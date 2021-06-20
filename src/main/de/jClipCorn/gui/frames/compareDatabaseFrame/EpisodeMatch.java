@@ -20,10 +20,11 @@ public class EpisodeMatch extends ComparisonMatch {
 	public final boolean NeedsUpdateFile;
 	public final boolean NeedsCreateNew;
 	public final boolean NeedsDelete;
+	public final boolean NeedsDeleteByParent;
 
 	public final List<Tuple<IEProperty, IEProperty>> MetadataDiff;
 
-	public EpisodeMatch(SeasonMatch parent, CCEpisode loc, CCEpisode ext, boolean updMeta, boolean updFile, boolean copy, boolean del, List<Tuple<IEProperty, IEProperty>> diff) {
+	public EpisodeMatch(SeasonMatch parent, CCEpisode loc, CCEpisode ext, boolean updMeta, boolean updFile, boolean copy, boolean del, boolean delByParent, List<Tuple<IEProperty, IEProperty>> diff) {
 		State               = parent.State;
 		Parent              = parent;
 		EpisodeLocal        = loc;
@@ -33,6 +34,7 @@ public class EpisodeMatch extends ComparisonMatch {
 		NeedsCreateNew      = copy;
 		NeedsDelete         = del;
 		MetadataDiff        = diff;
+		NeedsDeleteByParent = delByParent;
 	}
 
 	@Override
@@ -42,6 +44,7 @@ public class EpisodeMatch extends ComparisonMatch {
 		if (NeedsDelete) r.add("Delete");
 		if (NeedsUpdateMetadata) r.add("UpdateData");
 		if (NeedsUpdateFile) r.add("CopyVideo");
+		if (NeedsDeleteByParent) r.add("DeleteByParent");
 		return "[" + CCStreams.iterate(r).stringjoin(e -> e, ", ") + "]";
 	}
 

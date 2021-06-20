@@ -101,7 +101,7 @@ public class CompareDatabaseFrame extends JFrame
 			pnlTabs.setTitleAt(4, LocaleBundle.getString("BatchEditFrame.tabAddedEntries")     + " (" + tableAddedEntry    .getDataDirect().size() + ")");
 			pnlTabs.setTitleAt(5, LocaleBundle.getString("BatchEditFrame.tabUnchangedEntries") + " (" + tableUnchangedEntry.getDataDirect().size() + ")");
 
-			btnCreatePatch.setText(LocaleBundle.getString("BatchEditFrame.btnCreatePatch"));
+			btnCreatePatch.setText(LocaleBundle.getString("BatchEditFrame.btnCreatePatch") + " (" + FileSizeFormatter.format(currState.estimatePatchSize()) + ")");
 		}
 		else
 		{
@@ -119,7 +119,7 @@ public class CompareDatabaseFrame extends JFrame
 			pnlTabs.setTitleAt(4, LocaleBundle.getString("BatchEditFrame.tabAddedEntries"));
 			pnlTabs.setTitleAt(5, LocaleBundle.getString("BatchEditFrame.tabUnchangedEntries"));
 
-			btnCreatePatch.setText(LocaleBundle.getString("BatchEditFrame.btnCreatePatch") + " (" + FileSizeFormatter.format(currState.estimatePatchSize()) + ")");
+			btnCreatePatch.setText(LocaleBundle.getString("BatchEditFrame.btnCreatePatch"));
 		}
 
 		edEntryDiff.setText(Str.Empty);

@@ -4,6 +4,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.serialization.ExportHelper;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
@@ -119,7 +120,7 @@ public class ApplyPatchFrame extends JFrame
 			tableMain.setData(actions);
 			tableMain.autoResize();
 			_actions = actions;
-			_state = null;
+			_state = state;
 		}
 		catch (Exception e)
 		{
@@ -150,7 +151,7 @@ public class ApplyPatchFrame extends JFrame
 				edPathDestSeries.getText(),
 				edPathDestTrashMov.getText(),
 				edPathDestTrashSer.getText(),
-				PathFormatter.combine(edPathPatchfile.getText(), "patch_data"),
+				PathFormatter.combine(PathFormatter.getDirectory(edPathPatchfile.getText()), "patch_data"),
 				cbPorcelain.isSelected());
 
 		activeThread = new Thread(() ->
@@ -177,7 +178,11 @@ public class ApplyPatchFrame extends JFrame
 
 
 
-				APFWorker.applyPatch(actlist, movielist, state, opt, cb, (dold, dnew) -> SwingUtils.invokeLater(() -> tableMain.changeData(dold, dnew)));
+				APFWorker.applyPatch(actlist, movielist, state, opt, cb, (dold, dnew) -> SwingUtils.invokeLater(() ->
+				{
+					tableMain.changeData(dold, dnew);
+					tableMain.scrollIntoView(dnew);
+				}));
 
 				SwingUtils.invokeLater(this::updateUI);
 			}
@@ -209,7 +214,7 @@ public class ApplyPatchFrame extends JFrame
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		label1 = new JLabel();
-		edPathPatchfile = new JTextField();
+		edPathPatchfile = new ReadableTextField();
 		btnChoose = new JButton();
 		label2 = new JLabel();
 		edPathDestMovies = new JTextField();
@@ -234,7 +239,7 @@ public class ApplyPatchFrame extends JFrame
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default, $lcgap, default:grow, $lcgap, default, $lcgap, [80dlu,default], $ugap", //$NON-NLS-1$
+			"$ugap, default, $lcgap, default:grow, $lcgap, default, $lcgap, 80dlu, $ugap", //$NON-NLS-1$
 			"$ugap, 6*(default, $lgap), default:grow, 3*($lgap, default), $ugap")); //$NON-NLS-1$
 
 		//---- label1 ----
@@ -297,7 +302,7 @@ public class ApplyPatchFrame extends JFrame
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JLabel label1;
-	private JTextField edPathPatchfile;
+	private ReadableTextField edPathPatchfile;
 	private JButton btnChoose;
 	private JLabel label2;
 	private JTextField edPathDestMovies;

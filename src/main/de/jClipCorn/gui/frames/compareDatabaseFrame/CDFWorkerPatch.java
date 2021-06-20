@@ -10,14 +10,12 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -135,16 +133,12 @@ public class CDFWorkerPatch
 						var newfilename = "m_" + e.MovieLocal.LocalID.get() + "_" + i + "." + PathFormatter.getExtension(source.toString());
 						var target = Paths.get(PathFormatter.combine(datadir.getAbsolutePath(), newfilename));
 
-						String checksum;
-						try (FileInputStream fis = new FileInputStream(source.toFile())) { checksum = porcelain ? "-" : ("sha256://" + DigestUtils.sha256Hex(fis).toLowerCase()); }
-
 						var cmd = new Element("copyvideo");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "MOVIE");
 						cmd.setAttribute("id", idvar);
 						cmd.setAttribute("index", String.valueOf(i));
 						cmd.setAttribute("source", newfilename);
-						cmd.setAttribute("sourcehash", checksum);
 						cmd.setAttribute("filename", PathFormatter.getFilenameWithExt(source.toString()));
 						xaction.addContent(cmd);
 
@@ -274,16 +268,12 @@ public class CDFWorkerPatch
 						var newfilename = "m_" + e.MovieLocal.LocalID.get() + "_" + i + "." + PathFormatter.getExtension(source.toString());
 						var target = Paths.get(PathFormatter.combine(datadir.getAbsolutePath(), newfilename));
 
-						String checksum;
-						try (FileInputStream fis = new FileInputStream(source.toFile())) { checksum = porcelain ? "-" : ("sha256://" + DigestUtils.sha256Hex(fis).toLowerCase()); }
-
 						var cmd = new Element("copyvideo");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "MOVIE");
 						cmd.setAttribute("id", String.valueOf(e.MovieExtern.getLocalID()));
 						cmd.setAttribute("index", String.valueOf(i));
 						cmd.setAttribute("source", newfilename);
-						cmd.setAttribute("sourcehash", checksum);
 						cmd.setAttribute("filename", PathFormatter.getFilenameWithExt(source.toString()));
 						xaction.addContent(cmd);
 
@@ -501,7 +491,8 @@ public class CDFWorkerPatch
 					var cmd1 = new Element("insert");
 					cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 					cmd1.setAttribute("output_id", idvar);
-					cmd1.setAttribute("series_id", idparent);
+					cmd1.setAttribute("parent_id", idparent);
+					cmd1.setAttribute("parent_type", "SERIES");
 					cmd1.setAttribute("type", "SEASON");
 					cmd1.setAttribute("xmlversion", Main.JXMLVER);
 					xaction.addContent(cmd1);
@@ -592,7 +583,7 @@ public class CDFWorkerPatch
 
 					var cmd1 = new Element("replacecover");
 					cmd1.setAttribute("ctr", String.valueOf(innerctr++));
-					cmd1.setAttribute("type", "MOVIE");
+					cmd1.setAttribute("type", "SEASON");
 					cmd1.setAttribute("id", String.valueOf(e.SeasonExtern.getLocalID()));
 					cmd1.setAttribute("source", newfilename);
 					cmd1.setAttribute("sourcehash", coverdata.Checksum);
@@ -638,7 +629,8 @@ public class CDFWorkerPatch
 					var cmd1 = new Element("insert");
 					cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 					cmd1.setAttribute("output_id", idvar);
-					cmd1.setAttribute("season_id", idparent);
+					cmd1.setAttribute("parent_id", idparent);
+					cmd1.setAttribute("parent_type", "SEASON");
 					cmd1.setAttribute("type", "EPISODE");
 					cmd1.setAttribute("xmlversion", Main.JXMLVER);
 					xaction.addContent(cmd1);
@@ -653,15 +645,11 @@ public class CDFWorkerPatch
 						var newfilename = "e_" + e.EpisodeLocal.LocalID.get() + "." + PathFormatter.getExtension(source.toString());
 						var target = Paths.get(PathFormatter.combine(datadir.getAbsolutePath(), newfilename));
 
-						String checksum;
-						try (FileInputStream fis = new FileInputStream(source.toFile())) { checksum = porcelain ? "-" : ("sha256://" + DigestUtils.sha256Hex(fis).toLowerCase()); }
-
 						var cmd = new Element("copyvideo");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "EPISODE");
 						cmd.setAttribute("id", idvar);
 						cmd.setAttribute("source", newfilename);
-						cmd.setAttribute("sourcehash", checksum);
 						cmd.setAttribute("filename", PathFormatter.getFilenameWithExt(source.toString()));
 						xaction.addContent(cmd);
 
@@ -759,15 +747,11 @@ public class CDFWorkerPatch
 						var newfilename = "e_" + e.EpisodeLocal.LocalID.get() + "." + PathFormatter.getExtension(source.toString());
 						var target = Paths.get(PathFormatter.combine(datadir.getAbsolutePath(), newfilename));
 
-						String checksum;
-						try (FileInputStream fis = new FileInputStream(source.toFile())) { checksum = porcelain ? "-" : ("sha256://" + DigestUtils.sha256Hex(fis).toLowerCase()); }
-
 						var cmd = new Element("copyvideo");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "EPISODE");
 						cmd.setAttribute("id", String.valueOf(e.EpisodeExtern.getLocalID()));
 						cmd.setAttribute("source", newfilename);
-						cmd.setAttribute("sourcehash", checksum);
 						cmd.setAttribute("filename", PathFormatter.getFilenameWithExt(source.toString()));
 						xaction.addContent(cmd);
 

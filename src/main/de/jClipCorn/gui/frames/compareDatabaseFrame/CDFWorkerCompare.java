@@ -271,10 +271,10 @@ public class CDFWorkerCompare
 			var match = state.addSeriesExternOnly(sext);
 			for (var next: sext.iteratorSeasons())
 			{
-				var match2 = match.addSeasonExternOnly(next);
+				var match2 = match.addSeasonDeleteByParent(next);
 				for (var eext: next.iteratorEpisodes())
 				{
-					match2.addEpisodeExternOnly(eext);
+					match2.addEpisodeDeleteByParent(eext);
 				}
 			}
 		}
@@ -364,7 +364,7 @@ public class CDFWorkerCompare
 			var submatch = match.addSeasonExternOnly(sext);
 			for (var eext: sext.iteratorEpisodes())
 			{
-				submatch.addEpisodeExternOnly(eext);
+				submatch.addEpisodeDeleteByParent(eext);
 			}
 		}
 		seaExt.clear();

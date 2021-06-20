@@ -40,7 +40,7 @@ public class SeriesMatch extends ComparisonMatch {
 
 	public SeasonMatch addSeasonLocalOnly(CCSeason loc) {
 		var docopy = State.Ruleset.ShouldAddLocal(loc.getLocalID());
-		var match = new SeasonMatch(this, loc, null, false, false, docopy, false, new ArrayList<>());
+		var match = new SeasonMatch(this, loc, null, false, false, docopy, false, false, new ArrayList<>());
 		Seasons.add(match);
 		State.AllSeasons.add(match);
 		State.ProgressCallback.stepSub(1, loc.getLocalID() + "");
@@ -49,7 +49,15 @@ public class SeriesMatch extends ComparisonMatch {
 
 	public SeasonMatch addSeasonExternOnly(CCSeason ext) {
 		var dodel = State.Ruleset.ShouldDeleteExtern(ext.getLocalID());
-		var match = new SeasonMatch(this, null, ext, false, false, false, dodel, new ArrayList<>());
+		var match = new SeasonMatch(this, null, ext, false, false, false, dodel, false, new ArrayList<>());
+		Seasons.add(match);
+		State.AllSeasons.add(match);
+		State.ProgressCallback.stepSub(1, ext.getLocalID() + "");
+		return match;
+	}
+
+	public SeasonMatch addSeasonDeleteByParent(CCSeason ext) {
+		var match = new SeasonMatch(this, null, ext, false, false, false, false, true, new ArrayList<>());
 		Seasons.add(match);
 		State.AllSeasons.add(match);
 		State.ProgressCallback.stepSub(1, ext.getLocalID() + "");
@@ -66,7 +74,7 @@ public class SeriesMatch extends ComparisonMatch {
 				                .filter(p -> State.Ruleset.ShouldUpdateMetadata(loc.getLocalID(), ext.getLocalID(), p.Item1, p.Item2))
 				                .toList();
 
-		var match = new SeasonMatch(this, loc, ext, !diffMeta.isEmpty(), updateCover, false, false, diffMeta);
+		var match = new SeasonMatch(this, loc, ext, !diffMeta.isEmpty(), updateCover, false, false, false, diffMeta);
 		Seasons.add(match);
 		State.AllSeasons.add(match);
 		State.ProgressCallback.stepSub(2, loc.getLocalID() + "|" + ext.getLocalID());

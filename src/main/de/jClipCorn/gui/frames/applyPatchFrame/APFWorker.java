@@ -47,7 +47,11 @@ public class APFWorker
 			lstr.invoke(act, actNew1);
 			act = actNew1;
 
-			executeAction(act, ml, state, opt, cb);
+			try {
+				executeAction(act, ml, state, opt, cb);
+			} catch (Exception e) {
+				throw new Exception("Error in action " + act.Ctr + ": " + e.getMessage(), e);
+			}
 
 			var actNew2 = act.WithState(2);
 			lstr.invoke(act, actNew2);
@@ -73,13 +77,14 @@ public class APFWorker
 			else if (Str.equals(cmd.Command, "replacecover"))              executeReplaceCover(act, ml, cmd, state, opt, cb);
 			else if (Str.equals(cmd.Command, "insert"))                    executeInsertElement(act, ml, cmd, state, opt, cb);
 			else if (Str.equals(cmd.Command, "calc_mediainfo_subjective")) executeCalcMediaInfoSubjective(act, ml, cmd, state, opt, cb);
+			else if (Str.equals(cmd.Command, "delete"))                    executeDeleteElement(act, ml, cmd, state, opt, cb);
 			else throw new Exception("Unknown command: " + cmd.Command);
 		}
 	}
 
 	private static void executeClearVideos(ActionVM act, CCMovieList ml, ActionCommandVM cmd, PatchExecState state, PatchExecOptions opt, DoubleProgressCallbackListener cb) throws Exception
 	{
-		var ielem = getElement(ml, cmd, state);
+		var ielem = getElement(ml, cmd, state, opt);
 
 		if (ielem instanceof CCMovie)
 		{
@@ -119,7 +124,7 @@ public class APFWorker
 
 	private static void executeCopyVideo(ActionVM act, CCMovieList ml, ActionCommandVM cmd, PatchExecState state, PatchExecOptions opt, DoubleProgressCallbackListener cb) throws Exception
 	{
-		var ielem = getElement(ml, cmd, state);
+		var ielem = getElement(ml, cmd, state, opt);
 
 		if (ielem instanceof CCMovie)
 		{
@@ -127,7 +132,6 @@ public class APFWorker
 
 			var index        = cmd.XML.getAttributeIntValueOrThrow("index");
 			var source       = cmd.XML.getAttributeValueOrThrow("source");
-			var sourcehash   = cmd.XML.getAttributeValueOrThrow("sourcehash");
 			var destfilename = cmd.XML.getAttributeValueOrThrow("filename");
 
 			var pSource = Path.of(opt.DataDir, source);
@@ -149,7 +153,6 @@ public class APFWorker
 			var elem = (CCEpisode)ielem;
 
 			var source       = cmd.XML.getAttributeValueOrThrow("source");
-			var sourcehash   = cmd.XML.getAttributeValueOrThrow("sourcehash");
 			var destfilename = cmd.XML.getAttributeValueOrThrow("filename");
 
 			var serPath = ((CCEpisode) ielem).getFileForCreatedFolderstructure(new File(opt.DestinationSeries));
@@ -176,7 +179,7 @@ public class APFWorker
 
 	private static void executeSetProp(ActionVM act, CCMovieList ml, ActionCommandVM cmd, PatchExecState state, PatchExecOptions opt, DoubleProgressCallbackListener cb) throws Exception
 	{
-		var ielem = getElement(ml, cmd, state);
+		var ielem = getElement(ml, cmd, state, opt);
 
 		var propname = cmd.XML.getAttributeValueOrThrow("prop");
 		var valNew   = cmd.XML.getAttributeValueOrThrow("value_new");
@@ -214,16 +217,18 @@ public class APFWorker
 
 	private static void executeReplaceCover(ActionVM act, CCMovieList ml, ActionCommandVM cmd, PatchExecState state, PatchExecOptions opt, DoubleProgressCallbackListener cb) throws Exception
 	{
-		var ielem = getElement(ml, cmd, state);
+		var ielem = getElement(ml, cmd, state, opt);
 
 		var source     = cmd.XML.getAttributeValueOrThrow("source");
 		var sourcehash = cmd.XML.getAttributeValueOrThrow("sourcehash");
 
-		var img = ImageIO.read(new File(source));
+		var img = opt.Porcelain ? null : ImageIO.read(new File(source));
 
 		if (ielem instanceof CCDatabaseElement)
 		{
 			var elem = (CCDatabaseElement)ielem;
+
+			if (opt.Porcelain) return;
 
 			SwingUtils.invokeAndWait(() ->
 			{
@@ -233,6 +238,8 @@ public class APFWorker
 		else if (ielem instanceof CCSeason)
 		{
 			var elem = (CCSeason)ielem;
+
+			if (opt.Porcelain) return;
 
 			SwingUtils.invokeAndWait(() ->
 			{
@@ -247,15 +254,15 @@ public class APFWorker
 
 	private static void executeCalcMediaInfoSubjective(ActionVM act, CCMovieList ml, ActionCommandVM cmd, PatchExecState state, PatchExecOptions opt, DoubleProgressCallbackListener cb) throws Exception
 	{
-		var ielem = getElement(ml, cmd, state);
+		var ielem = getElement(ml, cmd, state, opt);
 
 		if (ielem instanceof CCMovie)
 		{
 			var elem = (CCMovie)ielem;
 
-			BasicFileAttributes attr = Files.readAttributes(new File(PathFormatter.fromCCPath(elem.getParts().get(0))).toPath(), BasicFileAttributes.class);
-
 			if (opt.Porcelain) return;
+
+			BasicFileAttributes attr = Files.readAttributes(new File(PathFormatter.fromCCPath(elem.getParts().get(0))).toPath(), BasicFileAttributes.class);
 
 			SwingUtils.invokeAndWait(() ->
 			{
@@ -267,9 +274,9 @@ public class APFWorker
 		{
 			var elem = (CCEpisode)ielem;
 
-			BasicFileAttributes attr = Files.readAttributes(new File(PathFormatter.fromCCPath(elem.getParts().get(0))).toPath(), BasicFileAttributes.class);
-
 			if (opt.Porcelain) return;
+
+			BasicFileAttributes attr = Files.readAttributes(new File(PathFormatter.fromCCPath(elem.getParts().get(0))).toPath(), BasicFileAttributes.class);
 
 			SwingUtils.invokeAndWait(() ->
 			{
@@ -292,10 +299,10 @@ public class APFWorker
 
 		if (Str.equals(type.toUpperCase(), "MOVIE"))
 		{
-			var dat = act.XML.getFirstChildOrNull("movie");
+			var dat = cmd.XML.getFirstChildOrNull("movie");
 			if (dat == null) throw new Exception("Missing data");
 
-			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, "(porcelain)"); return; }
+			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, "-1"); return; }
 
 			AtomicReference<Exception> _inner = new AtomicReference<>(null);
 			SwingUtils.invokeAndWait(() ->
@@ -323,10 +330,10 @@ public class APFWorker
 		}
 		else if (Str.equals(type.toUpperCase(), "SERIES"))
 		{
-			var dat = act.XML.getFirstChildOrNull("series");
+			var dat = cmd.XML.getFirstChildOrNull("series");
 			if (dat == null) throw new Exception("Missing data");
 
-			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, "(porcelain)"); return; }
+			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, "-1"); return; }
 
 			AtomicReference<Exception> _inner = new AtomicReference<>(null);
 			SwingUtils.invokeAndWait(() ->
@@ -354,12 +361,12 @@ public class APFWorker
 		}
 		else if (Str.equals(type.toUpperCase(), "SEASON"))
 		{
-			var dat = act.XML.getFirstChildOrNull("series");
+			var dat = cmd.XML.getFirstChildOrNull("season");
 			if (dat == null) throw new Exception("Missing data");
 
-			var parent = (CCSeries)getElement(ml, cmd, state, "series_id", "type");
+			var parent = (CCSeries)getElement(ml, cmd, state, opt, "parent_id", "parent_type");
 
-			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, "(porcelain)"); return; }
+			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, "-1"); return; }
 
 			AtomicReference<Exception> _inner = new AtomicReference<>(null);
 			SwingUtils.invokeAndWait(() ->
@@ -387,12 +394,12 @@ public class APFWorker
 		}
 		else if (Str.equals(type.toUpperCase(), "EPISODE"))
 		{
-			var dat = act.XML.getFirstChildOrNull("series");
+			var dat = cmd.XML.getFirstChildOrNull("episode");
 			if (dat == null) throw new Exception("Missing data");
 
-			var parent = (CCSeason)getElement(ml, cmd, state, "season_id", "type");
+			var parent = (CCSeason)getElement(ml, cmd, state, opt, "parent_id", "parent_type");
 
-			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, "(porcelain)"); return; }
+			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, "-1"); return; }
 
 			AtomicReference<Exception> _inner = new AtomicReference<>(null);
 			SwingUtils.invokeAndWait(() ->
@@ -425,12 +432,65 @@ public class APFWorker
 
 	}
 
-	private static ICCDatabaseStructureElement getElement(CCMovieList ml, ActionCommandVM cmd, PatchExecState state) throws Exception
+	private static void executeDeleteElement(ActionVM act, CCMovieList ml, ActionCommandVM cmd, PatchExecState state, PatchExecOptions opt, DoubleProgressCallbackListener cb) throws Exception
 	{
-		return getElement(ml, cmd, state, "id", "type");
+		var ielem = getElement(ml, cmd, state, opt);
+
+		if (ielem instanceof CCMovie)
+		{
+			var elem = (CCMovie)ielem;
+
+			if (opt.Porcelain) return;
+
+			for (int i = 0; i < elem.getPartcount(); i++)
+			{
+				var src = Path.of(elem.getAbsolutePart(i));
+				var dst = Path.of(opt.DestinationTrashMovies, "movie_" + elem.getLocalID() + "_" + i + "_" + Instant.now().getEpochSecond());
+				Files.move(src, dst);
+			}
+
+			SwingUtils.invokeAndWait(() -> { elem.delete(); });
+		}
+		else if (ielem instanceof CCSeries)
+		{
+			var elem = (CCSeries)ielem;
+
+			if (opt.Porcelain) return;
+
+			SwingUtils.invokeAndWait(() -> { elem.delete(); });
+		}
+		else if (ielem instanceof CCSeason)
+		{
+			var elem = (CCSeason)ielem;
+
+			if (opt.Porcelain) return;
+
+			SwingUtils.invokeAndWait(() -> { elem.delete(); });
+		}
+		else if (ielem instanceof CCEpisode)
+		{
+			var elem = (CCEpisode)ielem;
+
+			if (opt.Porcelain) return;
+
+			var src = Path.of(elem.getAbsolutePart());
+			var dst = Path.of(opt.DestinationTrashSeries, "episode_" + elem.getLocalID() + "_" + Instant.now().getEpochSecond());
+			Files.move(src, dst);
+
+			SwingUtils.invokeAndWait(() -> { elem.delete(); });
+		}
+		else
+		{
+			throw new Exception("Type");
+		}
 	}
 
-	private static ICCDatabaseStructureElement getElement(CCMovieList ml, ActionCommandVM cmd, PatchExecState state, String keyID, String keyType) throws Exception
+	private static ICCDatabaseStructureElement getElement(CCMovieList ml, ActionCommandVM cmd, PatchExecState state, PatchExecOptions opt) throws Exception
+	{
+		return getElement(ml, cmd, state, opt, "id", "type");
+	}
+
+	private static ICCDatabaseStructureElement getElement(CCMovieList ml, ActionCommandVM cmd, PatchExecState state, PatchExecOptions opt, String keyID, String keyType) throws Exception
 	{
 		var type  = cmd.XML.getAttributeValueOrThrow(keyType);
 		var idraw = cmd.XML.getAttributeValueOrThrow(keyID);
@@ -440,6 +500,7 @@ public class APFWorker
 		if (Str.equals(type.toUpperCase(), "MOVIE"))
 		{
 			var v = ml.iteratorMovies().singleOrNull(e -> e.LocalID.get().equals(id));
+			if (v == null && !Str.equals(state.Variables.getOrDefault(idraw, idraw), idraw) && opt.Porcelain) return ml.iteratorMovies().firstOrNull();
 			if (v == null) throw new Exception("Could not find [MOVIE] with id " + idraw + " ( = " + id + ")");
 			return v;
 		}
@@ -447,21 +508,24 @@ public class APFWorker
 		if (Str.equals(type.toUpperCase(), "SERIES"))
 		{
 			var v = ml.iteratorSeries().singleOrNull(e -> e.LocalID.get().equals(id));
-			if (v == null) throw new Exception("Could not find [MOVIE] with id " + idraw + " ( = " + id + ")");
+			if (v == null && !Str.equals(state.Variables.getOrDefault(idraw, idraw), idraw) && opt.Porcelain) return ml.iteratorSeries().firstOrNull();
+			if (v == null) throw new Exception("Could not find [SERIES] with id " + idraw + " ( = " + id + ")");
 			return v;
 		}
 
 		if (Str.equals(type.toUpperCase(), "SEASON"))
 		{
 			var v = ml.iteratorSeasons().singleOrNull(e -> e.LocalID.get().equals(id));
-			if (v == null) throw new Exception("Could not find [MOVIE] with id " + idraw + " ( = " + id + ")");
+			if (v == null && !Str.equals(state.Variables.getOrDefault(idraw, idraw), idraw) && opt.Porcelain) return ml.iteratorSeasons().firstOrNull();
+			if (v == null) throw new Exception("Could not find [SEASON] with id " + idraw + " ( = " + id + ")");
 			return v;
 		}
 
 		if (Str.equals(type.toUpperCase(), "EPISODE"))
 		{
 			var v = ml.iteratorEpisodes().singleOrNull(e -> e.LocalID.get().equals(id));
-			if (v == null) throw new Exception("Could not find [MOVIE] with id " + idraw + " ( = " + id + ")");
+			if (v == null && !Str.equals(state.Variables.getOrDefault(idraw, idraw), idraw) && opt.Porcelain) return ml.iteratorEpisodes().firstOrNull();
+			if (v == null) throw new Exception("Could not find [EPISODE] with id " + idraw + " ( = " + id + ")");
 			return v;
 		}
 

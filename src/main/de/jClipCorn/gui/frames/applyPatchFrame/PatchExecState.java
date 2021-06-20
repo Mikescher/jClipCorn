@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.applyPatchFrame;
 
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.helper.ThreadUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,8 @@ public class PatchExecState
 
 	public void load(String fn) throws Exception
 	{
+		_filename = fn;
+
 		LastSuccessfulCtr = -1;
 		Variables.clear();
 
@@ -43,20 +46,32 @@ public class PatchExecState
 				Variables.put(key, val);
 			}
 		}
-
-		_filename = fn;
 	}
 
 	public void save() throws IOException
 	{
-		StringBuilder r = new StringBuilder();
-		r.append("[ctr] := ").append(LastSuccessfulCtr).append("\n");
-
-		for (var e : Variables.entrySet())
+		synchronized (this)
 		{
-			r.append(e.getKey()).append(" := ").append(e.getValue()).append("\n");
-		}
+			StringBuilder r = new StringBuilder();
+			r.append("[ctr] := ").append(LastSuccessfulCtr).append("\n");
+			for (var e : Variables.entrySet()) r.append(e.getKey()).append(" := ").append(e.getValue()).append("\n");
 
-		SimpleFileUtils.writeTextFile(_filename, r.toString());
+			for (int i = 0; i < 10; i++)
+			{
+				try
+				{
+					SimpleFileUtils.writeTextFile(_filename, r.toString());
+					return;
+				}
+				catch (IOException e)
+				{
+					ThreadUtils.safeSleep(500);
+				}
+			}
+			SimpleFileUtils.writeTextFile(_filename, r.toString());
+
+
+
+		}
 	}
 }

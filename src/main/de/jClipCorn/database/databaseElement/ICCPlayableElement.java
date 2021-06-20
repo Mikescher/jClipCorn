@@ -2,7 +2,8 @@ package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.elementValues.*;
+import de.jClipCorn.database.elementProps.impl.*;
+import de.jClipCorn.database.elementProps.packs.EMediaInfoPropPack;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.properties.types.NamedPathVar;
 
@@ -14,7 +15,7 @@ public interface ICCPlayableElement {
 	// Episode, Movie
 
 	EStringProp             title();
-	EMediaInfoProp          mediaInfo();
+	EMediaInfoPropPack      mediaInfo();
 	EIntProp                length();
 	ETagListProp            tags();
 	EEnumProp<CCFileFormat> format();

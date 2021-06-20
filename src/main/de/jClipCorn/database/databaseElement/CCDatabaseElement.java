@@ -4,7 +4,8 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IDatabaseElementData;
-import de.jClipCorn.database.elementValues.*;
+import de.jClipCorn.database.elementProps.*;
+import de.jClipCorn.database.elementProps.impl.*;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
@@ -24,13 +25,13 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	private int coverid = -1;
 	private CCGroupList linkedGroups = CCGroupList.EMPTY;
 
-	public final EStringProp                 Title           = new EStringProp(       "Title",           Str.Empty,                   this, EPropertyType.OBJECTIVE_METADATA);
-	public final EGenreListProp              Genres          = new EGenreListProp(    "Genres",          CCGenreList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
-	public final EEnumProp<CCOnlineScore>    OnlineScore     = new EEnumProp<>(       "OnlineScore",     CCOnlineScore.STARS_0_0,     this, EPropertyType.OBJECTIVE_METADATA);
-	public final EEnumProp<CCFSK>            FSK             = new EEnumProp<>(       "FSK",             CCFSK.RATING_0,              this, EPropertyType.OBJECTIVE_METADATA);
-	public final EEnumProp<CCUserScore>      Score           = new EEnumProp<>(       "Score",           CCUserScore.RATING_NO,       this, EPropertyType.USER_METADATA);
-	public final EOnlineRefListProp          OnlineReference = new EOnlineRefListProp("OnlineReference", CCOnlineReferenceList.EMPTY, this, EPropertyType.OBJECTIVE_METADATA);
-	public final ETagListProp                Tags            = new ETagListProp(      "Tags",            CCTagList.EMPTY,             this, EPropertyType.USER_METADATA);
+	public final EStringProp              Title           = new EStringProp(       "Title",           Str.Empty,                   this, EPropertyType.OBJECTIVE_METADATA);
+	public final EGenreListProp           Genres          = new EGenreListProp(    "Genres",          CCGenreList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
+	public final EEnumProp<CCOnlineScore> OnlineScore     = new EEnumProp<>(       "OnlineScore",     CCOnlineScore.STARS_0_0,     this, EPropertyType.OBJECTIVE_METADATA);
+	public final EEnumProp<CCFSK>         FSK             = new EEnumProp<>(       "FSK",             CCFSK.RATING_0,              this, EPropertyType.OBJECTIVE_METADATA);
+	public final EEnumProp<CCUserScore>   Score           = new EEnumProp<>(       "Score",           CCUserScore.RATING_NO,       this, EPropertyType.USER_METADATA);
+	public final EOnlineRefListProp       OnlineReference = new EOnlineRefListProp("OnlineReference", CCOnlineReferenceList.EMPTY, this, EPropertyType.OBJECTIVE_METADATA);
+	public final ETagListProp             Tags            = new ETagListProp(      "Tags",            CCTagList.EMPTY,             this, EPropertyType.USER_METADATA);
 
 	private IEProperty[] _properties = null;
 
@@ -43,13 +44,13 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		this.movielist = ml;
 	}
 
-	public IEProperty[] GetProperties()
+	public IEProperty[] getProperties()
 	{
-		if (_properties == null) _properties = ListProperties();
+		if (_properties == null) _properties = listProperties();
 		return _properties;
 	}
 
-	protected IEProperty[] ListProperties()
+	protected IEProperty[] listProperties()
 	{
 		return new IEProperty[]
 		{
@@ -76,7 +77,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 
 		coverid = -1;
 		linkedGroups = CCGroupList.EMPTY;
-		for (IEProperty prop : GetProperties()) prop.resetToDefault();
+		for (IEProperty prop : getProperties()) prop.resetToDefault();
 
 		if (updateDB) endUpdating(); else abortUpdating();
 	}

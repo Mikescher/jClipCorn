@@ -1,7 +1,7 @@
 package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.elementValues.EStringProp;
+import de.jClipCorn.database.elementProps.impl.EStringProp;
 import de.jClipCorn.util.stream.CCStream;
 
 public interface IEpisodeOwner {

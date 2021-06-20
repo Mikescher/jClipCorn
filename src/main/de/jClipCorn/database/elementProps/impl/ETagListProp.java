@@ -1,7 +1,8 @@
-package de.jClipCorn.database.elementValues;
+package de.jClipCorn.database.elementProps.impl;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleTag;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
 
 public class ETagListProp extends EProperty<CCTagList> {

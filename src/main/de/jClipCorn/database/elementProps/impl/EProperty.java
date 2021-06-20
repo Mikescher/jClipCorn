@@ -1,8 +1,14 @@
-package de.jClipCorn.database.elementValues;
+package de.jClipCorn.database.elementProps.impl;
 
+import de.jClipCorn.database.elementProps.IEProperty;
+import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
+import de.jClipCorn.util.lambda.Func3to0;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("HardCodedStringLiteral")
 public abstract class EProperty<TType> implements IEProperty {
@@ -10,6 +16,7 @@ public abstract class EProperty<TType> implements IEProperty {
 	private TType _value;
 
 	private final IPropertyParent _parent;
+	private final List<Func3to0<EProperty<TType>, TType, TType>> _listener = new ArrayList<>();
 
 	public final EPropertyType ValueType;
 	public final String Name;
@@ -35,10 +42,14 @@ public abstract class EProperty<TType> implements IEProperty {
 	public void set(TType v) {
 		v = validateValue(v);
 
+		var old = _value;
+
 		_value = v;
 
 		_parent.getCache().bust();
 		_parent.updateDB();
+
+		for (var l: _listener) l.invoke(this, old, v);
 	}
 
 	public void setWithException(TType v) throws DatabaseUpdateException {
@@ -74,8 +85,14 @@ public abstract class EProperty<TType> implements IEProperty {
 		return "() -> " + _value;
 	}
 
+	public void addChangeListener(Func3to0<EProperty<TType>, TType, TType> lstnr)
+	{
+		_listener.add(lstnr);
+	}
+
 	public abstract String serializeValueToString();
 	public abstract Object serializeValueToDatabaseValue();
 	public abstract void deserializeValueFromString(String v) throws Exception;
 	public abstract void deserializeValueFromDatabaseValue(Object v) throws Exception;
+
 }

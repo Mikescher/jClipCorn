@@ -7,8 +7,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-			"$columnSpecs": "unrelgap, default, labelcompgap, default:grow, labelcompgap, default, unrelgap"
-			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default, linegap, default:grow, linegap, default, linegap, default:grow, linegap, default, unrelgap"
+			"$columnSpecs": "unrelgap, default, labelcompgap, default:grow, labelcompgap, 70dlu, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default, linegap, 80dlu, linegap, 20dlu, linegap, default:grow, linegap, 80dlu, linegap, default, linegap, default, linegap, default, unrelgap"
 		} ) {
 			name: "this"
 			"$sizePolicy": 1
@@ -74,31 +74,84 @@ new FormModel {
 				"gridWidth": 5
 			} )
 			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
-				name: "tabbedPane1"
+				name: "pnlTabs"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
-					name: "panel1"
+					name: "tabDeletedEntries"
+					add( new FormContainer( "de.jClipCorn.gui.frames.compareDatabaseFrame.ShowMatchesTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "tableDeletedEntries"
+						auxiliary() {
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(this, false, true);"
+						}
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "BatchEditFrame.tabDelete" )
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
-					name: "panel2"
+					name: "tabUpdateMetadata"
+					add( new FormContainer( "de.jClipCorn.gui.frames.compareDatabaseFrame.ShowMatchesTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "tableUpdateMetadata"
+						auxiliary() {
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(this, true, true);"
+						}
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "BatchEditFrame.tabUpdateMeta" )
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
-					name: "panel3"
+					name: "tabUpdateCover"
+					add( new FormContainer( "de.jClipCorn.gui.frames.compareDatabaseFrame.ShowMatchesTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "tableUpdateCover"
+						auxiliary() {
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(this, true, true);"
+						}
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "BatchEditFrame.tabUpdateCover" )
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
-					name: "panel4"
+					name: "tabUpdateFile"
+					add( new FormContainer( "de.jClipCorn.gui.frames.compareDatabaseFrame.ShowMatchesTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "tableUpdateFile"
+						auxiliary() {
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(this, true, true);"
+						}
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "BatchEditFrame.tabUpdateFile" )
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
-					name: "panel5"
+					name: "tabAddedEntry"
+					add( new FormContainer( "de.jClipCorn.gui.frames.compareDatabaseFrame.ShowMatchesTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "tableAddedEntry"
+						auxiliary() {
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(this, true, false);"
+						}
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
 				}, new FormLayoutConstraints( null ) {
-					"title": new FormMessage( null, "BatchEditFrame.btnAdd" )
+					"title": new FormMessage( null, "BatchEditFrame.tabAddedEntries" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+					name: "tabUnchangedEntry"
+					add( new FormContainer( "de.jClipCorn.gui.frames.compareDatabaseFrame.ShowMatchesTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "tableUnchangedEntry"
+						auxiliary() {
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(this, true, true);"
+						}
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "BatchEditFrame.tabUnchangedEntries" )
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
@@ -107,17 +160,57 @@ new FormModel {
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane2"
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "edEntryDiff"
+					"font": new java.awt.Font( "Monospaced", 0, 12 )
+					"editable": false
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 14
+				"gridWidth": 5
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "btnCreatePatch"
 				"text": new FormMessage( null, "BatchEditFrame.btnCreatePatch" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 14
+				"gridY": 16
 				"gridWidth": 5
+			} )
+			add( new FormComponent( "javax.swing.JProgressBar" ) {
+				name: "progressBar1"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 18
+				"gridWidth": 3
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblProgress1"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 18
+			} )
+			add( new FormComponent( "javax.swing.JProgressBar" ) {
+				name: "progressBar2"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 20
+				"gridWidth": 3
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblProgress2"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 20
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 650, 500 )
+			"size": new java.awt.Dimension( 800, 725 )
 		} )
 	}
 }

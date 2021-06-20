@@ -1,7 +1,6 @@
 package de.jClipCorn.gui.frames.watchHistoryFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
-import de.jClipCorn.gui.frames.databaseHistoryFrame.DatabaseHistoryTable;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryElement;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
@@ -35,56 +34,64 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 				"ClipTableModel.Title",
 				WatchHistoryElement::getName,
 				WatchHistoryElement::getNameIcon,
-				null));
+				null,
+				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"WatchHistoryFrame.tableHeaders.Date",
 				e -> e.getTimestamp().toStringUIShort(),
 				null,
-				e -> e.getTimestamp().toStringUINormal()));
+				e -> e.getTimestamp().toStringUINormal(),
+				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"ClipTableModel.Quality",
 				e -> e.getMediaInfoCategory().getShortText(),
 				e -> e.getMediaInfoCategory().getIcon(),
-				e -> e.getMediaInfoCategory().getTooltip()));
+				e -> e.getMediaInfoCategory().getTooltip(),
+				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				Str.Empty,
 				e -> Str.Empty,
 				e -> e.getLanguage().getIcon(),
-				e -> e.getLanguage().toOutputString()));
+				e -> e.getLanguage().toOutputString(),
+				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"ClipTableModel.Length",
 				e -> TimeIntervallFormatter.formatShort(e.getLength()),
 				null,
-				e -> TimeIntervallFormatter.format(e.getLength())));
+				e -> TimeIntervallFormatter.format(e.getLength()),
+				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"ClipTableModel.Tags",
 				null,
 				e -> e.getTags().getIcon(),
-				e -> e.getTags().getAsString()));
+				e -> e.getTags().getAsString(),
+				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"ClipTableModel.Format",
 				e -> e.getFormat().asString(),
 				e -> e.getFormat().getIcon(),
-				null));
+				null,
+				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"ClipTableModel.Size",
 				e -> e.getSize().getFormatted(),
 				null,
-				e -> FileSizeFormatter.formatBytes(e.getSize())));
+				e -> FileSizeFormatter.formatBytes(e.getSize()),
+				true));
 		
 		return r;
 	}
@@ -102,10 +109,5 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 	@Override
 	protected boolean isMultiselect() {
 		return false;
-	}
-
-	@Override
-	protected boolean isSortable(int col) {
-		return true;
 	}
 }

@@ -179,8 +179,8 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		initListener(m);
 	}
 
-	public static void show(Component owner, CCMovie data) {
-		if (!CCProperties.getInstance().PROP_PREVIEWMOVIE_SINGLETON.getValue()) {
+	public static void show(Component owner, CCMovie data, boolean forceNoSingleton) {
+		if (forceNoSingleton || !CCProperties.getInstance().PROP_PREVIEWMOVIE_SINGLETON.getValue()) {
 			new PreviewMovieFrame(owner, data).setVisible(true);
 			return;
 		}

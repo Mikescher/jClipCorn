@@ -1,7 +1,8 @@
-package de.jClipCorn.database.elementValues;
+package de.jClipCorn.database.elementProps.impl;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.util.exceptions.CCFormatException;
 
 public class EGenreListProp extends EProperty<CCGenreList> {

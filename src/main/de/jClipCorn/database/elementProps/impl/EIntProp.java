@@ -1,4 +1,6 @@
-package de.jClipCorn.database.elementValues;
+package de.jClipCorn.database.elementProps.impl;
+
+import de.jClipCorn.database.elementProps.IPropertyParent;
 
 public class EIntProp extends EProperty<Integer> {
 	public EIntProp(String name, Integer defValue, IPropertyParent p, EPropertyType t) {

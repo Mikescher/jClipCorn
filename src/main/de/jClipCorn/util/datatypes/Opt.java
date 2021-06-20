@@ -31,6 +31,10 @@ public class Opt<T> {
 		return new Opt<>(value);
 	}
 
+	public static <T> Opt<T> ofNullable(T value) {
+		return (value == null) ? empty() : new Opt<>(value);
+	}
+
 	public T get() {
 		if (!isSet) throw new NoSuchElementException("No value present"); //$NON-NLS-1$
 		return value;

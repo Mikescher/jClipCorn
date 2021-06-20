@@ -1,6 +1,7 @@
-package de.jClipCorn.database.elementValues;
+package de.jClipCorn.database.elementProps.impl;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 

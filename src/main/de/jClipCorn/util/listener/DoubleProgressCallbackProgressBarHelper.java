@@ -35,6 +35,8 @@ public class DoubleProgressCallbackProgressBarHelper implements DoubleProgressCa
 
 		msgRoot     = Str.Empty;
 		msgSub      = Str.Empty;
+
+		update();
 	}
 
 	@Override
@@ -115,6 +117,14 @@ public class DoubleProgressCallbackProgressBarHelper implements DoubleProgressCa
 	@Override
 	public void stepSub(String msgSub) {
 		this.progressSub++;
+		this.msgSub = msgSub;
+
+		update();
+	}
+
+	@Override
+	public void stepSub(int inc, String msgSub) {
+		this.progressSub+=inc;
 		this.msgSub = msgSub;
 
 		update();

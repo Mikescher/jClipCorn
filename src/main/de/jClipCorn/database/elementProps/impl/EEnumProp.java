@@ -1,5 +1,6 @@
-package de.jClipCorn.database.elementValues;
+package de.jClipCorn.database.elementProps.impl;
 
+import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;

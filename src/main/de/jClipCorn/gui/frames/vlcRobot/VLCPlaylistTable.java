@@ -52,10 +52,4 @@ public class VLCPlaylistTable extends JCCSimpleTable<VLCPlaylistEntry> {
 	protected boolean isMultiselect() {
 		return false;
 	}
-
-	@Override
-	protected boolean isSortable(int col) {
-		return false;
-	}
-
 }

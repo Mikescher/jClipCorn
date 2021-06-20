@@ -1,4 +1,4 @@
-package de.jClipCorn.database.elementValues;
+package de.jClipCorn.database.elementProps.impl;
 
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;

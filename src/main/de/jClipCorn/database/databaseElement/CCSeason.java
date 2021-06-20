@@ -6,7 +6,10 @@ import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.database.databaseElement.caches.SeasonCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.ISeasonData;
-import de.jClipCorn.database.elementValues.*;
+import de.jClipCorn.database.elementProps.*;
+import de.jClipCorn.database.elementProps.impl.EIntProp;
+import de.jClipCorn.database.elementProps.impl.EPropertyType;
+import de.jClipCorn.database.elementProps.impl.EStringProp;
 import de.jClipCorn.database.util.*;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -36,7 +39,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	private final SeasonCache _cache = new SeasonCache(this);
 
 	public final EStringProp Title = new EStringProp("Title", Str.Empty, this, EPropertyType.OBJECTIVE_METADATA);
-	public final EIntProp    Year  = new EIntProp(   "Year",  1900,      this, EPropertyType.OBJECTIVE_METADATA);
+	public final EIntProp Year     = new EIntProp(   "Year",  1900,      this, EPropertyType.OBJECTIVE_METADATA);
 
 	private IEProperty[] _properties = null;
 
@@ -49,13 +52,13 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		this.seasonID = seasonID;
 	}
 
-	public IEProperty[] GetProperties()
+	public IEProperty[] getProperties()
 	{
-		if (_properties == null) _properties = ListProperties();
+		if (_properties == null) _properties = listProperties();
 		return _properties;
 	}
 
-	protected IEProperty[] ListProperties()
+	protected IEProperty[] listProperties()
 	{
 		return new IEProperty[]
 		{
@@ -71,7 +74,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		beginUpdating();
 
 		coverid = -1;
-		for (IEProperty prop : GetProperties()) prop.resetToDefault();
+		for (IEProperty prop : getProperties()) prop.resetToDefault();
 
 		if (updateDB) endUpdating(); else abortUpdating();
 	}

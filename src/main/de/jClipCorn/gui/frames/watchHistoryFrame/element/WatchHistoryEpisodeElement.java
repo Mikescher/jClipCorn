@@ -1,10 +1,5 @@
 package de.jClipCorn.gui.frames.watchHistoryFrame.element;
 
-import java.awt.image.BufferedImage;
-import java.text.MessageFormat;
-
-import javax.swing.ImageIcon;
-
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.CCQualityCategory;
@@ -13,6 +8,10 @@ import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDateTime;
+
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.text.MessageFormat;
 
 public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 	public final CCDateTime Timestamp;
@@ -107,6 +106,6 @@ public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 
 	@Override
 	public void open(WatchHistoryFrame owner) {
-		PreviewSeriesFrame.show(owner, Episode);
+		PreviewSeriesFrame.show(owner, Episode, false);
 	}
 }

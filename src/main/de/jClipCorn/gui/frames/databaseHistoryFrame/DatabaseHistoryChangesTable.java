@@ -35,21 +35,24 @@ public class DatabaseHistoryChangesTable extends JCCSimpleTable<CCHistorySingleC
 				"DatabaseHistoryFrame.Table.ColumnField",
 				e -> e.Field,
 				null,
-				null));
+				null,
+				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"*",
 				"DatabaseHistoryFrame.Table.ColumnOld",
 				e -> e.OldValue==null ? "<NULL>" : limit(e.OldValue),
 				null,
-				null));
+				null,
+				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"*",
 				"DatabaseHistoryFrame.Table.ColumnNew",
 				e -> e.NewValue==null ? "<NULL>" : limit(e.NewValue),
 				null,
-				null));
+				null,
+				true));
 		
 		return r;
 	}
@@ -84,10 +87,4 @@ public class DatabaseHistoryChangesTable extends JCCSimpleTable<CCHistorySingleC
 	protected boolean isMultiselect() {
 		return false;
 	}
-
-	@Override
-	protected boolean isSortable(int col) {
-		return true;
-	}
-
 }

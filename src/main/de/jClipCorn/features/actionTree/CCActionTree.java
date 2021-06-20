@@ -472,7 +472,7 @@ public class CCActionTree extends UIActionTree{
 	}
 
 	private void onClickMoviesPrev(CCTreeActionEvent e) {
-		e.ifMovieSource(m -> PreviewMovieFrame.show(e.SwingOwner, m));
+		e.ifMovieSource(m -> PreviewMovieFrame.show(e.SwingOwner, m, false));
 	}
 
 	private void onClickMoviesAdd(CCTreeActionEvent e) {
@@ -589,7 +589,7 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickSeriesPreview(CCTreeActionEvent e) {
-		e.ifSeriesSource(s -> PreviewSeriesFrame.show(e.SwingOwner, s));
+		e.ifSeriesSource(s -> PreviewSeriesFrame.show(e.SwingOwner, s, false));
 	}
 	
 	private void onClickSeriesMove(CCTreeActionEvent e) {
@@ -669,7 +669,7 @@ public class CCActionTree extends UIActionTree{
 	
 	private void onClickSeasonOpenLast(CCTreeActionEvent e) {
 		CCEpisode ep = movielist.getLastPlayedEpisode();
-		if (ep != null) PreviewSeriesFrame.show(e.SwingOwner, ep);
+		if (ep != null) PreviewSeriesFrame.show(e.SwingOwner, ep, false);
 	}
 
 	private void onClickMoviesEdit(CCTreeActionEvent e) {

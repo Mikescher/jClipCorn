@@ -1,4 +1,6 @@
-package de.jClipCorn.database.elementValues;
+package de.jClipCorn.database.elementProps.impl;
+
+import de.jClipCorn.database.elementProps.IPropertyParent;
 
 public class EStringProp extends EProperty<String> {
 	public EStringProp(String name, String defValue, IPropertyParent p, EPropertyType t) {

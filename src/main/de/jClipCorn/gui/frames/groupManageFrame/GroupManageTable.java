@@ -94,9 +94,4 @@ public class GroupManageTable extends JCCSimpleTable<Tuple<CCGroup, Integer>> {
 	protected boolean isMultiselect() {
 		return false;
 	}
-
-	@Override
-	protected boolean isSortable(int col) {
-		return false;
-	}
 }

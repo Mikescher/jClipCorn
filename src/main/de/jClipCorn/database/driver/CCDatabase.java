@@ -198,6 +198,7 @@ public class CCDatabase {
 			if (db.isConnected()) {
 				shutdownStatements();
 				db.closeDBConnection(databaseDirectory, databaseName, cleanshutdown);
+				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBDisconnect", getDBPath()));
 			}
 		} catch (SQLException e) {
 			CCLog.addError(LocaleBundle.getString("LogMessage.CouldNotDisconnectFromDB"), e); //$NON-NLS-1$
@@ -336,12 +337,13 @@ public class CCDatabase {
 		mov.OnlineReference.set(rs.getString(DatabaseStructure.COL_MAIN_ONLINEREF));
 		mov.FileSize.set(rs.getLong(DatabaseStructure.COL_MAIN_FILESIZE));
 		mov.Tags.set(rs.getShort(DatabaseStructure.COL_MAIN_TAGS));
-		mov.Parts.set(0, rs.getString(DatabaseStructure.COL_MAIN_PART_1));
-		mov.Parts.set(1, rs.getString(DatabaseStructure.COL_MAIN_PART_2));
-		mov.Parts.set(2, rs.getString(DatabaseStructure.COL_MAIN_PART_3));
-		mov.Parts.set(3, rs.getString(DatabaseStructure.COL_MAIN_PART_4));
-		mov.Parts.set(4, rs.getString(DatabaseStructure.COL_MAIN_PART_5));
-		mov.Parts.set(5, rs.getString(DatabaseStructure.COL_MAIN_PART_6));
+		mov.Parts.set(
+				rs.getString(DatabaseStructure.COL_MAIN_PART_1),
+				rs.getString(DatabaseStructure.COL_MAIN_PART_2),
+				rs.getString(DatabaseStructure.COL_MAIN_PART_3),
+				rs.getString(DatabaseStructure.COL_MAIN_PART_4),
+				rs.getString(DatabaseStructure.COL_MAIN_PART_5),
+				rs.getString(DatabaseStructure.COL_MAIN_PART_6));
 		mov.Score.set(rs.getInt(DatabaseStructure.COL_MAIN_SCORE));
 		mov.MediaInfo.set(CCMediaInfo.createFromDB(
 			rs.getNullableLong(DatabaseStructure.COL_MAIN_MI_FILESIZE),

@@ -1,6 +1,7 @@
-package de.jClipCorn.database.elementValues;
+package de.jClipCorn.database.elementProps.impl;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
+import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.util.exceptions.CCFormatException;
 
 public class EOnlineRefListProp extends EProperty<CCOnlineReferenceList> {

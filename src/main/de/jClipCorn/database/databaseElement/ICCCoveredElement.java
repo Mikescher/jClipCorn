@@ -2,7 +2,7 @@ package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
-import de.jClipCorn.database.elementValues.EStringProp;
+import de.jClipCorn.database.elementProps.impl.EStringProp;
 import de.jClipCorn.util.datatypes.Tuple;
 
 import java.awt.image.BufferedImage;

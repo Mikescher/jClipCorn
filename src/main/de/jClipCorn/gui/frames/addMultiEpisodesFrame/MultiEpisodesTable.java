@@ -101,10 +101,4 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 	protected boolean isMultiselect() {
 		return false;
 	}
-
-	@Override
-	protected boolean isSortable(int col) {
-		return false;
-	}
-
 }

@@ -15,11 +15,11 @@ public class CSFSTable extends JCCSimpleTable<CSFSElement> {
 	protected List<JCCSimpleColumnPrototype<CSFSElement>> configureColumns() {
 		List<JCCSimpleColumnPrototype<CSFSElement>> r = new ArrayList<>();
 
-		r.add(new JCCSimpleColumnPrototype<>("auto", Str.Empty, null, e -> CSFSElement.getIcon(e.State), null));
-		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.CCOld", e -> e.CCPathOld, null, null));
-		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.CCNew", e -> e.CCPathNew, null, null));
-		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.FSOld", e -> e.FSPathOld, null, null));
-		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.FSNew", e -> e.FSPathNew, null, null));
+		r.add(new JCCSimpleColumnPrototype<>("auto", Str.Empty, null, e -> CSFSElement.getIcon(e.State), null, true));
+		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.CCOld", e -> e.CCPathOld, null, null, true));
+		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.CCNew", e -> e.CCPathNew, null, null, true));
+		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.FSOld", e -> e.FSPathOld, null, null, true));
+		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.FSNew", e -> e.FSPathNew, null, null, true));
 
 		return r;
 	}
@@ -37,10 +37,5 @@ public class CSFSTable extends JCCSimpleTable<CSFSElement> {
 	@Override
 	protected boolean isMultiselect() {
 		return false;
-	}
-
-	@Override
-	protected boolean isSortable(int col) {
-		return true;
 	}
 }

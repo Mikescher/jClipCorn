@@ -5,7 +5,9 @@ import de.jClipCorn.database.databaseElement.caches.EpisodeCache;
 import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
-import de.jClipCorn.database.elementValues.*;
+import de.jClipCorn.database.elementProps.*;
+import de.jClipCorn.database.elementProps.impl.*;
+import de.jClipCorn.database.elementProps.packs.EMediaInfoPropPack;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
@@ -22,6 +24,7 @@ import de.jClipCorn.util.exceptions.DatabaseUpdateException;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.stream.CCStreams;
 
 import java.awt.*;
 import java.io.File;
@@ -34,17 +37,17 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	private final EpisodeCache _cache = new EpisodeCache(this);
 
-	public final EIntProp                    EpisodeNumber = new EIntProp(         "EpisodeNumber", 0,                            this, EPropertyType.OBJECTIVE_METADATA);
-	public final EStringProp                 Title         = new EStringProp(      "Title",         Str.Empty,                    this, EPropertyType.OBJECTIVE_METADATA);
-	public final EMediaInfoProp              MediaInfo     = new EMediaInfoProp(   "MediaInfo",     CCMediaInfo.EMPTY,            this, EPropertyType.OBJECTIVE_METADATA);
-	public final EIntProp                    Length        = new EIntProp(         "Length",        0,                            this, EPropertyType.OBJECTIVE_METADATA);
-	public final ETagListProp                Tags          = new ETagListProp(     "Tags",          CCTagList.EMPTY,              this, EPropertyType.USER_METADATA);
-	public final EEnumProp<CCFileFormat>     Format        = new EEnumProp<>(      "Format",        CCFileFormat.MKV,             this, EPropertyType.OBJECTIVE_METADATA);
-	public final EFileSizeProp               FileSize      = new EFileSizeProp(    "FileSize",      CCFileSize.ZERO,              this, EPropertyType.OBJECTIVE_METADATA);
-	public final EStringProp                 Part          = new EStringProp(      "Part",          Str.Empty,                    this, EPropertyType.LOCAL_FILE_REF);
-	public final EDateProp                   AddDate       = new EDateProp(        "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
-	public final EDateTimeListProp           ViewedHistory = new EDateTimeListProp("ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
-	public final ELanguageListProp           Language      = new ELanguageListProp("Language",      CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
+	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,            this, EPropertyType.LOCAL_FILE_REF);
+	public final EIntProp                EpisodeNumber = new EIntProp(          "EpisodeNumber", 0,                            this, EPropertyType.OBJECTIVE_METADATA);
+	public final EStringProp             Title         = new EStringProp(       "Title",         Str.Empty,                    this, EPropertyType.OBJECTIVE_METADATA);
+	public final EIntProp                Length        = new EIntProp(          "Length",        0,                            this, EPropertyType.OBJECTIVE_METADATA);
+	public final ETagListProp            Tags          = new ETagListProp(      "Tags",          CCTagList.EMPTY,              this, EPropertyType.USER_METADATA);
+	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(       "Format",        CCFileFormat.MKV,             this, EPropertyType.OBJECTIVE_METADATA);
+	public final EFileSizeProp           FileSize      = new EFileSizeProp(     "FileSize",      CCFileSize.ZERO,              this, EPropertyType.OBJECTIVE_METADATA);
+	public final EStringProp             Part          = new EStringProp(       "Part",          Str.Empty,                    this, EPropertyType.LOCAL_FILE_REF);
+	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
+	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp( "ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
+	public final ELanguageListProp       Language      = new ELanguageListProp( "Language",      CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
 
 	private IEProperty[] _properties = null;
 
@@ -55,32 +58,43 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		this.localID = localID;
 	}
 
-	public IEProperty[] GetProperties()
+	public IEProperty[] getProperties()
 	{
-		if (_properties == null) _properties = ListProperties();
+		if (_properties == null) _properties = listProperties();
 		return _properties;
 	}
 
-	protected IEProperty[] ListProperties()
+	protected IEProperty[] listProperties()
 	{
-		return new IEProperty[]
-		{
-			EpisodeNumber,
-			Title,
-			MediaInfo,
-			Length,
-			Tags,
-			Format,
-			FileSize,
-			Part,
-			AddDate,
-			ViewedHistory,
-			Language,
-		};
+		return CCStreams.<IEProperty>empty()
+				.append(MediaInfo.getProperties())
+				.append(new IEProperty[]
+				{
+					EpisodeNumber,
+					Title,
+					Length,
+					Tags,
+					Format,
+					FileSize,
+					Part,
+					AddDate,
+					ViewedHistory,
+					Language,
+				})
+				.toArray(new IEProperty[0]);
 	}
 
 	public EIntProp                episodeNumber() { return EpisodeNumber; }
 	public EStringProp             title()         { return Title;         }
+	public EMediaInfoPropPack      mediaInfo()     { return MediaInfo;     }
+	public EIntProp                length()        { return Length;        }
+	public ETagListProp            tags()          { return Tags;          }
+	public EEnumProp<CCFileFormat> format()        { return Format;        }
+	public EFileSizeProp           fileSize()      { return FileSize;      }
+	public EStringProp             part()          { return Part;          }
+	public EDateProp               addDate()       { return AddDate;       }
+	public EDateTimeListProp       viewedHistory() { return ViewedHistory; }
+	public ELanguageListProp       language()      { return Language;      }
 
 	@Override
 	public CCTagList getTags() {
@@ -96,10 +110,6 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public CCMediaInfo getMediaInfo() {
 		return MediaInfo.get();
 	}
-
-	public EMediaInfoProp          mediaInfo()     { return MediaInfo;     }
-	public EIntProp                length()        { return Length;        }
-	public ETagListProp            tags()          { return Tags;          }
 
 	@Override
 	public int getEpisodeNumber() {
@@ -141,17 +151,10 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		return ViewedHistory.get();
 	}
 
-	public EEnumProp<CCFileFormat> format()        { return Format;        }
-	public EFileSizeProp           fileSize()      { return FileSize;      }
-	public EStringProp             part()          { return Part;          }
-	public EDateProp               addDate()       { return AddDate;       }
-	public EDateTimeListProp       viewedHistory() { return ViewedHistory; }
-	public ELanguageListProp       language()      { return Language;      }
-
 	public void setDefaultValues(boolean updateDB) {
 		beginUpdating();
 
-		for (IEProperty prop : GetProperties()) prop.resetToDefault();
+		for (IEProperty prop : getProperties()) prop.resetToDefault();
 
 		if (updateDB) endUpdating(); else abortUpdating();
 	}
@@ -238,7 +241,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	@Override
 	public String getQualifiedTitle() {
-		return Str.format("{0} E{1,number,###} - {2}", getSeries().Title.get(), getGlobalEpisodeNumber(), Title.get()); //$NON-NLS-1$
+		return Str.format("{0} {1} - {2}", getSeries().Title.get(), getStringIdentifier(), Title.get()); //$NON-NLS-1$
 	}
 
 	@Override

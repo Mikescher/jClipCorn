@@ -74,10 +74,10 @@ public class SearchFrame extends JFrame
 		if (lsMain.getModel().getSize() == 1)
 		{
 			Object v = lsMain.getModel().getElementAt(0);
-			if (v instanceof CCMovie)   { PreviewMovieFrame.show(this,  (CCMovie)   v); this.dispose(); }
-			if (v instanceof CCSeries)  { PreviewSeriesFrame.show(this, (CCSeries)  v); this.dispose(); }
-			if (v instanceof CCSeason)  { PreviewSeriesFrame.show(this, (CCSeason)  v); this.dispose(); }
-			if (v instanceof CCEpisode) { PreviewSeriesFrame.show(this, (CCEpisode) v); this.dispose(); }
+			if (v instanceof CCMovie)   { PreviewMovieFrame.show(this,  (CCMovie)   v, false); this.dispose(); }
+			if (v instanceof CCSeries)  { PreviewSeriesFrame.show(this, (CCSeries)  v, false); this.dispose(); }
+			if (v instanceof CCSeason)  { PreviewSeriesFrame.show(this, (CCSeason)  v, false); this.dispose(); }
+			if (v instanceof CCEpisode) { PreviewSeriesFrame.show(this, (CCEpisode) v, false); this.dispose(); }
 		}
 		else if (lsMain.getModel().getSize() > 1)
 		{
@@ -415,10 +415,10 @@ public class SearchFrame extends JFrame
 		if (lsMain.getSelectedIndex() >= 0)
 		{
 			Object v = lsMain.getSelectedValue();
-			if (v instanceof CCMovie)   PreviewMovieFrame.show(this,  (CCMovie)   v);
-			if (v instanceof CCSeries)  PreviewSeriesFrame.show(this, (CCSeries)  v);
-			if (v instanceof CCSeason)  PreviewSeriesFrame.show(this, (CCSeason)  v);
-			if (v instanceof CCEpisode) PreviewSeriesFrame.show(this, (CCEpisode) v);
+			if (v instanceof CCMovie)   PreviewMovieFrame.show(this,  (CCMovie)   v, false);
+			if (v instanceof CCSeries)  PreviewSeriesFrame.show(this, (CCSeries)  v, false);
+			if (v instanceof CCSeason)  PreviewSeriesFrame.show(this, (CCSeason)  v, false);
+			if (v instanceof CCEpisode) PreviewSeriesFrame.show(this, (CCEpisode) v, false);
 		}
 	}
 
@@ -433,10 +433,10 @@ public class SearchFrame extends JFrame
 	private void onListEnter()
 	{
 		Object v = lsMain.getSelectedValue();
-		if (v instanceof CCMovie)   { PreviewMovieFrame.show(this,  (CCMovie)   v); this.dispose(); }
-		if (v instanceof CCSeries)  { PreviewSeriesFrame.show(this, (CCSeries)  v); this.dispose(); }
-		if (v instanceof CCSeason)  { PreviewSeriesFrame.show(this, (CCSeason)  v); this.dispose(); }
-		if (v instanceof CCEpisode) { PreviewSeriesFrame.show(this, (CCEpisode) v); this.dispose(); }
+		if (v instanceof CCMovie)   { PreviewMovieFrame.show(this,  (CCMovie)   v, false); this.dispose(); }
+		if (v instanceof CCSeries)  { PreviewSeriesFrame.show(this, (CCSeries)  v, false); this.dispose(); }
+		if (v instanceof CCSeason)  { PreviewSeriesFrame.show(this, (CCSeason)  v, false); this.dispose(); }
+		if (v instanceof CCEpisode) { PreviewSeriesFrame.show(this, (CCEpisode) v, false); this.dispose(); }
 	}
 
 	private void initComponents() {

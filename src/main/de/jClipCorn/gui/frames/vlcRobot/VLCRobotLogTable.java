@@ -71,9 +71,4 @@ public class VLCRobotLogTable extends JCCSimpleTable<VLCRobotLogEntry> {
 		return false;
 	}
 
-	@Override
-	protected boolean isSortable(int col) {
-		return false;
-	}
-
 }

@@ -1,36 +1,29 @@
 package de.jClipCorn.database.elementProps.impl;
 
 import de.jClipCorn.database.elementProps.IPropertyParent;
-import de.jClipCorn.util.datetime.CCDate;
 
-import java.sql.Date;
-
-public class EDateProp extends EProperty<CCDate> {
-	public EDateProp(String name, CCDate defValue, IPropertyParent p, EPropertyType t) {
+public class EDoubleProp extends EProperty<Double> {
+	public EDoubleProp(String name, Double defValue, IPropertyParent p, EPropertyType t) {
 		super(name, defValue, p, t);
-	}
-
-	public void set(Date v) {
-		set(CCDate.create(v));
 	}
 
 	@Override
 	public String serializeValueToString() {
-		return get().toStringSQL();
+		return Double.toString(get());
 	}
 
 	@Override
 	public Object serializeValueToDatabaseValue() {
-		return get().toStringSQL();
+		return get();
 	}
 
 	@Override
 	public void deserializeValueFromString(String v) throws Exception {
-		set(CCDate.deserializeSQL(v));
+		set(Double.parseDouble(v));
 	}
 
 	@Override
 	public void deserializeValueFromDatabaseValue(Object v) throws Exception {
-		set(CCDate.deserializeSQL((String)v));
+		set((double)v);
 	}
 }

@@ -1,4 +1,6 @@
-package de.jClipCorn.database.elementValues;
+package de.jClipCorn.database.elementProps;
+
+import de.jClipCorn.database.elementProps.impl.EPropertyType;
 
 public interface IEProperty {
 	void resetToDefault();

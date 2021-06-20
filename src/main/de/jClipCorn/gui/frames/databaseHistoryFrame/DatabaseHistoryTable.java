@@ -1,7 +1,6 @@
 package de.jClipCorn.gui.frames.databaseHistoryFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
-import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.history.CCCombinedHistoryEntry;
@@ -100,10 +99,10 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 	@Override
 	protected void OnDoubleClickElement(CCCombinedHistoryEntry element) {
 		ICCDatabaseStructureElement dse = element.getSourceElement();
-		if (dse instanceof CCMovie)   { PreviewMovieFrame.show( _parent, (CCMovie)dse);   return; }
-		if (dse instanceof CCSeries)  { PreviewSeriesFrame.show(_parent, (CCSeries)dse);  return; }
-		if (dse instanceof CCSeason)  { PreviewSeriesFrame.show(_parent, (CCSeason)dse);  return; }
-		if (dse instanceof CCEpisode) { PreviewSeriesFrame.show(_parent, (CCEpisode)dse); return; }
+		if (dse instanceof CCMovie)   { PreviewMovieFrame.show( _parent, (CCMovie)dse, true);   return; }
+		if (dse instanceof CCSeries)  { PreviewSeriesFrame.show(_parent, (CCSeries)dse, true);  return; }
+		if (dse instanceof CCSeason)  { PreviewSeriesFrame.show(_parent, (CCSeason)dse, true);  return; }
+		if (dse instanceof CCEpisode) { PreviewSeriesFrame.show(_parent, (CCEpisode)dse, true); return; }
 		
 		if (element.Table == CCHistoryTable.COVERS) {
 			if (!Str.isInteger(element.ID)) return;
@@ -131,11 +130,6 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 
 	@Override
 	protected boolean isMultiselect() {
-		return false;
-	}
-
-	@Override
-	protected boolean isSortable(int col) {
 		return false;
 	}
 

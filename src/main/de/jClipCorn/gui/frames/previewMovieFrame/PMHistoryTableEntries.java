@@ -67,10 +67,4 @@ public class PMHistoryTableEntries extends JCCSimpleTable<CCCombinedHistoryEntry
 	protected boolean isMultiselect() {
 		return false;
 	}
-
-	@Override
-	protected boolean isSortable(int col) {
-		return false;
-	}
-
 }

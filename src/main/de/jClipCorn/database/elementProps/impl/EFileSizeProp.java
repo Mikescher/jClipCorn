@@ -1,6 +1,7 @@
-package de.jClipCorn.database.elementValues;
+package de.jClipCorn.database.elementProps.impl;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.elementProps.IPropertyParent;
 
 public class EFileSizeProp extends EProperty<CCFileSize> {
 	public EFileSizeProp(String name, CCFileSize defValue, IPropertyParent p, EPropertyType t) {

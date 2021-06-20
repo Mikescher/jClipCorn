@@ -1,4 +1,4 @@
-package de.jClipCorn.database.elementValues;
+package de.jClipCorn.database.elementProps;
 
 import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;

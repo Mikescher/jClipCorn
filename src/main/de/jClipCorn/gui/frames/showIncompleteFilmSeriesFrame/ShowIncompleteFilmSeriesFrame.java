@@ -1,8 +1,15 @@
 package de.jClipCorn.gui.frames.showIncompleteFilmSeriesFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
+import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -10,23 +17,6 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.border.EmptyBorder;
-
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
-import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 
 public class ShowIncompleteFilmSeriesFrame extends JDialog {
 	private static final long serialVersionUID = 4396672523833844038L;
@@ -81,7 +71,7 @@ public class ShowIncompleteFilmSeriesFrame extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2 && listMain.getSelectedValue() != null) {
-					PreviewMovieFrame.show(ShowIncompleteFilmSeriesFrame.this, listMain.getSelectedValue().target);
+					PreviewMovieFrame.show(ShowIncompleteFilmSeriesFrame.this, listMain.getSelectedValue().target, true);
 				}
 			}
 		});

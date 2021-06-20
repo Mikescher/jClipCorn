@@ -1,6 +1,7 @@
-package de.jClipCorn.database.elementValues;
+package de.jClipCorn.database.elementProps.impl;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.elementProps.IPropertyParent;
 
 public class ELanguageListProp extends EProperty<CCDBLanguageList> {
 	public ELanguageListProp(String name, CCDBLanguageList defValue, IPropertyParent p, EPropertyType t) {

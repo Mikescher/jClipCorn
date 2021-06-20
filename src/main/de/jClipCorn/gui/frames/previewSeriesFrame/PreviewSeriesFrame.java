@@ -166,8 +166,8 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		initListener(epi.getSeries());
 	}
 
-	public static void show(Component owner, CCSeries data) {
-		if (!CCProperties.getInstance().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
+	public static void show(Component owner, CCSeries data, boolean forceNoSingleton) {
+		if (forceNoSingleton || !CCProperties.getInstance().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
 			new PreviewSeriesFrame(owner, data).setVisible(true);
 			return;
 		}
@@ -183,8 +183,8 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		new PreviewSeriesFrame(owner, data).setVisible(true);
 	}
 
-	public static void show(Component owner, CCSeason data) {
-		if (!CCProperties.getInstance().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
+	public static void show(Component owner, CCSeason data, boolean forceNoSingleton) {
+		if (forceNoSingleton || !CCProperties.getInstance().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
 			new PreviewSeriesFrame(owner, data).setVisible(true);
 			return;
 		}
@@ -203,8 +203,8 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 		new PreviewSeriesFrame(owner, data).setVisible(true);
 	}
 
-	public static void show(Component owner, CCEpisode data) {
-		if (!CCProperties.getInstance().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
+	public static void show(Component owner, CCEpisode data, boolean forceNoSingleton) {
+		if (forceNoSingleton || !CCProperties.getInstance().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
 			new PreviewSeriesFrame(owner, data).setVisible(true);
 			return;
 		}

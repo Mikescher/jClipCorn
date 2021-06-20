@@ -19,19 +19,29 @@ import java.util.List;
 public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListSelectionListener, MouseListener {
 	private static final long serialVersionUID = -87600498201225357L;
 	
-	private final List<JCCSimpleColumnPrototype<TData>> columns;
-	private final JCCSimpleTableModel<TData> model;
-	private final JCCSimpleSFixTable<TData> table;
-	private final TableRowSorter<JCCSimpleTableModel<TData>> sorter;
+	private List<JCCSimpleColumnPrototype<TData>> columns;
+	private JCCSimpleTableModel<TData> model;
+	private JCCSimpleSFixTable<TData> table;
+	private TableRowSorter<JCCSimpleTableModel<TData>> sorter;
 
-	private final String _autoResizeConfig;
-	private final TableColumnAdjuster adjuster;
+	private String _autoResizeConfig;
+	private TableColumnAdjuster adjuster;
 	
 	public JCCSimpleTable() {
 		super();
-		
-		columns = configureColumns();
+
+		init(configureColumns());
+	}
+
+	protected void setColumnConfig(List<JCCSimpleColumnPrototype<TData>> cfg) {
+		init(cfg);
+	}
+
+	private void init(List<JCCSimpleColumnPrototype<TData>> cfg) {
+		columns = cfg;
+
 		model = new JCCSimpleTableModel<>(columns);
+
 		sorter = new TableRowSorter<>(model);
 		sorter.setSortsOnUpdates(true);
 
@@ -58,7 +68,7 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 
 		table.setRowSorter(sorter);
 
-		for (int i = 0; i < columns.size(); i++) sorter.setSortable(i, isSortable(i));
+		for (int i = 0; i < columns.size(); i++) sorter.setSortable(i, columns.get(i).IsSortable);
 	}
 
 	public void addListSelectionListener(ListSelectionListener listener)
@@ -218,5 +228,4 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 	protected abstract void OnDoubleClickElement(TData element);
 	protected abstract void OnSelectElement(TData element);
 	protected abstract boolean isMultiselect();
-	protected abstract boolean isSortable(int col);
 }

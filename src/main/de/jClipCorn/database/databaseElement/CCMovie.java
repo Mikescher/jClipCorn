@@ -5,7 +5,11 @@ import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.database.databaseElement.caches.MovieCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IMovieData;
-import de.jClipCorn.database.elementValues.*;
+import de.jClipCorn.database.elementProps.IEProperty;
+import de.jClipCorn.database.elementProps.impl.*;
+import de.jClipCorn.database.elementProps.packs.EMediaInfoPropPack;
+import de.jClipCorn.database.elementProps.packs.EPartArrayPropPack;
+import de.jClipCorn.database.elementProps.packs.EZyklusPropPack;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
@@ -30,54 +34,54 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, ICCDatedElement, IMovieData {
-	public final static int PARTCOUNT_MAX = 6; // 0 .. 5
+	public final static int PARTCOUNT_MAX = EPartArrayPropPack.PARTCOUNT_MAX;
 
 	private final MovieCache _cache = new MovieCache(this);
 
-	public final EZyklusProp             Zyklus        = new EZyklusProp(      "Zyklus",        CCMovieZyklus.EMPTY,          this, EPropertyType.OBJECTIVE_METADATA);
-	public final EMediaInfoProp          MediaInfo     = new EMediaInfoProp(   "MediaInfo",     CCMediaInfo.EMPTY,            this, EPropertyType.OBJECTIVE_METADATA);
-	public final EIntProp                Length        = new EIntProp(         "Length",        0,                            this, EPropertyType.OBJECTIVE_METADATA);
-	public final EDateProp               AddDate       = new EDateProp(        "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
-	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(      "Format",        CCFileFormat.MKV,             this, EPropertyType.OBJECTIVE_METADATA);
-	public final EIntProp                Year          = new EIntProp(         "Year",          1900,                         this, EPropertyType.OBJECTIVE_METADATA);
-	public final EFileSizeProp           FileSize      = new EFileSizeProp(    "FileSize",      CCFileSize.ZERO,              this, EPropertyType.OBJECTIVE_METADATA);
-	public final EPartArrayProp          Parts         = new EPartArrayProp(   "Parts",         PARTCOUNT_MAX,                this, EPropertyType.LOCAL_FILE_REF);
-	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp("ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
-	public final ELanguageListProp       Language      = new ELanguageListProp("Language",      CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
-	
+	public final EZyklusPropPack         Zyklus        = new EZyklusPropPack(   "Zyklus",        CCMovieZyklus.EMPTY,              this, EPropertyType.OBJECTIVE_METADATA);
+	public final EPartArrayPropPack      Parts         = new EPartArrayPropPack("Parts",         new String[PARTCOUNT_MAX],        this, EPropertyType.LOCAL_FILE_REF);
+	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,                this, EPropertyType.LOCAL_FILE_REF);
+	public final EIntProp                Length        = new EIntProp(          "Length",        0,                                this, EPropertyType.OBJECTIVE_METADATA);
+	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),          this, EPropertyType.USER_METADATA);
+	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(       "Format",        CCFileFormat.MKV,                 this, EPropertyType.LOCAL_FILE_REF);
+	public final EIntProp                Year          = new EIntProp(          "Year",          1900,                             this, EPropertyType.OBJECTIVE_METADATA);
+	public final EFileSizeProp           FileSize      = new EFileSizeProp(     "FileSize",      CCFileSize.ZERO,                  this, EPropertyType.LOCAL_FILE_REF);
+	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp( "ViewedHistory", CCDateTimeList.createEmpty(),     this, EPropertyType.USER_METADATA);
+	public final ELanguageListProp       Language      = new ELanguageListProp( "Language",      CCDBLanguageList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
+
 	public CCMovie(CCMovieList ml, int id) {
 		super(ml, CCDBElementTyp.MOVIE, id);
 	}
 
 	@Override
-	protected IEProperty[] ListProperties()
+	protected IEProperty[] listProperties()
 	{
 		return CCStreams
-				.iterate(super.ListProperties())
+				.iterate(super.listProperties())
+				.append(Zyklus.getProperties())
+				.append(MediaInfo.getProperties())
+				.append(Parts.getProperties())
 				.append(new IEProperty[]
 				{
-					Zyklus,
-					MediaInfo,
 					Length,
 					AddDate,
 					Format,
 					Year,
 					FileSize,
-					Parts,
 					ViewedHistory,
 					Language,
 				})
 				.toArray(new IEProperty[0]);
 	}
 
-	public EZyklusProp             zyklus()        { return  Zyklus;        }
-	public EMediaInfoProp          mediaInfo()     { return  MediaInfo;     }
+	public EZyklusPropPack         zyklus()        { return  Zyklus;        }
+	public EMediaInfoPropPack      mediaInfo()     { return  MediaInfo;     }
 	public EIntProp                length()        { return  Length;        }
 	public EDateProp               addDate()       { return  AddDate;       }
 	public EEnumProp<CCFileFormat> format()        { return  Format;        }
 	public EIntProp                year()          { return  Year;          }
 	public EFileSizeProp           fileSize()      { return  FileSize;      }
-	public EPartArrayProp          parts()         { return  Parts;         }
+	public EPartArrayPropPack      parts()         { return  Parts;         }
 	public EDateTimeListProp       viewedHistory() { return  ViewedHistory; }
 	public ELanguageListProp       language()      { return  Language;      }
 

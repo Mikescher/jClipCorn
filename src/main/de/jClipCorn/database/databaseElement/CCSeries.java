@@ -5,7 +5,7 @@ import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.database.databaseElement.caches.SeriesCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.ISeriesData;
-import de.jClipCorn.database.elementValues.IEProperty;
+import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.util.*;
 import de.jClipCorn.database.util.iterators.DirectEpisodesIterator;
 import de.jClipCorn.database.util.iterators.DirectSeasonsIterator;
@@ -44,9 +44,9 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	}
 
 	@Override
-	protected IEProperty[] ListProperties()
+	protected IEProperty[] listProperties()
 	{
-		return super.ListProperties();
+		return super.listProperties();
 	}
 
 	@Override

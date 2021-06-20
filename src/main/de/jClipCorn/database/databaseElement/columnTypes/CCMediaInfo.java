@@ -14,8 +14,6 @@ import java.util.Objects;
 public class CCMediaInfo {
 	public static final CCMediaInfo EMPTY = new CCMediaInfo();
 
-	private final boolean isSet;
-
 	private final long cdate;           // FileAttr
 	private final long mdate;           // FileAttr
 
@@ -40,6 +38,8 @@ public class CCMediaInfo {
 	private final String audiocodec;    // Audio -> CodecID
 	private final int audiosamplerate;  // Audio -> SamplingRate
 
+	private Boolean _isSetCache = null;
+
 	private CCQualityCategory _cat = null;
 	private CCGenreList _cat_source = null;
 
@@ -47,8 +47,6 @@ public class CCMediaInfo {
 					   int height, double framerate, short bitdepth, int framecount, String videocodec, String audioformat,
 					   short audiochannels, String audiocodec, int audiosamplerate, String checksum)
 	{
-		this.isSet = true;
-
 		this.cdate           = cdate;
 		this.mdate           = mdate;
 		this.filesize        = filesize;
@@ -69,8 +67,6 @@ public class CCMediaInfo {
 	}
 
 	private CCMediaInfo() {
-		this.isSet = false;
-
 		this.cdate           = -1;
 		this.mdate           = -1;
 		this.filesize        = -1;
@@ -117,11 +113,12 @@ public class CCMediaInfo {
 	}
 
 	public boolean isSet() {
-		return isSet;
+		if (_isSetCache != null) return _isSetCache;
+		return _isSetCache = !EMPTY.isEqual(this);
 	}
 
 	public boolean isUnset() {
-		return !isSet;
+		return !isSet();
 	}
 
 	public long getCDate() {
@@ -259,7 +256,7 @@ public class CCMediaInfo {
 
 		if (_cat != null && _cat_source == source) return _cat;
 
-		if (!isSet) { _cat_source=source; return _cat = CCQualityCategory.UNSET; }
+		if (!isSet()) { _cat_source=source; return _cat = CCQualityCategory.UNSET; }
 
 		CCQualityCategoryType ct = getCategoryType(source != null && source.shouldIgnoreBitrateInMediaInfo());
 		CCQualityResolutionType rt = getCategoryResType();

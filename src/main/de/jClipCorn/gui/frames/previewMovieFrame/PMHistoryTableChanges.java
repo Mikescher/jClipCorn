@@ -20,21 +20,24 @@ public class PMHistoryTableChanges extends JCCSimpleTable<CCHistorySingleChange>
 				"DatabaseHistoryFrame.Table.ColumnField",
 				e -> e.Field,
 				null,
-				null));
+				null,
+				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"*,expandonly",
 				"DatabaseHistoryFrame.Table.ColumnOld",
 				e -> e.OldValue==null ? "<NULL>" : limit(e.OldValue),
 				null,
-				null));
+				null,
+				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"*,expandonly",
 				"DatabaseHistoryFrame.Table.ColumnNew",
 				e -> e.NewValue==null ? "<NULL>" : limit(e.NewValue),
 				null,
-				null));
+				null,
+				true));
 		
 		return r;
 	}
@@ -59,10 +62,4 @@ public class PMHistoryTableChanges extends JCCSimpleTable<CCHistorySingleChange>
 	protected boolean isMultiselect() {
 		return true;
 	}
-
-	@Override
-	protected boolean isSortable(int col) {
-		return true;
-	}
-
 }

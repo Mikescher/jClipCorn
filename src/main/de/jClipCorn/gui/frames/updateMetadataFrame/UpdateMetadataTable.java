@@ -34,77 +34,88 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				"",
 				null,
 				e -> e.Element.getOnlineReference().Main.getIcon16x16(),
-				null));
+				null,
+				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"*,min=auto",
 				"UpdateMetadataFrame.Table.ColumnTitle",
 				e -> e.Element.getFullDisplayTitle(),
 				null,
-				null));
+				null,
+				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnChangedScore",
 				this::getScoreChange,
 				null,
-				null));
+				null,
+				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnChangedGenres",
 				this::getGenreChange,
 				null,
-				null));
+				null,
+				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnChangedReferences",
 				this::getReferencesChange,
 				null,
-				null));
+				null,
+				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnLocalScore",
 				null,
 				e -> e.Element.getOnlinescore().getIcon(),
-				e -> e.Element.getOnlinescore().asInt() + "/10"));
+				e -> e.Element.getOnlinescore().asInt() + "/10",
+				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnOnlineScore",
 				null,
 				e -> (e.OnlineMeta != null && e.OnlineMeta.getOnlineScore() != null) ? (e.OnlineMeta.getOnlineScore().getIcon()) : (null),
-				e -> (e.OnlineMeta != null && e.OnlineMeta.getOnlineScore() != null) ? (e.OnlineMeta.getOnlineScore().asInt() + "/10") : (null)));
+				e -> (e.OnlineMeta != null && e.OnlineMeta.getOnlineScore() != null) ? (e.OnlineMeta.getOnlineScore().asInt() + "/10") : (null),
+				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnLocalGenres",
 				e -> e.Element.getGenres().asSortedString(),
 				null,
-				null));
+				null,
+				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnOnlineGenres",
 				e -> (e.OnlineMeta != null && e.OnlineMeta.Genres != null) ? e.OnlineMeta.Genres.asSortedString() : (null),
 				null,
-				null));
+				null,
+				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnLocalReferences",
 				e -> e.Element.getOnlineReference().toSourceConcatString(),
 				null,
-				null));
+				null,
+				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnOnlineReferences",
 				e -> (e.OnlineMeta != null) ? e.OnlineMeta.getFullReference().toSourceConcatString() : (null),
 				null,
-				null));
+				null,
+				true));
 		
 		return r;
 	}
@@ -207,10 +218,4 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 	protected boolean isMultiselect() {
 		return true;
 	}
-
-	@Override
-	protected boolean isSortable(int col) {
-		return true;
-	}
-
 }

@@ -28,56 +28,64 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 				"",
 				null,
 				e -> e.getStatusIcon(),
-				e -> e.getStatusText()));
+				e -> e.getStatusText(),
+				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"*,min=auto",
 				"UpdateCodecFrame.Table.ColumnTitle",
 				e -> e.getFullDisplayTitle(),
 				null,
-				null));
+				null,
+				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateCodecFrame.Table.ColumnLangOld",
 				e -> e.getOldLanguage().toShortOutputString(Str.Empty),
 				e -> e.getOldLanguage().getIcon(),
-				null));
+				null,
+				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateCodecFrame.Table.ColumnLangNew",
 				e -> e.getNewLanguage().toShortOutputString(Str.Empty),
 				e -> e.getNewLanguage().isEmpty() ? Resources.ICN_TRANSPARENT.get16x16() : e.getNewLanguage().getIcon(),
-				null));
+				null,
+				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateCodecFrame.Table.ColumnLengthOld",
 				e -> e.getOldLengthStr(),
 				null,
-				null));
+				null,
+				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateCodecFrame.Table.ColumnLengthNew",
 				e -> e.getNewLengthStr(),
 				null,
-				null));
+				null,
+				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateCodecFrame.Table.ColumnQualityOld",
 				e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getLongText(),
 				e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getIcon(),
-				e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getTooltip()));
+				e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getTooltip(),
+				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"UpdateCodecFrame.Table.ColumnQualityNew",
 				e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getLongText(),
 				e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getIcon(),
-				e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getTooltip()));
+				e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getTooltip(),
+				true));
 		
 		return r;
 	}
@@ -96,10 +104,4 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 	protected boolean isMultiselect() {
 		return true;
 	}
-
-	@Override
-	protected boolean isSortable(int col) {
-		return true;
-	}
-
 }

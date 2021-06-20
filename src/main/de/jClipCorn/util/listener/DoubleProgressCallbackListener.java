@@ -11,6 +11,7 @@ public interface DoubleProgressCallbackListener
 		@Override public void setSubMax(int maxSub) { /**/ }
 		@Override public void reset() { /**/ }
 		@Override public void stepSub(String msgSub) { /**/ }
+		@Override public void stepSub(int inc, String msgSub) { /**/ }
 	};
 
 	void setValueBoth(int valueRoot, int valueSub, String txtRoot, String txtSub);
@@ -26,4 +27,6 @@ public interface DoubleProgressCallbackListener
 	void reset();
 
 	void stepSub(String msgSub);
+
+	void stepSub(int inc, String msgSub);
 }

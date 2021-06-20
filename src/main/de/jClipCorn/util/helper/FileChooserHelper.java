@@ -1,12 +1,11 @@
 package de.jClipCorn.util.helper;
 
-import java.io.File;
-
-import javax.swing.filechooser.FileFilter;
-
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Validator;
 import de.jClipCorn.util.formatter.PathFormatter;
+
+import javax.swing.filechooser.FileFilter;
+import java.io.File;
 
 public class FileChooserHelper {
 	public static FileFilter createFileFilter(final String description, final String[] extensions) {
@@ -80,9 +79,19 @@ public class FileChooserHelper {
 		String[] arr = {ext1, ext2, ext3, ext4};
 		return createFileFilter(LocaleBundle.getString(description), arr);
 	}
-	
+
 	public static FileFilter createLocalFileFilter(String description, String ext1, String ext2, String ext3, String ext4, String ext5) {
 		String[] arr = {ext1, ext2, ext3, ext4, ext5};
+		return createFileFilter(LocaleBundle.getString(description), arr);
+	}
+
+	public static FileFilter createLocalFileFilter(String description, String ext1, String ext2, String ext3, String ext4, String ext5, String ext6) {
+		String[] arr = {ext1, ext2, ext3, ext4, ext5, ext6};
+		return createFileFilter(LocaleBundle.getString(description), arr);
+	}
+
+	public static FileFilter createLocalFileFilter(String description, String ext1, String ext2, String ext3, String ext4, String ext5, String ext6, String ext7) {
+		String[] arr = {ext1, ext2, ext3, ext4, ext5, ext6, ext7};
 		return createFileFilter(LocaleBundle.getString(description), arr);
 	}
 	

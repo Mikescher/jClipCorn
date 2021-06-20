@@ -1,8 +1,6 @@
 package de.jClipCorn.features.serialization.xmlimport;
 
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.features.serialization.xmlimport.impl.*;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.SerializationException;
@@ -89,6 +87,26 @@ public class DatabaseXMLImporter {
 		try {
 			IDatabaseXMLImporterImpl impl = getImportImpl(state);
 			impl.importSeries(ser, xml, imgf, state);
+		} catch (NumberFormatException e) {
+			throw new SerializationException(e.getMessage(), e);
+		}
+	}
+
+	public static void parseSingleSeason(CCSeason sea, CCXMLElement xml, Func1to1<String, BufferedImage> imgf, ImportState state) throws SerializationException, CCFormatException, CCXMLException
+	{
+		try {
+			IDatabaseXMLImporterImpl impl = getImportImpl(state);
+			impl.importSeason(sea, xml, imgf, state);
+		} catch (NumberFormatException e) {
+			throw new SerializationException(e.getMessage(), e);
+		}
+	}
+
+	public static void parseSingleEpisode(CCEpisode epi, CCXMLElement xml, Func1to1<String, BufferedImage> imgf, ImportState state) throws SerializationException, CCFormatException, CCXMLException
+	{
+		try {
+			IDatabaseXMLImporterImpl impl = getImportImpl(state);
+			impl.importEpisode(epi, xml, imgf, state);
 		} catch (NumberFormatException e) {
 			throw new SerializationException(e.getMessage(), e);
 		}

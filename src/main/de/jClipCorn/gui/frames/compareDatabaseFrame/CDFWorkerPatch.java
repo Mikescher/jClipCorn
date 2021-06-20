@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
+import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.features.serialization.xmlexport.impl.DatabaseXMLExporterImpl;
 import de.jClipCorn.util.Str;
@@ -35,7 +36,7 @@ public class CDFWorkerPatch
 		var datadir = new File(PathFormatter.combine(dir, "patch_data"));
 		if (!datadir.exists() && !datadir.mkdirs()) throw new Exception("Target directory could not be created");
 
-		if (new File(PathFormatter.combine(dir, "patch.jccpatch")).exists()) throw new Exception("Target directory not empty");
+		if (new File(PathFormatter.combine(dir, "patch." + ExportHelper.EXTENSION_PATCHFILE)).exists()) throw new Exception("Target directory not empty");
 
 		var subfiles = datadir.listFiles();
 		if (subfiles == null || subfiles.length > 0) throw new Exception("Target directory not empty");
@@ -65,7 +66,7 @@ public class CDFWorkerPatch
 
 
 		XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
-		try(var fw = new FileWriter(PathFormatter.combine(dir, "patch.jccpatch"))){
+		try(var fw = new FileWriter(PathFormatter.combine(dir, "patch." + ExportHelper.EXTENSION_PATCHFILE))){
 			xmlOut.output(xml, fw);
 		}
 	}
@@ -98,6 +99,7 @@ public class CDFWorkerPatch
 					cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 					cmd1.setAttribute("output_id", idvar);
 					cmd1.setAttribute("type", "MOVIE");
+					cmd1.setAttribute("xmlversion", Main.JXMLVER);
 					xaction.addContent(cmd1);
 					var inner = new Element("movie");
 					DatabaseXMLExporterImpl.exportMovie(inner, e.MovieLocal, new ExportOptions(false, false, false, false));
@@ -237,7 +239,7 @@ public class CDFWorkerPatch
 					cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 					cmd1.setAttribute("type", "MOVIE");
 					cmd1.setAttribute("id", String.valueOf(e.MovieExtern.getLocalID()));
-					cmd1.setAttribute("sourcename", newfilename);
+					cmd1.setAttribute("source", newfilename);
 					cmd1.setAttribute("sourcehash", coverdata.Checksum);
 					xaction.addContent(cmd1);
 
@@ -348,6 +350,7 @@ public class CDFWorkerPatch
 					cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 					cmd1.setAttribute("output_id", idvar);
 					cmd1.setAttribute("type", "SERIES");
+					cmd1.setAttribute("xmlversion", Main.JXMLVER);
 					xaction.addContent(cmd1);
 					var inner = new Element("series");
 					DatabaseXMLExporterImpl.exportSeries(inner, e.SeriesLocal, new ExportOptions(false, false, false, false));
@@ -454,7 +457,7 @@ public class CDFWorkerPatch
 					cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 					cmd1.setAttribute("type", "SERIES");
 					cmd1.setAttribute("id", String.valueOf(e.SeriesExtern.getLocalID()));
-					cmd1.setAttribute("sourcename", newfilename);
+					cmd1.setAttribute("source", newfilename);
 					cmd1.setAttribute("sourcehash", coverdata.Checksum);
 					xaction.addContent(cmd1);
 
@@ -500,6 +503,7 @@ public class CDFWorkerPatch
 					cmd1.setAttribute("output_id", idvar);
 					cmd1.setAttribute("series_id", idparent);
 					cmd1.setAttribute("type", "SEASON");
+					cmd1.setAttribute("xmlversion", Main.JXMLVER);
 					xaction.addContent(cmd1);
 					var inner = new Element("season");
 					DatabaseXMLExporterImpl.exportSeason(inner, e.SeasonLocal, new ExportOptions(false, false, false, false));
@@ -590,7 +594,7 @@ public class CDFWorkerPatch
 					cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 					cmd1.setAttribute("type", "MOVIE");
 					cmd1.setAttribute("id", String.valueOf(e.SeasonExtern.getLocalID()));
-					cmd1.setAttribute("sourcename", newfilename);
+					cmd1.setAttribute("source", newfilename);
 					cmd1.setAttribute("sourcehash", coverdata.Checksum);
 					xaction.addContent(cmd1);
 
@@ -634,7 +638,9 @@ public class CDFWorkerPatch
 					var cmd1 = new Element("insert");
 					cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 					cmd1.setAttribute("output_id", idvar);
+					cmd1.setAttribute("season_id", idparent);
 					cmd1.setAttribute("type", "EPISODE");
+					cmd1.setAttribute("xmlversion", Main.JXMLVER);
 					xaction.addContent(cmd1);
 					var inner = new Element("episode");
 					DatabaseXMLExporterImpl.exportEpisode(inner, e.EpisodeLocal, new ExportOptions(false, false, false, false));
@@ -681,7 +687,7 @@ public class CDFWorkerPatch
 					{
 						var cmd = new Element("calc_mediainfo_subjective");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
-						cmd.setAttribute("type", "MOVIE");
+						cmd.setAttribute("type", "EPISODE");
 						cmd.setAttribute("id", idvar);
 						xaction.addContent(cmd);
 					}
@@ -758,7 +764,7 @@ public class CDFWorkerPatch
 
 						var cmd = new Element("copyvideo");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
-						cmd.setAttribute("type", "MOVIE");
+						cmd.setAttribute("type", "EPISODE");
 						cmd.setAttribute("id", String.valueOf(e.EpisodeExtern.getLocalID()));
 						cmd.setAttribute("source", newfilename);
 						cmd.setAttribute("sourcehash", checksum);
@@ -789,7 +795,7 @@ public class CDFWorkerPatch
 					{
 						var cmd = new Element("calc_mediainfo_subjective");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
-						cmd.setAttribute("type", "MOVIE");
+						cmd.setAttribute("type", "EPISODE");
 						cmd.setAttribute("id", String.valueOf(e.EpisodeExtern.getLocalID()));
 						xaction.addContent(cmd);
 					}

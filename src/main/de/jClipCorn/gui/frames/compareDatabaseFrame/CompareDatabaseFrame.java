@@ -122,11 +122,12 @@ public class CompareDatabaseFrame extends JFrame
 			btnCreatePatch.setText(LocaleBundle.getString("BatchEditFrame.btnCreatePatch") + " (" + FileSizeFormatter.format(currState.estimatePatchSize()) + ")");
 		}
 
-
 		edEntryDiff.setText(Str.Empty);
 
 		progressBar1.setMaximum(1);progressBar1.setValue(0);lblProgress1.setText(Str.Empty);
 		progressBar2.setMaximum(1);progressBar2.setValue(0);lblProgress2.setText(Str.Empty);
+
+		btnCancel.setEnabled(activeThread != null);
 	}
 
 	private void openDatabase(ActionEvent e)
@@ -225,6 +226,15 @@ public class CompareDatabaseFrame extends JFrame
 		updateUI();
 	}
 
+	@SuppressWarnings("deprecation")
+	private void cancelThread(ActionEvent ae)
+	{
+		if (activeThread == null) { updateUI(); return; }
+
+		activeThread.stop();
+		updateUI();
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		edDatabasePath = new ReadableTextField();
@@ -252,6 +262,7 @@ public class CompareDatabaseFrame extends JFrame
 		scrollPane2 = new JScrollPane();
 		edEntryDiff = new JTextArea();
 		btnCreatePatch = new JButton();
+		btnCancel = new JButton();
 		cbPorcelain = new JCheckBox();
 		progressBar1 = new JProgressBar();
 		lblProgress1 = new JLabel();
@@ -263,28 +274,28 @@ public class CompareDatabaseFrame extends JFrame
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default, $lcgap, default:grow, $lcgap, 70dlu, $ugap", //$NON-NLS-1$
+			"$ugap, default, $lcgap, default:grow, $lcgap, default, $lcgap, 70dlu, $ugap", //$NON-NLS-1$
 			"$ugap, 3*(default, $lgap), 80dlu, $lgap, 20dlu, $lgap, default:grow, $lgap, 80dlu, 3*($lgap, default), $ugap")); //$NON-NLS-1$
-		contentPane.add(edDatabasePath, CC.xywh(2, 2, 3, 1, CC.FILL, CC.FILL));
+		contentPane.add(edDatabasePath, CC.xywh(2, 2, 5, 1, CC.FILL, CC.FILL));
 
 		//---- btnOpenDatabase ----
 		btnOpenDatabase.setText("..."); //$NON-NLS-1$
 		btnOpenDatabase.addActionListener(e -> openDatabase(e));
-		contentPane.add(btnOpenDatabase, CC.xy(6, 2));
+		contentPane.add(btnOpenDatabase, CC.xy(8, 2));
 
 		//---- label2 ----
 		label2.setText(LocaleBundle.getString("BatchEditFrame.lblDBName")); //$NON-NLS-1$
 		contentPane.add(label2, CC.xy(2, 4));
-		contentPane.add(edDatabaseName, CC.xy(4, 4));
+		contentPane.add(edDatabaseName, CC.xywh(4, 4, 3, 1));
 
 		//---- label1 ----
 		label1.setText(LocaleBundle.getString("BatchEditFrame.lblRules")); //$NON-NLS-1$
-		contentPane.add(label1, CC.xywh(2, 6, 3, 1));
+		contentPane.add(label1, CC.xywh(2, 6, 5, 1));
 
 		//---- btnShowRules ----
 		btnShowRules.setText("->"); //$NON-NLS-1$
 		btnShowRules.addActionListener(e -> showRules(e));
-		contentPane.add(btnShowRules, CC.xy(6, 6, CC.RIGHT, CC.DEFAULT));
+		contentPane.add(btnShowRules, CC.xy(8, 6, CC.RIGHT, CC.DEFAULT));
 
 		//======== scrollPane1 ========
 		{
@@ -293,12 +304,12 @@ public class CompareDatabaseFrame extends JFrame
 			edRules.setText("[from_ressources]"); //$NON-NLS-1$
 			scrollPane1.setViewportView(edRules);
 		}
-		contentPane.add(scrollPane1, CC.xywh(2, 8, 5, 1, CC.FILL, CC.FILL));
+		contentPane.add(scrollPane1, CC.xywh(2, 8, 7, 1, CC.FILL, CC.FILL));
 
 		//---- btnCompare ----
 		btnCompare.setText(LocaleBundle.getString("BatchEditFrame.btnCompare")); //$NON-NLS-1$
 		btnCompare.addActionListener(e -> startComparison(e));
-		contentPane.add(btnCompare, CC.xywh(2, 10, 5, 1));
+		contentPane.add(btnCompare, CC.xywh(2, 10, 7, 1));
 
 		//======== pnlTabs ========
 		{
@@ -345,7 +356,7 @@ public class CompareDatabaseFrame extends JFrame
 			}
 			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabUnchangedEntries"), tabUnchangedEntry); //$NON-NLS-1$
 		}
-		contentPane.add(pnlTabs, CC.xywh(2, 12, 5, 1, CC.FILL, CC.FILL));
+		contentPane.add(pnlTabs, CC.xywh(2, 12, 7, 1, CC.FILL, CC.FILL));
 
 		//======== scrollPane2 ========
 		{
@@ -355,20 +366,25 @@ public class CompareDatabaseFrame extends JFrame
 			edEntryDiff.setEditable(false);
 			scrollPane2.setViewportView(edEntryDiff);
 		}
-		contentPane.add(scrollPane2, CC.xywh(2, 14, 5, 1, CC.DEFAULT, CC.FILL));
+		contentPane.add(scrollPane2, CC.xywh(2, 14, 7, 1, CC.DEFAULT, CC.FILL));
 
 		//---- btnCreatePatch ----
 		btnCreatePatch.setText(LocaleBundle.getString("BatchEditFrame.btnCreatePatch")); //$NON-NLS-1$
 		btnCreatePatch.addActionListener(e -> startCreatingPatch(e));
 		contentPane.add(btnCreatePatch, CC.xywh(2, 16, 3, 1));
 
+		//---- btnCancel ----
+		btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+		btnCancel.addActionListener(e -> cancelThread(e));
+		contentPane.add(btnCancel, CC.xy(6, 16));
+
 		//---- cbPorcelain ----
 		cbPorcelain.setText(LocaleBundle.getString("BatchEditFrame.cbPorcelain")); //$NON-NLS-1$
-		contentPane.add(cbPorcelain, CC.xy(6, 16));
-		contentPane.add(progressBar1, CC.xywh(2, 18, 3, 1));
-		contentPane.add(lblProgress1, CC.xy(6, 18));
-		contentPane.add(progressBar2, CC.xywh(2, 20, 3, 1, CC.DEFAULT, CC.FILL));
-		contentPane.add(lblProgress2, CC.xy(6, 20));
+		contentPane.add(cbPorcelain, CC.xy(8, 16));
+		contentPane.add(progressBar1, CC.xywh(2, 18, 5, 1));
+		contentPane.add(lblProgress1, CC.xy(8, 18));
+		contentPane.add(progressBar2, CC.xywh(2, 20, 5, 1, CC.DEFAULT, CC.FILL));
+		contentPane.add(lblProgress2, CC.xy(8, 20));
 		setSize(800, 725);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -400,6 +416,7 @@ public class CompareDatabaseFrame extends JFrame
 	private JScrollPane scrollPane2;
 	private JTextArea edEntryDiff;
 	private JButton btnCreatePatch;
+	private JButton btnCancel;
 	private JCheckBox cbPorcelain;
 	private JProgressBar progressBar1;
 	private JLabel lblProgress1;

@@ -3,7 +3,6 @@ package de.jClipCorn.features.serialization.xmlimport;
 import de.jClipCorn.util.xml.CCXMLParser;
 
 public class ImportState {
-	public final CCXMLParser Document;
 	public final int XMLVersion;
 
 	public final boolean ResetAddDate;
@@ -13,8 +12,16 @@ public class ImportState {
 
 	public final boolean IgnoreCoverData;
 
-	public ImportState(CCXMLParser doc, int xmlVersion, ImportOptions opt) {
-		Document        = doc;
+	public ImportState(int xmlVersion, ImportOptions opt) {
+		XMLVersion      = xmlVersion;
+		ResetAddDate    = opt.ResetAddDate;
+		ResetViewed     = opt.ResetViewed;
+		ResetScore      = opt.ResetScore;
+		ResetTags       = opt.ResetTags;
+		IgnoreCoverData = opt.IgnoreCoverData;
+	}
+
+	public ImportState(CCXMLParser _doc, int xmlVersion, ImportOptions opt) {
 		XMLVersion      = xmlVersion;
 		ResetAddDate    = opt.ResetAddDate;
 		ResetViewed     = opt.ResetViewed;

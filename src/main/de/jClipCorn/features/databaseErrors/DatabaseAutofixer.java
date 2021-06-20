@@ -529,14 +529,7 @@ public class DatabaseAutofixer {
 
 				var cdate = attr.creationTime().toMillis();
 
-				var mi2 = new CCMediaInfo(cdate, mi.getMDate(),
-						mi.getFilesize(), mi.getDuration(), mi.getBitrate(), mi.getVideoFormat(),
-						mi.getWidth(), mi.getHeight(), mi.getFramerate(),
-						mi.getBitdepth(), mi.getFramecount(), mi.getVideoCodec(),
-						mi.getAudioFormat(), mi.getAudioChannels(), mi.getAudioCodec(), mi.getAudioSamplerate(),
-						mi.getChecksum());
-
-				elem.mediaInfo().set(mi2);
+				elem.mediaInfo().CDate.set(cdate);
 				return true;
 
 			} catch (IOException ex) {
@@ -558,14 +551,7 @@ public class DatabaseAutofixer {
 
 				var mdate = attr.lastModifiedTime().toMillis();
 
-				var mi2 = new CCMediaInfo(mi.getCDate(), mdate,
-						mi.getFilesize(), mi.getDuration(), mi.getBitrate(), mi.getVideoFormat(),
-						mi.getWidth(), mi.getHeight(), mi.getFramerate(),
-						mi.getBitdepth(), mi.getFramecount(), mi.getVideoCodec(),
-						mi.getAudioFormat(), mi.getAudioChannels(), mi.getAudioCodec(), mi.getAudioSamplerate(),
-						mi.getChecksum());
-
-				elem.mediaInfo().set(mi2);
+				elem.mediaInfo().MDate.set(mdate);
 				return true;
 
 			} catch (IOException ex) {

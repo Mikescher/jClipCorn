@@ -7,7 +7,7 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-			"$columnSpecs": "unrelgap, default, labelcompgap, default:grow, labelcompgap, 70dlu, unrelgap"
+			"$columnSpecs": "unrelgap, default, labelcompgap, default:grow, labelcompgap, default, labelcompgap, 70dlu, unrelgap"
 			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default, linegap, 80dlu, linegap, 20dlu, linegap, default:grow, linegap, 80dlu, linegap, default, linegap, default, linegap, default, unrelgap"
 		} ) {
 			name: "this"
@@ -21,14 +21,14 @@ new FormModel {
 				"gridY": 2
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
-				"gridWidth": 3
+				"gridWidth": 5
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "btnOpenDatabase"
 				"text": "..."
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openDatabase", true ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 6
+				"gridX": 8
 				"gridY": 2
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -43,6 +43,7 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 4
 				"gridY": 4
+				"gridWidth": 3
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label1"
@@ -50,14 +51,14 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
 				"gridY": 6
-				"gridWidth": 3
+				"gridWidth": 5
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "btnShowRules"
 				"text": "->"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showRules", true ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 6
+				"gridX": 8
 				"gridY": 6
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
 			} )
@@ -72,7 +73,7 @@ new FormModel {
 				"gridY": 8
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
-				"gridWidth": 5
+				"gridWidth": 7
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "btnCompare"
@@ -81,7 +82,7 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
 				"gridY": 10
-				"gridWidth": 5
+				"gridWidth": 7
 			} )
 			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
 				name: "pnlTabs"
@@ -166,7 +167,7 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
 				"gridY": 12
-				"gridWidth": 5
+				"gridWidth": 7
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
@@ -180,7 +181,7 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
 				"gridY": 14
-				"gridWidth": 5
+				"gridWidth": 7
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -192,11 +193,19 @@ new FormModel {
 				"gridY": 16
 				"gridWidth": 3
 			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnCancel"
+				"text": new FormMessage( null, "UIGeneric.btnCancel.text" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cancelThread", true ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 16
+			} )
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
 				name: "cbPorcelain"
 				"text": new FormMessage( null, "BatchEditFrame.cbPorcelain" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 6
+				"gridX": 8
 				"gridY": 16
 			} )
 			add( new FormComponent( "javax.swing.JProgressBar" ) {
@@ -204,12 +213,12 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
 				"gridY": 18
-				"gridWidth": 3
+				"gridWidth": 5
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "lblProgress1"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 6
+				"gridX": 8
 				"gridY": 18
 			} )
 			add( new FormComponent( "javax.swing.JProgressBar" ) {
@@ -217,13 +226,13 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
 				"gridY": 20
-				"gridWidth": 3
+				"gridWidth": 5
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "lblProgress2"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 6
+				"gridX": 8
 				"gridY": 20
 			} )
 		}, new FormLayoutConstraints( null ) {

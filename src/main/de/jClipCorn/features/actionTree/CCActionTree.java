@@ -13,6 +13,7 @@ import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.addMultiEpisodesFrame.AddMultiEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.addSeriesFrame.AddSeriesFrame;
+import de.jClipCorn.gui.frames.applyPatchFrame.ApplyPatchFrame;
 import de.jClipCorn.gui.frames.autofindRefrenceFrame.AutoFindReferenceFrame;
 import de.jClipCorn.gui.frames.backupManagerFrame.BackupsManagerFrame;
 import de.jClipCorn.gui.frames.batchEditFrame.BatchEditFrame;
@@ -150,6 +151,7 @@ public class CCActionTree extends UIActionTree{
 			{
 				add(extras, "ScanFolder",               KS_CTRL_O, "ClipMenuBar.Extras.ScanFolder",               Resources.ICN_MENUBAR_SCANFOLDER,           true,  this::onClickExtrasScanFolder);
 				add(extras, "CompareDBs",               null,      "ClipMenuBar.Extras.CompareDBs",               Resources.ICN_MENUBAR_COMPARE,              false, this::onClickExtrasCompareDBs);
+				add(extras, "ApplyComparePatch",        null,      "ClipMenuBar.Extras.ApplyComparePatch",        Resources.ICN_MENUBAR_APPLYPATCH,           true,  this::onClickExtrasApplyComparePatch);
 				add(extras, "ShowWatchHistory",         null,      "ClipMenuBar.Extras.WatchHistory",             Resources.ICN_MENUBAR_WATCHHISTORY,         false, this::onClickExtrasShowWatchHistory);
 				add(extras, "ShowDatabaseHistory",      null,      "ClipMenuBar.Extras.DatabaseHistory",          Resources.ICN_MENUBAR_DATABASEHISTORY,      false, this::onClickExtrasShowDatabaseHistory);
 				add(extras, "RandomMovie",              null,      "ClipMenuBar.Extras.RandomMovie",              Resources.ICN_MENUBAR_RANDOM,               false, this::onClickExtrasRandomMovie);
@@ -327,6 +329,10 @@ public class CCActionTree extends UIActionTree{
 		{
 			CCBXMLReader.openFile(file, MainFrame.getInstance());
 		}
+		else if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_PATCHFILE))
+		{
+			new ApplyPatchFrame(MainFrame.getInstance(), movielist, file).setVisible(true);
+		}
 		else if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_COMPAREFILE))
 		{
 			DialogHelper.showLocalError(MainFrame.getInstance(), "Dialogs.FileTypeDeprecated");
@@ -341,12 +347,19 @@ public class CCActionTree extends UIActionTree{
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setAcceptAllFileFilterUsed(false);
 		
-		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_all.description", ExportHelper.EXTENSION_FULLEXPORT, ExportHelper.EXTENSION_SINGLEEXPORT, ExportHelper.EXTENSION_MULTIPLEEXPORT, ExportHelper.EXTENSION_CCBACKUP, ExportHelper.EXTENSION_COMPAREFILE)); //$NON-NLS-1$
-		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jxmlbkp.description", ExportHelper.EXTENSION_FULLEXPORT)); //$NON-NLS-1$
-		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
+		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_all.description",  //$NON-NLS-1$
+				ExportHelper.EXTENSION_FULLEXPORT,
+				ExportHelper.EXTENSION_SINGLEEXPORT,
+				ExportHelper.EXTENSION_MULTIPLEEXPORT,
+				ExportHelper.EXTENSION_CCBACKUP,
+				ExportHelper.EXTENSION_COMPAREFILE,
+				ExportHelper.EXTENSION_PATCHFILE));
+
+		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jxmlbkp.description",    ExportHelper.EXTENSION_FULLEXPORT));     //$NON-NLS-1$
+		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT));   //$NON-NLS-1$
 		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jmccexport.description", ExportHelper.EXTENSION_MULTIPLEEXPORT)); //$NON-NLS-1$
-		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_ccbxml.description", ExportHelper.EXTENSION_CCBACKUP)); //$NON-NLS-1$
-		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jcccf.description", ExportHelper.EXTENSION_COMPAREFILE)); //$NON-NLS-1$
+		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_ccbxml.description",     ExportHelper.EXTENSION_CCBACKUP));       //$NON-NLS-1$
+		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jcccf.description",      ExportHelper.EXTENSION_COMPAREFILE));    //$NON-NLS-1$
 		
 		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
 		
@@ -385,6 +398,10 @@ public class CCActionTree extends UIActionTree{
 
 	private void onClickExtrasCompareDBs(CCTreeActionEvent e) {
 		new CompareDatabaseFrame(e.SwingOwner, movielist).setVisible(true);
+	}
+
+	private void onClickExtrasApplyComparePatch(CCTreeActionEvent e) {
+		new ApplyPatchFrame(e.SwingOwner, movielist).setVisible(true);
 	}
 	
 	private void onClickExtrasShowWatchHistory(CCTreeActionEvent e) {

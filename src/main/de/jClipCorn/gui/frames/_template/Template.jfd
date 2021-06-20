@@ -3,7 +3,7 @@ JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.11" encoding: "UTF-8"
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
 	"i18n.bundleName": "locale"
-	"i18n.keyPrefix": "BatchEditFrame"
+	"i18n.keyPrefix": "FrameTemplate"
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {

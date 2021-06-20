@@ -64,6 +64,7 @@ public class ExportHelper {
 	public final static String EXTENSION_TEXTEXPORT_XML   = "xml";          // = XML-TextFile                               //$NON-NLS-1$
 	public final static String EXTENSION_TEXTEXPORT_JSON  = "json";         // = JSON-TextFile                              //$NON-NLS-1$
 	public final static String EXTENSION_FILTERLIST       = "flst";         // = FilterList                                 //$NON-NLS-1$
+	public final static String EXTENSION_PATCHFILE        = "jccpatch";     // = PatchFile                                  //$NON-NLS-1$
 
 	public final static String FILENAME_BACKUPINFO = "info.ini"; 			// = jClipCornBackupInfo 							//$NON-NLS-1$ 
 	

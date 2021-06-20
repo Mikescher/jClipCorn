@@ -97,6 +97,7 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_MENUBAR_FILENAMERULES			= registerMultisizeIcon("/icons/toolbar/books.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_CREATE_JXMLBKP			= registerMultisizeIcon("/icons/toolbar/source_code.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_COMPARE				= registerMultisizeIcon("/icons/toolbar/balance_unbalance.png");
+	public final static MultiSizeIconRef ICN_MENUBAR_APPLYPATCH		    	= registerMultisizeIcon("/icons/toolbar/bandaid.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_SEARCH					= registerMultisizeIcon("/icons/toolbar/bubblechart.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_ONLINEREFERENCE		= registerMultisizeIcon("/icons/toolbar/www_page.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_EXPORTPLAINDB			= registerMultisizeIcon("/icons/toolbar/external.png");

@@ -1445,7 +1445,7 @@ public class EditSeriesFrame extends JFrame implements WindowListener {
 		series.Genres.set(cbxSeriesGenre_7.getSelectedEnum(), 7);
 		
 		series.OnlineReference.set(edSeriesReference.getValue());
-		series.setGroups(edSeriesGroups.getValue());
+		series.Groups.set(edSeriesGroups.getValue());
 		
 		series.Tags.set(tagPanel.getValue());
 		

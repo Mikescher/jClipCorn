@@ -33,10 +33,10 @@ import java.util.List;
 
 public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElement, IActionSourceObject, ICCTaggedElement, IEpisodeData, IPropertyParent {
 	private final CCSeason owner;
-	private final int localID;
 
 	private final EpisodeCache _cache = new EpisodeCache(this);
 
+	public final EIntProp                LocalID       = new EIntProp(          "LocalID",       -1,                           this, EPropertyType.DATABASE_PRIMARY_ID);
 	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,            this, EPropertyType.LOCAL_FILE_REF);
 	public final EIntProp                EpisodeNumber = new EIntProp(          "EpisodeNumber", 0,                            this, EPropertyType.OBJECTIVE_METADATA);
 	public final EStringProp             Title         = new EStringProp(       "Title",         Str.Empty,                    this, EPropertyType.OBJECTIVE_METADATA);
@@ -55,7 +55,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	
 	public CCEpisode(CCSeason owner, int localID) {
 		this.owner   = owner;
-		this.localID = localID;
+		LocalID.setReadonlyPropToInitial(localID);
 	}
 
 	public IEProperty[] getProperties()
@@ -67,9 +67,9 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	protected IEProperty[] listProperties()
 	{
 		return CCStreams.<IEProperty>empty()
-				.append(MediaInfo.getProperties())
 				.append(new IEProperty[]
 				{
+					LocalID,
 					EpisodeNumber,
 					Title,
 					Length,
@@ -81,6 +81,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 					ViewedHistory,
 					Language,
 				})
+				.append(MediaInfo.getProperties())
 				.toArray(new IEProperty[0]);
 	}
 
@@ -246,7 +247,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	@Override
 	public int getLocalID() {
-		return localID;
+		return LocalID.get();
 	}
 
 	public int getGlobalEpisodeNumber() {

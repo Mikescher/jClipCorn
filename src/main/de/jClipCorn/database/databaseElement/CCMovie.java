@@ -38,16 +38,16 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	private final MovieCache _cache = new MovieCache(this);
 
-	public final EZyklusPropPack         Zyklus        = new EZyklusPropPack(   "Zyklus",        CCMovieZyklus.EMPTY,              this, EPropertyType.OBJECTIVE_METADATA);
-	public final EPartArrayPropPack      Parts         = new EPartArrayPropPack("Parts",         new String[PARTCOUNT_MAX],        this, EPropertyType.LOCAL_FILE_REF);
-	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,                this, EPropertyType.LOCAL_FILE_REF);
-	public final EIntProp                Length        = new EIntProp(          "Length",        0,                                this, EPropertyType.OBJECTIVE_METADATA);
-	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),          this, EPropertyType.USER_METADATA);
-	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(       "Format",        CCFileFormat.MKV,                 this, EPropertyType.LOCAL_FILE_REF);
-	public final EIntProp                Year          = new EIntProp(          "Year",          1900,                             this, EPropertyType.OBJECTIVE_METADATA);
-	public final EFileSizeProp           FileSize      = new EFileSizeProp(     "FileSize",      CCFileSize.ZERO,                  this, EPropertyType.LOCAL_FILE_REF);
-	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp( "ViewedHistory", CCDateTimeList.createEmpty(),     this, EPropertyType.USER_METADATA);
-	public final ELanguageListProp       Language      = new ELanguageListProp( "Language",      CCDBLanguageList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
+	public final EZyklusPropPack         Zyklus        = new EZyklusPropPack(   "Zyklus",        CCMovieZyklus.EMPTY,          this, EPropertyType.OBJECTIVE_METADATA);
+	public final EPartArrayPropPack      Parts         = new EPartArrayPropPack("Parts",         new String[PARTCOUNT_MAX],    this, EPropertyType.LOCAL_FILE_REF);
+	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,            this, EPropertyType.LOCAL_FILE_REF);
+	public final EIntProp                Length        = new EIntProp(          "Length",        0,                            this, EPropertyType.OBJECTIVE_METADATA);
+	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
+	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(       "Format",        CCFileFormat.MKV,             this, EPropertyType.LOCAL_FILE_REF);
+	public final EIntProp                Year          = new EIntProp(          "Year",          1900,                         this, EPropertyType.OBJECTIVE_METADATA);
+	public final EFileSizeProp           FileSize      = new EFileSizeProp(     "FileSize",      CCFileSize.ZERO,              this, EPropertyType.LOCAL_FILE_REF);
+	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp( "ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
+	public final ELanguageListProp       Language      = new ELanguageListProp( "Language",      CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
 
 	public CCMovie(CCMovieList ml, int id) {
 		super(ml, CCDBElementTyp.MOVIE, id);
@@ -59,8 +59,6 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		return CCStreams
 				.iterate(super.listProperties())
 				.append(Zyklus.getProperties())
-				.append(MediaInfo.getProperties())
-				.append(Parts.getProperties())
 				.append(new IEProperty[]
 				{
 					Length,
@@ -71,6 +69,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 					ViewedHistory,
 					Language,
 				})
+				.append(Parts.getProperties())
+				.append(MediaInfo.getProperties())
 				.toArray(new IEProperty[0]);
 	}
 

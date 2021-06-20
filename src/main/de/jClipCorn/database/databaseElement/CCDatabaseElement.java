@@ -4,34 +4,32 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IDatabaseElementData;
-import de.jClipCorn.database.elementProps.*;
+import de.jClipCorn.database.elementProps.IEProperty;
+import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.database.elementProps.impl.*;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.exceptions.GroupFormatException;
 
 import java.awt.image.BufferedImage;
 
 public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, ICCTaggedElement, IDatabaseElementData, IPropertyParent {
-	private final int localID;
-	private final CCDBElementTyp typ;
 
-	private int coverid = -1;
-	private CCGroupList linkedGroups = CCGroupList.EMPTY;
-
-	public final EStringProp              Title           = new EStringProp(       "Title",           Str.Empty,                   this, EPropertyType.OBJECTIVE_METADATA);
-	public final EGenreListProp           Genres          = new EGenreListProp(    "Genres",          CCGenreList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
-	public final EEnumProp<CCOnlineScore> OnlineScore     = new EEnumProp<>(       "OnlineScore",     CCOnlineScore.STARS_0_0,     this, EPropertyType.OBJECTIVE_METADATA);
-	public final EEnumProp<CCFSK>         FSK             = new EEnumProp<>(       "FSK",             CCFSK.RATING_0,              this, EPropertyType.OBJECTIVE_METADATA);
-	public final EEnumProp<CCUserScore>   Score           = new EEnumProp<>(       "Score",           CCUserScore.RATING_NO,       this, EPropertyType.USER_METADATA);
-	public final EOnlineRefListProp       OnlineReference = new EOnlineRefListProp("OnlineReference", CCOnlineReferenceList.EMPTY, this, EPropertyType.OBJECTIVE_METADATA);
-	public final ETagListProp             Tags            = new ETagListProp(      "Tags",            CCTagList.EMPTY,             this, EPropertyType.USER_METADATA);
+	public final EIntProp                  LocalID         = new EIntProp(          "LocalID",         -1,                          this, EPropertyType.DATABASE_PRIMARY_ID);
+	public final EEnumProp<CCDBElementTyp> Typ             = new EEnumProp<>(       "Typ",             CCDBElementTyp.MOVIE,        this, EPropertyType.DATABASE_READONLY);
+	public final EIntProp                  CoverID         = new EIntProp(          "CoverID",         -1,                          this, EPropertyType.DATABASE_REF);
+	public final EGroupListProp            Groups          = new EGroupListProp(    "Groups",          CCGroupList.EMPTY,           this, EPropertyType.USER_METADATA, this::onGroupsChanging);
+	public final EStringProp               Title           = new EStringProp(       "Title",           Str.Empty,                   this, EPropertyType.OBJECTIVE_METADATA);
+	public final EGenreListProp            Genres          = new EGenreListProp(    "Genres",          CCGenreList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
+	public final EEnumProp<CCOnlineScore>  OnlineScore     = new EEnumProp<>(       "OnlineScore",     CCOnlineScore.STARS_0_0,     this, EPropertyType.OBJECTIVE_METADATA);
+	public final EEnumProp<CCFSK>          FSK             = new EEnumProp<>(       "FSK",             CCFSK.RATING_0,              this, EPropertyType.OBJECTIVE_METADATA);
+	public final EEnumProp<CCUserScore>    Score           = new EEnumProp<>(       "Score",           CCUserScore.RATING_NO,       this, EPropertyType.USER_METADATA);
+	public final EOnlineRefListProp        OnlineReference = new EOnlineRefListProp("OnlineReference", CCOnlineReferenceList.EMPTY, this, EPropertyType.OBJECTIVE_METADATA);
+	public final ETagListProp              Tags            = new ETagListProp(      "Tags",            CCTagList.EMPTY,             this, EPropertyType.USER_METADATA);
 
 	private IEProperty[] _properties = null;
 
@@ -39,8 +37,9 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	protected boolean isUpdating = false;
 
 	public CCDatabaseElement(CCMovieList ml, CCDBElementTyp typ, int id) {
-		this.typ       = typ;
-		this.localID   = id;
+		LocalID.setReadonlyPropToInitial(id);
+		Typ.setReadonlyPropToInitial(typ);
+
 		this.movielist = ml;
 	}
 
@@ -54,6 +53,10 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	{
 		return new IEProperty[]
 		{
+			LocalID,
+			Typ,
+			CoverID,
+			Groups,
 			Title,
 			Genres,
 			OnlineScore,
@@ -75,8 +78,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public void setDefaultValues(boolean updateDB) {
 		beginUpdating();
 
-		coverid = -1;
-		linkedGroups = CCGroupList.EMPTY;
 		for (IEProperty prop : getProperties()) prop.resetToDefault();
 
 		if (updateDB) endUpdating(); else abortUpdating();
@@ -100,18 +101,15 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 
 	@Override
 	public int getLocalID() {
-		return localID;
+		return LocalID.get();
 	}
 
 	public CCDBElementTyp getType() {
-		return typ;
+		return Typ.get();
 	}
 
 	public void setCover(int cid) {
-		this.coverid = cid;
-		
-		updateDB();
-		getCache().bust();
+		CoverID.set(cid);
 	}
 	
 	public void setCover(BufferedImage cvr) {
@@ -119,72 +117,40 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 			return;
 		}
 
-		if (coverid != -1 && cvr.equals(getCover())) {
+		if (CoverID.get() != -1 && cvr.equals(getCover())) {
 			return;
 		}
 		
-		if (coverid != -1) {
-			movielist.getCoverCache().deleteCover(this.coverid);
+		if (CoverID.get() != -1) {
+			movielist.getCoverCache().deleteCover(CoverID.get());
 		}
-		
-		this.coverid = movielist.getCoverCache().addCover(cvr);
-		
-		updateDB();
-		getCache().bust();
+
+		CoverID.set(movielist.getCoverCache().addCover(cvr));
 	}
 	
 	@Override
 	public int getCoverID() {
-		return coverid;
+		return CoverID.get();
 	}
 
 	@Override
 	public BufferedImage getCover() {
-		return movielist.getCoverCache().getCover(coverid);
+		return movielist.getCoverCache().getCover(CoverID.get());
 	}
 
 	@Override
 	public Tuple<Integer, Integer> getCoverDimensions() {
-		return movielist.getCoverCache().getDimensions(coverid);
+		return movielist.getCoverCache().getDimensions(CoverID.get());
 	}
 
 	@Override
 	public CCCoverData getCoverInfo() {
-		return movielist.getCoverCache().getInfoOrNull(coverid);
+		return movielist.getCoverCache().getInfoOrNull(CoverID.get());
 	}
 
-	public void setGroups(String data) throws GroupFormatException {
-		setGroups(CCGroupList.parseWithoutAddingNewGroups(movielist, data));
-	}
-
-	public void setGroups(CCGroupList value) {
-		if (value == null) { CCLog.addUndefinied("Prevented setting CCDBElem.Groups to NULL"); return; } //$NON-NLS-1$
-
-		if (linkedGroups.equals(value)) return;
-		
-		value = movielist.addMissingGroups(value);
-		
-		setGroupsInternal(value);
-		
-		updateDB();
-		getCache().bust();
-	}
-
-	public void setGroupsInternalWithUpdate(CCGroupList value) {
-		if (value == null) { CCLog.addUndefinied("Prevented setting CCDBElem.Groups to NULL"); return; } //$NON-NLS-1$
-
-		if (linkedGroups.equals(value)) return;
-
-		linkedGroups = value;
-		updateDB();
-		getCache().bust();
-	}
-
-	public void setGroupsInternal(CCGroupList value) {
-		if (value == null) { CCLog.addUndefinied("Prevented setting CCDBElem.Groups to NULL"); return; } //$NON-NLS-1$
-
-		linkedGroups = value;
-		getCache().bust();
+	private CCGroupList onGroupsChanging(CCGroupList value)
+	{
+		return movielist.addMissingGroups(value);
 	}
 
 	@Override
@@ -218,11 +184,11 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 
 	public CCGroupList getGroups() {
-		return linkedGroups;
+		return Groups.get();
 	}
 
 	public boolean hasGroups() {
-		return ! linkedGroups.isEmpty();
+		return ! Groups.isEmpty();
 	}
 
 	public boolean hasHoleInGenres() {

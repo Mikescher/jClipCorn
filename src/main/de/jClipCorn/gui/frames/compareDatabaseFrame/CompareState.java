@@ -31,7 +31,7 @@ public class CompareState {
 
 		var propLoc = CCStreams.iterate(loc.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 		var propExt = CCStreams.iterate(ext.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
-		var updateMeta = !CCStreams.equalsElementwise(propLoc, propExt, (a, b) -> Str.equals(a.serializeValueToString(), b.serializeValueToString()));
+		var updateMeta = !CCStreams.equalsElementwise(propLoc, propExt, (a, b) -> Str.equals(a.serializeToString(), b.serializeToString()));
 
 		var match = new MovieMatch(this, loc, ext, updateMeta, updateCover, updateFile, false, false);
 		Movies.add(match);
@@ -58,7 +58,7 @@ public class CompareState {
 
 		var propLoc = CCStreams.iterate(loc.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 		var propExt = CCStreams.iterate(ext.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
-		var updateMeta = !CCStreams.equalsElementwise(propLoc, propExt, (a, b) -> Str.equals(a.serializeValueToString(), b.serializeValueToString()));
+		var updateMeta = !CCStreams.equalsElementwise(propLoc, propExt, (a, b) -> Str.equals(a.serializeToString(), b.serializeToString()));
 
 		var match = new SeriesMatch(this, loc, ext, updateMeta, updateCover, false, false);
 		Series.add(match);

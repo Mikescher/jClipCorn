@@ -113,7 +113,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		CCSeries serWrite = ml.createNewEmptySeries();
 		{
 			serWrite.Score.set(CCUserScore.RATING_V);
-			serWrite.setGroups(CCGroupList.create(CCGroup.create("G0"), CCGroup.create("G1")));
+			serWrite.Groups.set(CCGroupList.create(CCGroup.create("G0"), CCGroup.create("G1")));
 			serWrite.Title.set("MySeries");
 			serWrite.Genres.set(CCGenreList.create(CCGenre.GENRE_006, CCGenre.GENRE_020, CCGenre.GENRE_006));
 			serWrite.Tags.set(CCTagList.create(CCSingleTag.TAG_WATCH_LATER, CCSingleTag.TAG_BAD_QUALITY));

@@ -319,7 +319,7 @@ public class CCDatabase {
 		ser.Tags.set(rs.getShort(DatabaseStructure.COL_MAIN_TAGS));
 
 		ser.setCover(rs.getInt(DatabaseStructure.COL_MAIN_COVERID));
-		ser.setGroups(rs.getString(DatabaseStructure.COL_MAIN_GROUPS));
+		ser.Groups.set(rs.getString(DatabaseStructure.COL_MAIN_GROUPS));
 	}
 
 	private void updateMovieFromResultSet(CCSQLResultSet rs, CCMovie mov) throws SQLException, CCFormatException, SQLWrapperException {
@@ -365,7 +365,7 @@ public class CCDatabase {
 			rs.getNullableString(DatabaseStructure.COL_MAIN_MI_CHECKSUM)));
 
 		mov.setCover(rs.getInt(DatabaseStructure.COL_MAIN_COVERID));
-		mov.setGroups(rs.getString(DatabaseStructure.COL_MAIN_GROUPS));
+		mov.Groups.set(rs.getString(DatabaseStructure.COL_MAIN_GROUPS));
 	}
 
 	private int getNewID() {

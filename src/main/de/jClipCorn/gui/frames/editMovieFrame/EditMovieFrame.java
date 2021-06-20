@@ -1063,7 +1063,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 
 		movie.ViewedHistory.set(edViewedHistory.getValue());
 		movie.OnlineReference.set(edReference.getValue());
-		movie.setGroups(edGroups.getValue());
+		movie.Groups.set(edGroups.getValue());
 		
 		movie.MediaInfo.set(ctrlMediaInfo.getValue());
 		

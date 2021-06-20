@@ -68,8 +68,8 @@ public abstract class ComparisonMatch {
 
 		return CCStreams
 				.zip(propLoc, propExt)
-				.filter(p -> !Str.equals(p.Item1.serializeValueToString(), p.Item2.serializeValueToString()))
-				.map(p -> Str.format("[{0}]\n  Local  := {1}\n  Extern := {2}\n", p.Item1.getName(), p.Item1.serializeValueToString(), p.Item2.serializeValueToString()))
+				.filter(p -> !Str.equals(p.Item1.serializeToString(), p.Item2.serializeToString()))
+				.map(p -> Str.format("[{0}]\n  Local  := {1}\n  Extern := {2}\n", p.Item1.getName(), p.Item1.serializeToString(), p.Item2.serializeToString()))
 				.stringjoin(e -> e, "\n");
 	}
 }

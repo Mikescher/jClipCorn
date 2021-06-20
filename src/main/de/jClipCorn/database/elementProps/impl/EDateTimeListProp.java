@@ -19,22 +19,22 @@ public class EDateTimeListProp extends EProperty<CCDateTimeList> {
 	}
 
 	@Override
-	public String serializeValueToString() {
+	public String serializeToString() {
 		return get().toSerializationString();
 	}
 
 	@Override
-	public Object serializeValueToDatabaseValue() {
+	public Object serializeToDatabaseValue() {
 		return get().toSerializationString();
 	}
 
 	@Override
-	public void deserializeValueFromString(String v) throws Exception {
+	public void deserializeFromString(String v) throws CCFormatException {
 		set(CCDateTimeList.parse(v));
 	}
 
 	@Override
-	public void deserializeValueFromDatabaseValue(Object v) throws Exception {
+	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set(CCDateTimeList.parse((String)v));
 	}
 }

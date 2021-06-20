@@ -5,6 +5,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.IEnumWrapper;
+import de.jClipCorn.util.exceptions.CCFormatException;
 
 public class EEnumProp<TType extends ContinoousEnum<TType>> extends EProperty<TType> {
 
@@ -35,24 +36,24 @@ public class EEnumProp<TType extends ContinoousEnum<TType>> extends EProperty<TT
 	}
 
 	@Override
-	public String serializeValueToString() {
+	public String serializeToString() {
 		return String.valueOf(get().asInt());
 	}
 
 	@Override
-	public Object serializeValueToDatabaseValue() {
+	public Object serializeToDatabaseValue() {
 		return get().asInt();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void deserializeValueFromString(String v) throws Exception {
+	public void deserializeFromString(String v) throws CCFormatException {
 		set((TType)_wrapper.findOrException(Integer.parseInt(v)));
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void deserializeValueFromDatabaseValue(Object v) throws Exception {
+	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set((TType)_wrapper.findOrException((int)v));
 	}
 }

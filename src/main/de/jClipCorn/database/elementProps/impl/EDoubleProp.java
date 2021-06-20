@@ -1,6 +1,7 @@
 package de.jClipCorn.database.elementProps.impl;
 
 import de.jClipCorn.database.elementProps.IPropertyParent;
+import de.jClipCorn.util.exceptions.CCFormatException;
 
 public class EDoubleProp extends EProperty<Double> {
 	public EDoubleProp(String name, Double defValue, IPropertyParent p, EPropertyType t) {
@@ -8,22 +9,22 @@ public class EDoubleProp extends EProperty<Double> {
 	}
 
 	@Override
-	public String serializeValueToString() {
+	public String serializeToString() {
 		return Double.toString(get());
 	}
 
 	@Override
-	public Object serializeValueToDatabaseValue() {
+	public Object serializeToDatabaseValue() {
 		return get();
 	}
 
 	@Override
-	public void deserializeValueFromString(String v) throws Exception {
+	public void deserializeFromString(String v) throws CCFormatException {
 		set(Double.parseDouble(v));
 	}
 
 	@Override
-	public void deserializeValueFromDatabaseValue(Object v) throws Exception {
+	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set((double)v);
 	}
 }

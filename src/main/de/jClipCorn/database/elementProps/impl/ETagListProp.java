@@ -3,6 +3,7 @@ package de.jClipCorn.database.elementProps.impl;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleTag;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.elementProps.IPropertyParent;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
 
 public class ETagListProp extends EProperty<CCTagList> {
@@ -43,22 +44,22 @@ public class ETagListProp extends EProperty<CCTagList> {
 	}
 
 	@Override
-	public String serializeValueToString() {
+	public String serializeToString() {
 		return get().serialize();
 	}
 
 	@Override
-	public Object serializeValueToDatabaseValue() {
+	public Object serializeToDatabaseValue() {
 		return get().asShort();
 	}
 
 	@Override
-	public void deserializeValueFromString(String v) throws Exception {
+	public void deserializeFromString(String v) throws CCFormatException {
 		set(CCTagList.deserialize(v));
 	}
 
 	@Override
-	public void deserializeValueFromDatabaseValue(Object v) throws Exception {
+	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set(CCTagList.fromShort((short)v));
 	}
 }

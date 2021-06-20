@@ -54,7 +54,7 @@ public class SeriesMatch extends ComparisonMatch {
 
 		var propLoc = CCStreams.iterate(loc.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 		var propExt = CCStreams.iterate(ext.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
-		var updateMeta = !CCStreams.equalsElementwise(propLoc, propExt, (a, b) -> Str.equals(a.serializeValueToString(), b.serializeValueToString()));
+		var updateMeta = !CCStreams.equalsElementwise(propLoc, propExt, (a, b) -> Str.equals(a.serializeToString(), b.serializeToString()));
 
 		var match = new SeasonMatch(State, loc, ext, updateMeta, updateCover, false, false);
 		Seasons.add(match);

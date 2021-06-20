@@ -2,6 +2,7 @@ package de.jClipCorn.database.elementProps.impl;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.elementProps.IPropertyParent;
+import de.jClipCorn.util.exceptions.CCFormatException;
 
 public class ELanguageListProp extends EProperty<CCDBLanguageList> {
 	public ELanguageListProp(String name, CCDBLanguageList defValue, IPropertyParent p, EPropertyType t) {
@@ -13,22 +14,22 @@ public class ELanguageListProp extends EProperty<CCDBLanguageList> {
 	}
 
 	@Override
-	public String serializeValueToString() {
+	public String serializeToString() {
 		return get().serializeToString();
 	}
 
 	@Override
-	public Object serializeValueToDatabaseValue() {
+	public Object serializeToDatabaseValue() {
 		return get().serializeToLong();
 	}
 
 	@Override
-	public void deserializeValueFromString(String v) throws Exception {
+	public void deserializeFromString(String v) throws CCFormatException {
 		set(CCDBLanguageList.parseFromString(v));
 	}
 
 	@Override
-	public void deserializeValueFromDatabaseValue(Object v) throws Exception {
+	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set((Long)v);
 	}
 }

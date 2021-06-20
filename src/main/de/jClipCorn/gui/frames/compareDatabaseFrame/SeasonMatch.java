@@ -5,7 +5,6 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class SeasonMatch extends ComparisonMatch {
 
 		var propLoc = CCStreams.iterate(loc.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 		var propExt = CCStreams.iterate(ext.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
-		var updateMeta = !CCStreams.equalsElementwise(propLoc, propExt, (a, b) -> Str.equals(a.serializeValueToString(), b.serializeValueToString()));
+		var updateMeta = !CCStreams.equalsElementwise(propLoc, propExt, (a, b) -> Str.equals(a.serializeToString(), b.serializeToString()));
 
 		var match = new EpisodeMatch(State, loc, ext, updateMeta, updateFile, false, false);
 		Episodes.add(match);

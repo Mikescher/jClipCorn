@@ -718,7 +718,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		
 		newM.Score.set(cbxScore.getSelectedEnum());
 		newM.OnlineReference.set(edReference.getValue());
-		newM.setGroups(edGroups.getValue());
+		newM.Groups.set(edGroups.getValue());
 
 		newM.setCover(edCvrControl.getResizedImageForStorage());
 		

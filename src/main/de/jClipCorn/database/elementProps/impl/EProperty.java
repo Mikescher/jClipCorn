@@ -4,6 +4,7 @@ import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
 import de.jClipCorn.util.lambda.Func3to0;
 
@@ -15,7 +16,8 @@ public abstract class EProperty<TType> implements IEProperty {
 
 	private TType _value;
 
-	private final IPropertyParent _parent;
+	protected final IPropertyParent parent;
+
 	private final List<Func3to0<EProperty<TType>, TType, TType>> _listener = new ArrayList<>();
 
 	public final EPropertyType ValueType;
@@ -23,9 +25,8 @@ public abstract class EProperty<TType> implements IEProperty {
 	public final TType DefaultValue;
 
 	public EProperty(String name, TType defValue, IPropertyParent p, EPropertyType t) {
-		_value          = defValue;
-		_parent         = p;
-
+		_value       = defValue;
+		parent       = p;
 		DefaultValue = defValue;
 		Name         = name;
 		ValueType    = t;
@@ -39,26 +40,47 @@ public abstract class EProperty<TType> implements IEProperty {
 		return v;
 	}
 
+	/**
+	 * Skips readonly check and does not call any external stuff (cache-busting, updateDB, listener, ...)
+	 */
+	public void setReadonlyPropToInitial(TType v) {
+		set(v, false, false, false, false);
+	}
+
 	public void set(TType v) {
+		set(v, true, true, true, true);
+	}
+
+	protected void set(TType v, boolean verifyReadonly, boolean bustCache, boolean updateDB, boolean callListener) {
+		if (verifyReadonly && getValueType().isReadonly()) throw new Error("Cannot update field ["+getValueType().asString()+"]::["+Name+"] - its readonly");
+
 		v = validateValue(v);
 
 		var old = _value;
 
+		v = onValueChanging(old, v);
+
 		_value = v;
 
-		_parent.getCache().bust();
-		_parent.updateDB();
+		if (bustCache) parent.getCache().bust();
+		if (updateDB)  parent.updateDB();
 
-		for (var l: _listener) l.invoke(this, old, v);
+		if (callListener) for (var l: _listener) l.invoke(this, old, v);
 	}
+
+	/**
+	 * Called before _value is set, before `parent.getCache().bust()`, `parent.updateDB()` are invoked and listener are called
+	 * It is _neccesary_ that this method never returns an invalid value (somehing that validateValue would reject)
+	 */
+	protected TType onValueChanging(TType valOld, TType valNew){ return valNew; /* override me */ }
 
 	public void setWithException(TType v) throws DatabaseUpdateException {
 		v = validateValue(v);
 
 		_value = v;
 
-		_parent.getCache().bust();
-		_parent.updateDBWithException();
+		parent.getCache().bust();
+		parent.updateDBWithException();
 	}
 
 	public TType get() {
@@ -90,9 +112,8 @@ public abstract class EProperty<TType> implements IEProperty {
 		_listener.add(lstnr);
 	}
 
-	public abstract String serializeValueToString();
-	public abstract Object serializeValueToDatabaseValue();
-	public abstract void deserializeValueFromString(String v) throws Exception;
-	public abstract void deserializeValueFromDatabaseValue(Object v) throws Exception;
-
+	public abstract String serializeToString();
+	public abstract Object serializeToDatabaseValue();
+	public abstract void deserializeFromString(String v) throws CCFormatException;
+	public abstract void deserializeFromDatabaseValue(Object v) throws CCFormatException;
 }

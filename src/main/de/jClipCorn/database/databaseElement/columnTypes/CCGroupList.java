@@ -146,15 +146,16 @@ public class CCGroupList implements CCIterable<CCGroup> {
 	@Override
 	public boolean equals(Object o) {
 		if (! (o instanceof CCGroupList)) return false;
-		
-		CCGroupList gl = (CCGroupList) o;
-		
+		return isEqual((CCGroupList) o);
+	}
+
+	public boolean isEqual(CCGroupList gl) {
 		if (gl.count() != this.count()) return false;
-		
+
 		for (int i = 0; i < count(); i++) {
 			if (! gl.get(i).equals(get(i))) return false; // it's ok - groups are always sorted
 		}
-		
+
 		return true;
 	}
 

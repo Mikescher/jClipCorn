@@ -117,7 +117,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		newS.Genres.set(cbxGenre6.getSelectedEnum(), 6);
 		newS.Genres.set(cbxGenre7.getSelectedEnum(), 7);
 
-		newS.setGroups(edGroups.getValue());
+		newS.Groups.set(edGroups.getValue());
 
 		newS.setCover(edCvrControl.getResizedImageForStorage());
 

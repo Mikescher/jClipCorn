@@ -7,11 +7,14 @@ import de.jClipCorn.util.enumextension.IEnumWrapper;
 public enum EPropertyType implements ContinoousEnum<EPropertyType> {
 	OBJECTIVE_METADATA(0),
 	USER_METADATA(1),
-	LOCAL_FILE_REF(2);
+	LOCAL_FILE_REF(2),
+	DATABASE_REF(3),
+	DATABASE_PRIMARY_ID(4),
+	DATABASE_READONLY(5);
 
 	private final int id;
 
-	private final static String[] NAMES = {"ObjectiveMetadata", "UserMetadata", "LocalFileReference"}; //$NON-NLS-1$ //$NON-NLS-2$
+	private final static String[] NAMES = {"ObjectiveMetadata", "UserMetadata", "LocalFileReference", "DatabaseRef", "DatabasePrimaryID", "DatabaseReadonlyField"};
 
 	private static final EnumWrapper<EPropertyType> wrapper = new EnumWrapper<>(OBJECTIVE_METADATA);
 
@@ -48,4 +51,7 @@ public enum EPropertyType implements ContinoousEnum<EPropertyType> {
 		return EPropertyType.values();
 	}
 
+	public boolean isReadonly() {
+		return (this == DATABASE_PRIMARY_ID) || (this == DATABASE_READONLY);
+	}
 }

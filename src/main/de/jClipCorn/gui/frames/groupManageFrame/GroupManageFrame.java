@@ -170,7 +170,7 @@ public class GroupManageFrame extends JFrame {
 				movielist.updateGroup(gOld, CCGroup.create(edDataName.getText(), gOld.Order, gOld.Color, gOld.DoSerialize, gOld.Parent, gOld.Visible));
 
 				for (CCDatabaseElement el : new ArrayList<>(movielist.getDatabaseElementsbyGroup(group))) {
-					el.setGroups(el.getGroups().getRemove(group).getAdd(movielist, edDataName.getText()));
+					el.Groups.set(el.getGroups().getRemove(group).getAdd(movielist, edDataName.getText()));
 				}
 
 				for (CCGroup og : movielist.getGroupList()) {
@@ -315,9 +315,9 @@ public class GroupManageFrame extends JFrame {
 		if (group == null) return;
 
 		if (e.NewValue) {
-			e.Data.setGroups(e.Data.getGroups().getAdd(group));
+			e.Data.Groups.set(e.Data.getGroups().getAdd(group));
 		} else {
-			e.Data.setGroups(e.Data.getGroups().getRemove(group));
+			e.Data.Groups.set(e.Data.getGroups().getRemove(group));
 		}
 	}
 

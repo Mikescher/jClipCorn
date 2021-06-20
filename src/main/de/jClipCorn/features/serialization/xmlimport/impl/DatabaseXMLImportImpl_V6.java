@@ -41,7 +41,7 @@ public class DatabaseXMLImportImpl_V6 implements IDatabaseXMLImporterImpl
 			}
 		}
 
-		e.execIfAttrExists("groups", o::setGroups);
+		e.execIfAttrExists("groups", o.Groups::set);
 		e.execIfAttrExists("onlinreref", o.OnlineReference::set);
 	}
 

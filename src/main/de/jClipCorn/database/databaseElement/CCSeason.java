@@ -32,14 +32,13 @@ import java.util.regex.Pattern;
 
 public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, IEpisodeOwner, ISeasonData, IPropertyParent {
 	private final CCSeries owner;
-	private final int seasonID;
-
-	private int coverid;
 
 	private final SeasonCache _cache = new SeasonCache(this);
 
-	public final EStringProp Title = new EStringProp("Title", Str.Empty, this, EPropertyType.OBJECTIVE_METADATA);
-	public final EIntProp Year     = new EIntProp(   "Year",  1900,      this, EPropertyType.OBJECTIVE_METADATA);
+	public final EIntProp    LocalID  = new EIntProp(   "LocalID", -1,        this, EPropertyType.DATABASE_PRIMARY_ID);
+	public final EIntProp    CoverID  = new EIntProp(   "CoverID",  -1,        this, EPropertyType.DATABASE_REF);
+	public final EStringProp Title    = new EStringProp("Title",    Str.Empty, this, EPropertyType.OBJECTIVE_METADATA);
+	public final EIntProp    Year     = new EIntProp(   "Year",     1900,      this, EPropertyType.OBJECTIVE_METADATA);
 
 	private IEProperty[] _properties = null;
 
@@ -47,9 +46,9 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	private boolean isUpdating = false;
 	
-	public CCSeason(CCSeries owner, int seasonID) {
+	public CCSeason(CCSeries owner, int localID) {
 		this.owner    = owner;
-		this.seasonID = seasonID;
+		LocalID.setReadonlyPropToInitial(localID);
 	}
 
 	public IEProperty[] getProperties()
@@ -62,6 +61,8 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	{
 		return new IEProperty[]
 		{
+			LocalID,
+			CoverID,
 			Title,
 			Year,
 		};
@@ -73,7 +74,6 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	public void setDefaultValues(boolean updateDB) {
 		beginUpdating();
 
-		coverid = -1;
 		for (IEProperty prop : getProperties()) prop.resetToDefault();
 
 		if (updateDB) endUpdating(); else abortUpdating();
@@ -117,29 +117,23 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	@Override
 	public int getLocalID() {
-		return seasonID;
+		return LocalID.get();
 	}
 
 	public void setCover(int cid) {
-		this.coverid = cid;
-		
-		_cache.bust();
-		updateDB();
+		CoverID.set(cid);
 	}
 	
 	public void setCover(BufferedImage cvr) {
-		if (coverid != -1 && cvr.equals(getCover())) {
+		if (CoverID.get() != -1 && cvr.equals(getCover())) {
 			return;
 		}
 		
-		if (coverid != -1) {
-			getSeries().getMovieList().getCoverCache().deleteCover(this.coverid);
+		if (CoverID.get() != -1) {
+			getSeries().getMovieList().getCoverCache().deleteCover(this.CoverID.get());
 		}
 		
-		this.coverid = getSeries().getMovieList().getCoverCache().addCover(cvr);
-		
-		_cache.bust();
-		updateDB();
+		this.CoverID.set(getSeries().getMovieList().getCoverCache().addCover(cvr));
 	}
 
 	@Override
@@ -154,7 +148,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	@Override
 	public int getCoverID() {
-		return coverid;
+		return CoverID.get();
 	}
 
 	@Override
@@ -169,17 +163,17 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	@Override
 	public BufferedImage getCover() {
-		return owner.getMovieList().getCoverCache().getCover(coverid);
+		return owner.getMovieList().getCoverCache().getCover(CoverID.get());
 	}
 
 	@Override
 	public Tuple<Integer, Integer> getCoverDimensions() {
-		return owner.getMovieList().getCoverCache().getDimensions(coverid);
+		return owner.getMovieList().getCoverCache().getDimensions(CoverID.get());
 	}
 
 	@Override
 	public CCCoverData getCoverInfo() {
-		return owner.getMovieList().getCoverCache().getInfoOrNull(coverid);
+		return owner.getMovieList().getCoverCache().getInfoOrNull(CoverID.get());
 	}
 	
 	public boolean isViewed() { // All parts viewed

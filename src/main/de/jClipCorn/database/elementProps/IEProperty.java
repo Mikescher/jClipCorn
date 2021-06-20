@@ -1,6 +1,7 @@
 package de.jClipCorn.database.elementProps;
 
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
+import de.jClipCorn.util.exceptions.CCFormatException;
 
 public interface IEProperty {
 	void resetToDefault();
@@ -8,8 +9,8 @@ public interface IEProperty {
 	EPropertyType getValueType();
 	String getName();
 
-	String serializeValueToString();
-	Object serializeValueToDatabaseValue();
-	void deserializeValueFromString(String v) throws Exception;
-	void deserializeValueFromDatabaseValue(Object v) throws Exception;
+	String serializeToString();
+	Object serializeToDatabaseValue();
+	void deserializeFromString(String v) throws CCFormatException;
+	void deserializeFromDatabaseValue(Object v) throws CCFormatException;
 }

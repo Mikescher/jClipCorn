@@ -445,7 +445,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 			tpnlMain.addTab(LocaleBundle.getString("LogFrame.TabLiveDisplay"), tabLiveDisplay); //$NON-NLS-1$
 		}
 		contentPane.add(tpnlMain, CC.xy(2, 2, CC.FILL, CC.FILL));
-		setSize(1010, 385);
+		setSize(1010, 570);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}

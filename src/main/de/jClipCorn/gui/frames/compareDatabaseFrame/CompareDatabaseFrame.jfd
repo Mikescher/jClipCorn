@@ -46,11 +46,20 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label1"
-				"text": "Rules:"
+				"text": new FormMessage( null, "BatchEditFrame.lblRules" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
 				"gridY": 6
 				"gridWidth": 3
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnShowRules"
+				"text": "->"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showRules", true ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 6
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane1"
@@ -177,10 +186,18 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "btnCreatePatch"
 				"text": new FormMessage( null, "BatchEditFrame.btnCreatePatch" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "startCreatingPatch", true ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
 				"gridY": 16
-				"gridWidth": 5
+				"gridWidth": 3
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbPorcelain"
+				"text": new FormMessage( null, "BatchEditFrame.cbPorcelain" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 16
 			} )
 			add( new FormComponent( "javax.swing.JProgressBar" ) {
 				name: "progressBar1"

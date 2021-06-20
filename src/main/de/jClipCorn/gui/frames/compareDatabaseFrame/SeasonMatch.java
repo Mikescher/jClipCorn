@@ -14,6 +14,7 @@ import java.util.List;
 
 public class SeasonMatch extends ComparisonMatch {
 	public final CompareState State;
+	public final SeriesMatch Parent;
 
 	public final CCSeason SeasonLocal;
 	public final CCSeason SeasonExtern;
@@ -27,8 +28,9 @@ public class SeasonMatch extends ComparisonMatch {
 
 	public final List<Tuple<IEProperty, IEProperty>> MetadataDiff;
 
-	public SeasonMatch(CompareState state, CCSeason loc, CCSeason ext, boolean updMeta, boolean updCover, boolean copy, boolean del, List<Tuple<IEProperty, IEProperty>> diff) {
-		State               = state;
+	public SeasonMatch(SeriesMatch parent, CCSeason loc, CCSeason ext, boolean updMeta, boolean updCover, boolean copy, boolean del, List<Tuple<IEProperty, IEProperty>> diff) {
+		State               = parent.State;
+		Parent              = parent;
 		SeasonLocal         = loc;
 		SeasonExtern        = ext;
 		NeedsUpdateMetadata = updMeta;
@@ -40,7 +42,7 @@ public class SeasonMatch extends ComparisonMatch {
 
 	public EpisodeMatch addEpisodeLocalOnly(CCEpisode loc) {
 		var docopy = State.Ruleset.ShouldAddLocal(loc.getLocalID());
-		var match = new EpisodeMatch(State, loc, null, false, false, docopy, false, new ArrayList<>());
+		var match = new EpisodeMatch(this, loc, null, false, false, docopy, false, new ArrayList<>());
 		Episodes.add(match);
 		State.AllEpisodes.add(match);
 		State.ProgressCallback.stepSub(1, loc.getLocalID() + "");
@@ -49,7 +51,7 @@ public class SeasonMatch extends ComparisonMatch {
 
 	public EpisodeMatch addEpisodeExternOnly(CCEpisode ext) {
 		var dodel = State.Ruleset.ShouldDeleteExtern(ext.getLocalID());
-		var match = new EpisodeMatch(State, null, ext, false, false, false, dodel, new ArrayList<>());
+		var match = new EpisodeMatch(this, null, ext, false, false, false, dodel, new ArrayList<>());
 		Episodes.add(match);
 		State.AllEpisodes.add(match);
 		State.ProgressCallback.stepSub(1, ext.getLocalID() + "");
@@ -69,7 +71,7 @@ public class SeasonMatch extends ComparisonMatch {
 				                .filter(p -> State.Ruleset.ShouldUpdateMetadata(loc.getLocalID(), ext.getLocalID(), p.Item1, p.Item2))
 				                .toList();
 
-		var match = new EpisodeMatch(State, loc, ext, !diffMeta.isEmpty(), updateFile, false, false, diffMeta);
+		var match = new EpisodeMatch(this, loc, ext, !diffMeta.isEmpty(), updateFile, false, false, diffMeta);
 		Episodes.add(match);
 		State.AllEpisodes.add(match);
 		State.ProgressCallback.stepSub(2, loc.getLocalID() + "|" + ext.getLocalID());

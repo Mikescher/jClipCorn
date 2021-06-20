@@ -37,14 +37,14 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	private final EpisodeCache _cache = new EpisodeCache(this);
 
 	public final EIntProp                LocalID       = new EIntProp(          "LocalID",       -1,                           this, EPropertyType.DATABASE_PRIMARY_ID);
-	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,            this, EPropertyType.LOCAL_FILE_REF);
+	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,            this);
 	public final EIntProp                EpisodeNumber = new EIntProp(          "EpisodeNumber", 0,                            this, EPropertyType.OBJECTIVE_METADATA);
 	public final EStringProp             Title         = new EStringProp(       "Title",         Str.Empty,                    this, EPropertyType.OBJECTIVE_METADATA);
 	public final EIntProp                Length        = new EIntProp(          "Length",        0,                            this, EPropertyType.OBJECTIVE_METADATA);
 	public final ETagListProp            Tags          = new ETagListProp(      "Tags",          CCTagList.EMPTY,              this, EPropertyType.USER_METADATA);
 	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(       "Format",        CCFileFormat.MKV,             this, EPropertyType.OBJECTIVE_METADATA);
 	public final EFileSizeProp           FileSize      = new EFileSizeProp(     "FileSize",      CCFileSize.ZERO,              this, EPropertyType.OBJECTIVE_METADATA);
-	public final EStringProp             Part          = new EStringProp(       "Part",          Str.Empty,                    this, EPropertyType.LOCAL_FILE_REF);
+	public final EStringProp             Part          = new EStringProp(       "Part",          Str.Empty,                    this, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
 	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
 	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp( "ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
 	public final ELanguageListProp       Language      = new ELanguageListProp( "Language",      CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);

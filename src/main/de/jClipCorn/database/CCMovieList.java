@@ -987,6 +987,10 @@ public class CCMovieList {
 		}
 	}
 
+	public String getDatabaseVersion() {
+		return database.getInformation_DBVersion();
+	}
+
 	public void resetLocalDUUID() {
 		database.resetInformation_DUUID();
 		_cache.bust();

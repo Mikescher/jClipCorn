@@ -11,6 +11,7 @@ import java.util.List;
 
 public class EpisodeMatch extends ComparisonMatch {
 	public final CompareState State;
+	public final SeasonMatch Parent;
 
 	public CCEpisode EpisodeLocal;
 	public CCEpisode EpisodeExtern;
@@ -22,8 +23,9 @@ public class EpisodeMatch extends ComparisonMatch {
 
 	public final List<Tuple<IEProperty, IEProperty>> MetadataDiff;
 
-	public EpisodeMatch(CompareState state, CCEpisode loc, CCEpisode ext, boolean updMeta, boolean updFile, boolean copy, boolean del, List<Tuple<IEProperty, IEProperty>> diff) {
-		State               = state;
+	public EpisodeMatch(SeasonMatch parent, CCEpisode loc, CCEpisode ext, boolean updMeta, boolean updFile, boolean copy, boolean del, List<Tuple<IEProperty, IEProperty>> diff) {
+		State               = parent.State;
+		Parent              = parent;
 		EpisodeLocal        = loc;
 		EpisodeExtern       = ext;
 		NeedsUpdateMetadata = updMeta;

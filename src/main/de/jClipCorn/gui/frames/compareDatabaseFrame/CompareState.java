@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
@@ -95,4 +96,18 @@ public class CompareState {
 		return match;
 	}
 
+	public CCFileSize estimatePatchSize() {
+		long fs = 0;
+
+		for (var m: Movies) if (m.NeedsCreateNew || m.NeedsUpdateFile) fs += m.MovieLocal.FileSize.get().getBytes();
+		for (var m: Movies) if (m.NeedsCreateNew || m.NeedsUpdateCover) fs += m.MovieLocal.getCoverInfo().Filesize;
+
+		for (var m: Series) if (m.NeedsCreateNew || m.NeedsUpdateCover) fs += m.SeriesLocal.getCoverInfo().Filesize;
+
+		for (var m: AllSeasons) if (m.NeedsCreateNew || m.NeedsUpdateCover) fs += m.SeasonLocal.getCoverInfo().Filesize;
+
+		for (var m: AllEpisodes) if (m.NeedsCreateNew || m.NeedsUpdateFile) fs += m.EpisodeLocal.FileSize.get().getBytes();
+
+		return new CCFileSize(fs);
+	}
 }

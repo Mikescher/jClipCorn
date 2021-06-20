@@ -39,13 +39,13 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	private final MovieCache _cache = new MovieCache(this);
 
 	public final EZyklusPropPack         Zyklus        = new EZyklusPropPack(   "Zyklus",        CCMovieZyklus.EMPTY,          this, EPropertyType.OBJECTIVE_METADATA);
-	public final EPartArrayPropPack      Parts         = new EPartArrayPropPack("Parts",         new String[PARTCOUNT_MAX],    this, EPropertyType.LOCAL_FILE_REF);
-	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,            this, EPropertyType.LOCAL_FILE_REF);
+	public final EPartArrayPropPack      Parts         = new EPartArrayPropPack("Parts",         new String[PARTCOUNT_MAX],    this, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
+	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,            this);
 	public final EIntProp                Length        = new EIntProp(          "Length",        0,                            this, EPropertyType.OBJECTIVE_METADATA);
 	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
-	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(       "Format",        CCFileFormat.MKV,             this, EPropertyType.LOCAL_FILE_REF);
+	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(       "Format",        CCFileFormat.MKV,             this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
 	public final EIntProp                Year          = new EIntProp(          "Year",          1900,                         this, EPropertyType.OBJECTIVE_METADATA);
-	public final EFileSizeProp           FileSize      = new EFileSizeProp(     "FileSize",      CCFileSize.ZERO,              this, EPropertyType.LOCAL_FILE_REF);
+	public final EFileSizeProp           FileSize      = new EFileSizeProp(     "FileSize",      CCFileSize.ZERO,              this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
 	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp( "ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
 	public final ELanguageListProp       Language      = new ELanguageListProp( "Language",      CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
 

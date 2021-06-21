@@ -304,7 +304,7 @@ public class TestIterators extends ClipCornBaseTest {
 		{
 			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3});
 			var s2 = CCStreams.iterate(new String[]{"1", "2", "3"});
-			assertFalse(CCStreams.equalsElementwiseAuto(s1, s2));
+			assertException(() -> CCStreams.equalsElementwiseAuto(s1, s2));
 		}
 		{
 			var s1 = CCStreams.iterate(new Integer[]{1, 2, 3});

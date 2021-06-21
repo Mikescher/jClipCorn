@@ -9,8 +9,10 @@ import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.lambda.Func0to0;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 
 import java.awt.image.BufferedImage;
@@ -81,6 +83,19 @@ public class ClipCornBaseTest {
 			for (int y = 0; y < a.getHeight(); y++) {
 				assertEquals(a.getRGB(x, y), b.getRGB(x, y));
 			}
+		}
+	}
+
+	protected void assertException(Func0to0 fn)
+	{
+		try
+		{
+			fn.invoke();
+			Assert.fail("Function did not throw Exception");
+		}
+		catch (Exception e)
+		{
+			// Good!
 		}
 	}
 }

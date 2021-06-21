@@ -155,7 +155,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public void setDefaultValues(boolean updateDB) {
 		beginUpdating();
 
-		for (IEProperty prop : getProperties()) prop.resetToDefault();
+		for (IEProperty prop : getProperties()) if (!prop.isReadonly()) prop.resetToDefault();
 
 		if (updateDB) endUpdating(); else abortUpdating();
 	}

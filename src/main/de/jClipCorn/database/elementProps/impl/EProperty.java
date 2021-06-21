@@ -52,7 +52,7 @@ public abstract class EProperty<TType> implements IEProperty {
 	}
 
 	protected void set(TType v, boolean verifyReadonly, boolean bustCache, boolean updateDB, boolean callListener) {
-		if (verifyReadonly && getValueType().isReadonly()) throw new Error("Cannot update field ["+getValueType().asString()+"]::["+Name+"] - its readonly");
+		if (verifyReadonly && isReadonly()) throw new Error("Cannot update field ["+getValueType().asString()+"]::["+Name+"] - its readonly");
 
 		v = validateValue(v);
 
@@ -110,6 +110,11 @@ public abstract class EProperty<TType> implements IEProperty {
 	public void addChangeListener(Func3to0<EProperty<TType>, TType, TType> lstnr)
 	{
 		_listener.add(lstnr);
+	}
+
+	public boolean isReadonly()
+	{
+		return getValueType().isReadonly();
 	}
 
 	public abstract String serializeToString();

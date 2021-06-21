@@ -13,4 +13,6 @@ public interface IEProperty {
 	Object serializeToDatabaseValue();
 	void deserializeFromString(String v) throws CCFormatException;
 	void deserializeFromDatabaseValue(Object v) throws CCFormatException;
+
+	boolean isReadonly();
 }

@@ -78,46 +78,52 @@ public class CompareDatabaseFrame extends JFrame
 					.append(CCStreams.iterate(currState.Movies).cast())
 					.append(CCStreams.iterate(currState.Series).cast())
 					.append(CCStreams.iterate(currState.AllSeasons).cast())
-					.append(CCStreams.iterate(currState.AllEpisodes).cast());
+					.append(CCStreams.iterate(currState.AllEpisodes).cast())
+					.toList();
 
-			tableDeletedEntries.setData(it.filter(ComparisonMatch::getNeedsDelete).toList());
-			tableUpdateCover   .setData(it.filter(ComparisonMatch::getNeedsUpdateCover).toList());
-			tableUpdateFile    .setData(it.filter(ComparisonMatch::getNeedsUpdateFile).toList());
-			tableUpdateMetadata.setData(it.filter(ComparisonMatch::getNeedsUpdateMetadata).toList());
-			tableAddedEntry    .setData(it.filter(ComparisonMatch::getNeedsCreateNew).toList());
-			tableUnchangedEntry.setData(it.filter(p -> !p.getNeedsAnything()).toList());
+			tableDeletedEntries         .setData(CCStreams.iterate(it).filter(ComparisonMatch::getNeedsDelete).toList());
+			tableDeletedRecursiveEntries.setData(CCStreams.iterate(it).filter(ComparisonMatch::getNeedsDeleteRecursive).toList());
+			tableUpdateMetadata         .setData(CCStreams.iterate(it).filter(ComparisonMatch::getNeedsUpdateMetadata).toList());
+			tableUpdateCover            .setData(CCStreams.iterate(it).filter(ComparisonMatch::getNeedsUpdateCover).toList());
+			tableUpdateFile             .setData(CCStreams.iterate(it).filter(ComparisonMatch::getNeedsUpdateFile).toList());
+			tableAddedEntry             .setData(CCStreams.iterate(it).filter(ComparisonMatch::getNeedsCreateNew).toList());
+			tableUnchangedEntry         .setData(CCStreams.iterate(it).filter(p -> !p.getNeedsAnything()).toList());
 
-			tableDeletedEntries.autoResize();
-			tableUpdateCover   .autoResize();
-			tableUpdateFile    .autoResize();
-			tableUpdateMetadata.autoResize();
-			tableAddedEntry    .autoResize();
-			tableUnchangedEntry.autoResize();
+			tableDeletedEntries         .autoResize();
+			tableDeletedRecursiveEntries.autoResize();
+			tableUpdateMetadata         .autoResize();
+			tableUpdateCover            .autoResize();
+			tableUpdateFile             .autoResize();
+			tableAddedEntry             .autoResize();
+			tableUnchangedEntry         .autoResize();
 
-			pnlTabs.setTitleAt(0, LocaleBundle.getString("BatchEditFrame.tabDelete")           + " (" + tableDeletedEntries.getDataDirect().size() + ")");
-			pnlTabs.setTitleAt(1, LocaleBundle.getString("BatchEditFrame.tabUpdateMeta")       + " (" + tableUpdateCover   .getDataDirect().size() + ")");
-			pnlTabs.setTitleAt(2, LocaleBundle.getString("BatchEditFrame.tabUpdateCover")      + " (" + tableUpdateFile    .getDataDirect().size() + ")");
-			pnlTabs.setTitleAt(3, LocaleBundle.getString("BatchEditFrame.tabUpdateFile")       + " (" + tableUpdateMetadata.getDataDirect().size() + ")");
-			pnlTabs.setTitleAt(4, LocaleBundle.getString("BatchEditFrame.tabAddedEntries")     + " (" + tableAddedEntry    .getDataDirect().size() + ")");
-			pnlTabs.setTitleAt(5, LocaleBundle.getString("BatchEditFrame.tabUnchangedEntries") + " (" + tableUnchangedEntry.getDataDirect().size() + ")");
+			pnlTabs.setTitleAt(0, LocaleBundle.getString("BatchEditFrame.tabDelete")           + " (" + tableDeletedEntries         .getDataDirect().size() + ")");
+			pnlTabs.setTitleAt(1, LocaleBundle.getString("BatchEditFrame.tabDeleteRecursive")  + " (" + tableDeletedRecursiveEntries.getDataDirect().size() + ")");
+			pnlTabs.setTitleAt(2, LocaleBundle.getString("BatchEditFrame.tabUpdateMeta")       + " (" + tableUpdateMetadata         .getDataDirect().size() + ")");
+			pnlTabs.setTitleAt(3, LocaleBundle.getString("BatchEditFrame.tabUpdateCover")      + " (" + tableUpdateCover            .getDataDirect().size() + ")");
+			pnlTabs.setTitleAt(4, LocaleBundle.getString("BatchEditFrame.tabUpdateFile")       + " (" + tableUpdateFile             .getDataDirect().size() + ")");
+			pnlTabs.setTitleAt(5, LocaleBundle.getString("BatchEditFrame.tabAddedEntries")     + " (" + tableAddedEntry             .getDataDirect().size() + ")");
+			pnlTabs.setTitleAt(6, LocaleBundle.getString("BatchEditFrame.tabUnchangedEntries") + " (" + tableUnchangedEntry         .getDataDirect().size() + ")");
 
 			btnCreatePatch.setText(LocaleBundle.getString("BatchEditFrame.btnCreatePatch") + " (" + FileSizeFormatter.format(currState.estimatePatchSize()) + ")");
 		}
 		else
 		{
-			tableDeletedEntries.clearData();
-			tableUpdateCover   .clearData();
-			tableUpdateFile    .clearData();
-			tableUpdateMetadata.clearData();
-			tableAddedEntry    .clearData();
-			tableUnchangedEntry.clearData();
+			tableDeletedEntries         .clearData();
+			tableDeletedRecursiveEntries.clearData();
+			tableUpdateMetadata         .clearData();
+			tableUpdateCover            .clearData();
+			tableUpdateFile             .clearData();
+			tableAddedEntry             .clearData();
+			tableUnchangedEntry         .clearData();
 
 			pnlTabs.setTitleAt(0, LocaleBundle.getString("BatchEditFrame.tabDelete"));
-			pnlTabs.setTitleAt(1, LocaleBundle.getString("BatchEditFrame.tabUpdateMeta"));
-			pnlTabs.setTitleAt(2, LocaleBundle.getString("BatchEditFrame.tabUpdateCover"));
-			pnlTabs.setTitleAt(3, LocaleBundle.getString("BatchEditFrame.tabUpdateFile"));
-			pnlTabs.setTitleAt(4, LocaleBundle.getString("BatchEditFrame.tabAddedEntries"));
-			pnlTabs.setTitleAt(5, LocaleBundle.getString("BatchEditFrame.tabUnchangedEntries"));
+			pnlTabs.setTitleAt(1, LocaleBundle.getString("BatchEditFrame.tabDeleteRecursive"));
+			pnlTabs.setTitleAt(2, LocaleBundle.getString("BatchEditFrame.tabUpdateMeta"));
+			pnlTabs.setTitleAt(3, LocaleBundle.getString("BatchEditFrame.tabUpdateCover"));
+			pnlTabs.setTitleAt(4, LocaleBundle.getString("BatchEditFrame.tabUpdateFile"));
+			pnlTabs.setTitleAt(5, LocaleBundle.getString("BatchEditFrame.tabAddedEntries"));
+			pnlTabs.setTitleAt(6, LocaleBundle.getString("BatchEditFrame.tabUnchangedEntries"));
 
 			btnCreatePatch.setText(LocaleBundle.getString("BatchEditFrame.btnCreatePatch"));
 		}
@@ -249,6 +255,8 @@ public class CompareDatabaseFrame extends JFrame
 		pnlTabs = new JTabbedPane();
 		tabDeletedEntries = new JPanel();
 		tableDeletedEntries = new ShowMatchesTable(this, false, true);
+		tabDeletedRecursiveEntries = new JPanel();
+		tableDeletedRecursiveEntries = new ShowMatchesTable(this, false, true);
 		tabUpdateMetadata = new JPanel();
 		tableUpdateMetadata = new ShowMatchesTable(this, true, true);
 		tabUpdateCover = new JPanel();
@@ -321,6 +329,13 @@ public class CompareDatabaseFrame extends JFrame
 			}
 			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabDelete"), tabDeletedEntries); //$NON-NLS-1$
 
+			//======== tabDeletedRecursiveEntries ========
+			{
+				tabDeletedRecursiveEntries.setLayout(new BorderLayout());
+				tabDeletedRecursiveEntries.add(tableDeletedRecursiveEntries, BorderLayout.CENTER);
+			}
+			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabDeleteRecursive"), tabDeletedRecursiveEntries); //$NON-NLS-1$
+
 			//======== tabUpdateMetadata ========
 			{
 				tabUpdateMetadata.setLayout(new BorderLayout());
@@ -385,7 +400,7 @@ public class CompareDatabaseFrame extends JFrame
 		contentPane.add(lblProgress1, CC.xy(8, 18));
 		contentPane.add(progressBar2, CC.xywh(2, 20, 5, 1, CC.DEFAULT, CC.FILL));
 		contentPane.add(lblProgress2, CC.xy(8, 20));
-		setSize(800, 725);
+		setSize(925, 725);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -403,6 +418,8 @@ public class CompareDatabaseFrame extends JFrame
 	private JTabbedPane pnlTabs;
 	private JPanel tabDeletedEntries;
 	private ShowMatchesTable tableDeletedEntries;
+	private JPanel tabDeletedRecursiveEntries;
+	private ShowMatchesTable tableDeletedRecursiveEntries;
 	private JPanel tabUpdateMetadata;
 	private ShowMatchesTable tableUpdateMetadata;
 	private JPanel tabUpdateCover;

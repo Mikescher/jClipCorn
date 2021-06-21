@@ -65,7 +65,7 @@ public class SeriesMatch extends ComparisonMatch {
 	}
 
 	public SeasonMatch addSeasonMatch(CCSeason loc, CCSeason ext) {
-		var updateCover = State.Ruleset.ShouldUpdateCover(loc.getLocalID(), ext.getLocalID()) && Str.equals(loc.getCoverInfo().Checksum, ext.getCoverInfo().Checksum);
+		var updateCover = State.Ruleset.ShouldUpdateCover(loc.getLocalID(), ext.getLocalID()) && !Str.equals(loc.getCoverInfo().Checksum, ext.getCoverInfo().Checksum);
 
 		var propLoc = CCStreams.iterate(loc.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 		var propExt = CCStreams.iterate(ext.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
@@ -114,6 +114,11 @@ public class SeriesMatch extends ComparisonMatch {
 	@Override
 	public boolean getNeedsDelete() {
 		return NeedsDelete;
+	}
+
+	@Override
+	public boolean getNeedsDeleteRecursive() {
+		return false;
 	}
 
 	@Override

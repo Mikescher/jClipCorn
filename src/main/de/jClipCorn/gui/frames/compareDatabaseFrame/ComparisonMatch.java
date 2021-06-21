@@ -16,6 +16,7 @@ public abstract class ComparisonMatch {
 	abstract String getTypeStr();
 
 	abstract boolean getNeedsDelete();
+	abstract boolean getNeedsDeleteRecursive();
 	abstract boolean getNeedsUpdateCover();
 	abstract boolean getNeedsUpdateFile();
 	abstract boolean getNeedsUpdateMetadata();
@@ -41,7 +42,7 @@ public abstract class ComparisonMatch {
 
 	public boolean getNeedsAnything()
 	{
-		return getNeedsDelete() || getNeedsUpdateCover() || getNeedsUpdateFile() || getNeedsUpdateMetadata() || getNeedsCreateNew();
+		return getNeedsDelete() || getNeedsDeleteRecursive() || getNeedsUpdateCover() || getNeedsUpdateFile() || getNeedsUpdateMetadata() || getNeedsCreateNew();
 	}
 
 	public Opt<Integer> getLocID()

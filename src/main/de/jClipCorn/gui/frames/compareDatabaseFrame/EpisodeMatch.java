@@ -74,6 +74,11 @@ public class EpisodeMatch extends ComparisonMatch {
 	}
 
 	@Override
+	public boolean getNeedsDeleteRecursive() {
+		return NeedsDeleteByParent;
+	}
+
+	@Override
 	public boolean getNeedsUpdateCover() {
 		return false;
 	}

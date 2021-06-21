@@ -125,6 +125,11 @@ public class SeasonMatch extends ComparisonMatch {
 	}
 
 	@Override
+	public boolean getNeedsDeleteRecursive() {
+		return NeedsDeleteByParent;
+	}
+
+	@Override
 	public boolean getNeedsUpdateCover() {
 		return NeedsUpdateCover;
 	}

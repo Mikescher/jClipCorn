@@ -100,6 +100,19 @@ new FormModel {
 					"title": new FormMessage( null, "BatchEditFrame.tabDelete" )
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+					name: "tabDeletedRecursiveEntries"
+					add( new FormContainer( "de.jClipCorn.gui.frames.compareDatabaseFrame.ShowMatchesTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "tableDeletedRecursiveEntries"
+						auxiliary() {
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(this, false, true);"
+						}
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "BatchEditFrame.tabDeleteRecursive" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 					name: "tabUpdateMetadata"
 					add( new FormContainer( "de.jClipCorn.gui.frames.compareDatabaseFrame.ShowMatchesTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "tableUpdateMetadata"
@@ -237,7 +250,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 800, 725 )
+			"size": new java.awt.Dimension( 925, 725 )
 		} )
 	}
 }

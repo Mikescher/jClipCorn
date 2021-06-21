@@ -72,6 +72,11 @@ public class MovieMatch extends ComparisonMatch {
 	}
 
 	@Override
+	public boolean getNeedsDeleteRecursive() {
+		return false;
+	}
+
+	@Override
 	public boolean getNeedsUpdateCover() {
 		return NeedsUpdateCover;
 	}

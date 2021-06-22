@@ -1,10 +1,7 @@
 package de.jClipCorn.util.helper;
 
 import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.datatransfer.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -57,5 +54,9 @@ public class ClipboardUtilities {
 		}
 		
 		return image;
+	}
+
+	public static void setString(String cb) {
+		systemClip.setContents(new StringSelection(cb), null);
 	}
 }

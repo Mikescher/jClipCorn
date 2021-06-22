@@ -1,0 +1,403 @@
+JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.11" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "CoverCropFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, default:grow, labelcompgap, max(pref;170dlu), labelcompgap, 170dlu, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default:grow, linegap, default, linegap, default, unrelgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": new FormMessage( null, "CoverCropFrame.this.title" )
+			"defaultCloseOperation": 2
+			"minimumSize": new java.awt.Dimension( 800, 600 )
+			addEvent( new FormEvent( "java.awt.event.ComponentListener", "componentResized", "onFormResized", true ) )
+			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowOpened", "onWindowOpened", true ) )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
+				"alignment": 0
+				"vgap": 0
+				"hgap": 0
+			} ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnReset"
+					"text": new FormMessage( null, "CoverCropFrame.btnReset.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "reset", true ) )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+					name: "panel3"
+					"minimumSize": new java.awt.Dimension( 12, 12 )
+					"preferredSize": new java.awt.Dimension( 12, 12 )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnAutoCalc"
+					"text": new FormMessage( null, "CoverCropFrame.btnAutoCalc.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "autoCalc", true ) )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+					name: "panel4"
+					"minimumSize": new java.awt.Dimension( 12, 12 )
+					"preferredSize": new java.awt.Dimension( 12, 12 )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnRotateCW"
+					"text": new FormMessage( null, "CoverCropFrame.btnRotateCW.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onRotateCW", true ) )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+					name: "panel10"
+					"minimumSize": &Dimension0 new java.awt.Dimension( 5, 5 )
+					"preferredSize": &Dimension1 new java.awt.Dimension( 5, 5 )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnRotateCCW"
+					"text": new FormMessage( null, "CoverCropFrame.btnRotateCCW.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onRotateCCW", true ) )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+					name: "panel5"
+					"minimumSize": new java.awt.Dimension( 12, 12 )
+					"preferredSize": new java.awt.Dimension( 12, 12 )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnFlipX"
+					"text": new FormMessage( null, "CoverCropFrame.btnFlipX.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFlipX", true ) )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+					name: "panel11"
+					"minimumSize": #Dimension0
+					"preferredSize": #Dimension1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnFlipY"
+					"text": new FormMessage( null, "CoverCropFrame.btnFlipY.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFlipY", true ) )
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"gridWidth": 5
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "labelcompgap, default:grow, labelcompgap"
+				"$rowSpecs": "linegap, default:grow, linegap"
+			} ) {
+				name: "panel12"
+				"border": new javax.swing.border.EtchedBorder( 1, null, null )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.jCanvasLabel.JCanvasLabel" ) {
+					name: "lblImage"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseReleased", "onImageMouseReleased", true ) )
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mousePressed", "onImageMousePressed", true ) )
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseExited", "onImageMouseExited", true ) )
+					addEvent( new FormEvent( "java.awt.event.MouseMotionListener", "mouseMoved", "onImageMouseMoved", true ) )
+					addEvent( new FormEvent( "java.awt.event.MouseMotionListener", "mouseDragged", "onImageMouseDragged", true ) )
+					addEvent( new FormEvent( "de.jClipCorn.gui.guiComponents.jCanvasLabel.PaintComponentListener", "paintComponentCalled", "onMainImagePaint", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"gridX": 2
+					"gridY": 2
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+				"gridHeight": 3
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "labelcompgap, default:grow, labelcompgap, max(default;30dlu), labelcompgap"
+				"$rowSpecs": "linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default:grow, linegap, default, linegap"
+			} ) {
+				name: "panel6"
+				"border": new javax.swing.border.EtchedBorder( 1, null, null )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "chckbxLockRatio"
+					"text": new FormMessage( null, "CoverCropFrame.btnLockRatio.text" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "repaintAll", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 2
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "chckbxShowCropOutline"
+					"text": new FormMessage( null, "CoverCropFrame.btnShowCropOutline.text" )
+					"selected": true
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "repaintAll", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 4
+					"gridX": 2
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "chckbxShowImageBorders"
+					"text": new FormMessage( null, "CoverCropFrame.btnShowImageBorders.text" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "repaintAll", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 6
+					"gridX": 2
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "chckbxShowTransparency"
+					"text": new FormMessage( null, "CoverCropFrame.btnShowTransparency.text" )
+					"selected": true
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "repaintAll", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 8
+					"gridX": 2
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "chckbxSeriesPreview"
+					"text": new FormMessage( null, "CoverCropFrame.btnShowSeriesPreview.text" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "repaintAll", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 10
+					"gridX": 2
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblPosition"
+					"text": new FormMessage( null, "CoverCropFrame.lblPosition.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 12
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblSize"
+					"text": new FormMessage( null, "CoverCropFrame.lblSize.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 14
+					"gridX": 2
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblRatio"
+					"text": new FormMessage( null, "CoverCropFrame.lblRatio.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 16
+					"gridX": 2
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblRatioState"
+					"text": new FormMessage( null, "CoverCropFrame.lblOK.textOK" )
+					"horizontalAlignment": 11
+					"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 0, false )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 16
+					"gridX": 4
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblMouse"
+					"text": new FormMessage( null, "CoverCropFrame.lblMouse.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 18
+					"gridX": 2
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
+					"alignment": 0
+				} ) {
+					name: "panel13"
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnCopyParams"
+						"text": new FormMessage( null, "UIGeneric.copy" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "copyParams", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnPasteAbs"
+						"text": new FormMessage( null, "UIGeneric.Paste" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "pasteParams", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnPasteRel"
+						"text": new FormMessage( null, "CoverCropFrame.PasteRel" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "pasteParamsPerc", true ) )
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 22
+					"gridWidth": 3
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 4
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "labelcompgap, default:grow, labelcompgap"
+				"$rowSpecs": "linegap, default, linegap, default:grow, linegap"
+			} ) {
+				name: "panel7"
+				"border": new javax.swing.border.EtchedBorder( 1, null, null )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "spnZoom"
+					"model": new javax.swing.SpinnerNumberModel( 2, 1, 10, 1 )
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "onZoomChanged", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 2
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.jCanvasLabel.JCanvasLabel" ) {
+					name: "lblZoom"
+					addEvent( new FormEvent( "de.jClipCorn.gui.guiComponents.jCanvasLabel.PaintComponentListener", "paintComponentCalled", "onZoomImagePaint", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 4
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 4
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "2dlu, default, labelcompgap, default, labelcompgap, default:grow, labelcompgap, default, 1dlu"
+				"$rowSpecs": "narrowlinegap, default:grow, linegap, default, narrowlinegap"
+			} ) {
+				name: "panel8"
+				"border": new javax.swing.border.EtchedBorder( 1, null, null )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.jCanvasLabel.JCanvasLabel" ) {
+					name: "lblCoverPreviewBig"
+					"minimumSize": new java.awt.Dimension( 182, 254 )
+					"maximumSize": new java.awt.Dimension( 182, 254 )
+					"preferredSize": new java.awt.Dimension( 182, 254 )
+					addEvent( new FormEvent( "de.jClipCorn.gui.guiComponents.jCanvasLabel.PaintComponentListener", "paintComponentCalled", "onBigCoverPaint", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 2
+					"gridHeight": 3
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints BOTTOM
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.jCanvasLabel.JCanvasLabel" ) {
+					name: "lblCoverPreviewSmall"
+					"maximumSize": new java.awt.Dimension( 91, 127 )
+					"minimumSize": new java.awt.Dimension( 91, 127 )
+					"preferredSize": new java.awt.Dimension( 91, 127 )
+					addEvent( new FormEvent( "de.jClipCorn.gui.guiComponents.jCanvasLabel.PaintComponentListener", "paintComponentCalled", "onSmallCoverPaint", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 2
+					"gridHeight": 3
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints BOTTOM
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "max(pref;18dlu), 2dlu, pref, 2dlu, max(pref;18dlu), 4dlu, max(pref;18dlu)"
+					"$rowSpecs": "max(pref;18dlu), 2dlu, max(pref;18dlu), 2dlu, max(pref;18dlu), 4dlu, 18dlu"
+				} ) {
+					name: "panel9"
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnResizeTop"
+						"text": "▲"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onCropTop", true ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 3
+						"gridY": 1
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnResizeLeft"
+						"text": "◀"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onCropLeft", true ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 3
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnResizeCenter"
+						"text": "✖"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onCropCenter", true ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 3
+						"gridX": 3
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnResizeRight"
+						"text": "▶"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onCropRight", true ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 3
+						"gridX": 5
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnResizeVert"
+						"text": "⬍"
+						"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 8, false )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onCropVertical", true ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 7
+						"gridHeight": 5
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnResizeBottom"
+						"text": "▼"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onCropBottom", true ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 5
+						"gridX": 3
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnResizeHorz"
+						"text": "⬌"
+						"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 8, false )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onCropHorizontal", true ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 7
+						"gridWidth": 5
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 8
+					"gridY": 4
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 6
+				"gridWidth": 3
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
+				"vgap": 0
+			} ) {
+				name: "panel2"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnOK"
+					"text": new FormMessage( null, "UIGeneric.btnOK.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOkay", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnAbort"
+					"text": new FormMessage( null, "UIGeneric.btnCancel.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onCancel", true ) )
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 8
+				"gridWidth": 5
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 1125, 695 )
+		} )
+	}
+}

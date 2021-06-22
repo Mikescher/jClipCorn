@@ -221,8 +221,8 @@ public class Main {
  - [ ] ChangeScoreFrame
  - [ ] ChangeViewedFrame
  - [ ] CheckDatabaseFrame
- - [ ] CompareDatabaseFrame
- - [ ] CoverCropFrame
+ - [X] CompareDatabaseFrame
+ - [X] CoverCropFrame
  - [ ] CoverPreviewFrame
  - [ ] CreateSeriesFolderStructureFrame
  - [ ] CustomFilterEditDialog

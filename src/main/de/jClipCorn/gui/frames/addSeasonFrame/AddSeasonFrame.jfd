@@ -1,0 +1,74 @@
+JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.11" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "AddSeasonFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, default, unrelgap, default:grow, unrelgap, default, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default:grow, linegap, default, unrelgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": new FormMessage( null, "AddSeasonFrame.this.title" )
+			"defaultCloseOperation": 2
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": new FormMessage( null, "AddMovieFrame.label_1.text" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "edTitle"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 2
+			} )
+			add( new FormContainer( "de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl", new FormLayoutManager( class javax.swing.JLayeredPane ) ) {
+				name: "edCvrControl"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 2
+				"gridHeight": 5
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": new FormMessage( null, "AddMovieFrame.lblYear.text" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.jYearSpinner.JYearSpinner" ) {
+				name: "spnYear"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 4
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnOK"
+					"text": new FormMessage( null, "UIGeneric.btnOK.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOK", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnABort"
+					"text": new FormMessage( null, "UIGeneric.btnCancel.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cancel", false ) )
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 8
+				"gridWidth": 5
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 500, 400 )
+		} )
+	}
+}

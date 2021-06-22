@@ -210,7 +210,7 @@ public class Main {
 
  - [X] MainFrame
  - [ ] AboutFrame
- - [ ] AddMovieFrame
+ - [X] AddMovieFrame
  - [X] AddMultiEpisodesFrame
  - [X] AddSeasonFrame
  - [X] AddSeriesFrame

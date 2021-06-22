@@ -1,9 +1,7 @@
 package de.jClipCorn.gui.frames.addMovieFrame;
 
-import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
@@ -18,19 +16,20 @@ import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
+import de.jClipCorn.gui.guiComponents.JMediaInfoButton;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
+import de.jClipCorn.gui.guiComponents.jYearSpinner.JYearSpinner;
 import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.adapter.ActionLambdaAdapter;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
@@ -38,7 +37,6 @@ import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.parser.FilenameParser;
 import de.jClipCorn.util.parser.FilenameParserResult;
@@ -47,579 +45,71 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 
-public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler {
-	private static final long serialVersionUID = -5912378114066741528L;
-	
+public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler
+{
 	private boolean firstChooseClick = true;
-	
+
 	private final JFileChooser videoFileChooser;
-	
+
 	private final CCMovieList movieList;
-	
+
 	private CCDateTimeList forceViewedHistory = null;
-	
-	private JPanel contentPane;
-	private ReadableTextField ed_Part0;
-	private ReadableTextField ed_Part1;
-	private ReadableTextField ed_Part2;
-	private ReadableTextField ed_Part3;
-	private ReadableTextField ed_Part4;
-	private ReadableTextField ed_Part5;
-	private JTextField edZyklus;
-	private JButton btnClear5;
-	private JButton btnClear4;
-	private JButton btnClear3;
-	private JButton btnClear2;
-	private JButton btnClear1;
-	private JButton btnChoose0;
-	private JButton btnChoose1;
-	private JButton btnChoose2;
-	private JButton btnChoose3;
-	private JButton btnChoose4;
-	private JButton btnChoose5;
-	private CCEnumComboBox<CCGenre> cbxGenre0;
-	private CCEnumComboBox<CCGenre> cbxGenre1;
-	private CCEnumComboBox<CCGenre> cbxGenre2;
-	private CCEnumComboBox<CCGenre> cbxGenre3;
-	private CCEnumComboBox<CCGenre> cbxGenre7;
-	private CCEnumComboBox<CCGenre> cbxGenre4;
-	private CCEnumComboBox<CCGenre> cbxGenre5;
-	private CCEnumComboBox<CCGenre> cbxGenre6;
-	private LanguageChooser cbxLanguage;
-	private JSpinner spnLength;
-	private JCCDateSpinner spnAddDate;
-	private JSpinner spnOnlineScore;
-	private CCEnumComboBox<CCOptionalFSK> cbxFSK;
-	private CCEnumComboBox<CCFileFormat> cbxFormat;
-	private JSpinner spnYear;
-	private JSpinner spnSize;
-	private JButton btnOK;
-	private JButton btnCancel;
-	private JTextField edTitle;
-	private JSpinner spnZyklus;
-	private JButton btnParseIMDB;
-	private CCEnumComboBox<CCUserScore> cbxScore;
-	private JLabel lblScore;
-	private JLabel lblPart;
-	private JLabel lblPart_1;
-	private JLabel lblPart_2;
-	private JLabel lblPart_3;
-	private JLabel lblPart_4;
-	private JLabel lblPart_5;
-	private JLabel lblZyklus;
-	private JLabel lblGenre;
-	private JLabel lblGenre_1;
-	private JLabel lblGenre_2;
-	private JLabel lblGenre_3;
-	private JLabel lblGenre_7;
-	private JLabel lblGenre_6;
-	private JLabel lblGenre_5;
-	private JLabel lblGenre_4;
-	private JLabel lblMediaInfo;
-	private JLabel lblLanguage;
-	private JLabel lblLength;
-	private JLabel lblMin;
-	private JLabel lblEinfgDatum;
-	private JLabel lblOnlinescore;
-	private JLabel label;
-	private JLabel lblFsk;
-	private JLabel lblFormat;
-	private JLabel lblYear;
-	private JLabel lblGre;
-	private JLabel lblFileSizeDisp;
-	private JLabel label_1;
-	private EditCoverControl edCvrControl;
-	private JReferenceChooser edReference;
-	private JLabel lblOnlineid;
-	private JLabel lblGroups;
-	private GroupListEditor edGroups;
-	private JButton btnMediaInfo;
-	private JButton btnMediaInfo2;
-	private JLabel lblLenAuto;
-	private JProgressBar pbLanguageLoad;
-	private JMediaInfoControl ctrlMediaInfo;
 
 	private volatile boolean _isDirtyLanguage = false;
 	private volatile boolean _isDirtyMediaInfo = false;
-	private JButton btnQueryMediaInfo;
-	private JPanel pnlBase;
-	private JPanel pnlLeft;
-	private JPanel pnlRight;
-	private JPanel pnlBot;
-	private JPanel pnlPaths;
-	private JPanel pnlData;
 
-	/**
-	 * @wbp.parser.constructor
-	 */
-	public AddMovieFrame(Component owner, CCMovieList mlist) {		
+	public AddMovieFrame(Component owner, CCMovieList mlist) {
+		this(owner, mlist, null);
+	}
+
+	public AddMovieFrame(Component owner, CCMovieList mlist, String firstPath)
+	{
 		super();
 		this.movieList = mlist;
 		this.videoFileChooser = new JFileChooser(mlist.getCommonPathForMovieFileChooser());
-		
-		init(owner);
-	}
-	
-	public AddMovieFrame(Component owner, CCMovieList mlist, String firstPath) {		
-		super();
-		this.movieList = mlist;
-		this.videoFileChooser = new JFileChooser(mlist.getCommonPathForMovieFileChooser());
-		
-		init(owner);
-		
-		setFilepath(0, firstPath);
-		setEnabledAll(true);
-		parseFromFile(firstPath);
-		firstChooseClick = false;	
-		updateFilesize();
-	}
 
-	private void init(Component owner) {
-		initGUI();
-		initFileChooser();
-		setDefaultValues();
-		
-		setEnabledAll(false);
-		btnChoose0.setEnabled(true);
+		initComponents();
+		postInit();
+
+		if (firstPath != null)
+		{
+			setFilepath(0, firstPath);
+			setEnabledAll(true);
+			parseFromFile(firstPath);
+			firstChooseClick = false;
+			updateFilesize();
+		}
 
 		setLocationRelativeTo(owner);
+		setMinimumSize(getSize());
 	}
 
-	private void initGUI() {
-		setTitle(LocaleBundle.getString("AddMovieFrame.this.title")); //$NON-NLS-1$
+	private void postInit()
+	{
 		setIconImage(Resources.IMG_FRAME_ICON.get());
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 750, LookAndFeelManager.isWindows() ? 675 : 750);
-		setMinimumSize(new Dimension(650, 660));
-		setResizable(true);
-		contentPane = new JPanel();
-		contentPane.setFocusable(false);
-		contentPane.setBorder(null);
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
 
-		pnlBase = new JPanel();
-		pnlBase.setBorder(null);
-		contentPane.add(pnlBase);
-		pnlBase.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				ColumnSpec.decode("20dlu"), //$NON-NLS-1$
-				ColumnSpec.decode("135dlu"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.PREF_ROWSPEC,}));
-		
-		pnlLeft = new JPanel();
-		pnlBase.add(pnlLeft, "1, 1, fill, fill"); //$NON-NLS-1$
-		pnlLeft.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				FormSpecs.PREF_ROWSPEC,
-				RowSpec.decode("16dlu"), //$NON-NLS-1$
-				RowSpec.decode("1dlu:grow"),})); //$NON-NLS-1$
-		
-		pnlPaths = new JPanel();
-		pnlLeft.add(pnlPaths, "1, 1, fill, fill"); //$NON-NLS-1$
-		pnlPaths.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		lblPart = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart.text")); //$NON-NLS-1$
-		pnlPaths.add(lblPart, "2, 2"); //$NON-NLS-1$
-		
-		ed_Part0 = new ReadableTextField();
-		pnlPaths.add(ed_Part0, "4, 2, 3, 1"); //$NON-NLS-1$
-		ed_Part0.setColumns(10);
-				
-		btnChoose0 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		pnlPaths.add(btnChoose0, "8, 2"); //$NON-NLS-1$
-		btnChoose0.addActionListener(arg0 -> onBtnChooseClicked(0));
-		
-		lblPart_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_1.text")); //$NON-NLS-1$
-		pnlPaths.add(lblPart_1, "2, 4"); //$NON-NLS-1$
-		
-		ed_Part1 = new ReadableTextField();
-		pnlPaths.add(ed_Part1, "4, 4"); //$NON-NLS-1$
-		ed_Part1.setColumns(10);
-		
-		btnChoose1 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		pnlPaths.add(btnChoose1, "6, 4"); //$NON-NLS-1$
-		btnChoose1.addActionListener(e -> onBtnChooseClicked(1));
-		
-		btnClear1 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		pnlPaths.add(btnClear1, "8, 4"); //$NON-NLS-1$
-		btnClear1.addActionListener(e -> onBtnClearClicked(1));
-		
-		lblPart_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_2.text")); //$NON-NLS-1$
-		pnlPaths.add(lblPart_2, "2, 6"); //$NON-NLS-1$
-		
-		ed_Part2 = new ReadableTextField();
-		pnlPaths.add(ed_Part2, "4, 6"); //$NON-NLS-1$
-		ed_Part2.setColumns(10);
-		
-		btnChoose2 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		pnlPaths.add(btnChoose2, "6, 6"); //$NON-NLS-1$
-		btnChoose2.addActionListener(e -> onBtnChooseClicked(2));
-		
-		btnClear2 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		pnlPaths.add(btnClear2, "8, 6"); //$NON-NLS-1$
-		btnClear2.addActionListener(e -> onBtnClearClicked(2));
-		
-		lblPart_3 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_3.text")); //$NON-NLS-1$
-		pnlPaths.add(lblPart_3, "2, 8"); //$NON-NLS-1$
-		
-		ed_Part3 = new ReadableTextField();
-		pnlPaths.add(ed_Part3, "4, 8"); //$NON-NLS-1$
-		ed_Part3.setColumns(10);
-		
-		btnChoose3 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		pnlPaths.add(btnChoose3, "6, 8"); //$NON-NLS-1$
-		btnChoose3.addActionListener(e -> onBtnChooseClicked(3));
-		
-		btnClear3 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		pnlPaths.add(btnClear3, "8, 8"); //$NON-NLS-1$
-		btnClear3.addActionListener(e -> onBtnClearClicked(3));
-		
-		lblPart_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_4.text")); //$NON-NLS-1$
-		pnlPaths.add(lblPart_4, "2, 10"); //$NON-NLS-1$
-		
-		ed_Part4 = new ReadableTextField();
-		pnlPaths.add(ed_Part4, "4, 10"); //$NON-NLS-1$
-		ed_Part4.setColumns(10);
-		
-		btnChoose4 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		pnlPaths.add(btnChoose4, "6, 10"); //$NON-NLS-1$
-		btnChoose4.addActionListener(e -> onBtnChooseClicked(4));
-		
-		btnClear4 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		pnlPaths.add(btnClear4, "8, 10"); //$NON-NLS-1$
-		btnClear4.addActionListener(e -> onBtnClearClicked(4));
-		
-		lblPart_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblPart_5.text")); //$NON-NLS-1$
-		pnlPaths.add(lblPart_5, "2, 12"); //$NON-NLS-1$
-		
-		ed_Part5 = new ReadableTextField();
-		pnlPaths.add(ed_Part5, "4, 12"); //$NON-NLS-1$
-		ed_Part5.setColumns(10);
-		
-		btnChoose5 = new JButton(LocaleBundle.getString("AddMovieFrame.btnChoose.text")); //$NON-NLS-1$
-		pnlPaths.add(btnChoose5, "6, 12"); //$NON-NLS-1$
-		
-		btnClear5 = new JButton(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-		pnlPaths.add(btnClear5, "8, 12"); //$NON-NLS-1$
-		btnClear5.addActionListener(e -> onBtnClearClicked(5));
-		btnChoose5.addActionListener(e -> onBtnChooseClicked(5));
-		
-		pnlData = new JPanel();
-		pnlLeft.add(pnlData, "1, 3, fill, fill"); //$NON-NLS-1$
-		pnlData.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("16dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("25dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("30dlu"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("14dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("14dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("14dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("14dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("14dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("16dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("16dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("14dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("14dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("14dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("14dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("14dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("14dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("14dlu"),})); //$NON-NLS-1$
-		
-		label_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
-		pnlData.add(label_1, "2, 2"); //$NON-NLS-1$
-		
-		edTitle = new JTextField();
-		pnlData.add(edTitle, "4, 2, 3, 1, fill, center"); //$NON-NLS-1$
-		edTitle.setColumns(10);
-		
-		lblOnlineid = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
-		pnlData.add(lblOnlineid, "2, 4"); //$NON-NLS-1$
-		
-		edReference = new JReferenceChooser();
-		pnlData.add(edReference, "4, 4, 3, 1, fill, center"); //$NON-NLS-1$
-		
-		lblZyklus = new JLabel(LocaleBundle.getString("AddMovieFrame.lblZyklus.text")); //$NON-NLS-1$
-		pnlData.add(lblZyklus, "2, 6"); //$NON-NLS-1$
-		
-		edZyklus = new JTextField();
-		pnlData.add(edZyklus, "4, 6, fill, center"); //$NON-NLS-1$
-		edZyklus.setColumns(10);
-		
-		spnZyklus = new JSpinner();
-		pnlData.add(spnZyklus, "6, 6, fill, center"); //$NON-NLS-1$
-		spnZyklus.setModel(new SpinnerNumberModel(-1, -1, 255, 1));
-		
-		lblGroups = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
-		pnlData.add(lblGroups, "2, 8"); //$NON-NLS-1$
-		
-		edGroups = new GroupListEditor(movieList);
-		pnlData.add(edGroups, "4, 8, 3, 1, fill, center"); //$NON-NLS-1$
-		edGroups.setEnabled(false);
-		
-		lblLength = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
-		pnlData.add(lblLength, "2, 10"); //$NON-NLS-1$
-		
-		spnLength = new JSpinner();
-		pnlData.add(spnLength, "4, 10, 3, 1, fill, center"); //$NON-NLS-1$
-		spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		
-		lblMin = new JLabel("min."); //$NON-NLS-1$
-		pnlData.add(lblMin, "8, 10"); //$NON-NLS-1$
-		
-		lblLenAuto = new JLabel(""); //$NON-NLS-1$
-		pnlData.add(lblLenAuto, "10, 10, 3, 1, fill, fill"); //$NON-NLS-1$
-		
-		lblLanguage = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-		pnlData.add(lblLanguage, "2, 12"); //$NON-NLS-1$
-		
-		cbxLanguage = new LanguageChooser();
-		pnlData.add(cbxLanguage, "4, 12, 3, 1, fill, center"); //$NON-NLS-1$
-		cbxLanguage.addChangeListener(new ActionLambdaAdapter(() -> { _isDirtyLanguage = true; }));
-		
-		btnMediaInfo = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
-		pnlData.add(btnMediaInfo, "8, 12, fill, default"); //$NON-NLS-1$
-		btnMediaInfo.addActionListener(e -> parseCodecMetadata());
-		btnMediaInfo.setToolTipText("MediaInfo"); //$NON-NLS-1$
-		
-		btnMediaInfo2 = new JButton("..."); //$NON-NLS-1$
-		pnlData.add(btnMediaInfo2, "10, 12"); //$NON-NLS-1$
-		btnMediaInfo2.addActionListener(e -> showCodecMetadata());
-		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
-		btnMediaInfo2.addActionListener(e -> getMediaInfo());
-		
-		lblMediaInfo = new JLabel("MediaInfo"); //$NON-NLS-1$
-		pnlData.add(lblMediaInfo, "2, 14"); //$NON-NLS-1$
-		
-		ctrlMediaInfo = new JMediaInfoControl(() -> Str.isNullOrWhitespace(ed_Part0.getText()) ? null : PathFormatter.fromCCPath(ed_Part0.getText()));
-		pnlData.add(ctrlMediaInfo, "4, 14, 3, 1"); //$NON-NLS-1$
-		ctrlMediaInfo.addChangeListener(new ActionLambdaAdapter(() -> { _isDirtyMediaInfo = true; }));
-		
-		btnQueryMediaInfo = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
-		pnlData.add(btnQueryMediaInfo, "8, 14, fill, fill"); //$NON-NLS-1$
-		btnQueryMediaInfo.setToolTipText("MediaInfo"); //$NON-NLS-1$
-		btnQueryMediaInfo.setEnabled(false);
-		
-		pbLanguageLoad = new JProgressBar();
-		pnlData.add(pbLanguageLoad, "10, 14, fill, center"); //$NON-NLS-1$
+		initFileChooser();
+		setDefaultValues();
+
+		setEnabledAll(false);
 		pbLanguageLoad.setVisible(false);
-		pbLanguageLoad.setIndeterminate(true);
-		
-		lblEinfgDatum = new JLabel(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
-		pnlData.add(lblEinfgDatum, "2, 16"); //$NON-NLS-1$
-		
-		spnAddDate = new JCCDateSpinner(CCDate.getMinimumDate(), CCDate.getMinimumDate(), null);
-		pnlData.add(spnAddDate, "4, 16, 3, 1, fill, center"); //$NON-NLS-1$
-		
-		lblOnlinescore = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
-		pnlData.add(lblOnlinescore, "2, 18"); //$NON-NLS-1$
-		
-		spnOnlineScore = new JSpinner();
-		pnlData.add(spnOnlineScore, "4, 18, 3, 1, fill, center"); //$NON-NLS-1$
-		spnOnlineScore.setModel(new SpinnerNumberModel(0, 0, 10, 1));
-		
-		label = new JLabel("/ 10"); //$NON-NLS-1$
-		pnlData.add(label, "8, 18, 5, 1"); //$NON-NLS-1$
-		
-		lblFsk = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
-		pnlData.add(lblFsk, "2, 20"); //$NON-NLS-1$
-		
-		cbxFSK = new CCEnumComboBox<>(CCOptionalFSK.getWrapper());
-		pnlData.add(cbxFSK, "4, 20, 3, 1, fill, center"); //$NON-NLS-1$
-		
-		lblFormat = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
-		pnlData.add(lblFormat, "2, 22"); //$NON-NLS-1$
-		
-		cbxFormat = new CCEnumComboBox<>(CCFileFormat.getWrapper());
-		pnlData.add(cbxFormat, "4, 22, 3, 1, fill, center"); //$NON-NLS-1$
-		
-		lblYear = new JLabel(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
-		pnlData.add(lblYear, "2, 24"); //$NON-NLS-1$
-		
-		spnYear = new JSpinner();
-		pnlData.add(spnYear, "4, 24, 3, 1, fill, center"); //$NON-NLS-1$
-		spnYear.setModel(new SpinnerNumberModel(1900, 1900, null, 1));
-		spnYear.setEditor(new JSpinner.NumberEditor(spnYear, "0")); //$NON-NLS-1$
-		
-		lblGre = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
-		pnlData.add(lblGre, "2, 26"); //$NON-NLS-1$
-		
-		spnSize = new JSpinner();
-		pnlData.add(spnSize, "4, 26, 3, 1, fill, center"); //$NON-NLS-1$
-		spnSize.addChangeListener(arg0 -> updateByteDisp());
-		spnSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
-		
-		lblFileSizeDisp = new JLabel("Byte = "); //$NON-NLS-1$
-		pnlData.add(lblFileSizeDisp, "8, 26, 5, 1"); //$NON-NLS-1$
-		
-		lblScore = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
-		pnlData.add(lblScore, "2, 28"); //$NON-NLS-1$
-		
-		cbxScore = new CCEnumComboBox<>(CCUserScore.getWrapper());
-		pnlData.add(cbxScore, "4, 28, 3, 1, fill, center"); //$NON-NLS-1$
-		
-		pnlRight = new JPanel();
-		pnlBase.add(pnlRight, "3, 1, fill, fill"); //$NON-NLS-1$
-		pnlRight.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("40dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
-		
-		lblGenre = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
-		pnlRight.add(lblGenre, "1, 2"); //$NON-NLS-1$
-		
-		cbxGenre0 = new CCEnumComboBox<>(CCGenre.getWrapper());
-		pnlRight.add(cbxGenre0, "3, 2"); //$NON-NLS-1$
-		
-		lblGenre_1 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
-		pnlRight.add(lblGenre_1, "1, 4"); //$NON-NLS-1$
-		
-		cbxGenre1 = new CCEnumComboBox<>(CCGenre.getWrapper());
-		pnlRight.add(cbxGenre1, "3, 4"); //$NON-NLS-1$
-		
-		lblGenre_2 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
-		pnlRight.add(lblGenre_2, "1, 6"); //$NON-NLS-1$
-		
-		cbxGenre2 = new CCEnumComboBox<>(CCGenre.getWrapper());
-		pnlRight.add(cbxGenre2, "3, 6"); //$NON-NLS-1$
-		
-		lblGenre_3 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
-		pnlRight.add(lblGenre_3, "1, 8"); //$NON-NLS-1$
-		
-		cbxGenre3 = new CCEnumComboBox<>(CCGenre.getWrapper());
-		pnlRight.add(cbxGenre3, "3, 8"); //$NON-NLS-1$
-		
-		lblGenre_4 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
-		pnlRight.add(lblGenre_4, "1, 10"); //$NON-NLS-1$
-		
-		cbxGenre4 = new CCEnumComboBox<>(CCGenre.getWrapper());
-		pnlRight.add(cbxGenre4, "3, 10"); //$NON-NLS-1$
-		
-		lblGenre_5 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
-		pnlRight.add(lblGenre_5, "1, 12"); //$NON-NLS-1$
-		
-		cbxGenre5 = new CCEnumComboBox<>(CCGenre.getWrapper());
-		pnlRight.add(cbxGenre5, "3, 12"); //$NON-NLS-1$
-		
-		lblGenre_6 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
-		pnlRight.add(lblGenre_6, "1, 14"); //$NON-NLS-1$
-		
-		cbxGenre6 = new CCEnumComboBox<>(CCGenre.getWrapper());
-		pnlRight.add(cbxGenre6, "3, 14"); //$NON-NLS-1$
-		
-		lblGenre_7 = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
-		pnlRight.add(lblGenre_7, "1, 16"); //$NON-NLS-1$
-		
-		cbxGenre7 = new CCEnumComboBox<>(CCGenre.getWrapper());
-		pnlRight.add(cbxGenre7, "3, 16"); //$NON-NLS-1$
-		
-		btnParseIMDB = new JButton(LocaleBundle.getString("AddMovieFrame.btnParseIMDB.text")); //$NON-NLS-1$
-		pnlRight.add(btnParseIMDB, "1, 18, 3, 1, fill, fill"); //$NON-NLS-1$
-		btnParseIMDB.addActionListener(arg0 -> showIMDBParser());
-		btnParseIMDB.setFont(new Font("Tahoma", Font.BOLD, 15)); //$NON-NLS-1$
-		
-		edCvrControl = new EditCoverControl(this, this);
-		pnlRight.add(edCvrControl, "1, 20, 3, 1, right, bottom"); //$NON-NLS-1$
-		
-		pnlBot = new JPanel();
-		pnlBase.add(pnlBot, "1, 3, 3, 1, fill, fill"); //$NON-NLS-1$
-		
-		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		pnlBot.add(btnOK);
-		
-		btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
-		pnlBot.add(btnCancel);
-		btnCancel.addActionListener(arg0 -> cancel());
-		btnOK.addActionListener(e -> {try {
-			onBtnOK(true);
-		} catch (EnumFormatException | EnumValueNotFoundException e1) {
-			CCLog.addError(e1);
-		}});
+		btnChoose0.setEnabled(true);
 	}
-	
+
 	public void parseFromTemp(CCMovie tmpMov, boolean resetAddDate, boolean resetScore) {
 		if (!tmpMov.getAddDate().isMinimum() && !resetAddDate)
 			spnAddDate.setValue(tmpMov.getAddDate());
-		
+
 		setFilesize(tmpMov.getFilesize());
 		setMovieFormat(tmpMov.getFormat());
 		setMediaInfo(tmpMov.mediaInfo().get());
@@ -629,9 +119,9 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			if (!tmpMov.Parts.get(i).isEmpty())
 				setDirectFilepath(i, tmpMov.Parts.get(i));
 		}
-		
+
 		forceViewedHistory = tmpMov.ViewedHistory.get();
-		
+
 		setYear(tmpMov.getYear());
 		setZyklus(tmpMov.getZyklus().getTitle());
 		setZyklusNumber(tmpMov.getZyklus().getNumber());
@@ -643,20 +133,20 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		setFSK(tmpMov.getFSK());
 
 		if (! resetScore) cbxScore.setSelectedEnum(tmpMov.Score.get());
-		
+
 		for (int i = 0; i < CCGenreList.getMaxListSize(); i++) {
 			setGenre(i, tmpMov.Genres.get(i));
 		}
-		
+
 		setEnabledAll(true);
 		firstChooseClick = false;
 	}
-	
+
 	private void onBtnOK(boolean check) throws EnumFormatException, EnumValueNotFoundException {
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserData(problems);
-		
+
 		// some problems are too fatal
 		if (probvalue && ! edCvrControl.isCoverSet()) {
 			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
@@ -666,47 +156,47 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 			probvalue = false;
 		}
-		
+
 		if (! probvalue) {
 			InputErrorDialog amied = new InputErrorDialog(problems, this, this);
 			amied.setVisible(true);
 			return;
 		}
-		
+
 		CCMovie newM = movieList.createNewEmptyMovie();
-		
+
 		newM.beginUpdating();
-		
+
 		//#####################################################################################
-		
+
 		if (forceViewedHistory != null) newM.setViewedHistoryFromUI(forceViewedHistory);
-		
+
 		newM.Parts.set(0, ed_Part0.getText());
 		newM.Parts.set(1, ed_Part1.getText());
 		newM.Parts.set(2, ed_Part2.getText());
 		newM.Parts.set(3, ed_Part3.getText());
 		newM.Parts.set(4, ed_Part4.getText());
 		newM.Parts.set(5, ed_Part5.getText());
-		
+
 		newM.Title.set(edTitle.getText());
 		newM.Zyklus.setTitle(edZyklus.getText());
 		newM.Zyklus.setNumber((int) spnZyklus.getValue());
-		
+
 		newM.MediaInfo.set(ctrlMediaInfo.getValue());
 		newM.Language.set(cbxLanguage.getValue());
-		
+
 		newM.Length.set((int) spnLength.getValue());
-		
+
 		newM.AddDate.set(spnAddDate.getValue());
-		
+
 		newM.OnlineScore.set((int) spnOnlineScore.getValue());
-		
+
 		newM.FSK.set(cbxFSK.getSelectedEnum().asFSK());
 		newM.Format.set(cbxFormat.getSelectedEnum());
-		
-		newM.Year.set((int) spnYear.getValue());
+
+		newM.Year.set(spnYear.getValue());
 		newM.FileSize.set((long) spnSize.getValue());
-		
+
 		newM.Genres.set(cbxGenre0.getSelectedEnum(), 0);
 		newM.Genres.set(cbxGenre1.getSelectedEnum(), 1);
 		newM.Genres.set(cbxGenre2.getSelectedEnum(), 2);
@@ -715,45 +205,45 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		newM.Genres.set(cbxGenre5.getSelectedEnum(), 5);
 		newM.Genres.set(cbxGenre6.getSelectedEnum(), 6);
 		newM.Genres.set(cbxGenre7.getSelectedEnum(), 7);
-		
+
 		newM.Score.set(cbxScore.getSelectedEnum());
 		newM.OnlineReference.set(edReference.getValue());
 		newM.Groups.set(edGroups.getValue());
 
 		newM.setCover(edCvrControl.getResizedImageForStorage());
-		
+
 		newM.endUpdating();
-		
+
 		dispose();
 	}
-	
+
 	private void cancel() {
 		this.dispose();
 	}
-	
-	private void showIMDBParser() {
+
+	private void showOnlineParser() {
 		(new ParseOnlineDialog(this, this, CCDBElementTyp.MOVIE)).setVisible(true);
 	}
-	
+
 	private void initFileChooser() {
 		videoFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.videoFileChooser.filterDescription", CCFileFormat::isValidMovieFormat)); //$NON-NLS-1$
-		
+
 		videoFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.videoFileChooser.title")); //$NON-NLS-1$
 	}
 
 	private void setDefaultValues() {
 		cbxScore.setSelectedEnum(CCUserScore.RATING_NO);
-		
+
 		cbxFSK.setSelectedEnum(CCOptionalFSK.NULL);
 
 		spnAddDate.setValue(CCDate.getCurrentDate());
 		spnZyklus.setValue(-1);
-		
+
 		edReference.setValue(CCOnlineReferenceList.EMPTY);
-		
+
 		updateByteDisp();
 	}
-	
+
 	private void setEnabledAll(boolean e) {
 		edZyklus.setEnabled(e);
 		btnParseIMDB.setEnabled(e);
@@ -792,25 +282,26 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		cbxScore.setEnabled(e);
 		edReference.setEnabled(e);
 		edGroups.setEnabled(e);
-		btnMediaInfo.setEnabled(e);
-		btnMediaInfo2.setEnabled(e);
+		btnMediaInfoMain.setEnabled(e);
+		btnMediaInfoLang.setEnabled(e);
+		btnMediaInfoLen.setEnabled(e);
 		ctrlMediaInfo.setEnabled(e);
 		btnQueryMediaInfo.setEnabled(e);
 	}
-	
+
 	private void onBtnChooseClicked(int cNmbr) {
 		int returnval = videoFileChooser.showOpenDialog(this);
-		
+
 		if (returnval != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
-		
+
 		setFilepath(cNmbr, videoFileChooser.getSelectedFile().getAbsolutePath());
-		
+
 		if (firstChooseClick) {
 			setEnabledAll(true);
 			parseFromFile(videoFileChooser.getSelectedFile().getAbsolutePath());
-			
+
 			firstChooseClick = false;
 
 			updateFilesize();
@@ -822,28 +313,28 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			runMediaInfoInBackground();
 		}
 	}
-	
+
 	private void parseFromFile(String fp) {
 		FilenameParserResult r = FilenameParser.parse(movieList, fp);
-		
+
 		if (r == null) return;
-		
+
 		if (r.Title != null) setMovieName(r.Title);
 		if (r.Zyklus != null) setZyklus(r.Zyklus.getTitle());
 		if (r.Zyklus != null) setZyklusNumber(r.Zyklus.getNumber());
-		
+
 		if (r.Language != null) setMovieLanguage(r.Language);
 		if (r.Format != null) setMovieFormat(r.Format);
 
 		if (r.Groups != null) setGroupList(r.Groups);
-		
-		if (r.AdditionalFiles != null) 
-			for (Entry<Integer, String> addFile : r.AdditionalFiles.entrySet())
+
+		if (r.AdditionalFiles != null)
+			for (Map.Entry<Integer, String> addFile : r.AdditionalFiles.entrySet())
 				setFilepath(addFile.getKey()-1, addFile.getValue());
 
 		runMediaInfoInBackground();
 	}
-	
+
 	private void onBtnClearClicked(int cNmbr) {
 		switch (cNmbr) {
 		case 0:
@@ -865,10 +356,10 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			ed_Part5.setText(""); //$NON-NLS-1$
 			break;
 		}
-		
+
 		updateFilesize();
 	}
-	
+
 	@Override
 	public void setMovieFormat(CCFileFormat cmf) {
 		cbxFormat.setSelectedEnum(cmf);
@@ -881,12 +372,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	@Override
 	public void setFilepath(int p, String t) {
 		t = PathFormatter.getCCPath(t);
-				
+
 		setDirectFilepath(p, t);
-		
+
 		updateFilesize();
 	}
-	
+
 	private void setDirectFilepath(int p, String pt) {
 		switch (p) {
 		case 0:
@@ -943,12 +434,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	public void setMediaInfo(CCMediaInfo mi) {
 		ctrlMediaInfo.setValue(mi);
 	}
-	
+
 	@Override
 	public void setYear(int y) {
 		spnYear.setValue(y);
 	}
-	
+
 	@Override
 	public void setGenre(int gid, CCGenre movGenre) {
 		switch (gid) {
@@ -962,35 +453,35 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		case 7: cbxGenre7.setSelectedEnum(movGenre); break;
 		}
 	}
-	
+
 	@Override
 	public void setFSK(CCFSK fsk) {
 		cbxFSK.setSelectedEnum(fsk.asOptionalFSK());
 	}
-	
+
 	@Override
 	public void setLength(int l) {
 		spnLength.setValue(l);
 	}
-	
+
 	@Override
 	public void setScore(CCOnlineScore s) {
 		spnOnlineScore.setValue(s.asInt());
 	}
-	
+
 	@Override
 	public void onFinishInserting() {
 		//
 	}
-	
+
 	private void updateByteDisp() {
 		lblFileSizeDisp.setText("Byte = " + FileSizeFormatter.format((long) spnSize.getValue())); //$NON-NLS-1$
 	}
-	
+
 	private String getMovieTitle() {
 		return edTitle.getText();
 	}
-	
+
 	private String getMovieZyklus() {
 		return edZyklus.getText();
 	}
@@ -1013,51 +504,51 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	public CCOnlineReferenceList getSearchReference() {
 		return edReference.getValue();
 	}
-	
+
 	private void updateFilesize() {
 		CCFileSize size = CCFileSize.ZERO;
-		
+
 		if (! ed_Part0.getText().isEmpty()) {
 			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part0.getText())));
 		}
-		
+
 		if (! ed_Part1.getText().isEmpty()) {
 			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part1.getText())));
 		}
-		
+
 		if (! ed_Part2.getText().isEmpty()) {
 			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part3.getText())));
 		}
-		
+
 		if (! ed_Part3.getText().isEmpty()) {
 			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part3.getText())));
 		}
-		
+
 		if (! ed_Part4.getText().isEmpty()) {
 			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part4.getText())));
 		}
-		
+
 		if (! ed_Part5.getText().isEmpty()) {
 			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(ed_Part5.getText())));
 		}
-		
+
 		setFilesize(size);
 	}
-	
+
 	@Override
 	public void setCover(BufferedImage nci) {
 		edCvrControl.setCover(nci);
 	}
-	
+
 	@Override
 	public void setOnlineReference(CCOnlineReferenceList ref) {
 		edReference.setValue(ref);
 	}
-	
+
 	public void setGroups(CCGroupList gl) {
 		edGroups.setValue(gl);
 	}
-	
+
 	private boolean checkUserData(List<UserDataProblem> ret) {
 		try
 		{
@@ -1085,7 +576,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			);
 
 			UserDataProblem.testMovieData(ret, movieList, null, mpack);
-		
+
 			return ret.isEmpty();
 		}
 		catch (Exception e)
@@ -1093,7 +584,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			return false;
 		}
 	}
-	
+
 	@Override
 	public void onAMIEDIgnoreClicked()
 	{
@@ -1104,7 +595,42 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		}
 	}
 
-	private void parseCodecMetadata() {
+	private void calculateMediaInfoAndSetLength() {
+		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			List<MediaQueryResult> dat = new ArrayList<>();
+
+			if (!Str.isNullOrWhitespace(ed_Part0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part0.getText()), false));
+			if (!Str.isNullOrWhitespace(ed_Part1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part1.getText()), false));
+			if (!Str.isNullOrWhitespace(ed_Part2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part2.getText()), false));
+			if (!Str.isNullOrWhitespace(ed_Part3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part3.getText()), false));
+			if (!Str.isNullOrWhitespace(ed_Part4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part4.getText()), false));
+			if (!Str.isNullOrWhitespace(ed_Part5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(ed_Part5.getText()), false));
+
+			if (dat.isEmpty()) {
+				lblLenAuto.setText(Str.Empty);
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
+				return;
+			}
+
+			lblLenAuto.setText(Str.Empty);
+
+			int dur = (int) (CCStreams.iterate(dat).any(d -> d.Duration == -1) ? -1 : (CCStreams.iterate(dat).sumDouble(d -> d.Duration)/60));
+			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
+			setLength(dur);
+
+		} catch (IOException | MediaQueryException e) {
+			CCLog.addWarning(e);
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	private void calculateMediaInfoAndSetLanguage() {
 		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
@@ -1152,7 +678,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		}
 	}
 
-	private void getMediaInfo() {
+	private void calculateAndSetMediaInfo() {
 		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
@@ -1182,7 +708,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		}
 	}
 
-	private void showCodecMetadata() {
+	private void calculateAndShowMediaInfo() {
 		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
@@ -1266,4 +792,570 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			}
 		}, "MINFO_QUERY").start(); //$NON-NLS-1$
 	}
+
+	private void onChoose0(ActionEvent e) {
+		onBtnChooseClicked(0);
+	}
+
+	private void onChoose1(ActionEvent e) {
+		onBtnChooseClicked(1);
+	}
+
+	private void onChoose2(ActionEvent e) {
+		onBtnChooseClicked(2);
+	}
+
+	private void onChoose3(ActionEvent e) {
+		onBtnChooseClicked(3);
+	}
+
+	private void onChoose4(ActionEvent e) {
+		onBtnChooseClicked(4);
+	}
+
+	private void onChoose5(ActionEvent e) {
+		onBtnChooseClicked(5);
+	}
+
+	private void onClear1(ActionEvent e) {
+		onBtnClearClicked(1);
+	}
+
+	private void onClear2(ActionEvent e) {
+		onBtnClearClicked(2);
+	}
+
+	private void onClear3(ActionEvent e) {
+		onBtnClearClicked(3);
+	}
+
+	private void onClear4(ActionEvent e) {
+		onBtnClearClicked(4);
+	}
+
+	private void onClear5(ActionEvent e) {
+		onBtnClearClicked(5);
+	}
+
+	private void onLanguageChanged(PropertyChangeEvent e) {
+		_isDirtyLanguage = true;
+	}
+
+	private void onMediaInfoChanged() {
+		_isDirtyMediaInfo = true;
+	}
+
+	private void onOkay() {
+		try {
+			onBtnOK(true);
+		}
+		catch (EnumFormatException | EnumValueNotFoundException e1) {
+			CCLog.addError(e1);
+		}
+	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		pnlLeft = new JPanel();
+		pnlParts = new JPanel();
+		label1 = new JLabel();
+		ed_Part0 = new ReadableTextField();
+		btnChoose0 = new JButton();
+		label2 = new JLabel();
+		ed_Part1 = new ReadableTextField();
+		btnChoose1 = new JButton();
+		btnClear1 = new JButton();
+		label3 = new JLabel();
+		ed_Part2 = new ReadableTextField();
+		btnChoose2 = new JButton();
+		btnClear2 = new JButton();
+		label5 = new JLabel();
+		ed_Part3 = new ReadableTextField();
+		btnChoose3 = new JButton();
+		btnClear3 = new JButton();
+		label6 = new JLabel();
+		ed_Part4 = new ReadableTextField();
+		btnChoose4 = new JButton();
+		btnClear4 = new JButton();
+		label4 = new JLabel();
+		ed_Part5 = new ReadableTextField();
+		btnChoose5 = new JButton();
+		btnClear5 = new JButton();
+		pnlData = new JPanel();
+		label15 = new JLabel();
+		edTitle = new JTextField();
+		label16 = new JLabel();
+		edReference = new JReferenceChooser();
+		label17 = new JLabel();
+		edZyklus = new JTextField();
+		spnZyklus = new JSpinner();
+		label18 = new JLabel();
+		edGroups = new GroupListEditor(movieList);
+		label19 = new JLabel();
+		spnLength = new JSpinner();
+		label29 = new JLabel();
+		btnMediaInfoLen = new JMediaInfoButton();
+		lblLenAuto = new JLabel();
+		label20 = new JLabel();
+		cbxLanguage = new LanguageChooser();
+		btnMediaInfoLang = new JMediaInfoButton();
+		btnQueryMediaInfo = new JButton();
+		label21 = new JLabel();
+		ctrlMediaInfo = new JMediaInfoControl(() -> Str.isNullOrWhitespace(ed_Part0.getText()) ? null : PathFormatter.fromCCPath(ed_Part0.getText()));
+		btnMediaInfoMain = new JMediaInfoButton();
+		pbLanguageLoad = new JProgressBar();
+		label22 = new JLabel();
+		spnAddDate = new JCCDateSpinner(CCDate.getMinimumDate(), CCDate.getMinimumDate(), null);
+		label23 = new JLabel();
+		spnOnlineScore = new JSpinner();
+		label30 = new JLabel();
+		label24 = new JLabel();
+		cbxFSK = new CCEnumComboBox<CCOptionalFSK>(CCOptionalFSK.getWrapper());
+		label25 = new JLabel();
+		cbxFormat = new CCEnumComboBox<CCFileFormat>(CCFileFormat.getWrapper());
+		label26 = new JLabel();
+		spnYear = new JYearSpinner();
+		label27 = new JLabel();
+		spnSize = new JSpinner();
+		lblFileSizeDisp = new JLabel();
+		label28 = new JLabel();
+		cbxScore = new CCEnumComboBox<CCUserScore>(CCUserScore.getWrapper());
+		pnlRight = new JPanel();
+		pnlGenres = new JPanel();
+		label7 = new JLabel();
+		cbxGenre0 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+		label8 = new JLabel();
+		cbxGenre1 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+		label9 = new JLabel();
+		cbxGenre2 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+		label10 = new JLabel();
+		cbxGenre3 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+		label11 = new JLabel();
+		cbxGenre4 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+		label12 = new JLabel();
+		cbxGenre5 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+		label13 = new JLabel();
+		cbxGenre6 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+		label14 = new JLabel();
+		cbxGenre7 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+		btnParseIMDB = new JButton();
+		edCvrControl = new EditCoverControl();
+		pnlBottom = new JPanel();
+		btnOK = new JButton();
+		btnCancel = new JButton();
+
+		//======== this ========
+		setTitle(LocaleBundle.getString("AddMovieFrame.this.title")); //$NON-NLS-1$
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		var contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$ugap, [300dlu,pref]:grow, 10dlu, [100dlu,default]:grow, $ugap", //$NON-NLS-1$
+			"$ugap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
+
+		//======== pnlLeft ========
+		{
+			pnlLeft.setLayout(new FormLayout(
+				"pref:grow", //$NON-NLS-1$
+				"default, 10dlu, default:grow, default")); //$NON-NLS-1$
+
+			//======== pnlParts ========
+			{
+				pnlParts.setLayout(new FormLayout(
+					"default, $lcgap, [175dlu,default]:grow, 2*($lcgap, default)", //$NON-NLS-1$
+					"5*(default, $lgap), default")); //$NON-NLS-1$
+
+				//---- label1 ----
+				label1.setText(LocaleBundle.getString("AddMovieFrame.lblPart.text")); //$NON-NLS-1$
+				pnlParts.add(label1, CC.xy(1, 1));
+				pnlParts.add(ed_Part0, CC.xywh(3, 1, 3, 1));
+
+				//---- btnChoose0 ----
+				btnChoose0.setText("..."); //$NON-NLS-1$
+				btnChoose0.addActionListener(e -> onChoose0(e));
+				pnlParts.add(btnChoose0, CC.xy(7, 1));
+
+				//---- label2 ----
+				label2.setText(LocaleBundle.getString("AddMovieFrame.lblPart_1.text")); //$NON-NLS-1$
+				pnlParts.add(label2, CC.xy(1, 3));
+				pnlParts.add(ed_Part1, CC.xy(3, 3));
+
+				//---- btnChoose1 ----
+				btnChoose1.setText("..."); //$NON-NLS-1$
+				btnChoose1.addActionListener(e -> onChoose1(e));
+				pnlParts.add(btnChoose1, CC.xy(5, 3));
+
+				//---- btnClear1 ----
+				btnClear1.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
+				btnClear1.addActionListener(e -> onClear1(e));
+				pnlParts.add(btnClear1, CC.xy(7, 3));
+
+				//---- label3 ----
+				label3.setText(LocaleBundle.getString("AddMovieFrame.lblPart_2.text")); //$NON-NLS-1$
+				pnlParts.add(label3, CC.xy(1, 5));
+				pnlParts.add(ed_Part2, CC.xy(3, 5));
+
+				//---- btnChoose2 ----
+				btnChoose2.setText("..."); //$NON-NLS-1$
+				btnChoose2.addActionListener(e -> onChoose2(e));
+				pnlParts.add(btnChoose2, CC.xy(5, 5));
+
+				//---- btnClear2 ----
+				btnClear2.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
+				btnClear2.addActionListener(e -> onClear2(e));
+				pnlParts.add(btnClear2, CC.xy(7, 5));
+
+				//---- label5 ----
+				label5.setText(LocaleBundle.getString("AddMovieFrame.lblPart_3.text")); //$NON-NLS-1$
+				pnlParts.add(label5, CC.xy(1, 7));
+				pnlParts.add(ed_Part3, CC.xy(3, 7));
+
+				//---- btnChoose3 ----
+				btnChoose3.setText("..."); //$NON-NLS-1$
+				btnChoose3.addActionListener(e -> onChoose3(e));
+				pnlParts.add(btnChoose3, CC.xy(5, 7));
+
+				//---- btnClear3 ----
+				btnClear3.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
+				btnClear3.addActionListener(e -> onClear3(e));
+				pnlParts.add(btnClear3, CC.xy(7, 7));
+
+				//---- label6 ----
+				label6.setText(LocaleBundle.getString("AddMovieFrame.lblPart_4.text")); //$NON-NLS-1$
+				pnlParts.add(label6, CC.xy(1, 9));
+				pnlParts.add(ed_Part4, CC.xy(3, 9));
+
+				//---- btnChoose4 ----
+				btnChoose4.setText("..."); //$NON-NLS-1$
+				btnChoose4.addActionListener(e -> onChoose4(e));
+				pnlParts.add(btnChoose4, CC.xy(5, 9));
+
+				//---- btnClear4 ----
+				btnClear4.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
+				btnClear4.addActionListener(e -> onClear4(e));
+				pnlParts.add(btnClear4, CC.xy(7, 9));
+
+				//---- label4 ----
+				label4.setText(LocaleBundle.getString("AddMovieFrame.lblPart_5.text")); //$NON-NLS-1$
+				pnlParts.add(label4, CC.xy(1, 11));
+				pnlParts.add(ed_Part5, CC.xy(3, 11));
+
+				//---- btnChoose5 ----
+				btnChoose5.setText("..."); //$NON-NLS-1$
+				btnChoose5.addActionListener(e -> onChoose5(e));
+				pnlParts.add(btnChoose5, CC.xy(5, 11));
+
+				//---- btnClear5 ----
+				btnClear5.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
+				btnClear5.addActionListener(e -> onClear5(e));
+				pnlParts.add(btnClear5, CC.xy(7, 11));
+			}
+			pnlLeft.add(pnlParts, CC.xy(1, 1, CC.FILL, CC.FILL));
+
+			//======== pnlData ========
+			{
+				pnlData.setLayout(new FormLayout(
+					"default, $lcgap, pref:grow, $lcgap, [40dlu,default], $lcgap, 16dlu, $lcgap, 25dlu, $lcgap, [30dlu,default]", //$NON-NLS-1$
+					"13*(default, $lgap), default")); //$NON-NLS-1$
+
+				//---- label15 ----
+				label15.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
+				pnlData.add(label15, CC.xy(1, 1));
+				pnlData.add(edTitle, CC.xywh(3, 1, 3, 1));
+
+				//---- label16 ----
+				label16.setText(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
+				pnlData.add(label16, CC.xy(1, 3));
+				pnlData.add(edReference, CC.xywh(3, 3, 3, 1));
+
+				//---- label17 ----
+				label17.setText(LocaleBundle.getString("AddMovieFrame.lblZyklus.text")); //$NON-NLS-1$
+				pnlData.add(label17, CC.xy(1, 5));
+				pnlData.add(edZyklus, CC.xy(3, 5));
+
+				//---- spnZyklus ----
+				spnZyklus.setModel(new SpinnerNumberModel(-1, -1, null, 1));
+				pnlData.add(spnZyklus, CC.xy(5, 5));
+
+				//---- label18 ----
+				label18.setText(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
+				pnlData.add(label18, CC.xy(1, 7));
+				pnlData.add(edGroups, CC.xywh(3, 7, 3, 1));
+
+				//---- label19 ----
+				label19.setText(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
+				pnlData.add(label19, CC.xy(1, 9));
+
+				//---- spnLength ----
+				spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
+				pnlData.add(spnLength, CC.xy(3, 9));
+
+				//---- label29 ----
+				label29.setText("min."); //$NON-NLS-1$
+				pnlData.add(label29, CC.xy(5, 9));
+
+				//---- btnMediaInfoLen ----
+				btnMediaInfoLen.setText("text"); //$NON-NLS-1$
+				btnMediaInfoLen.addActionListener(e -> calculateMediaInfoAndSetLength());
+				pnlData.add(btnMediaInfoLen, CC.xy(7, 9));
+				pnlData.add(lblLenAuto, CC.xywh(9, 9, 3, 1, CC.FILL, CC.FILL));
+
+				//---- label20 ----
+				label20.setText(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
+				pnlData.add(label20, CC.xy(1, 11));
+
+				//---- cbxLanguage ----
+				cbxLanguage.addPropertyChangeListener(e -> onLanguageChanged(e));
+				pnlData.add(cbxLanguage, CC.xywh(3, 11, 3, 1));
+
+				//---- btnMediaInfoLang ----
+				btnMediaInfoLang.addActionListener(e -> calculateMediaInfoAndSetLanguage());
+				pnlData.add(btnMediaInfoLang, CC.xy(7, 11));
+
+				//---- btnQueryMediaInfo ----
+				btnQueryMediaInfo.setText("..."); //$NON-NLS-1$
+				btnQueryMediaInfo.addActionListener(e -> calculateAndShowMediaInfo());
+				pnlData.add(btnQueryMediaInfo, CC.xy(9, 11));
+
+				//---- label21 ----
+				label21.setText(LocaleBundle.getString("AddMovieFrame.lblMediaInfo")); //$NON-NLS-1$
+				pnlData.add(label21, CC.xy(1, 13));
+
+				//---- ctrlMediaInfo ----
+				ctrlMediaInfo.addPropertyChangeListener(e -> onMediaInfoChanged());
+				pnlData.add(ctrlMediaInfo, CC.xywh(3, 13, 3, 1));
+
+				//---- btnMediaInfoMain ----
+				btnMediaInfoMain.addActionListener(e -> calculateAndSetMediaInfo());
+				pnlData.add(btnMediaInfoMain, CC.xy(7, 13));
+
+				//---- pbLanguageLoad ----
+				pbLanguageLoad.setIndeterminate(true);
+				pnlData.add(pbLanguageLoad, CC.xy(9, 13));
+
+				//---- label22 ----
+				label22.setText(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
+				pnlData.add(label22, CC.xy(1, 15));
+				pnlData.add(spnAddDate, CC.xywh(3, 15, 3, 1));
+
+				//---- label23 ----
+				label23.setText(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
+				pnlData.add(label23, CC.xy(1, 17));
+
+				//---- spnOnlineScore ----
+				spnOnlineScore.setModel(new SpinnerNumberModel(0, 0, 10, 1));
+				pnlData.add(spnOnlineScore, CC.xywh(3, 17, 3, 1));
+
+				//---- label30 ----
+				label30.setText("/ 10"); //$NON-NLS-1$
+				pnlData.add(label30, CC.xy(7, 17));
+
+				//---- label24 ----
+				label24.setText(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
+				pnlData.add(label24, CC.xy(1, 19));
+				pnlData.add(cbxFSK, CC.xywh(3, 19, 3, 1));
+
+				//---- label25 ----
+				label25.setText(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
+				pnlData.add(label25, CC.xy(1, 21));
+				pnlData.add(cbxFormat, CC.xywh(3, 21, 3, 1));
+
+				//---- label26 ----
+				label26.setText(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
+				pnlData.add(label26, CC.xy(1, 23));
+				pnlData.add(spnYear, CC.xywh(3, 23, 3, 1));
+
+				//---- label27 ----
+				label27.setText(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
+				pnlData.add(label27, CC.xy(1, 25));
+
+				//---- spnSize ----
+				spnSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
+				spnSize.addChangeListener(e -> updateByteDisp());
+				pnlData.add(spnSize, CC.xywh(3, 25, 3, 1));
+
+				//---- lblFileSizeDisp ----
+				lblFileSizeDisp.setText("Byte = 0"); //$NON-NLS-1$
+				pnlData.add(lblFileSizeDisp, CC.xywh(7, 25, 5, 1));
+
+				//---- label28 ----
+				label28.setText(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
+				pnlData.add(label28, CC.xy(1, 27));
+				pnlData.add(cbxScore, CC.xywh(3, 27, 3, 1));
+			}
+			pnlLeft.add(pnlData, CC.xy(1, 3, CC.FILL, CC.FILL));
+		}
+		contentPane.add(pnlLeft, CC.xy(2, 2, CC.FILL, CC.FILL));
+
+		//======== pnlRight ========
+		{
+			pnlRight.setLayout(new FormLayout(
+				"default:grow", //$NON-NLS-1$
+				"default:grow, 10dlu, default:grow")); //$NON-NLS-1$
+
+			//======== pnlGenres ========
+			{
+				pnlGenres.setLayout(new FormLayout(
+					"default, $lcgap, default:grow", //$NON-NLS-1$
+					"8*(default, $lgap), [50dlu,default]")); //$NON-NLS-1$
+
+				//---- label7 ----
+				label7.setText(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
+				pnlGenres.add(label7, CC.xy(1, 1));
+				pnlGenres.add(cbxGenre0, CC.xy(3, 1));
+
+				//---- label8 ----
+				label8.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
+				pnlGenres.add(label8, CC.xy(1, 3));
+				pnlGenres.add(cbxGenre1, CC.xy(3, 3));
+
+				//---- label9 ----
+				label9.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
+				pnlGenres.add(label9, CC.xy(1, 5));
+				pnlGenres.add(cbxGenre2, CC.xy(3, 5));
+
+				//---- label10 ----
+				label10.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
+				pnlGenres.add(label10, CC.xy(1, 7));
+				pnlGenres.add(cbxGenre3, CC.xy(3, 7));
+
+				//---- label11 ----
+				label11.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
+				pnlGenres.add(label11, CC.xy(1, 9));
+				pnlGenres.add(cbxGenre4, CC.xy(3, 9));
+
+				//---- label12 ----
+				label12.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
+				pnlGenres.add(label12, CC.xy(1, 11));
+				pnlGenres.add(cbxGenre5, CC.xy(3, 11));
+
+				//---- label13 ----
+				label13.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
+				pnlGenres.add(label13, CC.xy(1, 13));
+				pnlGenres.add(cbxGenre6, CC.xy(3, 13));
+
+				//---- label14 ----
+				label14.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
+				pnlGenres.add(label14, CC.xy(1, 15));
+				pnlGenres.add(cbxGenre7, CC.xy(3, 15));
+
+				//---- btnParseIMDB ----
+				btnParseIMDB.setText(LocaleBundle.getString("AddMovieFrame.btnParseIMDB.text")); //$NON-NLS-1$
+				btnParseIMDB.setFont(btnParseIMDB.getFont().deriveFont(btnParseIMDB.getFont().getStyle() | Font.BOLD, btnParseIMDB.getFont().getSize() + 4f));
+				btnParseIMDB.addActionListener(e -> showOnlineParser());
+				pnlGenres.add(btnParseIMDB, CC.xywh(1, 17, 3, 1, CC.FILL, CC.FILL));
+			}
+			pnlRight.add(pnlGenres, CC.xy(1, 1, CC.FILL, CC.FILL));
+			pnlRight.add(edCvrControl, CC.xy(1, 3, CC.RIGHT, CC.BOTTOM));
+		}
+		contentPane.add(pnlRight, CC.xy(4, 2, CC.FILL, CC.FILL));
+
+		//======== pnlBottom ========
+		{
+			pnlBottom.setLayout(new FlowLayout());
+
+			//---- btnOK ----
+			btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+			btnOK.addActionListener(e -> onOkay());
+			pnlBottom.add(btnOK);
+
+			//---- btnCancel ----
+			btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+			btnCancel.addActionListener(e -> cancel());
+			pnlBottom.add(btnCancel);
+		}
+		contentPane.add(pnlBottom, CC.xywh(2, 4, 3, 1));
+		pack();
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JPanel pnlLeft;
+	private JPanel pnlParts;
+	private JLabel label1;
+	private ReadableTextField ed_Part0;
+	private JButton btnChoose0;
+	private JLabel label2;
+	private ReadableTextField ed_Part1;
+	private JButton btnChoose1;
+	private JButton btnClear1;
+	private JLabel label3;
+	private ReadableTextField ed_Part2;
+	private JButton btnChoose2;
+	private JButton btnClear2;
+	private JLabel label5;
+	private ReadableTextField ed_Part3;
+	private JButton btnChoose3;
+	private JButton btnClear3;
+	private JLabel label6;
+	private ReadableTextField ed_Part4;
+	private JButton btnChoose4;
+	private JButton btnClear4;
+	private JLabel label4;
+	private ReadableTextField ed_Part5;
+	private JButton btnChoose5;
+	private JButton btnClear5;
+	private JPanel pnlData;
+	private JLabel label15;
+	private JTextField edTitle;
+	private JLabel label16;
+	private JReferenceChooser edReference;
+	private JLabel label17;
+	private JTextField edZyklus;
+	private JSpinner spnZyklus;
+	private JLabel label18;
+	private GroupListEditor edGroups;
+	private JLabel label19;
+	private JSpinner spnLength;
+	private JLabel label29;
+	private JMediaInfoButton btnMediaInfoLen;
+	private JLabel lblLenAuto;
+	private JLabel label20;
+	private LanguageChooser cbxLanguage;
+	private JMediaInfoButton btnMediaInfoLang;
+	private JButton btnQueryMediaInfo;
+	private JLabel label21;
+	private JMediaInfoControl ctrlMediaInfo;
+	private JMediaInfoButton btnMediaInfoMain;
+	private JProgressBar pbLanguageLoad;
+	private JLabel label22;
+	private JCCDateSpinner spnAddDate;
+	private JLabel label23;
+	private JSpinner spnOnlineScore;
+	private JLabel label30;
+	private JLabel label24;
+	private CCEnumComboBox<CCOptionalFSK> cbxFSK;
+	private JLabel label25;
+	private CCEnumComboBox<CCFileFormat> cbxFormat;
+	private JLabel label26;
+	private JYearSpinner spnYear;
+	private JLabel label27;
+	private JSpinner spnSize;
+	private JLabel lblFileSizeDisp;
+	private JLabel label28;
+	private CCEnumComboBox<CCUserScore> cbxScore;
+	private JPanel pnlRight;
+	private JPanel pnlGenres;
+	private JLabel label7;
+	private CCEnumComboBox<CCGenre> cbxGenre0;
+	private JLabel label8;
+	private CCEnumComboBox<CCGenre> cbxGenre1;
+	private JLabel label9;
+	private CCEnumComboBox<CCGenre> cbxGenre2;
+	private JLabel label10;
+	private CCEnumComboBox<CCGenre> cbxGenre3;
+	private JLabel label11;
+	private CCEnumComboBox<CCGenre> cbxGenre4;
+	private JLabel label12;
+	private CCEnumComboBox<CCGenre> cbxGenre5;
+	private JLabel label13;
+	private CCEnumComboBox<CCGenre> cbxGenre6;
+	private JLabel label14;
+	private CCEnumComboBox<CCGenre> cbxGenre7;
+	private JButton btnParseIMDB;
+	private EditCoverControl edCvrControl;
+	private JPanel pnlBottom;
+	private JButton btnOK;
+	private JButton btnCancel;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

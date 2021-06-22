@@ -10,6 +10,7 @@ public class JMediaInfoButton extends JButton
 	public JMediaInfoButton()
 	{
 		super(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
+		setToolTipText("MediaInfo");
 	}
 
 	@Override

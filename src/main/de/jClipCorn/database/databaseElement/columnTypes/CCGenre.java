@@ -62,7 +62,7 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 		LocaleBundle.getString("CCMovieGenre.Genre044"), LocaleBundle.getString("CCMovieGenre.Genre045"), LocaleBundle.getString("CCMovieGenre.Genre046"), LocaleBundle.getString("CCMovieGenre.Genre047"), 
 		LocaleBundle.getString("CCMovieGenre.Genre048"), LocaleBundle.getString("CCMovieGenre.Genre049"), LocaleBundle.getString("CCMovieGenre.Genre050"), LocaleBundle.getString("CCMovieGenre.Genre051"),
 		LocaleBundle.getString("CCMovieGenre.Genre052"), LocaleBundle.getString("CCMovieGenre.Genre053"), LocaleBundle.getString("CCMovieGenre.Genre054"), LocaleBundle.getString("CCMovieGenre.Genre055"),
-		LocaleBundle.getString("CCMovieGenre.Genre056"),
+		LocaleBundle.getString("CCMovieGenre.Genre056"), LocaleBundle.getString("CCMovieGenre.Genre057"),
 	};
 	
 	private final int id;
@@ -287,6 +287,7 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 		if (malEquals(txt, "Vampire"))       return new CCGenre[]{CCGenre.GENRE_038};
 		if (malEquals(txt, "Yaoi"))          return new CCGenre[]{};
 		if (malEquals(txt, "Yuri"))          return new CCGenre[]{};
+		if (malEquals(txt, "Seinen"))        return new CCGenre[]{CCGenre.GENRE_057};
 
 		return new CCGenre[]{};
 	}
@@ -319,6 +320,7 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 		if (txt.equalsIgnoreCase("Sports"))          return new CCGenre[]{CCGenre.GENRE_043};
 		if (txt.equalsIgnoreCase("Supernatural"))    return new CCGenre[]{CCGenre.GENRE_038};
 		if (txt.equalsIgnoreCase("Thriller"))        return new CCGenre[]{CCGenre.GENRE_006};
+		if (txt.equalsIgnoreCase("Seinen"))          return new CCGenre[]{CCGenre.GENRE_057};
 
 		return new CCGenre[]{};
 	}

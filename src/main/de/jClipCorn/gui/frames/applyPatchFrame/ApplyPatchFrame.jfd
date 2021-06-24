@@ -64,8 +64,15 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 4
 				"gridY": 6
-				"gridWidth": 5
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "chkbxSeriesAutoPath"
+				"text": new FormMessage( null, "ApplyPatchFrame.chkbxSeriesAutoPath" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 6
+				"gridWidth": 3
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label4"

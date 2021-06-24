@@ -373,7 +373,12 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		
 		return ChecksumHelper.calculateFastMD5(f);
 	}
-	
+
+	public File getFileForCreatedFolderstructure() {
+		var root = getSeries().guessSeriesRootPath();
+		return getFileForCreatedFolderstructure(new File(root));
+	}
+
 	public File getFileForCreatedFolderstructure(File parentfolder) {
 		return getSeason().getFileForCreatedFolderstructure(parentfolder, Title.get(), EpisodeNumber.get(), Format.get(), null);
 	}

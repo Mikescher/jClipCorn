@@ -149,6 +149,7 @@ public class ApplyPatchFrame extends JFrame
 				edPathPatchfile.getText()+".state",
 				edPathDestMovies.getText(),
 				edPathDestSeries.getText(),
+				chkbxSeriesAutoPath.isSelected(),
 				edPathDestTrashMov.getText(),
 				edPathDestTrashSer.getText(),
 				PathFormatter.combine(PathFormatter.getDirectory(edPathPatchfile.getText()), "patch_data"),
@@ -175,8 +176,6 @@ public class ApplyPatchFrame extends JFrame
 				if (!new File(opt.DestinationTrashSeries).exists() && !new File(opt.DestinationTrashSeries).mkdirs()) {
 					throw new Exception("DestinationTrashSeries not found");
 				}
-
-
 
 				APFWorker.applyPatch(actlist, movielist, state, opt, cb, (dold, dnew) -> SwingUtils.invokeLater(() ->
 				{
@@ -220,6 +219,7 @@ public class ApplyPatchFrame extends JFrame
 		edPathDestMovies = new JTextField();
 		label3 = new JLabel();
 		edPathDestSeries = new JTextField();
+		chkbxSeriesAutoPath = new JCheckBox();
 		label4 = new JLabel();
 		edPathDestTrashMov = new JTextField();
 		label5 = new JLabel();
@@ -260,7 +260,11 @@ public class ApplyPatchFrame extends JFrame
 		//---- label3 ----
 		label3.setText(LocaleBundle.getString("ApplyPatchFrame.labelDestSeries")); //$NON-NLS-1$
 		contentPane.add(label3, CC.xy(2, 6));
-		contentPane.add(edPathDestSeries, CC.xywh(4, 6, 5, 1, CC.DEFAULT, CC.FILL));
+		contentPane.add(edPathDestSeries, CC.xy(4, 6, CC.DEFAULT, CC.FILL));
+
+		//---- chkbxSeriesAutoPath ----
+		chkbxSeriesAutoPath.setText(LocaleBundle.getString("ApplyPatchFrame.chkbxSeriesAutoPath")); //$NON-NLS-1$
+		contentPane.add(chkbxSeriesAutoPath, CC.xywh(6, 6, 3, 1));
 
 		//---- label4 ----
 		label4.setText(LocaleBundle.getString("ApplyPatchFrame.labelDestTrashMov")); //$NON-NLS-1$
@@ -308,6 +312,7 @@ public class ApplyPatchFrame extends JFrame
 	private JTextField edPathDestMovies;
 	private JLabel label3;
 	private JTextField edPathDestSeries;
+	private JCheckBox chkbxSeriesAutoPath;
 	private JLabel label4;
 	private JTextField edPathDestTrashMov;
 	private JLabel label5;

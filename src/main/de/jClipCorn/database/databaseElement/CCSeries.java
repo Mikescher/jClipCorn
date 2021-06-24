@@ -477,19 +477,14 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 			String pathMax = ""; //$NON-NLS-1$
 			int countMax = 0;
 
-			for (int seasi = 0; seasi < getSeasonCount(); seasi++) {
-				CCSeason season = getSeasonByArrayIndex(seasi);
-				for (int epsi = 0; epsi < season.getEpisodeCount(); epsi++) {
-					CCEpisode episode = season.getEpisodeByArrayIndex(epsi);
+			for(var episode: iteratorEpisodes())
+			{
+				String path = PathFormatter.getParentPath(episode.getAbsolutePart(), 3); // season-folder -> series-folder -> root-folder
+				result.put(path, result.getOrDefault(path, 0) + 1);
 
-					String path = PathFormatter.getParentPath(episode.getAbsolutePart(), 3); // season-folder -> series-folder -> root-folder
-
-					result.put(path, result.getOrDefault(path, 0) + 1);
-
-					if (result.getOrDefault(path, 0) > countMax) {
-						countMax = result.getOrDefault(path, 0);
-						pathMax = path;
-					}
+				if (result.getOrDefault(path, 0) > countMax) {
+					countMax = result.getOrDefault(path, 0);
+					pathMax = path;
 				}
 			}
 

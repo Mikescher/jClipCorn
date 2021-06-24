@@ -157,6 +157,11 @@ public class APFWorker
 
 			var serPath = ((CCEpisode) ielem).getFileForCreatedFolderstructure(new File(opt.DestinationSeries));
 
+			if (((CCEpisode) ielem).getSeries().iteratorEpisodes().filter(e -> !Str.isNullOrWhitespace(e.getPart())).count() > 1)
+			{
+				serPath = ((CCEpisode) ielem).getFileForCreatedFolderstructure();
+			}
+
 			var pSource = Path.of(opt.DataDir, source);
 			var ptarget = Path.of(serPath.getAbsolutePath(), destfilename);
 			if (Files.exists(ptarget)) ptarget = Path.of(opt.DestinationMovies, UUID.randomUUID() + "." + PathFormatter.getExtension(source));
@@ -164,6 +169,7 @@ public class APFWorker
 
 			if (opt.Porcelain) return;
 
+			new File(ptarget.toFile().getParent()).mkdirs();
 			Files.move(pSource, ptarget);
 
 			SwingUtils.invokeAndWait(() ->

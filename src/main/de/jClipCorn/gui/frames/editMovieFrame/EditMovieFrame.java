@@ -32,7 +32,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.Validator;
 import de.jClipCorn.util.adapter.UpdateCallbackAdapter;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.EnumFormatException;
@@ -48,7 +47,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -69,6 +67,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 
 	private boolean _initFinished = false;
 	private boolean _isDirty = false;
+
 	public EditMovieFrame(Component owner, CCMovie movie, UpdateCallbackListener ucl)
 	{
 		super();
@@ -94,17 +93,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 
 		setTitle(LocaleBundle.getFormattedString("EditMovieFrame.this.title", movie.getCompleteTitle())); //$NON-NLS-1$
 
-		DirtyUtil.initDirtyListener(this::setDirty,
-				edPart0, edPart1, edPart2, edPart3, edPart4, edPart5,
-				cbxGenre0, cbxGenre1, cbxGenre2, cbxGenre3, cbxGenre4, cbxGenre5, cbxGenre6, cbxGenre7,
-				edTitle, edReference, edZyklus, spnZyklus, ctrlMediaInfo, cbxLanguage, spnLength,
-				spnAddDate, spnLength, cbxFSK, cbxFormat,
-				spnYear, spnSize, cbxScore, tagPnl, edViewedHistory, edGroups,
-				edCvrControl);
-	}
-
-	private void QueryFromOnline(ActionEvent evt) {
-		(new ParseOnlineDialog(this, this, CCDBElementTyp.MOVIE)).setVisible(true);
+		DirtyUtil.initDirtyListenerRecursive(this::setDirty, this);
 	}
 
 	private void setDefaultValues() {
@@ -198,12 +187,8 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	private void initFileChooser() {
-		videoFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.videoFileChooser.filterDescription", new Validator<String>() { //$NON-NLS-1$
-			@Override
-			public boolean validate(String val) {
-				return CCFileFormat.isValidMovieFormat(val);
-			}
-		}));
+		//$NON-NLS-1$
+		videoFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.videoFileChooser.filterDescription", CCFileFormat::isValidMovieFormat));
 
 		videoFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.videoFileChooser.title")); //$NON-NLS-1$
 	}
@@ -470,7 +455,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		movie.FSK.set(cbxFSK.getSelectedEnum());
 		movie.Format.set(cbxFormat.getSelectedEnum());
 
-		movie.Year.set((int) spnYear.getValue());
+		movie.Year.set(spnYear.getValue());
 		movie.FileSize.set((long) spnSize.getValue());
 
 		movie.Genres.set(cbxGenre0.getSelectedEnum(), 0);
@@ -504,7 +489,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		dispose();
 	}
 
-	public boolean checkUserData(List<UserDataProblem> ret)
+	private boolean checkUserData(List<UserDataProblem> ret)
 	{
 		var mpack = new MovieDataPack
 		(
@@ -513,7 +498,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 			(int) spnLength.getValue(),
 			spnAddDate.getValue(),
 			cbxFormat.getSelectedEnum(),
-			(int) spnYear.getValue(),
+			spnYear.getValue(),
 			new CCFileSize((long) spnSize.getValue()),
 			Arrays.asList(edPart0.getText(), edPart1.getText(), edPart2.getText(), edPart3.getText(), edPart4.getText(), edPart5.getText()),
 			CCDateTimeList.createEmpty(),
@@ -689,47 +674,47 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		_isDirty = true;
 	}
 
-	private void onChoose0(ActionEvent e) {
+	private void onChoose0() {
 		onBtnChooseClicked(0);
 	}
 
-	private void onChoose1(ActionEvent e) {
+	private void onChoose1() {
 		onBtnChooseClicked(1);
 	}
 
-	private void onChoose2(ActionEvent e) {
+	private void onChoose2() {
 		onBtnChooseClicked(2);
 	}
 
-	private void onChoose3(ActionEvent e) {
+	private void onChoose3() {
 		onBtnChooseClicked(3);
 	}
 
-	private void onChoose4(ActionEvent e) {
+	private void onChoose4() {
 		onBtnChooseClicked(4);
 	}
 
-	private void onChoose5(ActionEvent e) {
+	private void onChoose5() {
 		onBtnChooseClicked(5);
 	}
 
-	private void onClear1(ActionEvent e) {
+	private void onClear1() {
 		onBtnClearClicked(1);
 	}
 
-	private void onClear2(ActionEvent e) {
+	private void onClear2() {
 		onBtnClearClicked(2);
 	}
 
-	private void onClear3(ActionEvent e) {
+	private void onClear3() {
 		onBtnClearClicked(3);
 	}
 
-	private void onClear4(ActionEvent e) {
+	private void onClear4() {
 		onBtnClearClicked(4);
 	}
 
-	private void onClear5(ActionEvent e) {
+	private void onClear5() {
 		onBtnClearClicked(5);
 	}
 
@@ -753,7 +738,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		spnAddDate.setValue(CCDate.getCurrentDate());
 	}
 
-	private void onClosing(WindowEvent e) {
+	private void onClosing() {
 		if (_isDirty) {
 			if (DialogHelper.showLocaleYesNoDefaultNo(this, "Dialogs.CloseButDirty")) this.dispose(); //$NON-NLS-1$
 		} else {
@@ -860,27 +845,28 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		//======== this ========
 		setTitle(LocaleBundle.getString("EditMovieFrame.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setMinimumSize(new Dimension(670, 835));
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				onClosing(e);
+				onClosing();
 			}
 		});
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, [300dlu,pref]:grow, 10dlu, [100dlu,default]:grow, $ugap", //$NON-NLS-1$
+			"$ugap, 0dlu:grow, 10dlu, 125dlu, $ugap", //$NON-NLS-1$
 			"$ugap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
 
 		//======== pnlLeft ========
 		{
 			pnlLeft.setLayout(new FormLayout(
-				"pref:grow", //$NON-NLS-1$
+				"0dlu:grow", //$NON-NLS-1$
 				"default, 10dlu, default:grow")); //$NON-NLS-1$
 
 			//======== pnlParts ========
 			{
 				pnlParts.setLayout(new FormLayout(
-					"default, $lcgap, [175dlu,default]:grow, 2*($lcgap, default)", //$NON-NLS-1$
+					"default, $lcgap, 0dlu:grow, 2*($lcgap, default)", //$NON-NLS-1$
 					"6*(default, $lgap), default")); //$NON-NLS-1$
 
 				//---- label1 ----
@@ -890,7 +876,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 
 				//---- btnChoose0 ----
 				btnChoose0.setText("..."); //$NON-NLS-1$
-				btnChoose0.addActionListener(e -> onChoose0(e));
+				btnChoose0.addActionListener(e -> onChoose0());
 				pnlParts.add(btnChoose0, CC.xy(7, 1));
 
 				//---- label2 ----
@@ -900,12 +886,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 
 				//---- btnChoose1 ----
 				btnChoose1.setText("..."); //$NON-NLS-1$
-				btnChoose1.addActionListener(e -> onChoose1(e));
+				btnChoose1.addActionListener(e -> onChoose1());
 				pnlParts.add(btnChoose1, CC.xy(5, 3));
 
 				//---- btnClear1 ----
 				btnClear1.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-				btnClear1.addActionListener(e -> onClear1(e));
+				btnClear1.addActionListener(e -> onClear1());
 				pnlParts.add(btnClear1, CC.xy(7, 3));
 
 				//---- label3 ----
@@ -915,12 +901,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 
 				//---- btnChoose2 ----
 				btnChoose2.setText("..."); //$NON-NLS-1$
-				btnChoose2.addActionListener(e -> onChoose2(e));
+				btnChoose2.addActionListener(e -> onChoose2());
 				pnlParts.add(btnChoose2, CC.xy(5, 5));
 
 				//---- btnClear2 ----
 				btnClear2.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-				btnClear2.addActionListener(e -> onClear2(e));
+				btnClear2.addActionListener(e -> onClear2());
 				pnlParts.add(btnClear2, CC.xy(7, 5));
 
 				//---- label5 ----
@@ -930,12 +916,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 
 				//---- btnChoose3 ----
 				btnChoose3.setText("..."); //$NON-NLS-1$
-				btnChoose3.addActionListener(e -> onChoose3(e));
+				btnChoose3.addActionListener(e -> onChoose3());
 				pnlParts.add(btnChoose3, CC.xy(5, 7));
 
 				//---- btnClear3 ----
 				btnClear3.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-				btnClear3.addActionListener(e -> onClear3(e));
+				btnClear3.addActionListener(e -> onClear3());
 				pnlParts.add(btnClear3, CC.xy(7, 7));
 
 				//---- label6 ----
@@ -945,12 +931,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 
 				//---- btnChoose4 ----
 				btnChoose4.setText("..."); //$NON-NLS-1$
-				btnChoose4.addActionListener(e -> onChoose4(e));
+				btnChoose4.addActionListener(e -> onChoose4());
 				pnlParts.add(btnChoose4, CC.xy(5, 9));
 
 				//---- btnClear4 ----
 				btnClear4.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-				btnClear4.addActionListener(e -> onClear4(e));
+				btnClear4.addActionListener(e -> onClear4());
 				pnlParts.add(btnClear4, CC.xy(7, 9));
 
 				//---- label4 ----
@@ -960,12 +946,12 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 
 				//---- btnChoose5 ----
 				btnChoose5.setText("..."); //$NON-NLS-1$
-				btnChoose5.addActionListener(e -> onChoose5(e));
+				btnChoose5.addActionListener(e -> onChoose5());
 				pnlParts.add(btnChoose5, CC.xy(5, 11));
 
 				//---- btnClear5 ----
 				btnClear5.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-				btnClear5.addActionListener(e -> onClear5(e));
+				btnClear5.addActionListener(e -> onClear5());
 				pnlParts.add(btnClear5, CC.xy(7, 11));
 
 				//---- btnTestParts ----
@@ -978,7 +964,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 			//======== pnlData ========
 			{
 				pnlData.setLayout(new FormLayout(
-					"default, $lcgap, pref:grow, $lcgap, [40dlu,default], $lcgap, 16dlu, $lcgap, 25dlu, $lcgap, [30dlu,default]", //$NON-NLS-1$
+					"default, $lcgap, 0dlu:grow, $lcgap, [40dlu,default], $lcgap, 16dlu, $lcgap, 25dlu, $lcgap, [30dlu,default]", //$NON-NLS-1$
 					"15*(default, $lgap), [65dlu,default]:grow")); //$NON-NLS-1$
 
 				//---- label15 ----
@@ -1197,7 +1183,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 			pnlBottom.add(btnCancel);
 		}
 		contentPane.add(pnlBottom, CC.xywh(2, 4, 3, 1));
-		pack();
+		setSize(750, 825);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}

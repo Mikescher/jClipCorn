@@ -229,8 +229,8 @@ public class Main {
  - [X] DatabaseHistoryFrame
  - [ ] DisplayGenresDialog
  - [ ] EditMediaInfoDialog
- - [ ] EditMovieFrame
- - [ ] EditSeriesFrame
+ - [X] EditMovieFrame
+ - [X] EditSeriesFrame
  - [ ] EditStringListPropertyFrame
  - [ ] EditToolbarFrame
  - [ ] ExportElementsFrame

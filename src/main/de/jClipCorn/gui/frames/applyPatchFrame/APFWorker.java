@@ -163,7 +163,7 @@ public class APFWorker
 			}
 
 			var pSource = Path.of(opt.DataDir, source);
-			var ptarget = Path.of(serPath.getAbsolutePath(), destfilename);
+			var ptarget = Path.of(PathFormatter.getParentPath(serPath.getAbsolutePath(), 1), destfilename);
 			if (Files.exists(ptarget)) ptarget = Path.of(opt.DestinationMovies, UUID.randomUUID() + "." + PathFormatter.getExtension(source));
 			var finptarget = ptarget;
 
@@ -228,7 +228,9 @@ public class APFWorker
 		var source     = cmd.XML.getAttributeValueOrThrow("source");
 		var sourcehash = cmd.XML.getAttributeValueOrThrow("sourcehash");
 
-		var img = opt.Porcelain ? null : ImageIO.read(new File(source));
+		var pSource = Path.of(opt.DataDir, source);
+
+		var img = opt.Porcelain ? null : ImageIO.read(pSource.toFile());
 
 		if (ielem instanceof CCDatabaseElement)
 		{

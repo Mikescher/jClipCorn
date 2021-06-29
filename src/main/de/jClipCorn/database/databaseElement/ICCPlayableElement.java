@@ -6,6 +6,7 @@ import de.jClipCorn.database.elementProps.impl.*;
 import de.jClipCorn.database.elementProps.packs.EMediaInfoPropPack;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.properties.types.NamedPathVar;
+import de.jClipCorn.util.filesystem.CCPath;
 
 import java.awt.*;
 import java.util.List;
@@ -26,7 +27,7 @@ public interface ICCPlayableElement {
 
 	boolean isViewed();
 	CCQualityCategory getMediaInfoCategory();
-	List<String> getParts();
+	List<CCPath> getParts();
 
 	void play(Component swingOwner, boolean updateViewedAndHistory);
 	void play(Component swingOwner, boolean updateViewedAndHistory, NamedPathVar player);

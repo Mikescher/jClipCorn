@@ -15,6 +15,8 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.EnumFormatException;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -24,7 +26,6 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
@@ -34,12 +35,12 @@ import java.util.Iterator;
  * Old (pascal) ClipCorn database xmlexport format
  */
 public class CCBXMLReader {
-	private String filename;
-	private CCMovieList movielist;
+	private final FSPath filename;
+	private final CCMovieList movielist;
 	
 	private Document document;
 	
-	public CCBXMLReader(String filename, CCMovieList ml) {
+	public CCBXMLReader(FSPath filename, CCMovieList ml) {
 		this.movielist = ml;
 		this.filename = filename;
 	}
@@ -68,15 +69,12 @@ public class CCBXMLReader {
 	
 	private boolean loadXML() {
 		try {
-			document = new SAXBuilder().build(filename);
-		} catch (JDOMException e) {
-			CCLog.addError(e);
-			return false;
-		} catch (IOException e) {
+			document = new SAXBuilder().build(filename.toAbsolutePathString());
+		} catch (JDOMException | IOException e) {
 			CCLog.addError(e);
 			return false;
 		}
-		
+
 		return true;
 	}
 	
@@ -120,8 +118,8 @@ public class CCBXMLReader {
 		newMov.Format.set(e.getChild("format").getAttribute("dec").getIntValue());
 		newMov.Year.set(Integer.parseInt(e.getChildText("jahr")));
 		newMov.FileSize.set(e.getChild("größe").getAttribute("dec").getLongValue() * 1024);
-		newMov.Parts.set(0, e.getChildText("pathpart1"));
-		newMov.Parts.set(1, e.getChildText("pathpart2"));
+		newMov.Parts.set(0, CCPath.create(e.getChildText("pathpart1")));
+		newMov.Parts.set(1, CCPath.create(e.getChildText("pathpart2")));
 		//String cvrval = e.getChildText("cover");
 		//newMov.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
 		
@@ -203,7 +201,7 @@ public class CCBXMLReader {
 		newEp.Length.set(Integer.parseInt(owner.getChildText("länge")));
 		newEp.Format.set(owner.getChild("format").getAttribute("dec").getIntValue());
 		newEp.FileSize.set(owner.getChild("größe").getAttribute("dec").getLongValue() * 1024);
-		newEp.Part.set(owner.getChildText("pathpart1"));
+		newEp.Part.set(CCPath.create(owner.getChildText("pathpart1")));
 		newEp.AddDate.set(CCDate.deserialize(owner.getChildText("adddate")));
 		newEp.Language.set(CCDBLanguageList.single(lang));
 		
@@ -258,14 +256,14 @@ public class CCBXMLReader {
 		return -1;
 	}
 	
-	public static void openFile(final File f, final MainFrame owner) {
+	public static void openFile(final FSPath f, final MainFrame owner) {
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.LoadXML")) { //$NON-NLS-1$
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
 					owner.beginBlockingIntermediate();
 
-					CCBXMLReader xmlreader = new CCBXMLReader(f.getAbsolutePath(), owner.getMovielist());
+					CCBXMLReader xmlreader = new CCBXMLReader(f, owner.getMovielist());
 					if (!xmlreader.parse()) {
 						CCLog.addError(LocaleBundle.getString("LogMessage.CouldNotParseCCBXML")); //$NON-NLS-1$
 					}

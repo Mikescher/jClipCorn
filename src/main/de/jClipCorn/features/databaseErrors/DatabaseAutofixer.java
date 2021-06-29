@@ -7,15 +7,15 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,47 +88,7 @@ public class DatabaseAutofixer {
 		
 		return true;
 	}
-	
-	public static boolean fixError_Invalid_Chars(CCMovieList ml, DatabaseError err) {
-		if (err.getElement1() instanceof CCMovie) {
-			CCMovie mov = (CCMovie) err.getElement1();
-			
-			for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
-				if (! mov.Parts.get(i).isEmpty()) {
-					String old = mov.Parts.get(i);
-					String abs = mov.getAbsolutePart(i);
-					String rel = PathFormatter.getCCPath(abs.replace("\\", PathFormatter.SERIALIZATION_SEPERATOR)); //$NON-NLS-1$
-				
-					if (old.length() == rel.length() && rel.length() > 3) {
-						mov.Parts.set(i, rel);
-					} else {
-						return false;
-					}
-				}
-			}
-			
-			return true;
-		} else if (err.getElement1() instanceof CCEpisode) {
-			CCEpisode episode = (CCEpisode) err.getElement1();
-			
-			if (! episode.getPart().isEmpty()) {
-				String old = episode.getPart();
-				String abs = episode.getAbsolutePart();
-				String rel = PathFormatter.getCCPath(abs.replace("\\", PathFormatter.SERIALIZATION_SEPERATOR)); //$NON-NLS-1$
-			
-				if (old.length() == rel.length() && rel.length() > 3) {
-					episode.Part.set(rel);
-				} else {
-					return false;
-				}
-			}
-			
-			return true;
-		}
-		
-		return false;
-	}
-	
+
 	public static boolean fixError_Duplicate_Genre(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCDatabaseElement) {
 			CCDatabaseElement elem = (CCDatabaseElement) err.getElement1();
@@ -176,7 +136,7 @@ public class DatabaseAutofixer {
 		if (err.getElement1() instanceof CCMovie) {
 			CCFileSize size = CCFileSize.ZERO;
 			for (int i = 0; i < ((CCMovie) err.getElement1()).getPartcount(); i++) {
-				size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(((CCMovie) err.getElement1()).getAbsolutePart(i)));
+				size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(((CCMovie) err.getElement1()).Parts.get(i).toFSPath()));
 			}
 			
 			if (size.getBytes() == 0) {
@@ -191,7 +151,7 @@ public class DatabaseAutofixer {
 		} else if (err.getElement1() instanceof CCSeason) {
 			return false;
 		} else if (err.getElement1() instanceof CCEpisode) {
-			long size = FileSizeFormatter.getFileSize(((CCEpisode) err.getElement1()).getAbsolutePart());
+			long size = FileSizeFormatter.getFileSize(((CCEpisode) err.getElement1()).getPart().toFSPath());
 			
 			if (size == 0) {
 				return false;
@@ -207,7 +167,7 @@ public class DatabaseAutofixer {
 	
 	public static boolean fixError_Incontinous_Parts(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
-			List<String> parts = new ArrayList<>();
+			List<CCPath> parts = new ArrayList<>();
 			
 			for (int i = 0; i < ((CCMovie)err.getElement1()).getPartcount(); i++) {
 				if (! ((CCMovie)err.getElement1()).Parts.get(i).isEmpty()) {
@@ -237,7 +197,7 @@ public class DatabaseAutofixer {
 	
 	public static boolean fixError_Format_Not_Found(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCMovie) {
-			CCFileFormat fmt = CCFileFormat.getMovieFormat(PathFormatter.getExtension(((CCMovie)err.getElement1()).getAbsolutePart(0)));
+			CCFileFormat fmt = CCFileFormat.getMovieFormat(((CCMovie)err.getElement1()).Parts.get(0).getExtension());
 			if (fmt != null) {
 				((CCMovie)err.getElement1()).Format.set(fmt);
 				return true;
@@ -249,7 +209,7 @@ public class DatabaseAutofixer {
 		} else if (err.getElement1() instanceof CCSeason) {
 			return false;
 		} else if (err.getElement1() instanceof CCEpisode) {
-			((CCEpisode)err.getElement1()).Format.set(CCFileFormat.getMovieFormat(PathFormatter.getExtension(((CCEpisode)err.getElement1()).getAbsolutePart())));
+			((CCEpisode)err.getElement1()).Format.set(CCFileFormat.getMovieFormat(((CCEpisode)err.getElement1()).getPart().getExtension()));
 			return true;
 		}
 		
@@ -280,20 +240,14 @@ public class DatabaseAutofixer {
 			CCMovie mov = ((CCMovie)err.getElement1());
 			
 			for (int i = 0; i < mov.getPartcount(); i++) {
-				String opath = mov.getAbsolutePart(i);
-				File fold = new File(opath);
-				if (! fold.exists()) {
-					return false;
-				}
-				String npath = PathFormatter.rename(opath, mov.generateFilename(i));
-				File fnew = new File(npath);
+				FSPath opath = mov.Parts.get(i).toFSPath();
+				if (! opath.exists()) return false;
+				FSPath npath = opath.replaceFilename(mov.generateFilename(i));
+
+				boolean succ = opath.renameToSafe(npath);
+				mov.Parts.set(i, CCPath.createFromFSPath(npath));
 				
-				boolean succ = fold.renameTo(fnew);
-				mov.Parts.set(i, PathFormatter.getCCPath(npath));
-				
-				if (! succ) {
-					return false;
-				}
+				if (! succ) return false;
 			}
 
 			return true;
@@ -435,8 +389,8 @@ public class DatabaseAutofixer {
 	public static boolean fixError_NonNormalizedPath(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof CCEpisode) {
 
-			String pold = ((CCEpisode)err.getElement1()).getPart();
-			String pnew = PathFormatter.getCCPath(((CCEpisode)err.getElement1()).getAbsolutePart());
+			var pold = ((CCEpisode)err.getElement1()).getPart();
+			var pnew = CCPath.createFromFSPath(pold.toFSPath());
 
 			if (pold.equals(pnew)) return false;
 
@@ -445,8 +399,8 @@ public class DatabaseAutofixer {
 			return true;
 		} else if (err.getElement1() instanceof CCMovie) {
 			for (int i = 0; i < ((CCMovie)err.getElement1()).getPartcount(); i++) {
-				String pold = ((CCMovie)err.getElement1()).Parts.get(i);
-				String pnew = PathFormatter.getCCPath(((CCMovie)err.getElement1()).getAbsolutePart(i));
+				var pold = ((CCMovie)err.getElement1()).Parts.get(i);
+				var pnew = CCPath.createFromFSPath(pold.toFSPath());
 
 				if (pold.equals(pnew)) continue;
 
@@ -467,8 +421,8 @@ public class DatabaseAutofixer {
 			if (!mi.isSet()) return false;
 
 			long fsz = 0;
-			for (String p : elem.getParts()) {
-				File f = new File(PathFormatter.fromCCPath(p));
+			for (var p : elem.getParts()) {
+				File f = p.toFSPath().toFile();
 				if (!f.exists()) return false;
 				fsz += f.length();
 			}
@@ -525,7 +479,7 @@ public class DatabaseAutofixer {
 			if (!mi.isSet()) return false;
 
 			try {
-				BasicFileAttributes attr = Files.readAttributes(new File(PathFormatter.fromCCPath(elem.getParts().get(0))).toPath(), BasicFileAttributes.class);
+				BasicFileAttributes attr = elem.getParts().get(0).toFSPath().readFileAttr();
 
 				var cdate = attr.creationTime().toMillis();
 
@@ -547,7 +501,7 @@ public class DatabaseAutofixer {
 			if (!mi.isSet()) return false;
 
 			try {
-				BasicFileAttributes attr = Files.readAttributes(new File(PathFormatter.fromCCPath(elem.getParts().get(0))).toPath(), BasicFileAttributes.class);
+				BasicFileAttributes attr = elem.getParts().get(0).toFSPath().readFileAttr();
 
 				var mdate = attr.lastModifiedTime().toMillis();
 

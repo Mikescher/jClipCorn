@@ -1,12 +1,12 @@
 package de.jClipCorn.util.formatter;
 
-import java.io.File;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.util.filesystem.FSPath;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
-
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 
 public class FileSizeFormatter {
 	private static final String[] UNITS = new String[] { 
@@ -39,12 +39,8 @@ public class FileSizeFormatter {
 		return format(size.getBytes());
 	}
 	
-	public static long getFileSize(String filepath) {
-		return new File(filepath).length();
-	}
-	
-	public static long getFileSize(File f) {
-		return f.length();
+	public static long getFileSize(FSPath filepath) {
+		return filepath.toFile().length();
 	}
 
 	@SuppressWarnings("nls")

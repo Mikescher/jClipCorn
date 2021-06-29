@@ -20,7 +20,7 @@ import de.jClipCorn.util.colorquantizer.util.ColorQuantizerConverter;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCTime;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.sqlwrapper.CCSQLStatement;
 import de.jClipCorn.util.sqlwrapper.SQLBuilder;
@@ -31,7 +31,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -43,7 +42,7 @@ import static de.jClipCorn.database.driver.DatabaseStructure.*;
 
 public class DatabaseMigration {
 	private final GenericDatabase db;
-	private final String databaseDirectory;
+	private final FSPath databaseDirectory;
 	private final String databaseName;
 	private final boolean readonly;
 
@@ -53,7 +52,7 @@ public class DatabaseMigration {
 	
 	private final List<UpgradeAction> afterConnectActions = new ArrayList<>();
 	
-	public DatabaseMigration(GenericDatabase db, String dbpath, String dbName, boolean readonly) {
+	public DatabaseMigration(GenericDatabase db, FSPath dbpath, String dbName, boolean readonly) {
 		super();
 		
 		this.db                = db;
@@ -299,21 +298,21 @@ public class DatabaseMigration {
 
 		db.executeSQLThrow("CREATE TABLE COVERS(ID INTEGER PRIMARY KEY,FILENAME VARCHAR NOT NULL,WIDTH INTEGER NOT NULL,HEIGHT INTEGER NOT NULL,HASH_FILE VARCHAR(64) NOT NULL,FILESIZE BIGINT NOT NULL,PREVIEW_TYPE INTEGER NOT NULL,PREVIEW BLOB NOT NULL,CREATED VARCHAR NOT NULL)");
 
-		File cvrdir = new File(PathFormatter.combine(databaseDirectory, databaseName, CCDefaultCoverCache.COVER_DIRECTORY));
+		var cvrdir = databaseDirectory.append(databaseName, CCDefaultCoverCache.COVER_DIRECTORY_NAME);
 
 		final String prefix = CCProperties.getInstance().PROP_COVER_PREFIX.getValue();
 		final String suffix = "." + CCProperties.getInstance().PROP_COVER_TYPE.getValue();  //$NON-NLS-1$
 
-		String[] files = cvrdir.list((path, name) -> name.startsWith(prefix) && name.endsWith(suffix));
+		String[] files = cvrdir.listFilenames((path, name) -> name.startsWith(prefix) && name.endsWith(suffix));
 		for (String _f : files) {
-			String f = PathFormatter.combine(cvrdir.getAbsolutePath(), _f);
-			BufferedImage img = ImageIO.read(new File( f ));
+			var f = cvrdir.append(_f);
+			BufferedImage img = ImageIO.read(f.toFile());
 
-			int id = Integer.parseInt(PathFormatter.getFilename(f).substring(prefix.length()));
-			String fn = PathFormatter.getFilenameWithExt(f);
+			int id = Integer.parseInt(f.getFilenameWithoutExt().substring(prefix.length()));
+			String fn = f.getFilenameWithExt();
 
 			String checksum;
-			try (FileInputStream fis = new FileInputStream(f)) { checksum = DigestUtils.sha256Hex(fis).toUpperCase(); }
+			try (FileInputStream fis = new FileInputStream(f.toFile())) { checksum = DigestUtils.sha256Hex(fis).toUpperCase(); }
 
 			ColorQuantizerMethod ptype = CCProperties.getInstance().PROP_DATABASE_COVER_QUANTIZER.getValue();
 			ColorQuantizer quant = ptype.create();
@@ -333,10 +332,10 @@ public class DatabaseMigration {
 			stmt.setInt(COL_CVRS_WIDTH,       img.getWidth());
 			stmt.setInt(COL_CVRS_HEIGHT,      img.getHeight());
 			stmt.setStr(COL_CVRS_HASH_FILE,   checksum);
-			stmt.setLng(COL_CVRS_FILESIZE,    new File(f).length());
+			stmt.setLng(COL_CVRS_FILESIZE,    f.toFile().length());
 			stmt.setBlb(COL_CVRS_PREVIEW,     preview);
 			stmt.setInt(COL_CVRS_PREVIEWTYPE, ptype.asInt());
-			stmt.setCDT(COL_CVRS_CREATED,     CCDateTime.createFromFileTimestamp(new File(f).lastModified(), TimeZone.getDefault()));
+			stmt.setCDT(COL_CVRS_CREATED,     CCDateTime.createFromFileTimestamp(f.toFile().lastModified(), TimeZone.getDefault()));
 
 			stmt.executeUpdate();
 
@@ -358,8 +357,8 @@ public class DatabaseMigration {
 		db.executeSQLThrow("ALTER TABLE _ELEMENTS RENAME TO ELEMENTS");
 		db.executeSQLThrow("ALTER TABLE _SEASONS RENAME TO SEASONS");
 
-		File cc = new File(PathFormatter.combine(cvrdir.getAbsolutePath(), "covercache.xml"));
-		if (cc.exists()) cc.delete();
+		var cc = cvrdir.append("covercache.xml");
+		if (cc.exists()) cc.deleteWithException();
 	}
 
 	@SuppressWarnings("nls")

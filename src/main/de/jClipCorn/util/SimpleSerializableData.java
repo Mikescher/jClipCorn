@@ -1,5 +1,17 @@
 package de.jClipCorn.util;
 
+import de.jClipCorn.util.exceptions.XMLFormatException;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.lang3.ArrayUtils;
+import org.jdom2.Attribute;
+import org.jdom2.DataConversionException;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
@@ -10,19 +22,6 @@ import java.util.Base64.Encoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.jdom2.Attribute;
-import org.jdom2.DataConversionException;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
-
-import de.jClipCorn.util.exceptions.XMLFormatException;
-import de.jClipCorn.util.helper.SimpleFileUtils;
-import de.jClipCorn.util.stream.CCStreams;
 
 @SuppressWarnings("nls")
 public class SimpleSerializableData {
@@ -105,9 +104,9 @@ public class SimpleSerializableData {
 		return new SimpleSerializableData(outputSorted);
 	}
 	
-	public static SimpleSerializableData load(String filename, boolean outputSorted) throws XMLFormatException {
+	public static SimpleSerializableData load(FSPath filename, boolean outputSorted) throws XMLFormatException {
 		try {
-			Document doc = new SAXBuilder().build(new StringReader(SimpleFileUtils.readUTF8TextFile(filename)));
+			Document doc = new SAXBuilder().build(new StringReader(filename.readAsUTF8TextFile()));
 			
 			Element root = doc.getRootElement();
 			
@@ -119,7 +118,7 @@ public class SimpleSerializableData {
 		}
 	}
 	
-	public void save(String filepath) throws IOException {
+	public void save(FSPath filepath) throws IOException {
 		Document xml = new Document(new Element("root"));
 		
 		Element root = xml.getRootElement();
@@ -131,7 +130,7 @@ public class SimpleSerializableData {
 		
 		FileOutputStream ostream = null;
 		try {
-			ostream = new FileOutputStream(filepath);
+			ostream = new FileOutputStream(filepath.toString());
 			xout.output(xml, ostream);
 		} finally {
 			if (ostream != null) {

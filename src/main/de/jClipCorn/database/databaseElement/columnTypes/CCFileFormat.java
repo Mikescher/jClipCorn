@@ -4,10 +4,9 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.enumextension.IEnumWrapper;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FSPath;
 
 import javax.swing.*;
-import java.io.File;
 
 public enum CCFileFormat implements ContinoousEnum<CCFileFormat> {
 	MKV(0),
@@ -21,8 +20,8 @@ public enum CCFileFormat implements ContinoousEnum<CCFileFormat> {
 	FLV(8);
 	
 	// Names sind gleichzeitig die extensions
-	private final static String[] NAMES = {"mkv", "avi", "mpeg", "img", "ifo", "wmv", "mp4", "divx", "flv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
-	private final static String ALTNAMES[] = {"mkv", "avi", "mpg", "img", "ifo", "wmv", "mp4", "divx", "flv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+	private final static String[] NAMES    = {"mkv", "avi", "mpeg", "img", "ifo", "wmv", "mp4", "divx", "flv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+	private final static String[] ALTNAMES = {"mkv", "avi", "mpg",  "img", "ifo", "wmv", "mp4", "divx", "flv"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 	private int id;
 	
 	private static final EnumWrapper<CCFileFormat> wrapper = new EnumWrapper<>(MKV);
@@ -79,8 +78,8 @@ public enum CCFileFormat implements ContinoousEnum<CCFileFormat> {
 		return false;
 	}
 
-	public static boolean isValidMovieFormat(File f) {
-		return isValidMovieFormat(PathFormatter.getExtension(f));
+	public static boolean isValidMovieFormat(FSPath f) {
+		return isValidMovieFormat(f.getExtension());
 	}
 	
 	public static CCFileFormat getMovieFormat(String ext) {
@@ -99,12 +98,12 @@ public enum CCFileFormat implements ContinoousEnum<CCFileFormat> {
 		return null;
 	}
 	
-	public static CCFileFormat getMovieFormatFromPath(String path) {
-		return getMovieFormat(PathFormatter.getExtension(path));
+	public static CCFileFormat getMovieFormatFromPath(FSPath path) {
+		return getMovieFormat(path.getExtension());
 	}
 	
-	public static CCFileFormat getMovieFormatFromPathOrDefault(String path) {
-		CCFileFormat mf = getMovieFormat(PathFormatter.getExtension(path));
+	public static CCFileFormat getMovieFormatFromPathOrDefault(FSPath path) {
+		CCFileFormat mf = getMovieFormat(path.getExtension());
 		
 		if (mf == null) 
 			mf = AVI;
@@ -150,14 +149,14 @@ public enum CCFileFormat implements ContinoousEnum<CCFileFormat> {
 		}
 	}
 
-	public static CCFileFormat getMovieFormatFromPaths(String path0, String... paths) {
+	public static CCFileFormat getMovieFormatFromPaths(FSPath path0, FSPath... paths) {
 		CCFileFormat fmt = null;
 		
 		if (path0 != null && !path0.isEmpty()) {
 			fmt = getMovieFormatFromPath(path0);
 		}
 		
-		for (String path : paths) {
+		for (var path : paths) {
 			if (path != null && !path.isEmpty()) {
 				CCFileFormat result = getMovieFormatFromPath(path);
 				

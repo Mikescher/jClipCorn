@@ -1,6 +1,5 @@
 package de.jClipCorn.gui.frames.coverPreviewFrame;
 
-import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.ScalablePane;
@@ -10,8 +9,9 @@ import de.jClipCorn.util.colorquantizer.ColorQuantizer;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerException;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.colorquantizer.util.ColorQuantizerConverter;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ImageUtilities;
 
 import javax.imageio.ImageIO;
@@ -23,14 +23,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 public class CoverPreviewFrame extends JDialog {
 	private static final long serialVersionUID = -807033167837187549L;
 
 	private final BufferedImage _image;
-	private final File _path;
+	private final FSPath _path;
 
 	private ScalablePane lblImg;
 	
@@ -38,7 +37,7 @@ public class CoverPreviewFrame extends JDialog {
 		super();
 
 		_image = elem.getCover();
-		_path = new File(elem.getMovieList().getCoverCache().getFilepath(elem.getCoverInfo()));
+		_path = elem.getMovieList().getCoverCache().getFilepath(elem.getCoverInfo());
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		initGUI(elem.getCover(), elem.title().get());
@@ -242,7 +241,7 @@ public class CoverPreviewFrame extends JDialog {
 	}
 
 	private void openSourceAction() {
-		PathFormatter.showInExplorer(_path);
+		FilesystemUtils.showInExplorer(_path);
 	}
 
 	private void saveAction() {
@@ -261,7 +260,7 @@ public class CoverPreviewFrame extends JDialog {
 
 		if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 			FileFilter choosen = fc.getFileFilter();
-			String path = fc.getSelectedFile().getAbsolutePath();
+			var path = FSPath.create(fc.getSelectedFile());
 			String format = ""; //$NON-NLS-1$
 
 			if (choosen.equals(filterPng)) {
@@ -274,10 +273,10 @@ public class CoverPreviewFrame extends JDialog {
 				format = "bmp"; //$NON-NLS-1$
 			}
 
-			path = PathFormatter.forceExtension(path, format);
+			path = path.forceExtension(format);
 
 			try {
-				ImageIO.write(_image, format, new File(path));
+				ImageIO.write(_image, format, path.toFile());
 			} catch (IOException e) {
 				CCLog.addError(e);
 			}

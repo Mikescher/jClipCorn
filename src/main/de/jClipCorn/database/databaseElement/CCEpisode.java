@@ -5,7 +5,8 @@ import de.jClipCorn.database.databaseElement.caches.EpisodeCache;
 import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
-import de.jClipCorn.database.elementProps.*;
+import de.jClipCorn.database.elementProps.IEProperty;
+import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.database.elementProps.impl.*;
 import de.jClipCorn.database.elementProps.packs.EMediaInfoPropPack;
 import de.jClipCorn.database.util.CCQualityCategory;
@@ -21,13 +22,14 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.awt.*;
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public final ETagListProp            Tags          = new ETagListProp(      "Tags",          CCTagList.EMPTY,              this, EPropertyType.USER_METADATA);
 	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(       "Format",        CCFileFormat.MKV,             this, EPropertyType.OBJECTIVE_METADATA);
 	public final EFileSizeProp           FileSize      = new EFileSizeProp(     "FileSize",      CCFileSize.ZERO,              this, EPropertyType.OBJECTIVE_METADATA);
-	public final EStringProp             Part          = new EStringProp(       "Part",          Str.Empty,                    this, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
+	public final ECCPathProp             Part          = new ECCPathProp(       "Part",          CCPath.Empty,                 this, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
 	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
 	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp( "ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
 	public final ELanguageListProp       Language      = new ELanguageListProp( "Language",      CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
@@ -92,7 +94,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public ETagListProp            tags()          { return Tags;          }
 	public EEnumProp<CCFileFormat> format()        { return Format;        }
 	public EFileSizeProp           fileSize()      { return FileSize;      }
-	public EStringProp             part()          { return Part;          }
+	public ECCPathProp             part()          { return Part;          }
 	public EDateProp               addDate()       { return AddDate;       }
 	public EDateTimeListProp       viewedHistory() { return ViewedHistory; }
 	public ELanguageListProp       language()      { return Language;      }
@@ -138,7 +140,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	@Override
-	public String getPart() {
+	public CCPath getPart() {
 		return Part.get();
 	}
 
@@ -274,12 +276,8 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		return MediaInfo.get().getCategory(getSeries().Genres.get());
 	}
 
-	public String getAbsolutePart() {
-		return PathFormatter.fromCCPath(Part.get());
-	}
-
 	@Override
-	public List<String> getParts() {
+	public List<CCPath> getParts() {
 		return Collections.singletonList(Part.get());
 	}
 
@@ -368,19 +366,19 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	public String getFastMD5() {
-		File[] f = new File[1];
-		f[0] = new File(getAbsolutePart());
+		FSPath[] f = new FSPath[1];
+		f[0] = getPart().toFSPath();
 		
 		return ChecksumHelper.calculateFastMD5(f);
 	}
 
-	public File getFileForCreatedFolderstructure() {
+	public FSPath getPathForCreatedFolderstructure() {
 		var root = getSeries().guessSeriesRootPath();
-		return getFileForCreatedFolderstructure(new File(root));
+		return getPathForCreatedFolderstructure(root);
 	}
 
-	public File getFileForCreatedFolderstructure(File parentfolder) {
-		return getSeason().getFileForCreatedFolderstructure(parentfolder, Title.get(), EpisodeNumber.get(), Format.get(), null);
+	public FSPath getPathForCreatedFolderstructure(FSPath parentfolder) {
+		return getSeason().getPathForCreatedFolderstructure(parentfolder, Title.get(), EpisodeNumber.get(), Format.get(), null);
 	}
 	
 	public String getRelativeFileForCreatedFolderstructure() {
@@ -402,11 +400,19 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	public boolean checkFolderStructure() {
-		if (! getAbsolutePart().toLowerCase().endsWith(getRelativeFileForCreatedFolderstructure().toLowerCase())) {
-			CCLog.addDebug(getAbsolutePart() + " <> " + getRelativeFileForCreatedFolderstructure()); //$NON-NLS-1$
+		var abspath = getPart().toFSPath().toString();
+		var relpath = getRelativeFileForCreatedFolderstructure();
+
+		if (ApplicationHelper.isWindows()) {
+			abspath = abspath.toLowerCase();
+			relpath = relpath.toLowerCase();
+		}
+
+		if (! abspath.endsWith(relpath)) {
+			CCLog.addDebug(abspath + " <> " + relpath); //$NON-NLS-1$
 		}
 		
-		return getAbsolutePart().toLowerCase().endsWith(getRelativeFileForCreatedFolderstructure().toLowerCase());
+		return abspath.endsWith(relpath);
 	}
 
 	@Override

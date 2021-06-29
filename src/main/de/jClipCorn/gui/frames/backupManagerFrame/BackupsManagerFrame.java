@@ -12,8 +12,8 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -207,7 +207,7 @@ public class BackupsManagerFrame extends JFrame {
 		btnOpenInExplorer.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (isElementSelected()) PathFormatter.showInExplorer(currentSelected.getArchive());
+				if (isElementSelected()) FilesystemUtils.showInExplorer(currentSelected.getArchive());
 			}
 		});
 		

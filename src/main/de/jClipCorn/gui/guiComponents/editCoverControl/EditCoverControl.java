@@ -11,9 +11,9 @@ import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ClipboardUtilities;
-import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.http.HTTPUtilities;
 
@@ -61,7 +61,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	public EditCoverControl(Window owner, ParseResultHandler handler) {
 		super();
 		
-		this.coverFileChooser = new JFileChooser(PathFormatter.getAbsoluteSelfDirectory());
+		this.coverFileChooser = new JFileChooser(FilesystemUtils.getAbsoluteSelfDirectory().toFile());
 		this.owner = handler;
 		this.ownerWindow = owner;
 

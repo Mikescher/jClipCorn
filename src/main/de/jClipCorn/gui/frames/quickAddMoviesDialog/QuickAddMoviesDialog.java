@@ -14,7 +14,7 @@ import javax.swing.event.DocumentListener;
 
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.SwingUtils;
 
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -27,7 +27,7 @@ import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.PathFormatter;
 import de.jClipCorn.util.stream.CCStreams;
 
 public class QuickAddMoviesDialog extends JDialog {

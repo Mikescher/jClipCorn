@@ -4,6 +4,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.filesystem.CCPath;
 
 public class BatchEditEpisodeData implements IEpisodeData
 {
@@ -15,7 +16,7 @@ public class BatchEditEpisodeData implements IEpisodeData
 	public CCTagList        tags;
 	public CCFileFormat     format;
 	public CCFileSize       filesize;
-	public String           part;
+	public CCPath           part;
 	public CCDate           addDate;
 	public CCDateTimeList   viewedHistory;
 	public CCDBLanguageList language;
@@ -80,7 +81,7 @@ public class BatchEditEpisodeData implements IEpisodeData
 	@Override public int getLength() { return length; }
 	@Override public CCFileFormat getFormat() { return format; }
 	@Override public CCFileSize getFilesize() { return filesize; }
-	@Override public String getPart() { return part; }
+	@Override public CCPath getPart() { return part; }
 
 	public void apply() {
 		if (!isDirty()) return;

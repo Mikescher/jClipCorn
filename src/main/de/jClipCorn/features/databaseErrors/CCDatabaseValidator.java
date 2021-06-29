@@ -12,8 +12,8 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
@@ -24,10 +24,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
@@ -72,7 +70,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(mov, e) ->
 					{
 						CCFileSize size = CCFileSize.ZERO;
-						for (int i = 0; i < mov.getPartcount(); i++) size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(mov.getAbsolutePart(i)));
+						for (int i = 0; i < mov.getPartcount(); i++) size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(mov.Parts.get(i).toFSPath()));
 						if (getRelativeDifference(size.getBytes(), mov.getFilesize().getBytes()) > getMaxSizeFileDrift()) {
 							e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_WRONG_FILESIZE, mov));
 						}
@@ -135,7 +133,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					{
 						boolean rform = false;
 						for (int i = 0; i < mov.getPartcount(); i++) {
-							CCFileFormat mfmt = CCFileFormat.getMovieFormat(PathFormatter.getExtension(mov.Parts.get(i)));
+							CCFileFormat mfmt = CCFileFormat.getMovieFormat(mov.Parts.get(i).getExtension());
 							if (mfmt != null && mfmt.equals(mov.getFormat())) rform = true;
 						}
 						if (!rform) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_FORMAT_NOT_FOUND_IN_PARTS, mov));
@@ -148,7 +146,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(mov, e) ->
 					{
 						for (int i = 0; i < mov.getPartcount(); i++) {
-							if (! new File(mov.getAbsolutePart(i)).exists()) {
+							if (! mov.Parts.get(i).toFSPath().exists()) {
 								e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_PATH_NOT_FOUND, mov));
 							}
 						}
@@ -165,7 +163,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addMovieValidation(
 					DatabaseErrorType.ERROR_NOT_TRIMMED,
 					o -> o.ValidateMovies,
-					mov -> PathFormatter.isUntrimmed(mov.getTitle()) || PathFormatter.isUntrimmed(mov.getZyklus().getTitle()),
+					mov -> Str.isUntrimmed(mov.getTitle()) || Str.isUntrimmed(mov.getZyklus().getTitle()),
 					mov -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOT_TRIMMED, mov));
 
 			// Zyklus ends with Roman
@@ -199,7 +197,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					{
 						boolean wrongfn = false;
 						for (int i = 0; i < mov.getPartcount(); i++) {
-							if (! PathFormatter.getFilenameWithExt(mov.getAbsolutePart(i)).equals(mov.generateFilename(i))) wrongfn = true;
+							if (! mov.Parts.get(i).toFSPath().getFilenameWithExt().equals(mov.generateFilename(i))) wrongfn = true;
 						}
 						if (wrongfn) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_WRONG_FILENAME, mov));
 					});
@@ -235,7 +233,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(mov, e) ->
 					{
 						for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
-							if (PathFormatter.containsIllegalPathSymbolsInSerializedFormat(mov.Parts.get(i))){
+							if (CCPath.containsIllegalSymbols(mov.Parts.get(i))){
 								e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_INVALID_CHARS_IN_PATH, mov));
 								break;
 							}
@@ -321,7 +319,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(mov, e) ->
 					{
 						for (int i = 0; i < mov.getPartcount(); i++) {
-							if (!PathFormatter.getCCPath(mov.getAbsolutePart(i)).equals(mov.Parts.get(i))) {
+							if (!CCPath.isEqual(CCPath.createFromFSPath(mov.Parts.get(i).toFSPath()), mov.Parts.get(i))) {
 								e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NON_NORMALIZED_PATH, mov));
 								break;
 							}
@@ -385,7 +383,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					{
 						if (mov.mediaInfo().get().isSet()) {
 							try {
-								BasicFileAttributes attr = Files.readAttributes(new File(mov.getAbsolutePart(0)).toPath(), BasicFileAttributes.class);
+								BasicFileAttributes attr = mov.Parts.get(0).toFSPath().readFileAttr();
 								if (attr.creationTime().toMillis() != mov.mediaInfo().get().getCDate())
 									e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_CDATE_CHANGED, mov));
 							} catch (IOException ex) {
@@ -400,7 +398,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					{
 						if (mov.mediaInfo().get().isSet()) {
 							try {
-								BasicFileAttributes attr = Files.readAttributes(new File(mov.getAbsolutePart(0)).toPath(), BasicFileAttributes.class);
+								BasicFileAttributes attr = mov.Parts.get(0).toFSPath().readFileAttr();
 								if (attr.lastModifiedTime().toMillis() != mov.mediaInfo().get().getMDate())
 									e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_MDATE_CHANGED, mov));
 							} catch (IOException ex) {
@@ -416,7 +414,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(mov, e) ->
 					{
 						if (mov.mediaInfo().get().isSet()) {
-							if (new File(mov.getAbsolutePart(0)).length() != mov.mediaInfo().get().getFilesize())
+							if (mov.Parts.get(0).toFSPath().toFile().length() != mov.mediaInfo().get().getFilesize())
 								e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED, mov));
 						}
 					});
@@ -494,7 +492,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addSeriesValidation(
 					DatabaseErrorType.ERROR_NOT_TRIMMED,
 					o -> o.ValidateSeries,
-					series -> PathFormatter.isUntrimmed(series.getTitle()),
+					series -> Str.isUntrimmed(series.getTitle()),
 					series -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOT_TRIMMED, series));
 
 			// Duplicate Genre
@@ -609,7 +607,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addSeasonValidation(
 					DatabaseErrorType.ERROR_NOT_TRIMMED,
 					o -> o.ValidateSeasons,
-					season -> PathFormatter.isUntrimmed(season.getTitle()),
+					season -> Str.isUntrimmed(season.getTitle()),
 					season -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOT_TRIMMED, season));
 
 			// Non-continoous episode numbers
@@ -656,21 +654,21 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_FORMAT_NOT_FOUND_IN_PARTS,
 					o -> o.ValidateEpisodes,
-					episode -> !episode.getFormat().equals(CCFileFormat.getMovieFormat(PathFormatter.getExtension(episode.getPart()))),
+					episode -> !episode.getFormat().equals(CCFileFormat.getMovieFormat(episode.getPart().getExtension())),
 					episode -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_FORMAT_NOT_FOUND_IN_PARTS, episode));
 
 			// Inexistent Paths
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_PATH_NOT_FOUND,
 					o -> o.ValidateVideoFiles,
-					episode -> !new File(episode.getAbsolutePart()).exists(),
+					episode -> !episode.getPart().toFSPath().exists(),
 					episode -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_PATH_NOT_FOUND, episode));
 
 			// Moviesize <> Real size
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_WRONG_FILESIZE,
 					o -> o.ValidateVideoFiles,
-					episode -> getRelativeDifference(new CCFileSize(FileSizeFormatter.getFileSize(episode.getAbsolutePart())).getBytes(), episode.getFilesize().getBytes()) > getMaxSizeFileDrift(),
+					episode -> getRelativeDifference(new CCFileSize(FileSizeFormatter.getFileSize(episode.getPart().toFSPath())).getBytes(), episode.getFilesize().getBytes()) > getMaxSizeFileDrift(),
 					episode -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_WRONG_FILESIZE, episode));
 
 			// Wrong AddDate
@@ -698,7 +696,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_NOT_TRIMMED,
 					o -> o.ValidateEpisodes,
-					episode -> PathFormatter.isUntrimmed(episode.getTitle()),
+					episode -> Str.isUntrimmed(episode.getTitle()),
 					episode -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOT_TRIMMED, episode));
 
 			// MediaInfo not set
@@ -736,7 +734,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					{
 						if (episode.mediaInfo().get().isSet()) {
 							try {
-								BasicFileAttributes attr = Files.readAttributes(new File(episode.getAbsolutePart()).toPath(), BasicFileAttributes.class);
+								BasicFileAttributes attr = episode.getPart().toFSPath().readFileAttr();
 								if (attr.lastModifiedTime().toMillis() != episode.mediaInfo().get().getMDate())
 									e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_MDATE_CHANGED, episode));
 							} catch (IOException ex) {
@@ -751,7 +749,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					{
 						if (episode.mediaInfo().get().isSet()) {
 							try {
-								BasicFileAttributes attr = Files.readAttributes(new File(episode.getAbsolutePart()).toPath(), BasicFileAttributes.class);
+								BasicFileAttributes attr = episode.getPart().toFSPath().readFileAttr();
 								if (attr.creationTime().toMillis() != episode.mediaInfo().get().getCDate())
 									e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_CDATE_CHANGED, episode));
 							} catch (IOException ex) {
@@ -767,7 +765,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(episode, e) ->
 					{
 						if (episode.mediaInfo().get().isSet()) {
-							if (new File(episode.getAbsolutePart()).length() != episode.mediaInfo().get().getFilesize())
+							if (episode.getPart().toFSPath().toFile().length() != episode.mediaInfo().get().getFilesize())
 								e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED, episode));
 						}
 					});
@@ -797,7 +795,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_INVALID_CHARS_IN_PATH,
 					o -> o.ValidateEpisodes,
-					episode -> PathFormatter.containsIllegalPathSymbolsInSerializedFormat(episode.getPart()),
+					episode -> CCPath.containsIllegalSymbols(episode.getPart()),
 					episode -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_INVALID_CHARS_IN_PATH, episode));
 
 			// History but not viewed
@@ -836,7 +834,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_NON_NORMALIZED_PATH,
 					o -> o.ValidateEpisodes,
-					episode -> !PathFormatter.getCCPath(episode.getAbsolutePart()).equals(episode.getPart()),
+					episode -> !CCPath.isEqual(CCPath.createFromFSPath(episode.getPart().toFSPath()), episode.getPart()),
 					episode -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NON_NORMALIZED_PATH, episode));
 
 			// No language
@@ -1048,7 +1046,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			}
 			if (! found) {
 				if (cc instanceof CCDefaultCoverCache) {
-					e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NONLINKED_COVERFILE, new File(PathFormatter.combine(((CCDefaultCoverCache)cc).getCoverPath(), cvrname))));
+					e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NONLINKED_COVERFILE, ((CCDefaultCoverCache)cc).getCoverPath().append(cvrname).toFile()));
 				} else {
 					e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NONLINKED_COVERFILE, cvrname));
 				}
@@ -1063,17 +1061,17 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		{
 			pcl.stepSub(cce.Filename);
 
-			String fp = cc.getFilepath(cce);
-			if (fp == null) continue;
+			var fp = cc.getFilepath(cce);
+			if (fp == null || fp.isEmpty()) continue;
 
 			String checksum = "ERR"; //$NON-NLS-1$
-			try (FileInputStream fis = new FileInputStream(new File(fp))) { checksum = DigestUtils.sha256Hex(fis).toUpperCase(); } catch (IOException ex) {/**/}
+			try (FileInputStream fis = new FileInputStream(fp.toFile())) { checksum = DigestUtils.sha256Hex(fis).toUpperCase(); } catch (IOException ex) {/**/}
 			if (! checksum.equals(cce.Checksum)) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COVER_CHECKSUM_MISMATCH, cce.Filename));
 
 			BufferedImage img = cc.getCover(cce);
 			if (img.getWidth() != cce.Width || img.getHeight() != cce.Height)	 e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COVER_DIMENSIONS_MISMATCH, cce.Filename));
 
-			if (new File(fp).length() != cce.Filesize) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COVER_FILESIZE_MISMATCH, cce.Filename));
+			if (fp.toFile().length() != cce.Filesize) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COVER_FILESIZE_MISMATCH, cce.Filename));
 		}
 	}
 
@@ -1089,22 +1087,22 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		for (CCDatabaseElement el : movielist.iteratorElements()) {
 			if (el.isMovie()) {
 				for (int i = 0; i < ((CCMovie)el).getPartcount(); i++) {
-					if (ignIFO && CCFileFormat.getMovieFormat(PathFormatter.getExtension(((CCMovie)el).getAbsolutePart(i))) == CCFileFormat.IFO) {
+					if (ignIFO && CCFileFormat.getMovieFormat(((CCMovie)el).Parts.get(i).getExtension()) == CCFileFormat.IFO) {
 						continue;
 					}
 
-					flList.add(new DatabaseFileElement(((CCMovie)el).getAbsolutePart(i), ((CCMovie)el)));
+					flList.add(new DatabaseFileElement(((CCMovie)el).Parts.get(i), ((CCMovie)el)));
 				}
 			} else if (el.isSeries()) {
 				CCSeries s = ((CCSeries)el);
 				for (int i = 0; i < s.getSeasonCount(); i++) {
 					CCSeason se = s.getSeasonByArrayIndex(i);
 					for (int j = 0; j < se.getEpisodeCount(); j++) {
-						if (ignIFO && CCFileFormat.getMovieFormat(PathFormatter.getExtension(se.getEpisodeByArrayIndex(j).getAbsolutePart())) == CCFileFormat.IFO) {
+						if (ignIFO && CCFileFormat.getMovieFormat(se.getEpisodeByArrayIndex(j).getPart().getExtension()) == CCFileFormat.IFO) {
 							continue;
 						}
 
-						flList.add(new DatabaseFileElement(se.getEpisodeByArrayIndex(j).getAbsolutePart(), se.getEpisodeByArrayIndex(j)));
+						flList.add(new DatabaseFileElement(se.getEpisodeByArrayIndex(j).getPart(), se.getEpisodeByArrayIndex(j)));
 					}
 				}
 			}
@@ -1119,7 +1117,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				e.add(DatabaseError.createDouble(movielist, DatabaseErrorType.ERROR_DUPLICATE_FILELINK, flList.get(i-1).getElement(), flList.get(i).getElement()));
 			}
 
-			pcl.stepSub(PathFormatter.getFilenameWithExt(flList.get(i).getPath()));
+			pcl.stepSub(flList.get(i).getPath().getFilenameWithExt());
 		}
 	}
 

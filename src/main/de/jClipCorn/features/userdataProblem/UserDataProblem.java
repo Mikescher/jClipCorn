@@ -11,7 +11,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang.StringUtils;
@@ -76,7 +76,7 @@ public class UserDataProblem {
 	
 	public static void testMovieData(List<UserDataProblem> ret, CCMovieList ml, CCMovie movieSource, IMovieData newdata)
 	{
-		int partcount_nonempty = CCStreams.iterate(newdata.getParts()).count(p -> !Str.isNullOrWhitespace(p));
+		int partcount_nonempty = CCStreams.iterate(newdata.getParts()).count(p -> !CCPath.isNullOrEmpty(p));
 
 		var gen0 = newdata.getGenres().getGenre(0).asInt();
 		var gen1 = newdata.getGenres().getGenre(1).asInt();
@@ -87,12 +87,12 @@ public class UserDataProblem {
 		var gen6 = newdata.getGenres().getGenre(6).asInt();
 		var gen7 = newdata.getGenres().getGenre(7).asInt();
 
-		var p0 = newdata.getParts().size() <= 0 ? Str.Empty : newdata.getParts().get(0);
-		var p1 = newdata.getParts().size() <= 1 ? Str.Empty : newdata.getParts().get(1);
-		var p2 = newdata.getParts().size() <= 2 ? Str.Empty : newdata.getParts().get(2);
-		var p3 = newdata.getParts().size() <= 3 ? Str.Empty : newdata.getParts().get(3);
-		var p4 = newdata.getParts().size() <= 4 ? Str.Empty : newdata.getParts().get(4);
-		var p5 = newdata.getParts().size() <= 5 ? Str.Empty : newdata.getParts().get(5);
+		var p0 = newdata.getParts().size() <= 0 ? CCPath.Empty : newdata.getParts().get(0);
+		var p1 = newdata.getParts().size() <= 1 ? CCPath.Empty : newdata.getParts().get(1);
+		var p2 = newdata.getParts().size() <= 2 ? CCPath.Empty : newdata.getParts().get(2);
+		var p3 = newdata.getParts().size() <= 3 ? CCPath.Empty : newdata.getParts().get(3);
+		var p4 = newdata.getParts().size() <= 4 ? CCPath.Empty : newdata.getParts().get(4);
+		var p5 = newdata.getParts().size() <= 5 ? CCPath.Empty : newdata.getParts().get(5);
 
 		//################################################################################################################
 		
@@ -102,9 +102,9 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (CCStreams.iterate(newdata.getParts()).any(p -> !Str.isNullOrWhitespace(p)) &&
-			CCStreams.iterate(newdata.getParts()).any(Str::isNullOrWhitespace) &&
-			CCStreams.iterate(newdata.getParts()).findIndex(Str::isNullOrWhitespace) < CCStreams.iterate(newdata.getParts()).findLastIndex(p -> !Str.isNullOrWhitespace(p))) {
+		if (CCStreams.iterate(newdata.getParts()).any(p -> !CCPath.isNullOrEmpty(p)) &&
+			CCStreams.iterate(newdata.getParts()).any(CCPath::isNullOrEmpty) &&
+			CCStreams.iterate(newdata.getParts()).findIndex(CCPath::isNullOrEmpty) < CCStreams.iterate(newdata.getParts()).findLastIndex(p -> !CCPath.isNullOrEmpty(p))) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_HOLE_IN_PATH));
 		}
 		
@@ -163,7 +163,7 @@ public class UserDataProblem {
 
 		List<String> extensions = new ArrayList<>();
 
-		for (var p : newdata.getParts()) extensions.add(PathFormatter.getExtension(p).toLowerCase());
+		for (var p : newdata.getParts()) extensions.add(p.getExtension().toLowerCase());
 
 		if (! (extensions.contains(newdata.getFormat().asString().toLowerCase()) || extensions.contains(newdata.getFormat().asStringAlt().toLowerCase()))) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EXTENSION_UNEQUALS_FILENAME));
@@ -221,7 +221,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (PathFormatter.isUntrimmed(newdata.getTitle()) || PathFormatter.isUntrimmed(newdata.getTitle())) {
+		if (Str.isUntrimmed(newdata.getTitle()) || Str.isUntrimmed(newdata.getTitle())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
 		}
 		
@@ -280,13 +280,13 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (PathFormatter.containsIllegalPathSymbolsInSerializedFormat(p0) || 
-				PathFormatter.containsIllegalPathSymbolsInSerializedFormat(p1) || 
-				PathFormatter.containsIllegalPathSymbolsInSerializedFormat(p2) || 
-				PathFormatter.containsIllegalPathSymbolsInSerializedFormat(p3) || 
-				PathFormatter.containsIllegalPathSymbolsInSerializedFormat(p4) || 
-				PathFormatter.containsIllegalPathSymbolsInSerializedFormat(p5)) {
-			
+		if (CCPath.containsIllegalSymbols(p0) ||
+			CCPath.containsIllegalSymbols(p1) ||
+			CCPath.containsIllegalSymbols(p2) ||
+			CCPath.containsIllegalSymbols(p3) ||
+			CCPath.containsIllegalSymbols(p4) ||
+			CCPath.containsIllegalSymbols(p5))
+		{
 			ret.add(new UserDataProblem(PROBLEM_INVALID_PATH_CHARACTERS));
 		}
 		
@@ -376,7 +376,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (PathFormatter.isUntrimmed(newdata.getTitle())) {
+		if (Str.isUntrimmed(newdata.getTitle())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
 		}
 		
@@ -406,7 +406,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (PathFormatter.isUntrimmed(newdata.getTitle())) {
+		if (Str.isUntrimmed(newdata.getTitle())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
 		}
 	}
@@ -447,7 +447,7 @@ public class UserDataProblem {
 
 		//################################################################################################################
 
-		if (! (PathFormatter.getExtension(newdata.getPart()).equals(newdata.getFormat().asString()) || PathFormatter.getExtension(newdata.getPart()).equals(newdata.getFormat().asStringAlt()))) {
+		if (! (newdata.getPart().getExtension().equals(newdata.getFormat().asString()) || newdata.getPart().getExtension().equals(newdata.getFormat().asStringAlt()))) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EXTENSION_UNEQUALS_FILENAME));
 		}
 		
@@ -501,13 +501,13 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (PathFormatter.isUntrimmed(newdata.getTitle())) {
+		if (Str.isUntrimmed(newdata.getTitle())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
 		}
 
 		//################################################################################################################
 		
-		if (PathFormatter.containsIllegalPathSymbolsInSerializedFormat(newdata.getPart())) {
+		if (CCPath.containsIllegalSymbols(newdata.getPart())) {
 			ret.add(new UserDataProblem(PROBLEM_INVALID_PATH_CHARACTERS));
 		}
 
@@ -522,9 +522,9 @@ public class UserDataProblem {
 		}
 	}
 	
-	private static boolean isPathIncluded(CCMovie m, String p0) {
+	private static boolean isPathIncluded(CCMovie m, CCPath p0) {
 		for (int i = 0; i < m.getPartcount(); i++) {
-			if (StringUtils.equalsIgnoreCase(m.Parts.get(i), p0)) {
+			if (CCPath.equalsIgnoreCase(m.Parts.get(i), p0)) {
 				return true;
 			}
 		}
@@ -532,28 +532,28 @@ public class UserDataProblem {
 		return false;
 	}
 	
-	private static boolean isPathIncluded(CCEpisode m, String p0) {
-		return StringUtils.equalsIgnoreCase(m.getPart(), p0);
+	private static boolean isPathIncluded(CCEpisode m, CCPath p0) {
+		return CCPath.equalsIgnoreCase(m.getPart(), p0);
 	}
 
-	private static boolean isPathIncluded(CCMovie m, String p0, String p1, String p2, String p3, String p4, String p5) {
+	private static boolean isPathIncluded(CCMovie m, CCPath p0, CCPath p1, CCPath p2, CCPath p3, CCPath p4, CCPath p5) {
 		for (int i = 0; i < m.getPartcount(); i++) {
-			if (StringUtils.equalsIgnoreCase(m.Parts.get(i), p0)) {
+			if (CCPath.equalsIgnoreCase(m.Parts.get(i), p0)) {
 				return true;
 			}
-			if (StringUtils.equalsIgnoreCase(m.Parts.get(i), p1)) {
+			if (CCPath.equalsIgnoreCase(m.Parts.get(i), p1)) {
 				return true;
 			}
-			if (StringUtils.equalsIgnoreCase(m.Parts.get(i), p2)) {
+			if (CCPath.equalsIgnoreCase(m.Parts.get(i), p2)) {
 				return true;
 			}
-			if (StringUtils.equalsIgnoreCase(m.Parts.get(i), p3)) {
+			if (CCPath.equalsIgnoreCase(m.Parts.get(i), p3)) {
 				return true;
 			}
-			if (StringUtils.equalsIgnoreCase(m.Parts.get(i), p4)) {
+			if (CCPath.equalsIgnoreCase(m.Parts.get(i), p4)) {
 				return true;
 			}
-			if (StringUtils.equalsIgnoreCase(m.Parts.get(i), p5)) {
+			if (CCPath.equalsIgnoreCase(m.Parts.get(i), p5)) {
 				return true;
 			}
 		}
@@ -561,23 +561,23 @@ public class UserDataProblem {
 		return false;
 	}
 	
-	private static boolean isPathIncluded(CCEpisode m, String p0, String p1, String p2, String p3, String p4, String p5) {
-		if (StringUtils.equalsIgnoreCase(m.getPart(), p0)) {
+	private static boolean isPathIncluded(CCEpisode m, CCPath p0, CCPath p1, CCPath p2, CCPath p3, CCPath p4, CCPath p5) {
+		if (CCPath.equalsIgnoreCase(m.getPart(), p0)) {
 			return true;
 		}
-		if (StringUtils.equalsIgnoreCase(m.getPart(), p1)) {
+		if (CCPath.equalsIgnoreCase(m.getPart(), p1)) {
 			return true;
 		}
-		if (StringUtils.equalsIgnoreCase(m.getPart(), p2)) {
+		if (CCPath.equalsIgnoreCase(m.getPart(), p2)) {
 			return true;
 		}
-		if (StringUtils.equalsIgnoreCase(m.getPart(), p3)) {
+		if (CCPath.equalsIgnoreCase(m.getPart(), p3)) {
 			return true;
 		}
-		if (StringUtils.equalsIgnoreCase(m.getPart(), p4)) {
+		if (CCPath.equalsIgnoreCase(m.getPart(), p4)) {
 			return true;
 		}
-		if (StringUtils.equalsIgnoreCase(m.getPart(), p5)) {
+		if (CCPath.equalsIgnoreCase(m.getPart(), p5)) {
 			return true;
 		}
 

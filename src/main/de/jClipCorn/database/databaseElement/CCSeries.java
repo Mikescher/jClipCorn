@@ -19,13 +19,14 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.YearRange;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang.text.StrBuilder;
 
-import java.io.File;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -301,8 +302,8 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		return null;
 	}
 	
-	public List<File> getAbsolutePathList() {
-		List<File> result = new ArrayList<>();
+	public List<FSPath> getAbsolutePathList() {
+		List<FSPath> result = new ArrayList<>();
 
 		for (int i = 0; i < seasons.size(); i++) {
 			result.addAll(getSeasonByArrayIndex(i).getAbsolutePathList());
@@ -311,7 +312,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		return result;
 	}
 	
-	public boolean isFileInList(String path) {
+	public boolean isFileInList(FSPath path) {
 		for (int i = 0; i < seasons.size(); i++) {
 			CCSeason s = getSeasonByArrayIndex(i);
 			if(s.isFileInList(path)) {
@@ -446,40 +447,36 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		return guide.toString();
 	}
 	
-	public String getCommonPathStart(boolean extendedSearch) {
-
+	public CCPath getCommonPathStart(boolean extendedSearch) {
 		return _cache.get(SeriesCache.COMMON_PATH_START, Tuple1.Create(extendedSearch), ser->
 		{
-			List<String> all = new ArrayList<>();
+			List<CCPath> all = new ArrayList<>();
 
 			for (int seasi = 0; seasi < getSeasonCount(); seasi++) {
 				CCSeason season = getSeasonByArrayIndex(seasi);
-				all.add(season.getCommonPathStart());
+				var p = season.getCommonPathStart();
+				if (!p.isEmpty()) all.add(p);
 			}
 
-			while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
+			var common = CCPath.getCommonPath(all);
 
-			String common = PathFormatter.getCommonFolderPath(all);
-
-			if (extendedSearch && common.isEmpty()) {
-				common = movielist.getCommonSeriesPath();
-			}
+			if (extendedSearch && common.isEmpty()) common = movielist.getCommonSeriesPath();
 
 			return common;
 		});
 	}
 	
-	public String guessSeriesRootPath() {
+	public FSPath guessSeriesRootPath() {
 		return _cache.get(SeriesCache.SERIES_ROOT_PATH, null, ser->
 		{
-			Map<String, Integer> result = new HashMap<>();
+			Map<FSPath, Integer> result = new HashMap<>();
 
-			String pathMax = ""; //$NON-NLS-1$
+			FSPath pathMax = FSPath.Empty; //$NON-NLS-1$
 			int countMax = 0;
 
 			for(var episode: iteratorEpisodes())
 			{
-				String path = PathFormatter.getParentPath(episode.getAbsolutePart(), 3); // season-folder -> series-folder -> root-folder
+				var path = episode.getPart().toFSPath().getParent(3); // season-folder -> series-folder -> root-folder
 				result.put(path, result.getOrDefault(path, 0) + 1);
 
 				if (result.getOrDefault(path, 0) > countMax) {
@@ -654,7 +651,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 				seriesfoldername.append(String.format(" [%s]", lang.serializeToFilenameString()));
 			}
 
-			seriesfoldername = new StringBuilder(PathFormatter.fixStringToFilesystemname(seriesfoldername.toString()));
+			seriesfoldername = new StringBuilder(FilesystemUtils.fixStringToFilesystemname(seriesfoldername.toString()));
 
 			return seriesfoldername.toString();
 		});

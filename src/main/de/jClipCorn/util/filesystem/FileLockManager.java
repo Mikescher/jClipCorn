@@ -1,15 +1,15 @@
-package de.jClipCorn.util.helper;
+package de.jClipCorn.util.filesystem;
+
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.helper.ApplicationHelper;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
 
 /*
  * Cross plattfom lock file implementation
@@ -17,13 +17,11 @@ import de.jClipCorn.features.log.CCLog;
 public class FileLockManager {
 	private static final String LOCK_EXTENSION = ".~lock"; //$NON-NLS-1$
 	
-	public static boolean tryLockFile(String path, boolean registerShutdownError) throws IOException {
-		String lockpath = path + LOCK_EXTENSION; 
-		
-		File lockFile = new File(lockpath);
+	public static boolean tryLockFile(FSPath path, boolean registerShutdownError) throws IOException {
+		var lockFile = FSPath.create(path.toString() + LOCK_EXTENSION);
 		
 		if (lockFile.exists()) {
-			String pid = SimpleFileUtils.readUTF8TextFile(lockFile);
+			String pid = lockFile.readAsUTF8TextFile();
 			
 			if (pid.equalsIgnoreCase(getPID())) return true;
 			
@@ -32,22 +30,20 @@ public class FileLockManager {
 			if (registerShutdownError) {
 				CCLog.addWarning(LocaleBundle.getString("LogMessage.IncorrectShutdown")); //$NON-NLS-1$
 			}
-			
-			SimpleFileUtils.writeTextFile(lockFile, getPID());
+
+			lockFile.writeAsUTF8TextFile(getPID());
 			return true;
 		}
 
-		SimpleFileUtils.writeTextFile(lockFile, getPID());
+		lockFile.writeAsUTF8TextFile(getPID());
 		return true;
 	}
 
-	public static boolean unlockFile(String path) throws IOException {
-		String lockpath = path + LOCK_EXTENSION; 
-		
-		File lockFile = new File(lockpath);		
+	public static boolean unlockFile(FSPath path) throws IOException {
+		var lockFile = FSPath.create(path.toString() + LOCK_EXTENSION);
 
 		if (lockFile.exists()) {
-			String pid = SimpleFileUtils.readUTF8TextFile(lockFile);
+			String pid = lockFile.readAsUTF8TextFile();
 			
 			if (pid.equalsIgnoreCase(getPID()) || !isRunning(pid)) {
 				lockFile.delete();
@@ -60,16 +56,14 @@ public class FileLockManager {
 		return true;
 	}
 	
-	public static boolean isLocked(String path) throws IOException {
-		String lockpath = path + LOCK_EXTENSION; 
-
-		File lockFile = new File(lockpath);
+	public static boolean isLocked(FSPath path) throws IOException {
+		var lockFile = FSPath.create(path.toString() + LOCK_EXTENSION);
 
 		if (! lockFile.exists()) {
 			return false;
 		}
 		
-		String pid = SimpleFileUtils.readUTF8TextFile(lockFile);
+		String pid = lockFile.readAsUTF8TextFile();
 		
 		return isRunning(pid);
 	}

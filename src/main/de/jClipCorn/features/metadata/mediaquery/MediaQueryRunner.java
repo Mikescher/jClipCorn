@@ -6,8 +6,8 @@ import de.jClipCorn.features.metadata.exceptions.InnerMediaQueryException;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ProcessHelper;
 import de.jClipCorn.util.xml.CCXMLElement;
@@ -15,7 +15,6 @@ import de.jClipCorn.util.xml.CCXMLException;
 import de.jClipCorn.util.xml.CCXMLParser;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -27,18 +26,16 @@ public class MediaQueryRunner implements MetadataSource {
 	// https://mediaarea.net/mediainfo/mediainfo_2_0.xsd
 
 	@SuppressWarnings("nls")
-	public static MediaQueryResult query(String filename, boolean doNotValidateLangs) throws IOException, MediaQueryException {
-		String mqpath = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+	public static MediaQueryResult query(FSPath filename, boolean doNotValidateLangs) throws IOException, MediaQueryException {
+		var mqpath = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
 
-		File mqfile = new File(mqpath);
+		if (! mqpath.exists()) throw new MediaQueryException("MediaQuery not found");
 
-		if (! mqfile.exists()) throw new MediaQueryException("MediaQuery not found");
-
-		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath, filename, "--Output=XML");
+		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath, filename.toString(), "--Output=XML");
 
 		if (proc.Item1 != 0) throw new MediaQueryException("MediaQuery returned " + proc.Item1, proc.Item2 + "\n\n\n\n" + proc.Item3);
 
-		BasicFileAttributes attr = Files.readAttributes(new File(filename).toPath(), BasicFileAttributes.class);
+		BasicFileAttributes attr = Files.readAttributes(filename.toPath(), BasicFileAttributes.class);
 
 		String mqxml = proc.Item2;
 
@@ -52,7 +49,7 @@ public class MediaQueryRunner implements MetadataSource {
 			CCXMLElement media = root.getFirstChildOrThrow("media");
 			if (media == null) throw new InnerMediaQueryException("no media xml element");
 
-			var hash = ChecksumHelper.fastVideoHash(new File(filename));
+			var hash = ChecksumHelper.fastVideoHash(filename);
 
 			return MediaQueryResult.parse(mqxml, attr.creationTime().toMillis(), attr.lastModifiedTime().toMillis(), hash, media, doNotValidateLangs);
 		} catch (InnerMediaQueryException e) {
@@ -65,12 +62,12 @@ public class MediaQueryRunner implements MetadataSource {
 	}
 
 	@SuppressWarnings("nls")
-	public static String queryRaw(String filename) throws IOException, MediaQueryException {
-		String mqpath = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+	public static String queryRaw(FSPath filename) throws IOException, MediaQueryException {
+		var mqpath = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
 
-		if (! new File(mqpath).exists()) throw new MediaQueryException("MediaQuery not found");
+		if (!mqpath.exists()) throw new MediaQueryException("MediaQuery not found");
 
-		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath, filename);
+		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath, filename.toString());
 
 		if (proc.Item1 != 0) throw new MediaQueryException("MediaQuery returned " + proc.Item1, proc.Item2 + "\n\n\n\n" + proc.Item3);
 
@@ -78,25 +75,23 @@ public class MediaQueryRunner implements MetadataSource {
 	}
 
 	@Override
-	public PartialMediaInfo run(String filename) throws IOException, MetadataQueryException {
+	public PartialMediaInfo run(FSPath filename) throws IOException, MetadataQueryException {
 		return query(filename, true).toPartial();
 	}
 
 	@Override
-	public String getFullOutput(String filename, PartialMediaInfo result) throws IOException, MetadataQueryException {
+	public String getFullOutput(FSPath filename, PartialMediaInfo result) throws IOException, MetadataQueryException {
 		return queryRaw(filename);
 	}
 
 	@Override
 	public boolean isConfiguredAndRunnable() {
-		String mqpath = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (Str.isNullOrWhitespace(mqpath)) return false;
+		var mqpath = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (FSPath.isNullOrEmpty(mqpath)) return false;
 
-		File f = new File(mqpath);
-
-		if (!f.exists()) return false;
-		if (!f.isFile()) return false;
-		if (!f.canExecute()) return false;
+		if (!mqpath.exists())     return false;
+		if (!mqpath.isFile())     return false;
+		if (!mqpath.canExecute()) return false;
 
 		return true;
 	}

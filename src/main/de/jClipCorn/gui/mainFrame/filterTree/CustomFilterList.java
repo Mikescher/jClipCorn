@@ -6,8 +6,7 @@ import de.jClipCorn.features.table.filter.customFilter.operators.CustomAndOperat
 import de.jClipCorn.features.table.filter.customFilter.operators.CustomOperator;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 
 import java.io.File;
 import java.io.IOException;

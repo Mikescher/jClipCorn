@@ -1,6 +1,7 @@
 package de.jClipCorn.database.covertab;
 
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.filesystem.FSPath;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -28,5 +29,5 @@ public interface ICoverCache {
 
 	List<CCCoverData> listCovers();
 
-	String getFilepath(CCCoverData cce);
+	FSPath getFilepath(CCCoverData cce);
 }

@@ -226,6 +226,8 @@ dependencies {
 
 	implementation name: 'fast-md5'
 
+	implementation 'org.jetbrains:annotations:20.1.0'
+
 	implementation 'net.sourceforge.htmlunit:htmlunit:2.35.0'
 	implementation 'net.sourceforge.cssparser:cssparser:0.9.27'
 	implementation 'net.sourceforge.htmlunit:htmlunit-core-js:2.35.0'

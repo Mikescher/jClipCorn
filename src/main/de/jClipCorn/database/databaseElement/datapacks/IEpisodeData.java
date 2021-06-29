@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement.datapacks;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.filesystem.CCPath;
 
 public interface IEpisodeData
 {
@@ -10,7 +11,7 @@ public interface IEpisodeData
 	int getLength();
 	CCFileFormat getFormat();
 	CCFileSize getFilesize();
-	String getPart();
+	CCPath getPart();
 	CCDate getAddDate();
 	CCDateTimeList getViewedHistory();
 	CCTagList getTags();

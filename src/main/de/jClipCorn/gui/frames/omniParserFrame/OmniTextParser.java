@@ -1,7 +1,7 @@
 package de.jClipCorn.gui.frames.omniParserFrame;
 
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

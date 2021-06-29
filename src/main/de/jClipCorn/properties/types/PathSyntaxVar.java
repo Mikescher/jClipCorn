@@ -1,14 +1,15 @@
 package de.jClipCorn.properties.types;
 
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.filesystem.FSPath;
 
 public class PathSyntaxVar {
-	public final static PathSyntaxVar EMPTY = new PathSyntaxVar(Str.Empty, Str.Empty);
+	public final static PathSyntaxVar EMPTY = new PathSyntaxVar(Str.Empty, FSPath.Empty);
 
 	public final String Key;
-	public final String Value;
+	public final FSPath Value;
 
-	public PathSyntaxVar(String key, String value) {
+	public PathSyntaxVar(String key, FSPath value) {
 		Key = key;
 		Value = value;
 	}
@@ -19,6 +20,6 @@ public class PathSyntaxVar {
 	}
 
 	public String serialize() {
-		return Str.toBase64(this.Key) + ";" + Str.toBase64(this.Value);
+		return Str.toBase64(this.Key) + ";" + Str.toBase64(this.Value.toString());
 	}
 }

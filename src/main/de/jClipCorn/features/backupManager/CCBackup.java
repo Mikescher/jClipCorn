@@ -1,31 +1,26 @@
 package de.jClipCorn.features.backupManager;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
 import de.jClipCorn.Main;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.RegExHelper;
-import de.jClipCorn.util.helper.SimpleFileUtils;
 import org.apache.commons.io.FileUtils;
+
+import java.io.*;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public class CCBackup {
 	private final static String HEADER = "Backup Info File"; //$NON-NLS-1$
@@ -39,10 +34,10 @@ public class CCBackup {
 
 	private final static String REGEXNAME = "(?<= \\[)[0-9]{1,2}\\.[0-9]{1,2}\\.[0-9]{4}(?=\\])"; // (?<= \[)[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}(?=\]) //$NON-NLS-1$
 	
-	private File archive;
-	private Properties properties;
+	private final FSPath archive;
+	private final Properties properties;
 	
-	public CCBackup(File archive) throws IOException {
+	public CCBackup(FSPath archive) throws IOException {
 		this.archive = archive;
 		if (! archive.exists()) throw new FileNotFoundException();
 		
@@ -53,7 +48,7 @@ public class CCBackup {
 		if (! result.Item2) saveToFile();
 	}
 
-	public CCBackup(File archive, String name, CCDate date, boolean persistent, String jccversion, String dbversion, boolean excludeCovers) {
+	public CCBackup(FSPath archive, String name, CCDate date, boolean persistent, String jccversion, String dbversion, boolean excludeCovers) {
 		this.archive = archive;
 
 		properties = new Properties();
@@ -66,7 +61,7 @@ public class CCBackup {
 		properties.setProperty(PROP_EXCLUDECOVERS, excludeCovers ? "1" : "0"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	public File getArchive() {
+	public FSPath getArchive() {
 		return archive;
 	}
 	
@@ -84,8 +79,8 @@ public class CCBackup {
 
 			// delete old prop file if exits
 			try {
-				File externalInfoFile = getPropertyFileFor(archive);
-				if (externalInfoFile.exists()) externalInfoFile.delete();
+				var externalInfoFile = getPropertyFileFor(archive);
+				if (externalInfoFile.exists()) externalInfoFile.deleteWithException();
 			} catch(Exception e) {
 				CCLog.addError(e);
 			}
@@ -103,9 +98,9 @@ public class CCBackup {
 
 	public boolean saveToFileFallback() {
 		try {
-			File tempFile = new File(SimpleFileUtils.getSystemTempFile("zip")); //$NON-NLS-1$
+			var tempFile = SimpleFileUtils.getSystemTempFile("zip"); //$NON-NLS-1$
 
-			FileUtils.copyFile(archive, tempFile);
+			FileUtils.copyFile(archive.toFile(), tempFile.toFile());
 
 			Map<String, String> env = new HashMap<>();
 			env.put("create", "false"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -117,13 +112,13 @@ public class CCBackup {
 				}
 			}
 
-			FileUtils.copyFile(tempFile, archive);
-			FileUtils.forceDelete(tempFile);
+			FileUtils.copyFile(tempFile.toFile(), archive.toFile());
+			FileUtils.forceDelete(tempFile.toFile());
 
 			// delete old prop file if exits
 			try {
-				File externalInfoFile = getPropertyFileFor(archive);
-				if (externalInfoFile.exists()) externalInfoFile.delete();
+				var externalInfoFile = getPropertyFileFor(archive);
+				if (externalInfoFile.exists()) externalInfoFile.deleteWithException();
 			} catch(Exception e) {
 				CCLog.addError(e);
 			}
@@ -224,11 +219,11 @@ public class CCBackup {
 	}
 
 	public long getSize() {
-		return FileSizeFormatter.getFileSize(archive);
+		return archive.toFile().length();
 	}
 
-	private CCDate getBackupDateFromOldFileFormat(File f) {
-		String sdate = RegExHelper.find(REGEXNAME, f.getName());
+	private CCDate getBackupDateFromOldFileFormat(FSPath f) {
+		String sdate = RegExHelper.find(REGEXNAME, f.getFilenameWithExt());
 
 		try {
 			return CCDate.deserialize(sdate);
@@ -238,11 +233,11 @@ public class CCBackup {
 		}
 	}
 
-	private File getPropertyFileFor(File archive) {
-		return new File(PathFormatter.getWithoutExtension(archive.getAbsolutePath()) + "." + ExportHelper.EXTENSION_BACKUPPROPERTIES); //$NON-NLS-1$
+	private FSPath getPropertyFileFor(FSPath archive) {
+		return archive.replaceExtension(ExportHelper.EXTENSION_BACKUPPROPERTIES);
 	}
 
-	private Tuple<Properties, Boolean> loadProperties(File f) {
+	private Tuple<Properties, Boolean> loadProperties(FSPath f) {
 
 		// load from info.ini in zip file
 		try {
@@ -265,13 +260,11 @@ public class CCBackup {
 		
 		
 		// [Backwards compatibility] load from external info file - archives before 1.10.2
-		File externalInfoFile = getPropertyFileFor(f);
+		var externalInfoFile = getPropertyFileFor(f);
 		if (externalInfoFile.exists()) {
 			Properties result2 = new Properties();
-			try {
-				FileInputStream stream = new FileInputStream(externalInfoFile);
+			try (var stream = new FileInputStream(externalInfoFile.toFile())) {
 				result2.load(stream);
-				stream.close();
 				return Tuple.Create(result2, false);
 			} catch (IOException e) {
 				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateBackupInfo", getName()), e); //$NON-NLS-1$
@@ -281,7 +274,7 @@ public class CCBackup {
 		
 		// [Backwards compatibility] auto determine values - really old archives
 		Properties result3 = new Properties();
-		result3.setProperty(PROP_NAME, PathFormatter.getFilename(f.getAbsolutePath()));
+		result3.setProperty(PROP_NAME, f.getFilenameWithoutExt());
 		result3.setProperty(PROP_DATE, getBackupDateFromOldFileFormat(f).toStringSerialize());
 		result3.setProperty(PROP_PERSISTENT, "0"); //$NON-NLS-1$
 		result3.setProperty(PROP_CCVERSION, Main.VERSION);

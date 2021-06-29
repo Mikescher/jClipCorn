@@ -8,7 +8,7 @@ import de.jClipCorn.database.driver.DatabaseStructure;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.XMLFormatException;
-import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.parser.TurbineParser;
 import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
 import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;

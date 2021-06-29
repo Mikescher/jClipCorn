@@ -6,14 +6,12 @@ import de.jClipCorn.util.SimpleSerializableData;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
 import de.jClipCorn.util.exceptions.XMLFormatException;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -26,8 +24,8 @@ public class CachedWebConnection extends WebConnectionLayer {
 	
 	private final WebConnectionLayer conn;
 	
-	private String cachePath;
-	private String cacheDatabasePath;
+	private FSPath cachePath;
+	private FSPath cacheDatabasePath;
 	
 	private final Object dblock = new Object();
 	private SimpleSerializableData db;
@@ -40,16 +38,15 @@ public class CachedWebConnection extends WebConnectionLayer {
 	@Override
 	public void init() {
 		synchronized(dblock) {
-			cachePath = CCProperties.getInstance().PROP_DEBUG_HTTPCACHE_PATH.getValue();
-			cachePath = PathFormatter.appendSeparator(cachePath);
-			cacheDatabasePath = PathFormatter.combine(cachePath, "cache.xml");
-			
-			PathFormatter.createFolders(cacheDatabasePath);
-			
-			CCLog.addDebug("Start loading HTTP-Cache from drive");
-			
+			cachePath = FSPath.createAndNormalize(CCProperties.getInstance().PROP_DEBUG_HTTPCACHE_PATH.getValue());
+			cacheDatabasePath = cachePath.append("cache.xml");
+
 			try {
-				if (PathFormatter.fileExists(cacheDatabasePath)) {
+				cacheDatabasePath.createFolders();
+
+				CCLog.addDebug("Start loading HTTP-Cache from drive");
+
+				if (cacheDatabasePath.fileExists()) {
 					db = SimpleSerializableData.load(cacheDatabasePath, false);
 					dbref = new HashMap<>();
 					//for (SimpleSerializableData dat : db.enumerateChildren()) {
@@ -64,7 +61,7 @@ public class CachedWebConnection extends WebConnectionLayer {
 					db = SimpleSerializableData.createEmpty(false);
 					dbref = new HashMap<>();
 				}
-			} catch (XMLFormatException e) {
+			} catch (XMLFormatException | IOException e) {
 				CCLog.addError(e);
 			}
 	
@@ -79,7 +76,7 @@ public class CachedWebConnection extends WebConnectionLayer {
 			return dbref.get(d.getStr("result"));
 		}
 		else {
-			String data = SimpleFileUtils.readUTF8TextFile(PathFormatter.combine(cachePath, d.getStr("result")));
+			String data = cachePath.append(d.getStr("result")).readAsUTF8TextFile();
 			dbref.put(d.getStr("result"), data);
 			return data;
 		}
@@ -117,7 +114,7 @@ public class CachedWebConnection extends WebConnectionLayer {
 				try {
 					String r = conn.getUncaughtHTML(url, stripLineBreaks);
 					String fn = UUID.randomUUID().toString();
-					SimpleFileUtils.writeTextFile(PathFormatter.combine(cachePath, fn), r);
+					cachePath.append(fn).writeAsUTF8TextFile(r);
 					d.set("type", 0);
 					d.set("result", fn);
 					d.set("time", (int)(System.currentTimeMillis() - start));
@@ -182,13 +179,13 @@ public class CachedWebConnection extends WebConnectionLayer {
 					Tuple<String, List<Tuple<String, String>>> r = conn.getUncaughtPostContent(url, body);
 
 					String fn1 = UUID.randomUUID().toString();
-					SimpleFileUtils.writeTextFile(PathFormatter.combine(cachePath, fn1), r.Item1);
+					cachePath.append(fn1).writeAsUTF8TextFile(r.Item1);
 					d1.set("type", 0);
 					d1.set("result", fn1);
 					d1.set("time", (int)(System.currentTimeMillis() - start));
 
 					String fn2 = UUID.randomUUID().toString();
-					SimpleFileUtils.writeTextFile(PathFormatter.combine(cachePath, fn1), CCStreams.iterate(r.Item2).stringjoin(b -> b.Item1+"\t"+b.Item2, "\n"));
+					cachePath.append(fn1).writeAsUTF8TextFile(CCStreams.iterate(r.Item2).stringjoin(b -> b.Item1+"\t"+b.Item2, "\n"));
 					d2.set("type", 0);
 					d2.set("result", fn2);
 					d2.set("time", (int)(System.currentTimeMillis() - start));
@@ -240,7 +237,8 @@ public class CachedWebConnection extends WebConnectionLayer {
 					return null;
 				} else {
 					try {
-						return ImageIO.read(new File(PathFormatter.combine(cachePath, d.getStr("result"))));
+
+						return ImageIO.read(cachePath.append(d.getStr("result")).toFile());
 					} catch (IOException e) {
 						CCLog.addError(e);
 						return null;
@@ -255,7 +253,7 @@ public class CachedWebConnection extends WebConnectionLayer {
 				try {
 					BufferedImage r = conn.getImage(url);
 					String fn = UUID.randomUUID().toString();
-					ImageIO.write(r, "PNG", new File(PathFormatter.combine(cachePath, fn)));
+					ImageIO.write(r, "PNG", cachePath.append(fn).toFile());
 					d.set("type", 99);
 					d.set("null", false);
 					d.set("result", fn);

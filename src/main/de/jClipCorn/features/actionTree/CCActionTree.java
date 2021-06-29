@@ -56,14 +56,17 @@ import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.*;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
+import de.jClipCorn.util.helper.ApplicationHelper;
+import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.io.IOException;
 
 @SuppressWarnings("unused")
@@ -310,8 +313,8 @@ public class CCActionTree extends UIActionTree{
 		return movielist;
 	}
 
-	public void openFile(File file) {
-		String extension = PathFormatter.getExtension(file.getAbsolutePath());
+	public void openFile(FSPath file) {
+		String extension = file.getExtension();
 
 		if (extension.equalsIgnoreCase(ExportHelper.EXTENSION_FULLEXPORT))
 		{
@@ -361,11 +364,11 @@ public class CCActionTree extends UIActionTree{
 		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_ccbxml.description",     ExportHelper.EXTENSION_CCBACKUP));       //$NON-NLS-1$
 		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jcccf.description",      ExportHelper.EXTENSION_COMPAREFILE));    //$NON-NLS-1$
 		
-		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+		chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
 		
 		int returnval = chooser.showOpenDialog(e.SwingOwner);
 		
-		if (returnval == JFileChooser.APPROVE_OPTION) openFile(chooser.getSelectedFile());
+		if (returnval == JFileChooser.APPROVE_OPTION) openFile(FSPath.create(chooser.getSelectedFile()));
 	}
 
 	private void onClickFileRestart(CCTreeActionEvent e) {
@@ -379,12 +382,12 @@ public class CCActionTree extends UIActionTree{
 	private void onClickMaintenanceXML(CCTreeActionEvent e) {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_ccbxml.description", ExportHelper.EXTENSION_CCBACKUP));  //$NON-NLS-1$
-		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+		chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
 
 		int returnval = chooser.showOpenDialog(e.SwingOwner);
 
 		if (returnval == JFileChooser.APPROVE_OPTION) {
-			CCBXMLReader.openFile(chooser.getSelectedFile(), MainFrame.getInstance());
+			CCBXMLReader.openFile(FSPath.create(chooser.getSelectedFile()), MainFrame.getInstance());
 		}
 	}
 	
@@ -501,7 +504,7 @@ public class CCActionTree extends UIActionTree{
 		{
 			final JFileChooser chooser = new JFileChooser();
 			chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
-			chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+			chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
 
 			int returnval = chooser.showSaveDialog(e.SwingOwner);
 
@@ -512,7 +515,7 @@ public class CCActionTree extends UIActionTree{
 			{
 				MainFrame.getInstance().beginBlockingIntermediate();
 
-				ExportHelper.exportMovie(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), m, includeCover, true);
+				ExportHelper.exportMovie(FSPath.create(chooser.getSelectedFile()).forceExtension(ExportHelper.EXTENSION_SINGLEEXPORT), m, includeCover, true);
 
 				MainFrame.getInstance().endBlockingIntermediate();
 			}, "THREAD_EXPORT_JSCCEXPORT_MOVIE").start(); //$NON-NLS-1$
@@ -526,10 +529,10 @@ public class CCActionTree extends UIActionTree{
 	private void onClickMoviesImportSingle(CCTreeActionEvent e) {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
-		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+		chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
 
 		if (chooser.showOpenDialog(e.SwingOwner) == JFileChooser.APPROVE_OPTION) {
-			ExportHelper.openSingleElementFile(chooser.getSelectedFile(), MainFrame.getInstance(), movielist, CCDBElementTyp.MOVIE);
+			ExportHelper.openSingleElementFile(FSPath.create(chooser.getSelectedFile()), MainFrame.getInstance(), movielist, CCDBElementTyp.MOVIE);
 		}
 	}
 
@@ -553,7 +556,7 @@ public class CCActionTree extends UIActionTree{
 	private void onClickDatabaseExportAsJxmBKP(CCTreeActionEvent e) {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jxmlbkp.description", ExportHelper.EXTENSION_FULLEXPORT));  //$NON-NLS-1$
-		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+		chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
 		
 		int returnval = chooser.showSaveDialog(e.SwingOwner);
 
@@ -562,7 +565,7 @@ public class CCActionTree extends UIActionTree{
 			{
 				MainFrame.getInstance().beginBlockingIntermediate();
 
-				ExportHelper.exportDatabase(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_FULLEXPORT), movielist);
+				ExportHelper.exportDatabase(FSPath.create(chooser.getSelectedFile()).forceExtension(ExportHelper.EXTENSION_FULLEXPORT), movielist);
 
 				MainFrame.getInstance().endBlockingIntermediate();
 			}, "THREAD_EXPORT_JXMLBKP").start(); //$NON-NLS-1$
@@ -572,24 +575,24 @@ public class CCActionTree extends UIActionTree{
 	private void onClickDatabaseImportAsJxmBKP(CCTreeActionEvent e) {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jxmlbkp.description", ExportHelper.EXTENSION_FULLEXPORT));  //$NON-NLS-1$
-		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+		chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
 
 		int returnval = chooser.showOpenDialog(e.SwingOwner);
 
 		if (returnval == JFileChooser.APPROVE_OPTION) {
-			ExportHelper.openFullBackupFile(chooser.getSelectedFile(), MainFrame.getInstance(), movielist);
+			ExportHelper.openFullBackupFile(FSPath.create(chooser.getSelectedFile()), MainFrame.getInstance(), movielist);
 		}
 	}
 	
 	private void onClickDatabaseImportMultipleElements(CCTreeActionEvent e) {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jmccexport.description", ExportHelper.EXTENSION_MULTIPLEEXPORT)); //$NON-NLS-1$
-		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+		chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
 
 		int returnval = chooser.showOpenDialog(e.SwingOwner);
 
 		if (returnval == JFileChooser.APPROVE_OPTION) {
-			ExportHelper.openMultipleElementFile(chooser.getSelectedFile(), MainFrame.getInstance(), movielist);
+			ExportHelper.openMultipleElementFile(FSPath.create(chooser.getSelectedFile()), MainFrame.getInstance(), movielist);
 		}
 	}
 	
@@ -626,7 +629,7 @@ public class CCActionTree extends UIActionTree{
 		{
 			final JFileChooser chooser = new JFileChooser();
 			chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
-			chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+			chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
 
 			if (chooser.showSaveDialog(e.SwingOwner) != JFileChooser.APPROVE_OPTION) return;
 
@@ -636,7 +639,7 @@ public class CCActionTree extends UIActionTree{
 			{
 				MainFrame.getInstance().beginBlockingIntermediate();
 
-				ExportHelper.exportSeries(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_SINGLEEXPORT), s, includeCover, true);
+				ExportHelper.exportSeries(FSPath.create(chooser.getSelectedFile()).forceExtension(ExportHelper.EXTENSION_SINGLEEXPORT), s, includeCover, true);
 
 				MainFrame.getInstance().endBlockingIntermediate();
 			}, "THREAD_EXPORT_JSCCEXPORT_SERIES").start(); //$NON-NLS-1$
@@ -652,12 +655,12 @@ public class CCActionTree extends UIActionTree{
 		{
 			final JFileChooser chooser = new JFileChooser();
 			chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_txtguide.description", ExportHelper.EXTENSION_EPISODEGUIDE)); //$NON-NLS-1$
-			chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+			chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
 
 			if (chooser.showSaveDialog(e.SwingOwner) != JFileChooser.APPROVE_OPTION) return;
 
 			try {
-				SimpleFileUtils.writeTextFile(PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_EPISODEGUIDE), s.getEpisodeGuide());
+				FSPath.create(chooser.getSelectedFile()).forceExtension(ExportHelper.EXTENSION_EPISODEGUIDE).writeAsUTF8TextFile(s.getEpisodeGuide());
 			} catch (IOException e2) {
 				CCLog.addError(e2);
 			}
@@ -667,12 +670,12 @@ public class CCActionTree extends UIActionTree{
 	private void onClickSeriesImportSingle(CCTreeActionEvent e) {
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jsccexport.description", ExportHelper.EXTENSION_SINGLEEXPORT)); //$NON-NLS-1$
-		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+		chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
 
 		int returnval = chooser.showOpenDialog(e.SwingOwner);
 
 		if (returnval == JFileChooser.APPROVE_OPTION) {
-			ExportHelper.openSingleElementFile(chooser.getSelectedFile(), MainFrame.getInstance(), movielist, CCDBElementTyp.SERIES);
+			ExportHelper.openSingleElementFile(FSPath.create(chooser.getSelectedFile()), MainFrame.getInstance(), movielist, CCDBElementTyp.SERIES);
 		}
 	}
 
@@ -724,8 +727,8 @@ public class CCActionTree extends UIActionTree{
 	
 	private void onClickOtherOpenFolder(CCTreeActionEvent e) {
 		e.ifMovieOrSeriesSource(
-			m -> PathFormatter.showInExplorer(m.getAbsolutePart(0)),
-			s -> PathFormatter.showInExplorer(PathFormatter.fromCCPath(s.getCommonPathStart(false)))
+			m -> FilesystemUtils.showInExplorer(m.Parts.get(0).toFSPath()),
+			s -> FilesystemUtils.showInExplorer(s.getCommonPathStart(false).toFSPath())
 		);
 	}
 
@@ -800,13 +803,14 @@ public class CCActionTree extends UIActionTree{
 	private void onClickOtherSeasonQuickAddEpisodes(CCTreeActionEvent e) {
 		e.ifSeasonSource(s ->
 		{
-			String p = PathFormatter.fromCCPath(s.getCommonPathStart());
-			if (Str.isNullOrWhitespace(p)) p = PathFormatter.getRealSelfDirectory();
-			final JFileChooser chooser = new JFileChooser(p);
-			String cps = PathFormatter.fromCCPath(s.getCommonPathStart());
-			if (!Str.isNullOrWhitespace(cps)) chooser.setCurrentDirectory(new File(cps));
-			if (chooser.showOpenDialog(e.SwingOwner) == JFileChooser.APPROVE_OPTION) {
-				QuickAddEpisodeDialog.show(e.SwingOwner, o->{/**/}, s, chooser.getSelectedFile());
+			var p = s.getCommonPathStart().toFSPath();
+			if (p.isEmpty()) p = FilesystemUtils.getRealSelfDirectory();
+			final JFileChooser chooser = new JFileChooser(p.toAbsolutePathString());
+			var cps = s.getCommonPathStart().toFSPath();
+			if (!cps.isEmpty()) chooser.setCurrentDirectory(cps.toFile());
+			if (chooser.showOpenDialog(e.SwingOwner) == JFileChooser.APPROVE_OPTION)
+			{
+				QuickAddEpisodeDialog.show(e.SwingOwner, o->{ /**/ }, s, chooser.getSelectedFile());
 			}
 		});
 	}
@@ -831,7 +835,7 @@ public class CCActionTree extends UIActionTree{
 	}
 
 	private void onClickOtherSeasonOpenFolder(CCTreeActionEvent e) {
-		e.ifSeasonSource(s -> PathFormatter.showInExplorer(PathFormatter.fromCCPath(s.getCommonPathStart())));
+		e.ifSeasonSource(s -> FilesystemUtils.showInExplorer(s.getCommonPathStart().toFSPath()));
 	}
 
 	private void onClickOtherSeriesResumePlay(CCTreeActionEvent e) {
@@ -928,7 +932,7 @@ public class CCActionTree extends UIActionTree{
 	}
 
 	private void onClickOtherEpisodeOpenFolder(CCTreeActionEvent e) {
-		e.ifEpisodeSource(p -> PathFormatter.showInExplorer(p.getAbsolutePart()));
+		e.ifEpisodeSource(p -> FilesystemUtils.showInExplorer(p.getPart().toFSPath()));
 	}
 
 	private void onClickOtherEpisodeEdit(CCTreeActionEvent e) {

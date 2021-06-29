@@ -1,44 +1,38 @@
 package de.jClipCorn.util.parser;
 
-import java.io.File;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.formatter.RomanNumberFormatter;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.formatter.RomanNumberFormatter;
-
 @SuppressWarnings("nls")
 public class FilenameParser {
 
 	private final static Pattern REGEX_EPISODE = Pattern.compile("^S(?<s>[0-9])+E(?<e>[0-9]+) - (?<n>.*)\\.(?<x>[a-zA-Z][a-zA-Z][a-zA-Z]+)$");
 
-	public static FilenameParserResult parse(CCMovieList movielist, String filepath) {
-		Map<Integer, String> addFiles = new HashMap<>();
+	public static FilenameParserResult parse(CCMovieList movielist, FSPath filepath) {
+		Map<Integer, FSPath> addFiles = new HashMap<>();
 		CCGroupList groups = CCGroupList.EMPTY;
 		CCDBLanguageList lang = CCDBLanguageList.single(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		CCMovieZyklus zyklus = null;
 		CCFileFormat format = null;
 		String title = "";
 		
-		String path = PathFormatter.getFilepath(filepath);
-		String filename = PathFormatter.getFilename(filepath); // Filename
-		String ext = PathFormatter.getExtension(filepath);
+		FSPath path     = filepath.getParent();
+		String filename = filepath.getFilenameWithoutExt(); // Filename
+		String ext      = filepath.getExtension();
 		
-		if (path.equals(filepath) || filename.equals(filepath) || ext.equals(filepath)) {
+		if (path.equals(filepath) || path.isEmpty() || filename.equals(filepath.toString()) || ext.equals(filepath.toString())) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorParsingFN", filepath));
 			return null;
 		}
@@ -51,9 +45,8 @@ public class FilenameParser {
 			moviename = moviename.substring(0, filename.indexOf(" (Part 1)"));
 			
 			for (int p = 2; p <= CCMovie.PARTCOUNT_MAX; p++) {
-				String newFP = PathFormatter.combine(path, moviename + " (Part " + p + ")" + '.' + ext);
-				File f = new File(newFP);
-				if (f.exists()) {
+				var newFP = path.append(moviename + " (Part " + p + ")" + '.' + ext);
+				if (newFP.exists()) {
 					addFiles.put(p, newFP);
 				} else {
 					break;
@@ -153,8 +146,8 @@ public class FilenameParser {
 		return new FilenameParserResult(zyklus, title, lang, format, groups, addFiles);
 	}
 
-	public static EpisodeFilenameParserResult parseEpisode(String filepath) {
-		Matcher m = REGEX_EPISODE.matcher(PathFormatter.getFilenameWithExt(filepath));
+	public static EpisodeFilenameParserResult parseEpisode(FSPath filepath) {
+		Matcher m = REGEX_EPISODE.matcher(filepath.getFilenameWithExt());
 		if (m.matches()) {
 			return new EpisodeFilenameParserResult(Integer.parseInt(m.group("s")), Integer.parseInt(m.group("e")), m.group("n"), m.group("x"));
 		}

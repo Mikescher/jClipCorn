@@ -19,12 +19,12 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.sqlwrapper.*;
 
 import java.awt.*;
-import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -37,7 +37,7 @@ public class CCDatabase {
 
 	public final static String XML_NAME = "database/ClipCornSchema.xml"; //$NON-NLS-1$
 
-	private final String databaseDirectory; // = most of the time the working directory
+	private final FSPath databaseDirectory; // = most of the time the working directory
 	private final String databaseName;      // = the PROP_DATABASE_NAME
 
 	private final GenericDatabase db;
@@ -47,13 +47,13 @@ public class CCDatabase {
 
 	private final boolean _readonly;
 
-	private CCDatabase(CCDatabaseDriver driver, String dbDir, String dbName, boolean readonly) {
+	private CCDatabase(CCDatabaseDriver driver, FSPath dbDir, String dbName, boolean readonly) {
 		super();
 
 		_readonly = readonly;
 
 		databaseDirectory = dbDir;
-		databaseName = dbName;
+		databaseName      = dbName;
 
 		if (driver == null) driver = autoDetermineDriver(dbDir, dbName);
 
@@ -85,12 +85,12 @@ public class CCDatabase {
 		upgrader = new DatabaseMigration(db, databaseDirectory, databaseName, readonly);
 	}
 
-	private static CCDatabaseDriver autoDetermineDriver(String dbDir, String dbName) {
-		var sqlite = PathFormatter.combine(dbDir, dbName, dbName + ".db"); //$NON-NLS-1$
-		if (new File(sqlite).exists()) return CCDatabaseDriver.SQLITE;
+	private static CCDatabaseDriver autoDetermineDriver(FSPath dbDir, String dbName) {
+		var sqlite = dbDir.append(dbName, dbName + ".db"); //$NON-NLS-1$
+		if (sqlite.exists()) return CCDatabaseDriver.SQLITE;
 
-		var derby = PathFormatter.combine(dbDir, dbName, "seg0"); //$NON-NLS-1$
-		if (new File(derby).exists()) return CCDatabaseDriver.DERBY;
+		var derby = dbDir.append(dbName, "seg0"); //$NON-NLS-1$
+		if (derby.exists()) return CCDatabaseDriver.DERBY;
 
 		CCLog.addWarning("Could not identify DB at path: " + dbDir + " | " + dbName); //$NON-NLS-1$
 		return CCDatabaseDriver.SQLITE; // fallback
@@ -105,16 +105,16 @@ public class CCDatabase {
 		((CCMemoryCoverCache)coverCache).resetForTestReload();
 	}
 	
-	public static CCDatabase create(CCDatabaseDriver dbDriver, String dbPath, String dbName, boolean dbReadonly) {
+	public static CCDatabase create(CCDatabaseDriver dbDriver, FSPath dbPath, String dbName, boolean dbReadonly) {
 		return new CCDatabase(dbDriver, dbPath, dbName, dbReadonly);
 	}
 	
 	public static CCDatabase createStub() {
-		return new CCDatabase(CCDatabaseDriver.STUB, "", "STUB", false); //$NON-NLS-1$
+		return new CCDatabase(CCDatabaseDriver.STUB, FSPath.Empty, "STUB", false); //$NON-NLS-1$
 	}
 	
 	public static CCDatabase createInMemory() {
-		return new CCDatabase(CCDatabaseDriver.INMEMORY, "", "INMEMORY", false); //$NON-NLS-1$
+		return new CCDatabase(CCDatabaseDriver.INMEMORY, FSPath.Empty, "INMEMORY", false); //$NON-NLS-1$
 	}
 	
 	public boolean exists() {
@@ -278,7 +278,7 @@ public class CCDatabase {
 		ep.Length.set(rs.getInt(DatabaseStructure.COL_EPIS_LENGTH));
 		ep.Format.set(rs.getInt(DatabaseStructure.COL_EPIS_FORMAT));
 		ep.FileSize.set(rs.getLong(DatabaseStructure.COL_EPIS_FILESIZE));
-		ep.Part.set(rs.getString(DatabaseStructure.COL_EPIS_PART_1));
+		ep.Part.set(CCPath.create(rs.getString(DatabaseStructure.COL_EPIS_PART_1)));
 		ep.AddDate.set(rs.getDate(DatabaseStructure.COL_EPIS_ADDDATE));
 		ep.Tags.set(rs.getShort(DatabaseStructure.COL_EPIS_TAGS));
 		ep.Language.set(rs.getLong(DatabaseStructure.COL_EPIS_LANGUAGE));
@@ -338,12 +338,12 @@ public class CCDatabase {
 		mov.FileSize.set(rs.getLong(DatabaseStructure.COL_MAIN_FILESIZE));
 		mov.Tags.set(rs.getShort(DatabaseStructure.COL_MAIN_TAGS));
 		mov.Parts.set(
-				rs.getString(DatabaseStructure.COL_MAIN_PART_1),
-				rs.getString(DatabaseStructure.COL_MAIN_PART_2),
-				rs.getString(DatabaseStructure.COL_MAIN_PART_3),
-				rs.getString(DatabaseStructure.COL_MAIN_PART_4),
-				rs.getString(DatabaseStructure.COL_MAIN_PART_5),
-				rs.getString(DatabaseStructure.COL_MAIN_PART_6));
+				CCPath.create(rs.getString(DatabaseStructure.COL_MAIN_PART_1)),
+				CCPath.create(rs.getString(DatabaseStructure.COL_MAIN_PART_2)),
+				CCPath.create(rs.getString(DatabaseStructure.COL_MAIN_PART_3)),
+				CCPath.create(rs.getString(DatabaseStructure.COL_MAIN_PART_4)),
+				CCPath.create(rs.getString(DatabaseStructure.COL_MAIN_PART_5)),
+				CCPath.create(rs.getString(DatabaseStructure.COL_MAIN_PART_6)));
 		mov.Score.set(rs.getInt(DatabaseStructure.COL_MAIN_SCORE));
 		mov.MediaInfo.set(CCMediaInfo.createFromDB(
 			rs.getNullableLong(DatabaseStructure.COL_MAIN_MI_FILESIZE),
@@ -566,12 +566,12 @@ public class CCDatabase {
 			stmt.setStr(DatabaseStructure.COL_MAIN_ONLINEREF,     mov.OnlineReference.get().toSerializationString());
 			stmt.setLng(DatabaseStructure.COL_MAIN_FILESIZE,      mov.FileSize.get().getBytes());
 			stmt.setSht(DatabaseStructure.COL_MAIN_TAGS,          mov.Tags.get().asShort());
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_1,        mov.Parts.get(0));
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_2,        mov.Parts.get(1));
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_3,        mov.Parts.get(2));
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_4,        mov.Parts.get(3));
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_5,        mov.Parts.get(4));
-			stmt.setStr(DatabaseStructure.COL_MAIN_PART_6,        mov.Parts.get(5));
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_1,        mov.Parts.get(0).toString());
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_2,        mov.Parts.get(1).toString());
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_3,        mov.Parts.get(2).toString());
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_4,        mov.Parts.get(3).toString());
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_5,        mov.Parts.get(4).toString());
+			stmt.setStr(DatabaseStructure.COL_MAIN_PART_6,        mov.Parts.get(5).toString());
 			stmt.setInt(DatabaseStructure.COL_MAIN_SCORE,         mov.Score.get().asInt());
 
 			stmt.setStr(DatabaseStructure.COL_MAIN_GROUPS,        mov.getGroups().toSerializationString());
@@ -696,7 +696,7 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_EPIS_LENGTH,        ep.Length.get());
 			stmt.setInt(DatabaseStructure.COL_EPIS_FORMAT,        ep.Format.get().asInt());
 			stmt.setLng(DatabaseStructure.COL_EPIS_FILESIZE,      ep.FileSize.get().getBytes());
-			stmt.setStr(DatabaseStructure.COL_EPIS_PART_1,        ep.Part.get());
+			stmt.setStr(DatabaseStructure.COL_EPIS_PART_1,        ep.Part.get().toString());
 			stmt.setSht(DatabaseStructure.COL_EPIS_TAGS,          ep.Tags.get().asShort());
 			stmt.setStr(DatabaseStructure.COL_EPIS_ADDDATE,       ep.AddDate.get().toStringSQL());
 			stmt.setLng(DatabaseStructure.COL_EPIS_LANGUAGE,      ep.Language.get().serializeToLong());
@@ -1077,8 +1077,8 @@ public class CCDatabase {
 		}
 	}
 
-	public String getDBPath() {
-		return PathFormatter.combine(databaseDirectory, databaseName);
+	public FSPath getDBPath() {
+		return databaseDirectory.append(databaseName);
 	}
 
 	public void removeFromMain(int localID) {	

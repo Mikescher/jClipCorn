@@ -41,7 +41,12 @@ public final class Str {
 		if (a == null) return (b == null);
 		return a.equals(b);
 	}
-	
+
+	public static boolean equalsIgnoreCase(String a, String b) {
+		if (a == null) return (b == null);
+		return a.equalsIgnoreCase(b);
+	}
+
 	public static String toBase64(String v) {
 		return Base64.encodeBase64String(v.getBytes(UTF8));
 	}
@@ -112,5 +117,9 @@ public final class Str {
 		}
 
 		return b.toString();
+	}
+
+	public static boolean isUntrimmed(String s) {
+		return !s.equals(s.trim());
 	}
 }

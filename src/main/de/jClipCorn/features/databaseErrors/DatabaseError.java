@@ -1,12 +1,16 @@
 package de.jClipCorn.features.databaseErrors;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.*;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 
 import java.awt.*;
 import java.io.File;
@@ -143,7 +147,7 @@ public class DatabaseError {
 			EditSeriesFrame esf = new EditSeriesFrame(owner, (CCEpisode) el1, null);
 			esf.setVisible(true);
 		} else if (el1 instanceof File) {
-			PathFormatter.showInExplorer((File) el1);
+			FilesystemUtils.showInExplorer(FSPath.create((File) el1));
 		}
 
 		if (el2 != null)
@@ -161,7 +165,7 @@ public class DatabaseError {
 				EditSeriesFrame esf = new EditSeriesFrame(owner, (CCEpisode) el2, null);
 				esf.setVisible(true);
 			} else if (el2 instanceof File) {
-				PathFormatter.showInExplorer((File) el2);
+				FilesystemUtils.showInExplorer(FSPath.create((File) el2));
 			}
 		}
 

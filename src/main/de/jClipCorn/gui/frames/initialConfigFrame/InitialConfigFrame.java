@@ -8,9 +8,9 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.AppTheme;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.properties.enumerations.UILanguage;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import org.apache.commons.lang.StringUtils;
 

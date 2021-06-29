@@ -13,7 +13,7 @@ import de.jClipCorn.util.colorquantizer.util.ColorQuantizerConverter;
 import de.jClipCorn.util.datatypes.CachedHashMap;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.lambda.Func0to1WithIOException;
 import de.jClipCorn.util.sqlwrapper.SQLWrapperException;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -21,14 +21,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
 public class CCDefaultCoverCache implements ICoverCache {
 	public final static String COVER_DIRECTORY_NAME = "cover"; //$NON-NLS-1$
-	public final static String COVER_DIRECTORY = PathFormatter.appendAndPrependSeparator(COVER_DIRECTORY_NAME);
 
 	protected final CCDatabase _db;
 
@@ -37,7 +35,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 	protected final HashMap<Integer, CCCoverData> _elements;
 	protected final List<CCCoverData> _elementsList;
 
-	private String _coverPath;
+	private FSPath _coverPath;
 
 	public CCDefaultCoverCache(CCDatabase database) {
 		_db = database;
@@ -45,7 +43,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 		_elementsList = new ArrayList<>();
 		_cache = new CachedHashMap<>(CCProperties.getInstance().PROP_DATABASE_COVERCACHESIZE.getValue());
 
-		_coverPath = PathFormatter.combine(database.getDBPath(), COVER_DIRECTORY);
+		_coverPath = database.getDBPath().append(COVER_DIRECTORY_NAME);
 	}
 
 	@Override
@@ -54,34 +52,29 @@ public class CCDefaultCoverCache implements ICoverCache {
 	}
 
 	private void tryCreatePath() {
-		File dbpF = new File(_coverPath);
-
-		if (!dbpF.exists() && !dbpF.mkdirs()) { // Only mkdir if not exists
+		if (!_coverPath.exists() && !_coverPath.toFile().mkdirs()) { // Only mkdir if not exists
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorMKDIRCovers", _coverPath)); //$NON-NLS-1$
 		}
 	}
 
-	public String getCoverPath() {
+	public FSPath getCoverPath() {
 		return _coverPath;
 	}
 
-	public File getCoverDirectory() {
-		return new File(getCoverPath());
+	public FSPath getCoverDirectory() {
+		return _coverPath;
 	}
 
 	public List<Tuple<String, Func0to1WithIOException<BufferedImage>>> listCoversInFilesystem() {
 		final String prefix = CCProperties.getInstance().PROP_COVER_PREFIX.getValue();
 		final String suffix = "." + CCProperties.getInstance().PROP_COVER_TYPE.getValue();  //$NON-NLS-1$
 
-		String[] files = getCoverDirectory().list((path, name) -> name.startsWith(prefix) && name.endsWith(suffix));
+		var files = getCoverDirectory().listFilenames((path, name) -> name.startsWith(prefix) && name.endsWith(suffix));
 
 		List<Tuple<String, Func0to1WithIOException<BufferedImage>>> result = new ArrayList<>();
-		if (files != null)
-		{
-			for (String file : files) {
-				Func0to1WithIOException<BufferedImage> t2 = () -> ImageIO.read(new File(PathFormatter.combine(getCoverPath(), file)));
-				result.add(Tuple.Create(file, t2));
-			}
+		for (String file : files) {
+			Func0to1WithIOException<BufferedImage> t2 = () -> ImageIO.read(getCoverPath().append(file).toFile());
+			result.add(Tuple.Create(file, t2));
 		}
 
 		return result;
@@ -92,7 +85,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 		CCCoverData cce = getEntry(cid);
 		if (cce == null) return false;
 
-		return new File(getFilepath(cce)).exists();
+		return getFilepath(cce).exists();
 	}
 
 	@Override
@@ -111,8 +104,8 @@ public class CCDefaultCoverCache implements ICoverCache {
 		if (res != null) return res;
 
 		try {
-			File f = new File(getFilepath(cce));
-			res = ImageIO.read(f);
+			var f = getFilepath(cce);
+			res = ImageIO.read(f.toFile());
 			if (res != null) {
 				_cache.put(cce.ID, res);
 			} else {
@@ -140,7 +133,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 		if (cce == null) return;
 
 		try {
-			res = ImageIO.read(new File(getFilepath(cce)));
+			res = ImageIO.read(getFilepath(cce).toFile());
 			_cache.put(cid, res);
 		} catch (IOException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotFoundPreload", cid)); //$NON-NLS-1$
@@ -158,8 +151,8 @@ public class CCDefaultCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public String getFilepath(CCCoverData cce) {
-		return PathFormatter.combine(_coverPath, cce.Filename);
+	public FSPath getFilepath(CCCoverData cce) {
+		return _coverPath.append(cce.Filename);
 	}
 
 	@Override
@@ -171,31 +164,31 @@ public class CCDefaultCoverCache implements ICoverCache {
 		CCLog.addDebug("addingCoverToFolder: " + fname); //$NON-NLS-1$
 
 		try {
-			File f = new File(PathFormatter.combine(_coverPath, fname));
+			var f = _coverPath.append(fname);
 			if (! f.exists()) {
-				ImageIO.write(newCover, CCProperties.getInstance().PROP_COVER_TYPE.getValue(), f);
+				ImageIO.write(newCover, CCProperties.getInstance().PROP_COVER_TYPE.getValue(), f.toFile());
 
 				String checksum;
-				try (FileInputStream fis = new FileInputStream(f)) { checksum = DigestUtils.sha256Hex(fis).toUpperCase(); }
+				try (FileInputStream fis = new FileInputStream(f.toFile())) { checksum = DigestUtils.sha256Hex(fis).toUpperCase(); }
 
 				ColorQuantizerMethod ptype = CCProperties.getInstance().PROP_DATABASE_COVER_QUANTIZER.getValue();
 				ColorQuantizer quant = ptype.create();
 				quant.analyze(newCover, 16);
 				byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(newCover, ColorQuantizerConverter.PREVIEW_WIDTH));
 
-				CCCoverData cce = new CCCoverData(cid, fname, newCover.getWidth(), newCover.getHeight(), checksum, f.length(), preview, ptype, CCDateTime.getCurrentDateTime());
+				CCCoverData cce = new CCCoverData(cid, fname, newCover.getWidth(), newCover.getHeight(), checksum, f.toFile().length(), preview, ptype, CCDateTime.getCurrentDateTime());
 
 				boolean ok = _db.insertCoverEntry(cce);
 
 				if (!ok) {
-					try { f.delete(); } catch (Exception e) { /* */ }
+					try { f.deleteSafe(); } catch (Exception e) { /* */ }
 					throw new SQLWrapperException("Could not insert cover into database"); //$NON-NLS-1$
 				}
 
 				_elements.put(cid, cce);
 				_elementsList.add(cce);
 			} else {
-				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.TryOverwriteFile", f.getAbsolutePath())); //$NON-NLS-1$
+				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.TryOverwriteFile", f.toString())); //$NON-NLS-1$
 			}
 
 			return cid;
@@ -212,9 +205,9 @@ public class CCDefaultCoverCache implements ICoverCache {
 		CCCoverData cce = getEntry(cid);
 		if (cce == null) return;
 
-		File f = new File(getFilepath(cce));
+		var f = getFilepath(cce);
 
-		if (!f.delete()) {
+		if (!f.deleteSafe()) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.DeleteCover", cid)); //$NON-NLS-1$
 		}
 

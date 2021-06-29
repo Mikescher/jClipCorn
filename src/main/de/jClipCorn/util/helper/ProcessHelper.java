@@ -3,6 +3,7 @@ package de.jClipCorn.util.helper;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.io.*;
@@ -54,10 +55,10 @@ public class ProcessHelper {
 		}
 	}
 
-	public static Tuple3<Integer, String, String> procExec(String cmd, String... args) throws IOException
+	public static Tuple3<Integer, String, String> procExec(FSPath cmd, String... args) throws IOException
 	{
 		Runtime rt = Runtime.getRuntime();
-		String[] commands = CCStreams.iterate(args).prepend(cmd).toArray(new String[0]);
+		String[] commands = CCStreams.iterate(args).prepend(cmd.toString()).toArray(new String[0]);
 		Process proc = rt.exec(commands);
 
 		StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream());

@@ -6,7 +6,8 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.NamedPathVar;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ApplicationHelper;
 
 import java.awt.*;
@@ -18,39 +19,37 @@ import java.util.List;
 public class MoviePlayer {
 	@SuppressWarnings("nls")
 	private final static String[] PATHS_WIN = {
-		PathFormatter.combine("Programme", "VideoLAN", "VLC", "vlc.exe"),
-		PathFormatter.combine("Program Files", "VideoLAN", "VLC", "vlc.exe"),
-		PathFormatter.combine("Programme (x86)", "VideoLAN", "VLC", "vlc.exe"),
-		PathFormatter.combine("Program Files (x86)", "VideoLAN", "VLC", "vlc.exe"),
-		PathFormatter.combine("VideoLAN", "VLC", "vlc.exe"),
-		PathFormatter.combine("VLC", "vlc.exe")
+		FilesystemUtils.combineWithFSPathSeparator("Programme", "VideoLAN", "VLC", "vlc.exe"),
+		FilesystemUtils.combineWithFSPathSeparator("Program Files", "VideoLAN", "VLC", "vlc.exe"),
+		FilesystemUtils.combineWithFSPathSeparator("Programme (x86)", "VideoLAN", "VLC", "vlc.exe"),
+		FilesystemUtils.combineWithFSPathSeparator("Program Files (x86)", "VideoLAN", "VLC", "vlc.exe"),
+		FilesystemUtils.combineWithFSPathSeparator("VideoLAN", "VLC", "vlc.exe"),
+		FilesystemUtils.combineWithFSPathSeparator("VLC", "vlc.exe")
 	};
 
 	@SuppressWarnings("nls")
 	private final static String[] PATHS_NIX = {
-			"/bin/vlc",
-			"/usr/bin/vlc",
+		"/bin/vlc",
+		"/usr/bin/vlc",
 	};
 	
-	private final static String DRIVE_1 = "C:" + PathFormatter.SEPERATOR; //$NON-NLS-1$
-	private final static String DRIVE_2 = "H:" + PathFormatter.SEPERATOR; //$NON-NLS-1$
+	private final static String DRIVE_1 = "C:" + FSPath.SEPERATOR; //$NON-NLS-1$
+	private final static String DRIVE_2 = "H:" + FSPath.SEPERATOR; //$NON-NLS-1$
 	
 	private static String lastVLCPath = null;
 	
 	public static void play(CCMovie mov, NamedPathVar player) {
-		List<String> al = new ArrayList<>();
-		for (int i = 0; i < mov.getPartcount(); i++) {
-			al.add(mov.getAbsolutePart(i));
-		}
+		List<FSPath> al = new ArrayList<>();
+		for (var p: mov.getParts()) al.add(p.toFSPath());
 		play(al, player);
 	}
 	
 	public static void play(CCEpisode ep, NamedPathVar player) {
-		play(ep.getAbsolutePart(), player);
+		play(ep.Part.get().toFSPath(), player);
 	}
 	
-	public static void play(String abspath, NamedPathVar player) {
-		List<String> al = new ArrayList<>();
+	public static void play(FSPath abspath, NamedPathVar player) {
+		List<FSPath> al = new ArrayList<>();
 		al.add(abspath);
 		play(al, player);
 	}
@@ -90,7 +89,7 @@ public class MoviePlayer {
 	}
 
 	@SuppressWarnings("nls")
-	public static void play(List<String> abspaths, NamedPathVar player) {
+	public static void play(List<FSPath> abspaths, NamedPathVar player) {
 		String playerpath = (player == null) ? getVLCPath() : player.Path;
 		
 		if (Str.isNullOrWhitespace(playerpath)) {
@@ -98,8 +97,8 @@ public class MoviePlayer {
 			
 			if (CCProperties.getInstance().PROP_PLAY_USESTANDARDONMISSINGVLC.getValue()) {
 				try {
-					for (String s : abspaths) {
-						Desktop.getDesktop().open(new File(s));
+					for (var s : abspaths) {
+						Desktop.getDesktop().open(s.toFile());
 					}
 				} catch (IOException | IllegalArgumentException e) {
 					CCLog.addError(e);
@@ -108,21 +107,21 @@ public class MoviePlayer {
 		} else {
 			List<String> parameters = getParameters(playerpath, player);
 			
-			for (String abspath : abspaths) {
+			for (var abspath : abspaths) {
 				if (ApplicationHelper.isWindows()) {
-					parameters.add("\"" + abspath + "\"");
+					parameters.add("\"" + abspath.toAbsolutePathString() + "\"");
 				} else {
-					parameters.add(abspath);
+					parameters.add(abspath.toAbsolutePathString());
 				}
 			}
 			
 			try {
-				
+
 				ProcessBuilder pb = new ProcessBuilder(parameters);
 				pb.redirectOutput(new File(ApplicationHelper.getNullFile()));
 				pb.redirectError(new File(ApplicationHelper.getNullFile()));
 				pb.start();
-				
+
 			} catch (IOException e) {
 				CCLog.addError(e);
 			}

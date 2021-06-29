@@ -1,35 +1,10 @@
 package de.jClipCorn.gui.frames._template;
 
 import com.jgoodies.forms.layout.FormLayout;
-import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.database.databaseElement.datapacks.EpisodeDataPack;
-import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
-import de.jClipCorn.features.userdataProblem.UserDataProblem;
-import de.jClipCorn.gui.frames.batchEditFrame.BatchEditEpisodeData;
-import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
-import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
-import de.jClipCorn.gui.frames.omniParserFrame.OmniParserFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.Str;
-import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.stream.CCStreams;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Template extends JFrame
 {

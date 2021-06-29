@@ -18,6 +18,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.ChangeLambdaAdapter;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -139,7 +140,7 @@ public class EditMediaInfoDialog extends JDialog {
 		doShowHints(Opt.empty(), null);
 	}
 
-	public EditMediaInfoDialog(Component owner, String path, MediaQueryResult r, MediaInfoResultHandler h) {
+	public EditMediaInfoDialog(Component owner, FSPath path, MediaQueryResult r, MediaInfoResultHandler h) {
 		super();
 		_handler = h;
 		
@@ -156,7 +157,7 @@ public class EditMediaInfoDialog extends JDialog {
 		doShowHints(Opt.of(r.toPartial()), MetadataSourceType.MEDIAINFO);
 	}
 
-	public EditMediaInfoDialog(Component owner, String path, CCMediaInfo r, MediaInfoResultHandler h) {
+	public EditMediaInfoDialog(Component owner, FSPath path, CCMediaInfo r, MediaInfoResultHandler h) {
 		super();
 		_handler = h;
 		
@@ -173,7 +174,7 @@ public class EditMediaInfoDialog extends JDialog {
 		doShowHints(Opt.of(r.toPartial()), MetadataSourceType.MEDIAINFO);
 	}
 
-	public EditMediaInfoDialog(Component owner, String path, MediaInfoResultHandler h) {
+	public EditMediaInfoDialog(Component owner, FSPath path, MediaInfoResultHandler h) {
 		super();
 		_handler = h;
 		

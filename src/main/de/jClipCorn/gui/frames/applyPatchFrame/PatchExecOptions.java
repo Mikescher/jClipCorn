@@ -1,21 +1,23 @@
 package de.jClipCorn.gui.frames.applyPatchFrame;
 
+import de.jClipCorn.util.filesystem.FSPath;
+
 public class PatchExecOptions
 {
-	public final String PatchFilepath;
-	public final String StateFilepath;
-	public final String DestinationMovies;
-	public final String DestinationSeries;
+	public final FSPath PatchFilepath;
+	public final FSPath StateFilepath;
+	public final FSPath DestinationMovies;
+	public final FSPath DestinationSeries;
 	public final boolean AutoDesinationSeries;
-	public final String DestinationTrashMovies;
-	public final String DestinationTrashSeries;
+	public final FSPath DestinationTrashMovies;
+	public final FSPath DestinationTrashSeries;
 	public final boolean Porcelain;
-	public final String DataDir;
+	public final FSPath DataDir;
 
-	public PatchExecOptions(String patchFilepath, String stateFilepath,
-							String destinationMovies, String destinationSeries, boolean autoDestSeries,
-							String destinationTrashMov, String destinationTrashSer,
-							String datadir,
+	public PatchExecOptions(FSPath patchFilepath, FSPath stateFilepath,
+							FSPath destinationMovies, FSPath destinationSeries, boolean autoDestSeries,
+							FSPath destinationTrashMov, FSPath destinationTrashSer,
+							FSPath datadir,
 							boolean porcelain)
 	{
 		PatchFilepath          = patchFilepath;

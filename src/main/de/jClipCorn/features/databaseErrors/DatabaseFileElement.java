@@ -1,35 +1,36 @@
 package de.jClipCorn.features.databaseErrors;
 
+import de.jClipCorn.util.filesystem.CCPath;
 import org.apache.commons.lang.StringUtils;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 
 public class DatabaseFileElement implements Comparable<DatabaseFileElement> {
-	private final String path;
+	private final CCPath path;
 	private final Object element;
 	
-	public DatabaseFileElement(String path, CCMovie m) {
+	public DatabaseFileElement(CCPath path, CCMovie m) {
 		this.path = path;
 		this.element = m;
 	}
 
-	public DatabaseFileElement(String path, CCEpisode e) {
+	public DatabaseFileElement(CCPath path, CCEpisode e) {
 		this.path = path;
 		this.element = e;
 	}
 	
 	@Override
 	public int compareTo(DatabaseFileElement a) {
-		return getPath().compareTo(a.getPath());
+		return getPath().toString().compareTo(a.getPath().toString());
 	}
 	
-	public String getPath() {
+	public CCPath getPath() {
 		return path;
 	}
 
 	public boolean equalsPath(DatabaseFileElement dfe) {
-		return StringUtils.equalsIgnoreCase(getPath(), dfe.getPath());
+		return StringUtils.equalsIgnoreCase(getPath().toString(), dfe.getPath().toString());
 	}
 
 	public Object getElement() {

@@ -23,9 +23,9 @@ import de.jClipCorn.util.TimeKeeper;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.SerializationException;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
@@ -68,46 +68,48 @@ public class ExportHelper {
 
 	public final static String FILENAME_BACKUPINFO = "info.ini"; 			// = jClipCornBackupInfo 							//$NON-NLS-1$ 
 	
-	public static void zipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively) {
+	public static void zipDir(FSPath owner, FSPath zipDir, ZipOutputStream zos, boolean recursively) {
 		doZipDir(owner, zipDir, zos, recursively, f->false, null);
 	}
 	
-	public static void zipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively, Func1to1<File, Boolean> excluded, ProgressCallbackListener pcl) {
+	public static void zipDir(FSPath owner, FSPath zipDir, ZipOutputStream zos, boolean recursively, Func1to1<FSPath, Boolean> excluded, ProgressCallbackListener pcl) {
 		pcl.reset();
-		pcl.setMax(PathFormatter.countAllFiles(zipDir));
+		pcl.setMax(zipDir.countAllFilesRecursive());
 		
 		doZipDir(owner, zipDir, zos, recursively, excluded, pcl);
 	}
 	
-	private static void doZipDir(File owner, File zipDir, ZipOutputStream zos, boolean recursively, Func1to1<File, Boolean> excluded, ProgressCallbackListener pcl) {
+	private static void doZipDir(FSPath owner, FSPath zipDir, ZipOutputStream zos, boolean recursively, Func1to1<FSPath, Boolean> excluded, ProgressCallbackListener pcl) {
 		try {
-			String[] dirList = zipDir.list();
+			var dirList = zipDir.list().toList();
 			byte[] readBuffer = new byte[2156];
 			int bytesIn = 0;
-			
-			for (int i = 0; i < dirList.length; i++) {
-				if (dirList[i].toLowerCase().endsWith("thumbs.db")) continue; //$NON-NLS-1$
-				
-				File file = new File(zipDir, dirList[i]);
 
-				if (excluded.invoke(file)) continue;
+			for (FSPath subPath : dirList) {
 
-				if (file.isDirectory()) {
+				if (subPath.getFilenameWithExt().toLowerCase().endsWith("thumbs.db")) continue; //$NON-NLS-1$
+
+				if (excluded.invoke(subPath)) continue;
+
+				if (subPath.isDirectory()) {
 					if (recursively) {
-						doZipDir(owner, file, zos, recursively, excluded, pcl);
+						doZipDir(owner, subPath, zos, recursively, excluded, pcl);
 					}
 					continue;
 				}
-				
-				FileInputStream fis = new FileInputStream(file);
-				ZipEntry anEntry = new ZipEntry(file.getAbsolutePath().replace(PathFormatter.appendSeparator(owner.getAbsolutePath()), "")); //$NON-NLS-1$
-				zos.putNextEntry(anEntry);
-				
-				while ((bytesIn = fis.read(readBuffer)) != -1) {
-					zos.write(readBuffer, 0, bytesIn);
+
+				try (FileInputStream fis = new FileInputStream(subPath.toFile())) {
+
+					var zipfp = subPath.toString().replace(owner.toStringWithTraillingSeparator(), "");
+
+					ZipEntry anEntry = new ZipEntry(zipfp); //$NON-NLS-1$
+					zos.putNextEntry(anEntry);
+
+					while ((bytesIn = fis.read(readBuffer)) != -1) {
+						zos.write(readBuffer, 0, bytesIn);
+					}
 				}
-				fis.close();
-				
+
 				if (pcl != null) pcl.step();
 			}
 		} catch (Exception e) {
@@ -115,16 +117,14 @@ public class ExportHelper {
 		}
 	}
 	
-	public static boolean unzipBackupDir(File archive, File targetFolder, ProgressCallbackListener pcl) {
+	public static boolean unzipBackupDir(FSPath archive, FSPath targetFolder, ProgressCallbackListener pcl) {
 		byte[] buffer = new byte[2048];
-
-		String outdir = targetFolder.getAbsolutePath() + "/"; //$NON-NLS-1$
 
 		InputStream filestream = null;
 		ZipInputStream zipstream = null;
 		
 		try {
-			filestream = new FileInputStream(archive);
+			filestream = new FileInputStream(archive.toFile());
 			zipstream = new ZipInputStream(filestream);
 			
 			if (pcl != null) {
@@ -134,7 +134,7 @@ public class ExportHelper {
 				pcl.reset();
 				
 				zipstream.close();
-				filestream = new FileInputStream(archive);
+				filestream = new FileInputStream(archive.toFile());
 				zipstream = new ZipInputStream(filestream);
 			}
 			
@@ -142,7 +142,7 @@ public class ExportHelper {
 			while ((entry = zipstream.getNextEntry()) != null) {
 				if (entry.getName().equalsIgnoreCase(ExportHelper.FILENAME_BACKUPINFO)) continue;
 				
-				File outfile = new File(outdir + entry.getName());
+				File outfile = targetFolder.append(entry.getName()).toFile();
 				FileOutputStream output = null;
 				
 				try {
@@ -179,11 +179,11 @@ public class ExportHelper {
 
 	/// Export as *.jxmlbkp file
 	/// = zip file with database.xml, groups.xml, info.xml and covers directory
-	public static void exportDatabase(File file, CCMovieList movielist) {
+	public static void exportDatabase(FSPath file, CCMovieList movielist) {
 		try {
 			TimeKeeper.start();
 			
-			FileOutputStream ostream = new FileOutputStream(file);
+			FileOutputStream ostream = new FileOutputStream(file.toFile());
 			ZipOutputStream zos = new ZipOutputStream(ostream);
 			
 			outputXML(zos, movielist.getElementsAsXML(), DB_XML_FILENAME_MAIN);
@@ -194,10 +194,10 @@ public class ExportHelper {
 			
 			if (cc instanceof CCDefaultCoverCache) {
 				// fast track for already serialized images (~ 6 times faster)
-				zipDir(((CCDefaultCoverCache)cc).getCoverDirectory().getParentFile(), ((CCDefaultCoverCache)cc).getCoverDirectory(), zos, false);
+				zipDir(((CCDefaultCoverCache)cc).getCoverDirectory().getParent(), ((CCDefaultCoverCache)cc).getCoverDirectory(), zos, false);
 			} else {
 				for (CCCoverData cce : cc.listCovers()) {
-					ZipEntry coverEntry = new ZipEntry(PathFormatter.combine("cover", cce.Filename)); //$NON-NLS-1$
+					ZipEntry coverEntry = new ZipEntry("cover/" + cce.Filename); //$NON-NLS-1$
 					zos.putNextEntry(coverEntry);
 					ImageIO.write(cc.getCover(cce), "PNG", zos); //$NON-NLS-1$
 				}
@@ -219,12 +219,12 @@ public class ExportHelper {
 		xout.output(xml, zos);
 	}
 
-	private static BufferedImage getCoverFromBackupByName(File backup, String name) {
+	private static BufferedImage getCoverFromBackupByName(FSPath backup, String name) {
 
 		InputStream theFile = null;
 		ZipInputStream stream = null;
 		try {
-			theFile = new FileInputStream(backup);
+			theFile = new FileInputStream(backup.toFile());
 			stream = new ZipInputStream(theFile);
 
 			ZipEntry entry;
@@ -234,7 +234,7 @@ public class ExportHelper {
 
 				if (! entryname.startsWith("cover/")) continue; //$NON-NLS-1$
 
-				if (PathFormatter.getFilenameWithExt(entryname).equalsIgnoreCase(name)) return ImageIO.read(stream);
+				if (FSPath.create(entryname).getFilenameWithExt().equalsIgnoreCase(name)) return ImageIO.read(stream);
 			}
 
 			return null;
@@ -249,10 +249,10 @@ public class ExportHelper {
 		}
 	}
 
-	private static String getXMLContentFromBackup(File backup, String filename) throws Exception{
+	private static String getXMLContentFromBackup(FSPath backup, String filename) throws Exception{
 		String content = null;
 
-		InputStream theFile = new FileInputStream(backup);
+		InputStream theFile = new FileInputStream(backup.toFile());
 		ZipInputStream stream = new ZipInputStream(theFile);
 
 		try {
@@ -263,7 +263,7 @@ public class ExportHelper {
 				}
 				
 				BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-				content = SimpleFileUtils.readTextFile(reader);
+				content = SimpleFileUtils.readTextFromReader(reader);
 				reader.close();
 				
 				return content;
@@ -278,7 +278,7 @@ public class ExportHelper {
 
 	/// Restore from *.jxmlbkp file
 	/// = zip file with database.xml, groups.xml, info.xml and covers directory
-	public static void restoreDatabaseFromBackup(File backup, CCMovieList movielist) {
+	public static void restoreDatabaseFromBackup(FSPath backup, CCMovieList movielist) {
 		try {
 			movielist.clear();
 
@@ -331,7 +331,7 @@ public class ExportHelper {
 
 	/// Export as *.jsccexport
 	/// [jsccexport] = single xml file, contains a single element
-	public static void exportMovie(File file, CCMovie mov, boolean includeCover, boolean includeLocalID) {
+	public static void exportMovie(FSPath file, CCMovie mov, boolean includeCover, boolean includeLocalID) {
 		List<CCDatabaseElement> list = new ArrayList<>(1);
 		list.add(mov);
 		exportDBElements(file, list, includeCover, includeLocalID);
@@ -339,7 +339,7 @@ public class ExportHelper {
 
 	/// Export as *.jsccexport
 	/// [jsccexport] = single xml file, contains a single element
-	public static void exportSeries(File file, CCSeries ser, boolean includeCover, boolean includeLocalID) {
+	public static void exportSeries(FSPath file, CCSeries ser, boolean includeCover, boolean includeLocalID) {
 		List<CCDatabaseElement> list = new ArrayList<>(1);
 		list.add(ser);
 		exportDBElements(file, list, includeCover, includeLocalID);
@@ -348,7 +348,7 @@ public class ExportHelper {
 	/// Export as *.jsccexport or *.jmccexport
 	/// [jsccexport] = single xml file, contains a single element
 	/// [jmccexport] = single xml file, contains a one or multiple elements
-	public static void exportDBElements(File file, List<CCDatabaseElement> elements, boolean includeCover, boolean includeLocalID) {
+	public static void exportDBElements(FSPath file, List<CCDatabaseElement> elements, boolean includeCover, boolean includeLocalID) {
 		Document xml = DatabaseXMLExporter.export(elements, new ExportOptions(false, false, includeCover, includeLocalID));
 		
 		XMLOutputter xout = new XMLOutputter();
@@ -356,7 +356,7 @@ public class ExportHelper {
 		
 		FileOutputStream ostream = null;
 		try {
-			ostream = new FileOutputStream(file);
+			ostream = new FileOutputStream(file.toFile());
 			xout.output(xml, ostream);
 		} catch (IOException e) {
 			CCLog.addError(e);
@@ -423,9 +423,9 @@ public class ExportHelper {
 	/// Import from *.jsccexport
 	/// [jsccexport] = single xml file, contains a single element
 	/// This method asks if you want to edit the element or directly add it
-	public static void openSingleElementFile(File f, MainFrame owner, CCMovieList movielist, CCDBElementTyp forceTyp) {
+	public static void openSingleElementFile(FSPath f, MainFrame owner, CCMovieList movielist, CCDBElementTyp forceTyp) {
 		try {
-			String xml = SimpleFileUtils.readUTF8TextFile(f);
+			String xml = f.readAsUTF8TextFile();
 			CCDBElementTyp type = ExportHelper.getTypOfFirstElementOfExport(xml);
 			if (forceTyp != null && type != forceTyp) {
 				CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$
@@ -468,7 +468,7 @@ public class ExportHelper {
 
 	/// Restore from *.jxmlbkp file
 	/// = zip file with database.xml, groups.xml, info.xml and covers directory
-	public static void openFullBackupFile(final File f, final MainFrame owner, final CCMovieList movielist) {
+	public static void openFullBackupFile(final FSPath f, final MainFrame owner, final CCMovieList movielist) {
 		if (DialogHelper.showLocaleYesNo(owner, "Dialogs.LoadBackup")) { //$NON-NLS-1$
 			new Thread(() ->
 			{
@@ -485,16 +485,16 @@ public class ExportHelper {
 	/// Import from *.jmccexport
 	/// [jmccexport] = single xml file, contains a one or multiple elements
 	/// This shows a dialog for the to-add-elements
-	public static void openMultipleElementFile(File f, MainFrame owner, CCMovieList movielist) {
+	public static void openMultipleElementFile(FSPath f, MainFrame owner, CCMovieList movielist) {
 		try {
 			long maxmem = Runtime.getRuntime().maxMemory();
-			long fsize = f.length();
+			long fsize = f.toFile().length();
 			if (fsize > maxmem/2)
 			{
 				if (!DialogHelper.showLocaleYesNo(owner, "Dialogs.NotEnoughMem")) return; //$NON-NLS-1$
 			}
 
-			String xml = SimpleFileUtils.readUTF8TextFile(f);
+			String xml = f.readAsUTF8TextFile();
 			
 			ImportElementsFrame ief = new ImportElementsFrame(owner, xml, movielist);
 			ief.setVisible(true);

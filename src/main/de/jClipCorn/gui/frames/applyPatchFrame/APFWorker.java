@@ -7,16 +7,14 @@ import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.lambda.Func2to0;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
 
 import javax.imageio.ImageIO;
-import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 import java.util.List;
@@ -94,14 +92,14 @@ public class APFWorker
 
 			for (int i = 0; i < elem.getPartcount(); i++)
 			{
-				var src = Path.of(elem.getAbsolutePart(i));
-				var dst = Path.of(opt.DestinationTrashMovies, "movie_" + elem.getLocalID() + "_" + i + "_" + Instant.now().getEpochSecond());
-				Files.move(src, dst);
+				var src = elem.Parts.get(i).toFSPath();
+				var dst = opt.DestinationTrashMovies.append("movie_" + elem.getLocalID() + "_" + i + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
+				Files.move(src.toPath(), dst.toPath());
 			}
 
 			SwingUtils.invokeAndWait(() ->
 			{
-				elem.Parts.set(Str.Empty, Str.Empty, Str.Empty, Str.Empty, Str.Empty, Str.Empty);
+				elem.Parts.set(CCPath.Empty, CCPath.Empty, CCPath.Empty, CCPath.Empty, CCPath.Empty, CCPath.Empty);
 			});
 		}
 		else if (ielem instanceof CCEpisode)
@@ -110,11 +108,11 @@ public class APFWorker
 
 			if (opt.Porcelain) return;
 
-			var src = Path.of(elem.getAbsolutePart());
-			var dst = Path.of(opt.DestinationTrashSeries, "episode_" + elem.getLocalID() + "_" + Instant.now().getEpochSecond());
-			Files.move(src, dst);
+			var src = elem.getPart().toFSPath();
+			var dst = opt.DestinationTrashSeries.append("episode_" + elem.getLocalID() + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
+			Files.move(src.toPath(), dst.toPath());
 
-			elem.Part.set(Str.Empty);
+			elem.Part.set(CCPath.Empty);
 		}
 		else
 		{
@@ -134,18 +132,18 @@ public class APFWorker
 			var source       = cmd.XML.getAttributeValueOrThrow("source");
 			var destfilename = cmd.XML.getAttributeValueOrThrow("filename");
 
-			var pSource = Path.of(opt.DataDir, source);
-			var ptarget = Path.of(opt.DestinationMovies, destfilename);
-			if (Files.exists(ptarget)) ptarget = Path.of(opt.DestinationMovies, UUID.randomUUID() + "." + PathFormatter.getExtension(source));
+			var pSource = opt.DataDir.append(source);
+			var ptarget = opt.DestinationMovies.append(destfilename);
+			if (ptarget.exists()) ptarget = opt.DestinationMovies.append(UUID.randomUUID() + "." + pSource.getExtension());
 			var finptarget = ptarget;
 
 			if (opt.Porcelain) return;
 
-			Files.move(pSource, ptarget);
+			Files.move(pSource.toPath(), ptarget.toPath());
 
 			SwingUtils.invokeAndWait(() ->
 			{
-				elem.Parts.set(index, PathFormatter.getCCPath(finptarget.toAbsolutePath().toString()));
+				elem.Parts.set(index, CCPath.createFromFSPath(finptarget));
 			});
 		}
 		else if (ielem instanceof CCEpisode)
@@ -155,26 +153,26 @@ public class APFWorker
 			var source       = cmd.XML.getAttributeValueOrThrow("source");
 			var destfilename = cmd.XML.getAttributeValueOrThrow("filename");
 
-			var serPath = ((CCEpisode) ielem).getFileForCreatedFolderstructure(new File(opt.DestinationSeries));
+			var serPath = ((CCEpisode) ielem).getPathForCreatedFolderstructure(opt.DestinationSeries);
 
-			if (((CCEpisode) ielem).getSeries().iteratorEpisodes().filter(e -> !Str.isNullOrWhitespace(e.getPart())).count() > 1)
+			if (((CCEpisode) ielem).getSeries().iteratorEpisodes().filter(e -> !e.getPart().isEmpty()).count() > 1)
 			{
-				serPath = ((CCEpisode) ielem).getFileForCreatedFolderstructure();
+				serPath = ((CCEpisode) ielem).getPathForCreatedFolderstructure();
 			}
 
-			var pSource = Path.of(opt.DataDir, source);
-			var ptarget = Path.of(PathFormatter.getParentPath(serPath.getAbsolutePath(), 1), destfilename);
-			if (Files.exists(ptarget)) ptarget = Path.of(opt.DestinationMovies, UUID.randomUUID() + "." + PathFormatter.getExtension(source));
+			var pSource = opt.DataDir.append(source);
+			var ptarget = serPath.getParent().append(destfilename);
+			if (ptarget.exists()) ptarget = opt.DestinationMovies.append(UUID.randomUUID() + "." + pSource.getExtension());
 			var finptarget = ptarget;
 
 			if (opt.Porcelain) return;
 
-			new File(ptarget.toFile().getParent()).mkdirs();
-			Files.move(pSource, ptarget);
+			ptarget.getParent().mkdirsWithException();
+			Files.move(pSource.toPath(), ptarget.toPath());
 
 			SwingUtils.invokeAndWait(() ->
 			{
-				elem.Part.set(PathFormatter.getCCPath(finptarget.toAbsolutePath().toString()));
+				elem.Part.set(CCPath.createFromFSPath(finptarget));
 			});
 		}
 		else
@@ -228,7 +226,7 @@ public class APFWorker
 		var source     = cmd.XML.getAttributeValueOrThrow("source");
 		var sourcehash = cmd.XML.getAttributeValueOrThrow("sourcehash");
 
-		var pSource = Path.of(opt.DataDir, source);
+		var pSource = opt.DataDir.append(source);
 
 		var img = opt.Porcelain ? null : ImageIO.read(pSource.toFile());
 
@@ -270,7 +268,7 @@ public class APFWorker
 
 			if (opt.Porcelain) return;
 
-			BasicFileAttributes attr = Files.readAttributes(new File(PathFormatter.fromCCPath(elem.getParts().get(0))).toPath(), BasicFileAttributes.class);
+			BasicFileAttributes attr = elem.getParts().get(0).toFSPath().readFileAttr();
 
 			SwingUtils.invokeAndWait(() ->
 			{
@@ -284,7 +282,7 @@ public class APFWorker
 
 			if (opt.Porcelain) return;
 
-			BasicFileAttributes attr = Files.readAttributes(new File(PathFormatter.fromCCPath(elem.getParts().get(0))).toPath(), BasicFileAttributes.class);
+			BasicFileAttributes attr = elem.getParts().get(0).toFSPath().readFileAttr();
 
 			SwingUtils.invokeAndWait(() ->
 			{
@@ -452,9 +450,9 @@ public class APFWorker
 
 			for (int i = 0; i < elem.getPartcount(); i++)
 			{
-				var src = Path.of(elem.getAbsolutePart(i));
-				var dst = Path.of(opt.DestinationTrashMovies, "movie_" + elem.getLocalID() + "_" + i + "_" + Instant.now().getEpochSecond());
-				Files.move(src, dst);
+				var src = elem.Parts.get(i).toFSPath();
+				var dst = opt.DestinationTrashMovies.append("movie_" + elem.getLocalID() + "_" + i + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
+				Files.move(src.toPath(), dst.toPath());
 			}
 
 			SwingUtils.invokeAndWait(() -> { elem.delete(); });
@@ -481,9 +479,9 @@ public class APFWorker
 
 			if (opt.Porcelain) return;
 
-			var src = Path.of(elem.getAbsolutePart());
-			var dst = Path.of(opt.DestinationTrashSeries, "episode_" + elem.getLocalID() + "_" + Instant.now().getEpochSecond());
-			Files.move(src, dst);
+			var src = elem.getPart().toFSPath();
+			var dst = opt.DestinationTrashSeries.append("episode_" + elem.getLocalID() + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
+			Files.move(src.toPath(), dst.toPath());
 
 			SwingUtils.invokeAndWait(() -> { elem.delete(); });
 		}

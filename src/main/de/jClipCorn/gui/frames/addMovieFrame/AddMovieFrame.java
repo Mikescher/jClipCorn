@@ -17,7 +17,7 @@ import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
 import de.jClipCorn.gui.guiComponents.JMediaInfoButton;
-import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.JReadableCCPathTextField;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
@@ -33,10 +33,11 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.parser.FilenameParser;
 import de.jClipCorn.util.parser.FilenameParserResult;
@@ -48,12 +49,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler
 {
@@ -72,11 +71,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		this(owner, mlist, null);
 	}
 
-	public AddMovieFrame(Component owner, CCMovieList mlist, String firstPath)
+	public AddMovieFrame(Component owner, CCMovieList mlist, FSPath firstPath)
 	{
 		super();
 		this.movieList = mlist;
-		this.videoFileChooser = new JFileChooser(mlist.getCommonPathForMovieFileChooser());
+		this.videoFileChooser = new JFileChooser(mlist.getCommonPathForMovieFileChooser().toFile());
 
 		initComponents();
 		postInit();
@@ -171,12 +170,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 		if (forceViewedHistory != null) newM.setViewedHistoryFromUI(forceViewedHistory);
 
-		newM.Parts.set(0, edPart0.getText());
-		newM.Parts.set(1, edPart1.getText());
-		newM.Parts.set(2, edPart2.getText());
-		newM.Parts.set(3, edPart3.getText());
-		newM.Parts.set(4, edPart4.getText());
-		newM.Parts.set(5, edPart5.getText());
+		newM.Parts.set(0, edPart0.getPath());
+		newM.Parts.set(1, edPart1.getPath());
+		newM.Parts.set(2, edPart2.getPath());
+		newM.Parts.set(3, edPart3.getPath());
+		newM.Parts.set(4, edPart4.getPath());
+		newM.Parts.set(5, edPart5.getPath());
 
 		newM.Title.set(edTitle.getText());
 		newM.Zyklus.setTitle(edZyklus.getText());
@@ -296,11 +295,11 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			return;
 		}
 
-		setFilepath(cNmbr, videoFileChooser.getSelectedFile().getAbsolutePath());
+		setFilepath(cNmbr, FSPath.create(videoFileChooser.getSelectedFile()));
 
 		if (firstChooseClick) {
 			setEnabledAll(true);
-			parseFromFile(videoFileChooser.getSelectedFile().getAbsolutePath());
+			parseFromFile(FSPath.create(videoFileChooser.getSelectedFile()));
 
 			firstChooseClick = false;
 
@@ -314,7 +313,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		}
 	}
 
-	private void parseFromFile(String fp) {
+	private void parseFromFile(FSPath fp) {
 		FilenameParserResult r = FilenameParser.parse(movieList, fp);
 
 		if (r == null) return;
@@ -329,7 +328,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		if (r.Groups != null) setGroupList(r.Groups);
 
 		if (r.AdditionalFiles != null)
-			for (Map.Entry<Integer, String> addFile : r.AdditionalFiles.entrySet())
+			for (var addFile : r.AdditionalFiles.entrySet())
 				setFilepath(addFile.getKey()-1, addFile.getValue());
 
 		runMediaInfoInBackground();
@@ -369,39 +368,42 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		edGroups.setValue(gl);
 	}
 
-	@Override
-	public void setFilepath(int p, String t) {
-		t = PathFormatter.getCCPath(t);
-
+	public void setFilepath(int p, CCPath t) {
 		setDirectFilepath(p, t);
 
 		updateFilesize();
 	}
 
-	private void setDirectFilepath(int p, String pt) {
+	public void setFilepath(int p, FSPath t) {
+		setDirectFilepath(p, CCPath.createFromFSPath(t));
+
+		updateFilesize();
+	}
+
+	private void setDirectFilepath(int p, CCPath pt) {
 		switch (p) {
 		case 0:
-			edPart0.setText(pt);
+			edPart0.setPath(pt);
 			edPart0.setCaretPosition(0);
 			break;
 		case 1:
-			edPart1.setText(pt);
+			edPart1.setPath(pt);
 			edPart1.setCaretPosition(0);
 			break;
 		case 2:
-			edPart2.setText(pt);
+			edPart2.setPath(pt);
 			edPart2.setCaretPosition(0);
 			break;
 		case 3:
-			edPart3.setText(pt);
+			edPart3.setPath(pt);
 			edPart3.setCaretPosition(0);
 			break;
 		case 4:
-			edPart4.setText(pt);
+			edPart4.setPath(pt);
 			edPart4.setCaretPosition(0);
 			break;
 		case 5:
-			edPart5.setText(pt);
+			edPart5.setPath(pt);
 			edPart5.setCaretPosition(0);
 			break;
 		}
@@ -508,29 +510,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private void updateFilesize() {
 		CCFileSize size = CCFileSize.ZERO;
 
-		if (! edPart0.getText().isEmpty()) {
-			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart0.getText())));
-		}
-
-		if (! edPart1.getText().isEmpty()) {
-			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart1.getText())));
-		}
-
-		if (! edPart2.getText().isEmpty()) {
-			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart3.getText())));
-		}
-
-		if (! edPart3.getText().isEmpty()) {
-			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart3.getText())));
-		}
-
-		if (! edPart4.getText().isEmpty()) {
-			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart4.getText())));
-		}
-
-		if (! edPart5.getText().isEmpty()) {
-			size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(PathFormatter.fromCCPath(edPart5.getText())));
-		}
+		if (! edPart0.getPath().isEmpty()) size = CCFileSize.addBytes(size, edPart0.getPath().toFSPath().toFile().length());
+		if (! edPart1.getPath().isEmpty()) size = CCFileSize.addBytes(size, edPart1.getPath().toFSPath().toFile().length());
+		if (! edPart2.getPath().isEmpty()) size = CCFileSize.addBytes(size, edPart2.getPath().toFSPath().toFile().length());
+		if (! edPart3.getPath().isEmpty()) size = CCFileSize.addBytes(size, edPart3.getPath().toFSPath().toFile().length());
+		if (! edPart4.getPath().isEmpty()) size = CCFileSize.addBytes(size, edPart4.getPath().toFSPath().toFile().length());
+		if (! edPart5.getPath().isEmpty()) size = CCFileSize.addBytes(size, edPart5.getPath().toFSPath().toFile().length());
 
 		setFilesize(size);
 	}
@@ -559,9 +544,9 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				(int) spnLength.getValue(),
 				spnAddDate.getValue(),
 				cbxFormat.getSelectedEnum(),
-				(int) spnYear.getValue(),
+				spnYear.getValue(),
 				new CCFileSize((long) spnSize.getValue()),
-				Arrays.asList(edPart0.getText(), edPart1.getText(), edPart2.getText(), edPart3.getText(), edPart4.getText(), edPart5.getText()),
+				Arrays.asList(edPart0.getPath(), edPart1.getPath(), edPart2.getPath(), edPart3.getPath(), edPart4.getPath(), edPart5.getPath()),
 				CCDateTimeList.createEmpty(),
 				cbxLanguage.getValue(),
 				edTitle.getText(),
@@ -596,8 +581,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	private void calculateMediaInfoAndSetLength() {
-		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
@@ -605,12 +590,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		try {
 			List<MediaQueryResult> dat = new ArrayList<>();
 
-			if (!Str.isNullOrWhitespace(edPart0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart0.getText()), false));
-			if (!Str.isNullOrWhitespace(edPart1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart1.getText()), false));
-			if (!Str.isNullOrWhitespace(edPart2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart2.getText()), false));
-			if (!Str.isNullOrWhitespace(edPart3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart3.getText()), false));
-			if (!Str.isNullOrWhitespace(edPart4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart4.getText()), false));
-			if (!Str.isNullOrWhitespace(edPart5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart5.getText()), false));
+			if (!edPart0.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart0.getPath().toFSPath(), false));
+			if (!edPart1.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart1.getPath().toFSPath(), false));
+			if (!edPart2.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart2.getPath().toFSPath(), false));
+			if (!edPart3.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart3.getPath().toFSPath(), false));
+			if (!edPart4.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart4.getPath().toFSPath(), false));
+			if (!edPart5.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart5.getPath().toFSPath(), false));
 
 			if (dat.isEmpty()) {
 				lblLenAuto.setText(Str.Empty);
@@ -631,8 +616,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	private void calculateMediaInfoAndSetLanguage() {
-		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
@@ -640,12 +625,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		try {
 			List<MediaQueryResult> dat = new ArrayList<>();
 
-			if (!Str.isNullOrWhitespace(edPart0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart0.getText()), false));
-			if (!Str.isNullOrWhitespace(edPart1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart1.getText()), false));
-			if (!Str.isNullOrWhitespace(edPart2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart2.getText()), false));
-			if (!Str.isNullOrWhitespace(edPart3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart3.getText()), false));
-			if (!Str.isNullOrWhitespace(edPart4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart4.getText()), false));
-			if (!Str.isNullOrWhitespace(edPart5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart5.getText()), false));
+			if (!edPart0.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart0.getPath().toFSPath(), false));
+			if (!edPart1.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart1.getPath().toFSPath(), false));
+			if (!edPart2.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart2.getPath().toFSPath(), false));
+			if (!edPart3.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart3.getPath().toFSPath(), false));
+			if (!edPart4.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart4.getPath().toFSPath(), false));
+			if (!edPart5.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart5.getPath().toFSPath(), false));
 
 			if (dat.isEmpty()) {
 				lblLenAuto.setText(Str.Empty);
@@ -679,8 +664,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	private void calculateAndSetMediaInfo() {
-		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
@@ -688,12 +673,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		try {
 			List<MediaQueryResult> dat = new ArrayList<>();
 
-			if (!Str.isNullOrWhitespace(edPart0.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart0.getText()), true));
-			if (!Str.isNullOrWhitespace(edPart1.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart1.getText()), true));
-			if (!Str.isNullOrWhitespace(edPart2.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart2.getText()), true));
-			if (!Str.isNullOrWhitespace(edPart3.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart3.getText()), true));
-			if (!Str.isNullOrWhitespace(edPart4.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart4.getText()), true));
-			if (!Str.isNullOrWhitespace(edPart5.getText())) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(edPart5.getText()), true));
+			if (!edPart0.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart0.getPath().toFSPath(), true));
+			if (!edPart1.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart1.getPath().toFSPath(), true));
+			if (!edPart2.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart2.getPath().toFSPath(), true));
+			if (!edPart3.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart3.getPath().toFSPath(), true));
+			if (!edPart4.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart4.getPath().toFSPath(), true));
+			if (!edPart5.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart5.getPath().toFSPath(), true));
 
 			if (dat.isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
@@ -713,8 +698,8 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	private void calculateAndShowMediaInfo() {
-		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
@@ -722,12 +707,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		StringBuilder b = new StringBuilder();
 
 		try {
-			if (!Str.isNullOrWhitespace(edPart0.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edPart0.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!Str.isNullOrWhitespace(edPart1.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edPart1.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!Str.isNullOrWhitespace(edPart2.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edPart2.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!Str.isNullOrWhitespace(edPart3.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edPart3.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!Str.isNullOrWhitespace(edPart4.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edPart4.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!Str.isNullOrWhitespace(edPart5.getText())) b.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edPart5.getText()))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart0.getPath().isEmpty()) b.append(MediaQueryRunner.queryRaw(edPart0.getPath().toFSPath())).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart1.getPath().isEmpty()) b.append(MediaQueryRunner.queryRaw(edPart1.getPath().toFSPath())).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart2.getPath().isEmpty()) b.append(MediaQueryRunner.queryRaw(edPart2.getPath().toFSPath())).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart3.getPath().isEmpty()) b.append(MediaQueryRunner.queryRaw(edPart3.getPath().toFSPath())).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart4.getPath().isEmpty()) b.append(MediaQueryRunner.queryRaw(edPart4.getPath().toFSPath())).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart5.getPath().isEmpty()) b.append(MediaQueryRunner.queryRaw(edPart5.getPath().toFSPath())).append("\n\n\n\n\n"); //$NON-NLS-1$
 
 			GenericTextDialog.showText(this, getTitle(), b.toString(), false);
 		} catch (IOException | MediaQueryException e) {
@@ -736,12 +721,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	private void runMediaInfoInBackground() {
-		String p0 = edPart0.getText();
-		String p1 = edPart1.getText();
-		String p2 = edPart2.getText();
-		String p3 = edPart3.getText();
-		String p4 = edPart4.getText();
-		String p5 = edPart5.getText();
+		var p0 = edPart0.getPath();
+		var p1 = edPart1.getPath();
+		var p2 = edPart2.getPath();
+		var p3 = edPart3.getPath();
+		var p4 = edPart4.getPath();
+		var p5 = edPart5.getPath();
 
 		_isDirtyLanguage = false;
 		_isDirtyMediaInfo = false;
@@ -753,19 +738,19 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				SwingUtils.invokeLater(() -> pbLanguageLoad.setVisible(true));
 
 				MediaQueryResult dat0 = null;
-				if (!Str.isNullOrWhitespace(p0)) dat0 = MediaQueryRunner.query(PathFormatter.fromCCPath(p0), true);
+				if (!CCPath.isNullOrEmpty(p0)) dat0 = MediaQueryRunner.query(p0.toFSPath(), true);
 
 				final MediaQueryResult _fdat0 = dat0;
 				if (dat0 != null && !_isDirtyMediaInfo) SwingUtils.invokeLater(() -> ctrlMediaInfo.setValue(_fdat0));
 
 				List<MediaQueryResult> dat = new ArrayList<>();
 
-				if (!Str.isNullOrWhitespace(p0)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p0), false));
-				if (!Str.isNullOrWhitespace(p1)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p1), false));
-				if (!Str.isNullOrWhitespace(p2)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p2), false));
-				if (!Str.isNullOrWhitespace(p3)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p3), false));
-				if (!Str.isNullOrWhitespace(p4)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p4), false));
-				if (!Str.isNullOrWhitespace(p5)) dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(p5), false));
+				if (!CCPath.isNullOrEmpty(p0)) dat.add(MediaQueryRunner.query(p0.toFSPath(), false));
+				if (!CCPath.isNullOrEmpty(p1)) dat.add(MediaQueryRunner.query(p1.toFSPath(), false));
+				if (!CCPath.isNullOrEmpty(p2)) dat.add(MediaQueryRunner.query(p2.toFSPath(), false));
+				if (!CCPath.isNullOrEmpty(p3)) dat.add(MediaQueryRunner.query(p3.toFSPath(), false));
+				if (!CCPath.isNullOrEmpty(p4)) dat.add(MediaQueryRunner.query(p4.toFSPath(), false));
+				if (!CCPath.isNullOrEmpty(p5)) dat.add(MediaQueryRunner.query(p5.toFSPath(), false));
 
 				if (dat.isEmpty()) return;
 
@@ -863,26 +848,26 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		pnlLeft = new JPanel();
 		pnlParts = new JPanel();
 		label1 = new JLabel();
-		edPart0 = new ReadableTextField();
+		edPart0 = new JReadableCCPathTextField();
 		btnChoose0 = new JButton();
 		label2 = new JLabel();
-		edPart1 = new ReadableTextField();
+		edPart1 = new JReadableCCPathTextField();
 		btnChoose1 = new JButton();
 		btnClear1 = new JButton();
 		label3 = new JLabel();
-		edPart2 = new ReadableTextField();
+		edPart2 = new JReadableCCPathTextField();
 		btnChoose2 = new JButton();
 		btnClear2 = new JButton();
 		label5 = new JLabel();
-		edPart3 = new ReadableTextField();
+		edPart3 = new JReadableCCPathTextField();
 		btnChoose3 = new JButton();
 		btnClear3 = new JButton();
 		label6 = new JLabel();
-		edPart4 = new ReadableTextField();
+		edPart4 = new JReadableCCPathTextField();
 		btnChoose4 = new JButton();
 		btnClear4 = new JButton();
 		label4 = new JLabel();
-		edPart5 = new ReadableTextField();
+		edPart5 = new JReadableCCPathTextField();
 		btnChoose5 = new JButton();
 		btnClear5 = new JButton();
 		pnlData = new JPanel();
@@ -905,7 +890,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		btnMediaInfoLang = new JMediaInfoButton();
 		btnQueryMediaInfo = new JButton();
 		label21 = new JLabel();
-		ctrlMediaInfo = new JMediaInfoControl(() -> Str.isNullOrWhitespace(edPart0.getText()) ? null : PathFormatter.fromCCPath(edPart0.getText()));
+		ctrlMediaInfo = new JMediaInfoControl(() -> edPart0.getPath().toFSPath());
 		btnMediaInfoMain = new JMediaInfoButton();
 		pbLanguageLoad = new JProgressBar();
 		label22 = new JLabel();
@@ -1277,26 +1262,26 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private JPanel pnlLeft;
 	private JPanel pnlParts;
 	private JLabel label1;
-	private ReadableTextField edPart0;
+	private JReadableCCPathTextField edPart0;
 	private JButton btnChoose0;
 	private JLabel label2;
-	private ReadableTextField edPart1;
+	private JReadableCCPathTextField edPart1;
 	private JButton btnChoose1;
 	private JButton btnClear1;
 	private JLabel label3;
-	private ReadableTextField edPart2;
+	private JReadableCCPathTextField edPart2;
 	private JButton btnChoose2;
 	private JButton btnClear2;
 	private JLabel label5;
-	private ReadableTextField edPart3;
+	private JReadableCCPathTextField edPart3;
 	private JButton btnChoose3;
 	private JButton btnClear3;
 	private JLabel label6;
-	private ReadableTextField edPart4;
+	private JReadableCCPathTextField edPart4;
 	private JButton btnChoose4;
 	private JButton btnClear4;
 	private JLabel label4;
-	private ReadableTextField edPart5;
+	private JReadableCCPathTextField edPart5;
 	private JButton btnChoose5;
 	private JButton btnClear5;
 	private JPanel pnlData;

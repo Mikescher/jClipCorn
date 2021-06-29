@@ -17,7 +17,7 @@ import javax.swing.JTextArea;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 
 public class FilenameRuleFrame extends JFrame {
 	private static final long serialVersionUID = 692779597355844596L;

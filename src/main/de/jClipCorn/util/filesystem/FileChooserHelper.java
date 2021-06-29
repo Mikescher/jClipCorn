@@ -1,8 +1,7 @@
-package de.jClipCorn.util.helper;
+package de.jClipCorn.util.filesystem;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Validator;
-import de.jClipCorn.util.formatter.PathFormatter;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
@@ -16,16 +15,16 @@ public class FileChooserHelper {
 			}
 
 			@Override
-			public boolean accept(File f) {
-				if (f.isDirectory()) {
-					return true;
-				}
+			public boolean accept(File _f)
+			{
+				var f = FSPath.create(_f);
 
-				String ext = PathFormatter.getExtension(f.getAbsolutePath());
-				for (int i = 0; i < extensions.length; i++) {
-					if (ext.equalsIgnoreCase(extensions[i])) {
-						return true;
-					}
+				if (f.isDirectory()) return true;
+
+				String ext = f.getExtension();
+				for (String extension : extensions)
+				{
+					if (ext.equalsIgnoreCase(extension)) return true;
 				}
 
 				return false;
@@ -106,15 +105,14 @@ public class FileChooserHelper {
 			}
 
 			@Override
-			public boolean accept(File f) {
-				if (f.isDirectory()) {
-					return true;
-				}
+			public boolean accept(File _f)
+			{
+				var f = FSPath.create(_f);
 
-				String ext = PathFormatter.getExtension(f.getAbsolutePath());
-				if (validator.validate(ext)) {
-					return true;
-				}
+				if (f.isDirectory()) return true;
+
+				String ext = f.getExtension();
+				if (validator.validate(ext)) return true;
 
 				return false;
 			}
@@ -130,12 +128,13 @@ public class FileChooserHelper {
 			}
 
 			@Override
-			public boolean accept(File f) {
-				if (f.isDirectory()) {
-					return true;
-				}
+			public boolean accept(File _f)
+			{
+				var f = FSPath.create(_f);
+
+				if (f.isDirectory()) return true;
 				
-				if (validator.validate(f.getAbsolutePath())) {
+				if (validator.validate(f.toAbsolutePathString())) {
 					return true;
 				}
 

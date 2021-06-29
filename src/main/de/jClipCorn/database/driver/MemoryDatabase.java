@@ -3,7 +3,8 @@ package de.jClipCorn.database.driver;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.parser.TurbineParser;
 
 import java.sql.DriverManager;
@@ -18,7 +19,7 @@ public class MemoryDatabase extends GenericDatabase {
 	
 	@Override
 	@SuppressWarnings("deprecation")
-	public boolean createNewDatabase(String xmlPath, String dbDir, String dbName) {
+	public boolean createNewDatabase(FSPath xmlPath, FSPath dbDir, String dbName) {
 		try {
 			Class.forName(DRIVER).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -29,7 +30,7 @@ public class MemoryDatabase extends GenericDatabase {
 			connection = DriverManager.getConnection(PROTOCOL);
 			connection.setAutoCommit(true);
 
-			TurbineParser turb = new TurbineParser(SimpleFileUtils.readUTF8TextFile(xmlPath));
+			TurbineParser turb = new TurbineParser(xmlPath.readAsUTF8TextFile());
 			turb.parse();
 			turb.create(this);
 		} catch (Exception e) {
@@ -41,7 +42,7 @@ public class MemoryDatabase extends GenericDatabase {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbDir, String dbName) {
+	public boolean createNewDatabasefromResourceXML(String xmlResPath, FSPath dbDir, String dbName) {
 		try {
 			Class.forName(DRIVER).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -63,19 +64,19 @@ public class MemoryDatabase extends GenericDatabase {
 	}
 	
 	@Override
-	public boolean databaseExists(String dbDir, String dbName) {
+	public boolean databaseExists(FSPath dbDir, String dbName) {
 		return false;
 	}
 	
 	@Override
-	public void closeDBConnection(String dbDir, String dbName, boolean cleanshutdown) throws SQLException {
+	public void closeDBConnection(FSPath dbDir, String dbName, boolean cleanshutdown) throws SQLException {
         if(connection != null) {
             connection.close();
         }
 	}
 	
 	@Override
-	public void establishDBConnection(String dbDir, String dbName) throws Exception {
+	public void establishDBConnection(FSPath dbDir, String dbName) throws Exception {
 		throw new Exception("Cannot connect to memory-only database");
 	}
 

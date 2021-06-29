@@ -9,13 +9,16 @@ import de.jClipCorn.gui.mainFrame.toolbar.ClipToolbar;
 import de.jClipCorn.properties.enumerations.*;
 import de.jClipCorn.properties.property.*;
 import de.jClipCorn.properties.property.CCEnumSetProperty.EnumSetValue;
-import de.jClipCorn.properties.property.CCPathProperty.CCPathPropertyMode;
+import de.jClipCorn.properties.property.CCFSPathProperty.CCPathPropertyMode;
 import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTimeFormat;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ApplicationHelper;
 
 import java.io.FileInputStream;
@@ -74,7 +77,7 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_STATUSBAR_CALC_SERIES_IN_LENGTH;
 	public CCBoolProperty                                   PROP_STATUSBAR_CALC_SERIES_IN_SIZE;
 	public CCLookAndFeelProperty                            PROP_UI_APPTHEME;
-	public CCStringProperty                                 PROP_PLAY_VLC_PATH;
+	public CCFSPathProperty                                 PROP_PLAY_VLC_PATH;
 	public CCBoolProperty                                   PROP_PLAY_VLC_FULLSCREEN;
 	public CCBoolProperty                                   PROP_PLAY_VLC_AUTOPLAY;
 	public CCBoolProperty                                   PROP_PLAY_USESTANDARDONMISSINGVLC;
@@ -135,7 +138,7 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_STATISTICS_INTERACTIVECHARTS;
 	public CCBoolProperty                                   PROP_DATABASE_CLEANSHUTDOWN;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOWTAGS;
-	public CCStringProperty                                 PROP_MAINFRAME_FILTERLISTPATH;
+	public CCCCPathProperty                                 PROP_MAINFRAME_FILTERLISTPATH;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOWCOVERCORNER;
 	public CCBoolProperty                                   PROP_VALIDATE_CHECK_SERIES_STRUCTURE;
 	public CCBoolProperty                                   PROP_MAINFRAME_DONT_FILTER_WATCHNEVER;
@@ -155,7 +158,7 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_MAINFRAME_SORT_GENRES;
 	public CCEnumProperty<CCDateTimeFormat>                 PROP_UI_DATETIME_FORMAT;
 	public CCBoolProperty                                   PROP_DEBUG_USE_HTTPCACHE;
-	public CCPathProperty                                   PROP_DEBUG_HTTPCACHE_PATH;
+	public CCFSPathProperty                                 PROP_DEBUG_HTTPCACHE_PATH;
 	public CCPIntProperty                                   PROP_SERIES_PREVIEWFRAME_HEIGHT;
 	public CCEnumProperty<NextEpisodeHeuristic>             PROP_SERIES_NEXT_EPISODE_HEURISTIC;
 	public CCEnumProperty<CoverImageSize>                   PROP_DATABASE_MAX_COVER_SIZE;
@@ -175,10 +178,10 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_STATBAR_DRIVESCAN;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_VIEWCOUNT;
 	public CCBoolProperty                                   PROP_DRIVEMAP_REMOUNT_NETDRIVES;
-	public CCStringProperty                                 PROP_PLAY_MEDIAINFO_PATH;
-	public CCStringProperty                                 PROP_PLAY_FFMPEG_PATH;
-	public CCStringProperty                                 PROP_PLAY_FFPROBE_PATH;
-	public CCStringProperty                                 PROP_PLAY_MP4BOX_PATH;
+	public CCFSPathProperty                                 PROP_PLAY_MEDIAINFO_PATH;
+	public CCFSPathProperty                                 PROP_PLAY_FFMPEG_PATH;
+	public CCFSPathProperty                                 PROP_PLAY_FFPROBE_PATH;
+	public CCFSPathProperty                                 PROP_PLAY_MP4BOX_PATH;
 	public CCBoolProperty                                   PROP_PREVIEWSERIES_SINGLETON;
 	public CCBoolProperty                                   PROP_PREVIEWMOVIE_SINGLETON;
 	public CCBoolProperty                                   PROP_DATABASE_LOAD_ALL_COVERDATA;
@@ -261,7 +264,7 @@ public class CCProperties {
 		PROP_COMMON_PRESCANFILESYSTEM           = new CCBoolProperty(CAT_COMMON,            this,   "PROP_COMMON_PRESCANFILESYSTEM",            true);
 		PROP_LOG_APPEND                         = new CCBoolProperty(CAT_COMMON,            this,   "PROP_LOG_APPEND",                          true);
 		PROP_DATABASE_CLEANSHUTDOWN             = new CCBoolProperty(CAT_COMMON,            this,   "PROP_DATABASE_CLEANSHUTDOWN",              false);
-		PROP_MAINFRAME_FILTERLISTPATH           = new CCStringProperty(CAT_COMMON,          this,   "PROP_MAINFRAME_FILTERLISTPATH",            getDefFLPath());
+		PROP_MAINFRAME_FILTERLISTPATH           = new CCCCPathProperty(CAT_COMMON,          this,   "PROP_MAINFRAME_FILTERLISTPATH",            getDefFLPath());
 
 		PROP_UI_APPTHEME                        = new CCLookAndFeelProperty(CAT_VIEW,       this,   "PROP_UI_APPTHEME",                         getDefTheme());
 		PROP_MAINFRAME_TABLEBACKGROUND          = new CCEnumProperty<>(CAT_VIEW,            this,   "PROP_MAINFRAME_TABLEBACKGROUND",           UITableBackground.WHITE,            UITableBackground.getWrapper());
@@ -317,7 +320,7 @@ public class CCProperties {
 		PROP_SERIES_NEXT_EPISODE_HEURISTIC      = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_NEXT_EPISODE_HEURISTIC",       NextEpisodeHeuristic.AUTOMATIC,     NextEpisodeHeuristic.getWrapper());
 		PROP_PREVIEWSERIES_SINGLETON            = new CCBoolProperty(CAT_SERIES,            this,   "PROP_PREVIEWSERIES_SINGLETON",             true);
 
-		PROP_PLAY_VLC_PATH                      = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_PATH",                       "",                                 "vlc.exe",       CCPathPropertyMode.FILES);
+		PROP_PLAY_VLC_PATH                      = new CCFSPathProperty(CAT_PLAY,            this,   "PROP_PLAY_VLC_PATH",                       FSPath.Empty,                       "vlc.exe",       CCPathPropertyMode.FILES);
 		PROP_PLAY_VLC_FULLSCREEN                = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_FULLSCREEN",                 false);
 		PROP_PLAY_VLC_AUTOPLAY                  = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_AUTOPLAY",                   true);
 		PROP_PLAY_USESTANDARDONMISSINGVLC       = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_USESTANDARDONMISSINGVLC",        true);
@@ -328,10 +331,10 @@ public class CCProperties {
 		PROP_PLAY_ALT_PROG_4                    = new CCNamedPathProperty(CAT_PLAY,         this,   "PROP_PLAY_ALT_PROG_4",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
 		PROP_PLAY_ALT_PROG_5                    = new CCNamedPathProperty(CAT_PLAY,         this,   "PROP_PLAY_ALT_PROG_5",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
 
-		PROP_PLAY_MEDIAINFO_PATH                = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_MEDIAINFO_PATH",                 "",                                 "mediainfo.exe", CCPathPropertyMode.FILES);
-		PROP_PLAY_FFMPEG_PATH                   = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_FFMPEG_PATH",                    "",                                 "ffmpeg.exe",    CCPathPropertyMode.FILES);
-		PROP_PLAY_FFPROBE_PATH                  = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_FFPROBE_PATH",                   "",                                 "ffprobe.exe",   CCPathPropertyMode.FILES);
-		PROP_PLAY_MP4BOX_PATH                   = new CCPathProperty(CAT_PLAY,              this,   "PROP_PLAY_MP4BOX_PATH",                    "",                                 "mp4box.exe",    CCPathPropertyMode.FILES);
+		PROP_PLAY_MEDIAINFO_PATH                = new CCFSPathProperty(CAT_PLAY,            this,   "PROP_PLAY_MEDIAINFO_PATH",                 FSPath.Empty,                       "mediainfo.exe", CCPathPropertyMode.FILES);
+		PROP_PLAY_FFMPEG_PATH                   = new CCFSPathProperty(CAT_PLAY,            this,   "PROP_PLAY_FFMPEG_PATH",                    FSPath.Empty,                       "ffmpeg.exe",    CCPathPropertyMode.FILES);
+		PROP_PLAY_FFPROBE_PATH                  = new CCFSPathProperty(CAT_PLAY,            this,   "PROP_PLAY_FFPROBE_PATH",                   FSPath.Empty,                       "ffprobe.exe",   CCPathPropertyMode.FILES);
+		PROP_PLAY_MP4BOX_PATH                   = new CCFSPathProperty(CAT_PLAY,            this,   "PROP_PLAY_MP4BOX_PATH",                    FSPath.Empty,                       "mp4box.exe",    CCPathPropertyMode.FILES);
 
 		PROP_BACKUP_CREATEBACKUPS               = new CCBoolProperty(CAT_BACKUP,            this,   "PROP_BACKUP_CREATEBACKUPS",                false);
 		PROP_BACKUP_FOLDERNAME                  = new CCStringProperty(CAT_BACKUP,          this,   "PROP_BACKUP_FOLDERNAME",                   "jClipCorn_backup");
@@ -374,7 +377,7 @@ public class CCProperties {
 		PROP_DATABASE_DRIVER                    = new CCEnumProperty<>(NONVISIBLE,          this,   "PROP_DATABASE_DRIVER",                     CCDatabaseDriver.SQLITE,            CCDatabaseDriver.getWrapper());
 		PROP_SHOW_EXTENDED_FEATURES             = new CCBoolProperty(NONVISIBLE,            this,   "PROP_SHOW_EXTENDED_FEATURES",              true);
 		PROP_DEBUG_USE_HTTPCACHE                = new CCBoolProperty(NONVISIBLE,            this,   "PROP_DEBUG_USE_HTTPCACHE",                 false);
-		PROP_DEBUG_HTTPCACHE_PATH               = new CCPathProperty(NONVISIBLE,            this,   "PROP_DEBUG_HTTPCACHE_PATH",                "%temp%/jClipCorn/httpcache/",      null, CCPathPropertyMode.DIRECTORIES);
+		PROP_DEBUG_HTTPCACHE_PATH               = new CCFSPathProperty(NONVISIBLE,          this,   "PROP_DEBUG_HTTPCACHE_PATH",                getDefHttpCachePath(),       null, CCPathPropertyMode.DIRECTORIES);
 		PROP_SERIES_PREVIEWFRAME_HEIGHT         = new CCPIntProperty(NONVISIBLE,            this,   "PROP_SERIES_PREVIEWFRAME_HEIGHT",          22);
 		PROP_ANILIST_PREFERRED_TITLE_LANG       = new CCEnumProperty<>(NONVISIBLE,          this,   "PROP_ANILIST_PREFERRED_TITLE_LANG",        AniListTitleLang.PREFERRED,         AniListTitleLang.getWrapper());
 		PROP_MIN_DRIVEMAP_RESCAN_TIME           = new CCPIntProperty(NONVISIBLE,            this,   "PROP_MIN_DRIVEMAP_RESCAN_TIME",            30*1000);
@@ -410,6 +413,10 @@ public class CCProperties {
 		PROP_PATHSYNTAX_VAR5                    = new CCPathVarProperty(CAT_PATHSYNTAX,     this,   "PROP_PATHSYNTAX_VAR5",                     PathSyntaxVar.EMPTY);
 	}
 
+	private FSPath getDefHttpCachePath() {
+		return FilesystemUtils.getTempPath().append("jClipCorn").append("httpcache"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
 	private String getRandPass(int len)
 	{
 		final String CHARS = "ABCDEFGHKLMNPRSTUVWXYZ_0123456789"; //$NON-NLS-1$
@@ -427,8 +434,8 @@ public class CCProperties {
 		return set;
 	}
 
-	private String getDefFLPath() {
-		return "<?self>jClipCorn."+ExportHelper.EXTENSION_FILTERLIST; //$NON-NLS-1$
+	private CCPath getDefFLPath() {
+		return CCPath.create("<?self>jClipCorn."+ExportHelper.EXTENSION_FILTERLIST); //$NON-NLS-1$
 	}
 	
 	private ArrayList<String> getDefSeasonRegex() {

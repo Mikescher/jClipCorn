@@ -8,7 +8,8 @@ import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
@@ -22,7 +23,6 @@ import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,31 +66,29 @@ public class BackupManager {
 		Globals.TIMINGS.stop(Globals.TIMING_LOAD_INIT_BACKUPMANAGER);
 	}
 
-	private File getBackupDirectory() {
-		File file = new File(PathFormatter.combineAndAppend(PathFormatter.getRealSelfDirectory(), CCProperties.getInstance().PROP_BACKUP_FOLDERNAME.getValue()));
+	private FSPath getBackupDirectory() {
+		var d = FilesystemUtils.getRealSelfDirectory().append(CCProperties.getInstance().PROP_BACKUP_FOLDERNAME.getValue());
 
-		if (!file.exists()) {
-			file.mkdirs();
-		}
+		if (!d.exists()) d.mkdirsSafe();
 
-		return file;
+		return d;
 	}
 
-	private File[] getArchiveFiles() {
-		return getBackupDirectory().listFiles(f -> PathFormatter.getExtension(f.getAbsolutePath()).equalsIgnoreCase(ExportHelper.EXTENSION_BACKUP));
+	private FSPath[] getArchiveFiles() {
+		return getBackupDirectory().list(f -> f.getExtension().equalsIgnoreCase(ExportHelper.EXTENSION_BACKUP)).toArray(new FSPath[0]);
 	}
 
 	private void initBackupsList() {
 		try {
-			File[] archives = getArchiveFiles();
+			FSPath[] archives = getArchiveFiles();
 
-			for (File f : archives) {
+			for (FSPath f : archives) {
 				try {
 					CCBackup backup = new CCBackup(f);
 
 					backuplist.add(backup);
 				} catch (Exception e) {
-					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorInitBackupList", f.getName()), e); //$NON-NLS-1$
+					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorInitBackupList", f.getFilenameWithExt()), e); //$NON-NLS-1$
 				}
 			}
 		} finally {
@@ -146,15 +144,16 @@ public class BackupManager {
 		if (needsCreateBackup()) createBackup(c);
 	}
 
-	private File getNewBackupName() {
-		String prefix = PathFormatter.appendSeparator(getBackupDirectory().getAbsolutePath());
+	private FSPath getNewBackupName() {
+		var dir = getBackupDirectory();
+
 		int id = 0;
 		String now = CCDate.getCurrentDate().toStringSQL();
 
-		for (;;) {
-			File f = new File(prefix + String.format(BACKUPFILENAME, now, id));
-			if (!f.exists())
-				return f;
+		for (;;)
+		{
+			var f = dir.append(String.format(BACKUPFILENAME, now, id));
+			if (!f.exists()) return f;
 			id++;
 		}
 	}
@@ -214,9 +213,9 @@ public class BackupManager {
 	}
 
 	private void createBackupInternal(String name, CCDate date, boolean persistent, String jccversion, String dbversion, ProgressCallbackListener mon, boolean forceExcludeCovers) throws IOException {
-		File file = getNewBackupName();
+		var file = getNewBackupName();
 
-		FileOutputStream os = new FileOutputStream(file);
+		FileOutputStream os = new FileOutputStream(file.toFile());
 		ZipOutputStream zos = new ZipOutputStream(os);
 		zos.setLevel(CCProperties.getInstance().PROP_BACKUP_COMPRESSION.getValue());
 
@@ -230,7 +229,7 @@ public class BackupManager {
 		}
 
 		ExportHelper.zipDir(
-			movielist.getDatabaseDirectory().getParentFile(), 
+			movielist.getDatabaseDirectory().getParent(),
 			movielist.getDatabaseDirectory(), 
 			zos, 
 			true, 
@@ -242,21 +241,20 @@ public class BackupManager {
 		CCBackup backup = new CCBackup(file, name, date, persistent, jccversion, dbversion, excludeCovers);
 		boolean ok = backup.saveToFile();
 		if (!ok) {
-			if (file.exists()) FileUtils.deleteQuietly(file);
+			if (file.exists()) FileUtils.deleteQuietly(file.toFile());
 			throw new IOException("saveToFile failed"); //$NON-NLS-1$
 		}
 		backuplist.add(backup);
 	}
 
-	private boolean testExclusion(List<String> excludedFolders, List<String> excludedFiles, File f) {
-		if (f.isDirectory()) {
-			for (String ex : excludedFolders) {
-				if (f.getName().equalsIgnoreCase(ex)) return true;
-			}
-		} else {
-			for (String ex : excludedFiles) {
-				if (f.getName().equalsIgnoreCase(ex)) return true;
-			}
+	private boolean testExclusion(List<String> excludedFolders, List<String> excludedFiles, FSPath f) {
+		if (f.isDirectory())
+		{
+			for (String ex : excludedFolders) if (f.getDirectoryName().equalsIgnoreCase(ex)) return true;
+		}
+		else
+		{
+			for (String ex : excludedFiles) if (f.getFilenameWithExt().equalsIgnoreCase(ex)) return true;
 		}
 		return false;
 	}
@@ -271,13 +269,13 @@ public class BackupManager {
 
 		CCLog.addInformation(LocaleBundle.getString("LogMessage.RestoreStarted")); //$NON-NLS-1$
 
-		File archive = bkp.getArchive();
-		File directory = movielist.getDatabaseDirectory();
-		File directoryP = directory.getParentFile();
+		var archive    = bkp.getArchive();
+		var directory  = movielist.getDatabaseDirectory();
+		var directoryP = directory.getParent();
 
 		ProgressMonitor monitor = DialogHelper.getLocalPersistentProgressMonitor(c, "BackupsManagerFrame.dialogs.restoreRunning1"); //$NON-NLS-1$
 
-		if (!PathFormatter.deleteFolderContent(directory, true, new ProgressCallbackProgressMonitorHelper(monitor))) {
+		if (!FilesystemUtils.deleteFolderContent(directory, true, new ProgressCallbackProgressMonitorHelper(monitor))) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.RestoreFailed")); //$NON-NLS-1$
 			return false;
 		}

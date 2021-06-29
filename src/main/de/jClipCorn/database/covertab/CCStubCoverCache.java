@@ -4,6 +4,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.ImageUtilities;
 
 import java.awt.image.BufferedImage;
@@ -92,7 +93,7 @@ public class CCStubCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public String getFilepath(CCCoverData cce) {
-		return null;
+	public FSPath getFilepath(CCCoverData cce) {
+		return FSPath.Empty;
 	}
 }

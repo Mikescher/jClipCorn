@@ -32,13 +32,13 @@ public class CCStringProperty extends CCProperty<String> {
 	@Override
 	public String getValue() {
 		String val = properties.getProperty(identifier);
-		
+
 		if (val == null) {
 			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.PropNotFound", identifier)); //$NON-NLS-1$
 			setDefault();
 			return standard;
 		}
-		
+
 		return transformFromStorage(val);
 	}
 
@@ -53,7 +53,7 @@ public class CCStringProperty extends CCProperty<String> {
 	public boolean isValue(String val) {
 		return Str.equals(val, getValue());
 	}
-	
+
 	protected String transformToStorage(String value) {
 		return value;
 	}

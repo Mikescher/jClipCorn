@@ -10,13 +10,13 @@ import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.colorquantizer.util.ColorQuantizerConverter;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileInputStream;
 import java.util.*;
 
@@ -89,25 +89,25 @@ public class CCMemoryCoverCache implements ICoverCache {
 
 			String fname = CCProperties.getInstance().PROP_COVER_PREFIX.getValue() + StringUtils.leftPad(Integer.toString(cid), 5, '0') + '.' + CCProperties.getInstance().PROP_COVER_TYPE.getValue();
 
-			File f = new File(SimpleFileUtils.getSystemTempFile(".png")); //$NON-NLS-1$
-			ImageIO.write(newCover, CCProperties.getInstance().PROP_COVER_TYPE.getValue(), f);
+			FSPath f = SimpleFileUtils.getSystemTempFile(".png"); //$NON-NLS-1$
+			ImageIO.write(newCover, CCProperties.getInstance().PROP_COVER_TYPE.getValue(), f.toFile());
 
 			String checksum;
-			try (FileInputStream fis = new FileInputStream(f)) { checksum = DigestUtils.sha256Hex(fis).toUpperCase(); }
+			try (FileInputStream fis = new FileInputStream(f.toFile())) { checksum = DigestUtils.sha256Hex(fis).toUpperCase(); }
 
 			ColorQuantizerMethod ptype = CCProperties.getInstance().PROP_DATABASE_COVER_QUANTIZER.getValue();
 			ColorQuantizer quant = ptype.create();
 			quant.analyze(newCover, 16);
 			byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(newCover, ColorQuantizerConverter.PREVIEW_WIDTH));
 
-			CCCoverData cce = new CCCoverData(cid, fname, newCover.getWidth(), newCover.getHeight(), checksum, f.length(), preview, ptype, CCDateTime.getCurrentDateTime());
+			CCCoverData cce = new CCCoverData(cid, fname, newCover.getWidth(), newCover.getHeight(), checksum, f.toFile().length(), preview, ptype, CCDateTime.getCurrentDateTime());
 
 			_db.insertCoverEntry(cce);
 
 			data.put(cid, newCover);
 			_elements.put(cid, cce);
 
-			f.delete();
+			f.deleteSafe();
 
 			return cid;
 		} catch (Exception e) {
@@ -172,12 +172,12 @@ public class CCMemoryCoverCache implements ICoverCache {
 
 	@Override
 	public List<CCCoverData> listCovers() {
-		return Collections.unmodifiableList(new ArrayList<>(_elements.values()));
+		return List.copyOf(_elements.values());
 	}
 
 	@Override
-	public String getFilepath(CCCoverData cce) {
-		return null;
+	public FSPath getFilepath(CCCoverData cce) {
+		return FSPath.Empty;
 	}
 
 	public void resetForTestReload() {

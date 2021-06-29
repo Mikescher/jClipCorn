@@ -9,9 +9,10 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ProcessHelper;
-import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.json.JSONException;
 
@@ -30,7 +31,7 @@ public class MP4BoxRunner implements MetadataSource {
 
 	@SuppressWarnings("nls")
 	@Override
-	public PartialMediaInfo run(String filename) throws IOException, MetadataQueryException {
+	public PartialMediaInfo run(FSPath filename) throws IOException, MetadataQueryException {
 		String boxppath = CCProperties.getInstance().PROP_PLAY_MP4BOX_PATH.getValue();
 
 		File boxfile = new File(boxppath);
@@ -86,7 +87,7 @@ public class MP4BoxRunner implements MetadataSource {
 	}
 
 	@Override
-	public String getFullOutput(String filename, PartialMediaInfo result) throws IOException, MetadataQueryException {
+	public String getFullOutput(FSPath filename, PartialMediaInfo result) throws IOException, MetadataQueryException {
 		return result.RawOutput.orElse(Str.Empty);
 	}
 

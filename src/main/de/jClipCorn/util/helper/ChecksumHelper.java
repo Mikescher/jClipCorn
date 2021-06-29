@@ -6,10 +6,10 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.filesystem.FSPath;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -29,7 +29,7 @@ public class ChecksumHelper
 	private static final int FASTVIDEOHASH_TOTALREAD_COUNT      = FASTVIDEOHASH_BLOCKCOUNT * FASTVIDEOHASH_READ_COUNT_PER_BLOCK;
 	private static final int FASTVIDEOHASH_DIGITS_PER_BLOCK     = 2;
 
-	public static String calculateFastMD5(File[] f) {
+	public static String calculateFastMD5(FSPath[] f) {
 		MD5 md5 = new MD5();
 
 		for (int i = 0; i < f.length; i++) {
@@ -42,17 +42,17 @@ public class ChecksumHelper
 		return md5.asHex().toUpperCase();
 	}
 
-	private static boolean calculateLargeMD5(MD5 md5, File f) {
+	private static boolean calculateLargeMD5(MD5 md5, FSPath f) {
 		byte[] block = new byte[FASTMD5_BLOCKSIZE];
 
-		if (! f.exists() || f.length() < FASTMD5_BLOCKSIZE * 3) {
+		if (f.isEmpty() || !f.exists() || f.toFile().length() < FASTMD5_BLOCKSIZE * 3) {
 			return false;
 		}
 
-		long len = f.length();
+		long len = f.toFile().length();
 
 		try {
-			FileInputStream i = new FileInputStream(f);
+			FileInputStream i = new FileInputStream(f.toFile());
 			i.skip(len / 2);
 
 			i.read(block);
@@ -98,7 +98,7 @@ public class ChecksumHelper
 	//	return result.toString();
 	//}
 
-	public static String fastVideoHash(File f) throws IOException
+	public static String fastVideoHash(FSPath f) throws IOException
 	{
 		var raw = fastVideoHashRaw(f);
 
@@ -118,9 +118,9 @@ public class ChecksumHelper
 	}
 
 	@SuppressWarnings("nls")
-	private static Tuple<String, String[]> fastVideoHashRaw(File f) throws IOException
+	private static Tuple<String, String[]> fastVideoHashRaw(FSPath f) throws IOException
 	{
-		var len = f.length(); // in bytes
+		var len = f.toFile().length(); // in bytes
 
 		var hexlen = StringUtils.leftPad(Long.toHexString(len).toUpperCase(), 10, "0");
 		var blocks = new String[FASTVIDEOHASH_BLOCKCOUNT];
@@ -132,7 +132,7 @@ public class ChecksumHelper
 		//}
 
 		var buffer = new byte[FASTVIDEOHASH_READ_BLOCKSIZE];
-		try(RandomAccessFile file = new RandomAccessFile(f, "r"))
+		try(RandomAccessFile file = new RandomAccessFile(f.toFile(), "r"))
 		{
 			int readidx = 0;
 			for (int i1 = 0; i1 < FASTVIDEOHASH_BLOCKCOUNT; i1++)

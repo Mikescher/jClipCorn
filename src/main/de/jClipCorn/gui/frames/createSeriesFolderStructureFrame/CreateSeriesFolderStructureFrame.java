@@ -12,7 +12,7 @@ import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -159,7 +159,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 
 				CSFSElement elem = new CSFSElement();
 
-				File fileNew = episode.getFileForCreatedFolderstructure(parentfolder);
+				File fileNew = episode.getPathForCreatedFolderstructure(parentfolder);
 
 				elem.CCPathOld = episode.getPart();
 				elem.FSPathOld = episode.getAbsolutePart();
@@ -219,7 +219,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 					CCEpisode episode = season.getEpisodeByArrayIndex(epi);
 					
 					File file = new File(episode.getAbsolutePart());
-					File newfile = episode.getFileForCreatedFolderstructure(parentfolder);
+					File newfile = episode.getPathForCreatedFolderstructure(parentfolder);
 					
 					File mkdirfolder = newfile.getParentFile();
 					
@@ -270,7 +270,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 			for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
 				CCEpisode episode = season.getEpisodeByArrayIndex(epi);
 				
-				files.add(episode.getFileForCreatedFolderstructure(parentfolder));
+				files.add(episode.getPathForCreatedFolderstructure(parentfolder));
 			}
 		}
 		

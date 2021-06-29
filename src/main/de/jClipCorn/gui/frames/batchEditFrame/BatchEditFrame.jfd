@@ -132,7 +132,7 @@ new FormModel {
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl" ) {
 					name: "ctrlMediaInfo"
 					auxiliary() {
-						"JavaCodeGenerator.customCreateCode": "new JMediaInfoControl(() -> PathFormatter.fromCCPath(edPart.getText()));"
+						"JavaCodeGenerator.customCreateCode": "new JMediaInfoControl(() -> edPart.getPath().toFSPath());"
 					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 5
@@ -322,7 +322,7 @@ new FormModel {
 					"gridX": 3
 					"gridY": 24
 				} )
-				add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.JReadableCCPathTextField" ) {
 					name: "edPart"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 5

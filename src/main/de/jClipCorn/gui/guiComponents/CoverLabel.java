@@ -5,8 +5,8 @@ import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
 
 import javax.imageio.ImageIO;
@@ -15,7 +15,6 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 public class CoverLabel extends JLabel implements MouseListener {
@@ -180,7 +179,7 @@ public class CoverLabel extends JLabel implements MouseListener {
 
 		if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 			FileFilter choosen = fc.getFileFilter();
-			String path = fc.getSelectedFile().getAbsolutePath();
+			var path = FSPath.create(fc.getSelectedFile());
 			String format = ""; //$NON-NLS-1$
 
 			if (choosen.equals(filterPng)) {
@@ -193,10 +192,10 @@ public class CoverLabel extends JLabel implements MouseListener {
 				format = "bmp"; //$NON-NLS-1$
 			}
 
-			path = PathFormatter.forceExtension(path, format);
+			path = path.forceExtension(format);
 
 			try {
-				ImageIO.write(getOriginalCover(), format, new File(path));
+				ImageIO.write(getOriginalCover(), format, path.toFile());
 			} catch (IOException e) {
 				CCLog.addError(e);
 			}

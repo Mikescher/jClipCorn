@@ -21,7 +21,7 @@ new FormModel {
 				"gridX": 2
 				"gridY": 2
 			} )
-			add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.JReadableFSPathTextField" ) {
 				name: "edPathPatchfile"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridY": 2
@@ -44,7 +44,7 @@ new FormModel {
 				"gridX": 2
 				"gridY": 4
 			} )
-			add( new FormComponent( "javax.swing.JTextField" ) {
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.JFSPathTextField" ) {
 				name: "edPathDestMovies"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 4
@@ -59,7 +59,7 @@ new FormModel {
 				"gridX": 2
 				"gridY": 6
 			} )
-			add( new FormComponent( "javax.swing.JTextField" ) {
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.JFSPathTextField" ) {
 				name: "edPathDestSeries"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 4
@@ -81,7 +81,7 @@ new FormModel {
 				"gridX": 2
 				"gridY": 8
 			} )
-			add( new FormComponent( "javax.swing.JTextField" ) {
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.JFSPathTextField" ) {
 				name: "edPathDestTrashMov"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 4
@@ -95,7 +95,7 @@ new FormModel {
 				"gridX": 2
 				"gridY": 10
 			} )
-			add( new FormComponent( "javax.swing.JTextField" ) {
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.JFSPathTextField" ) {
 				name: "edPathDestTrashSer"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 4

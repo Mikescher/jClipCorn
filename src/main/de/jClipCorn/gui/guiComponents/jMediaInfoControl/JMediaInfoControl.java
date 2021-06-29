@@ -9,6 +9,7 @@ import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.lambda.Func0to1;
 
 import javax.swing.*;
@@ -31,7 +32,7 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 
 	private final List<ActionListener> _changeListener = new ArrayList<>();
 
-	private final Func0to1<String> _pathProvider;
+	private final Func0to1<FSPath> _pathProvider;
 
 	@DesignCreate
 	private static JMediaInfoControl designCreate()
@@ -39,7 +40,7 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 		return new JMediaInfoControl(() -> null);
 	}
 
-	public JMediaInfoControl(Func0to1<String> pathProvider) {
+	public JMediaInfoControl(Func0to1<FSPath> pathProvider) {
 		super();
 		_pathProvider = pathProvider;
 

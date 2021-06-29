@@ -2,6 +2,7 @@ package de.jClipCorn.database.driver;
 
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.filesystem.FSPath;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,12 +11,12 @@ import java.util.List;
 public class StubDatabase extends GenericDatabase {
 
 	@Override
-	public boolean createNewDatabase(String xmlPath, String dbDir, String dbName) {
+	public boolean createNewDatabase(FSPath xmlPath, FSPath dbDir, String dbName) {
 		return true;
 	}
 
 	@Override
-	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbDir, String dbName) {
+	public boolean createNewDatabasefromResourceXML(String xmlResPath, FSPath dbDir, String dbName) {
 		return true;
 	}
 
@@ -25,17 +26,17 @@ public class StubDatabase extends GenericDatabase {
 	}
 
 	@Override
-	public void establishDBConnection(String dbDir, String dbName) throws Exception {
+	public void establishDBConnection(FSPath dbDir, String dbName) throws Exception {
 		// NOP
 	}
 
 	@Override
-	public void closeDBConnection(String dbDir, String dbName, boolean cleanshutdown) throws SQLException {
+	public void closeDBConnection(FSPath dbDir, String dbName, boolean cleanshutdown) throws SQLException {
 		// NOP
 	}
 
 	@Override
-	public boolean databaseExists(String dbDir, String dbName) {
+	public boolean databaseExists(FSPath dbDir, String dbName) {
 		return true;
 	}
 

@@ -23,14 +23,15 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
-import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.CCDatabaseElementComparator;
 import de.jClipCorn.util.comparator.CCMovieComparator;
 import de.jClipCorn.util.comparator.CCSeriesComparator;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple1;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.lambda.Func0to0;
@@ -42,7 +43,6 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 
 import java.awt.*;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.*;
@@ -74,7 +74,7 @@ public class CCMovieList {
 	public static CCMovieList createInstanceMovieList() {
 		var db = CCDatabase.create(
 				CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue(),
-				PathFormatter.getRealSelfDirectory(),
+				FilesystemUtils.getRealSelfDirectory(),
 				CCProperties.getInstance().PROP_DATABASE_NAME.getValue(),
 				CCProperties.getInstance().ARG_READONLY);
 
@@ -89,7 +89,7 @@ public class CCMovieList {
 		return new CCMovieList(CCDatabase.createStub());
 	}
 
-	public static CCMovieList loadExtern(CCDatabaseDriver drv, String directory, String dbName, boolean readonly) {
+	public static CCMovieList loadExtern(CCDatabaseDriver drv, FSPath directory, String dbName, boolean readonly) {
 		return new CCMovieList(CCDatabase.create(drv, directory, dbName, readonly));
 	}
 
@@ -104,7 +104,7 @@ public class CCMovieList {
 			// in case db type has changed
 			database = CCDatabase.create(
 					CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue(),
-					PathFormatter.getRealSelfDirectory(),
+					FilesystemUtils.getRealSelfDirectory(),
 					CCProperties.getInstance().PROP_DATABASE_NAME.getValue(),
 					CCProperties.getInstance().ARG_READONLY);
 		}
@@ -683,47 +683,23 @@ public class CCMovieList {
 			database.disconnect(CCProperties.getInstance().PROP_DATABASE_CLEANSHUTDOWN.getValue());
 		}
 	}
-	
-	public String getDatabasePath() {
+
+	public FSPath getDatabaseDirectory() {
 		return database.getDBPath();
 	}
-
-	public File getDatabaseDirectory() {
-		return new File(database.getDBPath());
-	}
 	
-	public List<File> getAbsolutePathList(boolean includeSeries) {
-		List<File> result = new ArrayList<>();
+	public List<FSPath> getAbsolutePathList(boolean includeSeries) {
+		List<FSPath> result = new ArrayList<>();
 		
 		for (CCDatabaseElement el : list) {
 			if (el.isMovie()) {
-				for (int j = 0; j < ((CCMovie) el).getPartcount(); j++) {
-					result.add(new File(((CCMovie) el).getAbsolutePart(j)));
-				}
+				for (var p: ((CCMovie) el).getParts()) result.add(p.toFSPath());
 			} else if (includeSeries){
-				result.addAll(((CCSeries)el).getAbsolutePathList());
+				for (var e: ((CCSeries) el).getEpisodeList()) if (!e.Part.get().isEmpty()) result.add(e.Part.get().toFSPath());
 			}
 		}
 		
 		return result;
-	}
-	
-	public boolean isFileInList(String path, boolean includeSeries) {
-		for (CCDatabaseElement el : list) {
-			if (el.isMovie()) {
-				for (int j = 0; j < ((CCMovie) el).getPartcount(); j++) {
-					if (((CCMovie) el).getAbsolutePart(j).equals(path)) {
-						return true;
-					}
-				}
-			} else if (includeSeries){
-				if (((CCSeries) el).isFileInList(path)) {
-					return true;
-				}
-			}
-		}
-		
-		return false;
 	}
 
 	public void resetAllMovieViewed() {
@@ -740,64 +716,62 @@ public class CCMovieList {
 		return null;
 	}
 
-	public String getCommonPathForMovieFileChooser() {
-		String p = PathFormatter.fromCCPath(getCommonMoviesPath());
-		if (Str.isNullOrWhitespace(p)) p = PathFormatter.fromCCPath(getCommonSeriesPath());
-		if (Str.isNullOrWhitespace(p)) p = PathFormatter.getRealSelfDirectory();
-		if (Str.isNullOrWhitespace(p)) p = PathFormatter.getAbsoluteSelfDirectory();
+	public FSPath getCommonPathForMovieFileChooser() {
+		var p = getCommonMoviesPath().toFSPath();
+		if (p.isEmpty()) p = getCommonSeriesPath().toFSPath();
+		if (p.isEmpty()) p = FilesystemUtils.getRealSelfDirectory();
+		if (p.isEmpty()) p = FilesystemUtils.getAbsoluteSelfDirectory();
 		return p;
 	}
 
-	public String getCommonPathForSeriesFileChooser() {
-		String p = PathFormatter.fromCCPath(getCommonSeriesPath());
-		if (Str.isNullOrWhitespace(p)) p = PathFormatter.fromCCPath(getCommonMoviesPath());
-		if (Str.isNullOrWhitespace(p)) p = PathFormatter.getRealSelfDirectory();
-		if (Str.isNullOrWhitespace(p)) p = PathFormatter.getAbsoluteSelfDirectory();
+	public FSPath getCommonPathForSeriesFileChooser() {
+		var p = getCommonSeriesPath().toFSPath();
+		if (p.isEmpty()) p = getCommonMoviesPath().toFSPath();
+		if (p.isEmpty()) p = FilesystemUtils.getRealSelfDirectory();
+		if (p.isEmpty()) p = FilesystemUtils.getAbsoluteSelfDirectory();
 		return p;
 	}
 
-	public String getCommonSeriesPath() {
+	public CCPath getCommonSeriesPath() {
 		return _cache.get(MovieListCache.COMMON_SERIES_PATH, null, ml->
 		{
-			List<String> all = new ArrayList<>();
+			List<CCPath> all = new ArrayList<>();
 
 			for (CCSeries ser : iteratorSeries()) {
-				all.add(ser.getCommonPathStart(false));
+				var p = ser.getCommonPathStart(false);
+				if (!p.isEmpty()) all.add(p);
 			}
 
-			while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
-
-			return PathFormatter.getCommonFolderPath(all);
+			return CCPath.getCommonPath(all);
 		});
 	}
 
-	public String guessSeriesRootPath() {
+	public CCPath getCommonMoviesPath() {
+		return _cache.get(MovieListCache.COMMON_MOVIES_PATH, null, ml->
+		{
+			List<CCPath> all = new ArrayList<>();
+
+			for (CCMovie curr : iteratorMovies()) {
+				for (int i = 0; i < curr.getPartcount(); i++) {
+					var p = curr.Parts.get(i);
+					if (!p.isEmpty()) all.add(p);
+				}
+			}
+
+			return CCPath.getCommonPath(all);
+		});
+	}
+
+	public FSPath guessSeriesRootPath() {
 		return _cache.get(MovieListCache.GUESS_SERIES_ROOT_PATH, null, ml->
 		{
 			return iteratorSeries()
 					.map(CCSeries::guessSeriesRootPath)
-					.filter(p -> !Str.isNullOrWhitespace(p))
+					.filter(p -> !p.isEmpty())
 					.groupBy(p -> p)
 					.autosortByProperty(p -> p.getValue().size())
 					.map(Map.Entry::getKey)
-					.lastOr(Str.Empty);
-		});
-	}
-
-	public String getCommonMoviesPath() {
-		return _cache.get(MovieListCache.COMMON_MOVIES_PATH, null, ml->
-		{
-			List<String> all = new ArrayList<>();
-
-			for (CCMovie curr : iteratorMovies()) {
-				for (int i = 0; i < curr.getPartcount(); i++) {
-					all.add(curr.Parts.get(i));
-				}
-			}
-
-			while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
-
-			return PathFormatter.getCommonFolderPath(all);
+					.lastOr(FSPath.Empty);
 		});
 	}
 	

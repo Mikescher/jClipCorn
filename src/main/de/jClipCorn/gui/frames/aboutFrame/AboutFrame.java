@@ -1,23 +1,18 @@
 package de.jClipCorn.gui.frames.aboutFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
+import de.jClipCorn.Main;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-
-import de.jClipCorn.Main;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.helper.SimpleFileUtils;
 
 public class AboutFrame extends JFrame implements ComponentListener {
 	private static final long serialVersionUID = -807033167837187549L;

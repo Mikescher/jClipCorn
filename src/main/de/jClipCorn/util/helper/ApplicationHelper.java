@@ -7,7 +7,8 @@ import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.datatypes.Tuple4;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.io.BufferedReader;
@@ -25,17 +26,17 @@ public class ApplicationHelper {
 	
 	public static void SetOverrideModeUnix() {
 		os_property = "generic_unix"; //$NON-NLS-1$
-		PathFormatter.SetPathModeUnix();
+		FSPath.SetPathModeUnix();
 	}
 
 	public static void SetOverrideModeWindows() {
 		os_property = "generic_windows"; //$NON-NLS-1$
-		PathFormatter.SetPathModeWindows();
+		FSPath.SetPathModeWindows();
 	}
 	
 	@SuppressWarnings("nls")
 	public static boolean restartApplication() { //Will fail in Eclipse, cause there is no .jar File
-		String javaBin = PathFormatter.combine(System.getProperty("java.home"), "bin", "java");
+		var javaBin = FilesystemUtils.getHomePath().append("bin").append("java");
 		File currentJar;
 		
 		try {
@@ -48,7 +49,7 @@ public class ApplicationHelper {
 		if (!currentJar.getName().endsWith(".jar")) return false;
 
 		List<String> command = new ArrayList<>();
-		command.add(javaBin);
+		command.add(javaBin.toString());
 		command.add("-jar");
 		command.add(currentJar.getPath());
 

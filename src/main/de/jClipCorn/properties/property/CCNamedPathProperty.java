@@ -5,12 +5,14 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.guiComponents.JFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
@@ -22,15 +24,15 @@ public class CCNamedPathProperty extends CCProperty<NamedPathVar> {
 
 	private class CCNamedPathPropertyPanel extends JPanel {
 		private static final long serialVersionUID = -9214196751986446909L;
-		JTextField Field1;
-		JTextField Field2;
-		JTextField Field3;
+		JTextField       Field1;
+		JFSPathTextField Field2;
+		JTextField       Field3;
 	}
 
 	private final String filterEnd;
-	private final CCPathProperty.CCPathPropertyMode filterMode;
+	private final CCFSPathProperty.CCPathPropertyMode filterMode;
 
-	public CCNamedPathProperty(CCPropertyCategory cat, CCProperties prop, String ident, NamedPathVar standard, String filter, CCPathProperty.CCPathPropertyMode mode) {
+	public CCNamedPathProperty(CCPropertyCategory cat, CCProperties prop, String ident, NamedPathVar standard, String filter, CCFSPathProperty.CCPathPropertyMode mode) {
 		super(cat, NamedPathVar.class, prop, ident, standard);
 		filterEnd = filter;
 		filterMode = mode;
@@ -67,7 +69,7 @@ public class CCNamedPathProperty extends CCProperty<NamedPathVar> {
 		pnl.add(pnl.Field1 = new JTextField(), "4, 1, fill, default"); //$NON-NLS-1$
 
 		pnl.add(new JLabel(LocaleBundle.getString("CCNamedPathProperty.Path")), "6, 1, fill, default"); //$NON-NLS-1$ //$NON-NLS-2$
-		pnl.add(pnl.Field2 = new JTextField(), "8, 1, fill, default"); //$NON-NLS-1$
+		pnl.add(pnl.Field2 = new JFSPathTextField(), "8, 1, fill, default"); //$NON-NLS-1$
 
 		pnl.add(new JLabel(LocaleBundle.getString("CCNamedPathProperty.Args")), "2, 3, fill, default"); //$NON-NLS-1$ //$NON-NLS-2$
 		pnl.add(pnl.Field3 = new JTextField(), "4, 3, 5, 1, fill, default"); //$NON-NLS-1$
@@ -114,13 +116,13 @@ public class CCNamedPathProperty extends CCProperty<NamedPathVar> {
 	@Override
 	public void setComponentValueToValue(Component c, NamedPathVar val) {
 		((CCNamedPathPropertyPanel)c).Field1.setText(val.Name);
-		((CCNamedPathPropertyPanel)c).Field2.setText(val.Path);
+		((CCNamedPathPropertyPanel)c).Field2.setPath(val.Path);
 		((CCNamedPathPropertyPanel)c).Field3.setText(val.Arguments);
 	}
 
 	@Override
 	public NamedPathVar getComponentValue(Component c) {
-		return new NamedPathVar(((CCNamedPathPropertyPanel)c).Field1.getText(), ((CCNamedPathPropertyPanel)c).Field2.getText(), ((CCNamedPathPropertyPanel)c).Field3.getText());
+		return new NamedPathVar(((CCNamedPathPropertyPanel)c).Field1.getText(), ((CCNamedPathPropertyPanel)c).Field2.getPath(), ((CCNamedPathPropertyPanel)c).Field3.getText());
 	}
 
 	@Override
@@ -136,7 +138,7 @@ public class CCNamedPathProperty extends CCProperty<NamedPathVar> {
 		try {
 			String[] sval = val.split(";"); //$NON-NLS-1$
 			if (sval.length == 0 || sval.length == 1 || sval.length == 2) return NamedPathVar.EMPTY;
-			return new NamedPathVar(Str.fromBase64(sval[0]).trim(), Str.fromBase64(sval[1]).trim(), Str.fromBase64(sval[2]).trim());
+			return new NamedPathVar(Str.fromBase64(sval[0]).trim(), FSPath.create(Str.fromBase64(sval[1]).trim()), Str.fromBase64(sval[2]).trim());
 		} catch(NumberFormatException e) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorNumber", identifier, mclass.getName())); //$NON-NLS-1$
 			setDefault();

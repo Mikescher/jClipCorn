@@ -4,14 +4,15 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.serialization.ExportHelper;
-import de.jClipCorn.gui.guiComponents.*;
+import de.jClipCorn.gui.guiComponents.JFSPathTextField;
+import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.DoubleProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.xml.CCXMLParser;
@@ -19,7 +20,6 @@ import de.jClipCorn.util.xml.CCXMLParser;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.util.ArrayList;
 
 public class ApplyPatchFrame extends JFrame
@@ -41,7 +41,7 @@ public class ApplyPatchFrame extends JFrame
 		setLocationRelativeTo(owner);
 	}
 
-	public ApplyPatchFrame(Component owner, CCMovieList ml, File f)
+	public ApplyPatchFrame(Component owner, CCMovieList ml, FSPath f)
 	{
 		super();
 		movielist = ml;
@@ -49,7 +49,7 @@ public class ApplyPatchFrame extends JFrame
 		initComponents();
 		postInit();
 
-		edPathPatchfile.setText(f.getAbsolutePath());
+		edPathPatchfile.setText(f.toAbsolutePathString());
 
 		setLocationRelativeTo(owner);
 	}
@@ -58,11 +58,11 @@ public class ApplyPatchFrame extends JFrame
 	{
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 
-		edPathDestMovies.setText(PathFormatter.fromCCPath(movielist.getCommonMoviesPath()));
-		edPathDestSeries.setText(PathFormatter.fromCCPath(movielist.getCommonSeriesPath()));
+		edPathDestMovies.setText(movielist.getCommonMoviesPath().toFSPath().toString());
+		edPathDestSeries.setText(movielist.getCommonSeriesPath().toFSPath().toString());
 
-		edPathDestTrashMov.setText(PathFormatter.combine(PathFormatter.getParentPath(PathFormatter.fromCCPath(movielist.getCommonMoviesPath()), 1), "trash"));
-		edPathDestTrashSer.setText(PathFormatter.combine(PathFormatter.getParentPath(PathFormatter.fromCCPath(movielist.getCommonSeriesPath()), 1), "trash"));
+		edPathDestTrashMov.setText(movielist.getCommonMoviesPath().toFSPath().getParent().append("trash").toString());
+		edPathDestTrashSer.setText(movielist.getCommonSeriesPath().toFSPath().getParent().append("trash").toString());
 	}
 
 	private void updateUI()
@@ -82,7 +82,7 @@ public class ApplyPatchFrame extends JFrame
 
 		chooser.addChoosableFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jccpatch.description", ExportHelper.EXTENSION_PATCHFILE)); //$NON-NLS-1$
 
-		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+		chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
 
 		int returnval = chooser.showOpenDialog(this);
 
@@ -108,7 +108,7 @@ public class ApplyPatchFrame extends JFrame
 			var state = new PatchExecState();
 			state.load(edPathPatchfile.getText() + ".state");
 
-			CCXMLParser doc = CCXMLParser.parse(SimpleFileUtils.readUTF8TextFile(edPathPatchfile.getText()));
+			CCXMLParser doc = CCXMLParser.parse(FSPath.createAndNormalize(edPathPatchfile.getText()).readAsUTF8TextFile());
 
 			var actions = new ArrayList<ActionVM>();
 
@@ -145,14 +145,14 @@ public class ApplyPatchFrame extends JFrame
 		var cb = new DoubleProgressCallbackProgressBarHelper(progressBar1, lblProgress1, progressBar2, lblProgress2);
 
 		var opt = new PatchExecOptions(
-				edPathPatchfile.getText(),
-				edPathPatchfile.getText()+".state",
-				edPathDestMovies.getText(),
-				edPathDestSeries.getText(),
+				edPathPatchfile.getPath(),
+				FSPath.create(edPathPatchfile.getPath().toString()+".state"),
+				edPathDestMovies.getPath(),
+				edPathDestSeries.getPath(),
 				chkbxSeriesAutoPath.isSelected(),
-				edPathDestTrashMov.getText(),
-				edPathDestTrashSer.getText(),
-				PathFormatter.combine(PathFormatter.getDirectory(edPathPatchfile.getText()), "patch_data"),
+				edPathDestTrashMov.getPath(),
+				edPathDestTrashSer.getPath(),
+				edPathPatchfile.getPath().getParent().append("patch_data"),
 				cbPorcelain.isSelected());
 
 		activeThread = new Thread(() ->
@@ -161,19 +161,19 @@ public class ApplyPatchFrame extends JFrame
 			{
 				SwingUtils.invokeLater(() -> MainFrame.getInstance().beginBlockingIntermediate());
 
-				if (!new File(opt.DestinationMovies).exists()) {
+				if (!opt.DestinationMovies.exists()) {
 					throw new Exception("DestinationMovies does not exist");
 				}
-				if (!new File(opt.DestinationSeries).exists()) {
+				if (!opt.DestinationSeries.exists()) {
 					throw new Exception("DestinationMovies does not exist");
 				}
-				if (!new File(opt.DataDir).exists()) {
+				if (!opt.DataDir.exists()) {
 					throw new Exception("DestinationMovies does not exist");
 				}
-				if (!new File(opt.DestinationTrashMovies).exists() && !new File(opt.DestinationTrashMovies).mkdirs()) {
+				if (!opt.DestinationTrashMovies.exists() && !opt.DestinationTrashMovies.mkdirsSafe()) {
 					throw new Exception("DestinationTrashMovies not found");
 				}
-				if (!new File(opt.DestinationTrashSeries).exists() && !new File(opt.DestinationTrashSeries).mkdirs()) {
+				if (!opt.DestinationTrashSeries.exists() && !opt.DestinationTrashSeries.mkdirsSafe()) {
 					throw new Exception("DestinationTrashSeries not found");
 				}
 
@@ -213,17 +213,17 @@ public class ApplyPatchFrame extends JFrame
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		label1 = new JLabel();
-		edPathPatchfile = new ReadableTextField();
+		edPathPatchfile = new JReadableFSPathTextField();
 		btnChoose = new JButton();
 		label2 = new JLabel();
-		edPathDestMovies = new JTextField();
+		edPathDestMovies = new JFSPathTextField();
 		label3 = new JLabel();
-		edPathDestSeries = new JTextField();
+		edPathDestSeries = new JFSPathTextField();
 		chkbxSeriesAutoPath = new JCheckBox();
 		label4 = new JLabel();
-		edPathDestTrashMov = new JTextField();
+		edPathDestTrashMov = new JFSPathTextField();
 		label5 = new JLabel();
-		edPathDestTrashSer = new JTextField();
+		edPathDestTrashSer = new JFSPathTextField();
 		btnLoad = new JButton();
 		tableMain = new ActionListTable(this);
 		btnApply = new JButton();
@@ -306,17 +306,17 @@ public class ApplyPatchFrame extends JFrame
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JLabel label1;
-	private ReadableTextField edPathPatchfile;
+	private JReadableFSPathTextField edPathPatchfile;
 	private JButton btnChoose;
 	private JLabel label2;
-	private JTextField edPathDestMovies;
+	private JFSPathTextField edPathDestMovies;
 	private JLabel label3;
-	private JTextField edPathDestSeries;
+	private JFSPathTextField edPathDestSeries;
 	private JCheckBox chkbxSeriesAutoPath;
 	private JLabel label4;
-	private JTextField edPathDestTrashMov;
+	private JFSPathTextField edPathDestTrashMov;
 	private JLabel label5;
-	private JTextField edPathDestTrashSer;
+	private JFSPathTextField edPathDestTrashSer;
 	private JButton btnLoad;
 	private ActionListTable tableMain;
 	private JButton btnApply;

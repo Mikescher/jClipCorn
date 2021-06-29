@@ -5,13 +5,12 @@ import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.FileLockedException;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.FileLockManager;
-import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FileLockManager;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.parser.TurbineParser;
 import org.sqlite.SQLiteException;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -32,27 +31,27 @@ public class SQLiteDatabase extends GenericDatabase {
 		_readonly = ro;
 	}
 
-	public String getDatabaseFilePath(String dbDir, String dbName) {
-		return PathFormatter.combine(dbDir, dbName, dbName + ".db");
+	public FSPath getDatabaseFilePath(FSPath dbDir, String dbName) {
+		return dbDir.append(dbName, dbName + ".db");
 	}
 	
 	@Override
-	public boolean createNewDatabase(String xmlPath, String dbDir, String dbName) {
-		String dbFilePath = getDatabaseFilePath(dbDir, dbName);
+	public boolean createNewDatabase(FSPath xmlPath, FSPath dbDir, String dbName) {
+		var dbFilePath = getDatabaseFilePath(dbDir, dbName);
 		
 		try {
-			if (databaseExists(dbDir, dbName)) throw new FileAlreadyExistsException(dbFilePath);
-			if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath);
-			
-			PathFormatter.createFolders(dbFilePath);
-			
+			if (databaseExists(dbDir, dbName)) throw new FileAlreadyExistsException(dbFilePath.toString());
+			if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath.toString());
+
+			dbFilePath.createFolders();
+
 			if (! FileLockManager.tryLockFile(dbFilePath, true)) {
 				throw new Exception("Cannot lock databasefile");
 			}
 			
 			establishDBConnection(dbDir, dbName);
 
-			TurbineParser turb = new TurbineParser(SimpleFileUtils.readUTF8TextFile(xmlPath));
+			TurbineParser turb = new TurbineParser(xmlPath.readAsUTF8TextFile());
 			turb.parse();
 			turb.create(this);
 		} catch (Exception e) {
@@ -64,8 +63,8 @@ public class SQLiteDatabase extends GenericDatabase {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbDir, String dbName) {
-		String dbFilePath = getDatabaseFilePath(dbDir, dbName);
+	public boolean createNewDatabasefromResourceXML(String xmlResPath, FSPath dbDir, String dbName) {
+		var dbFilePath = getDatabaseFilePath(dbDir, dbName);
 		
 		try {
 			try {
@@ -74,10 +73,10 @@ public class SQLiteDatabase extends GenericDatabase {
 				CCLog.addError(e);
 			}
 			
-			if (databaseExists(dbDir, dbName)) throw new FileAlreadyExistsException(dbFilePath);
-			if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath);
-			
-			PathFormatter.createFolders(getDatabaseFilePath(dbDir, dbName));
+			if (databaseExists(dbDir, dbName)) throw new FileAlreadyExistsException(dbFilePath.toString());
+			if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath.toString());
+
+			dbFilePath.createFolders();
 			
 			if (! FileLockManager.tryLockFile(dbFilePath, true)) {
 				throw new Exception("Cannot lock databasefile");
@@ -99,12 +98,12 @@ public class SQLiteDatabase extends GenericDatabase {
 	}
 	
 	@Override
-	public boolean databaseExists(String dbDir, String dbName) {
-		return new File(getDatabaseFilePath(dbDir, dbName)).exists();
+	public boolean databaseExists(FSPath dbDir, String dbName) {
+		return getDatabaseFilePath(dbDir, dbName).exists();
 	}
 	
 	@Override
-	public void closeDBConnection(String dbDir, String dbName, boolean cleanshutdown) throws SQLException {
+	public void closeDBConnection(FSPath dbDir, String dbName, boolean cleanshutdown) throws SQLException {
 		boolean unlockresult;
 		try {
 			unlockresult = FileLockManager.unlockFile(getDatabaseFilePath(dbDir, dbName));
@@ -123,8 +122,8 @@ public class SQLiteDatabase extends GenericDatabase {
 	
 	@Override
 	@SuppressWarnings("deprecation")
-	public void establishDBConnection(String dbDir, String dbName) throws Exception {
-		String dbFilePath = getDatabaseFilePath(dbDir, dbName);
+	public void establishDBConnection(FSPath dbDir, String dbName) throws Exception {
+		var dbFilePath = getDatabaseFilePath(dbDir, dbName);
 		
 		try {
 			Class.forName(DRIVER).newInstance();
@@ -132,8 +131,8 @@ public class SQLiteDatabase extends GenericDatabase {
 			CCLog.addError(e);
 		}
 		
-		if (!databaseExists(dbDir, dbName)) throw new FileNotFoundException(dbFilePath);
-		if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath);
+		if (!databaseExists(dbDir, dbName)) throw new FileNotFoundException(dbFilePath.toString());
+		if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath.toString());
 		
 		if (!FileLockManager.tryLockFile(dbFilePath, true)) {
 			throw new Exception("Cannot lock databasefile");

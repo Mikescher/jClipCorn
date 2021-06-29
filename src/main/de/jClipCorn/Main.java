@@ -13,7 +13,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.ResourcePreloadMode;
 import de.jClipCorn.util.DriveMap;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.SwingUtils;
 
 //
@@ -56,7 +56,7 @@ public class Main {
 
 			Globals.TIMINGS.start(Globals.TIMING_INIT_TESTREADONLY);
 			{
-				PathFormatter.testWritePermissions();
+				FilesystemUtils.testWritePermissions();
 			}
 			Globals.TIMINGS.stop(Globals.TIMING_INIT_TESTREADONLY);
 

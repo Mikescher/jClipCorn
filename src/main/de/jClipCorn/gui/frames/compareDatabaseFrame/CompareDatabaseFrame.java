@@ -5,15 +5,16 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
-import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.SimpleFileUtils;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.DoubleProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.stream.CCStreams;
@@ -21,7 +22,6 @@ import de.jClipCorn.util.stream.CCStreams;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.IOException;
 
 public class CompareDatabaseFrame extends JFrame
@@ -63,7 +63,7 @@ public class CompareDatabaseFrame extends JFrame
 	{
 		var running = (activeThread != null);
 
-		btnCompare.setEnabled(!running && !Str.isNullOrWhitespace(edDatabasePath.getText()));
+		btnCompare.setEnabled(!running && !edDatabasePath.getPath().isEmpty());
 		btnCreatePatch.setEnabled(!running && currState != null);
 		pnlTabs.setEnabled(!running);
 
@@ -142,11 +142,11 @@ public class CompareDatabaseFrame extends JFrame
 
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+		chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
 
 		if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) { updateUI(); return; }
 
-		edDatabasePath.setText(chooser.getSelectedFile().getAbsolutePath());
+		edDatabasePath.setPath(FSPath.create(chooser.getSelectedFile()));
 		updateUI();
 	}
 
@@ -164,7 +164,7 @@ public class CompareDatabaseFrame extends JFrame
 			{
 				var ruleset = CompareDatabaseRuleset.parse(rulestr);
 
-				currState = CDFWorkerCompare.compare(cb, ruleset, edDatabasePath.getText(), edDatabaseName.getText(), movielist);
+				currState = CDFWorkerCompare.compare(cb, ruleset, edDatabasePath.getPath(), edDatabaseName.getText(), movielist);
 
 				SwingUtils.invokeLater(this::updateUI);
 			}
@@ -201,12 +201,12 @@ public class CompareDatabaseFrame extends JFrame
 		if (state == null) return;
 		if (activeThread != null) return;
 
-		var fchooser = new JFileChooser(edDatabasePath.getText());
+		var fchooser = new JFileChooser(edDatabasePath.getPath().toFile());
 		fchooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
 		if (fchooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) return;
 
-		var dir = fchooser.getSelectedFile().getAbsolutePath();
+		var dir = FSPath.create(fchooser.getSelectedFile());
 
 		var porcelain = cbPorcelain.isSelected(); // no expensive file copies - for testing...
 
@@ -243,7 +243,7 @@ public class CompareDatabaseFrame extends JFrame
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		edDatabasePath = new ReadableTextField();
+		edDatabasePath = new JReadableFSPathTextField();
 		btnOpenDatabase = new JButton();
 		label2 = new JLabel();
 		edDatabaseName = new JTextField();
@@ -406,7 +406,7 @@ public class CompareDatabaseFrame extends JFrame
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	private ReadableTextField edDatabasePath;
+	private JReadableFSPathTextField edDatabasePath;
 	private JButton btnOpenDatabase;
 	private JLabel label2;
 	private JTextField edDatabaseName;

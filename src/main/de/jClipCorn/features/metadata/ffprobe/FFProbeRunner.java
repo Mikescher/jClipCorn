@@ -7,6 +7,7 @@ import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ProcessHelper;
 import de.jClipCorn.util.stream.CCStreams;
@@ -28,7 +29,7 @@ public abstract class FFProbeRunner implements MetadataSource {
 	// https://stackoverflow.com/a/28376817/1761622
 
 	@SuppressWarnings("nls")
-	public FFProbeResult query(String filename) throws IOException, FFProbeQueryException {
+	public FFProbeResult query(FSPath filename) throws IOException, FFProbeQueryException {
 		String ffppath = CCProperties.getInstance().PROP_PLAY_FFPROBE_PATH.getValue();
 
 		File ffpfile = new File(ffppath);
@@ -96,7 +97,7 @@ public abstract class FFProbeRunner implements MetadataSource {
 		}
 	}
 
-	protected abstract String[] getArgs(String filename);
+	protected abstract String[] getArgs(FSPath filename);
 
 	private static String getStr(JSONObject obj, String key) {
 		if (obj == null) return Str.Empty;
@@ -155,12 +156,12 @@ public abstract class FFProbeRunner implements MetadataSource {
 	}
 
 	@Override
-	public PartialMediaInfo run(String filename) throws IOException, MetadataQueryException {
+	public PartialMediaInfo run(FSPath filename) throws IOException, MetadataQueryException {
 		return query(filename).toPartial();
 	}
 
 	@Override
-	public String getFullOutput(String filename, PartialMediaInfo result) throws IOException, MetadataQueryException {
+	public String getFullOutput(FSPath filename, PartialMediaInfo result) throws IOException, MetadataQueryException {
 		return result.RawOutput.orElse(Str.Empty);
 	}
 

@@ -1,8 +1,12 @@
 package de.jClipCorn.util.parser;
 
-import java.util.Map;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
+import de.jClipCorn.util.filesystem.FSPath;
 
-import de.jClipCorn.database.databaseElement.columnTypes.*;
+import java.util.Map;
 
 public class FilenameParserResult {
 	public final CCMovieZyklus Zyklus;
@@ -13,9 +17,9 @@ public class FilenameParserResult {
 	
 	public final CCGroupList Groups;
 
-	public final Map<Integer, String> AdditionalFiles;
+	public final Map<Integer, FSPath> AdditionalFiles;
 		
-	public FilenameParserResult(CCMovieZyklus z, String t, CCDBLanguageList l, CCFileFormat f, CCGroupList g, Map<Integer, String> a) {
+	public FilenameParserResult(CCMovieZyklus z, String t, CCDBLanguageList l, CCFileFormat f, CCGroupList g, Map<Integer, FSPath> a) {
 		this.Zyklus = z;
 		this.Title = t;
 		this.Groups = g;

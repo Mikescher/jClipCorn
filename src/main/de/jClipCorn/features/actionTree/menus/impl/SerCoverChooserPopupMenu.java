@@ -9,15 +9,14 @@ import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 
 public class SerCoverChooserPopupMenu extends ClipPopupMenu {
@@ -89,17 +88,17 @@ public class SerCoverChooserPopupMenu extends ClipPopupMenu {
 
 		if (fc.showSaveDialog(SerCoverChooserPopupMenu.this) == JFileChooser.APPROVE_OPTION) {
 			FileFilter choosen = fc.getFileFilter();
-			String path = fc.getSelectedFile().getAbsolutePath();
+			var path = FSPath.create(fc.getSelectedFile());
 			String format = ""; //$NON-NLS-1$
 
 			if (choosen.equals(filterPng)) format = "png"; //$NON-NLS-1$
 			if (choosen.equals(filterJpg)) format = "jpg"; //$NON-NLS-1$
 			if (choosen.equals(filterBmp)) format = "bmp"; //$NON-NLS-1$
 
-			path = PathFormatter.forceExtension(path, format);
+			path = path.forceExtension(format);
 
 			try {
-				ImageIO.write(season.getCover(), format, new File(path));
+				ImageIO.write(season.getCover(), format, path.toFile());
 			} catch (IOException e) {
 				CCLog.addError(e);
 			}

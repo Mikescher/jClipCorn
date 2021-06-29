@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement.datapacks;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.filesystem.CCPath;
 
 public class EpisodeDataPack implements IEpisodeData 
 {
@@ -10,7 +11,7 @@ public class EpisodeDataPack implements IEpisodeData
 	private final int length;
 	private final CCFileFormat format;
 	private final CCFileSize filesize;
-	private final String part;
+	private final CCPath part;
 	private final CCDate addDate;
 	private final CCDateTimeList viewedHistory;
 	private final CCTagList tags;
@@ -18,7 +19,8 @@ public class EpisodeDataPack implements IEpisodeData
 	private final CCMediaInfo mediaInfo;
 
 	public EpisodeDataPack(int episodeNumber, String title, int length,
-						   CCFileFormat format, CCFileSize filesize, String part,
+						   CCFileFormat format, CCFileSize filesize,
+						   CCPath part,
 						   CCDate addDate, CCDateTimeList viewedHistory,
 						   CCTagList tags, CCDBLanguageList language, CCMediaInfo mediaInfo)
 	{
@@ -45,7 +47,7 @@ public class EpisodeDataPack implements IEpisodeData
 
 	@Override public CCFileSize getFilesize() { return filesize; }
 
-	@Override public String getPart() { return part; }
+	@Override public CCPath getPart() { return part; }
 
 	@Override public CCDate getAddDate() { return addDate; }
 

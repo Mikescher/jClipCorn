@@ -18,13 +18,14 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -460,19 +461,19 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		}
 	}
 	
-	public List<File> getAbsolutePathList() {
-		List<File> result = new ArrayList<>();
+	public List<FSPath> getAbsolutePathList() {
+		List<FSPath> result = new ArrayList<>();
 		
 		for (int i = 0; i < episodes.size(); i++) {
-			result.add(new File(getEpisodeByArrayIndex(i).getAbsolutePart()));
+			result.add(getEpisodeByArrayIndex(i).getPart().toFSPath());
 		}
 		
 		return result;
 	}
 	
-	public boolean isFileInList(String path) {
+	public boolean isFileInList(FSPath path) {
 		for (int i = 0; i < episodes.size(); i++) {
-			if (getEpisodeByArrayIndex(i).getAbsolutePart().equals(path)) {
+			if (getEpisodeByArrayIndex(i).Part.get().toFSPath().equalsOnFilesystem(path)) {
 				return true;
 			}
 		}
@@ -507,24 +508,23 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		return Title.get();
 	}
 
-	public String getCommonPathStart() {
+	public CCPath getCommonPathStart() {
 		return _cache.get(SeasonCache.COMMON_PATH_START, null, sea->
 		{
-			List<String> all = new ArrayList<>();
+			List<CCPath> all = new ArrayList<>();
 
 			for (int seasi = 0; seasi < getEpisodeCount(); seasi++) {
 				CCEpisode episode = getEpisodeByArrayIndex(seasi);
-				all.add(episode.Part.get());
+				var p = episode.Part.get();
+				if (!p.isEmpty()) all.add(p);
 			}
 
-			while (all.contains("")) all.remove(""); //$NON-NLS-1$ //$NON-NLS-2$
-
-			return PathFormatter.getCommonFolderPath(all);
+			return CCPath.getCommonPath(all);
 		});
 	}
 	
 	public String getFolderNameForCreatedFolderStructure() {
-		return PathFormatter.fixStringToFilesystemname(Title.get());
+		return FilesystemUtils.fixStringToFilesystemname(Title.get());
 	}
 
 	public int getIndexForCreatedFolderStructure() {
@@ -620,16 +620,10 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		return CCStreams.iterate(episodes);
 	}
 
-	public File getFileForCreatedFolderstructure(File parentfolder, String title, int episodeNumber, CCFileFormat format, CCDBLanguageList fallbackLanguage) {
-		if (! parentfolder.isDirectory()) {
-			return null; // meehp
-		}
+	public FSPath getPathForCreatedFolderstructure(FSPath parentfolder, String title, int episodeNumber, CCFileFormat format, CCDBLanguageList fallbackLanguage) {
+		if (! parentfolder.isDirectory()) return null; // meehp
 
-		String parent = PathFormatter.appendSeparator(parentfolder.getAbsolutePath());
-
-		String path = parent + getRelativeFileForCreatedFolderstructure(title, episodeNumber, format, fallbackLanguage);
-
-		return new File(path);
+		return parentfolder.append(getRelativeFileForCreatedFolderstructure(title, episodeNumber, format, fallbackLanguage));
 	}
 
 	@SuppressWarnings("nls")
@@ -640,9 +634,9 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		String seasonfoldername = getFolderNameForCreatedFolderStructure();
 		int seasonIndex = getIndexForCreatedFolderStructure();
 
-		String filename = PathFormatter.fixStringToFilesystemname(String.format("S%sE%s - %s.%s", decFormattter.format(seasonIndex), decFormattter.format(episodeNumber), Str.limit(title, 128), format.asString()));
+		String filename = FilesystemUtils.fixStringToFilesystemname(String.format("S%sE%s - %s.%s", decFormattter.format(seasonIndex), decFormattter.format(episodeNumber), Str.limit(title, 128), format.asString()));
 
-		return PathFormatter.combine(seriesfoldername, seasonfoldername, filename);
+		return FilesystemUtils.combineWithFSPathSeparator(seriesfoldername, seasonfoldername, filename);
 	}
 
 

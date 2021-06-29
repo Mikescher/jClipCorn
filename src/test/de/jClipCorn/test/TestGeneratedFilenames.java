@@ -1,7 +1,7 @@
 package de.jClipCorn.test;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.PathFormatter;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

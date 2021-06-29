@@ -33,7 +33,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_INVALID_SERIES_STRUCTURE           = new DatabaseErrorType(26, null);
 	public final static DatabaseErrorType ERROR_IMPOSSIBLE_WATCH_NEVER             = new DatabaseErrorType(27, DatabaseAutofixer::fixError_Impossible_WatchNever);
 	public final static DatabaseErrorType ERROR_DUPLICATE_GENRE                    = new DatabaseErrorType(28, DatabaseAutofixer::fixError_Duplicate_Genre);
-	public final static DatabaseErrorType ERROR_INVALID_CHARS_IN_PATH              = new DatabaseErrorType(29, DatabaseAutofixer::fixError_Invalid_Chars);
+	public final static DatabaseErrorType ERROR_INVALID_CHARS_IN_PATH              = new DatabaseErrorType(29, null);
 	public final static DatabaseErrorType ERROR_INVALID_ONLINEREF                  = new DatabaseErrorType(30, null);
 	//public final static DatabaseErrorType ERROR_SERIES_HAS_HISTORY               = new DatabaseErrorType(31);
 	public final static DatabaseErrorType ERROR_HISTORY_BUT_UNVIEWED               = new DatabaseErrorType(32, null);

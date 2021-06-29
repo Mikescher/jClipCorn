@@ -2,32 +2,32 @@ package de.jClipCorn.database.elementProps.packs;
 
 import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.IPropertyParent;
+import de.jClipCorn.database.elementProps.impl.ECCPathProp;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
-import de.jClipCorn.database.elementProps.impl.EStringProp;
-import de.jClipCorn.util.Str;
+import de.jClipCorn.util.filesystem.CCPath;
 
 public class EPartArrayPropPack {
 	public final static int PARTCOUNT_MAX = 6; // 0 .. 5
 
-	public final EStringProp Part0;
-	public final EStringProp Part1;
-	public final EStringProp Part2;
-	public final EStringProp Part3;
-	public final EStringProp Part4;
-	public final EStringProp Part5;
+	public final ECCPathProp Part0;
+	public final ECCPathProp Part1;
+	public final ECCPathProp Part2;
+	public final ECCPathProp Part3;
+	public final ECCPathProp Part4;
+	public final ECCPathProp Part5;
 
-	private String[] _cache = null;
+	private CCPath[] _cache = null;
 	private IEProperty[] _properties = null;
 	private boolean _ignoreCacheUpdates = false;
 
-	public EPartArrayPropPack(String namePrefix, String[] _startValue, IPropertyParent parent, EPropertyType proptype)
+	public EPartArrayPropPack(String namePrefix, CCPath _startValue, IPropertyParent parent, EPropertyType proptype)
 	{
-		Part0 = new EStringProp(namePrefix + "[0]", Str.Empty, parent, proptype);
-		Part1 = new EStringProp(namePrefix + "[1]", Str.Empty, parent, proptype);
-		Part2 = new EStringProp(namePrefix + "[2]", Str.Empty, parent, proptype);
-		Part3 = new EStringProp(namePrefix + "[3]", Str.Empty, parent, proptype);
-		Part4 = new EStringProp(namePrefix + "[4]", Str.Empty, parent, proptype);
-		Part5 = new EStringProp(namePrefix + "[5]", Str.Empty, parent, proptype);
+		Part0 = new ECCPathProp(namePrefix + "[0]", _startValue, parent, proptype);
+		Part1 = new ECCPathProp(namePrefix + "[1]", _startValue, parent, proptype);
+		Part2 = new ECCPathProp(namePrefix + "[2]", _startValue, parent, proptype);
+		Part3 = new ECCPathProp(namePrefix + "[3]", _startValue, parent, proptype);
+		Part4 = new ECCPathProp(namePrefix + "[4]", _startValue, parent, proptype);
+		Part5 = new ECCPathProp(namePrefix + "[5]", _startValue, parent, proptype);
 
 		Part0.addChangeListener((_1, _2, _3) -> updateCache());
 		Part1.addChangeListener((_1, _2, _3) -> updateCache());
@@ -42,7 +42,7 @@ public class EPartArrayPropPack {
 	private void updateCache() {
 		if (_ignoreCacheUpdates) return;
 
-		_cache = new String[]
+		_cache = new CCPath[]
 		{
 			Part0.get(),
 			Part1.get(),
@@ -53,11 +53,11 @@ public class EPartArrayPropPack {
 		};
 	}
 
-	public String[] getAsArray() {
+	public CCPath[] getAsArray() {
 		return _cache;
 	}
 
-	public String get(int idx) {
+	public CCPath get(int idx) {
 		return getAsArray()[idx];
 	}
 
@@ -80,10 +80,10 @@ public class EPartArrayPropPack {
 	}
 
 	public void reset(int idx) {
-		set(idx, Str.Empty);
+		set(idx, CCPath.Empty);
 	}
 
-	public void set(int idx, String v) {
+	public void set(int idx, CCPath v) {
 		switch (idx) {
 			case 0: Part0.set(v); break;
 			case 1: Part1.set(v); break;
@@ -96,7 +96,7 @@ public class EPartArrayPropPack {
 		}
 	}
 
-	public void set(String p0, String p1, String p2, String p3, String p4, String p5) {
+	public void set(CCPath p0, CCPath p1, CCPath p2, CCPath p3, CCPath p4, CCPath p5) {
 		try
 		{
 			_ignoreCacheUpdates = true;

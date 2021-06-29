@@ -2,6 +2,7 @@ package de.jClipCorn.database.driver;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.filesystem.FSPath;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.ddlutils.Platform;
 import org.apache.ddlutils.PlatformFactory;
@@ -40,12 +41,12 @@ public class DerbyDatabase extends GenericDatabase {
 	}
 
 	//@Override
-	public String getDatabasePath(String dbPath) {
+	public String getDatabasePath(FSPath dbPath) {
 		return PROTOCOL + dbPath;
 	}
 	
 	@Override
-	public boolean createNewDatabase(String xmlPath, String dbDir, String dbName) {
+	public boolean createNewDatabase(FSPath xmlPath, FSPath dbDir, String dbName) {
 		try {
 			parseXML(xmlPath);
 			
@@ -64,7 +65,7 @@ public class DerbyDatabase extends GenericDatabase {
 	}
 
 	@Override
-	public boolean createNewDatabasefromResourceXML(String xmlResPath, String dbDir, String dbName) {
+	public boolean createNewDatabasefromResourceXML(String xmlResPath, FSPath dbDir, String dbName) {
 		try {
 			parseXMLfromResource(xmlResPath);
 			
@@ -83,13 +84,12 @@ public class DerbyDatabase extends GenericDatabase {
 	}
 	
 	@Override
-	public boolean databaseExists(String dbDir, String dbName) {
-		File f = new File(dbDir);
-		return f.exists() && f.isDirectory();
+	public boolean databaseExists(FSPath dbDir, String dbName) {
+		return dbDir.directoryExists();
 	}
 	
 	@Override
-	public void closeDBConnection(String dbDir, String dbName, boolean cleanshutdown) throws SQLException {
+	public void closeDBConnection(FSPath dbDir, String dbName, boolean cleanshutdown) throws SQLException {
 		connection.close();
 
 		try {
@@ -108,7 +108,7 @@ public class DerbyDatabase extends GenericDatabase {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public void establishDBConnection(String dbDir, String dbName) throws SQLException {
+	public void establishDBConnection(FSPath dbDir, String dbName) throws SQLException {
 		try {
 			Class.forName(DRIVER).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -136,8 +136,8 @@ public class DerbyDatabase extends GenericDatabase {
 	 * parses the structure from an XML-File
 	 * @param xmlPath Path to the descriptive XML-File
 	 */
-	protected void parseXML(String xmlPath) {
-		structure = new DatabaseIO().read(xmlPath);
+	protected void parseXML(FSPath xmlPath) {
+		structure = new DatabaseIO().read(xmlPath.toFile());
 	}
 	
 	/**

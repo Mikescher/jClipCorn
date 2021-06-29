@@ -7,7 +7,7 @@ import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.features.serialization.xmlexport.impl.DatabaseXMLExporterImpl;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
 import org.jdom2.Document;
@@ -15,29 +15,25 @@ import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class CDFWorkerPatch
 {
 	@SuppressWarnings("nls")
-	public static void createPatch(CompareState state, String dir, DoubleProgressCallbackListener cb, boolean porcelain) throws Exception
+	public static void createPatch(CompareState state, FSPath dir, DoubleProgressCallbackListener cb, boolean porcelain) throws Exception
 	{
-		var fdir = new File(dir);
+		if (!dir.exists()) throw new Exception("Target directory not found");
+		if (!dir.isDirectory()) throw new Exception("Target directory not found");
 
-		if (!fdir.exists()) throw new Exception("Target directory not found");
-		if (!fdir.isDirectory()) throw new Exception("Target directory not found");
+		var datadir = dir.append("patch_data");
+		if (!datadir.exists() && !datadir.mkdirsSafe()) throw new Exception("Target directory could not be created");
 
-		var datadir = new File(PathFormatter.combine(dir, "patch_data"));
-		if (!datadir.exists() && !datadir.mkdirs()) throw new Exception("Target directory could not be created");
+		if (dir.append("patch." + ExportHelper.EXTENSION_PATCHFILE).exists()) throw new Exception("Target directory not empty");
 
-		if (new File(PathFormatter.combine(dir, "patch." + ExportHelper.EXTENSION_PATCHFILE)).exists()) throw new Exception("Target directory not empty");
-
-		var subfiles = datadir.listFiles();
-		if (subfiles == null || subfiles.length > 0) throw new Exception("Target directory not empty");
+		var subfiles = datadir.list().toList();
+		if (subfiles == null || subfiles.size() > 0) throw new Exception("Target directory not empty");
 
 		cb.setMaxAndResetValueBoth(5, 1);
 
@@ -64,13 +60,13 @@ public class CDFWorkerPatch
 
 
 		XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
-		try(var fw = new FileWriter(PathFormatter.combine(dir, "patch." + ExportHelper.EXTENSION_PATCHFILE))){
+		try(var fw = new FileWriter(dir.append("patch." + ExportHelper.EXTENSION_PATCHFILE).toFile())){
 			xmlOut.output(xml, fw);
 		}
 	}
 
 	@SuppressWarnings("nls")
-	private static int exportMovies(CompareState state, File datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, int ctr) throws IOException
+	private static int exportMovies(CompareState state, FSPath datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, int ctr) throws IOException
 	{
 		var elements = CCStreams.iterate(state.Movies).filter(ComparisonMatch::getNeedsAnything).toList();
 		cb.setSubMax(elements.size()+1);
@@ -107,9 +103,9 @@ public class CDFWorkerPatch
 				{
 					var coverdata = e.MovieLocal.getCoverInfo();
 
-					var source = Paths.get(e.MovieLocal.getMovieList().getCoverCache().getFilepath(coverdata));
-					var newfilename = "c_" + e.MovieLocal.CoverID.get() + "." + PathFormatter.getExtension(source.toString());
-					var target = Paths.get(PathFormatter.combine(datadir.getAbsolutePath(), newfilename));
+					var source = e.MovieLocal.getMovieList().getCoverCache().getFilepath(coverdata);
+					var newfilename = "c_" + e.MovieLocal.CoverID.get() + "." + source.getExtension();
+					var target = datadir.append(newfilename);
 
 					var cmd1 = new Element("replacecover");
 					cmd1.setAttribute("ctr", "1");
@@ -120,18 +116,18 @@ public class CDFWorkerPatch
 					xaction.addContent(cmd1);
 
 					if (porcelain) {
-						Files.createFile(target);
+						Files.createFile(target.toPath());
 					} else {
-						Files.copy(source, target);
+						Files.copy(source.toPath(), target.toPath());
 					}
 				}
 
 				{
 					for (int i = 0; i < e.MovieLocal.getPartcount(); i++)
 					{
-						var source = Paths.get(e.MovieLocal.getAbsolutePart(i));
-						var newfilename = "m_" + e.MovieLocal.LocalID.get() + "_" + i + "." + PathFormatter.getExtension(source.toString());
-						var target = Paths.get(PathFormatter.combine(datadir.getAbsolutePath(), newfilename));
+						var source = e.MovieLocal.Parts.get(i).toFSPath();
+						var newfilename = "m_" + e.MovieLocal.LocalID.get() + "_" + i + "." + source.getExtension();
+						var target = datadir.append(newfilename);
 
 						var cmd = new Element("copyvideo");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
@@ -139,13 +135,13 @@ public class CDFWorkerPatch
 						cmd.setAttribute("id", idvar);
 						cmd.setAttribute("index", String.valueOf(i));
 						cmd.setAttribute("source", newfilename);
-						cmd.setAttribute("filename", PathFormatter.getFilenameWithExt(source.toString()));
+						cmd.setAttribute("filename", source.getFilenameWithExt());
 						xaction.addContent(cmd);
 
 						if (porcelain) {
-							Files.createFile(target);
+							Files.createFile(target.toPath());
 						} else {
-							Files.copy(source, target);
+							Files.copy(source.toPath(), target.toPath());
 						}
 					}
 
@@ -223,9 +219,9 @@ public class CDFWorkerPatch
 
 					var coverdata = e.MovieLocal.getCoverInfo();
 
-					var source = Paths.get(e.MovieLocal.getMovieList().getCoverCache().getFilepath(coverdata));
-					var newfilename = "c_" + e.MovieLocal.CoverID.get() + "." + PathFormatter.getExtension(source.toString());
-					var target = Paths.get(PathFormatter.combine(datadir.getAbsolutePath(), newfilename));
+					var source = e.MovieLocal.getMovieList().getCoverCache().getFilepath(coverdata);
+					var newfilename = "c_" + e.MovieLocal.CoverID.get() + "." + source.getExtension();
+					var target = datadir.append(newfilename);
 
 					var innerctr = 1;
 
@@ -238,9 +234,9 @@ public class CDFWorkerPatch
 					xaction.addContent(cmd1);
 
 					if (porcelain) {
-						Files.createFile(target);
+						Files.createFile(target.toPath());
 					} else {
-						Files.copy(source, target);
+						Files.copy(source.toPath(), target.toPath());
 					}
 				}
 				if (e.getNeedsUpdateFile())
@@ -264,9 +260,9 @@ public class CDFWorkerPatch
 
 					for (int i = 0; i < e.MovieLocal.getPartcount(); i++)
 					{
-						var source = Paths.get(e.MovieLocal.getAbsolutePart(i));
-						var newfilename = "m_" + e.MovieLocal.LocalID.get() + "_" + i + "." + PathFormatter.getExtension(source.toString());
-						var target = Paths.get(PathFormatter.combine(datadir.getAbsolutePath(), newfilename));
+						var source = e.MovieLocal.Parts.get(i).toFSPath();
+						var newfilename = "m_" + e.MovieLocal.LocalID.get() + "_" + i + "." + source.getExtension();
+						var target = datadir.append(newfilename);
 
 						var cmd = new Element("copyvideo");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
@@ -274,13 +270,13 @@ public class CDFWorkerPatch
 						cmd.setAttribute("id", String.valueOf(e.MovieExtern.getLocalID()));
 						cmd.setAttribute("index", String.valueOf(i));
 						cmd.setAttribute("source", newfilename);
-						cmd.setAttribute("filename", PathFormatter.getFilenameWithExt(source.toString()));
+						cmd.setAttribute("filename", source.getFilenameWithExt());
 						xaction.addContent(cmd);
 
 						if (porcelain) {
-							Files.createFile(target);
+							Files.createFile(target.toPath());
 						} else {
-							Files.copy(source, target);
+							Files.copy(source.toPath(), target.toPath());
 						}
 					}
 
@@ -313,7 +309,7 @@ public class CDFWorkerPatch
 	}
 
 	@SuppressWarnings("nls")
-	private static int exportSeries(CompareState state, File datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, int ctr) throws IOException
+	private static int exportSeries(CompareState state, FSPath datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, int ctr) throws IOException
 	{
 		var elements = CCStreams.iterate(state.Series).filter(ComparisonMatch::getNeedsAnything).toList();
 		cb.setSubMax(elements.size()+1);
@@ -350,9 +346,9 @@ public class CDFWorkerPatch
 				{
 					var coverdata = e.SeriesLocal.getCoverInfo();
 
-					var source = Paths.get(e.SeriesLocal.getMovieList().getCoverCache().getFilepath(coverdata));
-					var newfilename = "c_" + e.SeriesLocal.CoverID.get() + "." + PathFormatter.getExtension(source.toString());
-					var target = Paths.get(PathFormatter.combine(datadir.getAbsolutePath(), newfilename));
+					var source = e.SeriesLocal.getMovieList().getCoverCache().getFilepath(coverdata);
+					var newfilename = "c_" + e.SeriesLocal.CoverID.get() + "." + source.getExtension();
+					var target = datadir.append(newfilename);
 
 					var cmd1 = new Element("replacecover");
 					cmd1.setAttribute("ctr", "1");
@@ -363,9 +359,9 @@ public class CDFWorkerPatch
 					xaction.addContent(cmd1);
 
 					if (porcelain) {
-						Files.createFile(target);
+						Files.createFile(target.toPath());
 					} else {
-						Files.copy(source, target);
+						Files.copy(source.toPath(), target.toPath());
 					}
 				}
 
@@ -437,9 +433,9 @@ public class CDFWorkerPatch
 
 					var coverdata = e.SeriesLocal.getCoverInfo();
 
-					var source = Paths.get(e.SeriesLocal.getMovieList().getCoverCache().getFilepath(coverdata));
-					var newfilename = "c_" + e.SeriesLocal.CoverID.get() + "." + PathFormatter.getExtension(source.toString());
-					var target = Paths.get(PathFormatter.combine(datadir.getAbsolutePath(), newfilename));
+					var source = e.SeriesLocal.getMovieList().getCoverCache().getFilepath(coverdata);
+					var newfilename = "c_" + e.SeriesLocal.CoverID.get() + "." + source.getExtension();
+					var target = datadir.append(newfilename);
 
 					var innerctr = 1;
 
@@ -452,9 +448,9 @@ public class CDFWorkerPatch
 					xaction.addContent(cmd1);
 
 					if (porcelain) {
-						Files.createFile(target);
+						Files.createFile(target.toPath());
 					} else {
-						Files.copy(source, target);
+						Files.copy(source.toPath(), target.toPath());
 					}
 				}
 			}
@@ -464,7 +460,7 @@ public class CDFWorkerPatch
 	}
 
 	@SuppressWarnings("nls")
-	private static int exportSeasons(CompareState state, File datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, int ctr) throws IOException
+	private static int exportSeasons(CompareState state, FSPath datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, int ctr) throws IOException
 	{
 		var elements = CCStreams.iterate(state.AllSeasons).filter(ComparisonMatch::getNeedsAnything).toList();
 		cb.setSubMax(elements.size()+1);
@@ -504,9 +500,9 @@ public class CDFWorkerPatch
 				{
 					var coverdata = e.SeasonLocal.getCoverInfo();
 
-					var source = Paths.get(e.SeasonLocal.getMovieList().getCoverCache().getFilepath(coverdata));
-					var newfilename = "c_" + e.SeasonLocal.CoverID.get() + "." + PathFormatter.getExtension(source.toString());
-					var target = Paths.get(PathFormatter.combine(datadir.getAbsolutePath(), newfilename));
+					var source = e.SeasonLocal.getMovieList().getCoverCache().getFilepath(coverdata);
+					var newfilename = "c_" + e.SeasonLocal.CoverID.get() + "." + source.getExtension();
+					var target = datadir.append(newfilename);
 
 					var cmd1 = new Element("replacecover");
 					cmd1.setAttribute("ctr", "1");
@@ -517,9 +513,9 @@ public class CDFWorkerPatch
 					xaction.addContent(cmd1);
 
 					if (porcelain) {
-						Files.createFile(target);
+						Files.createFile(target.toPath());
 					} else {
-						Files.copy(source, target);
+						Files.copy(source.toPath(), target.toPath());
 					}
 				}
 			}
@@ -575,9 +571,9 @@ public class CDFWorkerPatch
 
 					var coverdata = e.SeasonLocal.getCoverInfo();
 
-					var source = Paths.get(e.SeasonLocal.getMovieList().getCoverCache().getFilepath(coverdata));
-					var newfilename = "c_" + e.SeasonLocal.CoverID.get() + "." + PathFormatter.getExtension(source.toString());
-					var target = Paths.get(PathFormatter.combine(datadir.getAbsolutePath(), newfilename));
+					var source = e.SeasonLocal.getMovieList().getCoverCache().getFilepath(coverdata);
+					var newfilename = "c_" + e.SeasonLocal.CoverID.get() + "." + source.getExtension();
+					var target = datadir.append(newfilename);
 
 					var innerctr = 1;
 
@@ -590,9 +586,9 @@ public class CDFWorkerPatch
 					xaction.addContent(cmd1);
 
 					if (porcelain) {
-						Files.createFile(target);
+						Files.createFile(target.toPath());
 					} else {
-						Files.copy(source, target);
+						Files.copy(source.toPath(), target.toPath());
 					}
 				}
 			}
@@ -602,7 +598,7 @@ public class CDFWorkerPatch
 	}
 
 	@SuppressWarnings("nls")
-	private static int exportEpisodes(CompareState state, File datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, int ctr) throws IOException
+	private static int exportEpisodes(CompareState state, FSPath datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, int ctr) throws IOException
 	{
 		var elements = CCStreams.iterate(state.AllEpisodes).filter(ComparisonMatch::getNeedsAnything).toList();
 		cb.setSubMax(elements.size()+1);
@@ -641,22 +637,22 @@ public class CDFWorkerPatch
 
 				{
 					{
-						var source = Paths.get(e.EpisodeLocal.getAbsolutePart());
-						var newfilename = "e_" + e.EpisodeLocal.LocalID.get() + "." + PathFormatter.getExtension(source.toString());
-						var target = Paths.get(PathFormatter.combine(datadir.getAbsolutePath(), newfilename));
+						var source = e.EpisodeLocal.getPart().toFSPath();
+						var newfilename = "e_" + e.EpisodeLocal.LocalID.get() + "." + source.getExtension();
+						var target = datadir.append(newfilename);
 
 						var cmd = new Element("copyvideo");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "EPISODE");
 						cmd.setAttribute("id", idvar);
 						cmd.setAttribute("source", newfilename);
-						cmd.setAttribute("filename", PathFormatter.getFilenameWithExt(source.toString()));
+						cmd.setAttribute("filename", source.getFilenameWithExt());
 						xaction.addContent(cmd);
 
 						if (porcelain) {
-							Files.createFile(target);
+							Files.createFile(target.toPath());
 						} else {
-							Files.copy(source, target);
+							Files.copy(source.toPath(), target.toPath());
 						}
 					}
 
@@ -743,22 +739,22 @@ public class CDFWorkerPatch
 					}
 
 					{
-						var source = Paths.get(e.EpisodeLocal.getAbsolutePart());
-						var newfilename = "e_" + e.EpisodeLocal.LocalID.get() + "." + PathFormatter.getExtension(source.toString());
-						var target = Paths.get(PathFormatter.combine(datadir.getAbsolutePath(), newfilename));
+						var source = e.EpisodeLocal.getPart().toFSPath();
+						var newfilename = "e_" + e.EpisodeLocal.LocalID.get() + "." + source.getExtension();
+						var target = datadir.append(newfilename);
 
 						var cmd = new Element("copyvideo");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "EPISODE");
 						cmd.setAttribute("id", String.valueOf(e.EpisodeExtern.getLocalID()));
 						cmd.setAttribute("source", newfilename);
-						cmd.setAttribute("filename", PathFormatter.getFilenameWithExt(source.toString()));
+						cmd.setAttribute("filename", source.getFilenameWithExt());
 						xaction.addContent(cmd);
 
 						if (porcelain) {
-							Files.createFile(target);
+							Files.createFile(target.toPath());
 						} else {
-							Files.copy(source, target);
+							Files.copy(source.toPath(), target.toPath());
 						}
 					}
 

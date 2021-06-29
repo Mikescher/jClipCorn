@@ -3,6 +3,7 @@ package de.jClipCorn.database.driver;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.sqlwrapper.StatementType;
 
@@ -53,17 +54,17 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 
 	}
 
-	public abstract boolean createNewDatabase(String xmlPath, String dbDir, String dbName);
+	public abstract boolean createNewDatabase(FSPath xmlPath, FSPath dbDir, String dbName);
 
-	public abstract boolean createNewDatabasefromResourceXML(String xmlResPath, String dbDir, String dbName);
+	public abstract boolean createNewDatabasefromResourceXML(String xmlResPath, FSPath dbDir, String dbName);
 
 	public abstract boolean supportsDateType();
 
-	public abstract void establishDBConnection(String dbDir, String dbName) throws Exception;
+	public abstract void establishDBConnection(FSPath dbDir, String dbName) throws Exception;
 	
-	public abstract void closeDBConnection(String dbDir, String dbName, boolean cleanshutdown) throws SQLException;
+	public abstract void closeDBConnection(FSPath dbDir, String dbName, boolean cleanshutdown) throws SQLException;
 
-	public abstract boolean databaseExists(String dbDir, String dbName);
+	public abstract boolean databaseExists(FSPath dbDir, String dbName);
 
 	public List<String> getAllTables(String type) throws SQLException {
 		List<String> result = new ArrayList<>();

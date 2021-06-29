@@ -7,17 +7,17 @@ import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.stream.CCStreams;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NewEpisodeVM implements IEpisodeData {
 
-	public String SourcePath = Str.Empty;
-	public String TargetPath = Str.Empty;
+	public FSPath SourcePath = FSPath.Empty;
+	public CCPath TargetPath = CCPath.Empty;
 
 	public boolean IsValid = false;
 	public String Problems = Str.Empty;
@@ -31,7 +31,7 @@ public class NewEpisodeVM implements IEpisodeData {
 	public boolean NoMove = false;
 
 	public MediaQueryResult MediaQueryResult = null;
-	public String TargetRoot = null;
+	public FSPath TargetRoot = FSPath.Empty;
 
 	// -------- -------- -------- -------- -------- -------- -------- --------
 
@@ -51,35 +51,35 @@ public class NewEpisodeVM implements IEpisodeData {
 
 	@Override public int getLength() { return Length; }
 
-	@Override public CCFileFormat getFormat() { return CCFileFormat.getMovieFormatOrDefault(PathFormatter.getExtension(SourcePath)); }
+	@Override public CCFileFormat getFormat() { return CCFileFormat.getMovieFormatOrDefault(SourcePath.getExtension()); }
 
 	@Override public CCFileSize getFilesize() { return new CCFileSize(Filesize); }
 
-	@Override public String getPart() { return TargetPath; }
+	@Override public CCPath getPart() { return TargetPath; }
 
-	public void updateTarget(CCSeason season, CCDBLanguageList commonLang, String globalSeriesRoot)
+	public void updateTarget(CCSeason season, CCDBLanguageList commonLang, FSPath globalSeriesRoot)
 	{
 		if (NoMove)
 		{
-			TargetPath = PathFormatter.getCCPath(SourcePath);
+			TargetPath = CCPath.createFromFSPath(SourcePath);
 			return;
 		}
 
-		String root = TargetRoot;
-		if (Str.isNullOrWhitespace(root)) root = season.getSeries().guessSeriesRootPath();
-		if (Str.isNullOrWhitespace(root)) root = globalSeriesRoot;
+		var root = TargetRoot;
+		if (root.isEmpty()) root = season.getSeries().guessSeriesRootPath();
+		if (root.isEmpty()) root = globalSeriesRoot;
 
-		if (Str.isNullOrWhitespace(root)) {
-			TargetPath = Str.Empty;
+		if (root.isEmpty()) {
+			TargetPath = CCPath.Empty;
 			return;
 		}
-		File t = season.getFileForCreatedFolderstructure(new File(root), Title, EpisodeNumber, getFormat(), commonLang);
+		var t = season.getPathForCreatedFolderstructure(root, Title, EpisodeNumber, getFormat(), commonLang);
 		if (t == null) {
-			TargetPath = Str.Empty;
+			TargetPath = CCPath.Empty;
 			return;
 		}
 
-		TargetPath = PathFormatter.getCCPath(t.getAbsolutePath());
+		TargetPath = CCPath.createFromFSPath(t);
 	}
 
 	public void validate(CCSeason s)

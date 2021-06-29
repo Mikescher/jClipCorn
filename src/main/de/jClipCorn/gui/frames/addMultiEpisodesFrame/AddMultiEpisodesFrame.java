@@ -17,10 +17,11 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
@@ -37,7 +38,7 @@ public class AddMultiEpisodesFrame extends JFrame
 {
 	private enum CopyMode { KeepFile, Rename, Move, Copy }
 
-	private final String _globalSeriesRoot;
+	private final FSPath _globalSeriesRoot;
 	private final CCSeason target;
 	private final UpdateCallbackListener callback;
 
@@ -67,8 +68,8 @@ public class AddMultiEpisodesFrame extends JFrame
 	{
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 
-		String cPathStart = target.getSeries().getCommonPathStart(true);
-		massVideoFileChooser = new JFileChooser(PathFormatter.fromCCPath(cPathStart));
+		var cPathStart = target.getSeries().getCommonPathStart(true);
+		massVideoFileChooser = new JFileChooser(cPathStart.toFSPath().toFile());
 		massVideoFileChooser.setMultiSelectionEnabled(true);
 		massVideoFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.videoFileChooser.filterDescription", CCFileFormat::isValidMovieFormat)); //$NON-NLS-1$
 		massVideoFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.videoFileChooser.title")); //$NON-NLS-1$
@@ -105,12 +106,12 @@ public class AddMultiEpisodesFrame extends JFrame
 		btnAddMoreFiles.setEnabled(   bb && lsData.getDataCopy().size()>0);
 	}
 
-	private String getCommonFolderPathStart() {
-		List<String> paths = new ArrayList<>();
+	private FSPath getCommonFolderPathStart() {
+		List<FSPath> paths = new ArrayList<>();
 
 		for (NewEpisodeVM vm : lsData.getDataDirect()) paths.add(vm.SourcePath);
 
-		return PathFormatter.fromCCPath(PathFormatter.getCommonFolderPath(paths));
+		return FSPath.getCommonPath(paths);
 	}
 
 	private void setAllEnabled(boolean b) {
@@ -132,14 +133,16 @@ public class AddMultiEpisodesFrame extends JFrame
 
 		int epid = (int)spnFirstEpNumber.getValue();;
 		for (File f : files) {
+			var fp = FSPath.create(f);
+
 			NewEpisodeVM vm  = new NewEpisodeVM();
-			vm.SourcePath    = f.getAbsolutePath();
+			vm.SourcePath    = fp;
 			vm.EpisodeNumber = epid;
 			vm.Length        = 0;
 			vm.Filesize      = f.length();
 			vm.IsValid       = false;
 			vm.Language      = lang;
-			vm.Title         = PathFormatter.getFilename(f.getAbsolutePath());
+			vm.Title         = fp.getFilenameWithoutExt();
 			vm.MediaInfo     = CCMediaInfo.EMPTY;
 
 			vm.updateTarget(target, lang, _globalSeriesRoot);
@@ -173,14 +176,16 @@ public class AddMultiEpisodesFrame extends JFrame
 
 		int epid = (int)spnFirstEpNumber.getValue() + data.size();
 		for (File f : files) {
+			var fp = FSPath.create(f);
+
 			NewEpisodeVM vm  = new NewEpisodeVM();
-			vm.SourcePath    = f.getAbsolutePath();
+			vm.SourcePath    = fp;
 			vm.EpisodeNumber = epid;
 			vm.Length        = 0;
 			vm.Filesize      = f.length();
 			vm.IsValid       = false;
 			vm.Language      = lang;
-			vm.Title         = PathFormatter.getFilename(f.getAbsolutePath());
+			vm.Title         = fp.getFilenameWithoutExt();
 			vm.MediaInfo     = CCMediaInfo.EMPTY;
 
 			vm.updateTarget(target, lang, _globalSeriesRoot);
@@ -505,14 +510,14 @@ public class AddMultiEpisodesFrame extends JFrame
 		JFileChooser vc = new JFileChooser();
 		vc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		vc.setAcceptAllFileFilterUsed(false);
-		String r = target.getSeries().guessSeriesRootPath();
-		if (Str.isNullOrWhitespace(r)) r = _globalSeriesRoot;
-		if (!Str.isNullOrWhitespace(r)) vc.setCurrentDirectory(new File(r));
+		var r = target.getSeries().guessSeriesRootPath();
+		if (FSPath.isNullOrEmpty(r)) r = _globalSeriesRoot;
+		if (!FSPath.isNullOrEmpty(r)) vc.setCurrentDirectory(r.toFile());
 
 		if (vc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
 
 		for (int i = 0; i < data.size(); i++) {
-			data.get(i).TargetRoot = vc.getSelectedFile().getAbsolutePath();
+			data.get(i).TargetRoot = FSPath.create(vc.getSelectedFile());
 			data.get(i).NoMove = false;
 			data.get(i).updateTarget(target, CCDBLanguageList.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
 			data.get(i).validate(target);
@@ -528,7 +533,7 @@ public class AddMultiEpisodesFrame extends JFrame
 		if (data.size() == 0) return;
 
 		for (int i = 0; i < data.size(); i++) {
-			data.get(i).TargetRoot = ""; //$NON-NLS-1$
+			data.get(i).TargetRoot = FSPath.Empty;
 			data.get(i).NoMove = true;
 			data.get(i).updateTarget(target, CCDBLanguageList.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
 			data.get(i).validate(target);
@@ -545,7 +550,7 @@ public class AddMultiEpisodesFrame extends JFrame
 		int num_offset = (int)spnFirstEpNumber.getValue();
 
 		for (int i = 0; i < data.size(); i++) {
-			data.get(i).TargetRoot = ""; //$NON-NLS-1$
+			data.get(i).TargetRoot = FSPath.Empty;
 			data.get(i).EpisodeNumber = i+num_offset;
 			data.get(i).updateTarget(target, CCDBLanguageList.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
 			data.get(i).validate(target);
@@ -603,14 +608,14 @@ public class AddMultiEpisodesFrame extends JFrame
 						SwingUtils.invokeAndWait(() -> progressBar.setValue(fi));
 						i++;
 
-						File srcFile = new File(vm.SourcePath);
-						File dstFile = new File(PathFormatter.fromCCPath(vm.TargetPath));
+						var srcFile = vm.SourcePath;
+						var dstFile = vm.TargetPath.toFSPath();
 
 						if (mode == CopyMode.KeepFile) { dstFile = srcFile; }
 
 						try
 						{
-							FileUtils.forceMkdir(dstFile.getParentFile());
+							FileUtils.forceMkdir(dstFile.getParent().toFile());
 							if (mode == CopyMode.Copy)
 							{
 								SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
@@ -627,18 +632,16 @@ public class AddMultiEpisodesFrame extends JFrame
 									SwingUtils.invokeLater(() -> { progressBar2.setValue(newvalue); progressBar2.setMaximum(100); });
 								});
 
-								if (!PathFormatter.pathEqualsOSAware(srcFile, dstFile))
+								if (!srcFile.equalsOnFilesystem(dstFile))
 								{
-									if (!srcFile.delete())
-										throw new Exception("Delete of '"+srcFile.getAbsolutePath()+"' failed"); //$NON-NLS-1$ //$NON-NLS-2$
+									srcFile.deleteWithException();
 								}
 							}
 							else if (mode == CopyMode.Rename)
 							{
-								if (!PathFormatter.pathEqualsOSAware(srcFile, dstFile))
+								if (!srcFile.equalsOnFilesystem(dstFile))
 								{
-									if (!srcFile.renameTo(dstFile))
-										throw new Exception("Rename of '"+srcFile.getAbsolutePath()+"' to '"+dstFile.getAbsolutePath()+"' failed"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+									srcFile.renameToWithException(dstFile);
 								}
 							}
 							else if (mode == CopyMode.KeepFile)
@@ -664,8 +667,8 @@ public class AddMultiEpisodesFrame extends JFrame
 							dstFile = srcFile;
 						}
 
-						final String final_realImmediatePath = PathFormatter.getCCPath(PathFormatter.combine(dstFile.getParent(), srcFile.getName()));
-						final String final_realTargetPath    = PathFormatter.getCCPath(dstFile.getAbsolutePath());
+						final var final_realImmediatePath = CCPath.createFromFSPath(dstFile.getParent().append(srcFile.getFilenameWithExt()));
+						final var final_realTargetPath    = CCPath.createFromFSPath(dstFile);
 
 						SwingUtils.invokeAndWait(() ->
 						{

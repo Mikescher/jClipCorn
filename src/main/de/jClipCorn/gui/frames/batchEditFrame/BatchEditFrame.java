@@ -14,9 +14,10 @@ import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.omniParserFrame.OmniParserFrame;
-import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
-import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.JMediaInfoButton;
+import de.jClipCorn.gui.guiComponents.JReadableCCPathTextField;
+import de.jClipCorn.gui.guiComponents.TagPanel;
 import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
@@ -31,10 +32,11 @@ import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.FileChooserHelper;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
@@ -69,10 +71,10 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		this.listener = ucl;
 		this.data = (eps!= null) ? CCStreams.iterate(eps).map(BatchEditEpisodeData::new).enumerate() : ss.iteratorEpisodes().map(BatchEditEpisodeData::new).enumerate();
 
-		String cPathStart = ss.getSeries().getCommonPathStart(true);
+		var cPathStart = ss.getSeries().getCommonPathStart(true);
 
-		this.videoFileChooser     = new JFileChooser(PathFormatter.fromCCPath(cPathStart));
-		this.massVideoFileChooser = new JFileChooser(PathFormatter.fromCCPath(cPathStart));
+		this.videoFileChooser     = new JFileChooser(cPathStart.toFSPath().toFile());
+		this.massVideoFileChooser = new JFileChooser(cPathStart.toFSPath().toFile());
 
 		initComponents();
 		postInit();
@@ -136,14 +138,14 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	}
 
 	private void showCodecMetadata() {
-		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
 
 		try {
-			String dat = MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edPart.getText()));
+			String dat = MediaQueryRunner.queryRaw(edPart.getPath().toFSPath());
 
 			GenericTextDialog.showText(this, getTitle(), dat, false);
 		} catch (IOException | MediaQueryException e) {
@@ -152,8 +154,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	}
 
 	private void recalcFilesize() {
-		String part = edPart.getText();
-		part = PathFormatter.fromCCPath(part);
+		var part = edPart.getPath().toFSPath();
 		long fs = FileSizeFormatter.getFileSize(part);
 
 		if (fs > 0) {
@@ -174,7 +175,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			return;
 		}
 
-		setFilepath(videoFileChooser.getSelectedFile().getAbsolutePath());
+		setFilepath(FSPath.create(videoFileChooser.getSelectedFile()));
 
 		recalcFilesize();
 
@@ -182,34 +183,31 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	}
 
 	private void testPart() {
-		String part = edPart.getText();
-		part = PathFormatter.fromCCPath(part);
+		var part = edPart.getPath().toFSPath();
 
-		if (new File(part).exists()) {
+		if (part.exists()) {
 			edPart.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		} else {
 			edPart.setBackground(Color.RED);
 		}
 	}
 
-	private void setFilepath(String t) {
-		String pt = PathFormatter.getCCPath(t);
-
-		edPart.setText(pt);
+	private void setFilepath(FSPath t) {
+		edPart.setPath(CCPath.createFromFSPath(t));
 		edPart.setCaretPosition(0);
 
 		updateFilesizeDisplay();
 	}
 
 	private void parseCodecMetadata_Lang() {
-		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edPart.getText()), false);
+			MediaQueryResult dat = MediaQueryRunner.query(edPart.getPath().toFSPath(), false);
 
 			if (dat.AudioLanguages == null) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
@@ -230,14 +228,14 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	}
 
 	private void parseCodecMetadata_MediaInfo() {
-		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edPart.getText()), true);
+			MediaQueryResult dat = MediaQueryRunner.query(edPart.getPath().toFSPath(), true);
 			CCMediaInfo minfo = dat.toMediaInfo();
 
 			ctrlMediaInfo.setValue(minfo);
@@ -247,14 +245,14 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	}
 
 	private void parseCodecMetadata_Len() {
-		String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edPart.getText()), true);
+			MediaQueryResult dat = MediaQueryRunner.query(edPart.getPath().toFSPath(), true);
 
 			int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
 			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
@@ -297,7 +295,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		episode.tags          = ctrlTags.getValue();
 		episode.filesize      = (new CCFileSize((long) spnSize.getValue()));
 		episode.addDate       = (spnAddDate.getValue());
-		episode.part          = (edPart.getText());
+		episode.part          = (edPart.getPath());
 		episode.language      = (ctrlLang.getValue());
 		episode.mediaInfo     = (ctrlMediaInfo.getValue());
 		episode.viewedHistory = (ctrlHistory.getValue());
@@ -336,7 +334,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			(int) spnEpisode.getValue(),
 			cbxFormat.getSelectedEnum(),
 			new CCFileSize((long) spnSize.getValue()),
-			edPart.getText(),
+			edPart.getPath(),
 			spnAddDate.getValue(),
 			CCDateTimeList.createEmpty(),
 			ctrlTags.getValue(),
@@ -423,7 +421,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 			ctrlTags.setValue(episode.tags);
 			spnSize.setValue(episode.filesize.getBytes());
 			spnAddDate.setValue(episode.addDate);
-			edPart.setText(episode.part);
+			edPart.setPath(episode.part);
 			ctrlLang.setValue(episode.language);
 			ctrlMediaInfo.setValue(episode.mediaInfo);
 			ctrlHistory.setValue(episode.viewedHistory);
@@ -474,14 +472,14 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		return result;
 	}
 
-	private String getCommonFolderPathStart() {
-		List<String> paths = new ArrayList<>();
+	private FSPath getCommonFolderPathStart() {
+		List<FSPath> paths = new ArrayList<>();
 
 		for (int i = 0; i < data.size(); i++) {
-			paths.add(i, data.get(i).part);
+			paths.add(i, data.get(i).part.toFSPath());
 		}
 
-		return PathFormatter.fromCCPath(PathFormatter.getCommonFolderPath(paths));
+		return FSPath.getCommonPath(paths);
 	}
 
 	private void showOmniParser() {
@@ -490,7 +488,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	}
 
 	private File[] ShowPathFromDialogChooser() {
-		var dlg = new JFileChooser(PathFormatter.fromCCPath(target.getSeries().guessSeriesRootPath()));
+		var dlg = new JFileChooser(target.getSeries().guessSeriesRootPath().toFile());
 		dlg.setMultiSelectionEnabled(true);
 
 		int returnval = dlg.showOpenDialog(this);
@@ -516,7 +514,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		cbxFormat = new CCEnumComboBox<>(CCFileFormat.getWrapper());
 		lblDirtyMediaInfo = new JLabel();
 		label4 = new JLabel();
-		ctrlMediaInfo = new JMediaInfoControl(() -> PathFormatter.fromCCPath(edPart.getText()));
+		ctrlMediaInfo = new JMediaInfoControl(() -> edPart.getPath().toFSPath());
 		btnMediaInfo3 = new JMediaInfoButton();
 		lblDirtyLanguage = new JLabel();
 		label5 = new JLabel();
@@ -542,7 +540,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 		btnToday = new JButton();
 		lblDirtyPath = new JLabel();
 		label10 = new JLabel();
-		edPart = new ReadableTextField();
+		edPart = new JReadableCCPathTextField();
 		btnOpen = new JButton();
 		lblDirtyHistory = new JLabel();
 		label11 = new JLabel();
@@ -1281,7 +1279,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 	private JButton btnToday;
 	private JLabel lblDirtyPath;
 	private JLabel label10;
-	private ReadableTextField edPart;
+	private JReadableCCPathTextField edPart;
 	private JButton btnOpen;
 	private JLabel lblDirtyHistory;
 	private JLabel label11;

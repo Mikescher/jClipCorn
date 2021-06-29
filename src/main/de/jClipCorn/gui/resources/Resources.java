@@ -5,7 +5,6 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.reftypes.*;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.formatter.PathFormatter;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.stream.CCStreams;
@@ -478,7 +477,11 @@ public class Resources {
 	}
 
 	private static String get16x16Filename(String s) {
-		return PathFormatter.getWithoutExtension(s) + "_16x16." + PathFormatter.getExtension(s);
+
+		var i1 = s.lastIndexOf('/');
+		var i2 = s.lastIndexOf('.');
+
+		return s.substring(0, i1) + "/" + s.substring(i1+1, i2) + "_16x16" + s.substring(i2);
 	}
 
 	private static SingleIconRef register16x16Icon(String s) {

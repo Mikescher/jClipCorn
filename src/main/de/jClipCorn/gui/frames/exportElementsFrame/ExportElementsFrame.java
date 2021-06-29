@@ -22,9 +22,10 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
+import de.jClipCorn.util.filesystem.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.helper.FileChooserHelper;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
 
 public class ExportElementsFrame extends JFrame {
 	private static final long serialVersionUID = 1568672663044965879L;
@@ -86,7 +87,7 @@ public class ExportElementsFrame extends JFrame {
 		
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jmccexport.description", ExportHelper.EXTENSION_MULTIPLEEXPORT)); //$NON-NLS-1$
-		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+		chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
 
 		int returnval = chooser.showSaveDialog(this);
 

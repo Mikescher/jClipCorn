@@ -9,7 +9,8 @@ import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.ChecksumHelper;
 
 import java.io.File;
@@ -24,7 +25,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Integer> PATH_DELETE_FIRST_CHARS = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = ep.part.substring(param);
+		ep.part = CCPath.create(ep.part.toString().substring(param));
 	});
 
 	public static BatchEditMethod<Integer> TITLE_DELETE_LAST_CHARS = new BatchEditMethod<>((ep, param, opt) ->
@@ -34,7 +35,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Integer> PATH_DELETE_LAST_CHARS = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = ep.part.substring(0, ep.title.length() - param);
+		ep.part = CCPath.create(ep.part.toString().substring(0, ep.title.length() - param));
 	});
 
 	public static BatchEditMethod<Tuple<String, String>> TITLE_STRING_REPLACE = new BatchEditMethod<>((ep, param, opt) ->
@@ -44,7 +45,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Tuple<String, String>> PATH_STRING_REPLACE = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = ep.part.replace(param.Item1, param.Item2);
+		ep.part = CCPath.create(ep.part.toString().replace(param.Item1, param.Item2));
 	});
 
 	public static BatchEditMethod<Tuple<String, String>> TITLE_REGEX_REPLACE = new BatchEditMethod<>((ep, param, opt) ->
@@ -54,7 +55,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Tuple<String, String>> PATH_REGEX_REPLACE = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = ep.part.replaceAll(param.Item1, param.Item2);
+		ep.part = CCPath.create(ep.part.toString().replaceAll(param.Item1, param.Item2));
 	});
 
 	public static BatchEditMethod<Void> TITLE_TRIM = new BatchEditMethod<>((ep, param, opt) ->
@@ -64,7 +65,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> PATH_TRIM = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = ep.part.trim();
+		ep.part = CCPath.create(ep.part.toString().trim());
 	});
 
 	public static BatchEditMethod<String> TITLE_APPEND = new BatchEditMethod<>((ep, param, opt) ->
@@ -74,7 +75,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<String> PATH_APPEND = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = param + ep.part;
+		ep.part = CCPath.create(param + ep.part.toString());
 	});
 
 	public static BatchEditMethod<String> TITLE_PREPEND = new BatchEditMethod<>((ep, param, opt) ->
@@ -84,7 +85,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<String> PATH_PREPEND = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = ep.part + param;
+		ep.part = CCPath.create(ep.part.toString() + param);
 	});
 
 	public static BatchEditMethod<Tuple<Integer, Integer>> TITLE_SUBSTRING_DELETE = new BatchEditMethod<>((ep, param, opt) ->
@@ -100,9 +101,9 @@ public class BatchEditMethods
 	{
 		int start = param.Item1;
 		int end   = param.Item2;
-		String val = ep.part;
+		String val = ep.part.toString();
 		val = val.substring(0, start).concat(val.substring(end));
-		ep.part = val;
+		ep.part = CCPath.create(val);
 	});
 
 	public static BatchEditMethod<String> TITLE_SEARCH_AND_DELETE = new BatchEditMethod<>((ep, param, opt) ->
@@ -112,7 +113,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<String> PATH_SEARCH_AND_DELETE = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = ep.part.replace(param, Str.Empty);
+		ep.part = CCPath.create(ep.part.toString().replace(param, Str.Empty));
 	});
 
 	public static BatchEditMethod<Integer> EPISODEINDEX_ADD = new BatchEditMethod<>((ep, param, opt) ->
@@ -122,8 +123,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> FILESIZE_FROM_FILE = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		File f = new File(PathFormatter.fromCCPath(ep.part));
-		if (f.exists()) ep.filesize = new CCFileSize(f.length());
+		if (ep.part.toFSPath().toFile().exists()) ep.filesize = new CCFileSize(ep.part.toFSPath().toFile().length());
 	});
 
 	public static BatchEditMethod<Void> VIEWED_CLEAR = new BatchEditMethod<>((ep, param, opt) ->
@@ -144,7 +144,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> FORMAT_FROM_FILE = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.format = CCFileFormat.getMovieFormatOrDefault(PathFormatter.getExtension(PathFormatter.fromCCPath(ep.part)));
+		ep.format = CCFileFormat.getMovieFormatOrDefault(ep.part.getExtension());
 	});
 
 	public static BatchEditMethod<CCDBLanguageList> LANGUAGE_SET = new BatchEditMethod<>((ep, param, opt) ->
@@ -155,7 +155,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> LANGUAGE_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.part), false);
+		MediaQueryResult dat = MediaQueryRunner.query(ep.part.toFSPath(), false);
 
 		if (dat.AudioLanguages == null) throw new MediaQueryException("No language in file"); //$NON-NLS-1$
 
@@ -167,7 +167,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> LENGTH_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.part), true);
+		MediaQueryResult dat = MediaQueryRunner.query(ep.part.toFSPath(), true);
 
 		int dur = dat.Duration==-1 ? -1 :(int)(dat.Duration/60);
 		if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
@@ -176,7 +176,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> MEDIAINFO_FROM_FILE = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(ep.part), true);
+		MediaQueryResult dat = MediaQueryRunner.query(ep.part.toFSPath(), true);
 		CCMediaInfo minfo = dat.toMediaInfo();
 
 		if (minfo.isSet()) ep.mediaInfo = minfo;
@@ -190,7 +190,7 @@ public class BatchEditMethods
 	public static BatchEditMethod<Void> MEDIAINFO_CALC_HASH = new BatchEditMethod<>((ep, param, opt) ->
 	{
 		var p = ep.mediaInfo.toPartial();
-		p.Checksum = Opt.of(ChecksumHelper.fastVideoHash(new File(PathFormatter.fromCCPath(ep.part))));
+		p.Checksum = Opt.of(ChecksumHelper.fastVideoHash(ep.part.toFSPath()));
 		ep.mediaInfo = p.toMediaInfo();
 	});
 
@@ -201,32 +201,33 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> PATH_TO_CCPATH = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = PathFormatter.getCCPath(ep.part);
+		ep.part = CCPath.createFromFSPath(FSPath.create(ep.part.toString()));
 	});
 
 	public static BatchEditMethod<Void> PATH_FROM_CCPATH = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = PathFormatter.fromCCPath(ep.part);
+		ep.part = CCPath.create(ep.part.toFSPath().toString());
 	});
 
 	public static BatchEditMethod<Void> PATH_DELETE_EXTENSION = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = PathFormatter.getWithoutExtension(ep.part);
+		var fs = ep.part.toFSPath();
+		ep.part = ep.part.getParent().append(ep.part.getFilenameWithoutExt());
 	});
 
 	public static BatchEditMethod<Void> PATH_DELETE_FILENAME_WITH_EXT = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = PathFormatter.getDirectory(ep.part);
+		ep.part = ep.part.getParent();
 	});
 
 	public static BatchEditMethod<Void> PATH_DELETE_FILENAME_WITHOUT_EXT = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = PathFormatter.getDirectory(ep.part).concat(PathFormatter.getExtension(ep.part));
+		ep.part = ep.part.getParent().append(ep.part.getExtension());
 	});
 
 	public static BatchEditMethod<Void> PATH_DELETE_FILEPATH = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = PathFormatter.getFilenameWithExt(ep.part);
+		ep.part = CCPath.create(ep.part.getFilenameWithExt());
 	});
 
 	public static BatchEditMethod<Void> TITLE_RESET = new BatchEditMethod<>((ep, param, opt) ->
@@ -300,7 +301,7 @@ public class BatchEditMethods
 
 		var file = param.Item1[opt.Item1-param.Item2];
 
-		ep.part = PathFormatter.getCCPath(file.getAbsolutePath());
+		ep.part = CCPath.createFromFSPath(FSPath.create(file));
 	});
 
 	public static BatchEditMethod<CCSingleTag> TAG_ADD = new BatchEditMethod<>((ep, param, opt) ->

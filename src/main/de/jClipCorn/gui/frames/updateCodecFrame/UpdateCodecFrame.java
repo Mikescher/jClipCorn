@@ -17,7 +17,8 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
@@ -296,10 +297,8 @@ public class UpdateCodecFrame extends JFrame {
 		if (collThread != null && collThread.isAlive()) {
 			cancelBackground = true;
 		} else {
-
-			String mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
-
-			if (Str.isNullOrWhitespace(mqp) || !new File(mqp).exists() || !new File(mqp).isFile() || !new File(mqp).canExecute()) {
+			var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+			if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 				return;
 			}

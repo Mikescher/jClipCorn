@@ -33,7 +33,7 @@ new FormModel {
 						"gridX": 1
 						"gridY": 1
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JReadableCCPathTextField" ) {
 						name: "edPart0"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
@@ -54,7 +54,7 @@ new FormModel {
 						"gridX": 1
 						"gridY": 3
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JReadableCCPathTextField" ) {
 						name: "edPart1"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
@@ -82,7 +82,7 @@ new FormModel {
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridY": 5
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JReadableCCPathTextField" ) {
 						name: "edPart2"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
@@ -110,7 +110,7 @@ new FormModel {
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridY": 7
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JReadableCCPathTextField" ) {
 						name: "edPart3"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
@@ -138,7 +138,7 @@ new FormModel {
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridY": 9
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JReadableCCPathTextField" ) {
 						name: "edPart4"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
@@ -166,7 +166,7 @@ new FormModel {
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridY": 11
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JReadableCCPathTextField" ) {
 						name: "edPart5"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
@@ -354,7 +354,7 @@ new FormModel {
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl" ) {
 						name: "ctrlMediaInfo"
 						auxiliary() {
-							"JavaCodeGenerator.customCreateCode": "new ${field_type}(() -> Str.isNullOrWhitespace(edPart0.getText()) ? null : PathFormatter.fromCCPath(edPart0.getText()));"
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(() -> edPart0.getPath().toFSPath());"
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3

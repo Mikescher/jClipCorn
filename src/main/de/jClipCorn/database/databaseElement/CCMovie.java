@@ -23,13 +23,14 @@ import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.awt.*;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	private final MovieCache _cache = new MovieCache(this);
 
 	public final EZyklusPropPack         Zyklus        = new EZyklusPropPack(   "Zyklus",        CCMovieZyklus.EMPTY,          this, EPropertyType.OBJECTIVE_METADATA);
-	public final EPartArrayPropPack      Parts         = new EPartArrayPropPack("Parts",         new String[PARTCOUNT_MAX],    this, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
+	public final EPartArrayPropPack      Parts         = new EPartArrayPropPack("Parts",         CCPath.Empty,                 this, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
 	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,            this);
 	public final EIntProp                Length        = new EIntProp(          "Length",        0,                            this, EPropertyType.OBJECTIVE_METADATA);
 	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
@@ -154,8 +155,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	}
 
 	@Override
-	public List<String> getParts() {
-		List<String> r = new ArrayList<>();
+	public List<CCPath> getParts() {
+		List<CCPath> r = new ArrayList<>();
 		for (int i = 0; i < PARTCOUNT_MAX; i++) if (!Parts.get(i).isEmpty()) r.add(Parts.get(i));
 		return r;
 	}
@@ -168,10 +169,6 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	@Override
 	public CCDBLanguageList getLanguage() {
 		return Language.get();
-	}
-
-	public String getAbsolutePart(int idx) {
-		return PathFormatter.fromCCPath(Parts.get(idx));
 	}
 
 	public void setViewedHistoryFromUI(CCDateTimeList value) {
@@ -251,10 +248,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	}
 
 	public String getFastMD5() {
-		File[] f = new File[getPartcount()];
-		for (int i = 0; i < getPartcount(); i++) {
-			f[i] = new File(getAbsolutePart(i));
-		}
+		var f = new FSPath[getPartcount()];
+		for (int i = 0; i < getPartcount(); i++) f[i] = Parts.get(i).toFSPath();
 		return ChecksumHelper.calculateFastMD5(f);
 	}
 	
@@ -289,7 +284,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		
 		filename.append(".").append(Format.get().asString());
 		
-		filename = new StringBuilder(PathFormatter.fixStringToFilesystemname(filename.toString()));
+		filename = new StringBuilder(FilesystemUtils.fixStringToFilesystemname(filename.toString()));
 		
 		return filename.toString();
 	}

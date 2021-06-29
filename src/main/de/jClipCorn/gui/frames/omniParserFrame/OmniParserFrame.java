@@ -10,8 +10,8 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
 
 import javax.swing.*;
@@ -38,7 +38,7 @@ public class OmniParserFrame extends JDialog {
 	
 	private OmniParserCallbackListener callbacklistener;
 	private List<String> old_titles;
-	private String filechooserdirectory;
+	private FSPath filechooserdirectory;
 	
 	private JPanel contentPane;
 	private JTextArea memoFormattedText;
@@ -71,7 +71,7 @@ public class OmniParserFrame extends JDialog {
 	private JLabel lblParsedText;
 	private JLabel lblCheck;
 
-	public OmniParserFrame(Component owner, OmniParserCallbackListener listener, List<String> oldtitles, String chooserdir, String initial, boolean modal) {
+	public OmniParserFrame(Component owner, OmniParserCallbackListener listener, List<String> oldtitles, FSPath chooserdir, String initial, boolean modal) {
 		super();
 		
 		this.callbacklistener = listener;
@@ -259,7 +259,7 @@ public class OmniParserFrame extends JDialog {
 	private void onLoadFromFolder() {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		chooser.setCurrentDirectory(new File(filechooserdirectory));
+		chooser.setCurrentDirectory(filechooserdirectory.toFile());
 		
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File f = chooser.getSelectedFile();
@@ -294,23 +294,20 @@ public class OmniParserFrame extends JDialog {
 		};
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser.setApproveButtonText(LocaleBundle.getString("OmniParserFrame.folderchooser.okBtn")); //$NON-NLS-1$
-		chooser.setCurrentDirectory(new File(filechooserdirectory));
+		chooser.setCurrentDirectory(filechooserdirectory.toFile());
 		
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-			File f = chooser.getSelectedFile();
+			var f = FSPath.create(chooser.getSelectedFile());
 			
-			if (! f.isDirectory()) {
-				f = f.getParentFile();
-			}
+			if (! f.isDirectory()) f = f.getParent();
 			
-			String[] list = f.list((dir, name) -> new File(dir, name).isFile());
-			if (list == null) list = new String[0];
-			
+			FSPath[] list = f.list(FSPath::isFile).toArray(new FSPath[0]);
+
 			StringBuilder result = new StringBuilder();
 			
 			for (int i = 0; i < list.length; i++) {
 				if (i > 0) result.append(SimpleFileUtils.LINE_END);
-				result.append(PathFormatter.getWithoutExtension(list[i]));
+				result.append(list[i].getFilenameWithoutExt());
 			}
 			
 			memoPlaintext.setText(result.toString());

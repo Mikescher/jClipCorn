@@ -5,11 +5,13 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.guiComponents.JFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.filesystem.FSPath;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,8 +20,8 @@ public class CCPathVarProperty extends CCProperty<PathSyntaxVar> {
 
 	private static class CCPathVarPropertyPanel extends JPanel {
 		private static final long serialVersionUID = -9214196751986446909L;
-		JTextField Field1; 
-		JTextField Field2;
+		JTextField       Field1;
+		JFSPathTextField Field2;
 	}
 
 	public CCPathVarProperty(CCPropertyCategory cat, CCProperties prop, String ident, PathSyntaxVar standard) {
@@ -51,7 +53,7 @@ public class CCPathVarProperty extends CCProperty<PathSyntaxVar> {
 		pnl.add(new JLabel(LocaleBundle.getString("CCPathVarProperty.Key")), "2, 1, fill, default"); //$NON-NLS-1$
 		pnl.add(pnl.Field1 = new JTextField(), "4, 1, fill, default"); //$NON-NLS-1$
 		pnl.add(new JLabel(LocaleBundle.getString("CCPathVarProperty.Value")), "6, 1, fill, default"); //$NON-NLS-1$
-		pnl.add(pnl.Field2 = new JTextField(), "8, 1, fill, default"); //$NON-NLS-1$
+		pnl.add(pnl.Field2 = new JFSPathTextField(), "8, 1, fill, default"); //$NON-NLS-1$
 
 		return pnl;
 	}
@@ -59,12 +61,12 @@ public class CCPathVarProperty extends CCProperty<PathSyntaxVar> {
 	@Override
 	public void setComponentValueToValue(Component c, PathSyntaxVar val) {
 		((CCPathVarPropertyPanel)c).Field1.setText(val.Key);
-		((CCPathVarPropertyPanel)c).Field2.setText(val.Value);
+		((CCPathVarPropertyPanel)c).Field2.setPath(val.Value);
 	}
 
 	@Override
 	public PathSyntaxVar getComponentValue(Component c) {
-		return new PathSyntaxVar(((CCPathVarPropertyPanel)c).Field1.getText(), ((CCPathVarPropertyPanel)c).Field2.getText());
+		return new PathSyntaxVar(((CCPathVarPropertyPanel)c).Field1.getText(), ((CCPathVarPropertyPanel)c).Field2.getPath());
 	}
 
 	@Override
@@ -80,7 +82,7 @@ public class CCPathVarProperty extends CCProperty<PathSyntaxVar> {
 		try {
 			String[] sval = val.split(";"); //$NON-NLS-1$
 			if (sval.length == 0 || sval.length == 1) return PathSyntaxVar.EMPTY;
-			return new PathSyntaxVar(Str.fromBase64(sval[0]), Str.fromBase64(sval[1]));
+			return new PathSyntaxVar(Str.fromBase64(sval[0]), FSPath.create(Str.fromBase64(sval[1])));
 		} catch(NumberFormatException e) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatErrorNumber", identifier, mclass.getName())); //$NON-NLS-1$
 			setDefault();

@@ -1,16 +1,16 @@
 package de.jClipCorn.properties.types;
 
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.formatter.PathFormatter;
+import de.jClipCorn.util.filesystem.FSPath;
 
 public class NamedPathVar {
-	public final static NamedPathVar EMPTY = new NamedPathVar(Str.Empty, Str.Empty, Str.Empty);
+	public final static NamedPathVar EMPTY = new NamedPathVar(Str.Empty, FSPath.Empty, Str.Empty);
 
 	public final String Name;
-	public final String Path;
+	public final FSPath Path;
 	public final String Arguments;
 
-	public NamedPathVar(String name, String path, String args) {
+	public NamedPathVar(String name, FSPath path, String args) {
 		Name      = name;
 		Path      = path;
 		Arguments = args;
@@ -22,14 +22,14 @@ public class NamedPathVar {
 	}
 
 	public boolean isEmpty() {
-		return Str.isNullOrWhitespace(Path);
+		return Path.isEmpty();
 	}
 
 	public String getCaption() {
-		if (Str.isNullOrWhitespace(Name)) return PathFormatter.getFilenameWithExt(Path); else return Name;
+		if (Str.isNullOrWhitespace(Name)) return Path.getFilenameWithExt(); else return Name;
 	}
 
 	public String serialize() {
-		return Str.toBase64(" " + this.Name + " ") + ";" + Str.toBase64(" " + this.Path + " ") + ";" + Str.toBase64(" " + this.Arguments + " ");
+		return Str.toBase64(" " + this.Name + " ") + ";" + Str.toBase64(" " + this.Path.toString() + " ") + ";" + Str.toBase64(" " + this.Arguments + " ");
 	}
 }

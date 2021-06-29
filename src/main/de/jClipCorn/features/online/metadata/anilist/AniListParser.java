@@ -13,7 +13,7 @@ import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.CollectionHelper;
 import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.stream.CCStreams;
 import org.json.JSONArray;

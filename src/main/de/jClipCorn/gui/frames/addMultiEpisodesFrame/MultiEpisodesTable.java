@@ -6,7 +6,6 @@ import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.formatter.PathFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,14 +37,14 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"MultiEpisodesTable.Source",
-				e -> PathFormatter.getFilenameWithExt(e.SourcePath),
+				e -> e.SourcePath.getFilenameWithExt(),
 				null,
-				e -> e.SourcePath));
+				e -> e.SourcePath.toString()));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				"auto",
 				"MultiEpisodesTable.Target",
-				e -> e.TargetPath,
+				e -> e.TargetPath.toString(),
 				null,
 				null));
 

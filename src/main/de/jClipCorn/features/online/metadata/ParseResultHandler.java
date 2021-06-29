@@ -10,7 +10,6 @@ public interface ParseResultHandler {
 	CCOnlineReferenceList getSearchReference();
 	
 	void setMovieFormat(CCFileFormat cmf);
-	void setFilepath(int p, String t);
 	void setMovieName(String name);
 	void setZyklus(String mZyklusTitle);
 	void setZyklusNumber(int iRoman);

@@ -21,9 +21,9 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.formatter.PathFormatter;
-import de.jClipCorn.util.helper.FileChooserHelper;
-import de.jClipCorn.util.helper.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.PathFormatter;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 
 public class TextExportFrame extends JFrame {
 	private static final long serialVersionUID = -807033167837187549L;
@@ -172,7 +172,7 @@ public class TextExportFrame extends JFrame {
 		
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_txt.description", expo.getFileExtension())); //$NON-NLS-1$
-		chooser.setCurrentDirectory(new File(PathFormatter.getRealSelfDirectory()));
+		chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
 		
 		if (chooser.showSaveDialog(this)  == JFileChooser.APPROVE_OPTION) {
 			start();

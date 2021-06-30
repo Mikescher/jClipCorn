@@ -15,10 +15,10 @@ public class LambdaListCellRenderer<T> extends DefaultListCellRenderer
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-		//noinspection unchecked
 		label.setText(_lambda.invoke((T)value));
 
 		return label;

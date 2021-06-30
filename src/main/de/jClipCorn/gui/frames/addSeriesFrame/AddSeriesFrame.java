@@ -186,11 +186,6 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 	}
 
 	@Override
-	public void setFilepath(int p, String t) {
-		// No such field
-	}
-
-	@Override
 	public void setMovieName(String name) {
 		edTitle.setText(name);
 	}

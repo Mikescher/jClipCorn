@@ -34,6 +34,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.UpdateConnector;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.stream.CCStreams;
@@ -310,12 +311,14 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 	public void filesDropped(final File[] files) {
 		if (files.length > 0) {
 
-			if (CCStreams.iterate(files).all(CCFileFormat::isValidMovieFormat)) {
-				SwingUtils.invokeLater(() -> new QuickAddMoviesDialog(this, getMovielist(), files).setVisible(true));
+			var f = CCStreams.iterate(files).map(FSPath::create).toArray(new FSPath[0]);
+
+			if (CCStreams.iterate(f).all(CCFileFormat::isValidMovieFormat)) {
+				SwingUtils.invokeLater(() -> new QuickAddMoviesDialog(this, getMovielist(), f).setVisible(true));
 				return;
 			}
 
-			if (files.length == 1) ((CCActionTree)CCActionTree.getInstance()).openFile(files[0]);
+			if (files.length == 1) ((CCActionTree)CCActionTree.getInstance()).openFile(f[0]);
 		}
 
 		// nothing dropped

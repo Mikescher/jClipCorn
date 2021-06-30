@@ -9,6 +9,10 @@ public class ECCPathProp extends EProperty<CCPath> {
 		super(name, defValue, p, t);
 	}
 
+	public void set(String v) {
+		set(CCPath.create(v));
+	}
+
 	@Override
 	public String serializeToString() {
 		return get().toString();

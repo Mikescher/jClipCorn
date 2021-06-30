@@ -3,7 +3,7 @@ package de.jClipCorn.gui.frames.vlcRobot;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.filesystem.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.stream.CCStreams;
@@ -318,10 +318,10 @@ public class VLCRobot {
 
 			new Thread(() ->
 			{
-				List<String> parts = q.Element.getParts();
+				List<CCPath> parts = q.Element.getParts();
 				for (int i=0; i<parts.size(); i++)
 				{
-					boolean ok = VLCConnection.enqueue(PathFormatter.fromCCPath(parts.get(i)), startPlayback && i==0) != null;
+					boolean ok = VLCConnection.enqueue(parts.get(i).toFSPath(), startPlayback && i==0) != null;
 					if (!ok)
 					{
 						SwingUtils.invokeLater(() -> _clientQueue.add(0, q));
@@ -338,7 +338,7 @@ public class VLCRobot {
 					{
 						for (int i=0; i<parts.size(); i++)
 						{
-							boolean ok = VLCConnection.enqueue(PathFormatter.fromCCPath(parts.get(i)), i==0) != null;
+							boolean ok = VLCConnection.enqueue(parts.get(i).toFSPath(), i==0) != null;
 							if (!ok)
 							{
 								SwingUtils.invokeLater(() -> _clientQueue.add(0, q));
@@ -364,10 +364,10 @@ public class VLCRobot {
 
 			new Thread(() ->
 			{
-				List<String> parts = nextSub.getParts();
+				List<CCPath> parts = nextSub.getParts();
 				for (int i=0; i<parts.size(); i++)
 				{
-					boolean ok = VLCConnection.enqueue(PathFormatter.fromCCPath(parts.get(i)), startPlayback && i==0) != null;
+					boolean ok = VLCConnection.enqueue(parts.get(i).toFSPath(), startPlayback && i==0) != null;
 					if (!ok)
 					{
 						SwingUtils.invokeLater(() -> q.ElementQueue.add(0, nextSub));
@@ -384,7 +384,7 @@ public class VLCRobot {
 					{
 						for (int i=0; i<parts.size(); i++)
 						{
-							boolean ok = VLCConnection.enqueue(PathFormatter.fromCCPath(parts.get(i)), i==0) != null;
+							boolean ok = VLCConnection.enqueue(parts.get(i).toFSPath(), i==0) != null;
 							if (!ok)
 							{
 								SwingUtils.invokeLater(() -> q.ElementQueue.add(0, nextSub));
@@ -418,11 +418,11 @@ public class VLCRobot {
 
 			new Thread(() ->
 			{
-				List<String> parts = q.Element.getParts();
+				List<CCPath> parts = q.Element.getParts();
 				List<String> uris = new ArrayList<>();
 				for (int i=0; i<parts.size(); i++)
 				{
-					var uri_ok = VLCConnection.enqueue(PathFormatter.fromCCPath(parts.get(i)), false);
+					var uri_ok = VLCConnection.enqueue(parts.get(i).toFSPath(), false);
 					if (uri_ok == null)
 					{
 						SwingUtils.invokeLater(() -> _clientQueue.add(0, q));
@@ -447,11 +447,11 @@ public class VLCRobot {
 
 			new Thread(() ->
 			{
-				List<String> parts = nextSub.getParts();
+				List<CCPath> parts = nextSub.getParts();
 				List<String> uris = new ArrayList<>();
 				for (int i=0; i<parts.size(); i++)
 				{
-					var uri_ok = VLCConnection.enqueue(PathFormatter.fromCCPath(parts.get(i)), false);
+					var uri_ok = VLCConnection.enqueue(parts.get(i).toFSPath(), false);
 					if (uri_ok == null)
 					{
 						SwingUtils.invokeLater(() -> q.ElementQueue.add(0, nextSub));

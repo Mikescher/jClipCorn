@@ -336,24 +336,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 	private void onBtnClearClicked(int cNmbr) {
 		switch (cNmbr) {
-		case 0:
-			edPart0.setText(""); //$NON-NLS-1$
-			break;
-		case 1:
-			edPart1.setText(""); //$NON-NLS-1$
-			break;
-		case 2:
-			edPart2.setText(""); //$NON-NLS-1$
-			break;
-		case 3:
-			edPart3.setText(""); //$NON-NLS-1$
-			break;
-		case 4:
-			edPart4.setText(""); //$NON-NLS-1$
-			break;
-		case 5:
-			edPart5.setText(""); //$NON-NLS-1$
-			break;
+			case 0: edPart0.setPath(CCPath.Empty); break; //$NON-NLS-1$
+			case 1: edPart1.setPath(CCPath.Empty); break; //$NON-NLS-1$
+			case 2: edPart2.setPath(CCPath.Empty); break; //$NON-NLS-1$
+			case 3: edPart3.setPath(CCPath.Empty); break; //$NON-NLS-1$
+			case 4: edPart4.setPath(CCPath.Empty); break; //$NON-NLS-1$
+			case 5: edPart5.setPath(CCPath.Empty); break; //$NON-NLS-1$
 		}
 
 		updateFilesize();

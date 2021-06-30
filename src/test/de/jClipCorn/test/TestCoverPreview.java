@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -19,12 +19,12 @@ public class TestCoverPreview extends ClipCornBaseTest {
 	public void testColorQuantizersBigImage() throws Exception {
 		for (ColorQuantizerMethod m : ColorQuantizerMethod.values())
 		{
-			File filep = new File(SimpleFileUtils.getSystemTempFile("png"));
+			var filep = SimpleFileUtils.getSystemTempFile("png");
 			SimpleFileUtils.writeRawResource(filep, "/cover_example_small.png", ClipCornBaseTest.class);
 
 			ColorQuantizer quant = m.create();
 
-			BufferedImage imgOrig = ImageIO.read(filep);
+			BufferedImage imgOrig = ImageIO.read(filep.toFile());
 
 			quant.analyze(imgOrig, 16);
 			BufferedImage imgNewBig = quant.quantize(imgOrig);
@@ -40,7 +40,7 @@ public class TestCoverPreview extends ClipCornBaseTest {
 			assertEquals(imgNewSmall1.getWidth(),  imgNewSmall2.getWidth());
 			assertEquals(imgNewSmall1.getHeight(), imgNewSmall2.getHeight());
 
-			filep.delete();
+			filep.deleteWithException();
 		}
 	}
 
@@ -48,14 +48,14 @@ public class TestCoverPreview extends ClipCornBaseTest {
 	public void testColorQuantizersSerialize1() throws Exception {
 		for (ColorQuantizerMethod m : ColorQuantizerMethod.values())
 		{
-			File filep = new File(SimpleFileUtils.getSystemTempFile("png"));
+			var filep = SimpleFileUtils.getSystemTempFile("png");
 			SimpleFileUtils.writeRawResource(filep, "/cover_example_small.png", ClipCornBaseTest.class);
 
 			ColorQuantizer quant = m.create();
 
-			BufferedImage imgOrig = ImageIO.read(filep);
+			BufferedImage imgOrig = ImageIO.read(filep.toFile());
 
-			filep.delete();
+			filep.deleteWithException();
 
 			quant.analyze(imgOrig, 16);
 
@@ -74,16 +74,16 @@ public class TestCoverPreview extends ClipCornBaseTest {
 	public void testColorQuantizersSerialize2() throws Exception {
 		for (ColorQuantizerMethod m : ColorQuantizerMethod.values())
 		{
-			File filep = new File(SimpleFileUtils.getSystemTempFile("png"));
+			var filep = SimpleFileUtils.getSystemTempFile("png");
 			SimpleFileUtils.writeRawResource(filep, "/cover_example_small.png", ClipCornBaseTest.class);
 
 			ColorQuantizer quant = m.create();
 
-			BufferedImage imgOrig = ImageIO.read(filep);
+			BufferedImage imgOrig = ImageIO.read(filep.toFile());
 			imgOrig = ColorQuantizerConverter.shrink(imgOrig, ColorQuantizerConverter.PREVIEW_WIDTH);
 			assertEquals(ColorQuantizerConverter.PREVIEW_WIDTH, imgOrig.getWidth());
 
-			filep.delete();
+			filep.deleteWithException();
 
 			quant.analyze(imgOrig, 16);
 

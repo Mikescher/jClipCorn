@@ -2,6 +2,8 @@ package de.jClipCorn.gui.frames.createSeriesFolderStructureFrame;
 
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
 
 import javax.swing.*;
 
@@ -11,11 +13,11 @@ public class CSFSElement {
 
 	public CSFSState State;
 
-	public String CCPathOld;
-	public String CCPathNew;
+	public CCPath CCPathOld;
+	public CCPath CCPathNew;
 
-	public String FSPathOld;
-	public String FSPathNew;
+	public FSPath FSPathOld;
+	public FSPath FSPathNew;
 
 	public static MultiSizeIconRef getIconRef(CSFSState state)
 	{

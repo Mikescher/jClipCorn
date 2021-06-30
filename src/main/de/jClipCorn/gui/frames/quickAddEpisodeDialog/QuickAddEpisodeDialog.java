@@ -17,19 +17,21 @@ import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
-import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.JCCPathTextField;
+import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
 import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
-import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.filesystem.PathFormatter;
-import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
+import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.EpisodeFilenameParserResult;
@@ -42,7 +44,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +52,8 @@ public class QuickAddEpisodeDialog extends JDialog {
 	private static final long serialVersionUID = -184393538006518026L;
 
 	private final JPanel contentPanel = new JPanel();
-	private ReadableTextField edSource;
-	private JTextField edTarget;
+	private JReadableFSPathTextField edSource;
+	private JCCPathTextField edTarget;
 	private JTextField edTitle;
 	private JCheckBox cbCopy;
 	private JCheckBox cbRename;
@@ -60,7 +61,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 	private JSpinner spnLength;
 
 	private final CCSeason season;
-	private final File source;
+	private final FSPath source;
 
 	private final UpdateCallbackListener ucListener;
 
@@ -70,7 +71,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	private QuickAddEpisodeDialog(Component owner, UpdateCallbackListener listener, CCSeason s, File f) {
+	private QuickAddEpisodeDialog(Component owner, UpdateCallbackListener listener, CCSeason s, FSPath f) {
 		super();
 		ucListener = listener;
 		season = s;
@@ -129,14 +130,14 @@ public class QuickAddEpisodeDialog extends JDialog {
 		lblSource.setHorizontalAlignment(SwingConstants.TRAILING);
 
 		contentPanel.add(lblSource, "1, 1, right, default"); //$NON-NLS-1$
-		edSource = new ReadableTextField();
+		edSource = new JReadableFSPathTextField();
 		contentPanel.add(edSource, "3, 1, 3, 1, fill, default"); //$NON-NLS-1$
 		edSource.setColumns(10);
 
 		JLabel lblTarget = new JLabel(LocaleBundle.getString("QuickAddEpisodeDialog.lblTarget")); //$NON-NLS-1$
 		lblTarget.setHorizontalAlignment(SwingConstants.TRAILING);
 		contentPanel.add(lblTarget, "1, 3, right, default"); //$NON-NLS-1$
-		edTarget = new JTextField();
+		edTarget = new JCCPathTextField();
 		contentPanel.add(edTarget, "3, 3, 3, 1, fill, default"); //$NON-NLS-1$
 		edTarget.setColumns(10);
 		edTarget.getDocument().addDocumentListener(new DocumentListener() {
@@ -172,13 +173,13 @@ public class QuickAddEpisodeDialog extends JDialog {
 
 		spnEpisode = new JSpinner();
 		spnEpisode.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		spnEpisode.addChangeListener((e) -> { if (cbRename.isSelected()) edTarget.setText(createTarget()); });
+		spnEpisode.addChangeListener((e) -> { if (cbRename.isSelected()) edTarget.setPath(createTarget()); });
 		contentPanel.add(spnEpisode, "3, 11"); //$NON-NLS-1$
 		
 		JLabel lblQuality = new JLabel("MediaInfo"); //$NON-NLS-1$
 		contentPanel.add(lblQuality, "1, 13, right, default"); //$NON-NLS-1$
 		
-		edMediaInfo = new JMediaInfoControl(() -> edSource.getText());
+		edMediaInfo = new JMediaInfoControl(() -> edSource.getPath());
 		contentPanel.add(edMediaInfo, "3, 13, fill, default"); //$NON-NLS-1$
 		
 		pbar = new JProgressBar();
@@ -195,19 +196,19 @@ public class QuickAddEpisodeDialog extends JDialog {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				suppressEdTargetEvents = true;
-				if (cbRename.isSelected()) edTarget.setText(createTarget());
+				if (cbRename.isSelected()) edTarget.setPath(createTarget());
 				suppressEdTargetEvents = false;
 			}
 			@Override
 			public void removeUpdate(DocumentEvent e) {
 				suppressEdTargetEvents = true;
-				if (cbRename.isSelected()) edTarget.setText(createTarget());
+				if (cbRename.isSelected()) edTarget.setPath(createTarget());
 				suppressEdTargetEvents = false;
 			}
 			@Override
 			public void changedUpdate(DocumentEvent e) {
 				suppressEdTargetEvents = true;
-				if (cbRename.isSelected()) edTarget.setText(createTarget());
+				if (cbRename.isSelected()) edTarget.setPath(createTarget());
 				suppressEdTargetEvents = false;
 			}
 		});
@@ -277,22 +278,22 @@ public class QuickAddEpisodeDialog extends JDialog {
 	}
 
 	private void initData() {
-		edSource.setText(source.getAbsolutePath());
+		edSource.setPath(source);
 		
 		spnEpisode.setValue(season.getNextEpisodeNumber());
 		spnLength.setValue(season.getSeries().getAutoEpisodeLength(season));
 
-		EpisodeFilenameParserResult result = FilenameParser.parseEpisode(source.getAbsolutePath());
+		EpisodeFilenameParserResult result = FilenameParser.parseEpisode(source);
 		if (result != null) {
 			spnEpisode.setValue(result.EpisodeNumber);
 			edTitle.setText(result.Title);
 		} else {
-			edTitle.setText(PathFormatter.getFilename(source.getAbsolutePath()));
+			edTitle.setText(source.getFilenameWithoutExt());
 		}
 
-		edTarget.setText(createTarget());
+		edTarget.setPath(createTarget());
 
-		cbCopy.setSelected(!PathFormatter.fromCCPath(edTarget.getText()).equalsIgnoreCase(edSource.getText()));
+		cbCopy.setSelected(!edTarget.getPath().toFSPath().equalsOnFilesystem(edSource.getPath()));
 		cbRename.setSelected(cbCopy.isSelected());
 		
 		CCEpisode last = season.getSeries().getLastAddedEpisode();
@@ -304,7 +305,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		new Thread(() ->  {
 
 			try {
-				MediaQueryResult dat = MediaQueryRunner.query(edSource.getText(), true);
+				MediaQueryResult dat = MediaQueryRunner.query(edSource.getPath(), true);
 
 				SwingUtils.invokeLater(() ->
 				{
@@ -327,28 +328,28 @@ public class QuickAddEpisodeDialog extends JDialog {
 		}, "QA_MINFO").start(); //$NON-NLS-1$
 	}
 
-	public static void show(PreviewSeriesFrame owner, CCSeason s, File f) {
+	public static void show(PreviewSeriesFrame owner, CCSeason s, FSPath f) {
 		QuickAddEpisodeDialog qaed = new QuickAddEpisodeDialog(owner, owner, s, f);
 		qaed.setVisible(true);
 	}
 
-	public static void show(Component owner, UpdateCallbackListener lst, CCSeason s, File f) {
+	public static void show(Component owner, UpdateCallbackListener lst, CCSeason s, FSPath f) {
 		QuickAddEpisodeDialog qaed = new QuickAddEpisodeDialog(owner, lst, s, f);
 		qaed.setVisible(true);
 	}
 
-	private String createTarget() {
+	private CCPath createTarget() {
 		return createTarget(season, (int)spnEpisode.getValue(), edTitle.getText());
 	}
 
-	private String createTarget(CCSeason season, int episode, String title) {
-		String root = season.getSeries().guessSeriesRootPath();
-		if (Str.isNullOrWhitespace(root)) return Str.Empty;
+	private CCPath createTarget(CCSeason season, int episode, String title) {
+		var root = season.getSeries().guessSeriesRootPath();
+		if (FSPath.isNullOrEmpty(root)) return CCPath.Empty;
 
-		File dst = season.getPathForCreatedFolderstructure(new File(root), title, episode, CCFileFormat.getMovieFormatFromPath(edSource.getText()), null);
-		if (dst == null) return Str.Empty;
+		var dst = season.getPathForCreatedFolderstructure(root, title, episode, CCFileFormat.getMovieFormatFromPath(edSource.getPath()), null);
+		if (dst == null) return CCPath.Empty;
 
-		return PathFormatter.getCCPath(dst.getAbsolutePath());
+		return CCPath.createFromFSPath(dst);
 	}
 
 	private volatile int progressValueCache;
@@ -358,31 +359,27 @@ public class QuickAddEpisodeDialog extends JDialog {
 
 	private void tryAdd(boolean check) {
 
-		String src = edSource.getText();
-		String dst = cbCopy.isSelected() ? edTarget.getText() : edSource.getText();
+		var src = edSource.getPath();
+		var dst = cbCopy.isSelected() ? edTarget.getPath().toFSPath() : edSource.getPath();
 
 		int episodenumber = (int)spnEpisode.getValue();
 		int length = (int)spnLength.getValue();
 		String title = edTitle.getText().trim();
 		CCDBLanguageList lang = ctrlLang.getValue();
 
-		String fullDst = PathFormatter.fromCCPath(dst);
-		File srcFile = new File(src);
-		File dstFile = new File(fullDst);
-
-		String imd = PathFormatter.getCCPath(PathFormatter.combine(dstFile.getParent(), srcFile.getName()));
+		var imd = dst.getParent().append(src.getFilenameWithExt());
 
 		CCDate adddate = CCDate.getCurrentDate();
 		CCDateTimeList history = CCDateTimeList.createEmpty();
 		CCTagList tags = CCTagList.EMPTY;
-		long filesize = FileSizeFormatter.getFileSize(new File(src));
+		long filesize = FileSizeFormatter.getFileSize(src);
 		CCFileFormat format = CCFileFormat.getMovieFormatFromPath(src);
 		CCMediaInfo minfo = edMediaInfo.getValue();
 
-		var epack = new EpisodeDataPack(episodenumber, title, length, format, new CCFileSize(filesize), dst, adddate, history, tags, lang, minfo);
+		var epack = new EpisodeDataPack(episodenumber, title, length, format, new CCFileSize(filesize), CCPath.createFromFSPath(dst), adddate, history, tags, lang, minfo);
 
 		List<UserDataProblem> problems = new ArrayList<>();
-		boolean probvalue = !check || checkUserDataEpisode(problems, epack, src, fullDst);
+		boolean probvalue = !check || checkUserDataEpisode(problems, epack, src, dst);
 
 		// some problems are too fatal
 		if (probvalue && Str.isNullOrWhitespace(title)) {
@@ -403,7 +400,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 			{
 				if (cbCopy.isSelected())
 				{
-					FileUtils.forceMkdir(dstFile.getParentFile());
+					FileUtils.forceMkdir(dst.getParent().toFile());
 
 					progressValueCache = 0;
 					SwingUtils.invokeAndWait(() ->
@@ -413,7 +410,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 					});
 
 					//FileUtils.copyFile(srcFile, dstFile);
-					SimpleFileUtils.copyWithProgress(srcFile, dstFile, (val, max) ->
+					SimpleFileUtils.copyWithProgress(src, dst, (val, max) ->
 					{
 						int newvalue = (int)(((val * 100) / max));
 						if (progressValueCache != newvalue)
@@ -436,13 +433,13 @@ public class QuickAddEpisodeDialog extends JDialog {
 					newEp.FileSize.set(filesize);
 					newEp.AddDate.set(adddate);
 					newEp.ViewedHistory.set(history);
-					newEp.Part.set(imd);
+					newEp.Part.set(CCPath.createFromFSPath(imd, Opt.False));
 					newEp.Tags.set(tags);
 					newEp.Language.set(lang);
 					newEp.endUpdating();
 
 					newEp.beginUpdating();
-					newEp.Part.set(dst);
+					newEp.Part.set(CCPath.createFromFSPath(dst));
 					newEp.endUpdating();
 
 					if (ucListener != null) ucListener.onUpdate(newEp);
@@ -461,15 +458,15 @@ public class QuickAddEpisodeDialog extends JDialog {
 		}).start();
 	}
 
-	private boolean checkUserDataEpisode(List<UserDataProblem> ret, IEpisodeData newdata, String src, String fullDst) {
+	private boolean checkUserDataEpisode(List<UserDataProblem> ret, IEpisodeData newdata, FSPath src, FSPath dst) {
 
 		UserDataProblem.testEpisodeData(ret, season.getMovieList(), season, null, newdata);
 
-		if (!PathFormatter.fileExists(src)) {
+		if (!src.fileExists()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INPUT_FILE_NOT_FOUND));
 		}
 
-		if (PathFormatter.fileExists(fullDst)) {
+		if (dst.fileExists()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_DESTINTAION_FILE_ALREADY_EXISTS));
 		}
 
@@ -484,7 +481,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(edSource.getText(), false);
+			MediaQueryResult dat = MediaQueryRunner.query(edSource.getPath(), false);
 
 			if (dat.AudioLanguages == null) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
@@ -514,7 +511,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(edSource.getText(), true);
+			MediaQueryResult dat = MediaQueryRunner.query(edSource.getPath(), true);
 
 			int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
 			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
@@ -534,7 +531,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		}
 
 		try {
-			String dat = MediaQueryRunner.queryRaw(edSource.getText());
+			String dat = MediaQueryRunner.queryRaw(edSource.getPath());
 
 			GenericTextDialog.showText(this, getTitle(), dat, false);
 		} catch (IOException | MediaQueryException e) {

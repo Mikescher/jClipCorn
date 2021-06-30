@@ -156,7 +156,13 @@ public class SearchFrame extends JFrame
 
 			for (int i = 0; i < mov.getPartcount(); i++)
 			{
-				if (StringUtils.containsIgnoreCase(mov.getAbsolutePart(i), searchString)) { result.add(mov); movFound = true; break; }
+				if (StringUtils.containsIgnoreCase(mov.Parts.get(i).toString(), searchString)) { result.add(mov); movFound = true; break; }
+			}
+			if (movFound) continue;
+
+			for (int i = 0; i < mov.getPartcount(); i++)
+			{
+				if (StringUtils.containsIgnoreCase(mov.Parts.get(i).toFSPath().toString(), searchString)) { result.add(mov); movFound = true; break; }
 			}
 			if (movFound) continue;
 

@@ -7,8 +7,9 @@ import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.datatypes.Opt;
-import de.jClipCorn.util.helper.ApplicationHelper;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
+import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.lambda.Func0to0;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
@@ -16,7 +17,6 @@ import org.junit.Assert;
 import org.junit.Before;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.TimeZone;
 
@@ -52,10 +52,10 @@ public class ClipCornBaseTest {
 		CCProperties.createInMemory();
 		CCMovieList ml = CCMovieList.createInMemory();
 		ml.connectForTests();
-		File filep = new File(SimpleFileUtils.getSystemTempFile("jxmlbkp"));
+		var filep = SimpleFileUtils.getSystemTempFile("jxmlbkp");
 		SimpleFileUtils.writeTextResource(filep, "/example_data_full.jxmlbkp", ClipCornBaseTest.class);
 		ExportHelper.restoreDatabaseFromBackup(filep, ml);
-		filep.delete();
+		filep.deleteWithException();
 
 		// create some dummy values for the file checksums
 
@@ -69,8 +69,8 @@ public class ClipCornBaseTest {
 			}
 		}
 
-		CCProperties.getInstance().PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", "/tmpfs/jcc/mov/"));
-		CCProperties.getInstance().PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", "/tmpfs/jcc/ser/"));
+		CCProperties.getInstance().PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", FSPath.create("/tmpfs/jcc/mov/")));
+		CCProperties.getInstance().PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", FSPath.create("/tmpfs/jcc/ser/")));
 
 		return ml;
 	}

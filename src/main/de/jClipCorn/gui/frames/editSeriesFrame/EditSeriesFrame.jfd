@@ -586,7 +586,7 @@ new FormModel {
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl" ) {
 					name: "ctrlEpisodeMediaInfo"
 					auxiliary() {
-						"JavaCodeGenerator.customCreateCode": "new ${field_type}(() -> Str.isNullOrWhitespace(edEpisodePart.getText()) ? null : PathFormatter.fromCCPath(edEpisodePart.getText()));"
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(() -> edEpisodePart.getPath().toFSPath());"
 					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 4
@@ -726,7 +726,7 @@ new FormModel {
 					"gridX": 2
 					"gridY": 20
 				} )
-				add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.JReadableCCPathTextField" ) {
 					name: "edEpisodePart"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 4

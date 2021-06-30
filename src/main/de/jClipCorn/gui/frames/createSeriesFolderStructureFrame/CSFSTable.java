@@ -16,10 +16,10 @@ public class CSFSTable extends JCCSimpleTable<CSFSElement> {
 		List<JCCSimpleColumnPrototype<CSFSElement>> r = new ArrayList<>();
 
 		r.add(new JCCSimpleColumnPrototype<>("auto", Str.Empty, null, e -> CSFSElement.getIcon(e.State), null, true));
-		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.CCOld", e -> e.CCPathOld, null, null, true));
-		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.CCNew", e -> e.CCPathNew, null, null, true));
-		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.FSOld", e -> e.FSPathOld, null, null, true));
-		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.FSNew", e -> e.FSPathNew, null, null, true));
+		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.CCOld", e -> e.CCPathOld.toString(), null, null, true));
+		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.CCNew", e -> e.CCPathNew.toString(), null, null, true));
+		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.FSOld", e -> e.FSPathOld.toString(), null, null, true));
+		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "CSFSTable.FSNew", e -> e.FSPathNew.toString(), null, null, true));
 
 		return r;
 	}

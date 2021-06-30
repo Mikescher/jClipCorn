@@ -96,6 +96,19 @@ public class EPartArrayPropPack {
 		}
 	}
 
+	public void set(int idx, String v) {
+		switch (idx) {
+			case 0: Part0.set(CCPath.create(v)); break;
+			case 1: Part1.set(CCPath.create(v)); break;
+			case 2: Part2.set(CCPath.create(v)); break;
+			case 3: Part3.set(CCPath.create(v)); break;
+			case 4: Part4.set(CCPath.create(v)); break;
+			case 5: Part5.set(CCPath.create(v)); break;
+
+			default: throw new Error("Invalid PartArray Index: " + idx);
+		}
+	}
+
 	public void set(CCPath p0, CCPath p1, CCPath p2, CCPath p3, CCPath p4, CCPath p5) {
 		try
 		{

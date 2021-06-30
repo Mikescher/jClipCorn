@@ -1,7 +1,7 @@
 package de.jClipCorn.test;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.util.filesystem.PathFormatter;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -37,10 +37,10 @@ public class TestGeneratedFilenames extends ClipCornBaseTest {
 
 	@Test
 	public void testFixStringToFilesystemname() {
-		assertEquals("Junketsu - Reinheit", PathFormatter.fixStringToFilesystemname("Junketsu – Reinheit"));
-		assertEquals("Departure x And x Friends", PathFormatter.fixStringToFilesystemname("Departure × And × Friends"));
-		assertEquals(" (Questionmark)", PathFormatter.fixStringToFilesystemname("? (Questionmark)"));
-		assertEquals("S.O.S", PathFormatter.fixStringToFilesystemname("S.O.S."));
-		assertEquals("Expose", PathFormatter.fixStringToFilesystemname("Exposé"));
+		assertEquals("Junketsu - Reinheit",       FilesystemUtils.fixStringToFilesystemname("Junketsu – Reinheit"));
+		assertEquals("Departure x And x Friends", FilesystemUtils.fixStringToFilesystemname("Departure × And × Friends"));
+		assertEquals(" (Questionmark)",           FilesystemUtils.fixStringToFilesystemname("? (Questionmark)"));
+		assertEquals("S.O.S",                     FilesystemUtils.fixStringToFilesystemname("S.O.S."));
+		assertEquals("Expose",                    FilesystemUtils.fixStringToFilesystemname("Exposé"));
 	}
 }

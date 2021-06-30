@@ -7,6 +7,7 @@ import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.WindowsJNAHelper;
 import de.jClipCorn.util.http.HTTPUtilities;
@@ -275,7 +276,7 @@ public class VLCConnection {
 		}
 	}
 
-	public static String enqueue(String filepath, boolean startPlayback)
+	public static String enqueue(FSPath filepath, boolean startPlayback)
 	{
 		try
 		{
@@ -305,9 +306,9 @@ public class VLCConnection {
 
 	public static void startPlayer()
 	{
-		String vlc = MoviePlayer.getVLCPath();
+		var vlc = MoviePlayer.getVLCPath();
 
-		if (Str.isNullOrWhitespace(vlc)) {
+		if (FSPath.isNullOrEmpty(vlc)) {
 			CCLog.addWarning(LocaleBundle.getString("LogMessage.VLCNotFound")); //$NON-NLS-1$
 			return;
 		}

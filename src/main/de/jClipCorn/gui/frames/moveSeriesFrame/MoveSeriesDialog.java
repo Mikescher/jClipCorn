@@ -11,7 +11,7 @@ import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.filesystem.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.helper.DialogHelper;
 
 import javax.swing.*;
@@ -19,7 +19,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Vector;
 
 public class MoveSeriesDialog extends JDialog {
@@ -144,7 +143,7 @@ public class MoveSeriesDialog extends JDialog {
 	private void init() {
 		lblTitel.setText(series.getTitle());
 		lblCover.setAndResizeCover(series.getCover());
-		edSearch.setText(series.getCommonPathStart(false));
+		edSearch.setText(series.getCommonPathStart(false).toString());
 	}
 	
 	private void startReplace() {
@@ -156,8 +155,11 @@ public class MoveSeriesDialog extends JDialog {
 			CCSeason season = series.getSeasonByArrayIndex(seasi);
 			for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
 				CCEpisode ep = season.getEpisodeByArrayIndex(epi);
-				
-				ep.Part.set(ep.getPart().replace(edSearch.getText(), edReplace.getText()));
+
+				var p = ep.getPart().toString();
+				p = p.replace(edSearch.getText(), edReplace.getText());
+
+				ep.Part.set(CCPath.create(p));
 			}
 		}
 		
@@ -172,11 +174,11 @@ public class MoveSeriesDialog extends JDialog {
 			for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
 				CCEpisode ep = season.getEpisodeByArrayIndex(epi);
 				
-				String oldp = ep.getPart();
-				String newp = ep.getPart().replace(edSearch.getText(), edReplace.getText());
+				var oldp = ep.getPart();
+				var newp = CCPath.create(ep.getPart().toString().replace(edSearch.getText(), edReplace.getText()));
 
-				String identOld = new File(PathFormatter.fromCCPath(oldp)).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
-				String identNew = new File(PathFormatter.fromCCPath(newp)).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+				String identOld = oldp.toFSPath().exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+				String identNew = newp.toFSPath().exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
 				
 				Vector<String> tmp = new Vector<>();
 				tmp.add(identOld + oldp);

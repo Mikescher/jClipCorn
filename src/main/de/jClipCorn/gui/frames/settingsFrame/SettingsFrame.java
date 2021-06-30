@@ -1,8 +1,8 @@
 package de.jClipCorn.gui.frames.settingsFrame;
 
+import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.filesystem.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 
 public class SettingsFrame extends AutomaticSettingsFrame {
@@ -16,7 +16,7 @@ public class SettingsFrame extends AutomaticSettingsFrame {
 
 	@Override
 	protected boolean validateValues() {
-		if (!PathFormatter.validateDatabaseName((String)getCurrentInputValue(CCProperties.getInstance().PROP_DATABASE_NAME))) {
+		if (!CCDatabase.validateDatabaseName((String)getCurrentInputValue(CCProperties.getInstance().PROP_DATABASE_NAME))) {
 			DialogHelper.showLocalError(this, "Dialogs.DatabasenameAssertion"); //$NON-NLS-1$
 			
 			return false;

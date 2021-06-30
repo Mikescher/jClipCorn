@@ -7,7 +7,7 @@ import de.jClipCorn.features.actionTree.menus.ClipMenuBar;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.MoviePlayer;
-import de.jClipCorn.util.Str;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 
@@ -35,7 +35,7 @@ public class PreviewSeriesMenuBar extends ClipMenuBar {
 	{
 		addMaster("PreviewSeriesFrame.Menu.Series");
 		{
-			if (CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !Str.isNullOrWhitespace(MoviePlayer.getVLCPath()))
+			if (CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath()))
 			{
 				addActionNode("QueueSeriesInRobot");
 				addSeparator();
@@ -49,7 +49,7 @@ public class PreviewSeriesMenuBar extends ClipMenuBar {
 		}
 		addMaster("PreviewSeriesFrame.Menu.Season");
 		{
-			if (CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !Str.isNullOrWhitespace(MoviePlayer.getVLCPath()))
+			if (CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath()))
 			{
 				addActionNode("QueueSeasonInRobot");
 				addSeparator();

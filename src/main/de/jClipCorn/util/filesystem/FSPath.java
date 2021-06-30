@@ -11,20 +11,22 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
-public class FSPath implements IPath {
-	public final static FSPath Empty = FSPath.create(Str.Empty);
+public class FSPath implements IPath, Comparable<FSPath> {
+	public final static FSPath Empty = new FSPath(Str.Empty);
 
 	public static String SEPERATOR      = File.separator;
 	public static char   SEPERATOR_CHAR = File.separatorChar;
 
 	private final String _path;
 
-	private File _cacheFile = null;
-	private Path _cachePath = null;
-	private URI  _cacheURI  = null;
+	private File    _cacheFile  = null;
+	private Path    _cachePath  = null;
+	private URI     _cacheURI   = null;
+	private Boolean _cacheValid = null;
 
 	private FSPath(@NotNull String path) {
 		_path = path;
@@ -210,6 +212,10 @@ public class FSPath implements IPath {
 		return _path.substring(_path.lastIndexOf(SEPERATOR) + 1);
 	}
 
+	public void deleteOnExit() {
+		toFile().deleteOnExit();
+	}
+
 	public boolean deleteSafe() {
 		return toFile().delete();
 	}
@@ -320,6 +326,29 @@ public class FSPath implements IPath {
 	@Override
 	public String toString() {
 		return _path;
+	}
+
+	@Override
+	public int compareTo(@NotNull FSPath o) {
+		var a = this._path;
+		var b = this._path;
+		return ApplicationHelper.isWindows() ? a.compareToIgnoreCase(b) : a.compareTo(b);
+	}
+
+	public boolean isValidPath()
+	{
+		if (_cacheValid != null) return _cacheValid;
+		try
+		{
+			Paths.get(_path);
+			//noinspection ResultOfMethodCallIgnored
+			new File(_path).getCanonicalPath();
+		}
+		catch (Exception ex)
+		{
+			return _cacheValid = false;
+		}
+		return _cacheValid = true;
 	}
 
 	public static FSPath getCommonPath(List<FSPath> pathlist) {

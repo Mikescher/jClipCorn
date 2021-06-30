@@ -10,15 +10,13 @@ import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ProcessHelper;
-import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.json.JSONException;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,22 +30,19 @@ public class MP4BoxRunner implements MetadataSource {
 	@SuppressWarnings("nls")
 	@Override
 	public PartialMediaInfo run(FSPath filename) throws IOException, MetadataQueryException {
-		String boxppath = CCProperties.getInstance().PROP_PLAY_MP4BOX_PATH.getValue();
+		var boxppath = CCProperties.getInstance().PROP_PLAY_MP4BOX_PATH.getValue();
+		if (! boxppath.exists()) throw new MP4BoxQueryException("MP4Box not found"); //$NON-NLS-1$
 
-		File boxfile = new File(boxppath);
+		BasicFileAttributes attr = filename.readFileAttr();
 
-		if (! boxfile.exists()) throw new MP4BoxQueryException("MP4Box not found"); //$NON-NLS-1$
-
-		BasicFileAttributes attr = Files.readAttributes(new File(filename).toPath(), BasicFileAttributes.class);
-
-		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(boxppath, "-info", filename); //$NON-NLS-1$
+		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(boxppath.toAbsolutePathString(), "-info", filename.toString()); //$NON-NLS-1$
 
 		if (proc.Item1 != 0) throw new MP4BoxQueryException("MP4Box returned " + proc.Item1, proc.Item2 + "\n\n\n\n" + proc.Item3); //$NON-NLS-1$ //$NON-NLS-2$
 
 		String ffoutput = proc.Item3;
 
 		try	{
-			var hash = ChecksumHelper.fastVideoHash(new File(filename));
+			var hash = ChecksumHelper.fastVideoHash(filename);
 
 			PartialMediaInfo mi = new PartialMediaInfo();
 			mi.RawOutput = Opt.of(ffoutput);
@@ -93,14 +88,12 @@ public class MP4BoxRunner implements MetadataSource {
 
 	@Override
 	public boolean isConfiguredAndRunnable() {
-		String ffpath = CCProperties.getInstance().PROP_PLAY_MP4BOX_PATH.getValue();
-		if (Str.isNullOrWhitespace(ffpath)) return false;
+		var ffpath = CCProperties.getInstance().PROP_PLAY_MP4BOX_PATH.getValue();
+		if (FSPath.isNullOrEmpty(ffpath)) return false;
 
-		File f = new File(ffpath);
-
-		if (!f.exists()) return false;
-		if (!f.isFile()) return false;
-		if (!f.canExecute()) return false;
+		if (!ffpath.exists()) return false;
+		if (!ffpath.isFile()) return false;
+		if (!ffpath.canExecute()) return false;
 
 		return true;
 	}

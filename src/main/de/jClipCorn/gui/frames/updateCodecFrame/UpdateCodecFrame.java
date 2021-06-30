@@ -17,8 +17,8 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
-import de.jClipCorn.util.filesystem.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
@@ -27,7 +27,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -331,7 +330,7 @@ public class UpdateCodecFrame extends JFrame {
 
 				try {
 
-					List<String> parts = elem.Element.getParts();
+					List<CCPath> parts = elem.Element.getParts();
 
 					if (parts.size() == 0) throw new MediaQueryException("Element has no associated files"); //$NON-NLS-1$
 
@@ -339,12 +338,12 @@ public class UpdateCodecFrame extends JFrame {
 					List<MediaQueryResult> dat = new ArrayList<>();
 
 					for (int pi = 0; pi < parts.size(); pi++) {
-						dat.add(MediaQueryRunner.query(PathFormatter.fromCCPath(parts.get(pi)), false));
+						dat.add(MediaQueryRunner.query(parts.get(pi).toFSPath(), false));
 
 						if (cancelBackground) return;
 
 						if (pi > 0) raw.append("\n\n--------------------------------------\n\n"); //$NON-NLS-1$
-						raw.append(MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(parts.get(pi))));
+						raw.append(MediaQueryRunner.queryRaw(parts.get(pi).toFSPath()));
 
 						if (cancelBackground) return;
 					}

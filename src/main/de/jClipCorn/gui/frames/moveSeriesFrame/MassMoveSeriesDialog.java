@@ -9,7 +9,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.filesystem.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.helper.DialogHelper;
 
 import javax.swing.*;
@@ -17,7 +17,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
@@ -130,7 +129,7 @@ public class MassMoveSeriesDialog extends JDialog {
 	}
 	
 	private void init() {
-		edSearch.setText(movielist.getCommonSeriesPath());
+		edSearch.setText(movielist.getCommonSeriesPath().toString());
 	}
 	
 	private void startReplace() {
@@ -139,7 +138,10 @@ public class MassMoveSeriesDialog extends JDialog {
 		}
 		
 		for (CCEpisode ep : episodes) {
-			ep.Part.set(ep.getPart().replace(edSearch.getText(), edReplace.getText()));
+			var p = ep.getPart().toString();
+			p = p.replace(edSearch.getText(), edReplace.getText());
+
+			ep.Part.set(CCPath.create(p));
 		}
 		
 		dispose();
@@ -149,11 +151,11 @@ public class MassMoveSeriesDialog extends JDialog {
 		Vector<Vector<String>> data = new Vector<>();
 
 		for (CCEpisode ep : episodes) {
-			String oldp = ep.getPart();
-			String newp = ep.getPart().replace(edSearch.getText(), edReplace.getText());
+			var oldp = ep.getPart();
+			var newp = CCPath.create(ep.getPart().toString().replace(edSearch.getText(), edReplace.getText()));
 
-			String identOld = new File(PathFormatter.fromCCPath(oldp)).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
-			String identNew = new File(PathFormatter.fromCCPath(newp)).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+			String identOld = oldp.toFSPath().exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+			String identNew = newp.toFSPath().exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
 
 			Vector<String> tmp = new Vector<>();
 

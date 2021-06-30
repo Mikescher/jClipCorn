@@ -1,10 +1,9 @@
 package de.jClipCorn.gui.frames.applyPatchFrame;
 
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.filesystem.SimpleFileUtils;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.ThreadUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,18 +13,18 @@ public class PatchExecState
 	public int LastSuccessfulCtr = -1;
 	public Map<String, String> Variables = new HashMap<>();
 
-	private String _filename;
+	private FSPath _filename;
 
-	public void load(String fn) throws Exception
+	public void load(FSPath fn) throws Exception
 	{
 		_filename = fn;
 
 		LastSuccessfulCtr = -1;
 		Variables.clear();
 
-		if (!new File(fn).exists()) return;
+		if (!fn.exists()) return;
 
-		var txt = SimpleFileUtils.readUTF8TextFile(fn);
+		var txt = fn.readAsUTF8TextFile();
 
 		for (var line : txt.split("\\r?\\n"))
 		{
@@ -60,7 +59,7 @@ public class PatchExecState
 			{
 				try
 				{
-					SimpleFileUtils.writeTextFile(_filename, r.toString());
+					_filename.writeAsUTF8TextFile(r.toString());
 					return;
 				}
 				catch (IOException e)
@@ -68,7 +67,7 @@ public class PatchExecState
 					ThreadUtils.safeSleep(500);
 				}
 			}
-			SimpleFileUtils.writeTextFile(_filename, r.toString());
+			_filename.writeAsUTF8TextFile(r.toString());
 
 
 

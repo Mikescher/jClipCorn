@@ -24,7 +24,7 @@ import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
 import de.jClipCorn.gui.guiComponents.JMediaInfoButton;
-import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.JReadableCCPathTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
 import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
@@ -38,16 +38,15 @@ import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.EnumFormatException;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.filesystem.PathFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.DirtyUtil;
-import de.jClipCorn.util.filesystem.FileChooserHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -58,7 +57,6 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +101,7 @@ public class EditSeriesFrame extends JFrame
 		this.series = ser;
 		this.movieList = ser.getMovieList();
 		this.listener = ucl;
-		this.videoFileChooser = new JFileChooser(ser.getMovieList().getCommonPathForSeriesFileChooser());
+		this.videoFileChooser = new JFileChooser(ser.getMovieList().getCommonPathForSeriesFileChooser().toFile());
 
 		initComponents();
 		postInit();
@@ -170,11 +168,6 @@ public class EditSeriesFrame extends JFrame
 
 			@Override
 			public void setMovieFormat(CCFileFormat cmf) {
-				// NOP
-			}
-
-			@Override
-			public void setFilepath(int p, String t) {
 				// NOP
 			}
 
@@ -264,11 +257,6 @@ public class EditSeriesFrame extends JFrame
 			}
 
 			@Override
-			public void setFilepath(int p, String t) {
-				// NOP
-			}
-
-			@Override
 			public void setMovieName(String name) {
 				// NOP
 			}
@@ -350,11 +338,6 @@ public class EditSeriesFrame extends JFrame
 
 			@Override
 			public void setMovieFormat(CCFileFormat cmf) {
-				// NOP
-			}
-
-			@Override
-			public void setFilepath(int p, String t) {
 				// NOP
 			}
 
@@ -630,7 +613,7 @@ public class EditSeriesFrame extends JFrame
 			spnEpisodeSize.setValue(episode.getFilesize().getBytes());
 			spnEpisodeAdded.setValue(episode.getAddDate());
 			ctrlEpisodeHistory.setValue(episode.ViewedHistory.get());
-			edEpisodePart.setText(episode.getPart());
+			edEpisodePart.setPath(episode.getPart());
 			edEpisodeTags.setValue(episode.getTags());
 			ctrlEpisodeLanguage.setValue(episode.getLanguage());
 			ctrlEpisodeMediaInfo.setValue(episode.mediaInfo().get());
@@ -925,9 +908,7 @@ public class EditSeriesFrame extends JFrame
 	}
 
 	private void testEpisodePart() {
-		String path = PathFormatter.fromCCPath(edEpisodePart.getText());
-
-		if (new File(path).exists()) {
+		if (edEpisodePart.getPath().toFSPath().exists()) {
 			edEpisodePart.setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		} else {
 			edEpisodePart.setBackground(Color.RED);
@@ -935,15 +916,11 @@ public class EditSeriesFrame extends JFrame
 	}
 
 	private void recalcEpisodeFilesize() {
-		String path = PathFormatter.fromCCPath(edEpisodePart.getText());
-
-		spnEpisodeSize.setValue(FileSizeFormatter.getFileSize(path));
+		spnEpisodeSize.setValue(FileSizeFormatter.getFileSize(edEpisodePart.getPath().toFSPath()));
 	}
 
 	private void recalcEpisodeFormat() {
-		String path = PathFormatter.fromCCPath(edEpisodePart.getText());
-
-		CCFileFormat fmt = CCFileFormat.getMovieFormatFromPath(path);
+		CCFileFormat fmt = CCFileFormat.getMovieFormatFromPath(edEpisodePart.getPath().toFSPath());
 
 		cbxEpisodeFormat.setSelectedEnum(fmt);
 	}
@@ -955,13 +932,8 @@ public class EditSeriesFrame extends JFrame
 			return;
 		}
 
-		String abspath = videoFileChooser.getSelectedFile().getAbsolutePath();
-		String path = abspath;
-		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
-			path = PathFormatter.getCCPath(abspath);
-		}
-
-		edEpisodePart.setText(path);
+		var path = CCPath.createFromFSPath(FSPath.create(videoFileChooser.getSelectedFile()));
+		edEpisodePart.setPath(path);
 
 		recalcEpisodeFilesize();
 		recalcEpisodeFormat();
@@ -1006,7 +978,7 @@ public class EditSeriesFrame extends JFrame
 		episode.FileSize.set((long) spnEpisodeSize.getValue());
 		episode.AddDate.set(spnEpisodeAdded.getValue());
 		episode.ViewedHistory.set(ctrlEpisodeHistory.getValue());
-		episode.Part.set(edEpisodePart.getText());
+		episode.Part.set(edEpisodePart.getPath());
 		episode.Tags.set(edEpisodeTags.getValue());
 		episode.Language.set(ctrlEpisodeLanguage.getValue());
 
@@ -1033,7 +1005,7 @@ public class EditSeriesFrame extends JFrame
 			(int) spnEpisodeLength.getValue(),
 			cbxEpisodeFormat.getSelectedEnum(),
 			new CCFileSize((long) spnEpisodeSize.getValue()),
-			edEpisodePart.getText(),
+			edEpisodePart.getPath(),
 			spnEpisodeAdded.getValue(),
 			ctrlEpisodeHistory.getValue(),
 			edEpisodeTags.getValue(),
@@ -1094,7 +1066,7 @@ public class EditSeriesFrame extends JFrame
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edEpisodePart.getText()), false);
+			MediaQueryResult dat = MediaQueryRunner.query(edEpisodePart.getPath().toFSPath(), false);
 
 			if (dat.AudioLanguages == null) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
@@ -1124,7 +1096,7 @@ public class EditSeriesFrame extends JFrame
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edEpisodePart.getText()), true);
+			MediaQueryResult dat = MediaQueryRunner.query(edEpisodePart.getPath().toFSPath(), true);
 
 			int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
 			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
@@ -1143,7 +1115,7 @@ public class EditSeriesFrame extends JFrame
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(PathFormatter.fromCCPath(edEpisodePart.getText()), true);
+			MediaQueryResult dat = MediaQueryRunner.query(edEpisodePart.getPath().toFSPath(), true);
 
 			ctrlEpisodeMediaInfo.setValue(dat);
 
@@ -1161,7 +1133,7 @@ public class EditSeriesFrame extends JFrame
 		}
 
 		try {
-			String dat = MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(edEpisodePart.getText()));
+			String dat = MediaQueryRunner.queryRaw(edEpisodePart.getPath().toFSPath());
 
 			GenericTextDialog.showText(this, getTitle(), dat, false);
 		} catch (IOException | MediaQueryException e) {
@@ -1292,7 +1264,7 @@ public class EditSeriesFrame extends JFrame
 		label21 = new JLabel();
 		cbxEpisodeFormat = new CCEnumComboBox<CCFileFormat>(CCFileFormat.getWrapper());
 		label22 = new JLabel();
-		ctrlEpisodeMediaInfo = new JMediaInfoControl(() -> Str.isNullOrWhitespace(edEpisodePart.getText()) ? null : PathFormatter.fromCCPath(edEpisodePart.getText()));
+		ctrlEpisodeMediaInfo = new JMediaInfoControl(() -> edEpisodePart.getPath().toFSPath());
 		btnEpisodeMediaInfoMain = new JMediaInfoButton();
 		label23 = new JLabel();
 		ctrlEpisodeLanguage = new LanguageChooser();
@@ -1310,7 +1282,7 @@ public class EditSeriesFrame extends JFrame
 		spnEpisodeAdded = new JCCDateSpinner();
 		button15 = new JButton();
 		label29 = new JLabel();
-		edEpisodePart = new ReadableTextField();
+		edEpisodePart = new JReadableCCPathTextField();
 		button16 = new JButton();
 		label30 = new JLabel();
 		edEpisodeTags = new TagPanel();
@@ -1813,7 +1785,7 @@ public class EditSeriesFrame extends JFrame
 	private JCCDateSpinner spnEpisodeAdded;
 	private JButton button15;
 	private JLabel label29;
-	private ReadableTextField edEpisodePart;
+	private JReadableCCPathTextField edEpisodePart;
 	private JButton button16;
 	private JLabel label30;
 	private TagPanel edEpisodeTags;

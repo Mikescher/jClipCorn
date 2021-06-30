@@ -6,6 +6,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.RegExHelper;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
-public class CCPath implements IPath {
+public class CCPath implements IPath, Comparable<CCPath> {
+	public final static CCPath Empty = new CCPath(Str.Empty);
+
 	public static final String SEPERATOR = "/";
 	public static final char SEPERATOR_CHAR = '/';
 
@@ -32,8 +35,6 @@ public class CCPath implements IPath {
 
 	private final static List<Character> INVALID_PATH_CHARS = Arrays.asList('\\', '"', '<', '>', '?', '*', '|');
 
-	public final static CCPath Empty = CCPath.create(Str.Empty);
-
 	private final String _path;
 
 	private CCPath(@NotNull String path) {
@@ -47,44 +48,56 @@ public class CCPath implements IPath {
 	}
 
 	public static CCPath createFromFSPath(FSPath p) {
+		return createFromFSPath(p, Opt.empty());
+	}
+
+	public static CCPath createFromFSPath(FSPath p, Opt<Boolean> makeRelative) {
 		if (p.isEmpty()) return CCPath.Empty;
 
 		var aPath = p.toString();
 
 		aPath = aPath.replace(FSPath.SEPERATOR, CCPath.SEPERATOR);
 
-		if (CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue()) {
-			String self = FilesystemUtils.getAbsoluteSelfDirectory().toString().replace(FSPath.SEPERATOR, CCPath.SEPERATOR);
+		var mkBase   = makeRelative.orElse(CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue());
+		var mkNet    = makeRelative.orElse(CCProperties.getInstance().PROP_PATHSYNTAX_NETDRIVE.getValue());
+		var mkSelf   = makeRelative.orElse(CCProperties.getInstance().PROP_PATHSYNTAX_SELF.getValue());
+		var mkSDir   = makeRelative.orElse(CCProperties.getInstance().PROP_PATHSYNTAX_SELFDIR.getValue());
+		var mkDLabel = makeRelative.orElse(CCProperties.getInstance().PROP_PATHSYNTAX_DRIVELABEL.getValue());
+		var mkVars   = makeRelative.orElse(CCProperties.getInstance().getActivePathVariables().size()>0);
 
-			// <?vNetwork="...">
-			if (CCProperties.getInstance().PROP_PATHSYNTAX_NETDRIVE.getValue() && FilesystemUtils.isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveUNC(aPath.charAt(0))) {
-				String unc = DriveMap.getDriveUNC(aPath.charAt(0));
-				String cc = String.format(WILDCARD_NETDRIVE, unc).concat(aPath.substring(3));
-				return insertCCPathVariables(cc);
-			}
+		if (! mkBase) return CCPath.create(aPath);
 
-			// <?self>
-			if (CCProperties.getInstance().PROP_PATHSYNTAX_SELF.getValue() && !Str.isNullOrWhitespace(self) && aPath.startsWith(self)) {
-				String cc = WILDCARD_SELF.concat(aPath.substring(self.length()));
-				return insertCCPathVariables(cc);
-			}
+		// <?vNetwork="...">
+		if (mkNet && FilesystemUtils.isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveUNC(aPath.charAt(0))) {
+			String unc = DriveMap.getDriveUNC(aPath.charAt(0));
+			String cc = String.format(WILDCARD_NETDRIVE, unc).concat(aPath.substring(3));
 
-			// <?self[dir]>
-			if (CCProperties.getInstance().PROP_PATHSYNTAX_SELFDIR.getValue() && ApplicationHelper.isWindows() && aPath.charAt(0) == FilesystemUtils.getAbsoluteSelfDirectory().toString().charAt(0)) {
-				String cc = WILDCARD_SELFDRIVE.concat(aPath.substring(3));
-				return insertCCPathVariables(cc);
-			}
-
-			// <?vLabel="...">
-			if (CCProperties.getInstance().PROP_PATHSYNTAX_DRIVELABEL.getValue() && FilesystemUtils.isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveLabel(aPath.charAt(0))){
-				String cc = String.format(WILDCARD_DRIVENAME, DriveMap.getDriveLabel(aPath.charAt(0))).concat(aPath.substring(3));
-				return insertCCPathVariables(cc);
-			}
-
-			return insertCCPathVariables(aPath);
+			return mkVars ? insertCCPathVariables(cc) : CCPath.create(aPath);
 		}
 
-		return CCPath.create(aPath);
+		// <?self>
+		String self = FilesystemUtils.getAbsoluteSelfDirectory().toString().replace(FSPath.SEPERATOR, CCPath.SEPERATOR);
+		if (mkSelf && !Str.isNullOrWhitespace(self) && aPath.startsWith(self)) {
+			String cc = WILDCARD_SELF.concat(aPath.substring(self.length()));
+
+			return mkVars ? insertCCPathVariables(cc) : CCPath.create(aPath);
+		}
+
+		// <?self[dir]>
+		if (mkSDir && ApplicationHelper.isWindows() && aPath.charAt(0) == FilesystemUtils.getAbsoluteSelfDirectory().toString().charAt(0)) {
+			String cc = WILDCARD_SELFDRIVE.concat(aPath.substring(3));
+
+			return mkVars ? insertCCPathVariables(cc) : CCPath.create(aPath);
+		}
+
+		// <?vLabel="...">
+		if (mkDLabel && FilesystemUtils.isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveLabel(aPath.charAt(0))){
+			String cc = String.format(WILDCARD_DRIVENAME, DriveMap.getDriveLabel(aPath.charAt(0))).concat(aPath.substring(3));
+
+			return mkVars ? insertCCPathVariables(cc) : CCPath.create(aPath);
+		}
+
+		return mkVars ? insertCCPathVariables(aPath) : CCPath.create(aPath);
 	}
 
 	private static CCPath insertCCPathVariables(String path) {
@@ -264,6 +277,13 @@ public class CCPath implements IPath {
 	@Override
 	public String toString() {
 		return _path;
+	}
+
+	@Override
+	public int compareTo(@NotNull CCPath o) {
+		var a = this._path;
+		var b = this._path;
+		return ApplicationHelper.isWindows() ? a.compareToIgnoreCase(b) : a.compareTo(b);
 	}
 
 	public static CCPath getCommonPath(List<CCPath> pathlist) {

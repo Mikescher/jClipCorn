@@ -53,7 +53,6 @@ import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.MoviePlayer;
-import de.jClipCorn.util.Str;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -810,7 +809,7 @@ public class CCActionTree extends UIActionTree{
 			if (!cps.isEmpty()) chooser.setCurrentDirectory(cps.toFile());
 			if (chooser.showOpenDialog(e.SwingOwner) == JFileChooser.APPROVE_OPTION)
 			{
-				QuickAddEpisodeDialog.show(e.SwingOwner, o->{ /**/ }, s, chooser.getSelectedFile());
+				QuickAddEpisodeDialog.show(e.SwingOwner, o->{ /**/ }, s, FSPath.create(chooser.getSelectedFile()));
 			}
 		});
 	}
@@ -950,7 +949,7 @@ public class CCActionTree extends UIActionTree{
 	private void onClickMoviesPlayInRobot(CCTreeActionEvent e) {
 
 		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue()) return;
-		if (Str.isNullOrWhitespace(MoviePlayer.getVLCPath())) return;
+		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath())) return;
 
 		e.ifMovieSource(p -> VLCRobotFrame.show(e.SwingOwner).enqueue(p));
 	}
@@ -958,7 +957,7 @@ public class CCActionTree extends UIActionTree{
 	private void onClickOtherSeasonPlayInRobot(CCTreeActionEvent e) {
 
 		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue()) return;
-		if (Str.isNullOrWhitespace(MoviePlayer.getVLCPath())) return;
+		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath())) return;
 
 		e.ifSeasonSource(p -> VLCRobotFrame.show(e.SwingOwner).enqueue(p));
 	}
@@ -966,7 +965,7 @@ public class CCActionTree extends UIActionTree{
 	private void onClickOtherSeriesPlayInRobot(CCTreeActionEvent e) {
 
 		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue()) return;
-		if (Str.isNullOrWhitespace(MoviePlayer.getVLCPath())) return;
+		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath())) return;
 
 		e.ifSeriesSource(p -> VLCRobotFrame.show(e.SwingOwner).enqueue(p));
 	}
@@ -974,7 +973,7 @@ public class CCActionTree extends UIActionTree{
 	private void onClickOtherEpisodePlayInRobot(CCTreeActionEvent e) {
 
 		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue()) return;
-		if (Str.isNullOrWhitespace(MoviePlayer.getVLCPath())) return;
+		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath())) return;
 
 		e.ifEpisodeSource(p -> VLCRobotFrame.show(e.SwingOwner).enqueue(p));
 	}

@@ -137,11 +137,6 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 	}
 
 	@Override
-	public void setFilepath(int p, String t) {
-		// NOP
-	}
-
-	@Override
 	public void setMovieName(String name) {
 		// NOP
 	}

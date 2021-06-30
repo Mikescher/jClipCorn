@@ -35,8 +35,8 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.MoviePlayer;
-import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.ImageUtilities;
@@ -331,7 +331,7 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 
 		btnVLCRobot = new JButton(LocaleBundle.getString("PreviewSeriesFrame.btnPlayRobot.caption"), Resources.ICN_MENUBAR_VLCROBOT.get16x16()); //$NON-NLS-1$
 		btnVLCRobot.addActionListener(e -> autoPlay());
-		btnVLCRobot.setEnabled(CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !Str.isNullOrWhitespace(MoviePlayer.getVLCPath()));
+		btnVLCRobot.setEnabled(CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath()));
 		pnlTopLeft.add(btnVLCRobot, "2, 4, fill, top"); //$NON-NLS-1$
 
 		lblTitle = new JLabel("<Title>"); //$NON-NLS-1$
@@ -727,15 +727,16 @@ public class PreviewSeriesFrame extends JFrame implements ListSelectionListener,
 	public void filesDropped(File[] files) {
 		if (files.length != 1) return;
 
-		if (!CCFileFormat.isValidMovieFormat(files[0])) return;
+		if (files[0] == null) return;
+
+		final var f0 = FSPath.create(files[0]);
+
+		if (!CCFileFormat.isValidMovieFormat(f0)) return;
 
 		final CCSeason s = tabSeason.getSeason();
 		if (s == null) return;
 
-		final File f = files[0];
-		if (f == null) return;
-
-		SwingUtils.invokeLater(() -> QuickAddEpisodeDialog.show(this, s, f));
+		SwingUtils.invokeLater(() -> QuickAddEpisodeDialog.show(this, s, f0));
 	}
 
 	public CCSeason getSelectedSeason() {

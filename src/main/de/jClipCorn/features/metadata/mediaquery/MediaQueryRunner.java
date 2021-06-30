@@ -28,10 +28,9 @@ public class MediaQueryRunner implements MetadataSource {
 	@SuppressWarnings("nls")
 	public static MediaQueryResult query(FSPath filename, boolean doNotValidateLangs) throws IOException, MediaQueryException {
 		var mqpath = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
-
 		if (! mqpath.exists()) throw new MediaQueryException("MediaQuery not found");
 
-		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath, filename.toString(), "--Output=XML");
+		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath.toAbsolutePathString(), filename.toString(), "--Output=XML");
 
 		if (proc.Item1 != 0) throw new MediaQueryException("MediaQuery returned " + proc.Item1, proc.Item2 + "\n\n\n\n" + proc.Item3);
 
@@ -64,10 +63,9 @@ public class MediaQueryRunner implements MetadataSource {
 	@SuppressWarnings("nls")
 	public static String queryRaw(FSPath filename) throws IOException, MediaQueryException {
 		var mqpath = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
-
 		if (!mqpath.exists()) throw new MediaQueryException("MediaQuery not found");
 
-		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath, filename.toString());
+		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath.toAbsolutePathString(), filename.toString());
 
 		if (proc.Item1 != 0) throw new MediaQueryException("MediaQuery returned " + proc.Item1, proc.Item2 + "\n\n\n\n" + proc.Item3);
 

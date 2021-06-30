@@ -11,7 +11,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.filesystem.PathFormatter;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -22,8 +22,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,13 +36,13 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	
 	private JPanel panel;
 	private JScrollPane scrollPane;
-	private JList<String> lsFiles;
+	private JList<FSPath> lsFiles;
 	private JButton btnOpenFolder;
 	private JProgressBar progressBar;
 	private JButton btnAddAll;
 	private JButton btnRemoveAdditionalParts;
 	
-	private DefaultListModel<String> lsModel;
+	private DefaultListModel<FSPath> lsModel;
 	private JCheckBox cbIncludeSeries;
 	private JCheckBox cbExcludeIfo;
 	
@@ -53,7 +51,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	
 	public ScanFolderFrame(MainFrame mf, CCMovieList ml) {
 		super();
-		this.folderchooser = new JFileChooser(ml.getCommonPathForMovieFileChooser());
+		this.folderchooser = new JFileChooser(ml.getCommonPathForMovieFileChooser().toFile());
 		this.owner = mf;
 		
 		initGUI();
@@ -177,50 +175,47 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 			}
 		});
 		
-		File dir = folderchooser.getSelectedFile();
+		var dir = FSPath.create(folderchooser.getSelectedFile());
 		
 		if (dir.isDirectory()) {
 			// List of Files in Directory
-			List<File> filelist = new ArrayList<>();
+			List<FSPath> filelist = new ArrayList<>();
 			searchFiles(dir, filelist);
 			
 			// List of Files in in Database
-			List<File> movielist = owner.getMovielist().getAbsolutePathList(includeSeries);
+			List<FSPath> movielist = owner.getMovielist().getAbsolutePathList(includeSeries);
 			
 			filelist.removeAll(movielist);
 
-			for (File f : filelist) {
+			for (var f : filelist) {
 				addToList(f);
 			}
 
 		}
 		
-		SwingUtils.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				btnRemoveAdditionalParts.setEnabled(true);
-				btnAddAll.setEnabled(true);
-				cbIncludeSeries.setEnabled(false);
-				cbExcludeIfo.setEnabled(false);
-				progressBar.setIndeterminate(false);
-				updateCount();
-			}
+		SwingUtils.invokeLater(() ->
+		{
+			btnRemoveAdditionalParts.setEnabled(true);
+			btnAddAll.setEnabled(true);
+			cbIncludeSeries.setEnabled(false);
+			cbExcludeIfo.setEnabled(false);
+			progressBar.setIndeterminate(false);
+			updateCount();
 		});
 	}
 
-	private void searchFiles(File dir, List<File> filelist) {
-		File[] files = dir.listFiles(new FileFilter() {
-			@Override
-			public boolean accept(File f) {
-				return (CCFileFormat.isValidMovieFormat(PathFormatter.getExtension(f.getAbsolutePath())) && !(excludeIfos && PathFormatter.getExtension(f.getAbsolutePath()).equalsIgnoreCase("ifo"))) || f.isDirectory(); //$NON-NLS-1$
-			}
+	private void searchFiles(FSPath dir, List<FSPath> filelist) {
+
+		var files = dir.list(p ->
+		{
+			if (p.isDirectory()) return true;
+
+			if (excludeIfos && p.getExtension().equalsIgnoreCase("ifo")) return false; //$NON-NLS-1$
+
+			return CCFileFormat.isValidMovieFormat(p);
 		});
-		
-		if (files == null) {
-			return;
-		}
-		
-		for (File f : files) {
+
+		for (var f : files) {
 			if (f.isDirectory()) {
 				searchFiles(f, filelist);
 			} else {
@@ -229,18 +224,13 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 		}
 	}
 	
-	private void addToList(final File f) {
-		SwingUtils.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				lsModel.addElement(f.getAbsolutePath());
-			}
-		});
+	private void addToList(final FSPath f) {
+		SwingUtils.invokeLater(() -> lsModel.addElement(f));
 	}
 	
 	private void removeAdditional() {
 		for (int i = lsModel.size() - 1; i >= 0; i--) {
-			if (lsModel.get(i).matches(REGEX_PART_N)) {
+			if (lsModel.get(i).toString().matches(REGEX_PART_N)) {
 				lsModel.remove(i);
 			}
 		}
@@ -259,7 +249,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 		}
 		
 		for (int i = 0; i < lsModel.size(); i++) {
-			String path = lsModel.get(i);
+			var path = lsModel.get(i);
 			AddMovieFrame amf = new AddMovieFrame(this, owner.getMovielist(), path);
 			amf.setVisible(true);
 		}
@@ -269,7 +259,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2 && lsFiles.getSelectedIndex() >= 0) {
-			String path = lsFiles.getSelectedValue();
+			var path = lsFiles.getSelectedValue();
 			lsModel.remove(lsFiles.getSelectedIndex());
 			AddMovieFrame amf = new AddMovieFrame(this, owner.getMovielist(), path);
 			amf.setVisible(true);

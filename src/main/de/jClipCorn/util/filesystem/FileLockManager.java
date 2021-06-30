@@ -46,7 +46,7 @@ public class FileLockManager {
 			String pid = lockFile.readAsUTF8TextFile();
 			
 			if (pid.equalsIgnoreCase(getPID()) || !isRunning(pid)) {
-				lockFile.delete();
+				lockFile.deleteWithException();
 				return true;
 			}
 			

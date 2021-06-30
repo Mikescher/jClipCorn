@@ -17,9 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 
 public abstract class FFProbeRunner implements MetadataSource {
@@ -30,15 +28,12 @@ public abstract class FFProbeRunner implements MetadataSource {
 
 	@SuppressWarnings("nls")
 	public FFProbeResult query(FSPath filename) throws IOException, FFProbeQueryException {
-		String ffppath = CCProperties.getInstance().PROP_PLAY_FFPROBE_PATH.getValue();
+		var ffppath = CCProperties.getInstance().PROP_PLAY_FFPROBE_PATH.getValue();
+		if (! ffppath.exists()) throw new FFProbeQueryException("FFProbe not found"); //$NON-NLS-1$
 
-		File ffpfile = new File(ffppath);
+		BasicFileAttributes attr = filename.readFileAttr();
 
-		if (! ffpfile.exists()) throw new FFProbeQueryException("FFProbe not found"); //$NON-NLS-1$
-
-		BasicFileAttributes attr = Files.readAttributes(new File(filename).toPath(), BasicFileAttributes.class);
-
-		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(ffppath, getArgs(filename));
+		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(ffppath.toAbsolutePathString(), getArgs(filename));
 
 		if (proc.Item1 != 0) throw new FFProbeQueryException("FFProbe returned " + proc.Item1, proc.Item2 + "\n\n\n\n" + proc.Item3); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -78,7 +73,7 @@ public abstract class FFProbeRunner implements MetadataSource {
 			int audSampleRate       = getIntFromStr(astream, "sample_rate"); //$NON-NLS-1$
 			int audChannels         = getIntDirect(astream, "channels"); //$NON-NLS-1$
 
-			var hash = ChecksumHelper.fastVideoHash(new File(filename));
+			var hash = ChecksumHelper.fastVideoHash(filename);
 
 			return new FFProbeResult(
 					ffjson,
@@ -167,14 +162,12 @@ public abstract class FFProbeRunner implements MetadataSource {
 
 	@Override
 	public boolean isConfiguredAndRunnable() {
-		String ffpath = CCProperties.getInstance().PROP_PLAY_FFPROBE_PATH.getValue();
-		if (Str.isNullOrWhitespace(ffpath)) return false;
+		var ffpath = CCProperties.getInstance().PROP_PLAY_FFPROBE_PATH.getValue();
+		if (FSPath.isNullOrEmpty(ffpath)) return false;
 
-		File f = new File(ffpath);
-
-		if (!f.exists()) return false;
-		if (!f.isFile()) return false;
-		if (!f.canExecute()) return false;
+		if (!ffpath.exists()) return false;
+		if (!ffpath.isFile()) return false;
+		if (!ffpath.canExecute()) return false;
 
 		return true;
 	}

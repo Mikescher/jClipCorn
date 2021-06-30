@@ -49,7 +49,7 @@ public class ApplyPatchFrame extends JFrame
 		initComponents();
 		postInit();
 
-		edPathPatchfile.setText(f.toAbsolutePathString());
+		edPathPatchfile.setPath(f);
 
 		setLocationRelativeTo(owner);
 	}
@@ -58,11 +58,11 @@ public class ApplyPatchFrame extends JFrame
 	{
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 
-		edPathDestMovies.setText(movielist.getCommonMoviesPath().toFSPath().toString());
-		edPathDestSeries.setText(movielist.getCommonSeriesPath().toFSPath().toString());
+		edPathDestMovies.setPath(movielist.getCommonMoviesPath().toFSPath());
+		edPathDestSeries.setPath(movielist.getCommonSeriesPath().toFSPath());
 
-		edPathDestTrashMov.setText(movielist.getCommonMoviesPath().toFSPath().getParent().append("trash").toString());
-		edPathDestTrashSer.setText(movielist.getCommonSeriesPath().toFSPath().getParent().append("trash").toString());
+		edPathDestTrashMov.setPath(movielist.getCommonMoviesPath().toFSPath().getParent().append("trash")); //$NON-NLS-1$
+		edPathDestTrashSer.setPath(movielist.getCommonSeriesPath().toFSPath().getParent().append("trash")); //$NON-NLS-1$
 	}
 
 	private void updateUI()
@@ -86,7 +86,7 @@ public class ApplyPatchFrame extends JFrame
 
 		int returnval = chooser.showOpenDialog(this);
 
-		if (returnval == JFileChooser.APPROVE_OPTION) edPathPatchfile.setText(chooser.getSelectedFile().getAbsolutePath());
+		if (returnval == JFileChooser.APPROVE_OPTION) edPathPatchfile.setPath(FSPath.create(chooser.getSelectedFile()));
 
 		tableMain.clearData();
 		_actions = null;
@@ -106,9 +106,9 @@ public class ApplyPatchFrame extends JFrame
 		try
 		{
 			var state = new PatchExecState();
-			state.load(edPathPatchfile.getText() + ".state");
+			state.load(FSPath.create(edPathPatchfile.getPath().toString() + ".state"));
 
-			CCXMLParser doc = CCXMLParser.parse(FSPath.createAndNormalize(edPathPatchfile.getText()).readAsUTF8TextFile());
+			CCXMLParser doc = CCXMLParser.parse(edPathPatchfile.getPath().readAsUTF8TextFile());
 
 			var actions = new ArrayList<ActionVM>();
 

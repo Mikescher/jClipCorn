@@ -4,7 +4,6 @@ import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
-import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
@@ -56,8 +55,8 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("languages",    o.getLanguage().serializeToString());
 
 		for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
-			String p = o.Parts.get(i);
-			if (!Str.isNullOrEmpty(p)) e.setAttribute("part_"+i, p);
+			var p = o.Parts.get(i);
+			if (!p.isEmpty()) e.setAttribute("part_"+i, p.toString());
 		}
 
 		e.setAttribute("history",      o.ViewedHistory.get().toSerializationString());
@@ -119,7 +118,7 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("format",        o.getFormat().asInt() + "");
 		e.setAttribute("history",       o.ViewedHistory.get().toSerializationString());
 		e.setAttribute("length",        o.getLength() + "");
-		e.setAttribute("part",          o.getPart());
+		e.setAttribute("part",          o.getPart().toString());
 		e.setAttribute("tags",          o.getTags().serialize());
 		e.setAttribute("languages",     o.getLanguage().serializeToString());
 

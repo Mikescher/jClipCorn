@@ -8,9 +8,10 @@ import de.jClipCorn.features.actionTree.menus.ClipMenuBar;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.MoviePlayer;
-import de.jClipCorn.util.Str;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.listener.ActionCallbackListener;
+
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +38,7 @@ public class PreviewMovieMenuBar extends ClipMenuBar {
 		{
 			addActionNode("PlayMovie");
 			addActionNode("PlayMovieAnonymous");
-			if (CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !Str.isNullOrWhitespace(MoviePlayer.getVLCPath()))
+			if (CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath()))
 			{
 				addActionNode("QueueMovieInRobot");
 			}

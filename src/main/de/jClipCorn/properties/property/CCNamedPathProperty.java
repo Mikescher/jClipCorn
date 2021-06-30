@@ -105,7 +105,7 @@ public class CCNamedPathProperty extends CCProperty<NamedPathVar> {
 				vc.setDialogTitle(LocaleBundle.getString("Settingsframe.dlg.title")); //$NON-NLS-1$
 
 				if (vc.showOpenDialog(firstComponent.getParent()) == JFileChooser.APPROVE_OPTION) {
-					((CCNamedPathPropertyPanel)firstComponent).Field2.setText(vc.getSelectedFile().getAbsolutePath());
+					((CCNamedPathPropertyPanel)firstComponent).Field2.setPath(FSPath.create(vc.getSelectedFile()));
 				}
 			}
 		});

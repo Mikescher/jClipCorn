@@ -1,34 +1,32 @@
 package de.jClipCorn.gui.frames.quickAddMoviesDialog;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
+import de.jClipCorn.gui.guiComponents.JFSPathTextField;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
+import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.filesystem.SimpleFileUtils;
-import de.jClipCorn.util.helper.SwingUtils;
-
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
-
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.filesystem.PathFormatter;
-import de.jClipCorn.util.stream.CCStreams;
+import java.awt.*;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuickAddMoviesDialog extends JDialog {
 	private static final long serialVersionUID = 5295134501386181860L;
@@ -36,8 +34,8 @@ public class QuickAddMoviesDialog extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 
 	private final CCMovieList movielist;
-	private final File[] inputFiles;
-	private JTextField edRoot;
+	private final FSPath[] inputFiles;
+	private JFSPathTextField edRoot;
 	private QuickAddMoviesTable lstData;
 	private JProgressBar progressBar1;
 	private JProgressBar progressBar2;
@@ -45,7 +43,7 @@ public class QuickAddMoviesDialog extends JDialog {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public QuickAddMoviesDialog(JFrame owner, CCMovieList mlist, File[] files) {
+	public QuickAddMoviesDialog(JFrame owner, CCMovieList mlist, FSPath[] files) {
 		super();
 
 		movielist = mlist;
@@ -55,11 +53,11 @@ public class QuickAddMoviesDialog extends JDialog {
 
 		setLocationRelativeTo(owner);
 		
-		edRoot.setText(PathFormatter.fromCCPath(mlist.getCommonMoviesPath()));
-		if (!PathFormatter.isValid(edRoot.getText())) {
+		edRoot.setPath(mlist.getCommonMoviesPath().toFSPath());
+		if (edRoot.getPath().isEmpty()) {
 			CCMovie m = mlist.iteratorMovies().lastOrNull();
 			if (m != null) {
-				edRoot.setText(new File(m.getAbsolutePart(0)).getParent());
+				edRoot.setPath(m.Parts.get(0).toFSPath().getParent());
 			}
 		}
 		lstData.setData(CCStreams.iterate(files).map(this::getPaths).enumerate());
@@ -84,7 +82,7 @@ public class QuickAddMoviesDialog extends JDialog {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
 		
-		edRoot = new JTextField();
+		edRoot = new JFSPathTextField();
 		contentPanel.add(edRoot, "1, 1, fill, default"); //$NON-NLS-1$
 		edRoot.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
@@ -140,9 +138,8 @@ public class QuickAddMoviesDialog extends JDialog {
 		progressBar2.setVisible(false);
 	}
 
-	private Tuple<String, String> getPaths(File f) {
-		String f0 = f.getAbsolutePath();
-		String f1 = PathFormatter.getCCPath(PathFormatter.combine(edRoot.getText(), PathFormatter.getFilenameWithExt(f0)));
+	private Tuple<FSPath, CCPath> getPaths(FSPath f0) {
+		var f1 = CCPath.createFromFSPath(edRoot.getPath().append(f0.getFilenameWithExt()));
 		
 		return Tuple.Create(f0, f1);
 	}
@@ -151,18 +148,17 @@ public class QuickAddMoviesDialog extends JDialog {
 	
 	private void onOK()
 	{
-		for (File file : inputFiles) {
-			Tuple<String, String> p = getPaths(file);
+		for (var file : inputFiles) {
+			var p = getPaths(file);
 
-			String src = p.Item1;
-			String dst = p.Item2;
-			String fullDst = PathFormatter.fromCCPath(dst);
+			var src = p.Item1;
+			var dst = p.Item2.toFSPath();
 
-			if (!PathFormatter.fileExists(src)) return;
+			if (!src.fileExists()) return;
 
-			if (PathFormatter.fileExists(fullDst) && !fullDst.equalsIgnoreCase(dst)) return;
+			if (dst.fileExists() && !src.equalsOnFilesystem(dst)) return;
 
-			if (!PathFormatter.isValid(fullDst)) return;
+			if (!dst.isValidPath()) return;
 		}
 
 		contentPanel.setEnabled(false);
@@ -182,17 +178,17 @@ public class QuickAddMoviesDialog extends JDialog {
 					});
 				} catch (InterruptedException | InvocationTargetException e) { /* */ }
 
-				List<String> destinations = new ArrayList<>();
+				List<FSPath> destinations = new ArrayList<>();
 
 				int i = 0;
-				for (File file : inputFiles)
+				for (var file : inputFiles)
 				{
 					i++;
 
-					Tuple<String, String> p = getPaths(file);
+					var p = getPaths(file);
 
-					String src = p.Item1;
-					String dst = PathFormatter.fromCCPath(p.Item2);
+					var src = p.Item1;
+					var dst = p.Item2.toFSPath();
 
 					final int iv = i;
 					SwingUtils.invokeLater(() ->
@@ -205,7 +201,7 @@ public class QuickAddMoviesDialog extends JDialog {
 					try {
 
 						//FileUtils.copyFile(new File(src), new File(dst));
-						SimpleFileUtils.copyWithProgress(new File(src), new File(dst), (val, max) ->
+						SimpleFileUtils.copyWithProgress(src, dst, (val, max) ->
 						{
 							int newvalue = (int)(((val * 100) / max));
 							if (progressValueCache != newvalue)
@@ -230,7 +226,7 @@ public class QuickAddMoviesDialog extends JDialog {
 
 				SwingUtils.invokeLater(() ->
 				{
-					for (String dst : destinations) {
+					for (var dst : destinations) {
 						AddMovieFrame amf = new AddMovieFrame(this, movielist, dst);
 						amf.setVisible(true);
 					}

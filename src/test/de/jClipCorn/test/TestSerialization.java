@@ -1,14 +1,15 @@
 package de.jClipCorn.test;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.*;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
@@ -80,13 +81,13 @@ public class TestSerialization extends ClipCornBaseTest {
 		CCMovie mov = ml.iteratorMovies().firstOrNull();
 		assertEquals(1, ml.getElementCount());
 
-		File filep = new File(SimpleFileUtils.getSystemTempFile("jsccexport"));
+		var filep = SimpleFileUtils.getSystemTempFile("jsccexport");
 		ExportHelper.exportMovie(filep, mov, true, false);
 
 		ml.remove(mov);
 		assertEquals(0, ml.getElementCount());
 
-		String dataExpected = SimpleFileUtils.readUTF8TextFile(filep);
+		String dataExpected = filep.readAsUTF8TextFile();
 		ExportHelper.importElements(ml, dataExpected, new ImportOptions(true, true, true, true, false), -1);
 		mov = ml.iteratorMovies().firstOrNull();
 		assertEquals(1, ml.getElementCount());
@@ -96,7 +97,7 @@ public class TestSerialization extends ClipCornBaseTest {
 		ml.remove(ml.iteratorMovies().firstOrNull());
 		assertEquals(0, ml.getElementCount());
 
-		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
+		String dataActual = filep.readAsUTF8TextFile();
 		ExportHelper.importElements(ml, dataExpected, new ImportOptions(true, true, true, true, false), -1);
 		mov = ml.iteratorMovies().firstOrNull();
 		assertEquals(1, ml.getElementCount());
@@ -106,7 +107,7 @@ public class TestSerialization extends ClipCornBaseTest {
 
 		assertEquals(dataExpected, dataActual);
 
-		filep.delete();
+		filep.deleteWithException();
 	}
 
 	@Test
@@ -119,13 +120,13 @@ public class TestSerialization extends ClipCornBaseTest {
 		CCMovie mov = ml.iteratorMovies().firstOrNull();
 		assertEquals(1, ml.getElementCount());
 
-		File filep = new File(SimpleFileUtils.getSystemTempFile("jsccexport"));
+		var filep = SimpleFileUtils.getSystemTempFile("jsccexport");
 		ExportHelper.exportMovie(filep, mov, true, false);
 
 		ml.remove(mov);
 		assertEquals(0, ml.getElementCount());
 
-		String dataExpected = SimpleFileUtils.readUTF8TextFile(filep);
+		String dataExpected = filep.readAsUTF8TextFile();
 		ExportHelper.importElements(ml, dataExpected, new ImportOptions(true, true, true, true, false), -1);
 		mov = ml.iteratorMovies().firstOrNull();
 		assertEquals(1, ml.getElementCount());
@@ -135,7 +136,7 @@ public class TestSerialization extends ClipCornBaseTest {
 		ml.remove(ml.iteratorMovies().firstOrNull());
 		assertEquals(0, ml.getElementCount());
 
-		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
+		String dataActual = filep.readAsUTF8TextFile();
 		ExportHelper.importElements(ml, dataExpected, new ImportOptions(true, true, true, true, false), -1);
 		mov = ml.iteratorMovies().firstOrNull();
 		assertEquals(1, ml.getElementCount());
@@ -145,7 +146,7 @@ public class TestSerialization extends ClipCornBaseTest {
 
 		assertEquals(dataExpected, dataActual);
 
-		filep.delete();
+		filep.deleteWithException();
 	}
 
 	@Test
@@ -158,13 +159,13 @@ public class TestSerialization extends ClipCornBaseTest {
 		CCSeries ser = ml.iteratorSeries().firstOrNull();
 		assertEquals(1, ml.getElementCount());
 
-		File filep = new File(SimpleFileUtils.getSystemTempFile("jsccexport"));
+		var filep = SimpleFileUtils.getSystemTempFile("jsccexport");
 		ExportHelper.exportSeries(filep, ser, true, false);
 		
 		ml.remove(ser);
 		assertEquals(0, ml.getElementCount());
 
-		String dataExpected = SimpleFileUtils.readUTF8TextFile(filep);
+		String dataExpected = filep.readAsUTF8TextFile();
 		ExportHelper.importElements(ml, dataExpected, new ImportOptions(true, true, true, true, false), -1);
 		ser = ml.iteratorSeries().firstOrNull();
 		assertEquals(1, ml.getElementCount());
@@ -174,7 +175,7 @@ public class TestSerialization extends ClipCornBaseTest {
 		ml.remove(ml.iteratorSeries().firstOrNull());
 		assertEquals(0, ml.getElementCount());
 		
-		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
+		String dataActual = filep.readAsUTF8TextFile();
 		ExportHelper.importElements(ml, dataExpected, new ImportOptions(true, true, true, true, false), -1);
 		ser = ml.iteratorSeries().firstOrNull();
 		assertEquals(1, ml.getElementCount());
@@ -184,7 +185,7 @@ public class TestSerialization extends ClipCornBaseTest {
 
 		assertEquals(dataExpected, dataActual);
 		
-		filep.delete();
+		filep.deleteWithException();
 	}
 
 	@Test
@@ -197,13 +198,13 @@ public class TestSerialization extends ClipCornBaseTest {
 		CCSeries ser = ml.iteratorSeries().firstOrNull();
 		assertEquals(1, ml.getElementCount());
 
-		File filep = new File(SimpleFileUtils.getSystemTempFile("jsccexport"));
+		var filep = SimpleFileUtils.getSystemTempFile("jsccexport");
 		ExportHelper.exportSeries(filep, ser, true, false);
 
 		ml.remove(ser);
 		assertEquals(0, ml.getElementCount());
 
-		String dataExpected = SimpleFileUtils.readUTF8TextFile(filep);
+		String dataExpected = filep.readAsUTF8TextFile();
 		ExportHelper.importElements(ml, dataExpected, new ImportOptions(true, true, true, true, false), -1);
 		ser = ml.iteratorSeries().firstOrNull();
 		assertEquals(1, ml.getElementCount());
@@ -213,7 +214,7 @@ public class TestSerialization extends ClipCornBaseTest {
 		ml.remove(ml.iteratorSeries().firstOrNull());
 		assertEquals(0, ml.getElementCount());
 
-		String dataActual = SimpleFileUtils.readUTF8TextFile(filep);
+		String dataActual = filep.readAsUTF8TextFile();
 		ExportHelper.importElements(ml, dataExpected, new ImportOptions(true, true, true, true, false), -1);
 		ser = ml.iteratorSeries().firstOrNull();
 		assertEquals(1, ml.getElementCount());
@@ -223,7 +224,7 @@ public class TestSerialization extends ClipCornBaseTest {
 
 		assertEquals(dataExpected, dataActual);
 
-		filep.delete();
+		filep.deleteWithException();
 	}
 
 	@Test
@@ -231,20 +232,20 @@ public class TestSerialization extends ClipCornBaseTest {
 		CCMovieList ml = createExampleDB();
 
 		for(CCDatabaseElement e : ml.iteratorElements()) {
-			File tmpfile1 = new File(SimpleFileUtils.getSystemTempFile("jmccexport"));
+			var tmpfile1 = SimpleFileUtils.getSystemTempFile("jmccexport");
 			tmpfile1.deleteOnExit();
 			ExportHelper.exportDBElements(tmpfile1, Collections.singletonList(e), true, false);
-			String data1 = SimpleFileUtils.readUTF8TextFile(tmpfile1);
-			tmpfile1.delete();
+			String data1 = tmpfile1.readAsUTF8TextFile();
+			tmpfile1.deleteWithException();
 
 			CCMovieList ml2 = createEmptyDB();
 			ExportHelper.importElements(ml2, data1, new ImportOptions(false, false, false, false, false), -1);
 
-			File tmpfile2 = new File(SimpleFileUtils.getSystemTempFile("jmccexport"));
+			var tmpfile2 = SimpleFileUtils.getSystemTempFile("jmccexport");
 			tmpfile2.deleteOnExit();
 			ExportHelper.exportDBElements(tmpfile2, Collections.singletonList(ml2.iteratorElements().singleOrNull()), true, false);
-			String data2 = SimpleFileUtils.readUTF8TextFile(tmpfile2);
-			tmpfile2.delete();
+			String data2 = tmpfile2.readAsUTF8TextFile();
+			tmpfile2.deleteWithException();
 
 			assertEquals(data1, data2);
 		}
@@ -254,20 +255,20 @@ public class TestSerialization extends ClipCornBaseTest {
 	public void testMultiRoundtrip2() throws Exception {
 		CCMovieList ml = createExampleDB();
 
-		File tmpfile1 = new File(SimpleFileUtils.getSystemTempFile("jmccexport"));
+		var tmpfile1 = SimpleFileUtils.getSystemTempFile("jmccexport");
 		tmpfile1.deleteOnExit();
 		ExportHelper.exportDBElements(tmpfile1, ml.iteratorElements().enumerate(), true, false);
-		String data1 = SimpleFileUtils.readUTF8TextFile(tmpfile1);
-		tmpfile1.delete();
+		String data1 = tmpfile1.readAsUTF8TextFile();
+		tmpfile1.deleteWithException();
 
 		CCMovieList ml2 = createEmptyDB();
 		ExportHelper.importElements(ml2, data1, new ImportOptions(false, false, false, false, false), -1);
 
-		File tmpfile2 = new File(SimpleFileUtils.getSystemTempFile("jmccexport"));
+		var tmpfile2 = SimpleFileUtils.getSystemTempFile("jmccexport");
 		tmpfile2.deleteOnExit();
 		ExportHelper.exportDBElements(tmpfile2, ml2.iteratorElements().enumerate(), true, false);
-		String data2 = SimpleFileUtils.readUTF8TextFile(tmpfile2);
-		tmpfile2.delete();
+		String data2 = tmpfile2.readAsUTF8TextFile();
+		tmpfile2.deleteWithException();
 
 		assertEquals(data1, data2);
 	}

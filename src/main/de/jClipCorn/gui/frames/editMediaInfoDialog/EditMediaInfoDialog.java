@@ -12,6 +12,7 @@ import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
+import de.jClipCorn.gui.guiComponents.JFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
@@ -35,7 +36,7 @@ import java.util.TimeZone;
 public class EditMediaInfoDialog extends JDialog {
 	private static final long serialVersionUID = -9200470525584039395L;
 	
-	private JTextField edFilepath;
+	private JFSPathTextField edFilepath;
 	private JPanel pnlGeneral;
 	private JPanel pnlVideo;
 	private JPanel pnlAudio;
@@ -145,7 +146,7 @@ public class EditMediaInfoDialog extends JDialog {
 		_handler = h;
 		
 		initGUI();
-		edFilepath.setText(path == null ? Str.Empty : path);
+		edFilepath.setPath(path == null ? FSPath.Empty : path);
 
 		initSources();
 
@@ -162,7 +163,7 @@ public class EditMediaInfoDialog extends JDialog {
 		_handler = h;
 		
 		initGUI();
-		edFilepath.setText(path == null ? Str.Empty : path);
+		edFilepath.setPath(path == null ? FSPath.Empty : path);
 
 		initSources();
 
@@ -179,7 +180,7 @@ public class EditMediaInfoDialog extends JDialog {
 		_handler = h;
 		
 		initGUI();
-		edFilepath.setText(path == null ? Str.Empty : path);
+		edFilepath.setPath(path == null ? FSPath.Empty : path);
 
 		initSources();
 
@@ -247,7 +248,7 @@ public class EditMediaInfoDialog extends JDialog {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("max(12dlu;default)"),})); //$NON-NLS-1$
 		
-		edFilepath = new JTextField();
+		edFilepath = new JFSPathTextField();
 		panel_3.add(edFilepath, "1, 1, fill, center"); //$NON-NLS-1$
 		edFilepath.setColumns(10);
 		
@@ -663,7 +664,7 @@ public class EditMediaInfoDialog extends JDialog {
 		doUpdateEnabled(true);
 		progressBar.setIndeterminate(true);
 
-		final String filename = edFilepath.getText();
+		final var filename = edFilepath.getPath();
 		new Thread(() ->
 		{
 			try
@@ -806,9 +807,5 @@ public class EditMediaInfoDialog extends JDialog {
 		if (_handler != null) _handler.onApplyMediaInfo(mi);
 
 		dispose();
-	}
-
-	public String getCurrentInputFilepath() {
-		return edFilepath.getText();
 	}
 }

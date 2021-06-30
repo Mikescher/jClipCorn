@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 public class CDFWorkerCompare
 {
-	public static CompareState compare(DoubleProgressCallbackListener cb, CompareDatabaseRuleset ruleset, String dbPath, String dbName, CCMovieList mlLoc) throws Exception
+	public static CompareState compare(DoubleProgressCallbackListener cb, CompareDatabaseRuleset ruleset, FSPath dbPath, String dbName, CCMovieList mlLoc) throws Exception
 	{
 		cb.setMaxAndResetValueBoth(3, 1);
 		cb.setValueBoth(0, 0, "Connecting", "");

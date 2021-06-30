@@ -9,6 +9,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONObject;
@@ -243,13 +244,13 @@ public class HTTPUtilities {
 		return null;
 	}
 
-	public static String getURLEncodedFilePath(String filepath)
+	public static String getURLEncodedFilePath(FSPath filepath)
 	{
 		var iswin = ApplicationHelper.isWindows();
 
 		var sb = new StringBuilder();
 
-		for (var chr : filepath.toCharArray())
+		for (var chr : filepath.toString().toCharArray())
 		{
 			switch (chr)
 			{

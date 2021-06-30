@@ -1,29 +1,18 @@
 package de.jClipCorn.gui.frames.textExportFrame;
 
-import java.awt.Component;
-import java.awt.Dimension;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FileChooserHelper;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.filesystem.PathFormatter;
-import de.jClipCorn.util.filesystem.FileChooserHelper;
-import de.jClipCorn.util.filesystem.SimpleFileUtils;
 
 public class TextExportFrame extends JFrame {
 	private static final long serialVersionUID = -807033167837187549L;
@@ -169,6 +158,7 @@ public class TextExportFrame extends JFrame {
 	
 	private void export() {
 		DatabaseTextExporter expo = (DatabaseTextExporter) cbFormat.getSelectedItem();
+		if (expo == null) return;
 		
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_txt.description", expo.getFileExtension())); //$NON-NLS-1$
@@ -178,7 +168,7 @@ public class TextExportFrame extends JFrame {
 			start();
 			
 			try {
-				SimpleFileUtils.writeTextFile(chooser.getSelectedFile(), memoResult.getText());
+				FSPath.create(chooser.getSelectedFile()).writeAsUTF8TextFile(memoResult.getText());
 			} catch (IOException e) {
 				CCLog.addError(e);
 				dispose();

@@ -1,6 +1,8 @@
 package de.jClipCorn.gui.frames.initialConfigFrame;
 
+import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.gui.LookAndFeelManager;
+import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -8,9 +10,9 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.AppTheme;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.properties.enumerations.UILanguage;
-import de.jClipCorn.util.filesystem.PathFormatter;
-import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
+import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -37,7 +39,7 @@ public class InitialConfigFrame extends JDialog {
 	private JLabel lblCreatePeriodicallyBackups;
 	private JCheckBox cbBackups;
 	private JLabel lblVlcPfad;
-	private JTextField edVLCPath;
+	private JReadableFSPathTextField edVLCPath;
 	private JButton btnVLCChooser;
 
 	public InitialConfigFrame() {
@@ -139,8 +141,7 @@ public class InitialConfigFrame extends JDialog {
 		lblVlcPfad.setBounds(12, 336, 55, 16);
 		getContentPane().add(lblVlcPfad);
 		
-		edVLCPath = new JTextField();
-		edVLCPath.setEditable(false);
+		edVLCPath = new JReadableFSPathTextField();
 		edVLCPath.setBounds(273, 334, 135, 20);
 		getContentPane().add(edVLCPath);
 		edVLCPath.setColumns(10);
@@ -158,7 +159,7 @@ public class InitialConfigFrame extends JDialog {
 			vc.setDialogTitle(LocaleBundle.getString("Settingsframe.dlg.title")); //$NON-NLS-1$
 
 			if (vc.showOpenDialog(InitialConfigFrame.this) == JFileChooser.APPROVE_OPTION) {
-				edVLCPath.setText(vc.getSelectedFile().getAbsolutePath());
+				edVLCPath.setPath(FSPath.create(vc.getSelectedFile()));
 			}
 		});
 		btnVLCChooser.setBounds(412, 331, 36, 26);
@@ -209,7 +210,7 @@ public class InitialConfigFrame extends JDialog {
 	private void onStart() {
 		if (cbxDatabaseDriver.getSelectedItem() == null) return;
 
-		if (!PathFormatter.validateDatabaseName(edDatabasename.getText())) {
+		if (!CCDatabase.validateDatabaseName(edDatabasename.getText())) {
 			DialogHelper.showLocalError(this, "Dialogs.DatabasenameAssertion"); //$NON-NLS-1$
 			
 			return;
@@ -238,7 +239,7 @@ public class InitialConfigFrame extends JDialog {
 			LookAndFeelManager.setLookAndFeel(cbxLooknFeel.getSelectedEnum(), false);
 		}
 				
-		if (!edVLCPath.getText().trim().isEmpty()) CCProperties.getInstance().PROP_PLAY_VLC_PATH.setValue(edVLCPath.getText());
+		if (!edVLCPath.getPath().isEmpty()) CCProperties.getInstance().PROP_PLAY_VLC_PATH.setValue(edVLCPath.getPath());
 		
 		result = true;
 

@@ -1,31 +1,21 @@
 package de.jClipCorn.gui.frames.exportElementsFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
-
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.filesystem.FilesystemUtils;
-import de.jClipCorn.util.filesystem.PathFormatter;
-import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
+import de.jClipCorn.util.helper.DialogHelper;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExportElementsFrame extends JFrame {
 	private static final long serialVersionUID = 1568672663044965879L;
@@ -94,7 +84,7 @@ public class ExportElementsFrame extends JFrame {
 		if (returnval == JFileChooser.APPROVE_OPTION) {
 			final boolean includeCover = 0 == DialogHelper.showLocaleOptions(this, "ExportHelper.dialogs.exportCover"); //$NON-NLS-1$
 
-			File f = PathFormatter.forceExtension(chooser.getSelectedFile(), ExportHelper.EXTENSION_MULTIPLEEXPORT);
+			var f = FSPath.create(chooser.getSelectedFile()).forceExtension(ExportHelper.EXTENSION_MULTIPLEEXPORT);
 
 			new Thread(() -> ExportHelper.exportDBElements(f, list, includeCover, true), "THREAD_EXPORT_JMCCEXPORT").start(); //$NON-NLS-1$
 		}

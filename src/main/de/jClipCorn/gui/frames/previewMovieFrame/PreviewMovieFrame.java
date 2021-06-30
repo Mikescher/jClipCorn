@@ -12,11 +12,10 @@ import de.jClipCorn.database.history.CCCombinedHistoryEntry;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewMovieMenuBar;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
+import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
-import de.jClipCorn.gui.guiComponents.CoverLabel;
-import de.jClipCorn.gui.guiComponents.OnlineRefButton;
-import de.jClipCorn.gui.guiComponents.ReadableTextField;
-import de.jClipCorn.gui.guiComponents.TagDisplay;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.language.LanguageDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -25,14 +24,12 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
-import de.jClipCorn.util.filesystem.PathFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -42,7 +39,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,12 +54,12 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private CoverLabel lblCover;
 	private JLabel lblTitle;
 	private JList<String> lsGenres;
-	private ReadableTextField edPart0;
-	private ReadableTextField edPart1;
-	private ReadableTextField edPart2;
-	private ReadableTextField edPart3;
-	private ReadableTextField edPart4;
-	private ReadableTextField edPart5;
+	private JReadableCCPathTextField edPart0;
+	private JReadableCCPathTextField edPart1;
+	private JReadableCCPathTextField edPart2;
+	private JReadableCCPathTextField edPart3;
+	private JReadableCCPathTextField edPart4;
+	private JReadableCCPathTextField edPart5;
 	private JLabel lblQuality;
 	private JLabel lblLanguage;
 	private JLabel lblLength;
@@ -632,7 +628,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,}));
 
-		edPart0 = new ReadableTextField();
+		edPart0 = new JReadableCCPathTextField();
 		pnlTabPaths.add(edPart0, "2, 2, fill, center"); //$NON-NLS-1$
 		edPart0.setColumns(10);
 
@@ -644,7 +640,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		btnOpenDir1.addActionListener((e) -> openDir(0));
 		pnlTabPaths.add(btnOpenDir1, "6, 2, fill, fill"); //$NON-NLS-1$
 
-		edPart1 = new ReadableTextField();
+		edPart1 = new JReadableCCPathTextField();
 		pnlTabPaths.add(edPart1, "2, 4, fill, center"); //$NON-NLS-1$
 		edPart1.setColumns(10);
 
@@ -656,7 +652,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		btnOpenDir2.addActionListener((e) -> openDir(1));
 		pnlTabPaths.add(btnOpenDir2, "6, 4, fill, fill"); //$NON-NLS-1$
 
-		edPart2 = new ReadableTextField();
+		edPart2 = new JReadableCCPathTextField();
 		pnlTabPaths.add(edPart2, "2, 6, fill, center"); //$NON-NLS-1$
 		edPart2.setColumns(10);
 
@@ -668,7 +664,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		btnOpenDir3.addActionListener((e) -> openDir(2));
 		pnlTabPaths.add(btnOpenDir3, "6, 6, fill, fill"); //$NON-NLS-1$
 
-		edPart3 = new ReadableTextField();
+		edPart3 = new JReadableCCPathTextField();
 		pnlTabPaths.add(edPart3, "2, 8, fill, center"); //$NON-NLS-1$
 		edPart3.setColumns(10);
 
@@ -680,7 +676,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		btnOpenDir4.addActionListener((e) -> openDir(3));
 		pnlTabPaths.add(btnOpenDir4, "6, 8, fill, fill"); //$NON-NLS-1$
 
-		edPart4 = new ReadableTextField();
+		edPart4 = new JReadableCCPathTextField();
 		pnlTabPaths.add(edPart4, "2, 10, fill, center"); //$NON-NLS-1$
 		edPart4.setColumns(10);
 
@@ -692,7 +688,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		btnOpenDir5.addActionListener((e) -> openDir(4));
 		pnlTabPaths.add(btnOpenDir5, "6, 10, fill, fill"); //$NON-NLS-1$
 
-		edPart5 = new ReadableTextField();
+		edPart5 = new JReadableCCPathTextField();
 		pnlTabPaths.add(edPart5, "2, 12, fill, center"); //$NON-NLS-1$
 		edPart5.setColumns(10);
 
@@ -810,12 +806,12 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 			dlsmGroups.addElement(group.Name);
 		}
 				
-		edPart0.setText(movie.Parts.get(0));
-		edPart1.setText(movie.Parts.get(1));
-		edPart2.setText(movie.Parts.get(2));
-		edPart3.setText(movie.Parts.get(3));
-		edPart4.setText(movie.Parts.get(4));
-		edPart5.setText(movie.Parts.get(5));
+		edPart0.setPath(movie.Parts.get(0));
+		edPart1.setPath(movie.Parts.get(1));
+		edPart2.setPath(movie.Parts.get(2));
+		edPart3.setPath(movie.Parts.get(3));
+		edPart4.setPath(movie.Parts.get(4));
+		edPart5.setPath(movie.Parts.get(5));
 		
 		DefaultListModel<String> dlsmViewed;
 		lsHistory.setModel(dlsmViewed = new DefaultListModel<>());
@@ -845,23 +841,23 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		edMI_AudioCodec.setText(mi.isUnset() ? Str.Empty : mi.getAudioCodec());
 		edMI_AudioSamplerate.setText(mi.isUnset() ? Str.Empty : Str.spacegroupformat(mi.getAudioSamplerate()));
 
-		btnMediaInfo1.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(0)));
-		btnOpenDir1.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(0)));
+		btnMediaInfo1.setEnabled(!movie.Parts.get(0).isEmpty());
+		btnOpenDir1  .setEnabled(!movie.Parts.get(0).isEmpty());
 
-		btnMediaInfo2.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(1)));
-		btnOpenDir2.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(1)));
+		btnMediaInfo2.setEnabled(!movie.Parts.get(1).isEmpty());
+		btnOpenDir2  .setEnabled(!movie.Parts.get(1).isEmpty());
 
-		btnMediaInfo3.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(2)));
-		btnOpenDir3.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(2)));
+		btnMediaInfo3.setEnabled(!movie.Parts.get(2).isEmpty());
+		btnOpenDir3  .setEnabled(!movie.Parts.get(2).isEmpty());
 
-		btnMediaInfo4.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(3)));
-		btnOpenDir4.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(3)));
+		btnMediaInfo4.setEnabled(!movie.Parts.get(3).isEmpty());
+		btnOpenDir4  .setEnabled(!movie.Parts.get(3).isEmpty());
 
-		btnMediaInfo5.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(4)));
-		btnOpenDir5.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(4)));
+		btnMediaInfo5.setEnabled(!movie.Parts.get(4).isEmpty());
+		btnOpenDir5  .setEnabled(!movie.Parts.get(4).isEmpty());
 
-		btnMediaInfo6.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(5)));
-		btnOpenDir6.setEnabled(!Str.isNullOrWhitespace(movie.Parts.get(5)));
+		btnMediaInfo6.setEnabled(!movie.Parts.get(5).isEmpty());
+		btnOpenDir6  .setEnabled(!movie.Parts.get(5).isEmpty());
 
 	}
 
@@ -878,7 +874,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		}
 
 		try {
-			GenericTextDialog.showText(this, getTitle(), MediaQueryRunner.queryRaw(PathFormatter.fromCCPath(movie.Parts.get(index))), false);
+			GenericTextDialog.showText(this, getTitle(), MediaQueryRunner.queryRaw(movie.Parts.get(index).toFSPath()), false);
 		} catch (IOException | MediaQueryException e) {
 			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
@@ -886,6 +882,6 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	}
 
 	private void openDir(int index) {
-		PathFormatter.showInExplorer(PathFormatter.fromCCPath(movie.Parts.get(index)));
+		FilesystemUtils.showInExplorer(movie.Parts.get(index).toFSPath());
 	}
 }

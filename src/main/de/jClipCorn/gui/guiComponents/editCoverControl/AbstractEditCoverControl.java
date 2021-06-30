@@ -45,11 +45,6 @@ public class AbstractEditCoverControl extends JLayeredPane implements ParseResul
 	}
 
 	@Override
-	public void setFilepath(int p, String t) {
-		// NOP
-	}
-
-	@Override
 	public void setMovieName(String name) {
 		// NOP
 	}

@@ -8,7 +8,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -39,23 +38,23 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 			b.append(get(i).exportToString());
 		}
 		
-		File f = new File(PathFormatter.fromCCPath(CCProperties.getInstance().PROP_MAINFRAME_FILTERLISTPATH.getValue()));
+		var f = CCProperties.getInstance().PROP_MAINFRAME_FILTERLISTPATH.getValue().toFSPath();
 		
 		try {
-			SimpleFileUtils.writeTextFile(f, b.toString());
+			f.writeAsUTF8TextFile(b.toString());
 		} catch (IOException e) {
 			CCLog.addError(e);
 		}
 	}
 
 	public void load() {
-		File f = new File(PathFormatter.fromCCPath(CCProperties.getInstance().PROP_MAINFRAME_FILTERLISTPATH.getValue()));
+		var f = CCProperties.getInstance().PROP_MAINFRAME_FILTERLISTPATH.getValue().toFSPath();
 		
 		if (f.exists()) {
 			String txt;
 			
 			try {
-				txt = SimpleFileUtils.readUTF8TextFile(f);
+				txt = f.readAsUTF8TextFile();
 			} catch (IOException e) {
 				CCLog.addError(e);
 				return;

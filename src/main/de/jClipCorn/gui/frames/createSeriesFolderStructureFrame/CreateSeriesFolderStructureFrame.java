@@ -8,17 +8,16 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
-import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.Str;
-import de.jClipCorn.util.filesystem.PathFormatter;
+import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +31,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	private CoverLabel lblCover;
 	private JPanel pnlLeft;
 	private JLabel lblTitel;
-	private ReadableTextField edPath;
+	private JReadableFSPathTextField edPath;
 	private JButton btnChoose;
 	private CSFSTable lsTest;
 	private JButton btnOk;
@@ -92,7 +91,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 		lblCommonPath = new JLabel();
 		pnlLeft.add(lblCommonPath, "2, 4, 3, 1"); //$NON-NLS-1$
 		
-		edPath = new ReadableTextField();
+		edPath = new JReadableFSPathTextField();
 		pnlLeft.add(edPath, "2, 6, 3, 1, fill, default"); //$NON-NLS-1$
 		edPath.setColumns(10);
 		
@@ -124,22 +123,21 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	private void init() {
 		lblCover.setAndResizeCover(series.getCover());
 		lblTitel.setText(series.getTitle());
-		lblCommonPath.setText(PathFormatter.fromCCPath(series.getCommonPathStart(false)));
-		edPath.setText(series.guessSeriesRootPath());
-		btnTest.setEnabled(! edPath.getText().isEmpty());
+		lblCommonPath.setText(series.getCommonPathStart(false).toFSPath().toString());
+		edPath.setPath(series.guessSeriesRootPath());
+		btnTest.setEnabled(! edPath.getPath().isEmpty());
 	}
 	
 	private void onBtnChoose() {
-		String pStart = series.guessSeriesRootPath();
-		if (pStart.isEmpty()) pStart = PathFormatter.fromCCPath(series.getCommonPathStart(false));
+		var pStart = series.guessSeriesRootPath();
+		if (pStart.isEmpty()) pStart = series.getCommonPathStart(false).toFSPath();
 				
-		JFileChooser folderchooser = new JFileChooser(pStart);
+		JFileChooser folderchooser = new JFileChooser(pStart.toFile());
 		folderchooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
 		if (folderchooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-			if (new File(folderchooser.getSelectedFile().getAbsolutePath()).isDirectory()) {
-				edPath.setText(folderchooser.getSelectedFile().getAbsolutePath());
-			}
+			var p = FSPath.create(folderchooser.getSelectedFile());
+			if (p.isDirectory()) edPath.setPath(p);
 		}
 		
 		btnOk.setEnabled(false);
@@ -149,7 +147,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	private void startTest() {
 		List<CSFSElement> elements = new ArrayList<>();
 		
-		File parentfolder = new File(edPath.getText());
+		FSPath parentfolder = edPath.getPath();
 
 		for (int sea = 0; sea < series.getSeasonCount(); sea++) {
 			CCSeason season = series.getSeasonByArrayIndex(sea);
@@ -159,13 +157,13 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 
 				CSFSElement elem = new CSFSElement();
 
-				File fileNew = episode.getPathForCreatedFolderstructure(parentfolder);
+				var fileNew = episode.getPathForCreatedFolderstructure(parentfolder);
 
 				elem.CCPathOld = episode.getPart();
-				elem.FSPathOld = episode.getAbsolutePart();
+				elem.FSPathOld = episode.getPart().toFSPath();
 
-				elem.FSPathNew = (fileNew==null)? Str.Empty:fileNew.getAbsolutePath();
-				elem.CCPathNew = PathFormatter.getCCPath(elem.FSPathNew);
+				elem.FSPathNew = (fileNew==null)? FSPath.Empty : fileNew;
+				elem.CCPathNew = CCPath.createFromFSPath(elem.FSPathNew);
 
 				if (fileNew==null)
 				{
@@ -210,7 +208,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 		}
 		
 		if (DialogHelper.showLocaleYesNo(this, "CreateSeriesFolderStructureFrame.dialogs.sure")) { //$NON-NLS-1$
-			File parentfolder = new File(edPath.getText());
+			var parentfolder = edPath.getPath();
 			
 			for (int sea = 0; sea < series.getSeasonCount(); sea++) {
 				CCSeason season = series.getSeasonByArrayIndex(sea);
@@ -218,10 +216,10 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
 					CCEpisode episode = season.getEpisodeByArrayIndex(epi);
 					
-					File file = new File(episode.getAbsolutePart());
-					File newfile = episode.getPathForCreatedFolderstructure(parentfolder);
+					var file = episode.getPart().toFSPath();
+					var newfile = episode.getPathForCreatedFolderstructure(parentfolder);
 					
-					File mkdirfolder = newfile.getParentFile();
+					var mkdirfolder = newfile.getParent();
 					
 					if (newfile.exists()) {
 						if (file.equals(newfile)) {
@@ -235,10 +233,10 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 					
 					boolean succ = true;
 					if (! mkdirfolder.isDirectory()) {
-						succ = mkdirfolder.mkdirs();
+						succ = mkdirfolder.mkdirsSafe();
 					}
 					if (succ) {
-						succ = file.renameTo(newfile);
+						succ = file.renameToSafe(newfile);
 					}
 					
 					if (! succ) {
@@ -247,7 +245,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 						return false;
 					}
 					
-					episode.Part.set(PathFormatter.getCCPath(newfile.getAbsolutePath()));
+					episode.Part.set(CCPath.createFromFSPath(newfile));
 				}
 			}
 		}
@@ -256,13 +254,13 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	}
 	
 	private boolean testMoving() {
-		File parentfolder = new File(edPath.getText());
+		var parentfolder = edPath.getPath();
 		
 		if (! parentfolder.isDirectory()) {
 			return false;
 		}
 		
-		List<File> files = new ArrayList<>();
+		List<FSPath> files = new ArrayList<>();
 		
 		for (int sea = 0; sea < series.getSeasonCount(); sea++) {
 			CCSeason season = series.getSeasonByArrayIndex(sea);

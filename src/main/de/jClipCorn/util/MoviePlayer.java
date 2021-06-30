@@ -36,7 +36,7 @@ public class MoviePlayer {
 	private final static String DRIVE_1 = "C:" + FSPath.SEPERATOR; //$NON-NLS-1$
 	private final static String DRIVE_2 = "H:" + FSPath.SEPERATOR; //$NON-NLS-1$
 	
-	private static String lastVLCPath = null;
+	private static FSPath lastVLCPath = null;
 	
 	public static void play(CCMovie mov, NamedPathVar player) {
 		List<FSPath> al = new ArrayList<>();
@@ -55,10 +55,10 @@ public class MoviePlayer {
 	}
 
 	@SuppressWarnings("nls")
-	public static List<String> getParameters(String path, NamedPathVar player) {
+	public static List<String> getParameters(FSPath path, NamedPathVar player) {
 		List<String> parameters = new ArrayList<>();
 
-		parameters.add(path);
+		parameters.add(path.toString());
 
 		if (player != null)
 		{
@@ -90,9 +90,9 @@ public class MoviePlayer {
 
 	@SuppressWarnings("nls")
 	public static void play(List<FSPath> abspaths, NamedPathVar player) {
-		String playerpath = (player == null) ? getVLCPath() : player.Path;
+		var playerpath = (player == null) ? getVLCPath() : player.Path;
 		
-		if (Str.isNullOrWhitespace(playerpath)) {
+		if (FSPath.isNullOrEmpty(playerpath)) {
 			CCLog.addWarning(LocaleBundle.getString("LogMessage.VLCNotFound"));
 			
 			if (CCProperties.getInstance().PROP_PLAY_USESTANDARDONMISSINGVLC.getValue()) {
@@ -128,17 +128,17 @@ public class MoviePlayer {
 		}
 	}
 	
-	public static String getVLCPath() {
-		String vlcpath = CCProperties.getInstance().PROP_PLAY_VLC_PATH.getValue();
+	public static FSPath getVLCPath() {
+		var vlcpath = CCProperties.getInstance().PROP_PLAY_VLC_PATH.getValue();
 		
-		if (lastVLCPath != null) {
-			if (new File(lastVLCPath).exists()) {
+		if (!FSPath.isNullOrEmpty(lastVLCPath)) {
+			if (lastVLCPath.exists()) {
 				return lastVLCPath;
 			}
 		}
 		
 		if (! vlcpath.isEmpty()) {
-			if (new File(vlcpath).exists()) {
+			if (vlcpath.exists()) {
 				return lastVLCPath = vlcpath;
 			}
 		}
@@ -146,15 +146,15 @@ public class MoviePlayer {
 		if (ApplicationHelper.isWindows())
 		{
 			for (String ss : PATHS_WIN) {
-				String path = DRIVE_1 + ss;
-				if (new File(path).exists()) {
+				var path = FSPath.create(DRIVE_1 + ss);
+				if (path.exists()) {
 					return lastVLCPath = path;
 				}
 			}
 			
 			for (String ss : PATHS_WIN) {
-				String path = DRIVE_2 + ss;
-				if (new File(path).exists()) {
+				var path = FSPath.create(DRIVE_2 + ss);
+				if (path.exists()) {
 					return lastVLCPath = path;
 				}
 			}
@@ -162,8 +162,8 @@ public class MoviePlayer {
 			for (File f : File.listRoots()) {
 				if (! (f.getAbsolutePath().equals(DRIVE_1) | f.getAbsolutePath().equals(DRIVE_2))) {
 					for (String ss : PATHS_WIN) {
-						String path = f.getAbsolutePath() + ss;
-						if (new File(path).exists()) {
+						var path = FSPath.create(f.getAbsolutePath() + ss);
+						if (path.exists()) {
 							return lastVLCPath = path;
 						}
 					}
@@ -171,14 +171,14 @@ public class MoviePlayer {
 			}
 		} else if (ApplicationHelper.isUnix()) {
 			
-			for (String path : PATHS_NIX) {
-				if (new File(path).exists()) {
+			for (String npath : PATHS_NIX) {
+				var path = FSPath.create(npath);
+				if (path.exists()) {
 					return lastVLCPath = path;
 				}
 			}
 		}
-		
-		lastVLCPath = null;
-		return null;
+
+		return lastVLCPath = FSPath.Empty;
 	}
 }

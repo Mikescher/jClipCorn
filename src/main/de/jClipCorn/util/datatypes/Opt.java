@@ -7,7 +7,10 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class Opt<T> {
-	private static final Opt<?> EMPTY = new Opt<>();
+	public static final Opt<?> EMPTY = new Opt<>();
+
+	public static final Opt<Boolean> False = new Opt<>(false);
+	public static final Opt<Boolean> True  = new Opt<>(true);
 
 	private final T value;
 	private final boolean isSet;

@@ -38,7 +38,7 @@ public class CachedWebConnection extends WebConnectionLayer {
 	@Override
 	public void init() {
 		synchronized(dblock) {
-			cachePath = FSPath.createAndNormalize(CCProperties.getInstance().PROP_DEBUG_HTTPCACHE_PATH.getValue());
+			cachePath = CCProperties.getInstance().PROP_DEBUG_HTTPCACHE_PATH.getValue();
 			cacheDatabasePath = cachePath.append("cache.xml");
 
 			try {

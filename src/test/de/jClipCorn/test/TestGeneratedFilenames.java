@@ -4,6 +4,8 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import org.junit.Test;
 
+import java.io.File;
+
 import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("nls")
@@ -25,14 +27,18 @@ public class TestGeneratedFilenames extends ClipCornBaseTest {
 	public void testSeriesFilename() throws Exception {
 		CCMovieList ml = createExampleDB();
 		
-		assertEquals("Steins;Gate/01 - ONA/S01E01 - Prologue of the Beginning and End.mkv", ml.findDatabaseSeries(11).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
-		assertEquals("Steins;Gate/01 - ONA/S01E06 - Divergence of Butterfly Effect.mkv", ml.findDatabaseSeries(11).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(5).getRelativeFileForCreatedFolderstructure());
-		assertEquals("Steins;Gate/02 - OVA/S02E25 - Egoistic Poriomania.mkv", ml.findDatabaseSeries(11).getSeasonByArrayIndex(1).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
-		assertEquals("Steins;Gate/02 - OVA/S02E25 - Egoistic Poriomania.mkv", ml.findDatabaseSeries(11).getSeasonByArrayIndex(1).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
+		assertEquals(loc("Steins;Gate/01 - ONA/S01E01 - Prologue of the Beginning and End.mkv"), ml.findDatabaseSeries(11).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
+		assertEquals(loc("Steins;Gate/01 - ONA/S01E06 - Divergence of Butterfly Effect.mkv"), ml.findDatabaseSeries(11).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(5).getRelativeFileForCreatedFolderstructure());
+		assertEquals(loc("Steins;Gate/02 - OVA/S02E25 - Egoistic Poriomania.mkv"), ml.findDatabaseSeries(11).getSeasonByArrayIndex(1).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
+		assertEquals(loc("Steins;Gate/02 - OVA/S02E25 - Egoistic Poriomania.mkv"), ml.findDatabaseSeries(11).getSeasonByArrayIndex(1).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
 	
-		assertEquals("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E01 - This Self-Proclaimed Goddess and Reincarnation in Another World.mp4", ml.findDatabaseSeries(102).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
-		assertEquals("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E09 - God's Blessing on This Wonderful Shop.mp4", ml.findDatabaseSeries(102).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(8).getRelativeFileForCreatedFolderstructure());
-		assertEquals("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E10 - Final Flame for This Over-the-Top Fortress.mp4", ml.findDatabaseSeries(102).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(9).getRelativeFileForCreatedFolderstructure());
+		assertEquals(loc("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E01 - This Self-Proclaimed Goddess and Reincarnation in Another World.mp4"), ml.findDatabaseSeries(102).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
+		assertEquals(loc("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E09 - God's Blessing on This Wonderful Shop.mp4"), ml.findDatabaseSeries(102).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(8).getRelativeFileForCreatedFolderstructure());
+		assertEquals(loc("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E10 - Final Flame for This Over-the-Top Fortress.mp4"), ml.findDatabaseSeries(102).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(9).getRelativeFileForCreatedFolderstructure());
+	}
+
+	private String loc(String s) {
+		return s.replace('/', File.separatorChar);
 	}
 
 	@Test

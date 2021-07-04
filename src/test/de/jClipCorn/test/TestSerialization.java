@@ -7,6 +7,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import org.junit.Test;
 
@@ -41,7 +42,8 @@ public class TestSerialization extends ClipCornBaseTest {
 		assertEquals(CCOnlineRefType.THEMOVIEDB, mov.getOnlineReference().Main.type);
 		assertEquals("movie/39514", mov.getOnlineReference().Main.id);
 		assertEquals(CCOnlineScore.STARS_3_5, mov.getOnlinescore());
-		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.parts().get(0));
+		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.parts().get(0).toString());
+		assertEquals(CCPath.create("<?self>R.E.D. I - Älter. Härter. Besser..avi"), mov.parts().get(0));
 	}
 
 	@Test
@@ -68,7 +70,8 @@ public class TestSerialization extends ClipCornBaseTest {
 		assertEquals(CCOnlineRefType.THEMOVIEDB, mov.getOnlineReference().Main.type);
 		assertEquals("movie/39514", mov.getOnlineReference().Main.id);
 		assertEquals(CCOnlineScore.STARS_3_5, mov.getOnlinescore());
-		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.parts().get(0));
+		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.parts().get(0).toString());
+		assertEquals(CCPath.create("<?self>R.E.D. I - Älter. Härter. Besser..avi"), mov.parts().get(0));
 	}
 
 	@Test

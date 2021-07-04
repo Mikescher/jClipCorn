@@ -976,7 +976,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 				//---- label21 ----
 				label21.setText(LocaleBundle.getString("AddMovieFrame.lblMediaInfo")); //$NON-NLS-1$
 				pnlData.add(label21, CC.xy(1, 13));
-				pnlData.add(ctrlMediaInfo, CC.xywh(3, 13, 3, 1));
+				pnlData.add(ctrlMediaInfo, CC.xywh(3, 13, 3, 1, CC.DEFAULT, CC.FILL));
 
 				//---- btnMediaInfoMain ----
 				btnMediaInfoMain.addActionListener(e -> calculateAndSetMediaInfo());

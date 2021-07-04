@@ -7,19 +7,20 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-			"$columnSpecs": "unrelgap, max(pref;300dlu):grow, 10dlu, max(default;100dlu):grow, unrelgap"
+			"$columnSpecs": "unrelgap, 0dlu:grow, 10dlu, 125dlu, unrelgap"
 			"$rowSpecs": "unrelgap, default:grow, linegap, default, unrelgap"
 		} ) {
 			name: "this"
 			"title": new FormMessage( null, "AddMovieFrame.this.title" )
-			"defaultCloseOperation": 0
+			"defaultCloseOperation": 2
+			"$sizePolicy": 1
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "pref:grow"
+				"$columnSpecs": "0dlu:grow"
 				"$rowSpecs": "default, 10dlu, default:grow, default"
 			} ) {
 				name: "pnlLeft"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-					"$columnSpecs": "default, labelcompgap, max(default;175dlu):grow, labelcompgap, default, labelcompgap, default"
+					"$columnSpecs": "default, labelcompgap, 0dlu:grow, labelcompgap, default, labelcompgap, default"
 					"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default"
 				} ) {
 					name: "pnlParts"
@@ -192,7 +193,7 @@ new FormModel {
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-					"$columnSpecs": "default, labelcompgap, pref:grow, labelcompgap, max(default;40dlu), labelcompgap, 16dlu, labelcompgap, 25dlu, labelcompgap, max(default;30dlu)"
+					"$columnSpecs": "default, labelcompgap, 0dlu:grow, labelcompgap, max(default;40dlu), labelcompgap, 16dlu, labelcompgap, 25dlu, labelcompgap, max(default;30dlu)"
 					"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default"
 				} ) {
 					name: "pnlData"
@@ -262,6 +263,7 @@ new FormModel {
 						"gridX": 3
 						"gridY": 7
 						"gridWidth": 3
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label19"
@@ -350,6 +352,7 @@ new FormModel {
 						"gridX": 3
 						"gridY": 13
 						"gridWidth": 3
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JMediaInfoButton" ) {
 						name: "btnMediaInfoMain"
@@ -708,7 +711,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 685, 705 )
+			"size": new java.awt.Dimension( 750, 700 )
 		} )
 	}
 }

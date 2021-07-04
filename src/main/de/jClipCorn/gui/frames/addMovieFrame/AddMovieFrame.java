@@ -90,7 +90,6 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		}
 
 		setLocationRelativeTo(owner);
-		setMinimumSize(getSize());
 	}
 
 	private void postInit()
@@ -923,22 +922,22 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 		//======== this ========
 		setTitle(LocaleBundle.getString("AddMovieFrame.this.title")); //$NON-NLS-1$
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, [300dlu,pref]:grow, 10dlu, [100dlu,default]:grow, $ugap", //$NON-NLS-1$
+			"$ugap, 0dlu:grow, 10dlu, 125dlu, $ugap", //$NON-NLS-1$
 			"$ugap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
 
 		//======== pnlLeft ========
 		{
 			pnlLeft.setLayout(new FormLayout(
-				"pref:grow", //$NON-NLS-1$
+				"0dlu:grow", //$NON-NLS-1$
 				"default, 10dlu, default:grow, default")); //$NON-NLS-1$
 
 			//======== pnlParts ========
 			{
 				pnlParts.setLayout(new FormLayout(
-					"default, $lcgap, [175dlu,default]:grow, 2*($lcgap, default)", //$NON-NLS-1$
+					"default, $lcgap, 0dlu:grow, 2*($lcgap, default)", //$NON-NLS-1$
 					"5*(default, $lgap), default")); //$NON-NLS-1$
 
 				//---- label1 ----
@@ -1031,7 +1030,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			//======== pnlData ========
 			{
 				pnlData.setLayout(new FormLayout(
-					"default, $lcgap, pref:grow, $lcgap, [40dlu,default], $lcgap, 16dlu, $lcgap, 25dlu, $lcgap, [30dlu,default]", //$NON-NLS-1$
+					"default, $lcgap, 0dlu:grow, $lcgap, [40dlu,default], $lcgap, 16dlu, $lcgap, 25dlu, $lcgap, [30dlu,default]", //$NON-NLS-1$
 					"13*(default, $lgap), default")); //$NON-NLS-1$
 
 				//---- label15 ----
@@ -1056,7 +1055,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				//---- label18 ----
 				label18.setText(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
 				pnlData.add(label18, CC.xy(1, 7));
-				pnlData.add(edGroups, CC.xywh(3, 7, 3, 1));
+				pnlData.add(edGroups, CC.xywh(3, 7, 3, 1, CC.DEFAULT, CC.FILL));
 
 				//---- label19 ----
 				label19.setText(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
@@ -1099,7 +1098,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 				//---- ctrlMediaInfo ----
 				ctrlMediaInfo.addPropertyChangeListener(e -> onMediaInfoChanged());
-				pnlData.add(ctrlMediaInfo, CC.xywh(3, 13, 3, 1));
+				pnlData.add(ctrlMediaInfo, CC.xywh(3, 13, 3, 1, CC.DEFAULT, CC.FILL));
 
 				//---- btnMediaInfoMain ----
 				btnMediaInfoMain.addActionListener(e -> calculateAndSetMediaInfo());
@@ -1241,7 +1240,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 			pnlBottom.add(btnCancel);
 		}
 		contentPane.add(pnlBottom, CC.xywh(2, 4, 3, 1));
-		pack();
+		setSize(750, 700);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}

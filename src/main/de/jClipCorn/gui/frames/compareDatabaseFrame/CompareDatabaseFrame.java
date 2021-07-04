@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -280,9 +281,10 @@ public class CompareDatabaseFrame extends JFrame
 		//======== this ========
 		setTitle(LocaleBundle.getString("CompareDatabaseFrame.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setMinimumSize(new Dimension(500, 675));
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default, $lcgap, default:grow, $lcgap, default, $lcgap, 70dlu, $ugap", //$NON-NLS-1$
+			"$ugap, default, $lcgap, 0dlu:grow, $lcgap, default, $lcgap, 70dlu, $ugap", //$NON-NLS-1$
 			"$ugap, 3*(default, $lgap), 80dlu, $lgap, 20dlu, $lgap, default:grow, $lgap, 80dlu, 3*($lgap, default), $ugap")); //$NON-NLS-1$
 		contentPane.add(edDatabasePath, CC.xywh(2, 2, 5, 1, CC.FILL, CC.FILL));
 

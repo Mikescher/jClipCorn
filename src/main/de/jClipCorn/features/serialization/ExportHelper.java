@@ -227,14 +227,12 @@ public class ExportHelper {
 			theFile = new FileInputStream(backup.toFile());
 			stream = new ZipInputStream(theFile);
 
+			var search = "cover/" + name; //$NON-NLS-1$
+
 			ZipEntry entry;
-			while ((entry = stream.getNextEntry()) != null) {
-
-				String entryname = entry.getName().replace("\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
-
-				if (! entryname.startsWith("cover/")) continue; //$NON-NLS-1$
-
-				if (FSPath.create(entryname).getFilenameWithExt().equalsIgnoreCase(name)) return ImageIO.read(stream);
+			while ((entry = stream.getNextEntry()) != null)
+			{
+				if (entry.getName().replace("\\", "/").equalsIgnoreCase(search)) return ImageIO.read(stream); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			return null;

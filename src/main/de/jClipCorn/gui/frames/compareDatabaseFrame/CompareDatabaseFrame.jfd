@@ -7,14 +7,15 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-			"$columnSpecs": "unrelgap, default, labelcompgap, default:grow, labelcompgap, default, labelcompgap, 70dlu, unrelgap"
+			"$columnSpecs": "unrelgap, default, labelcompgap, 0dlu:grow, labelcompgap, default, labelcompgap, 70dlu, unrelgap"
 			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default, linegap, 80dlu, linegap, 20dlu, linegap, default:grow, linegap, 80dlu, linegap, default, linegap, default, linegap, default, unrelgap"
 		} ) {
 			name: "this"
 			"$sizePolicy": 1
 			"title": new FormMessage( null, "CompareDatabaseFrame.this.title" )
 			"defaultCloseOperation": 2
-			add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+			"minimumSize": new java.awt.Dimension( 500, 675 )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.JReadableFSPathTextField" ) {
 				name: "edDatabasePath"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2

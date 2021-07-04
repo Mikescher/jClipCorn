@@ -7,7 +7,6 @@ import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.datatypes.Tuple4;
-import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -23,17 +22,7 @@ import java.util.regex.Pattern;
 public class ApplicationHelper {
 
 	private static String os_property = null;
-	
-	public static void SetOverrideModeUnix() {
-		os_property = "generic_unix"; //$NON-NLS-1$
-		FSPath.SetPathModeUnix();
-	}
 
-	public static void SetOverrideModeWindows() {
-		os_property = "generic_windows"; //$NON-NLS-1$
-		FSPath.SetPathModeWindows();
-	}
-	
 	@SuppressWarnings("nls")
 	public static boolean restartApplication() { //Will fail in Eclipse, cause there is no .jar File
 		var javaBin = FilesystemUtils.getHomePath().append("bin").append("java");

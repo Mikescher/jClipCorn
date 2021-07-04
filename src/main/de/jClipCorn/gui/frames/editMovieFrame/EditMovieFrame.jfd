@@ -360,6 +360,7 @@ new FormModel {
 						"gridX": 3
 						"gridY": 13
 						"gridWidth": 3
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JMediaInfoButton" ) {
 						name: "btnMediaInfoMain"

@@ -67,61 +67,49 @@ public class CCPath implements IPath, Comparable<CCPath> {
 
 		if (! mkBase) return CCPath.create(aPath);
 
+		// <?[...]">
+		if (mkVars) aPath = insertCCPathVariables(aPath);
+
 		// <?vNetwork="...">
 		if (mkNet && FilesystemUtils.isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveUNC(aPath.charAt(0))) {
 			String unc = DriveMap.getDriveUNC(aPath.charAt(0));
-			String cc = String.format(WILDCARD_NETDRIVE, unc).concat(aPath.substring(3));
-
-			return mkVars ? insertCCPathVariables(cc) : CCPath.create(aPath);
+			aPath = String.format(WILDCARD_NETDRIVE, unc).concat(aPath.substring(3));
 		}
 
 		// <?self>
 		String self = FilesystemUtils.getAbsoluteSelfDirectory().toString().replace(FSPath.SEPERATOR, CCPath.SEPERATOR);
 		if (mkSelf && !Str.isNullOrWhitespace(self) && aPath.startsWith(self)) {
-			String cc = WILDCARD_SELF.concat(aPath.substring(self.length()));
-
-			return mkVars ? insertCCPathVariables(cc) : CCPath.create(aPath);
+			aPath = WILDCARD_SELF.concat(aPath.substring(self.length()));
 		}
 
 		// <?self[dir]>
 		if (mkSDir && ApplicationHelper.isWindows() && aPath.charAt(0) == FilesystemUtils.getAbsoluteSelfDirectory().toString().charAt(0)) {
-			String cc = WILDCARD_SELFDRIVE.concat(aPath.substring(3));
-
-			return mkVars ? insertCCPathVariables(cc) : CCPath.create(aPath);
+			aPath = WILDCARD_SELFDRIVE.concat(aPath.substring(3));
 		}
 
 		// <?vLabel="...">
 		if (mkDLabel && FilesystemUtils.isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveLabel(aPath.charAt(0))){
-			String cc = String.format(WILDCARD_DRIVENAME, DriveMap.getDriveLabel(aPath.charAt(0))).concat(aPath.substring(3));
-
-			return mkVars ? insertCCPathVariables(cc) : CCPath.create(aPath);
+			aPath = String.format(WILDCARD_DRIVENAME, DriveMap.getDriveLabel(aPath.charAt(0))).concat(aPath.substring(3));
 		}
 
-		return mkVars ? insertCCPathVariables(aPath) : CCPath.create(aPath);
+		// <?[...]">
+		if (mkVars) aPath = insertCCPathVariables(aPath);
+
+		return CCPath.create(aPath);
 	}
 
-	private static CCPath insertCCPathVariables(String path) {
-		if (ApplicationHelper.isWindows())
-		{
-			for (PathSyntaxVar psv : CCProperties.getInstance().getActivePathVariables()) {
-				if (path.toLowerCase().startsWith(psv.Value.toString().toLowerCase()))
-				{
-					path = String.format(WILDCARD_VARIABLE, psv.Key) + path.substring(psv.Value.toString().length());
-					return CCPath.create(path);
-				}
-			}
+	private static String insertCCPathVariables(String path) {
+
+		for (PathSyntaxVar psv : CCProperties.getInstance().getActivePathVariables()) {
+
+			var repl = psv.Value.toStringWithTraillingSeparator();
+
+			var doinsert = ApplicationHelper.isWindows() ? path.toLowerCase().startsWith(repl.toLowerCase()) : path.startsWith(repl) ;
+
+			if (doinsert) return String.format(WILDCARD_VARIABLE, psv.Key) + path.substring(repl.length());
 		}
-		else
-		{
-			for (PathSyntaxVar psv : CCProperties.getInstance().getActivePathVariables()) {
-				if (path.startsWith(psv.Value.toString()))
-				{
-					path = String.format(WILDCARD_VARIABLE, psv.Key) + path.substring(psv.Value.toString().length());
-					return CCPath.create(path);
-				}
-			}
-		}
-		return CCPath.create(path);
+
+		return path;
 	}
 
 	public FSPath toFSPath() {
@@ -134,7 +122,7 @@ public class CCPath implements IPath, Comparable<CCPath> {
 			String keyident = card.substring(3, card.length() - 2);
 			for (PathSyntaxVar psv : CCProperties.getInstance().getActivePathVariables()) {
 				if (psv.Key.equals(keyident)) {
-					rPath =  RegExHelper.replace(REGEX_VARIABLE, rPath, psv.Value.toString());
+					rPath =  RegExHelper.replace(REGEX_VARIABLE, rPath, psv.Value.toStringWithTraillingSeparator());
 					break;
 				}
 			}
@@ -277,6 +265,10 @@ public class CCPath implements IPath, Comparable<CCPath> {
 	@Override
 	public String toString() {
 		return _path;
+	}
+
+	public String toStringWithTraillingSeparator() {
+		if (_path.endsWith(SEPERATOR)) return _path; else return (_path + SEPERATOR);
 	}
 
 	@Override

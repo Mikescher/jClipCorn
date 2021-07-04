@@ -7,7 +7,7 @@ import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.datatypes.Opt;
-import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.lambda.Func0to0;
@@ -31,7 +31,6 @@ public class ClipCornBaseTest {
 	@Before
 	public void Init() {
 		CCLog.initUnitTestMode();
-		ApplicationHelper.SetOverrideModeUnix();
 	}
 
 	@After
@@ -69,8 +68,16 @@ public class ClipCornBaseTest {
 			}
 		}
 
-		CCProperties.getInstance().PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", FSPath.create("/tmpfs/jcc/mov/")));
-		CCProperties.getInstance().PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", FSPath.create("/tmpfs/jcc/ser/")));
+		if (ApplicationHelper.isWindows())
+		{
+			CCProperties.getInstance().PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", CCPath.create("C:/tmpfs/jcc/mov/")));
+			CCProperties.getInstance().PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", CCPath.create("C:/tmpfs/jcc/ser/")));
+		}
+		else
+		{
+			CCProperties.getInstance().PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", CCPath.create("/tmpfs/jcc/mov/")));
+			CCProperties.getInstance().PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", CCPath.create("/tmpfs/jcc/ser/")));
+		}
 
 		return ml;
 	}

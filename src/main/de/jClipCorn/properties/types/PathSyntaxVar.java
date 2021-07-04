@@ -1,16 +1,16 @@
 package de.jClipCorn.properties.types;
 
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.CCPath;
 
 public class PathSyntaxVar {
-	public final static PathSyntaxVar EMPTY = new PathSyntaxVar(Str.Empty, FSPath.Empty);
+	public final static PathSyntaxVar EMPTY = new PathSyntaxVar(Str.Empty, CCPath.Empty);
 
 	public final String Key;
-	public final FSPath Value;
+	public final CCPath Value;
 
-	public PathSyntaxVar(String key, FSPath value) {
-		Key = key;
+	public PathSyntaxVar(String key, CCPath value) {
+		Key   = key;
 		Value = value;
 	}
 

@@ -18,8 +18,8 @@ import java.util.List;
 public class FSPath implements IPath, Comparable<FSPath> {
 	public final static FSPath Empty = new FSPath(Str.Empty);
 
-	public static String SEPERATOR      = File.separator;
-	public static char   SEPERATOR_CHAR = File.separatorChar;
+	public static final String SEPERATOR      = File.separator;
+	public static final char   SEPERATOR_CHAR = File.separatorChar;
 
 	private final String _path;
 
@@ -418,16 +418,6 @@ public class FSPath implements IPath, Comparable<FSPath> {
 
 	public String toNormalizedAndAbsolutePathString() {
 		return toPath().normalize().toAbsolutePath().toString();
-	}
-
-	public static void SetPathModeUnix() {
-		SEPERATOR = "/";
-		SEPERATOR_CHAR = '/';
-	}
-
-	public static void SetPathModeWindows() {
-		SEPERATOR = "\\";
-		SEPERATOR_CHAR = '\\';
 	}
 
 	public static boolean isNullOrEmpty(FSPath p) {

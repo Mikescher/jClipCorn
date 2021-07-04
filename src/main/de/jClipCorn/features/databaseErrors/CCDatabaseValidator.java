@@ -197,7 +197,12 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					{
 						boolean wrongfn = false;
 						for (int i = 0; i < mov.getPartcount(); i++) {
-							if (! mov.Parts.get(i).toFSPath().getFilenameWithExt().equals(mov.generateFilename(i))) wrongfn = true;
+							var should = mov.generateFilename(i);
+							var actual = mov.Parts.get(i).toFSPath().getFilenameWithExt();
+							if (!Str.equals(actual, should))
+							{
+								wrongfn = true;
+							}
 						}
 						if (wrongfn) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_WRONG_FILENAME, mov));
 					});
@@ -319,7 +324,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(mov, e) ->
 					{
 						for (int i = 0; i < mov.getPartcount(); i++) {
-							if (!CCPath.isEqual(CCPath.createFromFSPath(mov.Parts.get(i).toFSPath()), mov.Parts.get(i))) {
+							var should = CCPath.createFromFSPath(mov.Parts.get(i).toFSPath());
+							var actual = mov.Parts.get(i);
+							if (!CCPath.isEqual(should, actual)) {
 								e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NON_NORMALIZED_PATH, mov));
 								break;
 							}

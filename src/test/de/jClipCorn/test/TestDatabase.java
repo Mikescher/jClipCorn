@@ -84,7 +84,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(CCFSK.RATING_III, movRead.getFSK());
 		assertEquals(CCOnlineRefType.THEMOVIEDB, movRead.getOnlineReference().Main.type);
 		assertEquals(CCOnlineScore.STARS_3_0, movRead.getOnlinescore());
-		assertEquals("C:\\test.mov", movRead.Parts.get(0));
+		assertEquals("C:\\test.mov", movRead.Parts.get(0).toString());
 
 		assertEquals(1565454159, movRead.mediaInfo().get().getCDate());
 		assertEquals(1565454169, movRead.mediaInfo().get().getMDate());
@@ -199,7 +199,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(CCTagList.create(CCSingleTag.TAG_MISSING_TIME), epiRead.getTags());
 		assertEquals(CCFileFormat.MKV, epiRead.getFormat());
 		assertEquals(3570481288L, epiRead.getFilesize().getBytes());
-		assertEquals("/media/example.mkv", epiRead.getPart());
+		assertEquals("/media/example.mkv", epiRead.getPart().toString());
 		assertEquals(CCDate.create(1, 1, 2000), epiRead.getAddDate());
 		assertEquals(CCDateTimeList.create(CCDateTime.create(10, 1, 2000, 6, 0, 0), CCDateTime.create(12, 1, 2000, 12, 0, 0), CCDateTime.create(22, 1, 2000, 18, 0, 0)), epiRead.ViewedHistory.get());
 		assertEquals(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.RUSSIAN, CCDBLanguage.SPANISH), epiRead.getLanguage());

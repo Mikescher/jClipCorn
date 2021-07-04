@@ -915,7 +915,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		label14 = new JLabel();
 		cbxGenre7 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
 		btnParseIMDB = new JButton();
-		edCvrControl = new EditCoverControl();
+		edCvrControl = new EditCoverControl(this, this);
 		pnlBottom = new JPanel();
 		btnOK = new JButton();
 		btnCancel = new JButton();

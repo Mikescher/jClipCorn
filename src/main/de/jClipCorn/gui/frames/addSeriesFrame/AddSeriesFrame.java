@@ -265,7 +265,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		label4 = new JLabel();
 		cbxGenre0 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		button3 = new JButton();
-		edCvrControl = new EditCoverControl();
+		edCvrControl = new EditCoverControl(this, this);
 		label5 = new JLabel();
 		cbxGenre1 = new CCEnumComboBox<>(CCGenre.getWrapper());
 		label6 = new JLabel();

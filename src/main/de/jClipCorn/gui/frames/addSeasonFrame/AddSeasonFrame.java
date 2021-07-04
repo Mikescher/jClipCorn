@@ -199,7 +199,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		label1 = new JLabel();
 		edTitle = new JTextField();
-		edCvrControl = new EditCoverControl();
+		edCvrControl = new EditCoverControl(this, this);
 		label2 = new JLabel();
 		spnYear = new JYearSpinner();
 		panel1 = new JPanel();

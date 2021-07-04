@@ -29,6 +29,9 @@ new FormModel {
 			} )
 			add( new FormContainer( "de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl", new FormLayoutManager( class javax.swing.JLayeredPane ) ) {
 				name: "edCvrControl"
+				auxiliary() {
+					"JavaCodeGenerator.customCreateCode": "new ${field_type}(this, this);"
+				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 6
 				"gridY": 2

@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.guiComponents.editCoverControl;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.features.log.CCLog;
@@ -35,6 +36,9 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	public final static int CTRL_WIDTH = ImageUtilities.BASE_COVER_WIDTH;
 	public final static int CTRL_HEIGHT = ImageUtilities.BASE_COVER_HEIGHT + 34;
 
+	@DesignCreate
+	private static EditCoverControl designCreate() { return new EditCoverControl(null, null); }
+
 	private BufferedImage fullImage;
 
 	private final ParseResultHandler owner;
@@ -53,10 +57,6 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	private JMenuItem mntmPasteImg;
 
 	private List<ActionListener> _changeListener = new ArrayList<>();
-
-	public EditCoverControl() { // For WindowBuilder
-		this(null, null);
-	}
 
 	public EditCoverControl(Window owner, ParseResultHandler handler) {
 		super();

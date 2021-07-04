@@ -77,8 +77,6 @@ public class CoverCropDialog extends JFrame
 		chckbxSeriesPreview.setSelected(isSeries);
 
 		postInit();
-
-		setLocationRelativeTo(owner);
 	}
 
 	private void postInit()

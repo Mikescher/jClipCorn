@@ -374,4 +374,22 @@ public class DriveMap {
 			}
 		});
 	}
+
+	public static void initForTests(Tuple3<Character, String, String>... entries) {
+		driveMap              = new HashMap<>();
+		driveLabelToLetterMap = new HashMap<>();
+		driveUNCToLetterMap   = new HashMap<>();
+
+		for (var e : entries)
+		{
+			driveMap.put(e.Item1, Tuple.Create(e.Item2, e.Item3));
+			driveLabelToLetterMap.put(e.Item2, e.Item1);
+			driveUNCToLetterMap.put(e.Item3, e.Item1);
+		}
+
+		is_created = true;
+		is_creating = false;
+
+		triggerOnChanged();
+	}
 }

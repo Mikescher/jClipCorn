@@ -6,7 +6,9 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.PathSyntaxVar;
+import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.ApplicationHelper;
@@ -40,6 +42,7 @@ public class ClipCornBaseTest {
 	}
 	
 	protected CCMovieList createEmptyDB() {
+		createInMemoryProperties();
 		CCProperties.createInMemory();
 		CCMovieList ml = CCMovieList.createInMemory();
 		ml.connectForTests();
@@ -48,7 +51,7 @@ public class ClipCornBaseTest {
 	}
 
 	protected CCMovieList createExampleDB() throws IOException {
-		CCProperties.createInMemory();
+		createInMemoryProperties();
 		CCMovieList ml = CCMovieList.createInMemory();
 		ml.connectForTests();
 		var filep = SimpleFileUtils.getSystemTempFile("jxmlbkp");
@@ -68,18 +71,42 @@ public class ClipCornBaseTest {
 			}
 		}
 
+		return ml;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected void createInMemoryProperties()
+	{
+		CCProperties.createInMemory();
+
 		if (ApplicationHelper.isWindows())
 		{
 			CCProperties.getInstance().PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", CCPath.create("C:/tmpfs/jcc/mov/")));
 			CCProperties.getInstance().PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", CCPath.create("C:/tmpfs/jcc/ser/")));
+
+			DriveMap.initForTests(
+				Tuple3.Create('C', "Local Disk",      ""),
+				Tuple3.Create('F', "Data",            ""),
+				Tuple3.Create('G', "Spine",           ""),
+				Tuple3.Create('H', "Network Drive 0", "\\\\server1\\drive0"),
+				Tuple3.Create('K', "Network Drive 1", "\\\\server1\\drive1"),
+				Tuple3.Create('O', "Network Drive 2", "\\\\server2\\drive2")
+			);
 		}
 		else
 		{
 			CCProperties.getInstance().PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", CCPath.create("/tmpfs/jcc/mov/")));
 			CCProperties.getInstance().PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", CCPath.create("/tmpfs/jcc/ser/")));
-		}
 
-		return ml;
+			DriveMap.initForTests(
+					Tuple3.Create('C', "Local Disk",      ""),
+					Tuple3.Create('F', "Data",            ""),
+					Tuple3.Create('G', "Spine",           ""),
+					Tuple3.Create('H', "Network Drive 0", ""),
+					Tuple3.Create('K', "Network Drive 1", ""),
+					Tuple3.Create('O', "Network Drive 2", "")
+			);
+		}
 	}
 
 	protected void assertImageEquals(BufferedImage a, BufferedImage b) {

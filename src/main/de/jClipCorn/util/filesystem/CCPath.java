@@ -43,7 +43,7 @@ public class CCPath implements IPath, Comparable<CCPath> {
 
 	public static CCPath create(String v) {
 		if (Str.isNullOrWhitespace(v)) return Empty;
-		if (v.endsWith(SEPERATOR)) v = v.substring(0, v.length() - SEPERATOR.length());
+		if (v.endsWith(SEPERATOR) && !(!ApplicationHelper.isWindows() && Str.equals(v, "/"))) v = v.substring(0, v.length() - SEPERATOR.length());
 		return new CCPath(v);
 	}
 
@@ -117,7 +117,8 @@ public class CCPath implements IPath, Comparable<CCPath> {
 
 		var rPath = _path;
 
-		if (RegExHelper.startsWithRegEx(REGEX_VARIABLE, rPath)) {
+		if (RegExHelper.startsWithRegEx(REGEX_VARIABLE, rPath))
+		{
 			String card = RegExHelper.find(REGEX_VARIABLE, rPath);
 			String keyident = card.substring(3, card.length() - 2);
 			for (PathSyntaxVar psv : CCProperties.getInstance().getActivePathVariables()) {
@@ -128,9 +129,12 @@ public class CCPath implements IPath, Comparable<CCPath> {
 			}
 		}
 
-		if (RegExHelper.startsWithRegEx(REGEX_SELF, rPath)) {
+		if (RegExHelper.startsWithRegEx(REGEX_SELF, rPath))
+		{
 			rPath =  RegExHelper.replace(REGEX_SELF, rPath, FilesystemUtils.getAbsoluteSelfDirectory() + FSPath.SEPERATOR);
-		} else if (RegExHelper.startsWithRegEx(REGEX_DRIVENAME, rPath)) {
+		}
+		else if (RegExHelper.startsWithRegEx(REGEX_DRIVENAME, rPath))
+		{
 			String card = RegExHelper.find(REGEX_DRIVENAME, rPath);
 			String name = card.substring(10, card.length() - 2);
 			char letter = DriveMap.getDriveLetterByLabel(name);
@@ -141,18 +145,24 @@ public class CCPath implements IPath, Comparable<CCPath> {
 				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.DriveNotFound", name));
 				return FSPath.Empty;
 			}
-		} else if (RegExHelper.startsWithRegEx(REGEX_DRIVELETTER, rPath)) {
+		}
+		else if (RegExHelper.startsWithRegEx(REGEX_DRIVELETTER, rPath))
+		{
 			String card = RegExHelper.find(REGEX_DRIVELETTER, rPath);
 			char letter = card.charAt(11);
 			rPath = RegExHelper.replace(REGEX_DRIVELETTER, rPath, letter + ":" + FSPath.SEPERATOR);
-		} else if (RegExHelper.startsWithRegEx(REGEX_SELFDRIVE, rPath)) {
+		}
+		else if (RegExHelper.startsWithRegEx(REGEX_SELFDRIVE, rPath))
+		{
 			if (ApplicationHelper.isWindows()) {
 				char letter = FilesystemUtils.getRealSelfDirectory().toString().charAt(0);
 				rPath = RegExHelper.replace(REGEX_SELFDRIVE, rPath, letter + ":" + FSPath.SEPERATOR);
 			} else if (ApplicationHelper.isUnix() || ApplicationHelper.isMac()) {
 				rPath = RegExHelper.replace(REGEX_SELFDRIVE, rPath, "/");
 			}
-		} else if (RegExHelper.startsWithRegEx(REGEX_NETDRIVE, rPath)) {
+		}
+		else if (RegExHelper.startsWithRegEx(REGEX_NETDRIVE, rPath))
+		{
 			String card = RegExHelper.find(REGEX_NETDRIVE, rPath);
 			String name = card.substring(12, card.length() - 2);
 			char letter = DriveMap.getDriveLetterByUNC(name);

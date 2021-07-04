@@ -35,13 +35,14 @@ public class FSPath implements IPath, Comparable<FSPath> {
 
 	public static FSPath create(@NotNull String v) {
 		if (Str.isNullOrWhitespace(v)) return Empty;
+		if (v.endsWith(SEPERATOR) && !(!ApplicationHelper.isWindows() && Str.equals(v, "/"))) v = v.substring(0, v.length() - SEPERATOR.length());
 		return new FSPath(v);
 	}
 
 	public static FSPath createAndNormalize(@NotNull String v) {
 		if (Str.isNullOrWhitespace(v)) return Empty;
 		v = Path.of(v).normalize().toAbsolutePath().toString();
-		if (v.endsWith(SEPERATOR)) v = v.substring(0, v.length() - SEPERATOR.length());
+		if (v.endsWith(SEPERATOR) && !(!ApplicationHelper.isWindows() && Str.equals(v, "/"))) v = v.substring(0, v.length() - SEPERATOR.length());
 		return new FSPath(v);
 	}
 
@@ -51,7 +52,7 @@ public class FSPath implements IPath, Comparable<FSPath> {
 
 	public static FSPath create(@NotNull Path path) {
 		var v = path.normalize().toAbsolutePath().toString();
-		if (v.endsWith(SEPERATOR)) v = v.substring(0, v.length() - SEPERATOR.length());
+		if (v.endsWith(SEPERATOR) && !(!ApplicationHelper.isWindows() && Str.equals(v, "/"))) v = v.substring(0, v.length() - SEPERATOR.length());
 		return new FSPath(v);
 	}
 

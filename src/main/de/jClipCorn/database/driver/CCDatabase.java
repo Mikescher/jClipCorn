@@ -5,6 +5,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.*;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.history.CCDatabaseHistory;
@@ -581,7 +582,7 @@ public class CCDatabase {
 			CCMediaInfo mi = mov.MediaInfo.get();
 			if (mi.isSet())
 			{
-				stmt.setLng(DatabaseStructure.COL_MAIN_MI_FILESIZE,   mi.getFilesize());
+				stmt.setLng(DatabaseStructure.COL_MAIN_MI_FILESIZE,   mi.getFilesize().getBytes());
 				stmt.setLng(DatabaseStructure.COL_MAIN_MI_CDATE,      mi.getCDate());
 				stmt.setLng(DatabaseStructure.COL_MAIN_MI_MDATE,      mi.getMDate());
 				stmt.setStr(DatabaseStructure.COL_MAIN_MI_AFORMAT,    mi.getAudioFormat());
@@ -704,7 +705,7 @@ public class CCDatabase {
 			CCMediaInfo mi = ep.MediaInfo.get();
 			if (mi.isSet())
 			{
-				stmt.setLng(DatabaseStructure.COL_EPIS_MI_FILESIZE,   mi.getFilesize());
+				stmt.setLng(DatabaseStructure.COL_EPIS_MI_FILESIZE,   mi.getFilesize().getBytes());
 				stmt.setLng(DatabaseStructure.COL_EPIS_MI_CDATE,      mi.getCDate());
 				stmt.setLng(DatabaseStructure.COL_EPIS_MI_MDATE,      mi.getMDate());
 				stmt.setStr(DatabaseStructure.COL_EPIS_MI_AFORMAT,    mi.getAudioFormat());
@@ -975,7 +976,7 @@ public class CCDatabase {
 					int pt        = rs.getInt(DatabaseStructure.COL_CVRS_PREVIEWTYPE);
 					CCDateTime ts = rs.getDateTime(DatabaseStructure.COL_CVRS_CREATED);
 
-					coverCache.addInternal(new CCCoverData(id, fn, ww, hh, cs, fs, pv, pt, ts));
+					coverCache.addInternal(new CCCoverData(id, fn, ww, hh, cs, new CCFileSize(fs), pv, pt, ts));
 				}
 				rs.close();
 			}
@@ -996,7 +997,7 @@ public class CCDatabase {
 					CCDateTime ts = rs.getDateTime(DatabaseStructure.COL_CVRS_CREATED);
 					String cs     = rs.getString(DatabaseStructure.COL_CVRS_HASH_FILE);
 
-					coverCache.addInternal(new CCCoverData(id, fn, ww, hh, cs, fs, pt, ts));
+					coverCache.addInternal(new CCCoverData(id, fn, ww, hh, cs, new CCFileSize(fs), pt, ts));
 				}
 				rs.close();
 			}
@@ -1237,7 +1238,7 @@ public class CCDatabase {
 				stmt.setInt(DatabaseStructure.COL_CVRS_WIDTH,       cce.Width);
 				stmt.setInt(DatabaseStructure.COL_CVRS_HEIGHT,      cce.Height);
 				stmt.setStr(DatabaseStructure.COL_CVRS_HASH_FILE,   cce.Checksum);
-				stmt.setLng(DatabaseStructure.COL_CVRS_FILESIZE,    cce.Filesize);
+				stmt.setLng(DatabaseStructure.COL_CVRS_FILESIZE,    cce.Filesize.getBytes());
 				stmt.setBlb(DatabaseStructure.COL_CVRS_PREVIEW,     cce.getPreviewOrNull());
 				stmt.setInt(DatabaseStructure.COL_CVRS_PREVIEWTYPE, cce.PreviewType.asInt());
 				stmt.setCDT(DatabaseStructure.COL_CVRS_CREATED,     cce.Timestamp);

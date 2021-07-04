@@ -55,7 +55,7 @@ public class StatisticsMediaInfoFilesizeChart extends StatisticsChart {
 		List<Long> values = source
 				.iteratorMoviesOrEpisodes(movielist)
 				.filter(e -> e.mediaInfo().get().isSet())
-				.map(e -> (e.mediaInfo().get().getFilesize() / (1024*1024)))
+				.map(e -> (e.mediaInfo().get().getFilesize().getMegaBytes()))
 				.enumerate();
 
 		long min = CCStreams.iterate(values).autoMinOrDefault(-1L);

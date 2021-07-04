@@ -75,7 +75,7 @@ public class SimpleFileUtils {
 
 	public static void copyWithProgress(FSPath src, FSPath dst, Func2to0<Long, Long> feedback) throws IOException
 	{
-		long fullsize = src.toFile().length();
+		long fullsize = src.filesize().getBytes();
 
 		if (src.equalsOnFilesystem(dst))
 		{

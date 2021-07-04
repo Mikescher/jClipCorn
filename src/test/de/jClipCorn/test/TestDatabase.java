@@ -58,7 +58,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		movWrite.Year.set(2012);
 		movWrite.Score.set(CCUserScore.RATING_III);
 		movWrite.OnlineReference.set("tmdb:movie/207703");
-		movWrite.MediaInfo.set(new CCMediaInfo(1565454159, 1565454169, 1570732032, 5903.904, 2128398, "MPEG-4 Visual", 720, 304, 23.976, (short)8, 141552, "XVID", "AC-3", (short)6, "2000", 48000, Str.Empty));
+		movWrite.MediaInfo.set(new CCMediaInfo(1565454159, 1565454169, new CCFileSize(1570732032), 5903.904, 2128398, "MPEG-4 Visual", 720, 304, 23.976, (short)8, 141552, "XVID", "AC-3", (short)6, "2000", 48000, Str.Empty));
 		movWrite.Parts.set(0, "C:\\test.mov");
 		movWrite.endUpdating();
 		
@@ -88,7 +88,7 @@ public class TestDatabase extends ClipCornBaseTest {
 
 		assertEquals(1565454159, movRead.mediaInfo().get().getCDate());
 		assertEquals(1565454169, movRead.mediaInfo().get().getMDate());
-		assertEquals(1570732032, movRead.mediaInfo().get().getFilesize());
+		assertEquals(1570732032, movRead.mediaInfo().get().getFilesize().getBytes());
 		assertEquals(5903.904, movRead.mediaInfo().get().getDuration(), 0.000001);
 		assertEquals(2128398, movRead.mediaInfo().get().getBitrate());
 		assertEquals("MPEG-4 Visual", movRead.mediaInfo().get().getVideoFormat());
@@ -135,7 +135,7 @@ public class TestDatabase extends ClipCornBaseTest {
 			epiWrite.MediaInfo.set(new CCMediaInfo(
 					CCDateTime.create(15, 4, 2019, 6,  0, 0).toFileTimestamp(GMT_2), // long cdate
 					CCDateTime.create(15, 4, 2019, 8, 30, 0).toFileTimestamp(GMT_2), // long mdate
-					3570481288L,                                                     // long filesize
+					new CCFileSize(3570481288L),                                     // long filesize
 					5932.933,                                                        // double duration
 					4814457,                                                         // int bitrate
 					"AVC",                                                           // String videoformat
@@ -205,7 +205,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.RUSSIAN, CCDBLanguage.SPANISH), epiRead.getLanguage());
 		assertEquals(1555300800000L, epiRead.mediaInfo().get().getCDate());
 		assertEquals(1555309800000L, epiRead.mediaInfo().get().getMDate());
-		assertEquals(3570481288L, epiRead.mediaInfo().get().getFilesize());
+		assertEquals(3570481288L, epiRead.mediaInfo().get().getFilesize().getBytes());
 		assertEquals(5932.933, epiRead.mediaInfo().get().getDuration(), 0.000001);
 		assertEquals(4814457, epiRead.mediaInfo().get().getBitrate());
 		assertEquals("AVC", epiRead.mediaInfo().get().getVideoFormat());

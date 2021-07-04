@@ -66,7 +66,7 @@ public class DatabaseXMLExporterImpl {
 
 		CCMediaInfo minfo = o.mediaInfo().get();
 		if (minfo.isSet()) {
-			e.setAttribute("mediainfo.filesize",        minfo.getFilesize()+"");
+			e.setAttribute("mediainfo.filesize",        minfo.getFilesize().getBytes()+"");
 			e.setAttribute("mediainfo.cdate",           minfo.getCDate()+"");
 			e.setAttribute("mediainfo.mdate",           minfo.getMDate()+"");
 			e.setAttribute("mediainfo.audioformat",     minfo.getAudioFormat());
@@ -124,7 +124,7 @@ public class DatabaseXMLExporterImpl {
 
 		CCMediaInfo minfo = o.mediaInfo().get();
 		if (minfo.isSet()) {
-			e.setAttribute("mediainfo.filesize",        minfo.getFilesize()+"");
+			e.setAttribute("mediainfo.filesize",        minfo.getFilesize().getBytes()+"");
 			e.setAttribute("mediainfo.cdate",           minfo.getCDate()+"");
 			e.setAttribute("mediainfo.mdate",           minfo.getMDate()+"");
 			e.setAttribute("mediainfo.audioformat",     minfo.getAudioFormat());

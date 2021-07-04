@@ -19,7 +19,7 @@ public class CCMediaInfo {
 
 	private final String checksum;      // CCFVH
 
-	private final long filesize;        // General -> FileSize             (bytes)
+	private final CCFileSize filesize;  // General -> FileSize
 	private final double duration;      // General -> Duration             (seconds)
 
 
@@ -43,7 +43,7 @@ public class CCMediaInfo {
 	private CCQualityCategory _cat = null;
 	private CCGenreList _cat_source = null;
 
-	public CCMediaInfo(long cdate, long mdate, long filesize, double duration, int bitrate, String videoformat, int width,
+	public CCMediaInfo(long cdate, long mdate, CCFileSize filesize, double duration, int bitrate, String videoformat, int width,
 					   int height, double framerate, short bitdepth, int framecount, String videocodec, String audioformat,
 					   short audiochannels, String audiocodec, int audiosamplerate, String checksum)
 	{
@@ -69,7 +69,7 @@ public class CCMediaInfo {
 	private CCMediaInfo() {
 		this.cdate           = -1;
 		this.mdate           = -1;
-		this.filesize        = -1;
+		this.filesize        = CCFileSize.ZERO;
 		this.duration        = -1;
 		this.bitrate         = -1;
 		this.videoformat     = Str.Empty;
@@ -107,7 +107,7 @@ public class CCMediaInfo {
 		if (acodec     == null) return CCMediaInfo.EMPTY;
 		if (samplerate == null) return CCMediaInfo.EMPTY;
 
-		return new CCMediaInfo(cdate, mdate, filesize, duration, bitrate, vformat, width, height,
+		return new CCMediaInfo(cdate, mdate, new CCFileSize(filesize), duration, bitrate, vformat, width, height,
 				               framerate, (short)(int)bitdepth, framecount, vcodec, aformat,
 				               (short)(int)achannels, acodec, samplerate, ccfvh);
 	}
@@ -129,7 +129,7 @@ public class CCMediaInfo {
 		return mdate;
 	}
 
-	public long getFilesize() {
+	public CCFileSize getFilesize() {
 		return filesize;
 	}
 
@@ -232,7 +232,7 @@ public class CCMediaInfo {
 		long temp;
 		result = (int) (cdate ^ (cdate >>> 32));
 		result = 31 * result + (int) (mdate ^ (mdate >>> 32));
-		result = 31 * result + (int) (filesize ^ (filesize >>> 32));
+		result = 31 * result + (int) (filesize.getBytes() ^ (filesize.getBytes() >>> 32));
 		temp = Double.doubleToLongBits(duration);
 		result = 31 * result + (int) (temp ^ (temp >>> 32));
 		result = 31 * result + bitrate;
@@ -364,7 +364,7 @@ public class CCMediaInfo {
 	{
 		if (cdate <= 0) return "CDate";
 		if (mdate <= 0) return "MDate";
-		if (filesize <= 0) return "Filesize";
+		if (filesize.getBytes() <= 0) return "Filesize";
 		if (duration <= 0) return "Duration";
 		if (bitrate <= 0) return "Bitrate";
 		if (Str.isNullOrWhitespace(videoformat)) return "VideoFormat";
@@ -390,7 +390,7 @@ public class CCMediaInfo {
 
 		pmi.CreationDate     = (cdate <= 0)                          ? Opt.empty() : Opt.of(cdate);
 		pmi.ModificationDate = (mdate <= 0)                          ? Opt.empty() : Opt.of(mdate);
-		pmi.Filesize         = (filesize <= 0)                       ? Opt.empty() : Opt.of(new CCFileSize(filesize));
+		pmi.Filesize         = (filesize.getBytes() <= 0)            ? Opt.empty() : Opt.of(filesize);
 		pmi.Duration         = (duration <= 0)                       ? Opt.empty() : Opt.of(duration);
 		pmi.Bitrate          = (bitrate <= 0)                        ? Opt.empty() : Opt.of(bitrate);
 		pmi.VideoFormat      = (Str.isNullOrWhitespace(videoformat)) ? Opt.empty() : Opt.of(videoformat);

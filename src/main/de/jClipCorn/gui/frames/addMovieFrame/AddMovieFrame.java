@@ -497,12 +497,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private void updateFilesize() {
 		CCFileSize size = CCFileSize.ZERO;
 
-		if (! edPart0.getPath().isEmpty()) size = CCFileSize.addBytes(size, edPart0.getPath().toFSPath().toFile().length());
-		if (! edPart1.getPath().isEmpty()) size = CCFileSize.addBytes(size, edPart1.getPath().toFSPath().toFile().length());
-		if (! edPart2.getPath().isEmpty()) size = CCFileSize.addBytes(size, edPart2.getPath().toFSPath().toFile().length());
-		if (! edPart3.getPath().isEmpty()) size = CCFileSize.addBytes(size, edPart3.getPath().toFSPath().toFile().length());
-		if (! edPart4.getPath().isEmpty()) size = CCFileSize.addBytes(size, edPart4.getPath().toFSPath().toFile().length());
-		if (! edPart5.getPath().isEmpty()) size = CCFileSize.addBytes(size, edPart5.getPath().toFSPath().toFile().length());
+		if (! edPart0.getPath().isEmpty()) size = CCFileSize.add(size, edPart0.getPath().toFSPath().filesize());
+		if (! edPart1.getPath().isEmpty()) size = CCFileSize.add(size, edPart1.getPath().toFSPath().filesize());
+		if (! edPart2.getPath().isEmpty()) size = CCFileSize.add(size, edPart2.getPath().toFSPath().filesize());
+		if (! edPart3.getPath().isEmpty()) size = CCFileSize.add(size, edPart3.getPath().toFSPath().filesize());
+		if (! edPart4.getPath().isEmpty()) size = CCFileSize.add(size, edPart4.getPath().toFSPath().filesize());
+		if (! edPart5.getPath().isEmpty()) size = CCFileSize.add(size, edPart5.getPath().toFSPath().filesize());
 
 		setFilesize(size);
 	}

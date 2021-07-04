@@ -486,7 +486,7 @@ public class ExportHelper {
 	public static void openMultipleElementFile(FSPath f, MainFrame owner, CCMovieList movielist) {
 		try {
 			long maxmem = Runtime.getRuntime().maxMemory();
-			long fsize = f.toFile().length();
+			long fsize = f.filesize().getBytes();
 			if (fsize > maxmem/2)
 			{
 				if (!DialogHelper.showLocaleYesNo(owner, "Dialogs.NotEnoughMem")) return; //$NON-NLS-1$

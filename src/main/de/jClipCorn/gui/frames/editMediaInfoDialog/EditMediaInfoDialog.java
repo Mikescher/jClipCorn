@@ -4,6 +4,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.metadata.MetadataSource;
@@ -377,7 +378,7 @@ public class EditMediaInfoDialog extends JDialog {
 		
 		ctrlFilesize = new JSpinner();
 		ctrlFilesize.setModel(new SpinnerNumberModel(0L, null, null, 1L));
-		ctrlFilesize.addChangeListener(new ChangeLambdaAdapter(() -> lblFullFilesize1.setText(FileSizeFormatter.formatPrecise((long)ctrlFilesize.getValue()))));
+		ctrlFilesize.addChangeListener(new ChangeLambdaAdapter(() -> lblFullFilesize1.setText(FileSizeFormatter.formatPrecise(new CCFileSize((long)ctrlFilesize.getValue())))));
 		pnlGeneral.add(ctrlFilesize, "4, 10"); //$NON-NLS-1$
 		
 		lblHintFilesize = new JLabel(""); //$NON-NLS-1$
@@ -797,7 +798,7 @@ public class EditMediaInfoDialog extends JDialog {
 
 		if (err) return null;
 
-		return new CCMediaInfo(cdate, mdate, fsize, durat, brate, vfmt, width, height, frate, bdepth, fcount, vcodec, afmt, achnls, acodec, srate, chksum);
+		return new CCMediaInfo(cdate, mdate, new CCFileSize(fsize), durat, brate, vfmt, width, height, frate, bdepth, fcount, vcodec, afmt, achnls, acodec, srate, chksum);
 	}
 
 	private void onOK() {

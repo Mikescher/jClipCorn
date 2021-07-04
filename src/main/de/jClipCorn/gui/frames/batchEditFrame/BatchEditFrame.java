@@ -155,9 +155,9 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 	private void recalcFilesize() {
 		var part = edPart.getPath().toFSPath();
-		long fs = FileSizeFormatter.getFileSize(part);
+		var fs = part.filesize();
 
-		if (fs > 0) {
+		if (fs.getBytes() > 0) {
 			spnSize.setValue(fs);
 		}
 

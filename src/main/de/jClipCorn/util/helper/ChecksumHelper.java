@@ -45,11 +45,11 @@ public class ChecksumHelper
 	private static boolean calculateLargeMD5(MD5 md5, FSPath f) {
 		byte[] block = new byte[FASTMD5_BLOCKSIZE];
 
-		if (f.isEmpty() || !f.exists() || f.toFile().length() < FASTMD5_BLOCKSIZE * 3) {
+		if (f.isEmpty() || !f.exists() || f.filesize().getBytes() < FASTMD5_BLOCKSIZE * 3) {
 			return false;
 		}
 
-		long len = f.toFile().length();
+		long len = f.filesize().getBytes();
 
 		try {
 			FileInputStream i = new FileInputStream(f.toFile());
@@ -120,7 +120,7 @@ public class ChecksumHelper
 	@SuppressWarnings("nls")
 	private static Tuple<String, String[]> fastVideoHashRaw(FSPath f) throws IOException
 	{
-		var len = f.toFile().length(); // in bytes
+		var len = f.filesize().getBytes(); // in bytes
 
 		var hexlen = StringUtils.leftPad(Long.toHexString(len).toUpperCase(), 10, "0");
 		var blocks = new String[FASTVIDEOHASH_BLOCKCOUNT];
@@ -200,7 +200,7 @@ public class ChecksumHelper
 		if (version.get() == 1)
 		{
 			// filesize should match
-			if (!Str.equals(split[1], StringUtils.leftPad(Long.toHexString(mediainfo.getFilesize()).toUpperCase(), 10, "0"))) return false;
+			if (!Str.equals(split[1], StringUtils.leftPad(Long.toHexString(mediainfo.getFilesize().getBytes()).toUpperCase(), 10, "0"))) return false;
 
 			return true;
 		}

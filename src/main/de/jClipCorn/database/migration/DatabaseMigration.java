@@ -332,7 +332,7 @@ public class DatabaseMigration {
 			stmt.setInt(COL_CVRS_WIDTH,       img.getWidth());
 			stmt.setInt(COL_CVRS_HEIGHT,      img.getHeight());
 			stmt.setStr(COL_CVRS_HASH_FILE,   checksum);
-			stmt.setLng(COL_CVRS_FILESIZE,    f.toFile().length());
+			stmt.setLng(COL_CVRS_FILESIZE,    f.filesize().getBytes());
 			stmt.setBlb(COL_CVRS_PREVIEW,     preview);
 			stmt.setInt(COL_CVRS_PREVIEWTYPE, ptype.asInt());
 			stmt.setCDT(COL_CVRS_CREATED,     CCDateTime.createFromFileTimestamp(f.toFile().lastModified(), TimeZone.getDefault()));

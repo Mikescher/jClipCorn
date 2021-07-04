@@ -13,7 +13,6 @@ import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
-import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
@@ -70,7 +69,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(mov, e) ->
 					{
 						CCFileSize size = CCFileSize.ZERO;
-						for (int i = 0; i < mov.getPartcount(); i++) size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(mov.Parts.get(i).toFSPath()));
+						for (int i = 0; i < mov.getPartcount(); i++) size = CCFileSize.add(size, mov.Parts.get(i).toFSPath().filesize());
 						if (getRelativeDifference(size.getBytes(), mov.getFilesize().getBytes()) > getMaxSizeFileDrift()) {
 							e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_WRONG_FILESIZE, mov));
 						}
@@ -365,7 +364,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addMovieValidation(
 					DatabaseErrorType.ERROR_MEDIAINFO_SIZE_MISMATCH,
 					o -> o.ValidateMovies,
-					mov -> mov.mediaInfo().get().isSet() && (mov.getPartcount()==1 && mov.mediaInfo().get().getFilesize() != mov.getFilesize().getBytes()),
+					mov -> mov.mediaInfo().get().isSet() && (mov.getPartcount()==1 && !CCFileSize.isEqual(mov.mediaInfo().get().getFilesize(), mov.getFilesize())),
 					mov -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_SIZE_MISMATCH, mov));
 
 			// MediaInfo length does not match movie length
@@ -421,7 +420,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(mov, e) ->
 					{
 						if (mov.mediaInfo().get().isSet()) {
-							if (mov.Parts.get(0).toFSPath().toFile().length() != mov.mediaInfo().get().getFilesize())
+							if (!CCFileSize.isEqual(mov.Parts.get(0).toFSPath().filesize(), mov.mediaInfo().get().getFilesize()))
 								e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED, mov));
 						}
 					});
@@ -675,7 +674,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_WRONG_FILESIZE,
 					o -> o.ValidateVideoFiles,
-					episode -> getRelativeDifference(new CCFileSize(FileSizeFormatter.getFileSize(episode.getPart().toFSPath())).getBytes(), episode.getFilesize().getBytes()) > getMaxSizeFileDrift(),
+					episode -> getRelativeDifference(episode.getPart().toFSPath().filesize().getBytes(), episode.getFilesize().getBytes()) > getMaxSizeFileDrift(),
 					episode -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_WRONG_FILESIZE, episode));
 
 			// Wrong AddDate
@@ -717,7 +716,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_MEDIAINFO_SIZE_MISMATCH,
 					o -> o.ValidateEpisodes,
-					episode -> episode.mediaInfo().get().isSet() && (episode.mediaInfo().get().getFilesize() != episode.getFilesize().getBytes()),
+					episode -> episode.mediaInfo().get().isSet() && !CCFileSize.isEqual(episode.mediaInfo().get().getFilesize(), episode.getFilesize()),
 					episode -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_SIZE_MISMATCH, episode));
 
 			// MediaInfo length does not match movie length
@@ -772,7 +771,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(episode, e) ->
 					{
 						if (episode.mediaInfo().get().isSet()) {
-							if (episode.getPart().toFSPath().toFile().length() != episode.mediaInfo().get().getFilesize())
+							if (!CCFileSize.isEqual(episode.getPart().toFSPath().filesize(), episode.mediaInfo().get().getFilesize()))
 								e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED, episode));
 						}
 					});
@@ -1078,7 +1077,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			BufferedImage img = cc.getCover(cce);
 			if (img.getWidth() != cce.Width || img.getHeight() != cce.Height)	 e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COVER_DIMENSIONS_MISMATCH, cce.Filename));
 
-			if (fp.toFile().length() != cce.Filesize) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COVER_FILESIZE_MISMATCH, cce.Filename));
+			if (!CCFileSize.isEqual(fp.filesize(), cce.Filesize)) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COVER_FILESIZE_MISMATCH, cce.Filename));
 		}
 	}
 

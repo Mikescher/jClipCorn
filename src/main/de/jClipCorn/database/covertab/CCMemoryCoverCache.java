@@ -100,7 +100,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 			quant.analyze(newCover, 16);
 			byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(newCover, ColorQuantizerConverter.PREVIEW_WIDTH));
 
-			CCCoverData cce = new CCCoverData(cid, fname, newCover.getWidth(), newCover.getHeight(), checksum, f.toFile().length(), preview, ptype, CCDateTime.getCurrentDateTime());
+			CCCoverData cce = new CCCoverData(cid, fname, newCover.getWidth(), newCover.getHeight(), checksum, f.filesize(), preview, ptype, CCDateTime.getCurrentDateTime());
 
 			_db.insertCoverEntry(cce);
 

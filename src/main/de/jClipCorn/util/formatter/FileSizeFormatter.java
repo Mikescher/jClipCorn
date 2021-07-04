@@ -1,7 +1,6 @@
 package de.jClipCorn.util.formatter;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.util.filesystem.FSPath;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -27,7 +26,9 @@ public class FileSizeFormatter {
 		return new DecimalFormat("#,##0.#").format(bytes / Math.pow(1024, digitGroups)) + " " + UNITS[digitGroups]; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	public static String formatPrecise(long bytes) {
+	public static String formatPrecise(CCFileSize fs) {
+		var bytes = fs.getBytes();
+
 		if (bytes <= 0) {
 			return "0"; //$NON-NLS-1$
 		}
@@ -37,10 +38,6 @@ public class FileSizeFormatter {
 
 	public static String format(CCFileSize size) {
 		return format(size.getBytes());
-	}
-	
-	public static long getFileSize(FSPath filepath) {
-		return filepath.toFile().length();
 	}
 
 	@SuppressWarnings("nls")

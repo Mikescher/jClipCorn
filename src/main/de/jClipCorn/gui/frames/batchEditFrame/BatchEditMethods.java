@@ -123,7 +123,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> FILESIZE_FROM_FILE = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		if (ep.part.toFSPath().toFile().exists()) ep.filesize = new CCFileSize(ep.part.toFSPath().toFile().length());
+		if (ep.part.toFSPath().toFile().exists()) ep.filesize = ep.part.toFSPath().filesize();
 	});
 
 	public static BatchEditMethod<Void> VIEWED_CLEAR = new BatchEditMethod<>((ep, param, opt) ->

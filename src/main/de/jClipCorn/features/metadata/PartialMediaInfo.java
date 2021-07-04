@@ -36,7 +36,7 @@ public class PartialMediaInfo {
 		(
 				CreationDate.orElse(-1L),
 				ModificationDate.orElse(-1L),
-				Filesize.map(CCFileSize::getBytes).orElse(-1L),
+				Filesize.orElse(CCFileSize.ZERO),
 				Duration.orElse(-1.0),
 				Bitrate.orElse(-1),
 				VideoFormat.orElse(Str.Empty),

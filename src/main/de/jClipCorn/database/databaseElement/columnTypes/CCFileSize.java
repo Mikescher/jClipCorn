@@ -1,8 +1,9 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.util.formatter.FileSizeFormatter;
+import org.jetbrains.annotations.NotNull;
 
-public class CCFileSize {
+public class CCFileSize implements Comparable<CCFileSize>  {
 	public static final CCFileSize ZERO = new CCFileSize(0);
 	private final long bytes;
 
@@ -16,6 +17,14 @@ public class CCFileSize {
 
 	public long getBytes() {
 		return bytes;
+	}
+
+	public long getKiloBytes() {
+		return bytes / 1024;
+	}
+
+	public long getMegaBytes() {
+		return bytes / (1024 * 1024);
 	}
 
 	public String getFormatted() {
@@ -47,14 +56,23 @@ public class CCFileSize {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
+		return isEqual(this, (CCFileSize) o);
+	}
 
-		CCFileSize that = (CCFileSize) o;
-
-		return bytes == that.bytes;
+	public static boolean isEqual(CCFileSize a, CCFileSize b)
+	{
+		if (a == b) return true;
+		if (a == null || b == null) return false;
+		return a.bytes == b.bytes;
 	}
 
 	@Override
 	public int hashCode() {
 		return (int) (bytes ^ (bytes >>> 32));
+	}
+
+	@Override
+	public int compareTo(@NotNull CCFileSize o) {
+		return Long.compare(this.bytes, o.bytes);
 	}
 }

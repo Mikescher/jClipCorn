@@ -1,6 +1,7 @@
 package de.jClipCorn.features.backupManager;
 
 import de.jClipCorn.Main;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -218,8 +219,8 @@ public class CCBackup {
 		return getName();
 	}
 
-	public long getSize() {
-		return archive.toFile().length();
+	public CCFileSize getSize() {
+		return archive.filesize();
 	}
 
 	private CCDate getBackupDateFromOldFileFormat(FSPath f) {

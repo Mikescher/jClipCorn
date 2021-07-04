@@ -78,7 +78,7 @@ public class DatabaseXMLImportImpl_V6 implements IDatabaseXMLImporterImpl
 				o.MediaInfo.set(new CCMediaInfo(
 					e.getAttributeLongValueOrThrow("mediainfo.cdate"),
 					e.getAttributeLongValueOrThrow("mediainfo.mdate"),
-					e.getAttributeLongValueOrThrow("mediainfo.filesize"),
+					new CCFileSize(e.getAttributeLongValueOrThrow("mediainfo.filesize")),
 					e.getAttributeDoubleValueOrThrow("mediainfo.duration"),
 					e.getAttributeIntValueOrThrow("mediainfo.bitrate"),
 					e.getAttributeValueOrThrow("mediainfo.videoformat"),
@@ -172,7 +172,7 @@ public class DatabaseXMLImportImpl_V6 implements IDatabaseXMLImporterImpl
 				o.MediaInfo.set(new CCMediaInfo(
 					e.getAttributeLongValueOrThrow("mediainfo.cdate"),
 					e.getAttributeLongValueOrThrow("mediainfo.mdate"),
-					e.getAttributeLongValueOrThrow("mediainfo.filesize"),
+					new CCFileSize(e.getAttributeLongValueOrThrow("mediainfo.filesize")),
 					e.getAttributeDoubleValueOrThrow("mediainfo.duration"),
 					e.getAttributeIntValueOrThrow("mediainfo.bitrate"),
 					e.getAttributeValueOrThrow("mediainfo.videoformat"),

@@ -7,23 +7,23 @@ import de.jClipCorn.database.elementProps.impl.*;
 
 public class EMediaInfoPropPack {
 
-	public final ELongProp   CDate;
-	public final ELongProp   MDate;
-	public final EStringProp Checksum;
-	public final ELongProp   Filesize;
-	public final EDoubleProp Duration;
-	public final EIntProp    Bitrate;
-	public final EStringProp VideoFormat;
-	public final EIntProp    Width;
-	public final EIntProp    Height;
-	public final EDoubleProp Framerate;
-	public final EShortProp  Bitdepth;
-	public final EIntProp    Framecount;
-	public final EStringProp VideoCodec;
-	public final EStringProp AudioFormat;
-	public final EShortProp  AudioChannels;
-	public final EStringProp AudioCodec;
-	public final EIntProp    AudioSamplerate;
+	public final ELongProp     CDate;
+	public final ELongProp     MDate;
+	public final EStringProp   Checksum;
+	public final EFileSizeProp Filesize;
+	public final EDoubleProp   Duration;
+	public final EIntProp      Bitrate;
+	public final EStringProp   VideoFormat;
+	public final EIntProp      Width;
+	public final EIntProp      Height;
+	public final EDoubleProp   Framerate;
+	public final EShortProp    Bitdepth;
+	public final EIntProp      Framecount;
+	public final EStringProp   VideoCodec;
+	public final EStringProp   AudioFormat;
+	public final EShortProp    AudioChannels;
+	public final EStringProp   AudioCodec;
+	public final EIntProp      AudioSamplerate;
 
 	private CCMediaInfo _cache = null;
 	private IEProperty[] _properties = null;
@@ -31,23 +31,23 @@ public class EMediaInfoPropPack {
 
 	public EMediaInfoPropPack(String namePrefix, CCMediaInfo startValue, IPropertyParent parent)
 	{
-		CDate           = new ELongProp(  namePrefix + ".CDate",           startValue.getCDate(),           parent, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
-		MDate           = new ELongProp(  namePrefix + ".MDate",           startValue.getMDate(),           parent, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
-		Checksum        = new EStringProp(namePrefix + ".Checksum",        startValue.getChecksum(),        parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-		Filesize        = new ELongProp(  namePrefix + ".Filesize",        startValue.getFilesize(),        parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-		Duration        = new EDoubleProp(namePrefix + ".Duration",        startValue.getDuration(),        parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-		Bitrate         = new EIntProp(   namePrefix + ".Bitrate",         startValue.getBitrate(),         parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-		VideoFormat     = new EStringProp(namePrefix + ".VideoFormat",     startValue.getVideoFormat(),     parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-		Width           = new EIntProp(   namePrefix + ".Width",           startValue.getWidth(),           parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-		Height          = new EIntProp(   namePrefix + ".Height",          startValue.getHeight(),          parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-		Framerate       = new EDoubleProp(namePrefix + ".Framerate",       startValue.getFramerate(),       parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-		Bitdepth        = new EShortProp( namePrefix + ".Bitdepth",        startValue.getBitdepth(),        parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-		Framecount      = new EIntProp(   namePrefix + ".Framecount",      startValue.getFramecount(),      parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-		VideoCodec      = new EStringProp(namePrefix + ".VideoCodec",      startValue.getVideoCodec(),      parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-		AudioFormat     = new EStringProp(namePrefix + ".AudioFormat",     startValue.getAudioFormat(),     parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-		AudioChannels   = new EShortProp( namePrefix + ".AudioChannels",   startValue.getAudioChannels(),   parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-		AudioCodec      = new EStringProp(namePrefix + ".AudioCodec",      startValue.getAudioCodec(),      parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-		AudioSamplerate = new EIntProp(   namePrefix + ".AudioSamplerate", startValue.getAudioSamplerate(), parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		CDate           = new ELongProp(    namePrefix + ".CDate",           startValue.getCDate(),           parent, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
+		MDate           = new ELongProp(    namePrefix + ".MDate",           startValue.getMDate(),           parent, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
+		Checksum        = new EStringProp(  namePrefix + ".Checksum",        startValue.getChecksum(),        parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		Filesize        = new EFileSizeProp(namePrefix + ".Filesize",        startValue.getFilesize(),        parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		Duration        = new EDoubleProp(  namePrefix + ".Duration",        startValue.getDuration(),        parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		Bitrate         = new EIntProp(     namePrefix + ".Bitrate",         startValue.getBitrate(),         parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		VideoFormat     = new EStringProp(  namePrefix + ".VideoFormat",     startValue.getVideoFormat(),     parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		Width           = new EIntProp(     namePrefix + ".Width",           startValue.getWidth(),           parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		Height          = new EIntProp(     namePrefix + ".Height",          startValue.getHeight(),          parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		Framerate       = new EDoubleProp(  namePrefix + ".Framerate",       startValue.getFramerate(),       parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		Bitdepth        = new EShortProp(   namePrefix + ".Bitdepth",        startValue.getBitdepth(),        parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		Framecount      = new EIntProp(     namePrefix + ".Framecount",      startValue.getFramecount(),      parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		VideoCodec      = new EStringProp(  namePrefix + ".VideoCodec",      startValue.getVideoCodec(),      parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		AudioFormat     = new EStringProp(  namePrefix + ".AudioFormat",     startValue.getAudioFormat(),     parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		AudioChannels   = new EShortProp(   namePrefix + ".AudioChannels",   startValue.getAudioChannels(),   parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		AudioCodec      = new EStringProp(  namePrefix + ".AudioCodec",      startValue.getAudioCodec(),      parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+		AudioSamplerate = new EIntProp(     namePrefix + ".AudioSamplerate", startValue.getAudioSamplerate(), parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
 
 		CDate.addChangeListener((_1, _2, _3) -> updateCache());
 		MDate.addChangeListener((_1, _2, _3) -> updateCache());

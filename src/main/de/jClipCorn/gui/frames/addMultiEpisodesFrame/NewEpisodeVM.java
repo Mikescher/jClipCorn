@@ -26,7 +26,7 @@ public class NewEpisodeVM implements IEpisodeData {
 	public CCDBLanguageList Language = CCDBLanguageList.EMPTY;
 	public int Length = -1;
 	public int EpisodeNumber = -1;
-	public long Filesize = -1;
+	public CCFileSize Filesize = CCFileSize.ZERO;
 	public CCMediaInfo MediaInfo = CCMediaInfo.EMPTY;
 	public boolean NoMove = false;
 
@@ -53,7 +53,7 @@ public class NewEpisodeVM implements IEpisodeData {
 
 	@Override public CCFileFormat getFormat() { return CCFileFormat.getMovieFormatOrDefault(SourcePath.getExtension()); }
 
-	@Override public CCFileSize getFilesize() { return new CCFileSize(Filesize); }
+	@Override public CCFileSize getFilesize() { return Filesize; }
 
 	@Override public CCPath getPart() { return TargetPath; }
 

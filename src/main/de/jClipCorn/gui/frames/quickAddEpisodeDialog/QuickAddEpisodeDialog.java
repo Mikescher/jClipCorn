@@ -30,7 +30,6 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
-import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
@@ -372,11 +371,11 @@ public class QuickAddEpisodeDialog extends JDialog {
 		CCDate adddate = CCDate.getCurrentDate();
 		CCDateTimeList history = CCDateTimeList.createEmpty();
 		CCTagList tags = CCTagList.EMPTY;
-		long filesize = FileSizeFormatter.getFileSize(src);
+		var filesize = src.filesize();
 		CCFileFormat format = CCFileFormat.getMovieFormatFromPath(src);
 		CCMediaInfo minfo = edMediaInfo.getValue();
 
-		var epack = new EpisodeDataPack(episodenumber, title, length, format, new CCFileSize(filesize), CCPath.createFromFSPath(dst), adddate, history, tags, lang, minfo);
+		var epack = new EpisodeDataPack(episodenumber, title, length, format, filesize, CCPath.createFromFSPath(dst), adddate, history, tags, lang, minfo);
 
 		List<UserDataProblem> problems = new ArrayList<>();
 		boolean probvalue = !check || checkUserDataEpisode(problems, epack, src, dst);

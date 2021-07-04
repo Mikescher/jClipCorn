@@ -916,7 +916,7 @@ public class EditSeriesFrame extends JFrame
 	}
 
 	private void recalcEpisodeFilesize() {
-		spnEpisodeSize.setValue(FileSizeFormatter.getFileSize(edEpisodePart.getPath().toFSPath()));
+		spnEpisodeSize.setValue(edEpisodePart.getPath().toFSPath().filesize().getBytes());
 	}
 
 	private void recalcEpisodeFormat() {

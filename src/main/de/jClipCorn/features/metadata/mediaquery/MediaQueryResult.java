@@ -356,7 +356,9 @@ public class MediaQueryResult {
 
 		if (tbr              == -1)   return CCMediaInfo.EMPTY;
 
-		return new CCMediaInfo(CDate, MDate, FileSize, Duration,
+		if (FileSize   <= 0)          return CCMediaInfo.EMPTY;
+
+		return new CCMediaInfo(CDate, MDate, new CCFileSize(FileSize), Duration,
 		                       tbr,
 			                   video.Format, video.Width, video.Height, video.FrameRate, video.BitDepth, video.FrameCount, Str.coalesce(video.CodecID),
 			                   audio.Format, audio.Channels, Str.coalesce(audio.CodecID), audio.Samplingrate,

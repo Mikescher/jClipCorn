@@ -9,12 +9,10 @@ import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
-import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
@@ -136,7 +134,7 @@ public class DatabaseAutofixer {
 		if (err.getElement1() instanceof CCMovie) {
 			CCFileSize size = CCFileSize.ZERO;
 			for (int i = 0; i < ((CCMovie) err.getElement1()).getPartcount(); i++) {
-				size = CCFileSize.addBytes(size, FileSizeFormatter.getFileSize(((CCMovie) err.getElement1()).Parts.get(i).toFSPath()));
+				size = CCFileSize.add(size, ((CCMovie) err.getElement1()).Parts.get(i).toFSPath().filesize());
 			}
 			
 			if (size.getBytes() == 0) {
@@ -151,9 +149,9 @@ public class DatabaseAutofixer {
 		} else if (err.getElement1() instanceof CCSeason) {
 			return false;
 		} else if (err.getElement1() instanceof CCEpisode) {
-			long size = FileSizeFormatter.getFileSize(((CCEpisode) err.getElement1()).getPart().toFSPath());
-			
-			if (size == 0) {
+			var size = ((CCEpisode) err.getElement1()).getPart().toFSPath().filesize();
+
+			if (size.getBytes() == 0) {
 				return false;
 			}
 			
@@ -422,12 +420,12 @@ public class DatabaseAutofixer {
 
 			long fsz = 0;
 			for (var p : elem.getParts()) {
-				File f = p.toFSPath().toFile();
+				var f = p.toFSPath();
 				if (!f.exists()) return false;
-				fsz += f.length();
+				fsz += f.filesize().getBytes();
 			}
 
-			if (fsz != mi.getFilesize()) return false;
+			if (fsz != mi.getFilesize().getBytes()) return false;
 
 			elem.fileSize().set(fsz);
 			return true;

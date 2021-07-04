@@ -1,5 +1,6 @@
 package de.jClipCorn.database.covertab;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -11,14 +12,14 @@ public class CCCoverData {
 	public final String Filename;
 	public final int Width;
 	public final int Height;
-	public final long Filesize;
+	public final CCFileSize Filesize;
 	public final ColorQuantizerMethod PreviewType;
 	public final String Checksum;
 	public final CCDateTime Timestamp;
 
 	private byte[] Preview; // can be null
 
-	public CCCoverData(int id, String fn, int ww, int hh, String cs, long fs, byte[] pv, ColorQuantizerMethod pt, CCDateTime ts) {
+	public CCCoverData(int id, String fn, int ww, int hh, String cs, CCFileSize fs, byte[] pv, ColorQuantizerMethod pt, CCDateTime ts) {
 		this.ID          = id;
 		this.Filename    = fn;
 		this.Width       = ww;
@@ -31,7 +32,7 @@ public class CCCoverData {
 		this.Preview     = pv;
 	}
 
-	public CCCoverData(int id, String fn, int ww, int hh, String cs, long fs, byte[] pv, int pt, CCDateTime ts) throws EnumFormatException {
+	public CCCoverData(int id, String fn, int ww, int hh, String cs, CCFileSize fs, byte[] pv, int pt, CCDateTime ts) throws EnumFormatException {
 		this.ID          = id;
 		this.Filename    = fn;
 		this.Width       = ww;
@@ -44,7 +45,7 @@ public class CCCoverData {
 		this.Preview     = pv;
 	}
 
-	public CCCoverData(int id, String fn, int ww, int hh, String cs, long fs, ColorQuantizerMethod pt, CCDateTime ts) {
+	public CCCoverData(int id, String fn, int ww, int hh, String cs, CCFileSize fs, ColorQuantizerMethod pt, CCDateTime ts) {
 		this.ID          = id;
 		this.Filename    = fn;
 		this.Width       = ww;
@@ -57,7 +58,7 @@ public class CCCoverData {
 		this.Preview     = null;
 	}
 
-	public CCCoverData(int id, String fn, int ww, int hh, String cs, long fs, int pt, CCDateTime ts) throws EnumFormatException {
+	public CCCoverData(int id, String fn, int ww, int hh, String cs, CCFileSize fs, int pt, CCDateTime ts) throws EnumFormatException {
 		this.ID          = id;
 		this.Filename    = fn;
 		this.Width       = ww;

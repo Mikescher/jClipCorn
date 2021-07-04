@@ -100,11 +100,11 @@ public class CompareState {
 		long fs = 0;
 
 		for (var m: Movies) if (m.NeedsCreateNew || m.NeedsUpdateFile) fs += m.MovieLocal.FileSize.get().getBytes();
-		for (var m: Movies) if (m.NeedsCreateNew || m.NeedsUpdateCover) fs += m.MovieLocal.getCoverInfo().Filesize;
+		for (var m: Movies) if (m.NeedsCreateNew || m.NeedsUpdateCover) fs += m.MovieLocal.getCoverInfo().Filesize.getBytes();
 
-		for (var m: Series) if (m.NeedsCreateNew || m.NeedsUpdateCover) fs += m.SeriesLocal.getCoverInfo().Filesize;
+		for (var m: Series) if (m.NeedsCreateNew || m.NeedsUpdateCover) fs += m.SeriesLocal.getCoverInfo().Filesize.getBytes();
 
-		for (var m: AllSeasons) if (m.NeedsCreateNew || m.NeedsUpdateCover) fs += m.SeasonLocal.getCoverInfo().Filesize;
+		for (var m: AllSeasons) if (m.NeedsCreateNew || m.NeedsUpdateCover) fs += m.SeasonLocal.getCoverInfo().Filesize.getBytes();
 
 		for (var m: AllEpisodes) if (m.NeedsCreateNew || m.NeedsUpdateFile) fs += m.EpisodeLocal.FileSize.get().getBytes();
 

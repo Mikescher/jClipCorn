@@ -1,5 +1,6 @@
 package de.jClipCorn.util.filesystem;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.stream.CCStream;
@@ -260,6 +261,10 @@ public class FSPath implements IPath, Comparable<FSPath> {
 		if (idx < 0 || (sep > 0 && idx < sep)) return Str.Empty;
 
 		return _path.substring(idx + 1); // ganz neat, returned den ganzen string wenn kein '.' gefunden ;)
+	}
+
+	public CCFileSize filesize() {
+		return new CCFileSize(toFile().length());
 	}
 
 	public int countAllFilesRecursive() {

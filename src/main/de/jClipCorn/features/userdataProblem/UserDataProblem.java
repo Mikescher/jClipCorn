@@ -3,6 +3,7 @@ package de.jClipCorn.features.userdataProblem;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
 import de.jClipCorn.database.databaseElement.datapacks.IMovieData;
 import de.jClipCorn.database.databaseElement.datapacks.ISeasonData;
@@ -236,7 +237,7 @@ public class UserDataProblem {
 		if (!newdata.getMediaInfo().isSet()) {
 			ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET));
 		} else {
-			if (newdata.getMediaInfo().getFilesize() != newdata.getFilesize().getBytes() && partcount_nonempty == 1) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
+			if (!CCFileSize.isEqual(newdata.getMediaInfo().getFilesize(), newdata.getFilesize()) && partcount_nonempty == 1) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
 			String err = newdata.getMediaInfo().validate();
 			if (err != null) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_DATA, err));
 		}
@@ -468,7 +469,7 @@ public class UserDataProblem {
 		if (!newdata.getMediaInfo().isSet()) {
 			ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET));
 		} else {
-			if (newdata.getMediaInfo().getFilesize() != newdata.getFilesize().getBytes()) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
+			if (!CCFileSize.isEqual(newdata.getMediaInfo().getFilesize(), newdata.getFilesize())) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
 			String err = newdata.getMediaInfo().validate();
 			if (err != null) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_DATA, err));
 		}

@@ -1,7 +1,6 @@
 Insubstantial (substance, trident, laf-plugin, laf-widget)
 Apache Commons (betwixt, digester, lang, logging, beanutils)
 Apache DdlUtils
-Apache Derby
 Fast-MD5
 JDOM
 Java JSON library

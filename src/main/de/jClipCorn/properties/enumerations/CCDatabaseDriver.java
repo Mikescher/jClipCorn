@@ -7,7 +7,7 @@ import de.jClipCorn.util.enumextension.IEnumWrapper;
 
 public enum CCDatabaseDriver implements ContinoousEnum<CCDatabaseDriver> {
 	DERBY(0),
-	SQLITE(1), 
+	SQLITE(1),
 	STUB(2), 
 	INMEMORY(3);
 	
@@ -20,7 +20,7 @@ public enum CCDatabaseDriver implements ContinoousEnum<CCDatabaseDriver> {
 	
 	private int id;
 
-	private static final EnumWrapper<CCDatabaseDriver> wrapper = new EnumWrapper<>(DERBY);
+	private static final EnumWrapper<CCDatabaseDriver> wrapper = new EnumWrapper<>(SQLITE);
 
 	CCDatabaseDriver(int val) {
 		id = val;
@@ -36,7 +36,7 @@ public enum CCDatabaseDriver implements ContinoousEnum<CCDatabaseDriver> {
 	}
 
 	public static CCDatabaseDriver[] getSelectableValues() {
-		return new CCDatabaseDriver[]{ DERBY, SQLITE };
+		return new CCDatabaseDriver[]{ SQLITE };
 	}
 
 	public boolean isDeprecated() {

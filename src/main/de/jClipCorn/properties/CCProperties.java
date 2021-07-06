@@ -89,7 +89,6 @@ public class CCProperties {
 	public CCEnumProperty<UITableBackground>                PROP_MAINFRAME_TABLEBACKGROUND;
 	public CCEnumProperty<ResourcePreloadMode>              PROP_LOADING_PRELOADRESOURCES;
 	public CCBoolProperty                                   PROP_LOADING_INITBACKUPMANAGERASYNC;
-	public CCBoolProperty                                   PROP_DATABASE_CREATELOGFILE;
 	public CCPIntProperty                                   PROP_DATABASE_COVERCACHESIZE;
 	public CCBoolProperty                                   PROP_COMMON_CHECKFORUPDATES;
 	public CCBoolProperty                                   PROP_COMMON_PRESCANFILESYSTEM;
@@ -290,7 +289,6 @@ public class CCProperties {
 		PROP_SELF_DIRECTORY                     = new CCStringProperty(CAT_DATABASE,        this,   "PROP_SELF_DIRECTORY",                      "");
 		PROP_COVER_PREFIX                       = new CCStringProperty(CAT_DATABASE,        this,   "PROP_COVER_PREFIX",                        "cover_");
 		PROP_COVER_TYPE                         = new CCStringProperty(CAT_DATABASE,        this,   "PROP_COVER_TYPE",                          "png");
-		PROP_DATABASE_CREATELOGFILE             = new CCBoolProperty(CAT_DATABASE,          this,   "PROP_DATABASE_CREATELOGFILE",              true);
 		PROP_DATABASE_COVERCACHESIZE            = new CCPIntProperty(CAT_DATABASE,          this,   "PROP_DATABASE_COVERCACHESIZE",             128);
 		PROP_DATABASE_MAX_COVER_SIZE            = new CCEnumProperty<>(CAT_DATABASE,        this,   "PROP_DATABASE_MAX_COVER_SIZE",             CoverImageSize.BASE_SIZE,           CoverImageSize.getWrapper());
 		PROP_LOG_MAX_LINECOUNT                  = new CCPIntProperty(CAT_DATABASE,          this,   "PROP_LOG_MAX_LINECOUNT",                   1048576); // 2^20

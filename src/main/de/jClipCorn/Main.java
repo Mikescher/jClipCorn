@@ -81,10 +81,6 @@ public class Main {
 	
 	private static void init() {
 		DEBUG |= CCProperties.getInstance().PROP_OTHER_DEBUGMODE.getValue();
-		
-		if (!CCProperties.getInstance().PROP_DATABASE_CREATELOGFILE.getValue()) {
-			System.setProperty("derby.stream.error.field", "de.jClipCorn.database.driver.DerbyDatabase.DERBY_OUT"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
 
 		if (CCProperties.getInstance().PROP_COMMON_PRESCANFILESYSTEM.getValue()) {
 			DriveMap.preScan(); // creates a new Thread

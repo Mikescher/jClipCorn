@@ -59,10 +59,6 @@ public class CCDatabase {
 		if (driver == null) driver = autoDetermineDriver(dbDir, dbName);
 
 		switch (driver) {
-		case DERBY:
-			db = new DerbyDatabase(readonly);
-			coverCache = new CCDefaultCoverCache(this);
-			break;
 		case SQLITE:
 			db = new SQLiteDatabase(readonly);
 			coverCache = new CCDefaultCoverCache(this);
@@ -89,9 +85,6 @@ public class CCDatabase {
 	private static CCDatabaseDriver autoDetermineDriver(FSPath dbDir, String dbName) {
 		var sqlite = dbDir.append(dbName, dbName + ".db"); //$NON-NLS-1$
 		if (sqlite.exists()) return CCDatabaseDriver.SQLITE;
-
-		var derby = dbDir.append(dbName, "seg0"); //$NON-NLS-1$
-		if (derby.exists()) return CCDatabaseDriver.DERBY;
 
 		CCLog.addWarning("Could not identify DB at path: " + dbDir + " | " + dbName); //$NON-NLS-1$
 		return CCDatabaseDriver.SQLITE; // fallback

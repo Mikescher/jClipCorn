@@ -110,7 +110,7 @@ public class EditSeriesFrame extends JFrame
 
 		if (sea != null)
 		{
-			selectSeason(ep.getSeason());
+			selectSeason(sea);
 			if (ep != null) selectEpisode(ep);
 		}
 

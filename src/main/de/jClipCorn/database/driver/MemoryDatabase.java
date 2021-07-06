@@ -4,11 +4,11 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.FSPath;
-import de.jClipCorn.util.filesystem.SimpleFileUtils;
-import de.jClipCorn.util.parser.TurbineParser;
+import de.jClipCorn.util.sqlwrapper.SQLBuilder;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("nls")
@@ -19,7 +19,7 @@ public class MemoryDatabase extends GenericDatabase {
 	
 	@Override
 	@SuppressWarnings("deprecation")
-	public boolean createNewDatabase(FSPath xmlPath, FSPath dbDir, String dbName) {
+	public boolean createNewDatabase(FSPath dbDir, String dbName) {
 		try {
 			Class.forName(DRIVER).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -30,9 +30,12 @@ public class MemoryDatabase extends GenericDatabase {
 			connection = DriverManager.getConnection(PROTOCOL);
 			connection.setAutoCommit(true);
 
-			TurbineParser turb = new TurbineParser(xmlPath.readAsUTF8TextFile());
-			turb.parse();
-			turb.create(this);
+			for (var tab: DatabaseStructure.TABLES)
+			{
+				var sql = SQLBuilder.createSchema(tab).build(this::createPreparedStatement, new ArrayList<>());
+				sql.execute();
+				sql.tryClose();
+			}
 		} catch (Exception e) {
 			lastError = e;
 			return false;
@@ -40,29 +43,6 @@ public class MemoryDatabase extends GenericDatabase {
 		return true;
 	}
 
-	@Override
-	@SuppressWarnings("deprecation")
-	public boolean createNewDatabasefromResourceXML(String xmlResPath, FSPath dbDir, String dbName) {
-		try {
-			Class.forName(DRIVER).newInstance();
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			CCLog.addError(e);
-		}
-		
-		try {
-			connection = DriverManager.getConnection(PROTOCOL);
-			connection.setAutoCommit(true);
-
-			TurbineParser turb = new TurbineParser(SimpleFileUtils.readTextResource(xmlResPath, getClass()));
-			turb.parse();
-			turb.create(this);
-		} catch (Exception e) {
-			lastError = e;
-			return false;
-		}
-		return true;
-	}
-	
 	@Override
 	public boolean databaseExists(FSPath dbDir, String dbName) {
 		return false;

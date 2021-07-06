@@ -1,10 +1,12 @@
 package de.jClipCorn.util.sqlwrapper;
 
 import de.jClipCorn.database.driver.CCDatabase;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.DoubleString;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.lambda.Func1to1WithGenericException;
+import de.jClipCorn.util.stream.CCStreams;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -17,11 +19,12 @@ public class SQLBuilder {
 	private final StatementType _type;
 
 	private String _table = null;
-	private List<Tuple<DoubleString, CCSQLType>> _fields = new ArrayList<>();
-	private List<Tuple<DoubleString, CCSQLType>> _whereClauses = new ArrayList<>();
-	private List<Tuple<String, CCSQLType>> _selectFields = new ArrayList<>();
-	private List<Tuple3<Integer, String, CCSQLType>> _customPrepFields = new ArrayList<>();
-	private List<Tuple3<Integer, String, CCSQLType>> _customSelFields = new ArrayList<>();
+	private final List<Tuple<DoubleString, CCSQLType>> _fields = new ArrayList<>();
+	private final List<Tuple<DoubleString, CCSQLType>> _whereClauses = new ArrayList<>();
+	private final List<Tuple<String, CCSQLType>> _selectFields = new ArrayList<>();
+	private final List<Tuple3<Integer, String, CCSQLType>> _customPrepFields = new ArrayList<>();
+	private final List<Tuple3<Integer, String, CCSQLType>> _customSelFields = new ArrayList<>();
+	private CCSQLTableDef _createSchema = null;
 	private String _customSQL = null;
 	private String _orderField = null;
 	private SQLOrder _orderDirection = null;
@@ -36,10 +39,23 @@ public class SQLBuilder {
 		return b;
 	}
 
+	public static SQLBuilder createInsertSingle(CCSQLTableDef tab) throws SQLWrapperException {
+		var v = createInsert(tab);
+		for (var col: tab.Columns) v = v.addPreparedField(col);
+		return v;
+	}
+
 	public static SQLBuilder createUpdate(CCSQLTableDef tab) {
 		SQLBuilder b = new SQLBuilder(StatementType.UPDATE);
 		b._table = tab.Name;
 		return b;
+	}
+
+	public static SQLBuilder createUpdateSingle(CCSQLTableDef tab, CCSQLColDef where) throws SQLWrapperException {
+		var v = createUpdate(tab);
+		v = v.addPreparedWhereCondition(where);
+		for (var col: tab.Columns) if (col != where) v = v.addPreparedField(col);
+		return v;
 	}
 
 	public static SQLBuilder createInsertOrReplace(CCSQLTableDef tab) {
@@ -60,9 +76,29 @@ public class SQLBuilder {
 		return b;
 	}
 
+	public static SQLBuilder createSelectAll(CCSQLTableDef tab) throws SQLWrapperException {
+		var v = createSelect(tab);
+		for (var col: tab.Columns) v = v.addSelectField(col);
+		return v;
+	}
+
+	public static SQLBuilder createSelectSingle(CCSQLTableDef tab, CCSQLColDef where) throws SQLWrapperException {
+		var v = createSelect(tab);
+		v = v.addPreparedWhereCondition(where);
+		for (var col: tab.Columns) v = v.addSelectField(col);
+		return v;
+	}
+
 	public static SQLBuilder createCustom(CCSQLTableDef tab) {
 		SQLBuilder b = new SQLBuilder(StatementType.CUSTOM);
 		b._table = tab.Name;
+		return b;
+	}
+
+	public static SQLBuilder createSchema(CCSQLTableDef tab) {
+		SQLBuilder b = new SQLBuilder(StatementType.TABSCHEMA);
+		b._table = tab.Name;
+		b._createSchema = tab;
 		return b;
 	}
 
@@ -111,6 +147,18 @@ public class SQLBuilder {
 		return this;
 	}
 
+	public SQLBuilder remSelectField(CCSQLColDef field) throws SQLWrapperException {
+		if (_type != StatementType.SELECT) throw new SQLWrapperException("Cannot [remSelectField] on type " + _type);
+
+		var rm = CCStreams.iterate(_selectFields).singleOrNull(p -> Str.equals(p.Item1, field.Name) && p.Item2 == field.Type);
+		if (rm == null) throw new SQLWrapperException("Cannot [remSelectField]: (not found)");
+
+		var ok = _selectFields.remove(rm);
+		if (!ok) throw new SQLWrapperException("Cannot [remSelectField]: (failed)");
+
+		return this;
+	}
+
 	public SQLBuilder setOrder(CCSQLColDef col, SQLOrder ord) throws SQLWrapperException {
 		if (_type != StatementType.SELECT) throw new SQLWrapperException("Cannot [setOrder] on type " + _type);
 
@@ -136,12 +184,13 @@ public class SQLBuilder {
 
 	public CCSQLStatement build(Func1to1WithGenericException<String, PreparedStatement, SQLException> fn, ArrayList<CCSQLStatement> collector) throws SQLWrapperException, SQLException {
 		switch (_type) {
-			case SELECT:  { CCSQLStatement r = buildSelect(fn);          collector.add(r); return r; }
-			case UPDATE:  { CCSQLStatement r = buildUpdate(fn);          collector.add(r); return r; }
-			case REPLACE: { CCSQLStatement r = buildInsertOrReplace(fn); collector.add(r); return r; }
-			case DELETE:  { CCSQLStatement r = buildDelete(fn);          collector.add(r); return r; }
-			case INSERT:  { CCSQLStatement r = buildInsert(fn);          collector.add(r); return r; }
-			case CUSTOM:  { CCSQLStatement r = buildCustom(fn);          collector.add(r); return r; }
+			case SELECT:    { CCSQLStatement r = buildSelect(fn);          collector.add(r); return r; }
+			case UPDATE:    { CCSQLStatement r = buildUpdate(fn);          collector.add(r); return r; }
+			case REPLACE:   { CCSQLStatement r = buildInsertOrReplace(fn); collector.add(r); return r; }
+			case DELETE:    { CCSQLStatement r = buildDelete(fn);          collector.add(r); return r; }
+			case INSERT:    { CCSQLStatement r = buildInsert(fn);          collector.add(r); return r; }
+			case TABSCHEMA: { CCSQLStatement r = buildTableSchema(fn);     collector.add(r); return r; }
+			case CUSTOM:    { CCSQLStatement r = buildCustom(fn);          collector.add(r); return r; }
 			default: throw new SQLWrapperException("Unknown CC:StatementType := " + _type);
 		}
 	}
@@ -338,5 +387,39 @@ public class SQLBuilder {
 		}
 
 		return new CCSQLStatement(_type, sql, fn.invoke(sql), fields, selectFields);
+	}
+
+	@SuppressWarnings("nls")
+	private CCSQLStatement buildTableSchema(Func1to1WithGenericException<String, PreparedStatement, SQLException> fn) throws SQLException, SQLWrapperException {
+
+		List<String> colSQL = new ArrayList<>();
+
+		for (var column : _createSchema.Columns) {
+			colSQL.add(getSQLCreateColumn(_createSchema, column));
+		}
+
+		for (var fkey : _createSchema.ForeignKeys) {
+			colSQL.add(getSQLCreateForeignKey(fkey));
+		}
+
+		var sql = "CREATE TABLE " + SQLBuilderHelper.sqlEscape(_createSchema.Name) + "(" + String.join(",", colSQL) + ")";
+
+		return new CCSQLStatement(_type, sql, fn.invoke(sql), new ArrayList<>(), new ArrayList<>());
+	}
+
+	private String getSQLCreateColumn(CCSQLTableDef tab, CCSQLColDef col) {
+		String tabSQL = SQLBuilderHelper.sqlEscape(col.Name) + " " + col.Type.toSQL();
+
+		if (tab.Primary == col) {
+			tabSQL += " PRIMARY KEY";
+		} else if (col.NonNullable) {
+			tabSQL += " NOT NULL";
+		}
+
+		return tabSQL;
+	}
+
+	private String getSQLCreateForeignKey(CCSQLFKey fkey) {
+		return "FOREIGN KEY(" + SQLBuilderHelper.sqlEscape(fkey.ColumnLocal.Name) + ") REFERENCES " + SQLBuilderHelper.sqlEscape(fkey.TableForeign.Name) + "(" + SQLBuilderHelper.sqlEscape(fkey.ColumnForeign.Name) + ")";
 	}
 }

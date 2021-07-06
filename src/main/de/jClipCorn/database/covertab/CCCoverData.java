@@ -1,7 +1,6 @@
 package de.jClipCorn.database.covertab;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.EnumFormatException;
@@ -72,14 +71,6 @@ public class CCCoverData {
 	}
 
 	public byte[] getPreviewOrNull() {
-		return Preview;
-	}
-
-	public byte[] getPreview(CCDatabase db) {
-		if (Preview != null) return Preview;
-
-		Preview = db.getPreviewForCover(this);
-
-		return Preview;
+		return Preview; // Is NULL if db was loaded in 'fast-cover' mode
 	}
 }

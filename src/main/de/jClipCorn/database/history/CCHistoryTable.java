@@ -14,11 +14,12 @@ import javax.swing.*;
 public enum CCHistoryTable implements ContinoousEnum<CCHistoryTable>
 {
 	COVERS(0,   "COVERS",   DatabaseStructure.TAB_COVERS,   Resources.ICN_TABLE_COVERS),   //$NON-NLS-1$
-	ELEMENTS(1, "ELEMENTS", DatabaseStructure.TAB_MAIN,     Resources.ICN_TABLE_MOVIE),    //$NON-NLS-1$
-	EPISODES(2, "EPISODES", DatabaseStructure.TAB_EPISODES, Resources.ICN_TABLE_EPISODES), //$NON-NLS-1$
-	GROUPS(3,   "GROUPS",   DatabaseStructure.TAB_GROUPS,   Resources.ICN_TABLE_GROUPS),   //$NON-NLS-1$
-	INFO(4,     "INFO",     DatabaseStructure.TAB_INFO,     Resources.ICN_TABLE_INFO),     //$NON-NLS-1$
-	SEASONS(5,  "SEASONS",  DatabaseStructure.TAB_SEASONS,  Resources.ICN_TABLE_SEASONS);  //$NON-NLS-1$
+	MOVIES(1,   "MOVIES",   DatabaseStructure.TAB_MOVIES,   Resources.ICN_TABLE_MOVIE),    //$NON-NLS-1$
+	SERIES(2,   "SERIES",   DatabaseStructure.TAB_SERIES,   Resources.ICN_TABLE_SERIES),   //$NON-NLS-1$
+	EPISODES(3, "EPISODES", DatabaseStructure.TAB_EPISODES, Resources.ICN_TABLE_EPISODES), //$NON-NLS-1$
+	GROUPS(4,   "GROUPS",   DatabaseStructure.TAB_GROUPS,   Resources.ICN_TABLE_GROUPS),   //$NON-NLS-1$
+	INFO(5,     "INFO",     DatabaseStructure.TAB_INFO,     Resources.ICN_TABLE_INFO),     //$NON-NLS-1$
+	SEASONS(6,  "SEASONS",  DatabaseStructure.TAB_SEASONS,  Resources.ICN_TABLE_SEASONS);  //$NON-NLS-1$
 
 	private static final String[] _list = CCStreams.iterate(values()).map(CCHistoryTable::asString).toArray(new String[0]);
 

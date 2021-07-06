@@ -81,7 +81,7 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 				CCHistorySingleChange n = CCStreams.iterate(entry.Changes).firstOrNull(c -> Str.equals(c.Field, "FILENAME")); //$NON-NLS-1$
 				if (n != null && n.NewValue != null) return n.NewValue;
 				if (n != null && n.OldValue != null) return n.OldValue;
-			} else if (entry.Table == CCHistoryTable.ELEMENTS || entry.Table == CCHistoryTable.SEASONS || entry.Table == CCHistoryTable.EPISODES) {
+			} else if (entry.Table == CCHistoryTable.MOVIES || entry.Table == CCHistoryTable.SERIES || entry.Table == CCHistoryTable.SEASONS || entry.Table == CCHistoryTable.EPISODES) {
 				CCHistorySingleChange n = CCStreams.iterate(entry.Changes).firstOrNull(c -> Str.equals(c.Field, "NAME")); //$NON-NLS-1$
 				if (n != null && n.NewValue != null) return n.NewValue;
 				if (n != null && n.OldValue != null) return n.OldValue;

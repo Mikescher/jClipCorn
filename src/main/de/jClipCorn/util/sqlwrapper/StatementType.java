@@ -6,5 +6,6 @@ public enum StatementType {
 	REPLACE,
 	DELETE,
 	INSERT,
+	TABSCHEMA,
 	CUSTOM,
 }

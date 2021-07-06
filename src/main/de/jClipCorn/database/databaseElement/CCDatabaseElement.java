@@ -20,7 +20,6 @@ import java.awt.image.BufferedImage;
 public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, ICCTaggedElement, IDatabaseElementData, IPropertyParent {
 
 	public final EIntProp                  LocalID         = new EIntProp(          "LocalID",         -1,                          this, EPropertyType.DATABASE_PRIMARY_ID);
-	public final EEnumProp<CCDBElementTyp> Typ             = new EEnumProp<>(       "Typ",             CCDBElementTyp.MOVIE,        this, EPropertyType.DATABASE_READONLY);
 	public final EIntProp                  CoverID         = new EIntProp(          "CoverID",         -1,                          this, EPropertyType.DATABASE_REF);
 	public final EGroupListProp            Groups          = new EGroupListProp(    "Groups",          CCGroupList.EMPTY,           this, EPropertyType.USER_METADATA, this::onGroupsChanging);
 	public final EStringProp               Title           = new EStringProp(       "Title",           Str.Empty,                   this, EPropertyType.OBJECTIVE_METADATA);
@@ -36,9 +35,8 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	protected final CCMovieList movielist;
 	protected boolean isUpdating = false;
 
-	public CCDatabaseElement(CCMovieList ml, CCDBElementTyp typ, int id) {
+	public CCDatabaseElement(CCMovieList ml, int id) {
 		LocalID.setReadonlyPropToInitial(id);
-		Typ.setReadonlyPropToInitial(typ);
 
 		this.movielist = ml;
 	}
@@ -54,7 +52,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		return new IEProperty[]
 		{
 			LocalID,
-			Typ,
 			CoverID,
 			Groups,
 			Title,
@@ -104,9 +101,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		return LocalID.get();
 	}
 
-	public CCDBElementTyp getType() {
-		return Typ.get();
-	}
+	public abstract CCDBElementTyp getType();
 
 	public void setCover(int cid) {
 		CoverID.set(cid);

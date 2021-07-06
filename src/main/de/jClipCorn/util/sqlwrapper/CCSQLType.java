@@ -96,4 +96,22 @@ public enum CCSQLType {
 		CCLog.addDefaultSwitchError(this, this);
 		return Types.INTEGER;
 	}
+
+	public String toSQL() {
+		switch (this)
+		{
+			case INTEGER:  return "INTEGER";
+			case VARCHAR:  return "TEXT";
+			case BLOB:     return "BLOB";
+			case BIT:      return "BIT";
+			case BIGINT:   return "BIGINT";
+			case DATE:     return "DATE";
+			case TINYINT:  return "TINYINT";
+			case SMALLINT: return "SMALLINT";
+			case REAL:     return "REAL";
+		}
+
+		CCLog.addDefaultSwitchError(this, this);
+		return null;
+	}
 }

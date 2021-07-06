@@ -40,7 +40,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	private final SeriesCache _cache;
 
 	public CCSeries(CCMovieList ml, int id) {
-		super(ml, CCDBElementTyp.SERIES, id);
+		super(ml, id);
 		_cache = new SeriesCache(this);
 	}
 
@@ -56,6 +56,11 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 			return movielist.update(this);
 		}
 		return true;
+	}
+
+	@Override
+	public CCDBElementTyp getType() {
+		return CCDBElementTyp.SERIES;
 	}
 
 	public void updateDBWithException() throws DatabaseUpdateException {

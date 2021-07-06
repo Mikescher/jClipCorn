@@ -580,7 +580,7 @@ public class CCMovieList {
 
 	private void removeMovie(CCMovie m) {
 		list.remove(m);
-		database.removeFromMain(m.getLocalID());
+		database.removeFromMovies(m.getLocalID());
 
 		if (m.getCoverID() != -1) {
 			getCoverCache().deleteCover(m.getCoverID());
@@ -594,7 +594,7 @@ public class CCMovieList {
 		for (int i = s.getSeasonCount() - 1; i >= 0; i--) {
 			s.deleteSeason(s.getSeasonByArrayIndex(i));
 		}
-		database.removeFromMain(s.getLocalID());
+		database.removeFromSeries(s.getLocalID());
 		
 		if (s.getCoverID() != -1) {
 			getCoverCache().deleteCover(s.getCoverID());
@@ -1151,5 +1151,9 @@ public class CCMovieList {
 
 	public boolean databaseExists() {
 		return database.exists();
+	}
+
+	public void sortByIDAfterInitialLoad() {
+		list.sort(Comparator.comparingInt(e -> -1 * e.LocalID.get()));
 	}
 }

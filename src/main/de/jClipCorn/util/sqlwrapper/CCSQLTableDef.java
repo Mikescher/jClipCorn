@@ -13,21 +13,17 @@ public class CCSQLTableDef {
 	public final String Name;
 	public final CCSQLColDef Primary;
 	public final List<CCSQLColDef> Columns;
+	public final List<CCSQLFKey> ForeignKeys;
 
-	public CCSQLTableDef(String n, CCSQLColDef p, CCSQLColDef... cols) {
+	public CCSQLTableDef(String n, CCSQLColDef p, CCSQLColDef[] cols, CCSQLFKey[] fkeys) {
 		Name    = n;
 
 		Primary = p;
 
 		Columns = new ArrayList<>(Arrays.asList(cols));
 		if (p != null) Columns.add(0, p);
-	}
 
-	public CCSQLTableDef(String n, CCSQLColDef primary, List<CCSQLColDef> allColumns) {
-		Name    = n;
-
-		Primary = primary;
-		Columns = new ArrayList<>(allColumns);
+		ForeignKeys = Arrays.asList(fkeys);
 	}
 
 	public CCStream<CCSQLColDef> getNonPrimaryColumns() {

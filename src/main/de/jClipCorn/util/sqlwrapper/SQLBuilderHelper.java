@@ -580,7 +580,7 @@ public class SQLBuilderHelper {
 	}
 
 	public static String sqlEscape(String value) {
-		if (KEYWORD_MAP.contains(value)) return String.format("\"%s\"", value); //$NON-NLS-1$
+		if (KEYWORD_MAP.contains(value)) return String.format("[%s]", value); //$NON-NLS-1$
 
 		if (value.contains(".")) return "["+value+"]";
 

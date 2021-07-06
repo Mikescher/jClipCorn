@@ -51,7 +51,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public final ELanguageListProp       Language      = new ELanguageListProp( "Language",      CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
 
 	public CCMovie(CCMovieList ml, int id) {
-		super(ml, CCDBElementTyp.MOVIE, id);
+		super(ml, id);
 	}
 
 	@Override
@@ -92,6 +92,11 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 			return movielist.update(this);
 		}
 		return true;
+	}
+
+	@Override
+	public CCDBElementTyp getType() {
+		return CCDBElementTyp.MOVIE;
 	}
 
 	public void updateDBWithException() throws DatabaseUpdateException {

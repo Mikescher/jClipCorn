@@ -54,9 +54,7 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 
 	}
 
-	public abstract boolean createNewDatabase(FSPath xmlPath, FSPath dbDir, String dbName);
-
-	public abstract boolean createNewDatabasefromResourceXML(String xmlResPath, FSPath dbDir, String dbName);
+	public abstract boolean createNewDatabase(FSPath dbDir, String dbName);
 
 	public abstract boolean supportsDateType();
 
@@ -229,7 +227,7 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 		return result;
 	}
 	
-	public Object querySingleSQL(String sql, int column) {
+	public Object querySingleSQL(String sql, int columnIndex) {
 		try {
 			Statement s = connection.createStatement();
 			CCLog.addSQL("QuerySingleSQL", StatementType.CUSTOM, sql);
@@ -237,7 +235,7 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 			
 			Object ret = null;
 			if (rs.next()) {
-				ret = rs.getObject(column + 1);
+				ret = rs.getObject(columnIndex + 1);
 			}
 			rs.close();
 			s.close();
@@ -249,14 +247,14 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 	}
 
 	@Override
-	public Object querySingleSQLThrow(String sql, int column) throws SQLException {
+	public Object querySingleSQLThrow(String sql, int columnIndex) throws SQLException {
 		Statement s = connection.createStatement();
 		CCLog.addSQL("QuerySingleSQLThrow", StatementType.CUSTOM, sql);
 		ResultSet rs = s.executeQuery(sql);
 		
 		Object ret = null;
 		if (rs.next()) {
-			ret = rs.getObject(column + 1);
+			ret = rs.getObject(columnIndex + 1);
 		}
 		rs.close();
 		s.close();
@@ -264,22 +262,22 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 		return ret;
 	}
 
-	public int querySingleIntSQL(String sql, int column) {
-		return (Integer) querySingleSQL(sql, column);
+	public int querySingleIntSQL(String sql, int columnIndex) {
+		return (Integer) querySingleSQL(sql, columnIndex);
 	}
 
 	@Override
-	public int querySingleIntSQLThrow(String sql, int column) throws SQLException {
-		return (Integer) querySingleSQLThrow(sql, column);
+	public int querySingleIntSQLThrow(String sql, int columnIndex) throws SQLException {
+		return (Integer) querySingleSQLThrow(sql, columnIndex);
 	}
 
-	public String querySingleStringSQL(String sql, int column) {
-		return (String) querySingleSQL(sql, column);
+	public String querySingleStringSQL(String sql, int columnIndex) {
+		return (String) querySingleSQL(sql, columnIndex);
 	}
 
 	@Override
-	public String querySingleStringSQLThrow(String sql, int column) throws SQLException {
-		return (String) querySingleSQLThrow(sql, column);
+	public String querySingleStringSQLThrow(String sql, int columnIndex) throws SQLException {
+		return (String) querySingleSQLThrow(sql, columnIndex);
 	}
 
 	public List<Object> getSingleRow(String table, int row, String orderColumn, boolean ascend) {

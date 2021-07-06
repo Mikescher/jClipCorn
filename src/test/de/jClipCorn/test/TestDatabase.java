@@ -1,32 +1,20 @@
 package de.jClipCorn.test;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseStructure;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.exceptions.XMLFormatException;
-import de.jClipCorn.util.filesystem.SimpleFileUtils;
-import de.jClipCorn.util.parser.TurbineParser;
-import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
-import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;
-import de.jClipCorn.util.stream.CCStreams;
-import org.jdom2.JDOMException;
-import org.junit.Test;
-
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
+import org.junit.Test;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -232,25 +220,6 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(2, ml.getGroupList().size());
 		assertEquals(17, ml.getMovieCount());
 		assertEquals(3, ml.getSeriesCount());
-	}
-
-	@Test
-	public void testTurbine() throws IOException, XMLFormatException, JDOMException {
-
-		TurbineParser tp = new TurbineParser(SimpleFileUtils.readTextResource("/" + CCDatabase.XML_NAME, getClass()));
-		tp.parse();
-		List<CCSQLTableDef> xml  = tp.convertToTableDefinition();
-		List<CCSQLTableDef> code = new ArrayList<>(Arrays.asList(DatabaseStructure.TABLES));
-
-		assertEquals(code.size(), xml.size());
-
-		for (CCSQLTableDef d1 : xml) {
-			CCSQLTableDef other = CCStreams.iterate(code).singleOrNull(d2 -> d2.isEqual(d1));
-			assertNotNull(other);
-			code.remove(other);
-		}
-
-		assertEquals(0, code.size());
 	}
 
 	@Test

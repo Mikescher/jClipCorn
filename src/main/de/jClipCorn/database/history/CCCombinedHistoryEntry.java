@@ -41,7 +41,7 @@ public class CCCombinedHistoryEntry
 
 	public boolean isTrivialViewedChangesOnly() {
 		if (Action != CCHistoryAction.UPDATE) return false;
-		if (Table != CCHistoryTable.ELEMENTS && Table != CCHistoryTable.EPISODES) return false;
+		if (Table != CCHistoryTable.MOVIES && Table != CCHistoryTable.SERIES && Table != CCHistoryTable.EPISODES) return false;
 
 		for (CCHistorySingleChange hsc : Changes) {
 			if (!hsc.isTrivialViewedChange()) return false;

@@ -246,8 +246,10 @@ public class FSPath implements IPath, Comparable<FSPath> {
 	}
 
 	public void createFolders() throws IOException {
-		var r = toFile().getParentFile().mkdirs();
-		if (!r) throw new IOException("Failed to create (parent) directories of file '"+_path+"' (returned false)");
+		var parent = getParent();
+		if (parent.directoryExists()) return;
+
+		if (!parent.toFile().mkdirs()) throw new IOException("Failed to create (parent) directories of file '"+_path+"' (returned false)");
 	}
 
 	public String getExtension() {

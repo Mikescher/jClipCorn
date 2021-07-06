@@ -7,8 +7,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.FileLockedException;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileLockManager;
-import de.jClipCorn.util.filesystem.SimpleFileUtils;
-import de.jClipCorn.util.parser.TurbineParser;
+import de.jClipCorn.util.sqlwrapper.SQLBuilder;
 import org.sqlite.SQLiteException;
 
 import java.io.FileNotFoundException;
@@ -16,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -36,7 +36,7 @@ public class SQLiteDatabase extends GenericDatabase {
 	}
 	
 	@Override
-	public boolean createNewDatabase(FSPath xmlPath, FSPath dbDir, String dbName) {
+	public boolean createNewDatabase(FSPath dbDir, String dbName) {
 		var dbFilePath = getDatabaseFilePath(dbDir, dbName);
 		
 		try {
@@ -49,11 +49,14 @@ public class SQLiteDatabase extends GenericDatabase {
 				throw new Exception("Cannot lock databasefile");
 			}
 			
-			establishDBConnection(dbDir, dbName);
+			open(dbDir, dbName, true);
 
-			TurbineParser turb = new TurbineParser(xmlPath.readAsUTF8TextFile());
-			turb.parse();
-			turb.create(this);
+			for (var tab: DatabaseStructure.TABLES)
+			{
+				var sql = SQLBuilder.createSchema(tab).build(this::createPreparedStatement, new ArrayList<>());
+				sql.execute();
+				sql.tryClose();
+			}
 		} catch (Exception e) {
 			lastError = e;
 			return false;
@@ -61,42 +64,6 @@ public class SQLiteDatabase extends GenericDatabase {
 		return true;
 	}
 
-	@Override
-	@SuppressWarnings("deprecation")
-	public boolean createNewDatabasefromResourceXML(String xmlResPath, FSPath dbDir, String dbName) {
-		var dbFilePath = getDatabaseFilePath(dbDir, dbName);
-		
-		try {
-			try {
-				Class.forName(DRIVER).newInstance();
-			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-				CCLog.addError(e);
-			}
-			
-			if (databaseExists(dbDir, dbName)) throw new FileAlreadyExistsException(dbFilePath.toString());
-			if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath.toString());
-
-			dbFilePath.createFolders();
-			
-			if (! FileLockManager.tryLockFile(dbFilePath, true)) {
-				throw new Exception("Cannot lock databasefile");
-			}
-			
-			connection = DriverManager.getConnection(PROTOCOL + dbFilePath);
-
-			connection.setAutoCommit(true);
-			connection.setReadOnly(_readonly);
-
-			TurbineParser turb = new TurbineParser(SimpleFileUtils.readTextResource(xmlResPath, getClass()));
-			turb.parse();
-			turb.create(this);
-		} catch (Exception e) {
-			lastError = e;
-			return false;
-		}
-		return true;
-	}
-	
 	@Override
 	public boolean databaseExists(FSPath dbDir, String dbName) {
 		return getDatabaseFilePath(dbDir, dbName).exists();
@@ -119,23 +86,32 @@ public class SQLiteDatabase extends GenericDatabase {
             connection.close();
         }
 	}
-	
+
 	@Override
-	@SuppressWarnings("deprecation")
 	public void establishDBConnection(FSPath dbDir, String dbName) throws Exception {
+		open(dbDir, dbName, false);
+	}
+
+	@SuppressWarnings("deprecation")
+	private void open(FSPath dbDir, String dbName, boolean createNew) throws Exception {
 		var dbFilePath = getDatabaseFilePath(dbDir, dbName);
-		
+
+		if (_readonly && createNew) throw new Exception("Cannot create new DB in readonly mode");
+
 		try {
 			Class.forName(DRIVER).newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			CCLog.addError(e);
 		}
-		
-		if (!databaseExists(dbDir, dbName)) throw new FileNotFoundException(dbFilePath.toString());
-		if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath.toString());
-		
-		if (!FileLockManager.tryLockFile(dbFilePath, true)) {
-			throw new Exception("Cannot lock databasefile");
+
+		if (!createNew)
+		{
+			if (!databaseExists(dbDir, dbName)) throw new FileNotFoundException(dbFilePath.toString());
+			if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath.toString());
+
+			if (!FileLockManager.tryLockFile(dbFilePath, true)) {
+				throw new Exception("Cannot lock databasefile");
+			}
 		}
 
 		Properties cfg = new Properties();
@@ -150,20 +126,30 @@ public class SQLiteDatabase extends GenericDatabase {
 
 		try
 		{
-			// Test if newly created
-			executeSQLThrow("SELECT * FROM " + DatabaseStructure.TAB_TEMP.Name + " LIMIT 1");
-
-			if (!_readonly)
+			if (!createNew)
 			{
-				// Test if writeable
-				executeSQLThrow("REPLACE INTO [TEMP] (IKEY,IVALUE) VALUES ('RAND','" + Double.toString(Math.random()).substring(2) + "'),('ACCESS','"+ CCDateTime.getCurrentDateTime().toStringISO() +"')");
+				// Throw if newly created
+				executeSQLThrow("SELECT * FROM " + DatabaseStructure.TAB_TEMP.Name + " LIMIT 1");
+
+				if (!_readonly)
+				{
+					// Test if writeable
+					executeSQLThrow("REPLACE INTO [TEMP] (IKEY,IVALUE) VALUES ('RAND','" + Double.toString(Math.random()).substring(2) + "'),('ACCESS','"+ CCDateTime.getCurrentDateTime().toStringISO() +"')");
+				}
 			}
 		}
 		catch (SQLiteException e)
 		{
 			if (e.getMessage().contains("no such table: TEMP"))
 			{
-				if (Integer.parseInt(querySingleStringSQL("SELECT IVALUE FROM INFO WHERE IKEY='VERSION_DB'", 0)) < 14) return; // before there was a TEMP table - will be migrated
+				try
+				{
+					if (Integer.parseInt(querySingleStringSQL("SELECT IVALUE FROM INFO WHERE IKEY='VERSION_DB'", 0)) < 14) return; // before there was a TEMP table - will be migrated
+				}
+				catch (Exception e2)
+				{
+					// ...
+				}
 			}
 
 			throw e;

@@ -11,12 +11,7 @@ import java.util.List;
 public class StubDatabase extends GenericDatabase {
 
 	@Override
-	public boolean createNewDatabase(FSPath xmlPath, FSPath dbDir, String dbName) {
-		return true;
-	}
-
-	@Override
-	public boolean createNewDatabasefromResourceXML(String xmlResPath, FSPath dbDir, String dbName) {
+	public boolean createNewDatabase(FSPath dbDir, String dbName) {
 		return true;
 	}
 

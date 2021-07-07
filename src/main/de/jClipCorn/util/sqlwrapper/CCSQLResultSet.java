@@ -1,7 +1,6 @@
 package de.jClipCorn.util.sqlwrapper;
 
 import de.jClipCorn.database.driver.CCDatabase;
-import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
@@ -35,130 +34,130 @@ public class CCSQLResultSet {
 	}
 
 	public int getInt(CCSQLColDef col) throws SQLWrapperException, SQLException {
-		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+		var idx = _statement.getSelectFieldIndex(col);
 
-		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsInteger()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsInteger()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
 
-		return _data.getInt(idx.Item2);
+		return _data.getInt(idx);
 	}
 
 	public String getString(CCSQLColDef col) throws SQLWrapperException, SQLException {
-		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+		var idx = _statement.getSelectFieldIndex(col);
 
-		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsString()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsString()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
 
-		return _data.getString(idx.Item2);
+		return _data.getString(idx);
 	}
 
 	public boolean getBoolean(CCSQLColDef col) throws SQLWrapperException, SQLException {
-		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+		var idx = _statement.getSelectFieldIndex(col);
 
-		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsBoolean()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsBoolean()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
 
-		return _data.getBoolean(idx.Item2);
+		return _data.getBoolean(idx);
 	}
 
 	public long getLong(CCSQLColDef col) throws SQLWrapperException, SQLException {
-		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+		var idx = _statement.getSelectFieldIndex(col);
 
-		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsLong()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsLong()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
 
-		return _data.getLong(idx.Item2);
+		return _data.getLong(idx);
 	}
 
 	public short getShort(CCSQLColDef col) throws SQLWrapperException, SQLException {
-		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+		var idx = _statement.getSelectFieldIndex(col);
 
-		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsShort()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsShort()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
 
-		return _data.getShort(idx.Item2);
+		return _data.getShort(idx);
 	}
 
 	public CCDate getDate(CCSQLColDef col) throws SQLWrapperException, SQLException, DateFormatException {
-		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+		var idx = _statement.getSelectFieldIndex(col);
 
-		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsDate()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsDate()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
 
 		if (_database.supportsDateType()) {
-			return CCDate.create(_data.getDate(idx.Item2));
+			return CCDate.create(_data.getDate(idx));
 		} else {
-			return CCDate.createFromSQL(_data.getString(idx.Item2));
+			return CCDate.createFromSQL(_data.getString(idx));
 		}
 	}
 
 	public byte[] getBlob(CCSQLColDef col) throws SQLException, SQLWrapperException {
-		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+		var idx = _statement.getSelectFieldIndex(col);
 
-		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsBlob()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsBlob()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
 
-		return _data.getBytes(idx.Item2);
+		return _data.getBytes(idx);
 	}
 
 	public CCDateTime getDateTime(CCSQLColDef col) throws SQLWrapperException, SQLException, CCFormatException {
-		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+		var idx = _statement.getSelectFieldIndex(col);
 
-		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsString()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsString()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
 
-		return CCDateTime.createFromSQL(_data.getString(idx.Item2));
+		return CCDateTime.createFromSQL(_data.getString(idx));
 	}
 
 	public double getFloat(CCSQLColDef col) throws SQLWrapperException, SQLException {
-		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+		var idx = _statement.getSelectFieldIndex(col);
 
-		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsFloat()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsFloat()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
 
-		return _data.getDouble(idx.Item2);
+		return _data.getDouble(idx);
 	}
 
 	public Double getNullableFloat(CCSQLColDef col) throws SQLWrapperException, SQLException {
-		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+		var idx = _statement.getSelectFieldIndex(col);
 
-		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsFloat()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsFloat()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
 
-		double v = _data.getDouble(idx.Item2);
+		double v = _data.getDouble(idx);
 		if (_data.wasNull()) return null;
 		return v;
 	}
 
 	public Integer getNullableInt(CCSQLColDef col) throws SQLWrapperException, SQLException {
-		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+		var idx = _statement.getSelectFieldIndex(col);
 
-		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsInteger()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsInteger()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
 
-		int v = _data.getInt(idx.Item2);
+		int v = _data.getInt(idx);
 		if (_data.wasNull()) return null;
 		return v;
 	}
 
 	public Long getNullableLong(CCSQLColDef col) throws SQLWrapperException, SQLException {
-		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+		var idx = _statement.getSelectFieldIndex(col);
 
-		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsLong()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsLong()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
 
-		long v = _data.getLong(idx.Item2);
+		long v = _data.getLong(idx);
 		if (_data.wasNull()) return null;
 		return v;
 	}
 
 	public String getNullableString(CCSQLColDef col) throws SQLWrapperException, SQLException {
-		Tuple<CCSQLType, Integer> idx = _statement.getSelectFieldIndex(col);
+		var idx = _statement.getSelectFieldIndex(col);
 
-		if (idx == null) throw new SQLWrapperException("Field ["+col+"] not found in CCSQLStatement");
-		if (!idx.Item1.isCallableAsString()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsString()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
 
-		String v = _data.getString(idx.Item2);
+		String v = _data.getString(idx);
 		if (_data.wasNull()) return null;
 		return v;
 	}

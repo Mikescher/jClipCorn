@@ -30,6 +30,10 @@ public class CCSQLTableDef {
 		return CCStreams.iterate(Columns).filter(c -> c != Primary);
 	}
 
+	public boolean contains(CCSQLColDef col) {
+		return CCStreams.iterate(Columns).any(c -> c == col);
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

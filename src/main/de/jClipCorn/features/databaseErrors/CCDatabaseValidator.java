@@ -1285,7 +1285,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 	@SuppressWarnings("nls")
 	protected void findInternalDatabaseErrors(List<DatabaseError> e, DoubleProgressCallbackListener pcl)
 	{
-		pcl.stepRootAndResetSub("Validate database layer", 8);
+		pcl.stepRootAndResetSub("Validate database layer", 7);
 
 		PublicDatabaseInterface db = movielist.getInternalDatabaseDirectly();
 
@@ -1294,12 +1294,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		{
 			pcl.stepSub("Global ID uniqueness");
 
-			List<Integer> ids_elm = db.querySQL("SELECT LOCALID  FROM ELEMENTS",              1, o -> (int)o[0]);
-			List<Integer> ids_sea = db.querySQL("SELECT SEASONID FROM SEASONS",               1, o -> (int)o[0]);
-			List<Integer> ids_epi = db.querySQL("SELECT LOCALID  FROM EPISODES",              1, o -> (int)o[0]);
+			List<Integer> ids_mov = db.querySQL("SELECT LOCALID FROM MOVIES",                1, o -> (int)o[0]);
+			List<Integer> ids_ser = db.querySQL("SELECT LOCALID FROM SERIES",                1, o -> (int)o[0]);
+			List<Integer> ids_sea = db.querySQL("SELECT LOCALID FROM SEASONS",               1, o -> (int)o[0]);
+			List<Integer> ids_epi = db.querySQL("SELECT LOCALID FROM EPISODES",              1, o -> (int)o[0]);
 
 			List<Integer> duplicates = CCStreams
-					.iterate(ids_elm, ids_sea, ids_epi)
+					.iterate(ids_mov, ids_ser, ids_sea, ids_epi)
 					.groupBy(p->p)
 					.filter(p->p.getValue().size()>1)
 					.map(Map.Entry::getKey)
@@ -1311,7 +1312,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 
 			{
 				int last_id = db.querySingleIntSQLThrow("SELECT CAST(IVALUE AS INTEGER) FROM INFO WHERE IKEY='LAST_ID'", 0);
-				for (int tlid : CCStreams.iterate(ids_elm, ids_sea, ids_epi).filter(p -> p > last_id)) {
+				for (int tlid : CCStreams.iterate(ids_mov, ids_ser, ids_sea, ids_epi).filter(p -> p > last_id)) {
 					e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_TOO_LARGE_ID, tlid));
 				}
 			}
@@ -1332,26 +1333,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		// ### 2 ###
 		try
 		{
-			pcl.stepSub("Mismatch [TYPE] <> [REAL]");
-
-			List<Integer> errs = db.querySQL("SELECT LOCALID FROM ELEMENTS AS E0 WHERE (TYPE=0 AND (SELECT COUNT(*) FROM SEASONS AS S0 WHERE S0.SERIESID = E0.LOCALID)>0) OR (TYPE=1 AND (SELECT COUNT(*) FROM SEASONS AS S0 WHERE S0.SERIESID = E0.LOCALID)=0) OR (TYPE<>0 AND TYPE<>1)", 1, o -> (int)o[0]);
-
-			for (int errid : errs) {
-				e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_TYPE_SID_MISMATCH, errid));
-			}
-		}
-		catch (Exception ex)
-		{
-			e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
-		}
-
-
-		// ### 3 ###
-		try
-		{
 			pcl.stepSub("Missing series entry");
 
-			List<Integer> errs = db.querySQL("SELECT DISTINCT SEASONS.SERIESID FROM SEASONS LEFT JOIN ELEMENTS ON SEASONS.SERIESID=ELEMENTS.LOCALID WHERE ELEMENTS.LOCALID IS NULL", 1, o -> (int)o[0]);
+			List<Integer> errs = db.querySQL("SELECT DISTINCT SEASONS.SERIESID FROM SEASONS LEFT JOIN SERIES ON SEASONS.SERIESID=SERIES.LOCALID WHERE SERIES.LOCALID IS NULL", 1, o -> (int)o[0]);
 
 			for (int errid : errs) {
 				e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_MISSING_SERIES, errid));
@@ -1363,12 +1347,12 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		}
 
 
-		// ### 4 ###
+		// ### 3 ###
 		try
 		{
 			pcl.stepSub("Missing seasons entry");
 
-			List<Integer> errs = db.querySQL("SELECT DISTINCT EPISODES.SEASONID FROM EPISODES LEFT JOIN SEASONS ON EPISODES.SEASONID=SEASONS.SEASONID WHERE SEASONS.SEASONID IS NULL", 1, o -> (int)o[0]);
+			List<Integer> errs = db.querySQL("SELECT DISTINCT EPISODES.SEASONID FROM EPISODES LEFT JOIN SEASONS ON EPISODES.SEASONID=SEASONS.LOCALID WHERE SEASONS.LOCALID IS NULL", 1, o -> (int)o[0]);
 
 			for (int errid : errs) {
 				e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_MISSING_SEASON, errid));
@@ -1380,18 +1364,19 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		}
 
 
-		// ### 5 ###
+		// ### 4 ###
 		try
 		{
 			pcl.stepSub("Validate CoverIDs");
 
-			List<Integer> cvr1 = db.querySQL("SELECT COVERID FROM ELEMENTS WHERE COVERID <> -1", 1, o -> (int)o[0]);
-			List<Integer> cvr2 = db.querySQL("SELECT COVERID FROM SEASONS WHERE COVERID <> -1",  1, o -> (int)o[0]);
+			List<Integer> cvr1 = db.querySQL("SELECT COVERID FROM MOVIES WHERE COVERID <> -1", 1, o -> (int)o[0]);
+			List<Integer> cvr2 = db.querySQL("SELECT COVERID FROM SERIES WHERE COVERID <> -1", 1, o -> (int)o[0]);
+			List<Integer> cvr3 = db.querySQL("SELECT COVERID FROM SEASONS WHERE COVERID <> -1",  1, o -> (int)o[0]);
 
 			List<Integer> cvrall = db.querySQL("SELECT ID FROM COVERS",  1, o -> (int)o[0]);
 
 			List<Integer> duplicates = CCStreams
-					.iterate(cvr1, cvr2)
+					.iterate(cvr1, cvr2, cvr3)
 					.groupBy(p->p)
 					.filter(p->p.getValue().size()>1)
 					.map(Map.Entry::getKey)
@@ -1401,11 +1386,11 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_MULTI_REF_COVER, dup));
 			}
 
-			for (int cvrid : CCStreams.iterate(cvrall).filter(p -> !cvr1.contains(p) && !cvr2.contains(p) )) {
+			for (int cvrid : CCStreams.iterate(cvrall).filter(p -> !cvr1.contains(p) && !cvr2.contains(p) && !cvr3.contains(p) )) {
 				e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_UNUSED_COVERID, cvrid));
 			}
 
-			for (int cvrid : CCStreams.iterate(cvr1, cvr2).filter(p -> !cvrall.contains(p) )) {
+			for (int cvrid : CCStreams.iterate(cvr1, cvr2, cvr3).filter(p -> !cvrall.contains(p) )) {
 				e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_DANGLING_COVERID, cvrid));
 			}
 		}
@@ -1414,7 +1399,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
 		}
 
-		// ### 6 ###
+		// ### 5 ###
 		try
 		{
 			pcl.stepSub("Validate History trigger");
@@ -1433,7 +1418,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
 		}
 
-		// ### 7 ###
+		// ### 6 ###
 		try
 		{
 			pcl.stepSub("Check database foreign keys");
@@ -1447,7 +1432,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
 		}
 
-		// ### 8 ###
+		// ### 7 ###
 		try
 		{
 			pcl.stepSub("Check database foreign keys");

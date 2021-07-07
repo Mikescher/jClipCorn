@@ -371,31 +371,18 @@ public class CCDatabase {
 			CCSQLStatement stmt = addEmptyMovieTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_MOV_LOCALID,       id);
-			stmt.setStr(DatabaseStructure.COL_MOV_NAME,          "");
-			stmt.setStr(DatabaseStructure.COL_MOV_VIEWEDHISTORY, "");
-			stmt.setStr(DatabaseStructure.COL_MOV_ZYKLUS,        "");
-			stmt.setInt(DatabaseStructure.COL_MOV_ZYKLUSNUMBER,  0);
-			stmt.setInt(DatabaseStructure.COL_MOV_LANGUAGE,      0);
-			stmt.setInt(DatabaseStructure.COL_MOV_GENRE,         0);
-			stmt.setInt(DatabaseStructure.COL_MOV_LENGTH,        0);
-			stmt.setStr(DatabaseStructure.COL_MOV_ADDDATE,       CCDate.MIN_SQL);
-			stmt.setInt(DatabaseStructure.COL_MOV_ONLINESCORE,   0);
-			stmt.setInt(DatabaseStructure.COL_MOV_FSK,           0);
-			stmt.setInt(DatabaseStructure.COL_MOV_FORMAT,        0);
-			stmt.setInt(DatabaseStructure.COL_MOV_MOVIEYEAR,     0);
-			stmt.setStr(DatabaseStructure.COL_MOV_ONLINEREF,     "");
-			stmt.setStr(DatabaseStructure.COL_MOV_GROUPS,        "");
-			stmt.setInt(DatabaseStructure.COL_MOV_FILESIZE,      0);
-			stmt.setInt(DatabaseStructure.COL_MOV_TAGS,          0);
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_1,        "");
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_2,        "");
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_3,        "");
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_4,        "");
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_5,        "");
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_6,        "");
-			stmt.setInt(DatabaseStructure.COL_MOV_SCORE,         0);
-			stmt.setInt(DatabaseStructure.COL_MOV_COVERID,       -1);
+			for (var col : stmt.getPreparedFields()) {
+				if (col == COL_MOV_LOCALID)         { stmt.setInt(col, id);             continue; }
+				if (col == COL_MOV_COVERID)         { stmt.setInt(col, -1);             continue; }
+				if (col == COL_MOV_ADDDATE)         { stmt.setStr(col, CCDate.MIN_SQL); continue; }
+
+				if (!col.NonNullable)               { stmt.setNull(col);                continue; }
+
+				if (col.Type == CCSQLType.VARCHAR)  { stmt.setStr(col, Str.Empty);      continue; }
+				if (col.Type.isCallableAsInteger()) { stmt.setInt(col, 0);              continue; }
+
+				throw new Error("Unknown default value for column " + col.Name);
+			}
 
 			stmt.executeUpdate();
 
@@ -413,16 +400,17 @@ public class CCDatabase {
 			CCSQLStatement stmt = addEmptySeriesTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_SER_LOCALID,       id);
-			stmt.setStr(DatabaseStructure.COL_SER_NAME,          "");
-			stmt.setInt(DatabaseStructure.COL_SER_GENRE,         0);
-			stmt.setInt(DatabaseStructure.COL_SER_ONLINESCORE,   0);
-			stmt.setInt(DatabaseStructure.COL_SER_FSK,           0);
-			stmt.setStr(DatabaseStructure.COL_SER_ONLINEREF,     "");
-			stmt.setStr(DatabaseStructure.COL_SER_GROUPS,        "");
-			stmt.setInt(DatabaseStructure.COL_SER_TAGS,          0);
-			stmt.setInt(DatabaseStructure.COL_SER_SCORE,         0);
-			stmt.setInt(DatabaseStructure.COL_SER_COVERID,       -1);
+			for (var col : stmt.getPreparedFields()) {
+				if (col == COL_SER_LOCALID)         { stmt.setInt(col, id);        continue; }
+				if (col == COL_SER_COVERID)         { stmt.setInt(col, -1);        continue; }
+
+				if (!col.NonNullable)               { stmt.setNull(col);           continue; }
+
+				if (col.Type == CCSQLType.VARCHAR)  { stmt.setStr(col, Str.Empty); continue; }
+				if (col.Type.isCallableAsInteger()) { stmt.setInt(col, 0);         continue; }
+
+				throw new Error("Unknown default value for column " + col.Name);
+			}
 
 			stmt.executeUpdate();
 
@@ -440,11 +428,18 @@ public class CCDatabase {
 			CCSQLStatement stmt = addEmptySeasonTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_SEAS_LOCALID,   seasid);
-			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID,  serid);
-			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,      "");
-			stmt.setInt(DatabaseStructure.COL_SEAS_YEAR,      0);
-			stmt.setInt(DatabaseStructure.COL_SEAS_COVERID,   -1);
+			for (var col : stmt.getPreparedFields()) {
+				if (col == COL_SEAS_LOCALID)        { stmt.setInt(col, seasid);    continue; }
+				if (col == COL_SEAS_SERIESID)       { stmt.setInt(col, serid);     continue; }
+				if (col == COL_SEAS_COVERID)        { stmt.setInt(col, -1);        continue; }
+
+				if (!col.NonNullable)               { stmt.setNull(col);           continue; }
+
+				if (col.Type == CCSQLType.VARCHAR)  { stmt.setStr(col, Str.Empty); continue; }
+				if (col.Type.isCallableAsInteger()) { stmt.setInt(col, 0);         continue; }
+
+				throw new Error("Unknown default value for column " + col.Name);
+			}
 
 			stmt.executeUpdate();
 
@@ -462,18 +457,18 @@ public class CCDatabase {
 			CCSQLStatement stmt = addEmptyEpisodeTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_EPIS_LOCALID,       eid);
-			stmt.setInt(DatabaseStructure.COL_EPIS_SEASONID,      sid);
-			stmt.setInt(DatabaseStructure.COL_EPIS_EPISODE,       0);
-			stmt.setStr(DatabaseStructure.COL_EPIS_NAME,          "");
-			stmt.setStr(DatabaseStructure.COL_EPIS_VIEWEDHISTORY, "");
-			stmt.setInt(DatabaseStructure.COL_EPIS_LENGTH,        0);
-			stmt.setInt(DatabaseStructure.COL_EPIS_FORMAT,        0);
-			stmt.setInt(DatabaseStructure.COL_EPIS_FILESIZE,      0);
-			stmt.setStr(DatabaseStructure.COL_EPIS_PART_1,        "");
-			stmt.setInt(DatabaseStructure.COL_EPIS_TAGS,          0);
-			stmt.setStr(DatabaseStructure.COL_EPIS_ADDDATE,       CCDate.MIN_SQL);
-			stmt.setInt(DatabaseStructure.COL_EPIS_LANGUAGE,      0);
+			for (var col : stmt.getPreparedFields()) {
+				if (col == COL_EPIS_LOCALID)        { stmt.setInt(col, eid);            continue; }
+				if (col == COL_EPIS_SEASONID)       { stmt.setInt(col, sid);            continue; }
+				if (col == COL_EPIS_ADDDATE)        { stmt.setStr(col, CCDate.MIN_SQL); continue; }
+
+				if (!col.NonNullable)               { stmt.setNull(col);                continue; }
+
+				if (col.Type == CCSQLType.VARCHAR)  { stmt.setStr(col, Str.Empty);      continue; }
+				if (col.Type.isCallableAsInteger()) { stmt.setInt(col, 0);              continue; }
+
+				throw new Error("Unknown default value for column " + col.Name);
+			}
 
 			stmt.executeUpdate();
 

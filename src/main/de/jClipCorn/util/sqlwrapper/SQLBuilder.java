@@ -1,10 +1,7 @@
 package de.jClipCorn.util.sqlwrapper;
 
 import de.jClipCorn.database.driver.CCDatabase;
-import de.jClipCorn.util.Str;
-import de.jClipCorn.util.datatypes.DoubleString;
 import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.lambda.Func1to1WithGenericException;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -17,26 +14,49 @@ import java.util.List;
 public class SQLBuilder {
 
 	private final StatementType _type;
+	private final CCSQLTableDef _table;
 
-	private String _table = null;
-	private final List<Tuple<DoubleString, CCSQLType>> _fields = new ArrayList<>();
-	private final List<Tuple<DoubleString, CCSQLType>> _whereClauses = new ArrayList<>();
-	private final List<Tuple<String, CCSQLType>> _selectFields = new ArrayList<>();
-	private final List<Tuple3<Integer, String, CCSQLType>> _customPrepFields = new ArrayList<>();
-	private final List<Tuple3<Integer, String, CCSQLType>> _customSelFields = new ArrayList<>();
-	private CCSQLTableDef _createSchema = null;
+	private final List<CCSQLColDef>                 _fields           = new ArrayList<>();
+	private final List<CCSQLColDef>                 _whereClauses     = new ArrayList<>();
+	private final List<CCSQLColDef>                 _selectFields     = new ArrayList<>();
+	private final List<Tuple<Integer, CCSQLColDef>> _customPrepFields = new ArrayList<>();
+	private final List<Tuple<Integer, CCSQLColDef>> _customSelFields  = new ArrayList<>();
+
+	private Tuple<CCSQLColDef, SQLOrder> _order = null;
+
 	private String _customSQL = null;
-	private String _orderField = null;
-	private SQLOrder _orderDirection = null;
 
-	private SQLBuilder(StatementType st) {
+	private SQLBuilder(StatementType st, CCSQLTableDef tab) {
 		_type = st;
+		_table = tab;
 	}
 
 	public static SQLBuilder createInsert(CCSQLTableDef tab) {
-		SQLBuilder b = new SQLBuilder(StatementType.INSERT);
-		b._table = tab.Name;
-		return b;
+		return new SQLBuilder(StatementType.INSERT, tab);
+	}
+
+	public static SQLBuilder createUpdate(CCSQLTableDef tab) {
+		return new SQLBuilder(StatementType.UPDATE, tab);
+	}
+
+	public static SQLBuilder createInsertOrReplace(CCSQLTableDef tab) {
+		return new SQLBuilder(StatementType.REPLACE, tab);
+	}
+
+	public static SQLBuilder createDelete(CCSQLTableDef tab) {
+		return new SQLBuilder(StatementType.DELETE, tab);
+	}
+
+	public static SQLBuilder createSelect(CCSQLTableDef tab) {
+		return new SQLBuilder(StatementType.SELECT, tab);
+	}
+
+	public static SQLBuilder createCustom(CCSQLTableDef tab) {
+		return new SQLBuilder(StatementType.CUSTOM, tab);
+	}
+
+	public static SQLBuilder createSchema(CCSQLTableDef tab) {
+		return new SQLBuilder(StatementType.TABSCHEMA, tab);
 	}
 
 	public static SQLBuilder createInsertSingle(CCSQLTableDef tab) throws SQLWrapperException {
@@ -45,35 +65,11 @@ public class SQLBuilder {
 		return v;
 	}
 
-	public static SQLBuilder createUpdate(CCSQLTableDef tab) {
-		SQLBuilder b = new SQLBuilder(StatementType.UPDATE);
-		b._table = tab.Name;
-		return b;
-	}
-
 	public static SQLBuilder createUpdateSingle(CCSQLTableDef tab, CCSQLColDef where) throws SQLWrapperException {
 		var v = createUpdate(tab);
 		v = v.addPreparedWhereCondition(where);
 		for (var col: tab.Columns) if (col != where) v = v.addPreparedField(col);
 		return v;
-	}
-
-	public static SQLBuilder createInsertOrReplace(CCSQLTableDef tab) {
-		SQLBuilder b = new SQLBuilder(StatementType.REPLACE);
-		b._table = tab.Name;
-		return b;
-	}
-
-	public static SQLBuilder createDelete(CCSQLTableDef tab) {
-		SQLBuilder b = new SQLBuilder(StatementType.DELETE);
-		b._table = tab.Name;
-		return b;
-	}
-
-	public static SQLBuilder createSelect(CCSQLTableDef tab) {
-		SQLBuilder b = new SQLBuilder(StatementType.SELECT);
-		b._table = tab.Name;
-		return b;
 	}
 
 	public static SQLBuilder createSelectAll(CCSQLTableDef tab) throws SQLWrapperException {
@@ -89,23 +85,11 @@ public class SQLBuilder {
 		return v;
 	}
 
-	public static SQLBuilder createCustom(CCSQLTableDef tab) {
-		SQLBuilder b = new SQLBuilder(StatementType.CUSTOM);
-		b._table = tab.Name;
-		return b;
-	}
-
-	public static SQLBuilder createSchema(CCSQLTableDef tab) {
-		SQLBuilder b = new SQLBuilder(StatementType.TABSCHEMA);
-		b._table = tab.Name;
-		b._createSchema = tab;
-		return b;
-	}
-
 	public SQLBuilder addPreparedField(CCSQLColDef field) throws SQLWrapperException {
 		if (_type != StatementType.INSERT && _type != StatementType.UPDATE && _type != StatementType.REPLACE) throw new SQLWrapperException("Cannot [addPreparedField] on type " + _type);
+		if (!_table.contains(field)) throw new SQLWrapperException("Field ["+field.Name+"] is not part of table " + _table.Name);
 
-		_fields.add(Tuple.Create(new DoubleString(field.Name, "?"), field.Type));
+		_fields.add(field);
 
 		return this;
 	}
@@ -119,7 +103,7 @@ public class SQLBuilder {
 		if (_type != StatementType.CUSTOM) throw new SQLWrapperException("Cannot [setSQL] on type " + _type);
 
 		for (int i = 0; i < objList.length; i++) s = s.replace("{"+i+"}", objList[i]); //$NON-NLS-1$  //$NON-NLS-2$
-		s = s.replace("{TAB}", _table); //$NON-NLS-1$
+		s = s.replace("{TAB}", _table.Name); //$NON-NLS-1$
 
 		_customSQL = s;
 
@@ -128,16 +112,18 @@ public class SQLBuilder {
 
 	public SQLBuilder addPreparedWhereCondition(CCSQLColDef field) throws SQLWrapperException {
 		if (_type != StatementType.UPDATE && _type != StatementType.SELECT && _type != StatementType.DELETE) throw new SQLWrapperException("Cannot [addPreparedWhereCondition] on type " + _type);
+		if (!_table.contains(field)) throw new SQLWrapperException("Field ["+field.Name+"] is not part of table " + _table.Name);
 
-		_whereClauses.add(Tuple.Create(new DoubleString(field.Name, "?"), field.Type));
+		_whereClauses.add(field);
 
 		return this;
 	}
 
 	public SQLBuilder addSelectField(CCSQLColDef field) throws SQLWrapperException {
 		if (_type != StatementType.SELECT) throw new SQLWrapperException("Cannot [addSelectField] on type " + _type);
+		if (!_table.contains(field)) throw new SQLWrapperException("Field ["+field.Name+"] is not part of table " + _table.Name);
 
-		_selectFields.add(Tuple.Create(field.Name, field.Type));
+		_selectFields.add(field);
 
 		return this;
 	}
@@ -149,8 +135,9 @@ public class SQLBuilder {
 
 	public SQLBuilder remSelectField(CCSQLColDef field) throws SQLWrapperException {
 		if (_type != StatementType.SELECT) throw new SQLWrapperException("Cannot [remSelectField] on type " + _type);
+		if (!_table.contains(field)) throw new SQLWrapperException("Field ["+field.Name+"] is not part of table " + _table.Name);
 
-		var rm = CCStreams.iterate(_selectFields).singleOrNull(p -> Str.equals(p.Item1, field.Name) && p.Item2 == field.Type);
+		var rm = CCStreams.iterate(_selectFields).singleOrNull(p -> p == field);
 		if (rm == null) throw new SQLWrapperException("Cannot [remSelectField]: (not found)");
 
 		var ok = _selectFields.remove(rm);
@@ -162,19 +149,18 @@ public class SQLBuilder {
 	public SQLBuilder setOrder(CCSQLColDef col, SQLOrder ord) throws SQLWrapperException {
 		if (_type != StatementType.SELECT) throw new SQLWrapperException("Cannot [setOrder] on type " + _type);
 
-		_orderField = col.Name;
-		_orderDirection = ord;
+		_order = Tuple.Create(col, ord);
 
 		return this;
 	}
 
 	public SQLBuilder setCustomSelectField(int pos, CCSQLColDef field) {
-		_customSelFields.add(Tuple3.Create(pos, field.Name, field.Type));
+		_customSelFields.add(Tuple.Create(pos, field));
 		return this;
 	}
 
 	public SQLBuilder setCustomPrepared(int pos, CCSQLColDef field) {
-		_customPrepFields.add(Tuple3.Create(pos, field.Name, field.Type));
+		_customPrepFields.add(Tuple.Create(pos, field));
 		return this;
 	}
 
@@ -211,20 +197,19 @@ public class SQLBuilder {
 				cnames.append(", ");
 				cvals.append(", ");
 			}
-			cnames.append(SQLBuilderHelper.sqlEscape(_fields.get(i).Item1.get1()));
-			cvals.append(SQLBuilderHelper.sqlEscape(_fields.get(i).Item1.get2()));
+			cnames.append(SQLBuilderHelper.sqlEscape(_fields.get(i).Name));
+			cvals.append("?");
 		}
 
 		int prepIdx = 1;
 
-		List<Tuple3<Integer, String, CCSQLType>> fields = new ArrayList<>();
-		for (Tuple<DoubleString, CCSQLType> field : _fields) {
-			if (!field.Item1.get2().equals("?")) continue; //$NON-NLS-1$
-			fields.add(Tuple3.Create(prepIdx, field.Item1.get1(), field.Item2));
+		List<Tuple<Integer, CCSQLColDef>> fields = new ArrayList<>();
+		for (var field : _fields) {
+			fields.add(Tuple.Create(prepIdx, field));
 			prepIdx++;
 		}
 
-		String sql = String.format("INSERT INTO %s (%s) VALUES (%s)", SQLBuilderHelper.sqlEscape(_table), cnames.toString(), cvals.toString());
+		String sql = String.format("INSERT INTO %s (%s) VALUES (%s)", SQLBuilderHelper.sqlEscape(_table.Name), cnames.toString(), cvals.toString());
 
 		return new CCSQLStatement(_type, sql, fn.invoke(sql), fields, new ArrayList<>());
 	}
@@ -236,21 +221,20 @@ public class SQLBuilder {
 		for (int i = 0; i < _fields.size(); i++) {
 			if (i > 0) assigns.append(", ");
 
-			assigns.append(SQLBuilderHelper.sqlEscape(_fields.get(i).Item1.get1()));
+			assigns.append(SQLBuilderHelper.sqlEscape(_fields.get(i).Name));
 			assigns.append("=");
-			assigns.append(SQLBuilderHelper.sqlEscape(_fields.get(i).Item1.get2()));
+			assigns.append("?");
 		}
 
 		int prepIdx = 1;
-		List<Tuple3<Integer, String, CCSQLType>> fields = new ArrayList<>();
+		List<Tuple<Integer, CCSQLColDef>> fields = new ArrayList<>();
 
-		for (Tuple<DoubleString, CCSQLType> field : _fields) {
-			if (!field.Item1.get2().equals("?")) continue;
-			fields.add(Tuple3.Create(prepIdx, field.Item1.get1(), field.Item2));
+		for (var field : _fields) {
+			fields.add(Tuple.Create(prepIdx, field));
 			prepIdx++;
 		}
 
-		String sql = String.format("UPDATE %s SET %s", SQLBuilderHelper.sqlEscape(_table), assigns.toString());
+		String sql = String.format("UPDATE %s SET %s", SQLBuilderHelper.sqlEscape(_table.Name), assigns.toString());
 
 		if (!_whereClauses.isEmpty()) {
 			sql += " WHERE ";
@@ -260,15 +244,14 @@ public class SQLBuilder {
 				if (i > 0) wconds.append(" AND ");
 
 				wconds.append('(');
-				wconds.append(SQLBuilderHelper.sqlEscape(_whereClauses.get(i).Item1.get1()));
+				wconds.append(SQLBuilderHelper.sqlEscape(_whereClauses.get(i).Name));
 				wconds.append('=');
-				wconds.append(SQLBuilderHelper.sqlEscape(_whereClauses.get(i).Item1.get2()));
+				wconds.append("?");
 				wconds.append(')');
 			}
 
-			for (Tuple<DoubleString, CCSQLType> clause : _whereClauses) {
-				if (!clause.Item1.get2().equals("?")) continue;
-				fields.add(Tuple3.Create(prepIdx, clause.Item1.get1(), clause.Item2));
+			for (var clause : _whereClauses) {
+				fields.add(Tuple.Create(prepIdx, clause));
 				prepIdx++;
 			}
 
@@ -285,22 +268,21 @@ public class SQLBuilder {
 
 		for (int i = 0; i < _fields.size(); i++) {
 			if (i > 0) assigns1.append(", ");
-			assigns1.append(SQLBuilderHelper.sqlEscape(_fields.get(i).Item1.get1()));
+			assigns1.append(SQLBuilderHelper.sqlEscape(_fields.get(i).Name));
 
 			if (i > 0) assigns2.append(", ");
-			assigns2.append(SQLBuilderHelper.sqlEscape(_fields.get(i).Item1.get2()));
+			assigns2.append("?");
 		}
 
 		int prepIdx = 1;
-		List<Tuple3<Integer, String, CCSQLType>> fields = new ArrayList<>();
+		List<Tuple<Integer, CCSQLColDef>> fields = new ArrayList<>();
 
-		for (Tuple<DoubleString, CCSQLType> field : _fields) {
-			if (!field.Item1.get2().equals("?")) continue;
-			fields.add(Tuple3.Create(prepIdx, field.Item1.get1(), field.Item2));
+		for (var field : _fields) {
+			fields.add(Tuple.Create(prepIdx, field));
 			prepIdx++;
 		}
 
-		String sql = String.format("INSERT OR REPLACE INTO %s (%s) VALUES (%s)", SQLBuilderHelper.sqlEscape(_table), assigns1.toString(), assigns2.toString());
+		String sql = String.format("INSERT OR REPLACE INTO %s (%s) VALUES (%s)", SQLBuilderHelper.sqlEscape(_table.Name), assigns1.toString(), assigns2.toString());
 
 		if (!_whereClauses.isEmpty()) throw new SQLWrapperException("SQLStatementType.REPLACE does not allow WHERE clauses");
 
@@ -309,10 +291,10 @@ public class SQLBuilder {
 
 	@SuppressWarnings("nls")
 	private CCSQLStatement buildDelete(Func1to1WithGenericException<String, PreparedStatement, SQLException> fn) throws SQLException, SQLWrapperException {
-		String sql = String.format("DELETE FROM %s", _table);
+		String sql = String.format("DELETE FROM %s", _table.Name);
 
 		int prepIdx = 1;
-		List<Tuple3<Integer, String, CCSQLType>> fields = new ArrayList<>();
+		List<Tuple<Integer, CCSQLColDef>> fields = new ArrayList<>();
 
 		if (!_whereClauses.isEmpty()) {
 			sql += " WHERE ";
@@ -322,15 +304,14 @@ public class SQLBuilder {
 				if (i > 0) wconds.append(" AND ");
 
 				wconds.append('(');
-				wconds.append(SQLBuilderHelper.sqlEscape(_whereClauses.get(i).Item1.get1()));
+				wconds.append(SQLBuilderHelper.sqlEscape(_whereClauses.get(i).Name));
 				wconds.append('=');
-				wconds.append(SQLBuilderHelper.sqlEscape(_whereClauses.get(i).Item1.get2()));
+				wconds.append("?");
 				wconds.append(')');
 			}
 
-			for (Tuple<DoubleString, CCSQLType> clause : _whereClauses) {
-				if (!clause.Item1.get2().equals("?")) continue;
-				fields.add(Tuple3.Create(prepIdx, clause.Item1.get1(), clause.Item2));
+			for (var clause : _whereClauses) {
+				fields.add(Tuple.Create(prepIdx, clause));
 				prepIdx++;
 			}
 
@@ -344,20 +325,20 @@ public class SQLBuilder {
 	private CCSQLStatement buildSelect(Func1to1WithGenericException<String, PreparedStatement, SQLException> fn) throws SQLException, SQLWrapperException {
 		StringBuilder assigns = new StringBuilder();
 
-		List<Tuple3<Integer, String, CCSQLType>> selectFields = new ArrayList<>();
+		List<Tuple<Integer, CCSQLColDef>> selectFields = new ArrayList<>();
 
 		for (int i = 0; i < _selectFields.size(); i++) {
 			if (i > 0) assigns.append(", ");
 
-			assigns.append(SQLBuilderHelper.sqlEscape(_selectFields.get(i).Item1));
+			assigns.append(SQLBuilderHelper.sqlEscape(_selectFields.get(i).Name));
 
-			selectFields.add(Tuple3.Create(i+1, _selectFields.get(i).Item1, _selectFields.get(i).Item2));
+			selectFields.add(Tuple.Create(i+1, _selectFields.get(i)));
 		}
 
 		int prepIdx = 1;
-		List<Tuple3<Integer, String, CCSQLType>> fields = new ArrayList<>();
+		List<Tuple<Integer, CCSQLColDef>> fields = new ArrayList<>();
 
-		String sql = String.format("SELECT %s FROM %s", assigns.toString(), SQLBuilderHelper.sqlEscape(_table));
+		String sql = String.format("SELECT %s FROM %s", assigns.toString(), SQLBuilderHelper.sqlEscape(_table.Name));
 
 		if (!_whereClauses.isEmpty()) {
 			sql += " WHERE ";
@@ -367,23 +348,22 @@ public class SQLBuilder {
 				if (i > 0) wconds.append(" AND ");
 
 				wconds.append('(');
-				wconds.append(SQLBuilderHelper.sqlEscape(_whereClauses.get(i).Item1.get1()));
+				wconds.append(SQLBuilderHelper.sqlEscape(_whereClauses.get(i).Name));
 				wconds.append('=');
-				wconds.append(SQLBuilderHelper.sqlEscape(_whereClauses.get(i).Item1.get2()));
+				wconds.append("?");
 				wconds.append(')');
 			}
 
-			for (Tuple<DoubleString, CCSQLType> clause : _whereClauses) {
-				if (!clause.Item1.get2().equals("?")) continue;
-				fields.add(Tuple3.Create(prepIdx, clause.Item1.get1(), clause.Item2));
+			for (var clause : _whereClauses) {
+				fields.add(Tuple.Create(prepIdx, clause));
 				prepIdx++;
 			}
 
 			sql += wconds.toString();
 		}
 
-		if (_orderField != null && _orderDirection != null) {
-			sql += String.format(" ORDER BY %s %s", SQLBuilderHelper.sqlEscape(_orderField), _orderDirection == SQLOrder.ASC ? "ASC" : "DESC");
+		if (_order != null) {
+			sql += String.format(" ORDER BY %s %s", SQLBuilderHelper.sqlEscape(_order.Item1.Name), _order.Item2 == SQLOrder.ASC ? "ASC" : "DESC");
 		}
 
 		return new CCSQLStatement(_type, sql, fn.invoke(sql), fields, selectFields);
@@ -394,15 +374,15 @@ public class SQLBuilder {
 
 		List<String> colSQL = new ArrayList<>();
 
-		for (var column : _createSchema.Columns) {
-			colSQL.add(getSQLCreateColumn(_createSchema, column));
+		for (var column : _table.Columns) {
+			colSQL.add(getSQLCreateColumn(_table, column));
 		}
 
-		for (var fkey : _createSchema.ForeignKeys) {
+		for (var fkey : _table.ForeignKeys) {
 			colSQL.add(getSQLCreateForeignKey(fkey));
 		}
 
-		var sql = "CREATE TABLE " + SQLBuilderHelper.sqlEscape(_createSchema.Name) + "(" + String.join(",", colSQL) + ")";
+		var sql = "CREATE TABLE " + SQLBuilderHelper.sqlEscape(_table.Name) + "(" + String.join(",", colSQL) + ")";
 
 		return new CCSQLStatement(_type, sql, fn.invoke(sql), new ArrayList<>(), new ArrayList<>());
 	}

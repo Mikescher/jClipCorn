@@ -55,8 +55,11 @@ public class TestPaths extends ClipCornBaseTest {
 		assertEquals(loc("F:/dir1/dir2"), FSPath.create(loc("F:/dir1/dir2/file.txt")).getParent(1).toString());
 		assertEquals(loc("F:/dir1"), FSPath.create(loc("F:/dir1/dir2/file.txt")).getParent(2).toString());
 
-		assertTrue(FSPath.create(loc("F:/dir1/dir2/file.txt")).isValidPath());
-		assertFalse(FSPath.create(loc("F:|dir1|dir2|file.txt")).isValidPath());
+		if (ApplicationHelper.isWindows()) // all paths are valid under Linux
+		{
+			assertTrue(FSPath.create(loc("F:/dir1/dir2/file.txt")).isValidPath());
+			assertFalse(FSPath.create(loc("F:|dir1|dir2|file.txt")).isValidPath());
+		}
 
 		assertEquals(loc("F:/dir1/dir2/file.txt"), FSPath.create(loc("F:/dir1/dir2/file.txt")).replaceExtension("txt").toString());
 		assertEquals(loc("F:/dir1/dir2/file.mp4"), FSPath.create(loc("F:/dir1/dir2/file.txt")).replaceExtension("mp4").toString());
@@ -257,9 +260,9 @@ public class TestPaths extends ClipCornBaseTest {
 	{
 		createInMemoryProperties();
 
-		assertEquals("<?[mov]>fname.ext",          CCPath.createFromFSPath(FSPath.create(loc("C:/tmpfs/jcc/mov/fname.ext"))).toString());
-		assertEquals("<?[mov]>fname.ext",          CCPath.createFromFSPath(FSPath.create(loc("C:/tmpfs/jcc/mov/fname.ext")), Opt.True).toString());
-		assertEquals("C:/tmpfs/jcc/mov/fname.ext", CCPath.createFromFSPath(FSPath.create(loc("C:/tmpfs/jcc/mov/fname.ext")), Opt.False).toString());
+		assertEquals("<?[mov]>fname.ext",               CCPath.createFromFSPath(FSPath.create(loc("C:/tmpfs/jcc/mov/fname.ext"))).toString());
+		assertEquals("<?[mov]>fname.ext",               CCPath.createFromFSPath(FSPath.create(loc("C:/tmpfs/jcc/mov/fname.ext")), Opt.True).toString());
+		assertEquals(loc("C:/tmpfs/jcc/mov/fname.ext"), CCPath.createFromFSPath(FSPath.create(loc("C:/tmpfs/jcc/mov/fname.ext")), Opt.False).toString());
 
 		assertEquals("<?vNetwork=\"\\\\server2\\drive2\">fname.ext", CCPath.createFromFSPath(FSPath.create(loc("O:/fname.ext"))).toString());
 		assertEquals("<?vNetwork=\"\\\\server2\\drive2\">fname.ext", CCPath.createFromFSPath(FSPath.create(loc("O:/fname.ext")), Opt.True).toString());

@@ -311,7 +311,7 @@ public class CCMovieList {
 		return null;
 	}
 
-	public CCMovie createNewEmptyMovie() { // Does this make getMovieBySort fail (id changes etc ??)
+	public CCMovie createNewEmptyMovie() {
 		CCMovie mov = database.createNewEmptyMovie(this);
 		list.add(mov);
 		_cache.bust();
@@ -321,7 +321,7 @@ public class CCMovieList {
 		return mov;
 	}
 
-	public CCSeries createNewEmptySeries() { // Does this make getMovieBySort fail (id changes etc ??)
+	public CCSeries createNewEmptySeries() {
 		CCSeries s = database.createNewEmptySeries(this);
 		list.add(s);
 		_cache.bust();

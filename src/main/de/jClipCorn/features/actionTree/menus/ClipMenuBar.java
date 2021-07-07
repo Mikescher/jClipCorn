@@ -15,6 +15,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.listener.ActionCallbackListener;
+import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +58,7 @@ public abstract class ClipMenuBar extends JMenuBar {
 		lastMaster.add(lastSubMaster);
 	}
 
-	protected void addNode(final String textID, final Func0to0 action, final MultiSizeIconRef icon, final boolean readOnlyRestriction)
+	protected void addNode(final String textID, final Func0to0 action, final MultiSizeIconRef icon, final boolean readOnlyRestriction, final boolean highlight)
 	{
 		JMenuItem node;
 		if (icon != null)
@@ -71,13 +72,20 @@ public abstract class ClipMenuBar extends JMenuBar {
 			action.invoke();
 			_postAction.invoke();
 		});
+
+		if (highlight)
+		{
+			var f1 = node.getFont();
+			var f2 = new Font(f1.getName(), f1.getStyle() | Font.BOLD, f1.getSize());
+			node.setFont(f2);
+		}
 
 		if (readOnlyRestriction && _movielist.isReadonly()) node.setEnabled(false);
 
 		lastMaster.add(node);
 	}
 
-	protected void addSubNode(final String textID, final Func0to0 action, final MultiSizeIconRef icon, final boolean readOnlyRestriction)
+	protected void addSubNode(final String textID, final Func0to0 action, final MultiSizeIconRef icon, final boolean readOnlyRestriction, final boolean highlight)
 	{
 		JMenuItem node;
 		if (icon != null)
@@ -91,6 +99,13 @@ public abstract class ClipMenuBar extends JMenuBar {
 			action.invoke();
 			_postAction.invoke();
 		});
+
+		if (highlight)
+		{
+			var f1 = node.getFont();
+			var f2 = new Font(f1.getName(), f1.getStyle() | Font.BOLD, f1.getSize());
+			node.setFont(f2);
+		}
 
 		if (readOnlyRestriction && _movielist.isReadonly()) node.setEnabled(false);
 
@@ -116,7 +131,11 @@ public abstract class ClipMenuBar extends JMenuBar {
 
 		actions.add(el);
 
-		addNode(el.getCaptionIdent(), () -> el.execute(getSourceComponent(), getActionSource(), getActionSourceObject(), getSourceListener()), el.getIconRef(), el.isReadOnlyRestricted());
+		addNode(el.getCaptionIdent(),
+				() -> el.execute(getSourceComponent(), getActionSource(), getActionSourceObject(), getSourceListener()),
+				el.getIconRef(),
+				el.isReadOnlyRestricted(),
+				CCStreams.iterate(getActionSourceObject()).any(aso -> aso.shouldHighlightAction(el)));
 	}
 
 	protected void addActionSubNode(String actionIdent)
@@ -130,7 +149,11 @@ public abstract class ClipMenuBar extends JMenuBar {
 
 		actions.add(el);
 
-		addSubNode(el.getCaptionIdent(), () -> el.execute(getSourceComponent(), getActionSource(), getActionSourceObject(), getSourceListener()), el.getIconRef(), el.isReadOnlyRestricted());
+		addSubNode(el.getCaptionIdent(),
+				() -> el.execute(getSourceComponent(), getActionSource(), getActionSourceObject(), getSourceListener()),
+				el.getIconRef(),
+				el.isReadOnlyRestricted(),
+				CCStreams.iterate(getActionSourceObject()).any(aso -> aso.shouldHighlightAction(el)));
 	}
 
 	protected void addActionTreeNode(String actionIdent) {
@@ -157,13 +180,13 @@ public abstract class ClipMenuBar extends JMenuBar {
 		{
 			addSubMaster("ClipMenuBar.Other.MovieExtra.ShowInBrowser", Resources.ICN_MENUBAR_ONLINEREFERENCE); //$NON-NLS-1$
 			for	(final CCSingleOnlineReference soref : ref) {
-				addSubNode("@" + (soref.hasDescription() ? soref.description : soref.type.asString()), () -> openRef(soref), soref.getIconRef(), false); //$NON-NLS-1$
+				addSubNode("@" + (soref.hasDescription() ? soref.description : soref.type.asString()), () -> openRef(soref), soref.getIconRef(), false, false); //$NON-NLS-1$
 				if (soref == ref.Main && ref.hasAdditional()) addSubSeparator();
 			}
 		}
 		else
 		{
-			addNode("ClipMenuBar.Other.MovieExtra.ShowInBrowser", () -> openRef(ref.Main), Resources.ICN_MENUBAR_ONLINEREFERENCE, false); //$NON-NLS-1$
+			addNode("ClipMenuBar.Other.MovieExtra.ShowInBrowser", () -> openRef(ref.Main), Resources.ICN_MENUBAR_ONLINEREFERENCE, false, false); //$NON-NLS-1$
 		}
 	}
 

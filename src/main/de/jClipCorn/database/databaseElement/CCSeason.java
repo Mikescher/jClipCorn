@@ -11,6 +11,7 @@ import de.jClipCorn.database.elementProps.impl.EIntProp;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
 import de.jClipCorn.database.elementProps.impl.EStringProp;
 import de.jClipCorn.database.util.*;
+import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
@@ -687,5 +688,11 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 			return new CCQualityCategory(ct, rtype, longtext, tooltip, (minBitrate + maxBitrate) / 2);
 		});
+	}
+
+	@Override
+	@SuppressWarnings("nls")
+	public boolean shouldHighlightAction(CCActionElement e) {
+		return false;
 	}
 }

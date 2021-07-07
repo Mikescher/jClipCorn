@@ -12,6 +12,7 @@ import de.jClipCorn.database.elementProps.packs.EMediaInfoPropPack;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
+import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.mainFrame.MainFrame;
@@ -423,5 +424,16 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	@Override
 	public ICalculationCache getCache() {
 		return _cache;
+	}
+
+	@Override
+	@SuppressWarnings("nls")
+	public boolean shouldHighlightAction(CCActionElement e) {
+
+		for (final CCSingleTag tag : CCTagList.TAGS) {
+			if (Str.equals(e.getName(), String.format("SwitchTag_Episode_%02d", tag.Index)) && Tags.get(tag)) return true;
+		}
+
+		return false;
 	}
 }

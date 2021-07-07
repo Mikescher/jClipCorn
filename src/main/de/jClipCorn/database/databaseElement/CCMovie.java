@@ -13,6 +13,7 @@ import de.jClipCorn.database.elementProps.packs.EZyklusPropPack;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
+import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
@@ -368,5 +369,24 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	@Override
 	public Opt<CCDateTime> getLastViewed() {
 		return ViewedHistory.get().isEmpty() ? Opt.empty() : Opt.of(ViewedHistory.get().getLastOrInvalid());
+	}
+
+	@Override
+	@SuppressWarnings("nls")
+	public boolean shouldHighlightAction(CCActionElement e) {
+		if (Str.equals(e.getName(), "SetMovRatingNO")  && Score.get() == CCUserScore.RATING_NO)   return true;
+		if (Str.equals(e.getName(), "SetMovRating0")   && Score.get() == CCUserScore.RATING_0)    return true;
+		if (Str.equals(e.getName(), "SetMovRating1")   && Score.get() == CCUserScore.RATING_I)    return true;
+		if (Str.equals(e.getName(), "SetMovRating2")   && Score.get() == CCUserScore.RATING_II)   return true;
+		if (Str.equals(e.getName(), "SetMovRatingMID") && Score.get() == CCUserScore.RATING_MID)  return true;
+		if (Str.equals(e.getName(), "SetMovRating3")   && Score.get() == CCUserScore.RATING_III)  return true;
+		if (Str.equals(e.getName(), "SetMovRating4")   && Score.get() == CCUserScore.RATING_IV)   return true;
+		if (Str.equals(e.getName(), "SetMovRating5")   && Score.get() == CCUserScore.RATING_V)    return true;
+
+		for (final CCSingleTag tag : CCTagList.TAGS) {
+			if (Str.equals(e.getName(), String.format("SwitchTag_Movie_%02d", tag.Index)) && Tags.get(tag)) return true;
+		}
+
+		return false;
 	}
 }

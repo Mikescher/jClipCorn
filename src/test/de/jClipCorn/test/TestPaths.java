@@ -264,8 +264,11 @@ public class TestPaths extends ClipCornBaseTest {
 		assertEquals("<?[mov]>fname.ext",               CCPath.createFromFSPath(FSPath.create(loc("C:/tmpfs/jcc/mov/fname.ext")), Opt.True).toString());
 		assertEquals(loc("C:/tmpfs/jcc/mov/fname.ext"), CCPath.createFromFSPath(FSPath.create(loc("C:/tmpfs/jcc/mov/fname.ext")), Opt.False).toString());
 
-		assertEquals("<?vNetwork=\"\\\\server2\\drive2\">fname.ext", CCPath.createFromFSPath(FSPath.create(loc("O:/fname.ext"))).toString());
-		assertEquals("<?vNetwork=\"\\\\server2\\drive2\">fname.ext", CCPath.createFromFSPath(FSPath.create(loc("O:/fname.ext")), Opt.True).toString());
-		assertEquals("O:/fname.ext",                                 CCPath.createFromFSPath(FSPath.create(loc("O:/fname.ext")), Opt.False).toString());
+		if (ApplicationHelper.isWindows())
+		{
+			assertEquals("<?vNetwork=\"\\\\server2\\drive2\">fname.ext", CCPath.createFromFSPath(FSPath.create(loc("O:/fname.ext"))).toString());
+			assertEquals("<?vNetwork=\"\\\\server2\\drive2\">fname.ext", CCPath.createFromFSPath(FSPath.create(loc("O:/fname.ext")), Opt.True).toString());
+			assertEquals("O:/fname.ext",                                 CCPath.createFromFSPath(FSPath.create(loc("O:/fname.ext")), Opt.False).toString());
+		}
 	}
 }

@@ -53,6 +53,13 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		JMenuItem item = add(el.getCaption());
 		
 		item.setIcon(el.getSmallIcon());
+
+		if (getSourceObject().shouldHighlightAction(el))
+		{
+			var f1 = item.getFont();
+			var f2 = new Font(f1.getName(), f1.getStyle() | Font.BOLD, f1.getSize());
+			item.setFont(f2);
+		}
 		
 		if (! KeyStrokeUtil.isEmpty(el.getKeyStroke())) {
 			item.setAccelerator(el.getKeyStroke());
@@ -77,9 +84,16 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		add(item);
 		
 		item.setIcon(el.getSmallIcon());
-		
+
 		if (! KeyStrokeUtil.isEmpty(el.getKeyStroke())) {
 			item.setAccelerator(el.getKeyStroke());
+		}
+
+		if (getSourceObject().shouldHighlightAction(el))
+		{
+			var f1 = item.getFont();
+			var f2 = new Font(f1.getName(), f1.getStyle() | Font.BOLD, f1.getSize());
+			item.setFont(f2);
 		}
 		
 		item.addActionListener(arg0 -> el.execute(getSourceFrame(), ActionSource.POPUP_MENU, getSourceObject(), getSourceListener()));

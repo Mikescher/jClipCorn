@@ -9,6 +9,7 @@ import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.util.*;
 import de.jClipCorn.database.util.iterators.DirectEpisodesIterator;
 import de.jClipCorn.database.util.iterators.DirectSeasonsIterator;
+import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
@@ -916,5 +917,24 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 			return Opt.of(dt);
 		});
+	}
+
+	@Override
+	@SuppressWarnings("nls")
+	public boolean shouldHighlightAction(CCActionElement e) {
+		if (Str.equals(e.getName(), "SetSerRatingNO")  && Score.get() == CCUserScore.RATING_NO)   return true;
+		if (Str.equals(e.getName(), "SetSerRating0")   && Score.get() == CCUserScore.RATING_0)    return true;
+		if (Str.equals(e.getName(), "SetSerRating1")   && Score.get() == CCUserScore.RATING_I)    return true;
+		if (Str.equals(e.getName(), "SetSerRating2")   && Score.get() == CCUserScore.RATING_II)   return true;
+		if (Str.equals(e.getName(), "SetSerRatingMID") && Score.get() == CCUserScore.RATING_MID)  return true;
+		if (Str.equals(e.getName(), "SetSerRating3")   && Score.get() == CCUserScore.RATING_III)  return true;
+		if (Str.equals(e.getName(), "SetSerRating4")   && Score.get() == CCUserScore.RATING_IV)   return true;
+		if (Str.equals(e.getName(), "SetSerRating5")   && Score.get() == CCUserScore.RATING_V)    return true;
+
+		for (final CCSingleTag tag : CCTagList.TAGS) {
+			if (Str.equals(e.getName(), String.format("SwitchTag_Series_%02d", tag.Index)) && Tags.get(tag)) return true;
+		}
+
+		return false;
 	}
 }

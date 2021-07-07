@@ -244,7 +244,7 @@ public class Main {
  - [ ] OrganizeFilterFrame
  - [ ] ParseOnlineFrame
  - [ ] ParseWatchDataFrame
- - [ ] PreviewMovieFrame
+ - [X] PreviewMovieFrame
  - [X] PreviewSeriesFrame
  - [ ] QuickAddEpisodeDialog
  - [ ] QuickAddMoviesDialog

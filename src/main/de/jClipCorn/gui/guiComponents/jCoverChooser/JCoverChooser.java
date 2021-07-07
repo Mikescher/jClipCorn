@@ -334,7 +334,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 
 				if (imgid != Integer.MIN_VALUE) {
 					for (JCoverChooserPopupListener ev : listener_popup) {
-						ev.onPopup(new CoverChooseEvent(this, imgid, e));
+						ev.onPopup(new JCoverChooserPopupListener.CoverChooseEvent(this, imgid, e));
 					}
 				}
 				

@@ -22,8 +22,8 @@ import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
 import de.jClipCorn.gui.frames.vlcRobot.VLCRobotFrame;
 import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.displaySearchResultsDialog.DisplaySearchResultsDialog;
-import de.jClipCorn.gui.guiComponents.jCoverChooser.CoverChooseEvent;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
+import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupListener;
 import de.jClipCorn.gui.guiComponents.language.LanguageDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -56,18 +56,18 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 {
 	private static final List<Tuple<CCSeries, PreviewSeriesFrame>> _activeFrames = new ArrayList<>();
 
-	private final CCSeries dispSeries;
+	private final CCSeries series;
 
 	private PreviewSeriesFrame(Component owner, CCSeries ser)
 	{
 		super();
 
-		dispSeries = ser;
+		series = ser;
 
 		initComponents();
 		postInit();
 
-		CCSeason sea = dispSeries.getInitialDisplaySeason();
+		CCSeason sea = series.getInitialDisplaySeason();
 		if (sea != null) { changeSeason(sea); cvrChooser.setCurrSelected(sea.getSeasonNumber()); }
 
 		setLocationRelativeTo(owner);
@@ -77,7 +77,7 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 	{
 		super();
 
-		dispSeries = sea.getSeries();
+		series = sea.getSeries();
 
 		initComponents();
 		postInit();
@@ -92,7 +92,7 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 	{
 		super();
 
-		dispSeries = epi.getSeries();
+		series = epi.getSeries();
 
 		initComponents();
 		postInit();
@@ -107,15 +107,9 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 	{
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 
-		if (Main.DEBUG) {
-			setTitle("<LID:" + dispSeries.getLocalID() + "> " + dispSeries.getTitle() + " (" + dispSeries.getCoverID() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		} else {
-			setTitle(dispSeries.getTitle());
-		}
+		_activeFrames.add(Tuple.Create(series, this));
 
-		_activeFrames.add(Tuple.Create(dispSeries, this));
-
-		setJMenuBar(new PreviewSeriesMenuBar(this, this.dispSeries, () -> onUpdate(null)));
+		setJMenuBar(new PreviewSeriesMenuBar(this, this.series, () -> onUpdate(null)));
 
 		updateData();
 
@@ -127,21 +121,21 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 		setSize(size1.width, Math.max(size1.height, size2.height));
 		setMinimumSize(new Dimension(getMinimumSize().width, size2.height));
 
-		dispSeries.getMovieList().addChangeListener(new CCDBUpdateAdapter() {
+		series.getMovieList().addChangeListener(new CCDBUpdateAdapter() {
 			@Override
 			public void onChangeDatabaseElement(CCDatabaseElement el) {
-				if (el.equals(dispSeries)) updateData();
+				if (el.equals(series)) updateData();
 			}
 
 			@Override
 			public void onAddDatabaseElement(CCDatabaseElement mov) {
-				if (mov.equals(dispSeries)) updateData();
+				if (mov.equals(series)) updateData();
 			}
 		});
 
-		if (!dispSeries.isEmpty())
+		if (!series.isEmpty())
 		{
-			var cep = new ClipEpisodePopup(this, dispSeries.getFirstEpisode());
+			var cep = new ClipEpisodePopup(this, series.getFirstEpisode());
 			cep.implementDirectKeyListener(this, (JPanel) getContentPane());
 		}
 
@@ -228,50 +222,56 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 	}
 
 	private void updateData() {
-		if (dispSeries == null) return;
+		if (series == null) return;
 
-		lblTitle.setText(dispSeries.getTitle());
+		if (Main.DEBUG) {
+			setTitle("<LID:" + series.getLocalID() + "> " + series.getTitle() + " (" + series.getCoverID() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		} else {
+			setTitle(series.getTitle());
+		}
+
+		lblTitle.setText(series.getTitle());
 
 		int ccidx = cvrChooser.getSelectedIndex();
 
 		cvrChooser.clear();
-		for(var v : dispSeries.iteratorSeasons()) cvrChooser.addCover(v, v);
+		for(var v : series.iteratorSeasons()) cvrChooser.addCover(v, v);
 
 		cvrChooser.setCurrSelected(ccidx);
 
-		lblOnlineScore.setOnlineScore(dispSeries.getOnlinescore());
+		lblOnlineScore.setOnlineScore(series.getOnlinescore());
 
-		lblLength.setText(TimeIntervallFormatter.formatPointed(dispSeries.getLength()));
-		lblLength.setToolTipText(dispSeries.getMediaInfoLength().map(TimeIntervallFormatter::formatSeconds).orElse(null));
+		lblLength.setText(TimeIntervallFormatter.formatPointed(series.getLength()));
+		lblLength.setToolTipText(series.getMediaInfoLength().map(TimeIntervallFormatter::formatSeconds).orElse(null));
 
-		lblSize.setText(FileSizeFormatter.format(dispSeries.getFilesize()));
+		lblSize.setText(FileSizeFormatter.format(series.getFilesize()));
 
-		lblViewed.setText(dispSeries.getViewedCount() + "/" + dispSeries.getEpisodeCount()); //$NON-NLS-1$
+		lblViewed.setText(series.getViewedCount() + "/" + series.getEpisodeCount()); //$NON-NLS-1$
 
-		lblViewed.setIcon(ImageUtilities.sliceImage(Resources.ICN_TABLE_VIEWED_TRUE.get(), 0d, (dispSeries.getViewedCount() * 1d) / dispSeries.getEpisodeCount()));
+		lblViewed.setIcon(ImageUtilities.sliceImage(Resources.ICN_TABLE_VIEWED_TRUE.get(), 0d, (series.getViewedCount() * 1d) / series.getEpisodeCount()));
 
 		lblScore.setText(Str.Empty);
-		lblScore.setIcon(dispSeries.Score.get().getIcon());
+		lblScore.setIcon(series.Score.get().getIcon());
 
-		ctrlLang.setValue(dispSeries.getAllLanguages());
+		ctrlLang.setValue(series.getAllLanguages());
 
-		ctrlTags.setValue(dispSeries.getTags());
+		ctrlTags.setValue(series.getTags());
 
 		lblFSK.setText(Str.Empty);
-		lblFSK.setIcon(dispSeries.getFSK().getIcon());
+		lblFSK.setIcon(series.getFSK().getIcon());
 
-		lblCover.setModeCover(dispSeries);
+		lblCover.setModeCover(series);
 
-		btnOnline.setValue(dispSeries.getOnlineReference());
+		btnOnline.setValue(series.getOnlineReference());
 
-		lblGroups.setText(dispSeries.getGroups().iterate().stringjoin(p->p.Name, "\n"));
+		lblGroups.setText(series.getGroups().iterate().stringjoin(p->p.Name, "\n"));
 
-		lblGenres.setText(dispSeries.getGenres().iterate().stringjoin(CCGenre::asString, "\n"));
+		lblGenres.setText(series.getGenres().iterate().stringjoin(CCGenre::asString, "\n"));
 	}
 
 	private void autoPlay() {
-		var next = NextEpisodeHelper.findNextEpisode(dispSeries);
-		VLCRobotFrame.show(this).enqueue(dispSeries);
+		var next = NextEpisodeHelper.findNextEpisode(series);
+		VLCRobotFrame.show(this).enqueue(series);
 		if (next != null) {
 			changeSeason(next.getSeason());
 			tabSeason.select(next);
@@ -318,7 +318,7 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 	}
 
 	private void startSearch() {
-		List<CCEpisode> el = dispSeries.getEpisodeList();
+		List<CCEpisode> el = series.getEpisodeList();
 		List<CCEpisode> found = new ArrayList<>();
 
 		for (CCEpisode ccEpisode : el) {
@@ -380,15 +380,15 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 	}
 
 	private void onPlayNext() {
-		CCActionTree.getInstance().find("ResumeSeries").execute(this, ActionSource.PREV_SER_FRAME, Collections.singletonList(dispSeries), this);
+		CCActionTree.getInstance().find("ResumeSeries").execute(this, ActionSource.PREV_SER_FRAME, Collections.singletonList(series), this);
 	}
 
 	private void onCoverChooserSelected() {
-		changeSeason(dispSeries.getSeasonByArrayIndex(cvrChooser.getSelectedIndex()));
+		changeSeason(series.getSeasonByArrayIndex(cvrChooser.getSelectedIndex()));
 	}
 
-	private void onCoverChooserPopup(CoverChooseEvent e) {
-		var pm = new SerCoverChooserPopupMenu(dispSeries.getSeasonByArrayIndex(e.CoverID), this);
+	private void onCoverChooserPopup(JCoverChooserPopupListener.CoverChooseEvent e) {
+		var pm = new SerCoverChooserPopupMenu(series.getSeasonByArrayIndex(e.CoverID), this);
 		pm.show(cvrChooser, e.InnerEvent.getX(), e.InnerEvent.getY());
 	}
 

@@ -1,14 +1,12 @@
 package de.jClipCorn.gui.frames.previewMovieFrame;
 
-import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.Main;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
-import de.jClipCorn.database.history.CCCombinedHistoryEntry;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewMovieMenuBar;
 import de.jClipCorn.features.log.CCLog;
@@ -21,6 +19,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
@@ -31,149 +30,55 @@ import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.TimeZone;
 
-public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener {
-	private static final long serialVersionUID = 7483476533745432416L;
-
-	private static List<Tuple<CCMovie, PreviewMovieFrame>> _activeFrames = new ArrayList<>();
+public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener
+{
+	private final static java.util.List<Tuple<CCMovie, PreviewMovieFrame>> _activeFrames = new ArrayList<>();
 
 	private final CCMovie movie;
-	
-	private CoverLabel lblCover;
-	private JLabel lblTitle;
-	private JList<String> lsGenres;
-	private JReadableCCPathTextField edPart0;
-	private JReadableCCPathTextField edPart1;
-	private JReadableCCPathTextField edPart2;
-	private JReadableCCPathTextField edPart3;
-	private JReadableCCPathTextField edPart4;
-	private JReadableCCPathTextField edPart5;
-	private JLabel lblQuality;
-	private JLabel lblLanguage;
-	private JLabel lblLength;
-	private JLabel lblAdded;
-	private JLabel lblScore;
-	private JLabel lblFsk;
-	private JLabel lblFormat;
-	private JLabel lblYear;
-	private JLabel lblSize;
-	private OnlineRefButton btnOnlineRef;
-	private JLabel lblGenre;
-	private JLabel lblScore_1;
-	private JLabel lbl_Quality;
-	private LanguageDisplay lbl_Language;
-	private JLabel lbl_Length;
-	private JLabel lbl_Added;
-	private JLabel lbl_FSK;
-	private JLabel lbl_Format;
-	private JLabel lbl_Year;
-	private JLabel lbl_Size;
-	private JLabel lbl_OnlineScore;
-	private JLabel lbl_Score;
-	private JButton btnPlay;
-	private JLabel lblTags;
-	private JList<String> lsHistory;
-	private JLabel lblViewedHistory;
-	private JScrollPane scrollPane;
-	private JScrollPane scrollPane_1;
-	private JLabel lblGruppen;
-	private JScrollPane scrollPane_2;
-	private JList<String> lsGroups;
-	private JTabbedPane tabbedPane;
-	private JPanel pnlTabMain;
-	private JPanel pnlTabMediaInfo;
-	private JPanel pnlTabPaths;
-	private TagDisplay pnlTags;
-	private JLabel lblTitel;
-	private JLabel lblTitle2;
-	private JLabel lblZyklus;
-	private JLabel lblZyklus2;
-	private JPanel panel_1;
-	private JLabel lblViewed;
-	private JPanel panel;
-	private JPanel pnlMI_General;
-	private JPanel pnlMI_Video;
-	private JPanel pnlMI_Audio;
-	private JLabel lblCdate;
-	private JLabel lblMdate;
-	private JLabel lblFilesize;
-	private JLabel lblDuration;
-	private JLabel lblBitrate;
-	private JLabel lblFormat_1;
-	private JLabel lblWidthHeight;
-	private ReadableTextField edMI_CDate;
-	private ReadableTextField edMI_MDate;
-	private ReadableTextField edMI_Filesize;
-	private ReadableTextField edMI_Duration;
-	private ReadableTextField edMI_Bitrate;
-	private JLabel lblFramerate;
-	private JLabel lblBitdepth;
-	private JLabel lblFramecount;
-	private JLabel lblCodec;
-	private JLabel lblFormat_2;
-	private JLabel lblChannels;
-	private JLabel lblCodec_1;
-	private JLabel lblSamplerate;
-	private ReadableTextField edMI_VideoFormat;
-	private ReadableTextField edMI_VideoResolution;
-	private ReadableTextField edMI_VideoFramerate;
-	private ReadableTextField edMI_VideoBitdepth;
-	private ReadableTextField edMI_VideoFramecount;
-	private ReadableTextField edMI_VideoCodec;
-	private ReadableTextField edMI_AudioFormat;
-	private ReadableTextField edMI_AudioChannels;
-	private ReadableTextField edMI_AudioCodec;
-	private ReadableTextField edMI_AudioSamplerate;
-	private JButton btnMediaInfo1;
-	private JButton btnMediaInfo2;
-	private JButton btnMediaInfo3;
-	private JButton btnMediaInfo4;
-	private JButton btnMediaInfo5;
-	private JButton btnMediaInfo6;
-	private JButton btnOpenDir6;
-	private JButton btnOpenDir5;
-	private JButton btnOpenDir4;
-	private JButton btnOpenDir3;
-	private JButton btnOpenDir2;
-	private JButton btnOpenDir1;
-	private JPanel pnlTabHistory;
-	private PMHistoryTableEntries tabHistoryEntries;
-	private PMHistoryTableChanges tabHistoryChanges;
-	private JButton btnQueryHistory;
 
-	/**
-	 * @wbp.parser.constructor
-	 */
-	private PreviewMovieFrame() {
+	public PreviewMovieFrame(Component owner, CCMovie m)
+	{
 		super();
-		this.movie = null;
-		
-		initGUI();
-	}
-	
-	private PreviewMovieFrame(Component owner, CCMovie m) {
-		super();
-		this.movie = m;
-		
-		initGUI();
-		setJMenuBar(new PreviewMovieMenuBar(this, m, this::updateFields));
-		
-		updateFields();
-		
+		movie = m;
+
+		initComponents();
+		postInit();
+
 		setLocationRelativeTo(owner);
-		initListener(m);
+	}
+
+	private void postInit()
+	{
+		setIconImage(Resources.IMG_FRAME_ICON.get());
+
+		_activeFrames.add(Tuple.Create(movie, this));
+
+		setJMenuBar(new PreviewMovieMenuBar(this, movie, this::updateData));
+
+		updateData();
+
+		movie.getMovieList().addChangeListener(new CCDBUpdateAdapter() {
+			@Override
+			public void onChangeDatabaseElement(CCDatabaseElement el) {
+				if (el.equals(movie)) updateData();
+			}
+
+			@Override
+			public void onAddDatabaseElement(CCDatabaseElement mov) {
+				if (mov.equals(movie)) updateData();
+			}
+		});
 	}
 
 	public static void show(Component owner, CCMovie data, boolean forceNoSingleton) {
@@ -193,607 +98,51 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		new PreviewMovieFrame(owner, data).setVisible(true);
 	}
 
-	private void initListener(CCMovie mov) {
-		final Tuple<CCMovie, PreviewMovieFrame> d = Tuple.Create(mov, this);
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosed(WindowEvent e) {
-				super.windowClosed(e);
-				_activeFrames.remove(d);
-			}
-		});
-		_activeFrames.add(d);
-	}
-	
-	private void initGUI() {
-		setMinimumSize(new Dimension(675, 550));
-		setSize(new Dimension(750, 615));
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("148px:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
-		
-		panel_1 = new JPanel();
-		getContentPane().add(panel_1, "2, 1, 3, 1, fill, fill"); //$NON-NLS-1$
-		panel_1.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("30dlu"), //$NON-NLS-1$
-				ColumnSpec.decode("1px"), //$NON-NLS-1$
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("231px:grow"), //$NON-NLS-1$
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("30dlu"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				FormSpecs.LINE_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
-		
-		lblViewed = new JLabel(""); //$NON-NLS-1$
-		panel_1.add(lblViewed, "1, 2, center, center"); //$NON-NLS-1$
-		
-		lblTitle = new JLabel();
-		panel_1.add(lblTitle, "4, 2, fill, center"); //$NON-NLS-1$
-		lblTitle.setText("<<DYNAMIC>>"); //$NON-NLS-1$
-		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTitle.setFont(new Font("Tahoma", Font.BOLD, 28)); //$NON-NLS-1$
-		
-		btnPlay = new JButton(Resources.ICN_MENUBAR_PLAY.get32x32());
-		panel_1.add(btnPlay, "6, 2, center, center"); //$NON-NLS-1$
-		btnPlay.addActionListener(e -> playMovie());
-		
-		lblCover = new CoverLabel(false);
-		lblCover.setPosition(10, 53);
-		getContentPane().add(lblCover, "2, 3, left, top"); //$NON-NLS-1$
-		
-		tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
-		getContentPane().add(tabbedPane, "4, 3, fill, fill"); //$NON-NLS-1$
-		
-		pnlTabMain = new JPanel();
-		tabbedPane.addTab(LocaleBundle.getString("PreviewMovieFrame.TabGeneral"), null, pnlTabMain, null); //$NON-NLS-1$
-		pnlTabMain.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("80dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("12dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("12dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("12dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("12dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("12dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("12dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("12dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("12dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("12dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("12dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("12dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("12dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("12dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
-		
-		lblTitel = new JLabel(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
-		pnlTabMain.add(lblTitel, "2, 2, fill, fill"); //$NON-NLS-1$
-		
-		lblTitle2 = new JLabel(""); //$NON-NLS-1$
-		pnlTabMain.add(lblTitle2, "4, 2, fill, fill"); //$NON-NLS-1$
-		
-		btnOnlineRef = new OnlineRefButton();
-		pnlTabMain.add(btnOnlineRef, "6, 2, 1, 3, fill, top"); //$NON-NLS-1$
-		
-		lblZyklus = new JLabel(LocaleBundle.getString("AddMovieFrame.lblZyklus.text")); //$NON-NLS-1$
-		pnlTabMain.add(lblZyklus, "2, 4, fill, fill"); //$NON-NLS-1$
-		
-		lblZyklus2 = new JLabel(""); //$NON-NLS-1$
-		pnlTabMain.add(lblZyklus2, "4, 4, fill, fill"); //$NON-NLS-1$
-		
-		lblQuality = new JLabel(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
-		pnlTabMain.add(lblQuality, "2, 6, fill, fill"); //$NON-NLS-1$
-		
-		lbl_Quality = new JLabel();
-		pnlTabMain.add(lbl_Quality, "4, 6, 3, 1, fill, fill"); //$NON-NLS-1$
-		
-		lblScore = new JLabel(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
-		pnlTabMain.add(lblScore, "2, 8, fill, fill"); //$NON-NLS-1$
-		
-		lbl_OnlineScore = new JLabel();
-		pnlTabMain.add(lbl_OnlineScore, "4, 8, 3, 1, fill, fill"); //$NON-NLS-1$
-		
-		lblLanguage = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-		pnlTabMain.add(lblLanguage, "2, 10, fill, fill"); //$NON-NLS-1$
-		
-		lbl_Language = new LanguageDisplay();
-		pnlTabMain.add(lbl_Language, "4, 10, 3, 1, fill, fill"); //$NON-NLS-1$
-		
-		lblLength = new JLabel(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
-		pnlTabMain.add(lblLength, "2, 12, fill, fill"); //$NON-NLS-1$
-		
-		lbl_Length = new JLabel();
-		pnlTabMain.add(lbl_Length, "4, 12, 3, 1, fill, fill"); //$NON-NLS-1$
-		
-		lblAdded = new JLabel(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
-		pnlTabMain.add(lblAdded, "2, 14, fill, fill"); //$NON-NLS-1$
-		
-		lbl_Added = new JLabel();
-		pnlTabMain.add(lbl_Added, "4, 14, 3, 1, fill, fill"); //$NON-NLS-1$
-		
-		lblFsk = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
-		pnlTabMain.add(lblFsk, "2, 16, fill, fill"); //$NON-NLS-1$
-		
-		lbl_FSK = new JLabel();
-		pnlTabMain.add(lbl_FSK, "4, 16, 3, 1, fill, fill"); //$NON-NLS-1$
-		
-		lblFormat = new JLabel(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
-		pnlTabMain.add(lblFormat, "2, 18, fill, fill"); //$NON-NLS-1$
-		
-		lbl_Format = new JLabel();
-		pnlTabMain.add(lbl_Format, "4, 18, 3, 1, fill, fill"); //$NON-NLS-1$
+	private void updateData() {
+		if (movie == null) return;
 
-		lblYear = new JLabel(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
-		pnlTabMain.add(lblYear, "2, 20, fill, fill"); //$NON-NLS-1$
-
-		lbl_Year = new JLabel();
-		pnlTabMain.add(lbl_Year, "4, 20, 3, 1, fill, fill"); //$NON-NLS-1$
-
-		lblSize = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
-		pnlTabMain.add(lblSize, "2, 22, fill, fill"); //$NON-NLS-1$
-
-		lbl_Size = new JLabel();
-		pnlTabMain.add(lbl_Size, "4, 22, 3, 1, fill, fill"); //$NON-NLS-1$
-
-		lblScore_1 = new JLabel(LocaleBundle.getString("PreviewMovieFrame.btnScore.text")); //$NON-NLS-1$
-		pnlTabMain.add(lblScore_1, "2, 24, fill, fill"); //$NON-NLS-1$
-
-		lbl_Score = new JLabel();
-		pnlTabMain.add(lbl_Score, "4, 24, 3, 1, fill, fill"); //$NON-NLS-1$
-
-		lblTags = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
-		pnlTabMain.add(lblTags, "2, 26, fill, fill"); //$NON-NLS-1$
-
-		pnlTags = new TagDisplay();
-		pnlTabMain.add(pnlTags, "4, 26, 3, 1, fill, fill"); //$NON-NLS-1$
-
-		panel = new JPanel();
-		pnlTabMain.add(panel, "2, 28, 5, 1, fill, fill"); //$NON-NLS-1$
-		panel.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("50dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("50dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("50dlu:grow"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
-
-		lblGruppen = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
-		panel.add(lblGruppen, "1, 1"); //$NON-NLS-1$
-
-		lblGenre = new JLabel(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
-		panel.add(lblGenre, "3, 1"); //$NON-NLS-1$
-
-		lblViewedHistory = new JLabel(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
-		panel.add(lblViewedHistory, "5, 1"); //$NON-NLS-1$
-
-		scrollPane_2 = new JScrollPane();
-		panel.add(scrollPane_2, "1, 3, fill, fill"); //$NON-NLS-1$
-
-		lsGroups = new JList<>();
-		scrollPane_2.setViewportView(lsGroups);
-
-		scrollPane = new JScrollPane();
-		panel.add(scrollPane, "3, 3, fill, fill"); //$NON-NLS-1$
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-		lsGenres = new JList<>();
-		scrollPane.setViewportView(lsGenres);
-
-		scrollPane_1 = new JScrollPane();
-		panel.add(scrollPane_1, "5, 3, fill, fill"); //$NON-NLS-1$
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-		lsHistory = new JList<>();
-		scrollPane_1.setViewportView(lsHistory);
-
-		pnlTabMediaInfo = new JPanel();
-		tabbedPane.addTab(LocaleBundle.getString("PreviewMovieFrame.TabMediaInfo"), null, pnlTabMediaInfo, null); //$NON-NLS-1$
-		pnlTabMediaInfo.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.PREF_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.PREF_ROWSPEC,}));
-
-		pnlMI_General = new JPanel();
-		pnlMI_General.setBorder(new TitledBorder(null, LocaleBundle.getString("EditMediaInfoDialog.header1"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
-		pnlTabMediaInfo.add(pnlMI_General, "2, 2, 3, 1, fill, fill"); //$NON-NLS-1$
-		pnlMI_General.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
-
-		lblCdate = new JLabel("CDate"); //$NON-NLS-1$
-		pnlMI_General.add(lblCdate, "2, 2, right, default"); //$NON-NLS-1$
-
-		edMI_CDate = new ReadableTextField();
-		pnlMI_General.add(edMI_CDate, "4, 2, fill, default"); //$NON-NLS-1$
-		edMI_CDate.setColumns(10);
-
-		lblMdate = new JLabel("MDate"); //$NON-NLS-1$
-		pnlMI_General.add(lblMdate, "2, 4, right, default"); //$NON-NLS-1$
-
-		edMI_MDate = new ReadableTextField();
-		pnlMI_General.add(edMI_MDate, "4, 4, fill, default"); //$NON-NLS-1$
-		edMI_MDate.setColumns(10);
-
-		lblFilesize = new JLabel("Filesize"); //$NON-NLS-1$
-		pnlMI_General.add(lblFilesize, "2, 6, right, default"); //$NON-NLS-1$
-
-		edMI_Filesize = new ReadableTextField();
-		pnlMI_General.add(edMI_Filesize, "4, 6, fill, default"); //$NON-NLS-1$
-		edMI_Filesize.setColumns(10);
-
-		lblDuration = new JLabel("Duration"); //$NON-NLS-1$
-		pnlMI_General.add(lblDuration, "2, 8, right, default"); //$NON-NLS-1$
-
-		edMI_Duration = new ReadableTextField();
-		pnlMI_General.add(edMI_Duration, "4, 8, fill, default"); //$NON-NLS-1$
-		edMI_Duration.setColumns(10);
-
-		lblBitrate = new JLabel("Bitrate"); //$NON-NLS-1$
-		pnlMI_General.add(lblBitrate, "2, 10, right, default"); //$NON-NLS-1$
-
-		edMI_Bitrate = new ReadableTextField();
-		pnlMI_General.add(edMI_Bitrate, "4, 10, fill, default"); //$NON-NLS-1$
-		edMI_Bitrate.setColumns(10);
-
-		pnlMI_Video = new JPanel();
-		pnlMI_Video.setBorder(new TitledBorder(null, LocaleBundle.getString("EditMediaInfoDialog.header2"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
-		pnlTabMediaInfo.add(pnlMI_Video, "2, 4, fill, fill"); //$NON-NLS-1$
-		pnlMI_Video.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
-
-		lblFormat_1 = new JLabel("Format"); //$NON-NLS-1$
-		pnlMI_Video.add(lblFormat_1, "2, 2, right, default"); //$NON-NLS-1$
-
-		edMI_VideoFormat = new ReadableTextField();
-		pnlMI_Video.add(edMI_VideoFormat, "4, 2, fill, default"); //$NON-NLS-1$
-		edMI_VideoFormat.setColumns(10);
-
-		lblWidthHeight = new JLabel("Resolution"); //$NON-NLS-1$
-		pnlMI_Video.add(lblWidthHeight, "2, 4, right, default"); //$NON-NLS-1$
-
-		edMI_VideoResolution = new ReadableTextField();
-		pnlMI_Video.add(edMI_VideoResolution, "4, 4, fill, default"); //$NON-NLS-1$
-		edMI_VideoResolution.setColumns(10);
-
-		lblFramerate = new JLabel("Framerate"); //$NON-NLS-1$
-		pnlMI_Video.add(lblFramerate, "2, 6, right, default"); //$NON-NLS-1$
-
-		edMI_VideoFramerate = new ReadableTextField();
-		pnlMI_Video.add(edMI_VideoFramerate, "4, 6, fill, default"); //$NON-NLS-1$
-		edMI_VideoFramerate.setColumns(10);
-
-		lblBitdepth = new JLabel("Bitdepth"); //$NON-NLS-1$
-		pnlMI_Video.add(lblBitdepth, "2, 8, right, default"); //$NON-NLS-1$
-
-		edMI_VideoBitdepth = new ReadableTextField();
-		pnlMI_Video.add(edMI_VideoBitdepth, "4, 8, fill, default"); //$NON-NLS-1$
-		edMI_VideoBitdepth.setColumns(10);
-
-		lblFramecount = new JLabel("Framecount"); //$NON-NLS-1$
-		pnlMI_Video.add(lblFramecount, "2, 10, right, default"); //$NON-NLS-1$
-
-		edMI_VideoFramecount = new ReadableTextField();
-		pnlMI_Video.add(edMI_VideoFramecount, "4, 10, fill, default"); //$NON-NLS-1$
-		edMI_VideoFramecount.setColumns(10);
-
-		lblCodec = new JLabel("Codec"); //$NON-NLS-1$
-		pnlMI_Video.add(lblCodec, "2, 12, right, default"); //$NON-NLS-1$
-
-		edMI_VideoCodec = new ReadableTextField();
-		pnlMI_Video.add(edMI_VideoCodec, "4, 12, fill, default"); //$NON-NLS-1$
-		edMI_VideoCodec.setColumns(10);
-
-		pnlMI_Audio = new JPanel();
-		pnlMI_Audio.setBorder(new TitledBorder(null, LocaleBundle.getString("EditMediaInfoDialog.header3"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
-		pnlTabMediaInfo.add(pnlMI_Audio, "4, 4, fill, fill"); //$NON-NLS-1$
-		pnlMI_Audio.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
-
-		lblFormat_2 = new JLabel("Format"); //$NON-NLS-1$
-		pnlMI_Audio.add(lblFormat_2, "2, 2, right, default"); //$NON-NLS-1$
-
-		edMI_AudioFormat = new ReadableTextField();
-		pnlMI_Audio.add(edMI_AudioFormat, "4, 2, fill, default"); //$NON-NLS-1$
-		edMI_AudioFormat.setColumns(10);
-
-		lblChannels = new JLabel("Channels"); //$NON-NLS-1$
-		pnlMI_Audio.add(lblChannels, "2, 4, right, default"); //$NON-NLS-1$
-
-		edMI_AudioChannels = new ReadableTextField();
-		pnlMI_Audio.add(edMI_AudioChannels, "4, 4, fill, default"); //$NON-NLS-1$
-		edMI_AudioChannels.setColumns(10);
-
-		lblCodec_1 = new JLabel("Codec"); //$NON-NLS-1$
-		pnlMI_Audio.add(lblCodec_1, "2, 6, right, default"); //$NON-NLS-1$
-
-		edMI_AudioCodec = new ReadableTextField();
-		pnlMI_Audio.add(edMI_AudioCodec, "4, 6, fill, default"); //$NON-NLS-1$
-		edMI_AudioCodec.setColumns(10);
-
-		lblSamplerate = new JLabel("Samplerate"); //$NON-NLS-1$
-		pnlMI_Audio.add(lblSamplerate, "2, 8, right, default"); //$NON-NLS-1$
-
-		edMI_AudioSamplerate = new ReadableTextField();
-		pnlMI_Audio.add(edMI_AudioSamplerate, "4, 8, fill, default"); //$NON-NLS-1$
-		edMI_AudioSamplerate.setColumns(10);
-
-		pnlTabPaths = new JPanel();
-		tabbedPane.addTab(LocaleBundle.getString("PreviewMovieFrame.TabPaths"), null, pnlTabPaths, null); //$NON-NLS-1$
-		pnlTabPaths.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("16dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("16dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,}));
-
-		edPart0 = new JReadableCCPathTextField();
-		pnlTabPaths.add(edPart0, "2, 2, fill, center"); //$NON-NLS-1$
-		edPart0.setColumns(10);
-
-		btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
-		btnMediaInfo1.addActionListener((e) -> showMediaInfo(0));
-		pnlTabPaths.add(btnMediaInfo1, "4, 2, fill, fill"); //$NON-NLS-1$
-
-		btnOpenDir1 = new JButton(Resources.ICN_MENUBAR_FOLDER.get16x16());
-		btnOpenDir1.addActionListener((e) -> openDir(0));
-		pnlTabPaths.add(btnOpenDir1, "6, 2, fill, fill"); //$NON-NLS-1$
-
-		edPart1 = new JReadableCCPathTextField();
-		pnlTabPaths.add(edPart1, "2, 4, fill, center"); //$NON-NLS-1$
-		edPart1.setColumns(10);
-
-		btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
-		btnMediaInfo2.addActionListener((e) -> showMediaInfo(1));
-		pnlTabPaths.add(btnMediaInfo2, "4, 4, fill, fill"); //$NON-NLS-1$
-
-		btnOpenDir2 = new JButton(Resources.ICN_MENUBAR_FOLDER.get16x16());
-		btnOpenDir2.addActionListener((e) -> openDir(1));
-		pnlTabPaths.add(btnOpenDir2, "6, 4, fill, fill"); //$NON-NLS-1$
-
-		edPart2 = new JReadableCCPathTextField();
-		pnlTabPaths.add(edPart2, "2, 6, fill, center"); //$NON-NLS-1$
-		edPart2.setColumns(10);
-
-		btnMediaInfo3 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
-		btnMediaInfo3.addActionListener((e) -> showMediaInfo(2));
-		pnlTabPaths.add(btnMediaInfo3, "4, 6, fill, fill"); //$NON-NLS-1$
-
-		btnOpenDir3 = new JButton(Resources.ICN_MENUBAR_FOLDER.get16x16());
-		btnOpenDir3.addActionListener((e) -> openDir(2));
-		pnlTabPaths.add(btnOpenDir3, "6, 6, fill, fill"); //$NON-NLS-1$
-
-		edPart3 = new JReadableCCPathTextField();
-		pnlTabPaths.add(edPart3, "2, 8, fill, center"); //$NON-NLS-1$
-		edPart3.setColumns(10);
-
-		btnMediaInfo4 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
-		btnMediaInfo4.addActionListener((e) -> showMediaInfo(3));
-		pnlTabPaths.add(btnMediaInfo4, "4, 8, fill, fill"); //$NON-NLS-1$
-
-		btnOpenDir4 = new JButton(Resources.ICN_MENUBAR_FOLDER.get16x16());
-		btnOpenDir4.addActionListener((e) -> openDir(3));
-		pnlTabPaths.add(btnOpenDir4, "6, 8, fill, fill"); //$NON-NLS-1$
-
-		edPart4 = new JReadableCCPathTextField();
-		pnlTabPaths.add(edPart4, "2, 10, fill, center"); //$NON-NLS-1$
-		edPart4.setColumns(10);
-
-		btnMediaInfo5 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
-		btnMediaInfo5.addActionListener((e) -> showMediaInfo(4));
-		pnlTabPaths.add(btnMediaInfo5, "4, 10, fill, fill"); //$NON-NLS-1$
-
-		btnOpenDir5 = new JButton(Resources.ICN_MENUBAR_FOLDER.get16x16());
-		btnOpenDir5.addActionListener((e) -> openDir(4));
-		pnlTabPaths.add(btnOpenDir5, "6, 10, fill, fill"); //$NON-NLS-1$
-
-		edPart5 = new JReadableCCPathTextField();
-		pnlTabPaths.add(edPart5, "2, 12, fill, center"); //$NON-NLS-1$
-		edPart5.setColumns(10);
-
-		btnMediaInfo6 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
-		btnMediaInfo6.addActionListener((e) -> showMediaInfo(5));
-		pnlTabPaths.add(btnMediaInfo6, "4, 12, fill, fill"); //$NON-NLS-1$
-
-		btnOpenDir6 = new JButton(Resources.ICN_MENUBAR_FOLDER.get16x16());
-		btnOpenDir6.addActionListener((e) -> openDir(5));
-		pnlTabPaths.add(btnOpenDir6, "6, 12, fill, fill"); //$NON-NLS-1$
-		
-		pnlTabHistory = new JPanel();
-		tabbedPane.addTab(LocaleBundle.getString("PreviewMovieFrame.TabHistory"), null, pnlTabHistory, null); //$NON-NLS-1$
-		pnlTabHistory.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("1dlu:grow(1)"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
-		
-		tabHistoryEntries = new PMHistoryTableEntries(elem -> {
-			if (elem == null) {
-				tabHistoryChanges.clearData();
-			} else {
-				tabHistoryChanges.setData(CCStreams.iterate(elem.Changes).autosortByProperty(p -> p.Field.toLowerCase()).enumerate());
-				tabHistoryChanges.autoResize();
-			}
-		});
-		pnlTabHistory.add(tabHistoryEntries, "2, 2, fill, fill"); //$NON-NLS-1$
-		tabHistoryEntries.autoResize();
-		
-		tabHistoryChanges = new PMHistoryTableChanges();
-		pnlTabHistory.add(tabHistoryChanges, "2, 4, fill, fill"); //$NON-NLS-1$
-		tabHistoryChanges.autoResize();
-		
-		btnQueryHistory = new JButton(LocaleBundle.getString("PreviewMovieFrame.btnQuery")); //$NON-NLS-1$
-		btnQueryHistory.addActionListener(this::queryHistory);
-		pnlTabHistory.add(btnQueryHistory, "2, 6, right, center"); //$NON-NLS-1$
-	}
-
-	private void queryHistory(ActionEvent evt) {
-		try {
-			List<CCCombinedHistoryEntry> data = movie.getMovieList().getHistory().query(movie.getMovieList(), false, false, false, true, null, null, Integer.toString(movie.getLocalID()));
-			tabHistoryEntries.setData(data);
-			tabHistoryChanges.clearData();
-			tabHistoryEntries.autoResize();
-		} catch (CCFormatException e) {
-			CCLog.addError(e);
-			DialogHelper.showLocalError(this, "Dialogs.GenericError"); //$NON-NLS-1$
-		}
-	}
-
-	private void playMovie() {
-		movie.play(PreviewMovieFrame.this, true);
-	}
-
-	private void updateFields() {
 		if (Main.DEBUG) {
 			setTitle("<" + movie.getLocalID() + "> " + movie.getCompleteTitle() + " (" + movie.getCoverID() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else {
 			setTitle(movie.getCompleteTitle());
 		}
-		
+
 		lblCover.setAndResizeCover(movie.getCover());
-		lblTitle.setText(movie.getCompleteTitle());
-		
-		lblTitle2.setText(movie.getTitle());
-		lblZyklus2.setText(movie.getZyklus().isEmpty() ? Str.Empty : movie.getZyklus().getFormatted());
-		
+		lblHeaderTitle.setText(movie.getCompleteTitle());
+
+		lblTitle.setText(movie.getTitle());
+		lblZyklus.setText(movie.getZyklus().isEmpty() ? Str.Empty : movie.getZyklus().getFormatted());
+
 		lblViewed.setIcon(movie.isViewed()?Resources.ICN_TABLE_VIEWED_TRUE.get():null);
-		
+
 		CCQualityCategory qcat = movie.getMediaInfoCategory();
-		lbl_Quality.setIcon(qcat.getIcon());
-		lbl_Quality.setText(qcat.getShortText());
-		lbl_Quality.setToolTipText(qcat.getTooltip());
-		
-		lbl_Language.setValue(movie.getLanguage());
-		
-		lbl_Length.setText(TimeIntervallFormatter.formatPointed(movie.getLength()));
-		
-		lbl_Added.setText(movie.getAddDate().toStringUINormal());
-		
-		lbl_FSK.setIcon(movie.getFSK().getIcon());
-		lbl_FSK.setText(movie.getFSK().asString());
-		
-		lbl_Format.setIcon(movie.getFormat().getIcon());
-		lbl_Format.setText(movie.getFormat().asString());
-		
-		lbl_Year.setText(movie.getYear() + ""); //$NON-NLS-1$
-		
-		lbl_Score.setIcon(movie.Score.get().getIcon());
-		lbl_Score.setToolTipText(movie.Score.get().asString());
-		
-		lbl_Size.setText(FileSizeFormatter.format(movie.getFilesize()));
-		
-		pnlTags.setValue(movie.getTags());
-		
-		lbl_OnlineScore.setIcon(movie.getOnlinescore().getIcon());
-		
+		lblQualityIcon.setIcon(qcat.getIcon());
+		lblQuality.setText(qcat.getShortText());
+		lblQuality.setToolTipText(qcat.getTooltip());
+
+		lblLanguage.setValue(movie.getLanguage());
+
+		lblLength.setText(TimeIntervallFormatter.formatPointed(movie.getLength()));
+
+		lblAdded.setText(movie.getAddDate().toStringUINormal());
+
+		lblFSKIcon.setIcon(movie.getFSK().getIcon());
+		lblFSK.setText(movie.getFSK().asString());
+
+		lblFormatIcon.setIcon(movie.getFormat().getIcon());
+		lblFormat.setText(movie.getFormat().asString());
+
+		lblYear.setText(movie.getYear() + ""); //$NON-NLS-1$
+
+		lblUserScoreIcon.setIcon(movie.Score.get().getIcon());
+		lblUserScore.setToolTipText(movie.Score.get().asString());
+
+		lblSize.setText(FileSizeFormatter.format(movie.getFilesize()));
+
+		lblTags.setValue(movie.getTags());
+
+		lblOnlineScore.setOnlineScore(movie.getOnlinescore());
+
 		DefaultListModel<String> dlsmGenre;
 		lsGenres.setModel(dlsmGenre = new DefaultListModel<>());
 		for (int i = 0; i < movie.Genres.get().getGenreCount(); i++) {
@@ -805,65 +154,73 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 		for (CCGroup group : movie.getGroups()) {
 			dlsmGroups.addElement(group.Name);
 		}
-				
+
 		edPart0.setPath(movie.Parts.get(0));
 		edPart1.setPath(movie.Parts.get(1));
 		edPart2.setPath(movie.Parts.get(2));
 		edPart3.setPath(movie.Parts.get(3));
 		edPart4.setPath(movie.Parts.get(4));
 		edPart5.setPath(movie.Parts.get(5));
-		
+
 		DefaultListModel<String> dlsmViewed;
 		lsHistory.setModel(dlsmViewed = new DefaultListModel<>());
 		for (CCDateTime dt : movie.ViewedHistory.get().ccstream()) {
 			dlsmViewed.addElement(dt.toStringUINormal());
 		}
-		
+
 		btnOnlineRef.setValue(movie.getOnlineReference());
-		
+
 		CCMediaInfo mi = movie.mediaInfo().get();
 
-		edMI_CDate.setText(mi.isUnset() ? Str.Empty : CCDateTime.createFromFileTimestamp(mi.getCDate(), TimeZone.getDefault()).toStringISO());
-		edMI_MDate.setText(mi.isUnset() ? Str.Empty : CCDateTime.createFromFileTimestamp(mi.getMDate(), TimeZone.getDefault()).toStringISO());
+		edMI_CDate   .setText(mi.isUnset() ? Str.Empty : CCDateTime.createFromFileTimestamp(mi.getCDate(), TimeZone.getDefault()).toStringISO());
+		edMI_MDate   .setText(mi.isUnset() ? Str.Empty : CCDateTime.createFromFileTimestamp(mi.getMDate(), TimeZone.getDefault()).toStringISO());
 		edMI_Filesize.setText(mi.isUnset() ? Str.Empty : FileSizeFormatter.formatPrecise(mi.getFilesize()));
 		edMI_Duration.setText(mi.isUnset() ? Str.Empty : TimeIntervallFormatter.formatSeconds(mi.getDuration()));
-		edMI_Bitrate.setText(mi.isUnset() ? Str.Empty : Str.spacegroupformat(mi.getNormalizedBitrate()) + " kbit/s"); //$NON-NLS-1$
+		edMI_Bitrate .setText(mi.isUnset() ? Str.Empty : Str.spacegroupformat(mi.getNormalizedBitrate()) + " kbit/s"); //$NON-NLS-1$
 
-		edMI_VideoFormat.setText(mi.isUnset() ? Str.Empty : mi.getVideoFormat());
+		edMI_VideoFormat    .setText(mi.isUnset() ? Str.Empty : mi.getVideoFormat());
 		edMI_VideoResolution.setText(mi.isUnset() ? Str.Empty : Str.format("{0,number,#} x {1,number,#}", mi.getWidth(), mi.getHeight())); //$NON-NLS-1$
-		edMI_VideoFramerate.setText(mi.isUnset() ? Str.Empty : String.valueOf((int)Math.round(mi.getFramerate())));
-		edMI_VideoBitdepth.setText(mi.isUnset() ? Str.Empty : String.valueOf(mi.getBitdepth()));
+		edMI_VideoFramerate .setText(mi.isUnset() ? Str.Empty : String.valueOf((int)Math.round(mi.getFramerate())));
+		edMI_VideoBitdepth  .setText(mi.isUnset() ? Str.Empty : String.valueOf(mi.getBitdepth()));
 		edMI_VideoFramecount.setText(mi.isUnset() ? Str.Empty : Str.spacegroupformat(mi.getFramecount()));
-		edMI_VideoCodec.setText(mi.isUnset() ? Str.Empty : mi.getVideoCodec());
+		edMI_VideoCodec     .setText(mi.isUnset() ? Str.Empty : mi.getVideoCodec());
 
-		edMI_AudioFormat.setText(mi.isUnset() ? Str.Empty : mi.getAudioFormat());
-		edMI_AudioChannels.setText(mi.isUnset() ? Str.Empty : String.valueOf(mi.getAudioChannels()));
-		edMI_AudioCodec.setText(mi.isUnset() ? Str.Empty : mi.getAudioCodec());
+		edMI_AudioFormat    .setText(mi.isUnset() ? Str.Empty : mi.getAudioFormat());
+		edMI_AudioChannels  .setText(mi.isUnset() ? Str.Empty : String.valueOf(mi.getAudioChannels()));
+		edMI_AudioCodec     .setText(mi.isUnset() ? Str.Empty : mi.getAudioCodec());
 		edMI_AudioSamplerate.setText(mi.isUnset() ? Str.Empty : Str.spacegroupformat(mi.getAudioSamplerate()));
 
-		btnMediaInfo1.setEnabled(!movie.Parts.get(0).isEmpty());
-		btnOpenDir1  .setEnabled(!movie.Parts.get(0).isEmpty());
+		btnMediaInfo0.setEnabled(!movie.Parts.get(0).isEmpty());
+		btnOpenDir0  .setEnabled(!movie.Parts.get(0).isEmpty());
 
-		btnMediaInfo2.setEnabled(!movie.Parts.get(1).isEmpty());
-		btnOpenDir2  .setEnabled(!movie.Parts.get(1).isEmpty());
+		btnMediaInfo1.setEnabled(!movie.Parts.get(1).isEmpty());
+		btnOpenDir1  .setEnabled(!movie.Parts.get(1).isEmpty());
 
-		btnMediaInfo3.setEnabled(!movie.Parts.get(2).isEmpty());
-		btnOpenDir3  .setEnabled(!movie.Parts.get(2).isEmpty());
+		btnMediaInfo2.setEnabled(!movie.Parts.get(2).isEmpty());
+		btnOpenDir2  .setEnabled(!movie.Parts.get(2).isEmpty());
 
-		btnMediaInfo4.setEnabled(!movie.Parts.get(3).isEmpty());
-		btnOpenDir4  .setEnabled(!movie.Parts.get(3).isEmpty());
+		btnMediaInfo3.setEnabled(!movie.Parts.get(3).isEmpty());
+		btnOpenDir3  .setEnabled(!movie.Parts.get(3).isEmpty());
 
-		btnMediaInfo5.setEnabled(!movie.Parts.get(4).isEmpty());
-		btnOpenDir5  .setEnabled(!movie.Parts.get(4).isEmpty());
+		btnMediaInfo4.setEnabled(!movie.Parts.get(4).isEmpty());
+		btnOpenDir4  .setEnabled(!movie.Parts.get(4).isEmpty());
 
-		btnMediaInfo6.setEnabled(!movie.Parts.get(5).isEmpty());
-		btnOpenDir6  .setEnabled(!movie.Parts.get(5).isEmpty());
-
+		btnMediaInfo5.setEnabled(!movie.Parts.get(5).isEmpty());
+		btnOpenDir5  .setEnabled(!movie.Parts.get(5).isEmpty());
 	}
 
 	@Override
 	public void onUpdate(Object o) {
-		updateFields();
+		updateData();
+	}
+
+	private void onHistorySelected(PMHSelectionListener.PMHSelectionEvent e) {
+		if (e.Entry == null) {
+			tabHistoryChanges.clearData();
+		} else {
+			tabHistoryChanges.setData(CCStreams.iterate(e.Entry.Changes).autosortByProperty(p -> p.Field.toLowerCase()).enumerate());
+			tabHistoryChanges.autoResize();
+		}
 	}
 
 	private void showMediaInfo(int index) {
@@ -884,4 +241,704 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener 
 	private void openDir(int index) {
 		FilesystemUtils.showInExplorer(movie.Parts.get(index).toFSPath());
 	}
+
+	private void onWindowClosed() {
+		_activeFrames.removeIf(p -> p.Item2 == this);
+	}
+
+	private void playMovie() {
+		movie.play(PreviewMovieFrame.this, true);
+	}
+
+	private void playMovieNoHistory() {
+		movie.play(PreviewMovieFrame.this, false);
+	}
+
+	private void queryHistory() {
+		try {
+			var data = movie.getMovieList().getHistory().query(movie.getMovieList(), false, false, false, true, null, null, Integer.toString(movie.getLocalID()));
+			tabHistoryEntries.setData(data);
+			tabHistoryChanges.clearData();
+			tabHistoryEntries.autoResize();
+		} catch (CCFormatException e) {
+			CCLog.addError(e);
+			DialogHelper.showLocalError(this, "Dialogs.GenericError"); //$NON-NLS-1$
+		}
+	}
+
+	private void onShowMediaInfo0() {
+		showMediaInfo(0);
+	}
+
+	private void onShowMediaInfo1() {
+		showMediaInfo(1);
+	}
+
+	private void onShowMediaInfo2() {
+		showMediaInfo(2);
+	}
+
+	private void onShowMediaInfo3() {
+		showMediaInfo(3);
+	}
+
+	private void onShowMediaInfo4() {
+		showMediaInfo(4);
+	}
+
+	private void onShowMediaInfo5() {
+		showMediaInfo(5);
+	}
+
+	private void onOpenDir0() {
+		openDir(0);
+	}
+
+	private void onOpenDir1() {
+		openDir(1);
+	}
+
+	private void onOpenDir2() {
+		openDir(2);
+	}
+
+	private void onOpenDir3() {
+		openDir(3);
+	}
+
+	private void onOpenDir4() {
+		openDir(4);
+	}
+
+	private void onOpenDir5() {
+		openDir(5);
+	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		pnlTop = new JPanel();
+		lblViewed = new JLabel();
+		lblHeaderTitle = new JLabel();
+		btnPlay = new JPlayButton();
+		btnPlayNoHistory = new JPlayButton();
+		pnlLeft = new JPanel();
+		lblCover = new CoverLabelFullsize();
+		tabbedPane1 = new JTabbedPane();
+		pnlTabMain = new JPanel();
+		label1 = new JLabel();
+		lblTitle = new JLabel();
+		btnOnlineRef = new OnlineRefButton();
+		label2 = new JLabel();
+		lblZyklus = new JLabel();
+		label3 = new JLabel();
+		lblQualityIcon = new JLabel();
+		lblQuality = new JLabel();
+		label4 = new JLabel();
+		lblOnlineScore = new OnlineScoreDisplay();
+		label5 = new JLabel();
+		lblLanguage = new LanguageDisplay();
+		label6 = new JLabel();
+		lblLength = new JLabel();
+		label19 = new JLabel();
+		lblAdded = new JLabel();
+		label8 = new JLabel();
+		lblFSKIcon = new JLabel();
+		lblFSK = new JLabel();
+		label9 = new JLabel();
+		lblFormatIcon = new JLabel();
+		lblFormat = new JLabel();
+		label10 = new JLabel();
+		lblYear = new JLabel();
+		label11 = new JLabel();
+		lblSize = new JLabel();
+		label12 = new JLabel();
+		lblUserScoreIcon = new JLabel();
+		lblUserScore = new JLabel();
+		label13 = new JLabel();
+		lblTags = new TagDisplay();
+		panel6 = new JPanel();
+		label14 = new JLabel();
+		label15 = new JLabel();
+		label16 = new JLabel();
+		scrollPane1 = new JScrollPane();
+		lsGroups = new JList<>();
+		scrollPane2 = new JScrollPane();
+		lsGenres = new JList<>();
+		scrollPane3 = new JScrollPane();
+		lsHistory = new JList<>();
+		pnlTabMediaInfo = new JPanel();
+		panel7 = new JPanel();
+		label17 = new JLabel();
+		edMI_CDate = new ReadableTextField();
+		label18 = new JLabel();
+		edMI_MDate = new ReadableTextField();
+		label20 = new JLabel();
+		edMI_Filesize = new ReadableTextField();
+		label21 = new JLabel();
+		edMI_Duration = new ReadableTextField();
+		label22 = new JLabel();
+		edMI_Bitrate = new ReadableTextField();
+		panel8 = new JPanel();
+		label23 = new JLabel();
+		edMI_VideoFormat = new ReadableTextField();
+		label24 = new JLabel();
+		edMI_VideoResolution = new ReadableTextField();
+		label25 = new JLabel();
+		edMI_VideoFramerate = new ReadableTextField();
+		label26 = new JLabel();
+		edMI_VideoBitdepth = new ReadableTextField();
+		label27 = new JLabel();
+		edMI_VideoFramecount = new ReadableTextField();
+		label28 = new JLabel();
+		edMI_VideoCodec = new ReadableTextField();
+		panel9 = new JPanel();
+		label29 = new JLabel();
+		edMI_AudioFormat = new ReadableTextField();
+		label30 = new JLabel();
+		edMI_AudioChannels = new ReadableTextField();
+		label31 = new JLabel();
+		edMI_AudioCodec = new ReadableTextField();
+		label32 = new JLabel();
+		edMI_AudioSamplerate = new ReadableTextField();
+		pnlTabPaths = new JPanel();
+		edPart0 = new JReadableCCPathTextField();
+		btnMediaInfo0 = new JMediaInfoButton();
+		btnOpenDir0 = new JOpenFolderButton();
+		edPart1 = new JReadableCCPathTextField();
+		btnMediaInfo1 = new JMediaInfoButton();
+		btnOpenDir1 = new JOpenFolderButton();
+		edPart2 = new JReadableCCPathTextField();
+		btnMediaInfo2 = new JMediaInfoButton();
+		btnOpenDir2 = new JOpenFolderButton();
+		edPart3 = new JReadableCCPathTextField();
+		btnMediaInfo3 = new JMediaInfoButton();
+		btnOpenDir3 = new JOpenFolderButton();
+		edPart4 = new JReadableCCPathTextField();
+		btnMediaInfo4 = new JMediaInfoButton();
+		btnOpenDir4 = new JOpenFolderButton();
+		edPart5 = new JReadableCCPathTextField();
+		btnMediaInfo5 = new JMediaInfoButton();
+		btnOpenDir5 = new JOpenFolderButton();
+		pnlTabHistory = new JPanel();
+		tabHistoryEntries = new PMHistoryTableEntries();
+		tabHistoryChanges = new PMHistoryTableChanges();
+		btnQueryHistory = new JButton();
+
+		//======== this ========
+		setTitle("<dynamic>"); //$NON-NLS-1$
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setMinimumSize(new Dimension(675, 550));
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				onWindowClosed();
+			}
+		});
+		var contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$ugap, default, $lcgap, default:grow, $ugap", //$NON-NLS-1$
+			"$ugap, default, $ugap, default:grow, $ugap")); //$NON-NLS-1$
+
+		//======== pnlTop ========
+		{
+			pnlTop.setLayout(new FormLayout(
+				"63dlu, $lcgap, 0dlu:grow, 2*($lcgap, 30dlu)", //$NON-NLS-1$
+				"default")); //$NON-NLS-1$
+			pnlTop.add(lblViewed, CC.xy(1, 1, CC.FILL, CC.FILL));
+
+			//---- lblHeaderTitle ----
+			lblHeaderTitle.setText("<dynamic>"); //$NON-NLS-1$
+			lblHeaderTitle.setFont(lblHeaderTitle.getFont().deriveFont(lblHeaderTitle.getFont().getStyle() | Font.BOLD, 28f));
+			lblHeaderTitle.setHorizontalAlignment(SwingConstants.CENTER);
+			pnlTop.add(lblHeaderTitle, CC.xy(3, 1));
+
+			//---- btnPlay ----
+			btnPlay.addActionListener(e -> playMovie());
+			pnlTop.add(btnPlay, CC.xy(5, 1, CC.DEFAULT, CC.FILL));
+
+			//---- btnPlayNoHistory ----
+			btnPlayNoHistory.setMode(JPlayButton.Mode.PLAY_HIDDEN);
+			btnPlayNoHistory.addActionListener(e -> playMovieNoHistory());
+			pnlTop.add(btnPlayNoHistory, CC.xy(7, 1, CC.DEFAULT, CC.FILL));
+		}
+		contentPane.add(pnlTop, CC.xywh(2, 2, 3, 1, CC.FILL, CC.FILL));
+
+		//======== pnlLeft ========
+		{
+			pnlLeft.setLayout(new FormLayout(
+				"default:grow", //$NON-NLS-1$
+				"default, $lgap, default")); //$NON-NLS-1$
+			pnlLeft.add(lblCover, CC.xy(1, 1));
+		}
+		contentPane.add(pnlLeft, CC.xy(2, 4, CC.FILL, CC.FILL));
+
+		//======== tabbedPane1 ========
+		{
+			tabbedPane1.setTabPlacement(SwingConstants.BOTTOM);
+
+			//======== pnlTabMain ========
+			{
+				pnlTabMain.setLayout(new FormLayout(
+					"2*($lcgap, default), $lcgap, default:grow, $lcgap, 80dlu, $lcgap", //$NON-NLS-1$
+					"13*($lgap, default), $lgap, default:grow")); //$NON-NLS-1$
+
+				//---- label1 ----
+				label1.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
+				pnlTabMain.add(label1, CC.xy(2, 2));
+
+				//---- lblTitle ----
+				lblTitle.setText("<dynamic>"); //$NON-NLS-1$
+				pnlTabMain.add(lblTitle, CC.xy(6, 2));
+				pnlTabMain.add(btnOnlineRef, CC.xywh(8, 2, 1, 3, CC.DEFAULT, CC.TOP));
+
+				//---- label2 ----
+				label2.setText(LocaleBundle.getString("AddMovieFrame.lblZyklus.text")); //$NON-NLS-1$
+				pnlTabMain.add(label2, CC.xy(2, 4));
+
+				//---- lblZyklus ----
+				lblZyklus.setText("<dynamic>"); //$NON-NLS-1$
+				pnlTabMain.add(lblZyklus, CC.xy(6, 4));
+
+				//---- label3 ----
+				label3.setText(LocaleBundle.getString("AddMovieFrame.lblQuality.text")); //$NON-NLS-1$
+				pnlTabMain.add(label3, CC.xy(2, 6));
+				pnlTabMain.add(lblQualityIcon, CC.xy(4, 6, CC.FILL, CC.FILL));
+
+				//---- lblQuality ----
+				lblQuality.setText("<dynamic>"); //$NON-NLS-1$
+				pnlTabMain.add(lblQuality, CC.xy(6, 6));
+
+				//---- label4 ----
+				label4.setText(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
+				pnlTabMain.add(label4, CC.xy(2, 8));
+				pnlTabMain.add(lblOnlineScore, CC.xy(6, 8));
+
+				//---- label5 ----
+				label5.setText(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
+				pnlTabMain.add(label5, CC.xy(2, 10));
+				pnlTabMain.add(lblLanguage, CC.xy(6, 10, CC.DEFAULT, CC.FILL));
+
+				//---- label6 ----
+				label6.setText(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
+				pnlTabMain.add(label6, CC.xy(2, 12));
+
+				//---- lblLength ----
+				lblLength.setText("<dynamic>"); //$NON-NLS-1$
+				pnlTabMain.add(lblLength, CC.xy(6, 12));
+
+				//---- label19 ----
+				label19.setText(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
+				pnlTabMain.add(label19, CC.xy(2, 14));
+
+				//---- lblAdded ----
+				lblAdded.setText("<dynamic>"); //$NON-NLS-1$
+				pnlTabMain.add(lblAdded, CC.xy(6, 14));
+
+				//---- label8 ----
+				label8.setText(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
+				pnlTabMain.add(label8, CC.xy(2, 16));
+				pnlTabMain.add(lblFSKIcon, CC.xy(4, 16, CC.FILL, CC.FILL));
+
+				//---- lblFSK ----
+				lblFSK.setText("<dynamic>"); //$NON-NLS-1$
+				pnlTabMain.add(lblFSK, CC.xy(6, 16));
+
+				//---- label9 ----
+				label9.setText(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
+				pnlTabMain.add(label9, CC.xy(2, 18));
+				pnlTabMain.add(lblFormatIcon, CC.xy(4, 18, CC.FILL, CC.FILL));
+
+				//---- lblFormat ----
+				lblFormat.setText("<dynamic>"); //$NON-NLS-1$
+				pnlTabMain.add(lblFormat, CC.xy(6, 18));
+
+				//---- label10 ----
+				label10.setText(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
+				pnlTabMain.add(label10, CC.xy(2, 20));
+
+				//---- lblYear ----
+				lblYear.setText("<dynamic>"); //$NON-NLS-1$
+				pnlTabMain.add(lblYear, CC.xy(6, 20));
+
+				//---- label11 ----
+				label11.setText(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
+				pnlTabMain.add(label11, CC.xy(2, 22));
+
+				//---- lblSize ----
+				lblSize.setText("<dynamic>"); //$NON-NLS-1$
+				pnlTabMain.add(lblSize, CC.xy(6, 22));
+
+				//---- label12 ----
+				label12.setText(LocaleBundle.getString("PreviewMovieFrame.btnScore.text")); //$NON-NLS-1$
+				pnlTabMain.add(label12, CC.xy(2, 24));
+				pnlTabMain.add(lblUserScoreIcon, CC.xy(4, 24, CC.FILL, CC.FILL));
+
+				//---- lblUserScore ----
+				lblUserScore.setText("<dynamic>"); //$NON-NLS-1$
+				pnlTabMain.add(lblUserScore, CC.xy(6, 24));
+
+				//---- label13 ----
+				label13.setText(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
+				pnlTabMain.add(label13, CC.xy(2, 26));
+				pnlTabMain.add(lblTags, CC.xy(6, 26, CC.DEFAULT, CC.FILL));
+
+				//======== panel6 ========
+				{
+					panel6.setLayout(new FormLayout(
+						"0dlu:grow, 2*($lcgap, 1dlu:grow)", //$NON-NLS-1$
+						"default, $lgap, default:grow")); //$NON-NLS-1$
+
+					//---- label14 ----
+					label14.setText(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
+					panel6.add(label14, CC.xy(1, 1));
+
+					//---- label15 ----
+					label15.setText(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
+					panel6.add(label15, CC.xy(3, 1));
+
+					//---- label16 ----
+					label16.setText(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
+					panel6.add(label16, CC.xy(5, 1));
+
+					//======== scrollPane1 ========
+					{
+						scrollPane1.setViewportView(lsGroups);
+					}
+					panel6.add(scrollPane1, CC.xy(1, 3, CC.FILL, CC.FILL));
+
+					//======== scrollPane2 ========
+					{
+						scrollPane2.setViewportView(lsGenres);
+					}
+					panel6.add(scrollPane2, CC.xy(3, 3, CC.FILL, CC.FILL));
+
+					//======== scrollPane3 ========
+					{
+						scrollPane3.setViewportView(lsHistory);
+					}
+					panel6.add(scrollPane3, CC.xy(5, 3, CC.FILL, CC.FILL));
+				}
+				pnlTabMain.add(panel6, CC.xywh(2, 28, 7, 1, CC.FILL, CC.FILL));
+			}
+			tabbedPane1.addTab(LocaleBundle.getString("PreviewMovieFrame.TabGeneral"), pnlTabMain); //$NON-NLS-1$
+
+			//======== pnlTabMediaInfo ========
+			{
+				pnlTabMediaInfo.setLayout(new FormLayout(
+					"0dlu:grow, $lcgap, 0dlu:grow", //$NON-NLS-1$
+					"default, $lgap, default")); //$NON-NLS-1$
+
+				//======== panel7 ========
+				{
+					panel7.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.header1"))); //$NON-NLS-1$
+					panel7.setLayout(new FormLayout(
+						"$lcgap, pref, $lcgap, default:grow, $lcgap", //$NON-NLS-1$
+						"5*($lgap, default), $lgap")); //$NON-NLS-1$
+
+					//---- label17 ----
+					label17.setText(LocaleBundle.getString("EditMediaInfoDialog.CDate")); //$NON-NLS-1$
+					panel7.add(label17, CC.xy(2, 2));
+					panel7.add(edMI_CDate, CC.xy(4, 2));
+
+					//---- label18 ----
+					label18.setText(LocaleBundle.getString("EditMediaInfoDialog.MDate")); //$NON-NLS-1$
+					panel7.add(label18, CC.xy(2, 4));
+					panel7.add(edMI_MDate, CC.xy(4, 4));
+
+					//---- label20 ----
+					label20.setText(LocaleBundle.getString("EditMediaInfoDialog.Filesize")); //$NON-NLS-1$
+					panel7.add(label20, CC.xy(2, 6));
+					panel7.add(edMI_Filesize, CC.xy(4, 6));
+
+					//---- label21 ----
+					label21.setText(LocaleBundle.getString("EditMediaInfoDialog.Duration")); //$NON-NLS-1$
+					panel7.add(label21, CC.xy(2, 8));
+					panel7.add(edMI_Duration, CC.xy(4, 8));
+
+					//---- label22 ----
+					label22.setText(LocaleBundle.getString("EditMediaInfoDialog.Bitrate")); //$NON-NLS-1$
+					panel7.add(label22, CC.xy(2, 10));
+					panel7.add(edMI_Bitrate, CC.xy(4, 10));
+				}
+				pnlTabMediaInfo.add(panel7, CC.xywh(1, 1, 3, 1));
+
+				//======== panel8 ========
+				{
+					panel8.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.header2"))); //$NON-NLS-1$
+					panel8.setLayout(new FormLayout(
+						"$lcgap, default, $lcgap, default:grow, $lcgap", //$NON-NLS-1$
+						"6*($lgap, default), $lgap")); //$NON-NLS-1$
+
+					//---- label23 ----
+					label23.setText(LocaleBundle.getString("EditMediaInfoDialog.Format")); //$NON-NLS-1$
+					panel8.add(label23, CC.xy(2, 2));
+					panel8.add(edMI_VideoFormat, CC.xy(4, 2));
+
+					//---- label24 ----
+					label24.setText(LocaleBundle.getString("EditMediaInfoDialog.Resolution")); //$NON-NLS-1$
+					panel8.add(label24, CC.xy(2, 4));
+					panel8.add(edMI_VideoResolution, CC.xy(4, 4));
+
+					//---- label25 ----
+					label25.setText(LocaleBundle.getString("EditMediaInfoDialog.Framerate")); //$NON-NLS-1$
+					panel8.add(label25, CC.xy(2, 6));
+					panel8.add(edMI_VideoFramerate, CC.xy(4, 6));
+
+					//---- label26 ----
+					label26.setText(LocaleBundle.getString("EditMediaInfoDialog.Bitdepth")); //$NON-NLS-1$
+					panel8.add(label26, CC.xy(2, 8));
+					panel8.add(edMI_VideoBitdepth, CC.xy(4, 8));
+
+					//---- label27 ----
+					label27.setText(LocaleBundle.getString("EditMediaInfoDialog.Framecount")); //$NON-NLS-1$
+					panel8.add(label27, CC.xy(2, 10));
+					panel8.add(edMI_VideoFramecount, CC.xy(4, 10));
+
+					//---- label28 ----
+					label28.setText(LocaleBundle.getString("EditMediaInfoDialog.Codec")); //$NON-NLS-1$
+					panel8.add(label28, CC.xy(2, 12));
+					panel8.add(edMI_VideoCodec, CC.xy(4, 12));
+				}
+				pnlTabMediaInfo.add(panel8, CC.xy(1, 3, CC.FILL, CC.FILL));
+
+				//======== panel9 ========
+				{
+					panel9.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.header3"))); //$NON-NLS-1$
+					panel9.setLayout(new FormLayout(
+						"$lcgap, default, $lcgap, default:grow, $lcgap", //$NON-NLS-1$
+						"4*($lgap, default), $lgap")); //$NON-NLS-1$
+
+					//---- label29 ----
+					label29.setText(LocaleBundle.getString("EditMediaInfoDialog.Format")); //$NON-NLS-1$
+					panel9.add(label29, CC.xy(2, 2));
+					panel9.add(edMI_AudioFormat, CC.xy(4, 2));
+
+					//---- label30 ----
+					label30.setText(LocaleBundle.getString("EditMediaInfoDialog.Channels")); //$NON-NLS-1$
+					panel9.add(label30, CC.xy(2, 4));
+					panel9.add(edMI_AudioChannels, CC.xy(4, 4));
+
+					//---- label31 ----
+					label31.setText(LocaleBundle.getString("EditMediaInfoDialog.Codec")); //$NON-NLS-1$
+					panel9.add(label31, CC.xy(2, 6));
+					panel9.add(edMI_AudioCodec, CC.xy(4, 6));
+
+					//---- label32 ----
+					label32.setText(LocaleBundle.getString("EditMediaInfoDialog.Samplerate")); //$NON-NLS-1$
+					panel9.add(label32, CC.xy(2, 8));
+					panel9.add(edMI_AudioSamplerate, CC.xy(4, 8));
+				}
+				pnlTabMediaInfo.add(panel9, CC.xy(3, 3, CC.FILL, CC.FILL));
+			}
+			tabbedPane1.addTab(LocaleBundle.getString("PreviewMovieFrame.TabMediaInfo"), pnlTabMediaInfo); //$NON-NLS-1$
+
+			//======== pnlTabPaths ========
+			{
+				pnlTabPaths.setLayout(new FormLayout(
+					"$lcgap, default:grow, 2*($lcgap, 16dlu), $lcgap", //$NON-NLS-1$
+					"6*($lgap, default), $lgap")); //$NON-NLS-1$
+				pnlTabPaths.add(edPart0, CC.xy(2, 2, CC.DEFAULT, CC.FILL));
+
+				//---- btnMediaInfo0 ----
+				btnMediaInfo0.setText("text"); //$NON-NLS-1$
+				btnMediaInfo0.addActionListener(e -> onShowMediaInfo0());
+				pnlTabPaths.add(btnMediaInfo0, CC.xy(4, 2));
+
+				//---- btnOpenDir0 ----
+				btnOpenDir0.setText("text"); //$NON-NLS-1$
+				btnOpenDir0.addActionListener(e -> onOpenDir0());
+				pnlTabPaths.add(btnOpenDir0, CC.xy(6, 2));
+				pnlTabPaths.add(edPart1, CC.xy(2, 4, CC.DEFAULT, CC.FILL));
+
+				//---- btnMediaInfo1 ----
+				btnMediaInfo1.setText("text"); //$NON-NLS-1$
+				btnMediaInfo1.addActionListener(e -> onShowMediaInfo1());
+				pnlTabPaths.add(btnMediaInfo1, CC.xy(4, 4));
+
+				//---- btnOpenDir1 ----
+				btnOpenDir1.setText("text"); //$NON-NLS-1$
+				btnOpenDir1.addActionListener(e -> onOpenDir1());
+				pnlTabPaths.add(btnOpenDir1, CC.xy(6, 4));
+				pnlTabPaths.add(edPart2, CC.xy(2, 6, CC.DEFAULT, CC.FILL));
+
+				//---- btnMediaInfo2 ----
+				btnMediaInfo2.setText("text"); //$NON-NLS-1$
+				btnMediaInfo2.addActionListener(e -> onShowMediaInfo2());
+				pnlTabPaths.add(btnMediaInfo2, CC.xy(4, 6));
+
+				//---- btnOpenDir2 ----
+				btnOpenDir2.setText("text"); //$NON-NLS-1$
+				btnOpenDir2.addActionListener(e -> onOpenDir2());
+				pnlTabPaths.add(btnOpenDir2, CC.xy(6, 6));
+				pnlTabPaths.add(edPart3, CC.xy(2, 8, CC.DEFAULT, CC.FILL));
+
+				//---- btnMediaInfo3 ----
+				btnMediaInfo3.setText("text"); //$NON-NLS-1$
+				btnMediaInfo3.addActionListener(e -> onShowMediaInfo3());
+				pnlTabPaths.add(btnMediaInfo3, CC.xy(4, 8));
+
+				//---- btnOpenDir3 ----
+				btnOpenDir3.setText("text"); //$NON-NLS-1$
+				btnOpenDir3.addActionListener(e -> onOpenDir3());
+				pnlTabPaths.add(btnOpenDir3, CC.xy(6, 8));
+				pnlTabPaths.add(edPart4, CC.xy(2, 10, CC.DEFAULT, CC.FILL));
+
+				//---- btnMediaInfo4 ----
+				btnMediaInfo4.setText("text"); //$NON-NLS-1$
+				btnMediaInfo4.addActionListener(e -> onShowMediaInfo4());
+				pnlTabPaths.add(btnMediaInfo4, CC.xy(4, 10));
+
+				//---- btnOpenDir4 ----
+				btnOpenDir4.setText("text"); //$NON-NLS-1$
+				btnOpenDir4.addActionListener(e -> onOpenDir4());
+				pnlTabPaths.add(btnOpenDir4, CC.xy(6, 10));
+				pnlTabPaths.add(edPart5, CC.xy(2, 12, CC.DEFAULT, CC.FILL));
+
+				//---- btnMediaInfo5 ----
+				btnMediaInfo5.setText("text"); //$NON-NLS-1$
+				btnMediaInfo5.addActionListener(e -> onShowMediaInfo5());
+				pnlTabPaths.add(btnMediaInfo5, CC.xy(4, 12));
+
+				//---- btnOpenDir5 ----
+				btnOpenDir5.setText("text"); //$NON-NLS-1$
+				btnOpenDir5.addActionListener(e -> onOpenDir5());
+				pnlTabPaths.add(btnOpenDir5, CC.xy(6, 12));
+			}
+			tabbedPane1.addTab(LocaleBundle.getString("PreviewMovieFrame.TabPaths"), pnlTabPaths); //$NON-NLS-1$
+
+			//======== pnlTabHistory ========
+			{
+				pnlTabHistory.setLayout(new FormLayout(
+					"$lcgap, default:grow, $lcgap", //$NON-NLS-1$
+					"2*($lgap, 0dlu:grow), $lgap, default, $lgap")); //$NON-NLS-1$
+
+				//======== tabHistoryEntries ========
+				{
+					tabHistoryEntries.addSelectionListener(e -> onHistorySelected(e));
+				}
+				pnlTabHistory.add(tabHistoryEntries, CC.xy(2, 2, CC.FILL, CC.FILL));
+				pnlTabHistory.add(tabHistoryChanges, CC.xy(2, 4, CC.DEFAULT, CC.FILL));
+
+				//---- btnQueryHistory ----
+				btnQueryHistory.setText(LocaleBundle.getString("PreviewMovieFrame.btnQuery")); //$NON-NLS-1$
+				btnQueryHistory.addActionListener(e -> queryHistory());
+				pnlTabHistory.add(btnQueryHistory, CC.xy(2, 6, CC.RIGHT, CC.DEFAULT));
+			}
+			tabbedPane1.addTab(LocaleBundle.getString("PreviewMovieFrame.TabHistory"), pnlTabHistory); //$NON-NLS-1$
+		}
+		contentPane.add(tabbedPane1, CC.xy(4, 4, CC.DEFAULT, CC.FILL));
+		setSize(750, 615);
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JPanel pnlTop;
+	private JLabel lblViewed;
+	private JLabel lblHeaderTitle;
+	private JPlayButton btnPlay;
+	private JPlayButton btnPlayNoHistory;
+	private JPanel pnlLeft;
+	private CoverLabelFullsize lblCover;
+	private JTabbedPane tabbedPane1;
+	private JPanel pnlTabMain;
+	private JLabel label1;
+	private JLabel lblTitle;
+	private OnlineRefButton btnOnlineRef;
+	private JLabel label2;
+	private JLabel lblZyklus;
+	private JLabel label3;
+	private JLabel lblQualityIcon;
+	private JLabel lblQuality;
+	private JLabel label4;
+	private OnlineScoreDisplay lblOnlineScore;
+	private JLabel label5;
+	private LanguageDisplay lblLanguage;
+	private JLabel label6;
+	private JLabel lblLength;
+	private JLabel label19;
+	private JLabel lblAdded;
+	private JLabel label8;
+	private JLabel lblFSKIcon;
+	private JLabel lblFSK;
+	private JLabel label9;
+	private JLabel lblFormatIcon;
+	private JLabel lblFormat;
+	private JLabel label10;
+	private JLabel lblYear;
+	private JLabel label11;
+	private JLabel lblSize;
+	private JLabel label12;
+	private JLabel lblUserScoreIcon;
+	private JLabel lblUserScore;
+	private JLabel label13;
+	private TagDisplay lblTags;
+	private JPanel panel6;
+	private JLabel label14;
+	private JLabel label15;
+	private JLabel label16;
+	private JScrollPane scrollPane1;
+	private JList<String> lsGroups;
+	private JScrollPane scrollPane2;
+	private JList<String> lsGenres;
+	private JScrollPane scrollPane3;
+	private JList<String> lsHistory;
+	private JPanel pnlTabMediaInfo;
+	private JPanel panel7;
+	private JLabel label17;
+	private ReadableTextField edMI_CDate;
+	private JLabel label18;
+	private ReadableTextField edMI_MDate;
+	private JLabel label20;
+	private ReadableTextField edMI_Filesize;
+	private JLabel label21;
+	private ReadableTextField edMI_Duration;
+	private JLabel label22;
+	private ReadableTextField edMI_Bitrate;
+	private JPanel panel8;
+	private JLabel label23;
+	private ReadableTextField edMI_VideoFormat;
+	private JLabel label24;
+	private ReadableTextField edMI_VideoResolution;
+	private JLabel label25;
+	private ReadableTextField edMI_VideoFramerate;
+	private JLabel label26;
+	private ReadableTextField edMI_VideoBitdepth;
+	private JLabel label27;
+	private ReadableTextField edMI_VideoFramecount;
+	private JLabel label28;
+	private ReadableTextField edMI_VideoCodec;
+	private JPanel panel9;
+	private JLabel label29;
+	private ReadableTextField edMI_AudioFormat;
+	private JLabel label30;
+	private ReadableTextField edMI_AudioChannels;
+	private JLabel label31;
+	private ReadableTextField edMI_AudioCodec;
+	private JLabel label32;
+	private ReadableTextField edMI_AudioSamplerate;
+	private JPanel pnlTabPaths;
+	private JReadableCCPathTextField edPart0;
+	private JMediaInfoButton btnMediaInfo0;
+	private JOpenFolderButton btnOpenDir0;
+	private JReadableCCPathTextField edPart1;
+	private JMediaInfoButton btnMediaInfo1;
+	private JOpenFolderButton btnOpenDir1;
+	private JReadableCCPathTextField edPart2;
+	private JMediaInfoButton btnMediaInfo2;
+	private JOpenFolderButton btnOpenDir2;
+	private JReadableCCPathTextField edPart3;
+	private JMediaInfoButton btnMediaInfo3;
+	private JOpenFolderButton btnOpenDir3;
+	private JReadableCCPathTextField edPart4;
+	private JMediaInfoButton btnMediaInfo4;
+	private JOpenFolderButton btnOpenDir4;
+	private JReadableCCPathTextField edPart5;
+	private JMediaInfoButton btnMediaInfo5;
+	private JOpenFolderButton btnOpenDir5;
+	private JPanel pnlTabHistory;
+	private PMHistoryTableEntries tabHistoryEntries;
+	private PMHistoryTableChanges tabHistoryChanges;
+	private JButton btnQueryHistory;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

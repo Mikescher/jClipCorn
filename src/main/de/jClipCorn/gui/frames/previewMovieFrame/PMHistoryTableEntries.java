@@ -4,18 +4,23 @@ import de.jClipCorn.database.history.CCCombinedHistoryEntry;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.lambda.Func1to0;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class PMHistoryTableEntries extends JCCSimpleTable<CCCombinedHistoryEntry> {
 	private static final long serialVersionUID = -7175124665697003916L;
 
-	private final Func1to0<CCCombinedHistoryEntry> _handler;
+	private final List<PMHSelectionListener> _handler = new ArrayList<>();
 
-	public PMHistoryTableEntries(Func1to0<CCCombinedHistoryEntry> handler) {
-		_handler = handler;
+	public void addSelectionListener(final PMHSelectionListener l) {
+		_handler.add(l);
 	}
+
+	public void removeSelectionListener(final PMHSelectionListener l) {
+		_handler.remove(l);
+	}
+
 
 	@Override
 	@SuppressWarnings("nls")
@@ -60,7 +65,7 @@ public class PMHistoryTableEntries extends JCCSimpleTable<CCCombinedHistoryEntry
 
 	@Override
 	protected void OnSelectElement(CCCombinedHistoryEntry element) {
-		_handler.invoke(element);
+		for (var h : _handler) h.actionPerformed(new PMHSelectionListener.PMHSelectionEvent(this, element));
 	}
 
 	@Override

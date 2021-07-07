@@ -1,0 +1,345 @@
+JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.11" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "PreviewSeriesFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, 182px, labelcompgap, default:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default:grow, unrelgap"
+		} ) {
+			name: "this"
+			"title": "<dynamic>"
+			"defaultCloseOperation": 2
+			"minimumSize": new java.awt.Dimension( 750, 680 )
+			"$sizePolicy": 1
+			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosed", "onWindowClosed", false ) )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "110dlu, labelcompgap, default:grow, labelcompgap, max(pref;80dlu), labelcompgap, 110dlu"
+				"$rowSpecs": "default, pref"
+			} ) {
+				name: "pnlTop"
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "default:grow"
+					"$rowSpecs": "default, linegap, default"
+				} ) {
+					name: "pnlTopLeft"
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnPlayNext"
+						"text": new FormMessage( null, "PreviewSeriesFrame.btnPlayNext.caption" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onPlayNext", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 1
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JVLCRobotButton" ) {
+						name: "btnVLCRobot"
+						"text": new FormMessage( null, "PreviewSeriesFrame.btnPlayRobot.caption" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "autoPlay", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 3
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridHeight": 2
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblTitle"
+					"text": "<Title>"
+					"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 28, true )
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "pref:grow, labelcompgap, default"
+					"$rowSpecs": "default"
+				} ) {
+					name: "pnlSearch"
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "edSearch"
+						"columns": 24
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "startSearch", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 1
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JSearchButton" ) {
+						name: "btnSearch"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "startSearch", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 3
+						"gridY": 1
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridWidth": 3
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser" ) {
+					name: "cvrChooser"
+					"circleRadius": 300
+					"coverHalfSize": true
+					addEvent( new FormEvent( "javax.swing.event.ListSelectionListener", "valueChanged", "onCoverChooserSelected", false ) )
+					addEvent( new FormEvent( "de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupListener", "onPopup", "onCoverChooserPopup", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 2
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"gridWidth": 3
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"gridWidth": 3
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default, labelcompgap, 0dlu:grow"
+				"$rowSpecs": "default, linegap, default, unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, pref, linegap, pref, linegap, default:grow, linegap, pref"
+			} ) {
+				name: "pnlInfo"
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel" ) {
+					name: "lblCover"
+					"noOverlay": true
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.OnlineScoreDisplay" ) {
+					name: "lblOnlineScore"
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 3
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label1"
+					"text": new FormMessage( null, "PreviewSeriesFrame.lblLength.text" )
+					"verticalAlignment": 1
+					"verticalTextPosition": 1
+					"font": &SwingDerivedFont0 new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, true )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 5
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblLength"
+					"text": "<dynamic>"
+					"font": #SwingDerivedFont0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label2"
+					"text": new FormMessage( null, "PreviewSeriesFrame.lblSize.text" )
+					"verticalAlignment": 1
+					"verticalTextPosition": 1
+					"font": #SwingDerivedFont0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 7
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblSize"
+					"text": "<dynamic>"
+					"font": #SwingDerivedFont0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 7
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label3"
+					"text": new FormMessage( null, "PreviewSeriesFrame.lblViewed.text" )
+					"verticalAlignment": 1
+					"font": #SwingDerivedFont0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 9
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblViewed"
+					"text": "<dynamic>"
+					"horizontalTextPosition": 10
+					"font": #SwingDerivedFont0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 9
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label4"
+					"text": new FormMessage( null, "PreviewSeriesFrame.lblScore.text" )
+					"verticalAlignment": 1
+					"verticalTextPosition": 1
+					"font": #SwingDerivedFont0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 11
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblScore"
+					"text": "<dynamic>"
+					"horizontalTextPosition": 10
+					"font": #SwingDerivedFont0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 11
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label7"
+					"text": new FormMessage( null, "PreviewSeriesFrame.lblLanguage.text" )
+					"verticalAlignment": 1
+					"verticalTextPosition": 1
+					"font": #SwingDerivedFont0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 13
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageDisplay" ) {
+					name: "ctrlLang"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 13
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label5"
+					"text": new FormMessage( null, "PreviewSeriesFrame.lblFSK.text" )
+					"verticalAlignment": 1
+					"verticalTextPosition": 1
+					"font": #SwingDerivedFont0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 15
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblFSK"
+					"text": "<dynamic>"
+					"horizontalTextPosition": 10
+					"font": #SwingDerivedFont0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 15
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label9"
+					"text": new FormMessage( null, "PreviewSeriesFrame.lblTags.text" )
+					"verticalAlignment": 1
+					"verticalTextPosition": 1
+					"font": #SwingDerivedFont0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 17
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.TagDisplay" ) {
+					name: "ctrlTags"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 17
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label6"
+					"text": new FormMessage( null, "PreviewSeriesFrame.lblGroups" )
+					"verticalAlignment": 1
+					"verticalTextPosition": 1
+					"font": #SwingDerivedFont0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 19
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.MultiLineTextLabel" ) {
+					name: "lblGroups"
+					"labelFont": new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, true )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 19
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label8"
+					"text": new FormMessage( null, "PreviewSeriesFrame.lblGenres.text" )
+					"verticalAlignment": 1
+					"verticalTextPosition": 1
+					"font": #SwingDerivedFont0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 21
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.MultiLineTextLabel" ) {
+					name: "lblGenres"
+					"labelFont": new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, true )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 21
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.OnlineRefButton" ) {
+					name: "btnOnline"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 25
+					"gridWidth": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "labelcompgap, default:grow, labelcompgap"
+				"$rowSpecs": "linegap, default, linegap, default:grow, linegap"
+			} ) {
+				name: "pnlMain"
+				"border": new javax.swing.border.LineBorder( sfield java.awt.Color gray, 1, false )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblSeason"
+					"text": "<Season>"
+					"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 25, true )
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 2
+				} )
+				add( new FormContainer( "de.jClipCorn.gui.frames.previewSeriesFrame.serTable.SerTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "tabSeason"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(this);"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 4
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"gridX": 2
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 4
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 1000, 750 )
+		} )
+	}
+}

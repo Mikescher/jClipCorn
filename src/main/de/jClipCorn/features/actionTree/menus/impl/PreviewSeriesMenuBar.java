@@ -44,6 +44,7 @@ public class PreviewSeriesMenuBar extends ClipMenuBar {
 			addActionNode("BatchEditSeries");
 			addActionNode("EditSeries");
 			addActionTreeNode("SetSeriesRating");
+			addActionTreeNode("SetTags_Series");
 			addActionNode("OpenFolder");
 			addActionNode("RemSeries");
 		}

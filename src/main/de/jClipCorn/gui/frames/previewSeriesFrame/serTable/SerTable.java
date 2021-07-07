@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.frames.previewSeriesFrame.serTable;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.features.actionTree.menus.impl.ClipEpisodePopup;
@@ -15,18 +16,21 @@ import java.awt.event.MouseListener;
 public class SerTable extends JScrollPane implements ListSelectionListener, MouseListener {
 	private static final long serialVersionUID = 6640341234698681428L;
 	
-	private SFixSerTable table;
-	private TableColumnAdjuster adjuster;
-	private SerTableModel model;
+	private final SFixSerTable table;
+	private final TableColumnAdjuster adjuster;
+	private final SerTableModel model;
+	private final PreviewSeriesFrame owner;
+
 	private CCSeason season;
-	private PreviewSeriesFrame owner;
-		
-	public SerTable(CCSeason ser, PreviewSeriesFrame owner) {
+
+	@DesignCreate
+	private static SerTable designCreate() { return new SerTable(null); }
+
+	public SerTable(PreviewSeriesFrame owner) {
 		super();
-		this.season = ser;
 		this.owner = owner;
-		
-		model = new SerTableModel(season);
+
+		model = new SerTableModel(null);
 		
 		table = new SFixSerTable(model);
 		configureTable();

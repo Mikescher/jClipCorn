@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.guiComponents;
 
 import com.jformdesigner.annotations.DesignCreate;
+import com.jformdesigner.annotations.PropertyDesc;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
@@ -33,8 +34,8 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	private volatile DEPLMode mode = DEPLMode.MODE_DEFAULT;
 	private volatile int timerCounter = 0;
 	private volatile boolean threadLoadFinished = false;
-	private Timer timer;
-	private final boolean noOverlay;
+	private final Timer timer;
+	private boolean noOverlay;
 
 	private volatile BufferedImage v_image_normal;
 	private volatile BufferedImage v_image_hover;
@@ -46,13 +47,17 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	private CCDatabaseElement element;
 
 	@DesignCreate
-	private static DatabaseElementPreviewLabel designCreate() { return new DatabaseElementPreviewLabel(true); }
+	private static DatabaseElementPreviewLabel designCreate() { return new DatabaseElementPreviewLabel(); }
+
+	public DatabaseElementPreviewLabel() {
+		this(false);
+	}
 
 	public DatabaseElementPreviewLabel(boolean noOverlayRender) {
 		super(false);
 		
 		noOverlay = noOverlayRender;
-		
+
 		timer = new Timer();
 		timer.schedule(new TimerTask() {
 			@Override
@@ -60,6 +65,19 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 				SwingUtils.invokeAndWaitSafe(() -> onTimer());
 			}
 		}, 0, TIMER_DELAY);
+	}
+
+	public void setNoOverlay(boolean noo) {
+		noOverlay = noo;
+
+		if (mode == DEPLMode.MODE_COVER && element != null) setModeCover(element);
+		else if (mode == DEPLMode.MODE_ERROR) setModeError();
+		else if (mode == DEPLMode.MODE_DEFAULT) setModeDefault();
+		else setModeDefault();
+	}
+
+	public boolean getNoOverlay() {
+		return noOverlay;
 	}
 	
 	private BufferedImage getImageWithoutOverlay(CCDatabaseElement el) {
@@ -315,5 +333,11 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	public boolean isErrorMode() {
 		return mode == DEPLMode.MODE_ERROR;
 	}
-	
+
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() throws Throwable {
+		if (timer != null) timer.cancel();
+		super.finalize();
+	}
 }

@@ -6,7 +6,6 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.SwingUtils;
 
 import javax.swing.*;
@@ -43,8 +42,7 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 		chooser = new JCoverChooser(true);
 		chooser.set3DMode(true);
 		chooser.setEnabled(false);
-		chooser.setCoverWidth(ImageUtilities.HALF_COVER_WIDTH);
-		chooser.setCoverHeight(ImageUtilities.HALF_COVER_HEIGHT);
+		chooser.setCoverHalfSize(true);
 		chooser.setCoverGap(10);
 		chooser.setCircleRadius(300);
 		getContentPane().add(chooser, BorderLayout.CENTER);

@@ -127,7 +127,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 			return c;
 		});
 	}
-	
+
 	public int getLength() {
 		return _cache.getInt(SeriesCache.LENGTH, null, ser->
 		{
@@ -136,6 +136,18 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 				l += se.getLength();
 			}
 			return l;
+		});
+	}
+
+	public Opt<Double> getMediaInfoLength() {
+		return _cache.getOptDouble(SeriesCache.MEDIAINFO_LENGTH, null, ser->
+		{
+			double l = 0;
+			for (CCEpisode ee: iteratorEpisodes()) {
+				if (!ee.MediaInfo.get().isSet()) return Opt.empty();
+				l += ee.MediaInfo.Duration.get();
+			}
+			return Opt.of(l);
 		});
 	}
 

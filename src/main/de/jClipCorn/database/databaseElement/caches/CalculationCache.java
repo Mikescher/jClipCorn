@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement.caches;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.datatypes.ITuple;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
@@ -62,9 +63,10 @@ public abstract class CalculationCache<TOwner> implements ICalculationCache
 			return get(key + "[" + params.toString() + "]", o);
 	}
 
-	public boolean getBool  (String key, ITuple params, Func1to1<TOwner, Boolean> o) { return get(key, params, o); }
-	public int     getInt   (String key, ITuple params, Func1to1<TOwner, Integer> o) { return get(key, params, o); }
-	public double  getDouble(String key, ITuple params, Func1to1<TOwner, Double>  o) { return get(key, params, o); }
+	public boolean     getBool     (String key, ITuple params, Func1to1<TOwner, Boolean>      o) { return get(key, params, o); }
+	public int         getInt      (String key, ITuple params, Func1to1<TOwner, Integer>      o) { return get(key, params, o); }
+	public double      getDouble   (String key, ITuple params, Func1to1<TOwner, Double>       o) { return get(key, params, o); }
+	public Opt<Double> getOptDouble(String key, ITuple params, Func1to1<TOwner, Opt<Double>>  o) { return get(key, params, o); }
 
 	public CCStream<String> listCachedKeys()
 	{

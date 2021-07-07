@@ -245,7 +245,7 @@ public class Main {
  - [ ] ParseOnlineFrame
  - [ ] ParseWatchDataFrame
  - [ ] PreviewMovieFrame
- - [ ] PreviewSeriesFrame
+ - [X] PreviewSeriesFrame
  - [ ] QuickAddEpisodeDialog
  - [ ] QuickAddMoviesDialog
  - [ ] RandomMovieFrame

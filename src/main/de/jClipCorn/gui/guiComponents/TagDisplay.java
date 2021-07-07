@@ -18,7 +18,7 @@ public class TagDisplay extends JPanel {
 	}
 
 	private void init() {
-		setLayout(new FlowLayout(FlowLayout.LEFT, 4, 1));
+		setLayout(new FlowLayout(FlowLayout.LEFT, 0, 1));
 	}
 
 	private void update() {
@@ -28,6 +28,12 @@ public class TagDisplay extends JPanel {
 			JLabel l = new JLabel(tag.getOnIcon());
 			l.setToolTipText(value.getAsString());
 			add(l);
+
+			var gap = new JPanel();
+			gap.setPreferredSize(new Dimension(4, 1));
+			gap.setMinimumSize(new Dimension(4, 1));
+			gap.setMaximumSize(new Dimension(4, 1));
+			add(gap);
 		}
 
 		Component parent = getParent();

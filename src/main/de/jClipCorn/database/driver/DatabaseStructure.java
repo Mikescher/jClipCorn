@@ -14,13 +14,13 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_INFO_KEY             = new CCSQLColDef("IKEY",                  CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_INFO_VALUE           = new CCSQLColDef("IVALUE",                CCSQLType.VARCHAR,     NON_NULLABLE);
 
-	public final static CCSQLColDef COL_HISTORY_TABLE         = new CCSQLColDef("TABLE",                CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_HISTORY_ID            = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_HISTORY_DATE          = new CCSQLColDef("DATE",                 CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_HISTORY_ACTION        = new CCSQLColDef("ACTION",               CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_HISTORY_FIELD         = new CCSQLColDef("FIELD",                CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_HISTORY_OLD           = new CCSQLColDef("OLD",                  CCSQLType.VARCHAR,     NULLABLE);
-	public final static CCSQLColDef COL_HISTORY_NEW           = new CCSQLColDef("NEW",                  CCSQLType.VARCHAR,     NULLABLE);
+	public final static CCSQLColDef COL_HISTORY_TABLE        = new CCSQLColDef("TABLE",                CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_HISTORY_ID           = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_HISTORY_DATE         = new CCSQLColDef("DATE",                 CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_HISTORY_ACTION       = new CCSQLColDef("ACTION",               CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_HISTORY_FIELD        = new CCSQLColDef("FIELD",                CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_HISTORY_OLD          = new CCSQLColDef("OLD",                  CCSQLType.VARCHAR,     NULLABLE);
+	public final static CCSQLColDef COL_HISTORY_NEW          = new CCSQLColDef("NEW",                  CCSQLType.VARCHAR,     NULLABLE);
 
 	public final static CCSQLColDef COL_MOV_LOCALID          = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);

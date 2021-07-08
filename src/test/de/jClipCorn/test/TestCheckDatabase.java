@@ -12,7 +12,10 @@ import de.jClipCorn.features.databaseErrors.DatabaseValidatorOptions;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +23,13 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @SuppressWarnings("nls")
+@RunWith(JUnitParamsRunner.class)
 public class TestCheckDatabase extends ClipCornBaseTest {
 
 	@Test
-	public void testDatabaseValidator() throws Exception {
-		CCMovieList ml = createExampleDB();
+	@Parameters({ "false", "true" })
+	public void testDatabaseValidator(boolean dbmode) throws Exception {
+		CCMovieList ml = createExampleDB(dbmode);
 
 		List<DatabaseError> errs = new ArrayList<>();
 		DatabaseValidatorOptions opt = new DatabaseValidatorOptions(
@@ -68,9 +73,10 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testDatabaseUserDataProblemMovies() throws Exception {
+	@Parameters({ "false", "true" })
+	public void testDatabaseUserDataProblemMovies(boolean dbmode) throws Exception {
 		CCMovieList mle = createEmptyDB();
-		CCMovieList ml = createExampleDB();
+		CCMovieList ml = createExampleDB(dbmode);
 
 		for (CCMovie m : ml.iteratorMovies())
 		{
@@ -110,8 +116,9 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testDatabaseUserDataProblemSeries() throws Exception {
-		CCMovieList ml = createExampleDB();
+	@Parameters({ "false", "true" })
+	public void testDatabaseUserDataProblemSeries(boolean dbmode) throws Exception {
+		CCMovieList ml = createExampleDB(dbmode);
 
 		for (CCSeries s : ml.iteratorSeries()) {
 
@@ -126,8 +133,9 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testDatabaseUserDataProblemSeason() throws Exception {
-		CCMovieList ml = createExampleDB();
+	@Parameters({ "false", "true" })
+	public void testDatabaseUserDataProblemSeason(boolean dbmode) throws Exception {
+		CCMovieList ml = createExampleDB(dbmode);
 
 		for (CCSeason s : ml.iteratorSeasons()) {
 
@@ -142,8 +150,9 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testDatabaseUserDataProblemEpisodes() throws Exception {
-		CCMovieList ml = createExampleDB();
+	@Parameters({ "false", "true" })
+	public void testDatabaseUserDataProblemEpisodes(boolean dbmode) throws Exception {
+		CCMovieList ml = createExampleDB(dbmode);
 
 		for (CCEpisode e : ml.iteratorEpisodes()) {
 

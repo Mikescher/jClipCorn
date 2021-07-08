@@ -12,13 +12,17 @@ import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 
 @SuppressWarnings("nls")
+@RunWith(JUnitParamsRunner.class)
 public class TestDatabase extends ClipCornBaseTest {
 
 	@Test
@@ -210,8 +214,9 @@ public class TestDatabase extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testImport() throws Exception {
-		CCMovieList ml = createExampleDB();
+	@Parameters({ "false", "true" })
+	public void testImport(boolean dbmode) throws Exception {
+		CCMovieList ml = createExampleDB(dbmode);
 		
 		assertTrue(ml.hasElements());
 		

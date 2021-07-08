@@ -45,7 +45,7 @@ public class ClipCornBaseTest {
 		createInMemoryProperties();
 		CCProperties.createInMemory();
 		CCMovieList ml = CCMovieList.createInMemory();
-		ml.connectForTests();
+		ml.connectForTests(false);
 		
 		return ml;
 	}
@@ -56,7 +56,7 @@ public class ClipCornBaseTest {
 		createInMemoryProperties();
 
 		CCMovieList ml1 = CCMovieList.createInMemory();
-		ml1.connectForTests();
+		ml1.connectForTests(false);
 
 		var filep = SimpleFileUtils.getSystemTempFile("jxmlbkp");
 		SimpleFileUtils.writeTextResource(filep, "/example_data_full.jxmlbkp", ClipCornBaseTest.class);
@@ -83,7 +83,12 @@ public class ClipCornBaseTest {
 
 		if (reloadFromMemory)
 		{
-			return CCMovieList.createRawForUnitTests(ml1.getDatabaseForUnitTests());
+			// With reload the data is loaded again from the (in-mem) database,
+			// so ml2 is acting like the data was there all along and not just recently imported
+
+			var ml2 = CCMovieList.createRawForUnitTests(ml1.getDatabaseForUnitTests());
+			ml2.connectForTests(true);
+			return ml2;
 		}
 
 		return ml1;

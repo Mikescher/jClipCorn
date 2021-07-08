@@ -7,11 +7,14 @@ import de.jClipCorn.util.comparator.CCMovieComparator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.stream.SingleStream;
+import junitparams.JUnitParamsRunner;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
 @SuppressWarnings("nls")
+@RunWith(JUnitParamsRunner.class)
 public class TestIterators extends ClipCornBaseTest {
 
 	@Test

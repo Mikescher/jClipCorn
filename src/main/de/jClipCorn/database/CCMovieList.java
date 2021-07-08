@@ -181,13 +181,16 @@ public class CCMovieList {
 		}, "THREAD_LOAD_DATABASE").start(); //$NON-NLS-1$
 	}
 	
-	public void connectForTests()
+	public void connectForTests(boolean skipconnect)
 	{
 		isLoading = true;
 		isLoaded  = false;
 		{
-			var r = database.tryconnect();
-			if (r != DatabaseConnectResult.SUCESS_CONNECTED && r != DatabaseConnectResult.SUCCESS_CREATED) throw new Error(String.valueOf(r));
+			if (!skipconnect)
+			{
+				var r = database.tryconnect();
+				if (r != DatabaseConnectResult.SUCESS_CONNECTED && r != DatabaseConnectResult.SUCCESS_CREATED) throw new Error(String.valueOf(r));
+			}
 
 			database.fillGroups(CCMovieList.this);
 			database.fillMovieList(CCMovieList.this);

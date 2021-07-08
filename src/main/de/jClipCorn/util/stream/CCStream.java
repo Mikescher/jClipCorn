@@ -477,7 +477,11 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 
 	public TType get(int idx) {
 		TType value = null;
-		for (int i = 0; i <= idx; i++) value = next();
+		for (int i = 0; i <= idx; i++)
+		{
+			if (!hasNext()) throw new IndexOutOfBoundsException();
+			value = next();
+		}
 		return value;
 	}
 

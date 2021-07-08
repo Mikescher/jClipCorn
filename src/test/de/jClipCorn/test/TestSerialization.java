@@ -9,13 +9,17 @@ import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
-@SuppressWarnings({"nls", "ResultOfMethodCallIgnored"})
+@SuppressWarnings({"nls"})
+@RunWith(JUnitParamsRunner.class)
 public class TestSerialization extends ClipCornBaseTest {
 
 	@Test
@@ -231,8 +235,9 @@ public class TestSerialization extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testMultiRoundtrip1() throws Exception {
-		CCMovieList ml = createExampleDB();
+	@Parameters({ "false", "true" })
+	public void testMultiRoundtrip1(boolean dbmode) throws Exception {
+		CCMovieList ml = createExampleDB(dbmode);
 
 		for(CCDatabaseElement e : ml.iteratorElements()) {
 			var tmpfile1 = SimpleFileUtils.getSystemTempFile("jmccexport");
@@ -255,8 +260,9 @@ public class TestSerialization extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testMultiRoundtrip2() throws Exception {
-		CCMovieList ml = createExampleDB();
+	@Parameters({ "false", "true" })
+	public void testMultiRoundtrip2(boolean dbmode) throws Exception {
+		CCMovieList ml = createExampleDB(dbmode);
 
 		var tmpfile1 = SimpleFileUtils.getSystemTempFile("jmccexport");
 		tmpfile1.deleteOnExit();
@@ -275,5 +281,4 @@ public class TestSerialization extends ClipCornBaseTest {
 
 		assertEquals(data1, data2);
 	}
-
 }

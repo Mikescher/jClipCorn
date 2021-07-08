@@ -1,26 +1,30 @@
 package de.jClipCorn.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Test;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.parser.watchdata.WatchDataChangeSet;
 import de.jClipCorn.util.parser.watchdata.WatchDataParser;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("nls")
+@RunWith(JUnitParamsRunner.class)
 public class TestWatchDataParser extends ClipCornBaseTest {
 
 	@Test
-	public void testWatchDataParse() throws Exception {
-		CCMovieList ml = createExampleDB();
+	@Parameters({ "false", "true" })
+	public void testWatchDataParse(boolean dbmode) throws Exception {
+		CCMovieList ml = createExampleDB(dbmode);
 		
 		List<String> err = new ArrayList<>();
 		List<WatchDataChangeSet> r = WatchDataParser.parse(ml, SimpleFileUtils.readTextResource("/example_watchdata.txt", getClass()), err);

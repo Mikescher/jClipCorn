@@ -14,6 +14,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.stream.CCStreams;
 
 import java.awt.image.BufferedImage;
 
@@ -79,7 +80,20 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 
 		if (updateDB) endUpdating(); else abortUpdating();
 	}
-	
+
+	public boolean isDirty() {
+		for (var p : getProperties()) if (p.isDirty()) return true;
+		return false;
+	}
+
+	public void resetDirty() {
+		for (var p : getProperties()) p.resetDirty();
+	}
+
+	public String[] getDirty() {
+		return CCStreams.iterate(getProperties()).filter(IEProperty::isDirty).map(IEProperty::getName).toArray(new String[0]);
+	}
+
 	public void beginUpdating() {
 		isUpdating = true;
 	}

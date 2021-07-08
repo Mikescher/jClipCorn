@@ -1,11 +1,11 @@
 package de.jClipCorn.features.log;
 
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datetime.CCTime;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.datetime.CCTime;
 
 public class CCLogElement {
 	public final static int FORMAT_LEVEL_PREVIEW = -1;
@@ -17,10 +17,11 @@ public class CCLogElement {
 	private final static String EXCLUSION_CLASS = "CCLog"; //$NON-NLS-1$
 	private final static String FATAL_ERROR_MSG = LocaleBundle.getString("LogMessage.ErrorTerminating"); //$NON-NLS-1$
 
-	private String text;
-	private CCLogType type;
-	private List<StackTraceElement> sTrace;
-	private CCTime time;
+	private final String text;
+	private final CCLogType type;
+	private final List<StackTraceElement> sTrace;
+	private final CCTime time;
+
 	private int count;
 
 	public CCLogElement() {

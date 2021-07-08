@@ -23,9 +23,11 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
+import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
 import de.jClipCorn.util.comparator.CCDatabaseElementComparator;
 import de.jClipCorn.util.comparator.CCMovieComparator;
 import de.jClipCorn.util.comparator.CCSeriesComparator;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple1;
 import de.jClipCorn.util.datetime.CCDate;
@@ -69,6 +71,8 @@ public class CCMovieList {
 		this.database = db;
 
 		_cache = new MovieListCache(this);
+
+		addChangeListener(new CCDBUpdateAdapter(){ @Override public void onChangeDatabaseElement(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] p) { CCLog.addMovieListChangeEvent(root, el, p); } });
 	}
 	
 	public static CCMovieList createInstanceMovieList() {
@@ -78,6 +82,10 @@ public class CCMovieList {
 				CCProperties.getInstance().PROP_DATABASE_NAME.getValue(),
 				CCProperties.getInstance().ARG_READONLY);
 
+		return new CCMovieList(db);
+	}
+
+	public static CCMovieList createRawForUnitTests(CCDatabase db) {
 		return new CCMovieList(db);
 	}
 	
@@ -331,22 +339,26 @@ public class CCMovieList {
 		return s;
 	}
 
-	public CCSeason createNewEmptySeason(CCSeries s) {
-		CCSeason seas = database.createNewEmptySeason(s);
-		s.directlyInsertSeason(seas);
+	public CCSeason createNewEmptySeason(CCSeries ser) {
+		CCSeason seas = database.createNewEmptySeason(ser);
+		ser.directlyInsertSeason(seas);
 
-		fireOnChangeDatabaseElement(s);
+		fireOnChangeDatabaseElement(ser, ser, new String[]{"@SEASONS"});  //$NON-NLS-1$
+
+		fireOnAddSeason(seas);
 
 		return seas;
 	}
 
-	public CCEpisode createNewEmptyEpisode(CCSeason s) {
-		CCEpisode e = database.createNewEmptyEpisode(s);
-		s.directlyInsertEpisode(e);
+	public CCEpisode createNewEmptyEpisode(CCSeason sea) {
+		CCEpisode epi = database.createNewEmptyEpisode(sea);
+		sea.directlyInsertEpisode(epi);
 
-		fireOnChangeDatabaseElement(s.getSeries());
+		fireOnChangeDatabaseElement(sea.getSeries(), sea, new String[]{"@EPISODES"});  //$NON-NLS-1$
 
-		return e;
+		fireOnAddEpisode(epi);
+
+		return epi;
 	}
 
 	// Only used by CCDatabase.fillMovieList
@@ -386,41 +398,75 @@ public class CCMovieList {
 		listener.add(l);
 	}
 
-	public void fireOnAddDatabaseElement(final CCDatabaseElement el) {
-		if (!EventQueue.isDispatchThread()) {
+	public void removeChangeListener(CCDBUpdateListener l) {
+		listener.remove(l);
+	}
+
+	private void fireOnAddDatabaseElement(final CCDatabaseElement el) {
+		if (!EventQueue.isDispatchThread() && !CCLog.isUnitTest()) {
 			SwingUtils.invokeLater(() -> fireOnAddDatabaseElement(el));
 			return;
 		}
 
-		for (CCDBUpdateListener l : listener) {
-			l.onAddDatabaseElement(el);
-		}
+		for (CCDBUpdateListener l : listener) l.onAddDatabaseElement(el);
 	}
 
-	public void fireOnChangeDatabaseElement(final CCDatabaseElement el) {
-		if (!EventQueue.isDispatchThread()) {
-			SwingUtils.invokeLater(() -> fireOnChangeDatabaseElement(el));
+	private void fireOnAddSeason(final CCSeason el) {
+		if (!EventQueue.isDispatchThread() && !CCLog.isUnitTest()) {
+			SwingUtils.invokeLater(() -> fireOnAddSeason(el));
 			return;
 		}
 
-		for (CCDBUpdateListener l : listener) {
-			l.onChangeDatabaseElement(el);
-		}
+		for (CCDBUpdateListener l : listener) l.onAddSeason(el);
 	}
 
-	public void fireOnRemDatabaseElement(final CCDatabaseElement el) {
-		if (!EventQueue.isDispatchThread()) {
+	private void fireOnAddEpisode(final CCEpisode el) {
+		if (!EventQueue.isDispatchThread() && !CCLog.isUnitTest()) {
+			SwingUtils.invokeLater(() -> fireOnAddEpisode(el));
+			return;
+		}
+
+		for (CCDBUpdateListener l : listener) l.onAddEpisode(el);
+	}
+
+	private void fireOnChangeDatabaseElement(final CCDatabaseElement el, final ICCDatabaseStructureElement actual, final String[] dirtyProps) {
+		if (!EventQueue.isDispatchThread() && !CCLog.isUnitTest()) {
+			SwingUtils.invokeLater(() -> fireOnChangeDatabaseElement(el, actual, dirtyProps));
+			return;
+		}
+
+		for (CCDBUpdateListener l : listener) l.onChangeDatabaseElement(el, actual, dirtyProps);
+	}
+
+	private void fireOnRemDatabaseElement(final CCDatabaseElement el) {
+		if (!EventQueue.isDispatchThread() && !CCLog.isUnitTest()) {
 			SwingUtils.invokeLater(() -> fireOnRemDatabaseElement(el));
 			return;
 		}
 
-		for (CCDBUpdateListener l : listener) {
-			l.onRemMovie(el);
+		for (CCDBUpdateListener l : listener) l.onRemDatabaseElement(el);
+	}
+
+	private void fireOnRemSeason(final CCSeason el) {
+		if (!EventQueue.isDispatchThread() && !CCLog.isUnitTest()) {
+			SwingUtils.invokeLater(() -> fireOnRemSeason(el));
+			return;
 		}
+
+		for (CCDBUpdateListener l : listener) l.onRemSeason(el);
+	}
+
+	private void fireOnRemEpisode(final CCEpisode el) {
+		if (!EventQueue.isDispatchThread() && !CCLog.isUnitTest()) {
+			SwingUtils.invokeLater(() -> fireOnRemEpisode(el));
+			return;
+		}
+
+		for (CCDBUpdateListener l : listener) l.onRemEpisode(el);
 	}
 
 	private void fireOnAfterLoad() {
-		if (!EventQueue.isDispatchThread()) {
+		if (!EventQueue.isDispatchThread() && !CCLog.isUnitTest()) {
 			SwingUtils.invokeLater(this::fireOnAfterLoad);
 			return;
 		}
@@ -431,9 +477,9 @@ public class CCMovieList {
 			l.onAfterLoad();
 		}
 	}
-	
+
 	public void fireOnRefresh() {
-		if (!EventQueue.isDispatchThread()) {
+		if (!EventQueue.isDispatchThread() && !CCLog.isUnitTest()) {
 			SwingUtils.invokeLater(this::fireOnRefresh);
 			return;
 		}
@@ -444,6 +490,8 @@ public class CCMovieList {
 	}
 
 	public boolean update(CCMovie el) {
+		var dirtyProps = el.getDirty();
+
 		if (database.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			
@@ -456,12 +504,14 @@ public class CCMovieList {
 
 		var ok = database.updateMovieInDatabase(el);
 
-		fireOnChangeDatabaseElement(el);
+		fireOnChangeDatabaseElement(el, el, dirtyProps);
 
 		return ok;
 	}
 
 	public boolean update(CCEpisode ep) {
+		var dirtyProps = ep.getDirty();
+
 		if (database.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 						
@@ -474,12 +524,14 @@ public class CCMovieList {
 
 		var ok = database.updateEpisodeInDatabase(ep);
 
-		fireOnChangeDatabaseElement(ep.getSeries());
+		fireOnChangeDatabaseElement(ep.getSeries(), ep, dirtyProps);
 
 		return ok;
 	}
 
 	public boolean update(CCSeries se) {
+		var dirtyProps = se.getDirty();
+
 		if (database.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			
@@ -492,12 +544,14 @@ public class CCMovieList {
 		
 		var ok = database.updateSeriesInDatabase(se);
 
-		fireOnChangeDatabaseElement(se);
+		fireOnChangeDatabaseElement(se, se, dirtyProps);
 
 		return ok;
 	}
 
 	public boolean update(CCSeason sa) {
+		var dirtyProps = sa.getDirty();
+
 		if (database.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			
@@ -510,7 +564,7 @@ public class CCMovieList {
 
 		var ok = database.updateSeasonInDatabase(sa);
 
-		fireOnChangeDatabaseElement(sa.getSeries());
+		fireOnChangeDatabaseElement(sa.getSeries(), sa, dirtyProps);
 
 		return ok;
 	}
@@ -521,10 +575,16 @@ public class CCMovieList {
 	
 	public void removeEpisodeFromDatabase(CCEpisode ep) {
 		database.removeFromEpisodes(ep.getLocalID());
+
+		fireOnChangeDatabaseElement(ep.getSeries(), ep.getSeason(), new String[]{"@EPISODES"});  //$NON-NLS-1$
+		fireOnRemEpisode(ep);
 	}
 	
 	public void removeSeasonDatabase(CCSeason s) {
 		database.removeFromSeasons(s.getLocalID());
+
+		fireOnChangeDatabaseElement(s.getSeries(), s.getSeries(), new String[]{"@SEASONS"});  //$NON-NLS-1$
+		fireOnRemSeason(s);
 	}
 
 	public int getTotalLength(boolean includeMovies, boolean includeSeries) {
@@ -829,6 +889,10 @@ public class CCMovieList {
 	
 	public CCStream<ICCDatedElement> iteratorDatedElements() {
 		return new DatedElementsIterator(list);
+	}
+
+	public CCStream<ICCDatabaseStructureElement> iteratorStructureElements() {
+		return new StructureElementsIterator(list);
 	}
 
 	public Document getElementsAsXML() {
@@ -1155,5 +1219,14 @@ public class CCMovieList {
 
 	public void sortByIDAfterInitialLoad() {
 		list.sort(Comparator.comparingInt(e -> -1 * e.LocalID.get()));
+	}
+
+	public Opt<ICCDatabaseStructureElement> getAny(int id) {
+		for (var v : iteratorStructureElements())
+		{
+			if (v.getLocalID() == id) return Opt.of(v);
+		}
+
+		return Opt.empty();
 	}
 }

@@ -32,4 +32,9 @@ public class ECCPathProp extends EProperty<CCPath> {
 	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set(CCPath.create((String)v));
 	}
+
+	@Override
+	public boolean valueEquals(CCPath a, CCPath b) {
+		return CCPath.isEqual(a, b);
+	}
 }

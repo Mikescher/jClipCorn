@@ -27,4 +27,7 @@ public interface ICCDatabaseStructureElement {
 	ICalculationCache   getCache();
 
 	IEProperty[]        getProperties();
+	boolean             isDirty();
+	void                resetDirty();
+	String[]            getDirty();
 }

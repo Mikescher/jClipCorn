@@ -3,6 +3,8 @@ package de.jClipCorn.database.elementProps.impl;
 import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.util.exceptions.CCFormatException;
 
+import java.util.Objects;
+
 public class EDoubleProp extends EProperty<Double> {
 	public EDoubleProp(String name, Double defValue, IPropertyParent p, EPropertyType t) {
 		super(name, defValue, p, t);
@@ -26,5 +28,10 @@ public class EDoubleProp extends EProperty<Double> {
 	@Override
 	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set((double)v);
+	}
+
+	@Override
+	public boolean valueEquals(Double a, Double b) {
+		return Objects.equals(a, b);
 	}
 }

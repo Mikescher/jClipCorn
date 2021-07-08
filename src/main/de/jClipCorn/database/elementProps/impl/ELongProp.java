@@ -3,6 +3,8 @@ package de.jClipCorn.database.elementProps.impl;
 import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.util.exceptions.CCFormatException;
 
+import java.util.Objects;
+
 public class ELongProp extends EProperty<Long> {
 	public ELongProp(String name, Long defValue, IPropertyParent p, EPropertyType t) {
 		super(name, defValue, p, t);
@@ -26,5 +28,10 @@ public class ELongProp extends EProperty<Long> {
 	@Override
 	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set((long)v);
+	}
+
+	@Override
+	public boolean valueEquals(Long a, Long b) {
+		return Objects.equals(a, b);
 	}
 }

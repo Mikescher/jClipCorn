@@ -1,35 +1,28 @@
 package de.jClipCorn.util.adapter;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+public class CCDBUpdateAdapter implements CCDBUpdateListener
+{
+	@Override public void onAddDatabaseElement(CCDatabaseElement mov) { }
 
-public class CCDBUpdateAdapter implements CCDBUpdateListener {
+	@Override public void onAddSeason(CCSeason el) { }
 
-	@Override
-	public void onAddDatabaseElement(CCDatabaseElement mov) {
+	@Override public void onAddEpisode(CCEpisode el) { }
 
-	}
+	@Override public void onRemDatabaseElement(CCDatabaseElement el) { }
 
-	@Override
-	public void onRemMovie(CCDatabaseElement el) {
+	@Override public void onRemSeason(CCSeason el) { }
 
-	}
+	@Override public void onRemEpisode(CCEpisode el) { }
 
-	@Override
-	public void onChangeDatabaseElement(CCDatabaseElement el) {
+	@Override public void onChangeDatabaseElement(CCDatabaseElement rootElement, ICCDatabaseStructureElement actualElement, String[] props) { }
 
-	}
+	@Override public void onAfterLoad() { }
 
-	@Override
-	public void onAfterLoad() {
-
-	}
-
-	@Override
-	public void onRefresh() {
-
-	}
+	@Override public void onRefresh() { }
 }

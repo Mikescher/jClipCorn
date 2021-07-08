@@ -3,9 +3,9 @@ package de.jClipCorn.gui.mainFrame.table;
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
-import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.TableCustomFilter;
 import de.jClipCorn.features.table.filter.customFilter.CustomUserScoreFilter;
@@ -15,6 +15,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.MainFrameColumn;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.TableColumnAdjuster;
+import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
 import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings("restriction")
-public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSelectionListener, MouseListener, MouseMotionListener {
+public class ClipTable extends JScrollPane implements ListSelectionListener, MouseListener, MouseMotionListener {
 	private static final long serialVersionUID = -1226727910191440220L;
 
 	private final SFixClipTable table;
@@ -71,7 +72,41 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		adjuster.adjustColumns(icfg);
 
 		if (ml != null) { // Sonst meckert der WindowsBuilder
-			ml.addChangeListener(this);
+			ml.addChangeListener(new CCDBUpdateAdapter()
+			{
+				@Override
+				public void onAddDatabaseElement(CCDatabaseElement mov) {
+					model.fireTableDataChanged();
+				}
+
+				@Override
+				public void onRemDatabaseElement(CCDatabaseElement el) {
+					model.fireTableDataChanged();
+				}
+
+				@Override
+				public void onChangeDatabaseElement(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] props) {
+					int row = root.getMovieListPosition();
+
+					if (row > 0) model.fireTableRowsUpdated(row, row);
+				}
+
+				@Override
+				public void onRefresh() {
+					model.fireTableDataChanged();
+				}
+
+				@Override
+				public void onAfterLoad() {
+					model.fireTableDataChanged();
+					initialSort();
+					autoResize();
+
+					var columnconfig = adjuster.getCurrentStateAsConfig();
+					CCProperties.getInstance().PROP_MAINFRAME_COLUMN_SIZE_CACHE.setValueIfDiff(columnconfig);
+				}
+
+			});
 		}
 	}
 
@@ -117,39 +152,6 @@ public class ClipTable extends JScrollPane implements CCDBUpdateListener, ListSe
 		adjuster.adjustColumns(_adjusterConfig);
 	}
 
-	@Override
-	public void onAddDatabaseElement(CCDatabaseElement mov) {
-		model.fireTableDataChanged();
-	}
-
-	@Override
-	public void onRemMovie(CCDatabaseElement el) {
-		model.fireTableDataChanged();
-	}
-
-	@Override
-	public void onChangeDatabaseElement(CCDatabaseElement el) {
-		int row = el.getMovieListPosition();
-		
-		if (row > 0)
-			model.fireTableRowsUpdated(row, row);
-	}
-	
-	@Override
-	public void onRefresh() {
-		model.fireTableDataChanged();
-	}
-
-	@Override
-	public void onAfterLoad() {
-		model.fireTableDataChanged();
-		initialSort();
-		autoResize();
-
-		var columnconfig = adjuster.getCurrentStateAsConfig();
-		CCProperties.getInstance().PROP_MAINFRAME_COLUMN_SIZE_CACHE.setValueIfDiff(columnconfig);
-	}
-	
 	private void initialSort() {
 		@SuppressWarnings("unchecked")
 		TableRowSorter<ClipTableModel> sorter = ((TableRowSorter<ClipTableModel>)table.getRowSorter());

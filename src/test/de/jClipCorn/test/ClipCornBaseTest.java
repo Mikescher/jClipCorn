@@ -50,19 +50,28 @@ public class ClipCornBaseTest {
 		return ml;
 	}
 
-	protected CCMovieList createExampleDB() throws IOException {
+	protected CCMovieList createExampleDB() throws IOException { return createExampleDB(false); }
+
+	protected CCMovieList createExampleDB(boolean reloadFromMemory) throws IOException {
 		createInMemoryProperties();
-		CCMovieList ml = CCMovieList.createInMemory();
-		ml.connectForTests();
+
+		CCMovieList ml1 = CCMovieList.createInMemory();
+		ml1.connectForTests();
+
 		var filep = SimpleFileUtils.getSystemTempFile("jxmlbkp");
 		SimpleFileUtils.writeTextResource(filep, "/example_data_full.jxmlbkp", ClipCornBaseTest.class);
-		ExportHelper.restoreDatabaseFromBackup(filep, ml);
+
+		CCLog.disableChangeEvents();
+		ExportHelper.restoreDatabaseFromBackup(filep, ml1);
+		CCLog.reenableChangeEvents();
+
 		filep.deleteWithException();
 
 		// create some dummy values for the file checksums
 
+		CCLog.disableChangeEvents();
 		{
-			for (var p : ml.iteratorPlayables())
+			for (var p : ml1.iteratorPlayables())
 			{
 				if (p.mediaInfo().get().isUnset()) continue;
 				var mi = p.mediaInfo().get().toPartial();
@@ -70,8 +79,14 @@ public class ClipCornBaseTest {
 				p.mediaInfo().set(mi.toMediaInfo());
 			}
 		}
+		CCLog.reenableChangeEvents();
 
-		return ml;
+		if (reloadFromMemory)
+		{
+			return CCMovieList.createRawForUnitTests(ml1.getDatabaseForUnitTests());
+		}
+
+		return ml1;
 	}
 
 	@SuppressWarnings("unchecked")

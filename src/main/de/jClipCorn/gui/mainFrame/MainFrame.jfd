@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.3.0.337" Java: "11.0.10" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.11" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -10,6 +10,8 @@ new FormModel {
 			name: "this"
 			"minimumSize": new java.awt.Dimension( 875, 625 )
 			"defaultCloseOperation": 0
+			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "onWindowClosing", false ) )
+			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosed", "onWindowClosed", false ) )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "default:grow, labelcompgap, default, labelcompgap, default, labelcompgap"
 				"$rowSpecs": "default"

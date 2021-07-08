@@ -5,8 +5,10 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
+import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewMovieMenuBar;
 import de.jClipCorn.features.log.CCLog;
@@ -45,6 +47,8 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener
 {
 	private final static java.util.List<Tuple<CCMovie, PreviewMovieFrame>> _activeFrames = new ArrayList<>();
 
+	private CCDBUpdateListener _mlListener;
+
 	private final CCMovie movie;
 
 	public PreviewMovieFrame(Component owner, CCMovie m)
@@ -68,15 +72,15 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener
 
 		updateData();
 
-		movie.getMovieList().addChangeListener(new CCDBUpdateAdapter() {
+		movie.getMovieList().addChangeListener(_mlListener = new CCDBUpdateAdapter() {
 			@Override
-			public void onChangeDatabaseElement(CCDatabaseElement el) {
-				if (el.equals(movie)) updateData();
+			public void onChangeDatabaseElement(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] props) {
+				if (root.equals(movie)) updateData();
 			}
 
 			@Override
-			public void onAddDatabaseElement(CCDatabaseElement mov) {
-				if (mov.equals(movie)) updateData();
+			public void onAddDatabaseElement(CCDatabaseElement el) {
+				if (el.equals(movie)) updateData();
 			}
 		});
 	}
@@ -244,6 +248,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener
 
 	private void onWindowClosed() {
 		_activeFrames.removeIf(p -> p.Item2 == this);
+		movie.getMovieList().removeChangeListener(_mlListener);
 	}
 
 	private void playMovie() {

@@ -62,4 +62,11 @@ public class ETagListProp extends EProperty<CCTagList> {
 	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set(CCTagList.fromShort((short)v));
 	}
+
+	@Override
+	public boolean valueEquals(CCTagList a, CCTagList b) {
+		if (a == null && b == null) return true;
+		if (a == null || b == null) return false;
+		return a.isEqual(b);
+	}
 }

@@ -48,4 +48,11 @@ public class EGenreListProp extends EProperty<CCGenreList> {
 	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set((Long)v);
 	}
+
+	@Override
+	public boolean valueEquals(CCGenreList a, CCGenreList b) {
+		if (a == null && b == null) return true;
+		if (a == null || b == null) return false;
+		return a.equals(b);
+	}
 }

@@ -2,6 +2,9 @@ package de.jClipCorn.gui.mainFrame.filterTree;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.JSimpleTree;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeObject;
@@ -121,12 +124,32 @@ public abstract class AbstractFilterTree extends JScrollPane implements CCDBUpda
 	}
 
 	@Override
-	public void onRemMovie(CCDatabaseElement el) {
+	public void onAddSeason(CCSeason el) {
+		// -
+	}
+
+	@Override
+	public void onAddEpisode(CCEpisode el) {
+		// -
+	}
+
+	@Override
+	public void onRemDatabaseElement(CCDatabaseElement el) {
 		updateTree();
 	}
 
 	@Override
-	public void onChangeDatabaseElement(CCDatabaseElement el) {
+	public void onRemSeason(CCSeason el) {
+		// -
+	}
+
+	@Override
+	public void onRemEpisode(CCEpisode el) {
+		// -
+	}
+
+	@Override
+	public void onChangeDatabaseElement(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] props) {
 		updateTree();
 	}
 

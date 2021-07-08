@@ -6,10 +6,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class CCSQLLogElement {
-	private String method;
-	private StatementType statementType;
-	private String source;
-	private CCTime time;
+	private final String method;
+	private final StatementType statementType;
+	private final String source;
+	private final CCTime time;
 
 	public CCSQLLogElement(String mth, StatementType st, String sql) {
 		method = mth;

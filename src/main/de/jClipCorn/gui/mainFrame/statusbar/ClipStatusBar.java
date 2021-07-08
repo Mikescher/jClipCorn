@@ -4,17 +4,20 @@ import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.Globals;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.log.CCLogChangedListener;
 import de.jClipCorn.features.log.CCLogType;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.adapter.CCLogChangedAdapter;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
@@ -28,7 +31,7 @@ import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
-public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateListener, CCLogChangedListener {
+public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateListener {
 	private static final long serialVersionUID = -5283785610114988490L;
 	
 	private final CCMovieList movielist;
@@ -52,12 +55,25 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 		this.owner = owner;
 		this.movielist = ml;
 		
-		if (ml != null) {
+		if (ml != null)
+		{
 			ml.addChangeListener(this);
-			CCLog.addChangeListener(this);
+
+			CCLog.addChangeListener(new CCLogChangedAdapter()
+			{
+				@Override
+				public void onChanged()
+				{
+					try { updateLabels_Log(); } catch (ConcurrentModificationException e) { /* Not so bad ... */ }
+				}
+			});
+
 			intializeGUI();
+
 			intializeListener();
-		} else {
+		}
+		else
+		{
 			startInitColumns();
 			addLabel("(designCreate)", true); //$NON-NLS-1$
 			addSeparator(true);
@@ -197,6 +213,11 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 			tooltip.append("<br/>");
 
 			tooltip.append(LocaleBundle.getString("CCLog.SQL")).append(": ").append(CCLog.getSQLCount());
+			tooltip.append("<br/>");
+
+			tooltip.append("<br/>");
+
+			tooltip.append(LocaleBundle.getString("CCLog.Changes")).append(": ").append(CCLog.getChangeCount());
 			tooltip.append("<br/>");
 
 			tooltip.append("</html>"); //$NON-NLS-1$
@@ -352,12 +373,32 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 	}
 
 	@Override
-	public void onRemMovie(CCDatabaseElement el) {
+	public void onAddSeason(CCSeason el) {
+		/**/
+	}
+
+	@Override
+	public void onAddEpisode(CCEpisode el) {
+		/**/
+	}
+
+	@Override
+	public void onRemDatabaseElement(CCDatabaseElement el) {
 		updateLabels();
 	}
 
 	@Override
-	public void onChangeDatabaseElement(CCDatabaseElement el) {
+	public void onRemSeason(CCSeason el) {
+		/**/
+	}
+
+	@Override
+	public void onRemEpisode(CCEpisode el) {
+		/**/
+	}
+
+	@Override
+	public void onChangeDatabaseElement(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] props) {
 		updateLabels();
 	}
 	
@@ -373,14 +414,5 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 	
 	public JProgressBar getProgressbar() {
 		return progressBar;
-	}
-
-	@Override
-	public void onChanged() {
-		try {
-			updateLabels_Log();
-		} catch (ConcurrentModificationException e) {
-			// Not so bad ...
-		}
 	}
 }

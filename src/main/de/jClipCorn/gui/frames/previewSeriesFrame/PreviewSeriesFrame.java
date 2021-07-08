@@ -3,12 +3,10 @@ package de.jClipCorn.gui.frames.previewSeriesFrame;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.Main;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.NextEpisodeHelper;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
@@ -55,6 +53,8 @@ import java.util.List;
 public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener, ActionCallbackListener, IActionRootFrame
 {
 	private static final List<Tuple<CCSeries, PreviewSeriesFrame>> _activeFrames = new ArrayList<>();
+
+	private CCDBUpdateListener _mlListener;
 
 	private final CCSeries series;
 
@@ -121,15 +121,15 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 		setSize(size1.width, Math.max(size1.height, size2.height));
 		setMinimumSize(new Dimension(getMinimumSize().width, size2.height));
 
-		series.getMovieList().addChangeListener(new CCDBUpdateAdapter() {
+		series.getMovieList().addChangeListener(_mlListener = new CCDBUpdateAdapter() {
 			@Override
-			public void onChangeDatabaseElement(CCDatabaseElement el) {
-				if (el.equals(series)) updateData();
+			public void onChangeDatabaseElement(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] props) {
+				if (root.equals(series)) updateData();
 			}
 
 			@Override
-			public void onAddDatabaseElement(CCDatabaseElement mov) {
-				if (mov.equals(series)) updateData();
+			public void onAddDatabaseElement(CCDatabaseElement el) {
+				if (el.equals(series)) updateData();
 			}
 		});
 
@@ -377,6 +377,7 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 
 	private void onWindowClosed() {
 		_activeFrames.removeIf(p -> p.Item2 == this);
+		series.getMovieList().removeChangeListener(_mlListener);
 	}
 
 	private void onPlayNext() {

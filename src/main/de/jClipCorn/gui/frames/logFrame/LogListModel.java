@@ -1,15 +1,10 @@
 package de.jClipCorn.gui.frames.logFrame;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import javax.swing.JTextArea;
+import de.jClipCorn.features.log.*;
+
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.log.CCLogChangedListener;
-import de.jClipCorn.features.log.CCLogElement;
-import de.jClipCorn.features.log.CCLogType;
 
 public class LogListModel extends DefaultListModel<String> implements ListSelectionListener, CCLogChangedListener {
 	private static final long serialVersionUID = -3406456293654719505L;
@@ -46,5 +41,15 @@ public class LogListModel extends DefaultListModel<String> implements ListSelect
 	@Override
 	public void onChanged() {
 		fireContentsChanged(this, 0, getSize());
+	}
+
+	@Override
+	public void onSQLChanged(CCSQLLogElement cle) {
+		//
+	}
+
+	@Override
+	public void onPropsChanged(CCChangeLogElement cle) {
+		//
 	}
 }

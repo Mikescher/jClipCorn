@@ -1,6 +1,10 @@
 package de.jClipCorn.features.log;
 
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.util.sqlwrapper.StatementType;
+
+import java.util.List;
 
 public class CCLog {
 
@@ -70,6 +74,10 @@ public class CCLog {
 
 	public static void addUndefinied(String msg) {
 		CCLogInternal.add('[' + Thread.currentThread().toString() + ']' + ' ' + msg, CCLogType.LOG_ELEM_UNDEFINED, new Exception().getStackTrace());
+	}
+
+	public static void addMovieListChangeEvent(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] p) {
+		CCLogInternal.addChange(root.getType().asString(), root.getLocalID(), el.getClass().getSimpleName(), el.getLocalID(), p);
 	}
 
 	public static void addDefaultSwitchError(String owner, Object value) {
@@ -150,6 +158,10 @@ public class CCLog {
 		return CCLogInternal.getSQLCount();
 	}
 
+	public static int getChangeCount() {
+		return CCLogInternal.getChangeCount();
+	}
+
 	public static void save() {
 		CCLogInternal.save();
 	}
@@ -188,5 +200,17 @@ public class CCLog {
 		while (c != null) { str.append("\n\n").append("-------[ CAUSED BY ]-------").append("\n\n").append(c.toString()); c = c.getCause(); } //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		return str.toString();
+	}
+
+	public static List<CCChangeLogElement> getChangeElements() {
+		return CCLogInternal.getChangeLogElementsCopy();
+	}
+
+	public static void disableChangeEvents() {
+		CCLogInternal.setChangeEventsEnabled(false);
+	}
+
+	public static void reenableChangeEvents() {
+		CCLogInternal.setChangeEventsEnabled(true);
 	}
 }

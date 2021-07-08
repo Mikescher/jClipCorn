@@ -32,4 +32,9 @@ public class EFileSizeProp extends EProperty<CCFileSize> {
 	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set((Long)v);
 	}
+
+	@Override
+	public boolean valueEquals(CCFileSize a, CCFileSize b) {
+		return CCFileSize.isEqual(a, b);
+	}
 }

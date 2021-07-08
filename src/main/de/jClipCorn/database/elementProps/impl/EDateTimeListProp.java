@@ -37,4 +37,11 @@ public class EDateTimeListProp extends EProperty<CCDateTimeList> {
 	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set(CCDateTimeList.parse((String)v));
 	}
+
+	@Override
+	public boolean valueEquals(CCDateTimeList a, CCDateTimeList b) {
+		if (a == null && b == null) return true;
+		if (a == null || b == null) return false;
+		return a.isEqual(b);
+	}
 }

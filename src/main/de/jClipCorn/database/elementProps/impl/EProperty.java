@@ -15,6 +15,7 @@ import java.util.List;
 public abstract class EProperty<TType> implements IEProperty {
 
 	private TType _value;
+	private boolean _dirty = false;
 
 	protected final IPropertyParent parent;
 
@@ -44,14 +45,14 @@ public abstract class EProperty<TType> implements IEProperty {
 	 * Skips readonly check and does not call any external stuff (cache-busting, updateDB, listener, ...)
 	 */
 	public void setReadonlyPropToInitial(TType v) {
-		set(v, false, false, false, false);
+		set(v, false, false, false, false, true);
 	}
 
 	public void set(TType v) {
-		set(v, true, true, true, true);
+		set(v, true, true, true, true, true);
 	}
 
-	protected void set(TType v, boolean verifyReadonly, boolean bustCache, boolean updateDB, boolean callListener) {
+	protected void set(TType v, boolean verifyReadonly, boolean bustCache, boolean updateDB, boolean callListener, boolean setDirty) {
 		if (verifyReadonly && isReadonly()) throw new Error("Cannot update field ["+getValueType().asString()+"]::["+Name+"] - its readonly");
 
 		v = validateValue(v);
@@ -61,6 +62,8 @@ public abstract class EProperty<TType> implements IEProperty {
 		v = onValueChanging(old, v);
 
 		_value = v;
+
+		if (setDirty && !valueEquals(old, v)) _dirty = true;
 
 		if (bustCache) parent.getCache().bust();
 		if (updateDB)  parent.updateDB();
@@ -78,6 +81,7 @@ public abstract class EProperty<TType> implements IEProperty {
 		v = validateValue(v);
 
 		_value = v;
+		_dirty = true;
 
 		parent.getCache().bust();
 		parent.updateDBWithException();
@@ -85,6 +89,14 @@ public abstract class EProperty<TType> implements IEProperty {
 
 	public TType get() {
 		return _value;
+	}
+
+	public boolean isDirty() {
+		return _dirty;
+	}
+
+	public void resetDirty() {
+		_dirty = false;
 	}
 
 	@Override
@@ -121,4 +133,6 @@ public abstract class EProperty<TType> implements IEProperty {
 	public abstract Object serializeToDatabaseValue();
 	public abstract void deserializeFromString(String v) throws CCFormatException;
 	public abstract void deserializeFromDatabaseValue(Object v) throws CCFormatException;
+
+	public abstract boolean valueEquals(TType a, TType b);
 }

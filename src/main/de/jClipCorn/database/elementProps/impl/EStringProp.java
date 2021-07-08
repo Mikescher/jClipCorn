@@ -1,6 +1,7 @@
 package de.jClipCorn.database.elementProps.impl;
 
 import de.jClipCorn.database.elementProps.IPropertyParent;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.CCFormatException;
 
 public class EStringProp extends EProperty<String> {
@@ -26,5 +27,10 @@ public class EStringProp extends EProperty<String> {
 	@Override
 	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set((String)v);
+	}
+
+	@Override
+	public boolean valueEquals(String a, String b) {
+		return Str.equals(a, b);
 	}
 }

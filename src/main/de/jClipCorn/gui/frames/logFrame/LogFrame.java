@@ -6,9 +6,7 @@ import de.jClipCorn.Globals;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.caches.CalculationCache;
 import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.log.CCLogChangedListener;
-import de.jClipCorn.features.log.CCLogType;
+import de.jClipCorn.features.log.*;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
@@ -22,6 +20,8 @@ import org.apache.commons.lang.StringUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -48,17 +48,16 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 	{
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 
-		tpnlMain.setTitleAt(0, LocaleBundle.getString("CCLog.Errors")       + " (" + CCLog.getCount(CCLogType.LOG_ELEM_ERROR)       + ")");
-		tpnlMain.setTitleAt(0, LocaleBundle.getString("CCLog.Warnings")     + " (" + CCLog.getCount(CCLogType.LOG_ELEM_WARNING)     + ")");
-		tpnlMain.setTitleAt(0, LocaleBundle.getString("CCLog.Informations") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION) + ")");
-		tpnlMain.setTitleAt(0, LocaleBundle.getString("CCLog.Undefinieds")  + " (" + CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED)   + ")");
-		tpnlMain.setTitleAt(0, LocaleBundle.getString("CCLog.SQL")          + " (" + CCLog.getSQLCount()                            + ")");
+		updateTabHeader();
 
 		lsErrors.setModel(new LogListModel(lsErrors, CCLogType.LOG_ELEM_ERROR, memoErrors));
 		lsWarnings.setModel(new LogListModel(lsWarnings, CCLogType.LOG_ELEM_WARNING, memoWarnings));
 		lsInformations.setModel(new LogListModel(lsInformations, CCLogType.LOG_ELEM_INFORMATION, memoInformations));
 		lsUndefinied.setModel(new LogListModel(lsUndefinied, CCLogType.LOG_ELEM_UNDEFINED, memoUndefinied));
 		lsSQL.setModel(new LogSQLListModel(lsSQL, memoSQL));
+
+		lsChanges.setData(CCLog.getChangeElements());
+		lsChanges.autoResize();
 
 		DatabaseElementPreviewLabel cl = MainFrame.getInstance().getCoverLabel();
 		if (cl.isErrorMode()) cl.setModeDefault();
@@ -94,11 +93,28 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 
 	@Override
 	public void onChanged() {
-		tpnlMain.setTitleAt(0, LocaleBundle.getString("CCLog.Error")        + " (" + CCLog.getCount(CCLogType.LOG_ELEM_ERROR)       + ")"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		tpnlMain.setTitleAt(1, LocaleBundle.getString("CCLog.Warnings")     + " (" + CCLog.getCount(CCLogType.LOG_ELEM_WARNING)     + ")"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		tpnlMain.setTitleAt(2, LocaleBundle.getString("CCLog.Informations") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION) + ")"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		tpnlMain.setTitleAt(3, LocaleBundle.getString("CCLog.Undefinieds")  + " (" + CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED)   + ")"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-		tpnlMain.setTitleAt(4, LocaleBundle.getString("CCLog.SQL")          + " (" + CCLog.getSQLCount()                            + ")"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		updateTabHeader();
+	}
+
+	@Override
+	public void onSQLChanged(CCSQLLogElement cle) {
+		//
+	}
+
+	@Override
+	public void onPropsChanged(CCChangeLogElement cle) {
+		lsChanges.addData(cle);
+		lsChanges.autoResize();
+		updateTabHeader();
+	}
+
+	private void updateTabHeader() {
+		tpnlMain.setTitleAt(0, LocaleBundle.getString("CCLog.Error")        + " (" + CCLog.getCount(CCLogType.LOG_ELEM_ERROR)       + ")");
+		tpnlMain.setTitleAt(1, LocaleBundle.getString("CCLog.Warnings")     + " (" + CCLog.getCount(CCLogType.LOG_ELEM_WARNING)     + ")");
+		tpnlMain.setTitleAt(2, LocaleBundle.getString("CCLog.Informations") + " (" + CCLog.getCount(CCLogType.LOG_ELEM_INFORMATION) + ")");
+		tpnlMain.setTitleAt(3, LocaleBundle.getString("CCLog.Undefinieds")  + " (" + CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED)   + ")");
+		tpnlMain.setTitleAt(4, LocaleBundle.getString("CCLog.SQL")          + " (" + CCLog.getSQLCount()                            + ")");
+		tpnlMain.setTitleAt(5, LocaleBundle.getString("CCLog.Changes")      + " (" + CCLog.getChangeCount()                         + ")");
 	}
 
 	private void showMoreErrors() {
@@ -142,6 +158,10 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 
 	}
 
+	private void onClosed() {
+		liveDisplayTimer.stop();
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		tpnlMain = new JTabbedPane();
@@ -175,6 +195,8 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 		scrollPane10 = new JScrollPane();
 		memoSQL = new JTextArea();
 		button5 = new JButton();
+		tabChanges = new JPanel();
+		lsChanges = new LogChangesTable(this, _movielist);
 		tabLiveDisplay = new JPanel();
 		label8 = new JLabel();
 		displUptime = new ReadableTextField();
@@ -203,6 +225,12 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 		//======== this ========
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(LocaleBundle.getString("CCLogFrame.this.title")); //$NON-NLS-1$
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				onClosed();
+			}
+		});
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
 			"$rgap, default:grow, $rgap", //$NON-NLS-1$
@@ -376,6 +404,15 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 			}
 			tpnlMain.addTab(LocaleBundle.getString("CCLog.SQL"), tabSQL); //$NON-NLS-1$
 
+			//======== tabChanges ========
+			{
+				tabChanges.setLayout(new FormLayout(
+					"default:grow", //$NON-NLS-1$
+					"default:grow")); //$NON-NLS-1$
+				tabChanges.add(lsChanges, CC.xy(1, 1, CC.FILL, CC.FILL));
+			}
+			tpnlMain.addTab(LocaleBundle.getString("CCLog.Changes"), tabChanges); //$NON-NLS-1$
+
 			//======== tabLiveDisplay ========
 			{
 				tabLiveDisplay.setLayout(new FormLayout(
@@ -482,6 +519,8 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 	private JScrollPane scrollPane10;
 	private JTextArea memoSQL;
 	private JButton button5;
+	private JPanel tabChanges;
+	private LogChangesTable lsChanges;
 	private JPanel tabLiveDisplay;
 	private JLabel label8;
 	private ReadableTextField displUptime;

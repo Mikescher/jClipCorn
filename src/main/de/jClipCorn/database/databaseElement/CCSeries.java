@@ -292,8 +292,6 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 			getMovieList().getCoverCache().deleteCover(season.getCoverID());
 		}
 		
-		getMovieList().fireOnChangeDatabaseElement(this);
-
 		_cache.bust();
 	}
 
@@ -396,7 +394,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		sortedseasons.sort(new CCSeasonComparator());
 		return sortedseasons;
 	}
-	
+
 	public int findSeasoninSorted(CCSeason ccSeason) {
 		return getSeasonsSorted().indexOf(ccSeason);
 	}

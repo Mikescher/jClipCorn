@@ -3,8 +3,11 @@ package de.jClipCorn.gui.frames.watchHistoryFrame;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
+import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryElement;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryEpisodeElement;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryMovieElement;
@@ -15,6 +18,9 @@ import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeNode;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeRenderer;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.stream.CCStreams;
@@ -27,6 +33,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +43,11 @@ public class WatchHistoryFrame extends JFrame {
 	private static final long serialVersionUID = 7210078286644540662L;
 	
 	private final CCMovieList movielist;
-	private List<WatchHistoryElement> data = new ArrayList<>();
+	private final List<WatchHistoryElement> data = new ArrayList<>();
+
+	private Tuple<WatchHistoryFilterType, WatchHistoryTimespanType> _currentFilter = null;
+
+	private CCDBUpdateListener _mlListener;
 
 	private DefaultMutableTreeNode treeTimespanRoot;
 
@@ -49,7 +61,7 @@ public class WatchHistoryFrame extends JFrame {
 
 		setLocationRelativeTo(owner);
 
-		loadDataFromMovieList();
+		loadDataFromMovieList(false);
 	}
 
 	private void postInit()
@@ -97,9 +109,18 @@ public class WatchHistoryFrame extends JFrame {
 		treeTimespan.expandPath(new TreePath(node_all.getPath()));
 		treeTimespan.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		treeTimespan.setCellRenderer(new SimpleTreeRenderer());
+
+		movielist.addChangeListener(_mlListener = new CCDBUpdateAdapter() {
+			@Override
+			public void onChangeDatabaseElement(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] props) {
+				if (CCStreams.iterate(props).any(p -> Str.equals(p, "ViewedHistory"))) {
+					loadDataFromMovieList(true);
+				}
+			}
+		});
 	}
 
-	private void loadDataFromMovieList()
+	private void loadDataFromMovieList(boolean isReload)
 	{
 		data.clear();
 
@@ -117,9 +138,22 @@ public class WatchHistoryFrame extends JFrame {
 
 		Collections.sort(data);
 
-		filterTable(WatchHistoryFilterType.ALL, WatchHistoryTimespanType.LAST_HUNDRED);
+		if (isReload && _currentFilter != null)
+		{
+			var vh = tableMain.getHorizontalScrollBar().getValue();
+			var vv = tableMain.getVerticalScrollBar().getValue();
 
-		tableMain.autoResize();
+			filterTable(_currentFilter.Item1, _currentFilter.Item2);
+
+			tableMain.getHorizontalScrollBar().setValue(vh);
+			tableMain.getVerticalScrollBar().setValue(vv);
+		}
+		else
+		{
+			filterTable(WatchHistoryFilterType.ALL, WatchHistoryTimespanType.LAST_HUNDRED);
+
+			tableMain.autoResize();
+		}
 	}
 
 	private void filterTable(WatchHistoryFilterType filter, WatchHistoryTimespanType time) {
@@ -159,6 +193,7 @@ public class WatchHistoryFrame extends JFrame {
 		}
 
 		tableMain.setData(filtered);
+		_currentFilter = Tuple.Create(filter, time);
 	}
 
 	public void onSelect(WatchHistoryElement elem) {
@@ -182,6 +217,10 @@ public class WatchHistoryFrame extends JFrame {
 		}
 	}
 
+	private void onWindowClosed() {
+		movielist.removeChangeListener(_mlListener);
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		scrollPane2 = new JScrollPane();
@@ -202,10 +241,16 @@ public class WatchHistoryFrame extends JFrame {
 		setTitle(LocaleBundle.getString("WatchHistoryFrame.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(600, 415));
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				onWindowClosed();
+			}
+		});
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$rgap, default, $rgap, default:grow, $rgap", //$NON-NLS-1$
-			"$rgap, default:grow, $rgap, default, $rgap")); //$NON-NLS-1$
+			"$ugap, default, $rgap, default:grow, $ugap", //$NON-NLS-1$
+			"$ugap, default:grow, $rgap, default, $ugap")); //$NON-NLS-1$
 
 		//======== scrollPane2 ========
 		{

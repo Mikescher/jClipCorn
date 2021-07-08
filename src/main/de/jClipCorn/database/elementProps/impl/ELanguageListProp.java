@@ -32,4 +32,11 @@ public class ELanguageListProp extends EProperty<CCDBLanguageList> {
 	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set((Long)v);
 	}
+
+	@Override
+	public boolean valueEquals(CCDBLanguageList a, CCDBLanguageList b) {
+		if (a == null && b == null) return true;
+		if (a == null || b == null) return false;
+		return a.isEqual(b);
+	}
 }

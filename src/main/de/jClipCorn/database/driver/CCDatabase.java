@@ -211,6 +211,8 @@ public class CCDatabase {
 
 		mov.abortUpdating();
 
+		mov.resetDirty();
+
 		return mov;
 	}
 
@@ -223,6 +225,8 @@ public class CCDatabase {
 		updateSeriesFromResultSet(rs, ser);
 
 		ser.abortUpdating();
+
+		ser.resetDirty();
 
 		if (fillSeries) fillSeries(ser);
 
@@ -238,6 +242,8 @@ public class CCDatabase {
 
 		seas.abortUpdating();
 
+		seas.resetDirty();
+
 		if (fillSeason) fillSeason(seas);
 
 		return seas;
@@ -251,6 +257,8 @@ public class CCDatabase {
 		updateEpisodeFromResultSet(rs, ep);
 
 		ep.abortUpdating();
+
+		ep.resetDirty();
 
 		return ep;
 	}
@@ -493,6 +501,7 @@ public class CCDatabase {
 
 		CCMovie result = new CCMovie(list, nlid);
 		result.setDefaultValues(false);
+		result.resetDirty();
 
 		return result;
 	}
@@ -510,6 +519,7 @@ public class CCDatabase {
 
 		CCSeries result = new CCSeries(list, nlid);
 		result.setDefaultValues(false);
+		result.resetDirty();
 
 		return result;
 	}
@@ -527,6 +537,7 @@ public class CCDatabase {
 
 		CCSeason result = new CCSeason(s, sid);
 		result.setDefaultValues(false);
+		result.resetDirty();
 
 		return result;
 	}
@@ -544,6 +555,7 @@ public class CCDatabase {
 
 		CCEpisode result = new CCEpisode(s, eid);
 		result.setDefaultValues(false);
+		result.resetDirty();
 
 		return result;
 	}
@@ -625,6 +637,7 @@ public class CCDatabase {
 			}
 
 			stmt.execute();
+			mov.resetDirty();
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
@@ -653,6 +666,7 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_SER_LOCALID,     ser.getLocalID());
 
 			stmt.executeUpdate();
+			ser.resetDirty();
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
@@ -662,25 +676,26 @@ public class CCDatabase {
 	}
 	
 	@SuppressWarnings("nls")
-	public boolean updateSeasonInDatabase(CCSeason ser) {
+	public boolean updateSeasonInDatabase(CCSeason sea) {
 		try {
 			CCSQLStatement stmt = updateSeasonTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID,  ser.getSeries().getLocalID());
+			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID,  sea.getSeries().getLocalID());
 
-			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,      ser.Title.get());
-			stmt.setInt(DatabaseStructure.COL_SEAS_YEAR,      ser.Year.get());
+			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,      sea.Title.get());
+			stmt.setInt(DatabaseStructure.COL_SEAS_YEAR,      sea.Year.get());
 
-			stmt.setInt(DatabaseStructure.COL_SEAS_COVERID,   ser.getCoverID());
+			stmt.setInt(DatabaseStructure.COL_SEAS_COVERID,   sea.getCoverID());
 
-			stmt.setInt(DatabaseStructure.COL_SEAS_LOCALID,   ser.getLocalID());
+			stmt.setInt(DatabaseStructure.COL_SEAS_LOCALID,   sea.getLocalID());
 
 			stmt.executeUpdate();
+			sea.resetDirty();
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", ser.Title.get(), ser.getLocalID()), e);
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", sea.Title.get(), sea.getLocalID()), e);
 			return false;
 		}
 	}
@@ -749,6 +764,7 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_EPIS_LOCALID,       ep.getLocalID());
 
 			stmt.execute();
+			ep.resetDirty();
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
@@ -770,6 +786,9 @@ public class CCDatabase {
 			}
 			
 			rs.close();
+
+			mov.resetDirty();
+
 			return true;
 		} catch (SQLException | CCFormatException | SQLWrapperException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.Title.get(), mov.getLocalID()), e);
@@ -790,6 +809,9 @@ public class CCDatabase {
 			}
 			
 			rs.close();
+
+			ser.resetDirty();
+
 			return true;
 		} catch (SQLException | CCFormatException | SQLWrapperException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.Title.get(), ser.getLocalID()), e);
@@ -810,6 +832,9 @@ public class CCDatabase {
 			}
 			
 			rs.close();
+
+			sea.resetDirty();
+
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", sea.Title.get(), sea.getLocalID()), e);
@@ -830,6 +855,9 @@ public class CCDatabase {
 			}
 			
 			rs.close();
+
+			epi.resetDirty();
+
 			return true;
 		} catch (SQLException | CCFormatException | SQLWrapperException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", epi.Title.get(), epi.getLocalID()), e);

@@ -15,4 +15,7 @@ public interface IEProperty {
 	void deserializeFromDatabaseValue(Object v) throws CCFormatException;
 
 	boolean isReadonly();
+
+	boolean isDirty();
+	void resetDirty();
 }

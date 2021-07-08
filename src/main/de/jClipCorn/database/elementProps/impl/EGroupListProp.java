@@ -27,7 +27,7 @@ public class EGroupListProp extends EProperty<CCGroupList> {
 		try
 		{
 			_preventCallbackFunc = true;
-			set(v, true, true, false, true);
+			set(v, true, true, false, true, false);
 		}
 		finally
 		{
@@ -72,5 +72,12 @@ public class EGroupListProp extends EProperty<CCGroupList> {
 	@Override
 	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set(CCGroupList.parseWithoutAddingNewGroups(parent.getMovieList(), (String)v));
+	}
+
+	@Override
+	public boolean valueEquals(CCGroupList a, CCGroupList b) {
+		if (a == null && b == null) return true;
+		if (a == null || b == null) return false;
+		return a.isEqual(b);
 	}
 }

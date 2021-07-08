@@ -201,7 +201,6 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 			}
 
 			_cache.bust();
-			updateDBWithException();
 		}
 		catch (Throwable e1)
 		{

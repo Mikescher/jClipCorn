@@ -14,6 +14,7 @@ new FormModel {
 			"$sizePolicy": 1
 			"defaultCloseOperation": 2
 			"title": new FormMessage( null, "CCLogFrame.this.title" )
+			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosed", "onClosed", false ) )
 			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
 				name: "tpnlMain"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
@@ -245,6 +246,25 @@ new FormModel {
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "CCLog.SQL" )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "default:grow"
+					"$rowSpecs": "default:grow"
+				} ) {
+					name: "tabChanges"
+					add( new FormContainer( "de.jClipCorn.gui.frames.logFrame.LogChangesTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "lsChanges"
+						auxiliary() {
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(this, _movielist);"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 1
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": new FormMessage( null, "CCLog.Changes" )
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "unrelgap, default, labelcompgap, 100dlu, labelcompgap, default"

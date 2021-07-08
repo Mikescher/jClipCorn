@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.3.0.337" Java: "11.0.9.1" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.11" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -7,14 +7,15 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-			"$columnSpecs": "relgap, default, relgap, default:grow, relgap"
-			"$rowSpecs": "relgap, default:grow, relgap, default, relgap"
+			"$columnSpecs": "unrelgap, default, relgap, default:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default:grow, relgap, default, unrelgap"
 		} ) {
 			name: "this"
 			"title": new FormMessage( null, "WatchHistoryFrame.title" )
 			"$sizePolicy": 1
 			"defaultCloseOperation": 2
 			"minimumSize": new java.awt.Dimension( 600, 415 )
+			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosed", "onWindowClosed", false ) )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane2"
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.jSimpleTree.JSimpleTree" ) {

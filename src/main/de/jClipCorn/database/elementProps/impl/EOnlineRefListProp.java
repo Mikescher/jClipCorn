@@ -32,4 +32,11 @@ public class EOnlineRefListProp extends EProperty<CCOnlineReferenceList> {
 	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set(CCOnlineReferenceList.parse((String)v));
 	}
+
+	@Override
+	public boolean valueEquals(CCOnlineReferenceList a, CCOnlineReferenceList b) {
+		if (a == null && b == null) return true;
+		if (a == null || b == null) return false;
+		return a.equals(b);
+	}
 }

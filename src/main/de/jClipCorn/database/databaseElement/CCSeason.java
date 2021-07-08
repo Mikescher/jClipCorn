@@ -38,9 +38,9 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	private final SeasonCache _cache = new SeasonCache(this);
 
 	public final EIntProp    LocalID  = new EIntProp(   "LocalID", -1,        this, EPropertyType.DATABASE_PRIMARY_ID);
-	public final EIntProp    CoverID  = new EIntProp(   "CoverID",  -1,        this, EPropertyType.DATABASE_REF);
-	public final EStringProp Title    = new EStringProp("Title",    Str.Empty, this, EPropertyType.OBJECTIVE_METADATA);
-	public final EIntProp    Year     = new EIntProp(   "Year",     1900,      this, EPropertyType.OBJECTIVE_METADATA);
+	public final EIntProp    CoverID  = new EIntProp(   "CoverID", -1,        this, EPropertyType.DATABASE_REF);
+	public final EStringProp Title    = new EStringProp("Title",   Str.Empty, this, EPropertyType.OBJECTIVE_METADATA);
+	public final EIntProp    Year     = new EIntProp(   "Year",    1900,      this, EPropertyType.OBJECTIVE_METADATA);
 
 	private IEProperty[] _properties = null;
 
@@ -79,6 +79,19 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		for (IEProperty prop : getProperties()) if (!prop.isReadonly()) prop.resetToDefault();
 
 		if (updateDB) endUpdating(); else abortUpdating();
+	}
+
+	public boolean isDirty() {
+		for (var p : getProperties()) if (p.isDirty()) return true;
+		return false;
+	}
+
+	public void resetDirty() {
+		for (var p : getProperties()) p.resetDirty();
+	}
+
+	public String[] getDirty() {
+		return CCStreams.iterate(getProperties()).filter(IEProperty::isDirty).map(IEProperty::getName).toArray(new String[0]);
 	}
 
 	public void beginUpdating() {
@@ -350,8 +363,6 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		episodes.remove(episode);
 		
 		getSeries().getMovieList().removeEpisodeFromDatabase(episode);
-		
-		getMovieList().fireOnChangeDatabaseElement(getSeries());
 
 		_cache.bust();
 	}

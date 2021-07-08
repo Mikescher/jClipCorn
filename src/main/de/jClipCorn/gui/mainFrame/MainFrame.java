@@ -34,6 +34,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.UpdateConnector;
+import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -47,9 +48,11 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
-public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Listener, IActionRootFrame
+public class MainFrame extends JFrame implements FileDrop.Listener, IActionRootFrame
 {
 	private static MainFrame instance = null;
+
+	private final CCDBUpdateListener _mlListener;
 
 	private final CCMovieList movielist;
 
@@ -57,13 +60,12 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		super();
 		this.movielist = movielist;
 
-		movielist.addChangeListener(this);
+		movielist.addChangeListener(_mlListener = new CCDBUpdateAdapter() { @Override public void onAfterLoad() { onMovieListAfterLoad(); } });
 		CCActionTree actionTree = new CCActionTree(this);
 
 		initComponents();
 		postInit();
 
-		createWindowListener();
 		actionTree.implementKeyListener(this, (JPanel) getContentPane());
 
 		instance = this;
@@ -225,19 +227,6 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		return movielist;
 	}
 
-	private void createWindowListener() {
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				if (tryTerminate()) {
-					dispose();
-					terminate();
-					System.exit(0);
-				}
-			}
-		});
-	}
-
 	public CCDatabaseElement getSelectedElement() {
 		return clipTable.getSelectedDatabaseElement();
 	}
@@ -266,23 +255,7 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		edSearch.reset(force);
 	}
 
-	@Override
-	public void onAddDatabaseElement(CCDatabaseElement mov) {
-		// -
-	}
-
-	@Override
-	public void onRemMovie(CCDatabaseElement el) {
-		// -
-	}
-
-	@Override
-	public void onChangeDatabaseElement(CCDatabaseElement el) {
-		// -
-	}
-
-	@Override
-	public void onAfterLoad() {
+	public void onMovieListAfterLoad() {
 		if (CCProperties.getInstance().PROP_COMMON_CHECKFORUPDATES.getValue() && ! Main.BETA) {
 			new UpdateConnector(Main.TITLE, Main.VERSION, (src, available, version) -> SwingUtils.invokeLater(() ->
 			{
@@ -296,11 +269,6 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 				}
 			}), true);
 		}
-	}
-
-	@Override
-	public void onRefresh() {
-		// -
 	}
 
 	public DatabaseElementPreviewLabel getCoverLabel() {
@@ -343,6 +311,18 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		//}
 	}
 
+	private void onWindowClosing() {
+		if (tryTerminate()) {
+			dispose();
+			terminate();
+			System.exit(0);
+		}
+	}
+
+	private void onWindowClosed() {
+		movielist.removeChangeListener(_mlListener);
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		panelTop = new JPanel();
@@ -359,6 +339,16 @@ public class MainFrame extends JFrame implements CCDBUpdateListener, FileDrop.Li
 		//======== this ========
 		setMinimumSize(new Dimension(875, 625));
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				onWindowClosed();
+			}
+			@Override
+			public void windowClosing(WindowEvent e) {
+				onWindowClosing();
+			}
+		});
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
 			"$lcgap, 182px, $lcgap, 0dlu:grow, $lcgap", //$NON-NLS-1$

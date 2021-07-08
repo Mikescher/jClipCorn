@@ -34,4 +34,9 @@ public class EDateProp extends EProperty<CCDate> {
 	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set(CCDate.deserializeSQL((String)v));
 	}
+
+	@Override
+	public boolean valueEquals(CCDate a, CCDate b) {
+		return CCDate.equals(a, b);
+	}
 }

@@ -2,8 +2,12 @@ package de.jClipCorn.database.elementProps.impl;
 
 import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.util.exceptions.CCFormatException;
+import org.jetbrains.annotations.NonNls;
+
+import java.util.Objects;
 
 public class EIntProp extends EProperty<Integer> {
+	@NonNls
 	public EIntProp(String name, Integer defValue, IPropertyParent p, EPropertyType t) {
 		super(name, defValue, p, t);
 	}
@@ -26,5 +30,10 @@ public class EIntProp extends EProperty<Integer> {
 	@Override
 	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set((int)v);
+	}
+
+	@Override
+	public boolean valueEquals(Integer a, Integer b) {
+		return Objects.equals(a, b);
 	}
 }

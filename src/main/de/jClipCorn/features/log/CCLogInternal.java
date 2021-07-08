@@ -13,14 +13,18 @@ import de.jClipCorn.util.sqlwrapper.StatementType;
 import javax.swing.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CCLogInternal {
-	private static List<CCLogElement>         log      = new Vector<>();
-	private static List<CCLogChangedListener> listener = new Vector<>();
-	private static List<CCSQLLogElement>      sqlLog   = new Vector<>();
+	private static List<CCLogElement>         log       = new Vector<>();
+	private static List<CCLogChangedListener> listener  = new Vector<>();
+	private static List<CCSQLLogElement>      sqlLog    = new Vector<>();
+	private static List<CCChangeLogElement>   changeLog = new Vector<>();
+
+	private static boolean changeLogEnabled = true;
 
 	private static boolean isUnitTest = false;
 
@@ -29,10 +33,11 @@ public class CCLogInternal {
 
 	private static volatile boolean fatalExit = false;
 
-	private static final Object _dataLock = new Object();
-	private static final Object _fileLock = new Object();
-	private static final Object _obsLock  = new Object();
-	private static final Object _sqlLock  = new Object();
+	private static final Object _dataLock   = new Object();
+	private static final Object _fileLock   = new Object();
+	private static final Object _obsLock    = new Object();
+	private static final Object _sqlLock    = new Object();
+	private static final Object _changeLock = new Object();
 
 	private static final AtomicBoolean hasUnwatchedInformation = new AtomicBoolean(false);
 	private static final AtomicBoolean hasUnwatchedWarnings    = new AtomicBoolean(false);
@@ -42,11 +47,13 @@ public class CCLogInternal {
 	public static void initUnitTestMode() {
 		synchronized (_dataLock) {
 			synchronized (_obsLock) {
-				isUnitTest = true;
-				log = new Vector<>();
-				listener = new Vector<>();
-				sqlLog = new Vector<>();
-				changed = false;
+				isUnitTest       = true;
+				log              = new Vector<>();
+				listener         = new Vector<>();
+				sqlLog           = new Vector<>();
+				changeLog        = new Vector<>();
+				changed          = false;
+				changeLogEnabled = true;
 			}
 		}
 	}
@@ -101,6 +108,20 @@ public class CCLogInternal {
 		synchronized (_sqlLock) {
 			sqlLog.add(cle);
 		}
+
+		triggerSQLChanged(cle);
+	}
+
+	public static void addChange(String rootType, int rootID, String actualType, int actualID, String[] properties) {
+		CCChangeLogElement cle = new CCChangeLogElement(rootType, rootID, actualType, actualID, properties);
+
+		synchronized (_changeLock) {
+			if (!changeLogEnabled) return;
+
+			changeLog.add(cle);
+		}
+
+		triggerChangesChanged(cle);
 	}
 
 	private static CCLogElement lastLogElem() {
@@ -213,6 +234,12 @@ public class CCLogInternal {
 		}
 	}
 
+	public static int getChangeCount() {
+		synchronized (_changeLock) {
+			return changeLog.size();
+		}
+	}
+
 	public static CCLogElement getElement(CCLogType type, int position) {
 		synchronized (_dataLock) {
 			int count = 0;
@@ -254,20 +281,27 @@ public class CCLogInternal {
 		changed = true;
 
 		if (! SwingUtilities.isEventDispatchThread()) {
-			SwingUtils.invokeLater(() ->
-			{
-				synchronized (_obsLock) {
-					for(CCLogChangedListener ls : listener) {
-						ls.onChanged();
-					}
-				}
-			});
+			SwingUtils.invokeLater(() -> { synchronized (_obsLock) { for(CCLogChangedListener ls : listener) { ls.onChanged(); } } });
 		} else {
 			synchronized (_obsLock) {
-				for(CCLogChangedListener ls : listener) {
-					ls.onChanged();
-				}
+				for(CCLogChangedListener ls : listener) { ls.onChanged(); }
 			}
+		}
+	}
+
+	public static void triggerSQLChanged(final CCSQLLogElement e) {
+		if (! SwingUtilities.isEventDispatchThread()) {
+			SwingUtils.invokeLater(() -> { synchronized (_obsLock) { for(CCLogChangedListener ls : listener) { ls.onSQLChanged(e); } } });
+		} else {
+			synchronized (_obsLock) { for(CCLogChangedListener ls : listener) { ls.onSQLChanged(e); } }
+		}
+	}
+
+	public static void triggerChangesChanged(final CCChangeLogElement e) {
+		if (! SwingUtilities.isEventDispatchThread()) {
+			SwingUtils.invokeLater(() -> { synchronized (_obsLock) { for(CCLogChangedListener ls : listener) { ls.onPropsChanged(e); } } });
+		} else {
+			synchronized (_obsLock) { for(CCLogChangedListener ls : listener) { ls.onPropsChanged(e); } }
 		}
 	}
 
@@ -347,5 +381,17 @@ public class CCLogInternal {
 
 	public static boolean isUnitTest() {
 		return isUnitTest;
+	}
+
+	public static List<CCChangeLogElement> getChangeLogElementsCopy() {
+		synchronized (_changeLock) {
+			return new ArrayList<>(changeLog);
+		}
+	}
+
+	public static void setChangeEventsEnabled(boolean b) {
+		synchronized (_changeLock) {
+			changeLogEnabled = b;
+		}
 	}
 }

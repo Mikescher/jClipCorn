@@ -56,4 +56,9 @@ public class EEnumProp<TType extends ContinoousEnum<TType>> extends EProperty<TT
 	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set((TType)_wrapper.findOrException((int)v));
 	}
+
+	@Override
+	public boolean valueEquals(TType a, TType b) {
+		return a == b;
+	}
 }

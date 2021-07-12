@@ -1,6 +1,7 @@
 package de.jClipCorn.util.datatypes;
 
 import de.jClipCorn.util.lambda.Func1to1;
+import de.jClipCorn.util.lambda.Func2to1;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -47,6 +48,10 @@ public class Opt<T> {
 		return isSet;
 	}
 
+	public boolean isEmpty() {
+		return !isSet;
+	}
+
 	public void ifPresent(Consumer<? super T> consumer) {
 		if (isSet) consumer.accept(value);
 	}
@@ -79,5 +84,12 @@ public class Opt<T> {
 		} else {
 			return Optional.empty();
 		}
+	}
+
+	public boolean isEqual(Opt<T> other, Func2to1<T, T, Boolean> cmp)
+	{
+		if (this.isEmpty() && other.isEmpty()) return true;
+		if (this.isEmpty() || other.isEmpty()) return false;
+		return cmp.invoke(this.get(), other.get());
 	}
 }

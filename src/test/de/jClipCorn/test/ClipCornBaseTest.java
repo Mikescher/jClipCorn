@@ -73,9 +73,9 @@ public class ClipCornBaseTest {
 		{
 			for (var p : ml1.iteratorPlayables())
 			{
-				if (p.mediaInfo().get().isUnset()) continue;
-				var mi = p.mediaInfo().get().toPartial();
-				mi.Checksum = Opt.of("[01-" + StringUtils.leftPad(Long.toHexString(mi.Filesize.orElse(CCFileSize.ZERO).getBytes()).toUpperCase(), 10, '0') + "-00:00:00:00:00:00:00:00]");
+				if (p.mediaInfo().getPartial().Checksum.isPresent()) continue;
+				var mi = p.mediaInfo().getPartial();
+				mi = mi.WithChecksum(Opt.of("[01-" + StringUtils.leftPad(Long.toHexString(mi.Filesize.orElse(CCFileSize.ZERO).getBytes()).toUpperCase(), 10, '0') + "-00:00:00:00:00:00:00:00]"));
 				p.mediaInfo().set(mi.toMediaInfo());
 			}
 		}

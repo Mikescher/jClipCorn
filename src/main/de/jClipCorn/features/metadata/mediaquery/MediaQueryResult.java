@@ -8,7 +8,6 @@ import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.InnerMediaQueryException;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
-import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
@@ -358,11 +357,13 @@ public class MediaQueryResult {
 
 		if (FileSize   <= 0)          return CCMediaInfo.EMPTY;
 
-		return new CCMediaInfo(CDate, MDate, new CCFileSize(FileSize), Duration,
-		                       tbr,
-			                   video.Format, video.Width, video.Height, video.FrameRate, video.BitDepth, video.FrameCount, Str.coalesce(video.CodecID),
-			                   audio.Format, audio.Channels, Str.coalesce(audio.CodecID), audio.Samplingrate,
-			                   Checksum);
+		return CCMediaInfo.create
+		(
+			CDate, MDate, new CCFileSize(FileSize), Checksum,
+			Duration, tbr,
+			video.Format, video.Width, video.Height, video.FrameRate, video.BitDepth, video.FrameCount, Str.coalesce(video.CodecID),
+			audio.Format, audio.Channels, Str.coalesce(audio.CodecID), audio.Samplingrate
+		);
 	}
 
 	public int getTotalBitrate() {
@@ -400,26 +401,26 @@ public class MediaQueryResult {
 
 		int tbr = getTotalBitrate();
 
-		PartialMediaInfo pmi = new PartialMediaInfo();
-		pmi.RawOutput = Opt.of(Raw);
-
-		pmi.CreationDate     = Opt.of(CDate);
-		pmi.ModificationDate = Opt.of(MDate);
-		pmi.Filesize         = Opt.of(new CCFileSize(FileSize));
-		pmi.Duration         = (Duration==-1) ? Opt.empty() : Opt.of(Duration);
-		pmi.Bitrate          = (tbr==-1) ? Opt.empty() : Opt.of(tbr);
-		pmi.VideoFormat      = (video == null || Str.isNullOrWhitespace(video.Format)) ? Opt.empty() : Opt.of(video.Format);
-		pmi.PixelSize        = (video == null) ? Opt.empty() : Opt.of(Tuple.Create(video.Width, video.Height));
-		pmi.Framerate        = (video == null || video.FrameRate == -1) ? Opt.empty() : Opt.of(video.FrameRate);
-		pmi.Bitdepth         = (video == null || video.BitDepth == -1) ? Opt.empty() : Opt.of(video.BitDepth);
-		pmi.FrameCount       = (video == null || video.FrameCount == -1) ? Opt.empty() : Opt.of(video.FrameCount);
-		pmi.VideoCodec       = (video == null || Str.isNullOrWhitespace(video.CodecID)) ? Opt.empty() : Opt.of(video.CodecID);
-		pmi.AudioFormat      = (audio == null || Str.isNullOrWhitespace(audio.Format)) ? Opt.empty() : Opt.of(audio.Format);
-		pmi.AudioChannels    = (audio == null || audio.Channels == -1) ? Opt.empty() : Opt.of(audio.Channels);
-		pmi.AudioCodec       = (audio == null || Str.isNullOrWhitespace(audio.CodecID)) ? Opt.empty() : Opt.of(audio.CodecID);
-		pmi.AudioSamplerate  = (audio == null || audio.Samplingrate == -1) ? Opt.empty() : Opt.of(audio.Samplingrate);
-		pmi.Checksum         = Str.isNullOrWhitespace(Checksum) ? Opt.empty() : Opt.of(Checksum);
-
-		return pmi;
+		return PartialMediaInfo.create
+		(
+			Opt.of(Raw),
+			Opt.of(CDate),
+			Opt.of(MDate),
+			Opt.of(new CCFileSize(FileSize)),
+			Str.isNullOrWhitespace(Checksum) ? Opt.empty() : Opt.of(Checksum),
+			(Duration==-1) ? Opt.empty() : Opt.of(Duration),
+			(tbr==-1) ? Opt.empty() : Opt.of(tbr),
+			(video == null || Str.isNullOrWhitespace(video.Format)) ? Opt.empty() : Opt.of(video.Format),
+			(video == null || video.Width <= 0) ? Opt.empty() : Opt.of(video.Width),
+			(video == null || video.Height <= 0) ? Opt.empty() : Opt.of(video.Height),
+			(video == null || video.FrameRate == -1) ? Opt.empty() : Opt.of(video.FrameRate),
+			(video == null || video.BitDepth == -1) ? Opt.empty() : Opt.of(video.BitDepth),
+			(video == null || video.FrameCount == -1) ? Opt.empty() : Opt.of(video.FrameCount),
+			(video == null || Str.isNullOrWhitespace(video.CodecID)) ? Opt.empty() : Opt.of(video.CodecID),
+			(audio == null || Str.isNullOrWhitespace(audio.Format)) ? Opt.empty() : Opt.of(audio.Format),
+			(audio == null || audio.Channels == -1) ? Opt.empty() : Opt.of(audio.Channels),
+			(audio == null || Str.isNullOrWhitespace(audio.CodecID)) ? Opt.empty() : Opt.of(audio.CodecID),
+			(audio == null || audio.Samplingrate == -1) ? Opt.empty() : Opt.of(audio.Samplingrate)
+		);
 	}
 }

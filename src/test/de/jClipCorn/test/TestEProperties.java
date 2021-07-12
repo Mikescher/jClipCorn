@@ -3,6 +3,7 @@ package de.jClipCorn.test;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.stream.CCStreams;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -205,7 +206,7 @@ public class TestEProperties extends ClipCornBaseTest {
 			assertTrue(e1.isDirty());
 			assertTrue(e1.Title.isDirty());
 
-			e1.MediaInfo.AudioChannels.set((short)3);
+			e1.MediaInfo.AudioChannels.set(Opt.of((short)3));
 			assertTrue(e1.isDirty());
 			assertTrue(e1.MediaInfo.AudioChannels.isDirty());
 		}

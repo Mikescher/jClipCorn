@@ -421,7 +421,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	public void setMediaInfo(CCMediaInfo mi) {
-		ctrlMediaInfo.setValue(mi);
+		ctrlMediaInfo.setValue(mi.toPartial());
 	}
 
 	@Override

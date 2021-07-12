@@ -6,6 +6,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.DriveMap;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -481,7 +482,7 @@ public class DatabaseAutofixer {
 
 				var cdate = attr.creationTime().toMillis();
 
-				elem.mediaInfo().CDate.set(cdate);
+				elem.mediaInfo().CDate.set(Opt.of(cdate));
 				return true;
 
 			} catch (IOException ex) {
@@ -503,7 +504,7 @@ public class DatabaseAutofixer {
 
 				var mdate = attr.lastModifiedTime().toMillis();
 
-				elem.mediaInfo().MDate.set(mdate);
+				elem.mediaInfo().MDate.set(Opt.of(mdate));
 				return true;
 
 			} catch (IOException ex) {

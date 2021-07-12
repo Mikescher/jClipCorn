@@ -4,7 +4,6 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
-import de.jClipCorn.util.datatypes.Tuple;
 
 public class FFProbeResult {
 	public final String Raw;
@@ -64,26 +63,30 @@ public class FFProbeResult {
 	}
 
 	public PartialMediaInfo toPartial() {
-		PartialMediaInfo pmi = new PartialMediaInfo();
-		pmi.RawOutput = Opt.of(Raw);
 
-		pmi.CreationDate     = (CDate == -1) ? Opt.empty() : Opt.of(CDate);
-		pmi.ModificationDate = (MDate == -1) ? Opt.empty() : Opt.of(MDate);
-		pmi.Filesize         = (FileSize == -1) ? Opt.empty() : Opt.of(new CCFileSize(FileSize));
-		pmi.Duration         = (Duration == -1) ? Opt.empty() : Opt.of(Duration);
-		pmi.Bitrate          = (Bitrate == -1) ? Opt.empty() : Opt.of(Bitrate);
-		pmi.VideoFormat      = Opt.empty();
-		pmi.PixelSize        = (Width == -1 || Height == -1) ? Opt.empty() : Opt.of(Tuple.Create(Width, Height));
-		pmi.Framerate        = (FrameRate == -1) ? Opt.empty() : Opt.of(FrameRate);
-		pmi.Bitdepth         = (BitDepth == -1) ? Opt.empty() : Opt.of(BitDepth);
-		pmi.FrameCount       = (FrameCount == -1) ? Opt.empty() : Opt.of(FrameCount);
-		pmi.VideoCodec       = Opt.empty();
-		pmi.AudioFormat      = Opt.empty();
-		pmi.AudioChannels    = (AudioChannels == -1) ? Opt.empty() : Opt.of(AudioChannels);
-		pmi.AudioCodec       = Opt.empty();
-		pmi.AudioSamplerate  = (AudioSampleRate == -1) ? Opt.empty() : Opt.of(AudioSampleRate);
-		pmi.Checksum         = Str.isNullOrWhitespace(Checksum) ? Opt.empty() : Opt.of(Checksum);
+		return PartialMediaInfo.create
+		(
+			Opt.of(Raw),
+			(CDate == -1) ? Opt.empty() : Opt.of(CDate),
+			(MDate == -1) ? Opt.empty() : Opt.of(MDate),
+			(FileSize == -1) ? Opt.empty() : Opt.of(new CCFileSize(FileSize)),
+			Str.isNullOrWhitespace(Checksum) ? Opt.empty() : Opt.of(Checksum),
 
-		return pmi;
+			(Duration == -1) ? Opt.empty() : Opt.of(Duration),
+			(Bitrate == -1) ? Opt.empty() : Opt.of(Bitrate),
+
+			Opt.empty(),
+			(Width == -1) ? Opt.empty() : Opt.of(Width),
+			(Height == -1) ? Opt.empty() : Opt.of(Height),
+			(FrameRate == -1) ? Opt.empty() : Opt.of(FrameRate),
+			(BitDepth == -1) ? Opt.empty() : Opt.of(BitDepth),
+			(FrameCount == -1) ? Opt.empty() : Opt.of(FrameCount),
+			Opt.empty(),
+
+			Opt.empty(),
+			(AudioChannels == -1) ? Opt.empty() : Opt.of(AudioChannels),
+			Opt.empty(),
+			(AudioSampleRate == -1) ? Opt.empty() : Opt.of(AudioSampleRate)
+		);
 	}
 }

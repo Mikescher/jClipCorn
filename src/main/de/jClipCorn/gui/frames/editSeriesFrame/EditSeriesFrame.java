@@ -616,7 +616,7 @@ public class EditSeriesFrame extends JFrame
 			edEpisodePart.setPath(episode.getPart());
 			edEpisodeTags.setValue(episode.getTags());
 			ctrlEpisodeLanguage.setValue(episode.getLanguage());
-			ctrlEpisodeMediaInfo.setValue(episode.mediaInfo().get());
+			ctrlEpisodeMediaInfo.setValue(episode.mediaInfo().getPartial());
 
 			updateEpisodesFilesizeDisplay();
 			testEpisodePart();

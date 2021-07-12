@@ -1,6 +1,7 @@
 package de.jClipCorn.database.databaseElement.datapacks;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 
@@ -16,13 +17,13 @@ public class EpisodeDataPack implements IEpisodeData
 	private final CCDateTimeList viewedHistory;
 	private final CCTagList tags;
 	private final CCDBLanguageList language;
-	private final CCMediaInfo mediaInfo;
+	private final PartialMediaInfo mediaInfo;
 
 	public EpisodeDataPack(int episodeNumber, String title, int length,
 						   CCFileFormat format, CCFileSize filesize,
 						   CCPath part,
 						   CCDate addDate, CCDateTimeList viewedHistory,
-						   CCTagList tags, CCDBLanguageList language, CCMediaInfo mediaInfo)
+						   CCTagList tags, CCDBLanguageList language, PartialMediaInfo mediaInfo)
 	{
 		this.episodeNumber = episodeNumber;
 		this.title = title;
@@ -57,5 +58,7 @@ public class EpisodeDataPack implements IEpisodeData
 
 	@Override public CCDBLanguageList getLanguage() { return language; }
 
-	@Override public CCMediaInfo getMediaInfo() { return mediaInfo; }
+	@Override public CCMediaInfo getMediaInfo() { return mediaInfo.toMediaInfo(); }
+
+	@Override public PartialMediaInfo getPartialMediaInfo() { return mediaInfo; }
 }

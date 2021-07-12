@@ -145,7 +145,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 			double l = 0;
 			for (CCEpisode ee: iteratorEpisodes()) {
 				if (!ee.MediaInfo.get().isSet()) return Opt.empty();
-				l += ee.MediaInfo.Duration.get();
+				l += ee.MediaInfo.get().getDuration();
 			}
 			return Opt.of(l);
 		});

@@ -159,7 +159,7 @@ public class EditMediaInfoDialog extends JDialog {
 		doShowHints(Opt.of(r.toPartial()), MetadataSourceType.MEDIAINFO);
 	}
 
-	public EditMediaInfoDialog(Component owner, FSPath path, CCMediaInfo r, MediaInfoResultHandler h) {
+	public EditMediaInfoDialog(Component owner, FSPath path, PartialMediaInfo r, MediaInfoResultHandler h) {
 		super();
 		_handler = h;
 		
@@ -171,9 +171,9 @@ public class EditMediaInfoDialog extends JDialog {
 		setLocationRelativeTo(owner);
 
 		MIDialogResultSet rs = CCStreams.iterate(_results).singleOrNull(p -> p.Type == MetadataSourceType.MEDIAINFO);
-		rs.updateData(r.toPartial());
-		doApply(r.toPartial());
-		doShowHints(Opt.of(r.toPartial()), MetadataSourceType.MEDIAINFO);
+		rs.updateData(r);
+		doApply(r);
+		doShowHints(Opt.of(r), MetadataSourceType.MEDIAINFO);
 	}
 
 	public EditMediaInfoDialog(Component owner, FSPath path, MediaInfoResultHandler h) {
@@ -617,17 +617,17 @@ public class EditMediaInfoDialog extends JDialog {
 
 		_hintType = typ;
 
-		lblHintCDate.setText(mi.flatten(p -> p.CreationDate).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintMDate.setText(mi.flatten(p -> p.ModificationDate).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
+		lblHintCDate.setText(mi.flatten(p -> p.CDate).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
+		lblHintMDate.setText(mi.flatten(p -> p.MDate).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
 		lblHintFilesize.setText(mi.flatten(p -> p.Filesize).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
 		lblHintDuration.setText(mi.flatten(p -> p.Duration).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
 		lblHintBitrate.setText(mi.flatten(p -> p.Bitrate).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
 		lblHintVideoFormat.setText(mi.flatten(p -> p.VideoFormat).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintVideoWidth.setText(mi.flatten(p -> p.PixelSize).mapOrElse(p -> "("+p.Item1+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintVideoHeight.setText(mi.flatten(p -> p.PixelSize).mapOrElse(p -> "("+p.Item2+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
+		lblHintVideoWidth.setText(mi.flatten(p -> p.Width).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
+		lblHintVideoHeight.setText(mi.flatten(p -> p.Height).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
 		lblHintVideoFramerate.setText(mi.flatten(p -> p.Framerate).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
 		lblHintVideoBitdepth.setText(mi.flatten(p -> p.Bitdepth).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintVideoFramecount.setText(mi.flatten(p -> p.FrameCount).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
+		lblHintVideoFramecount.setText(mi.flatten(p -> p.Framecount).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
 		lblHintVideoCodec.setText(mi.flatten(p -> p.VideoCodec).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
 		lblHintAudioFormat.setText(mi.flatten(p -> p.AudioFormat).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
 		lblHintAudioChannels.setText(mi.flatten(p -> p.AudioChannels).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
@@ -713,19 +713,19 @@ public class EditMediaInfoDialog extends JDialog {
 	}
 
 	public void doApply(PartialMediaInfo mi) {
-		mi.CreationDate.ifPresent(v -> ctrlCDate.setValue(v));
-		mi.ModificationDate.ifPresent(v -> ctrlMDate.setValue(v));
+		mi.CDate.ifPresent(v -> ctrlCDate.setValue(v));
+		mi.MDate.ifPresent(v -> ctrlMDate.setValue(v));
 		mi.Checksum.ifPresent(v -> ctrlChecksum.setText(v));
 		mi.Filesize.ifPresent(v -> ctrlFilesize.setValue(v.getBytes()));
 		mi.Duration.ifPresent(v -> ctrlDuration.setValue(v));
 		mi.Bitrate.ifPresent(v -> ctrlBitrate.setValue(v));
 
 		mi.VideoFormat.ifPresent(v -> ctrlVideoFormat.setText(v));
-		mi.PixelSize.ifPresent(v -> ctrlVideoWidth.setValue(v.Item1));
-		mi.PixelSize.ifPresent(v -> ctrlVideoHeight.setValue(v.Item2));
+		mi.Width.ifPresent(v -> ctrlVideoWidth.setValue(v));
+		mi.Height.ifPresent(v -> ctrlVideoHeight.setValue(v));
 		mi.Framerate.ifPresent(v -> ctrlVideoFramerate.setValue(v));
 		mi.Bitdepth.ifPresent(v -> ctrlVideoBitdepth.setValue(v));
-		mi.FrameCount.ifPresent(v -> ctrlVideoFramecount.setValue(v));
+		mi.Framecount.ifPresent(v -> ctrlVideoFramecount.setValue(v));
 		mi.VideoCodec.ifPresent(v -> ctrlVideoCodec.setText(v));
 
 		mi.AudioFormat.ifPresent(v -> ctrlAudioFormat.setText(v));
@@ -798,7 +798,7 @@ public class EditMediaInfoDialog extends JDialog {
 
 		if (err) return null;
 
-		return new CCMediaInfo(cdate, mdate, new CCFileSize(fsize), durat, brate, vfmt, width, height, frate, bdepth, fcount, vcodec, afmt, achnls, acodec, srate, chksum);
+		return CCMediaInfo.create(cdate, mdate, new CCFileSize(fsize), chksum, durat, brate, vfmt, width, height, frate, bdepth, fcount, vcodec, afmt, achnls, acodec, srate);
 	}
 
 	private void onOK() {

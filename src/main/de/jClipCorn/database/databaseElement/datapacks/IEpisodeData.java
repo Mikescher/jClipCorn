@@ -1,6 +1,7 @@
 package de.jClipCorn.database.databaseElement.datapacks;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 
@@ -17,4 +18,5 @@ public interface IEpisodeData
 	CCTagList getTags();
 	CCDBLanguageList getLanguage();
 	CCMediaInfo getMediaInfo();
+	PartialMediaInfo getPartialMediaInfo();
 }

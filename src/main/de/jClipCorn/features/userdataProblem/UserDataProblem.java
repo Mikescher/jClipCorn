@@ -235,10 +235,11 @@ public class UserDataProblem {
 		//################################################################################################################
 
 		if (!newdata.getMediaInfo().isSet()) {
-			ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET));
+			String err = newdata.getPartialMediaInfo().validate();
+			ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET, err));
 		} else {
 			if (!CCFileSize.isEqual(newdata.getMediaInfo().getFilesize(), newdata.getFilesize()) && partcount_nonempty == 1) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
-			String err = newdata.getMediaInfo().validate();
+			String err = newdata.getPartialMediaInfo().validate();
 			if (err != null) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_DATA, err));
 		}
 
@@ -467,10 +468,11 @@ public class UserDataProblem {
 		//################################################################################################################
 
 		if (!newdata.getMediaInfo().isSet()) {
-			ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET));
+			String err = newdata.getPartialMediaInfo().validate();
+			ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET, err));
 		} else {
 			if (!CCFileSize.isEqual(newdata.getMediaInfo().getFilesize(), newdata.getFilesize())) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
-			String err = newdata.getMediaInfo().validate();
+			String err = newdata.getPartialMediaInfo().validate();
 			if (err != null) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_DATA, err));
 		}
 

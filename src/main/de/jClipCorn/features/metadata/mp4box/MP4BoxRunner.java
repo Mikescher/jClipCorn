@@ -44,11 +44,14 @@ public class MP4BoxRunner implements MetadataSource {
 		try	{
 			var hash = ChecksumHelper.fastVideoHash(filename);
 
-			PartialMediaInfo mi = new PartialMediaInfo();
-			mi.RawOutput = Opt.of(ffoutput);
-			mi.CreationDate = Opt.of(attr.creationTime().toMillis());
-			mi.ModificationDate = Opt.of(attr.lastModifiedTime().toMillis());
-			mi.Checksum = Opt.of(hash);
+			var rawout = Opt.of(ffoutput);
+			var cdate = Opt.of(attr.creationTime().toMillis());
+			var mdate = Opt.of(attr.lastModifiedTime().toMillis());
+			var checksum = Opt.of(hash);
+
+			var duration = Opt.<Double>empty();
+			var width = Opt.<Integer>empty();
+			var height = Opt.<Integer>empty();
 
 			for (String line : SimpleFileUtils.splitLines(ffoutput))
 			{
@@ -58,21 +61,26 @@ public class MP4BoxRunner implements MetadataSource {
 					double m = Integer.parseInt(m1.group(2));
 					double s = Integer.parseInt(m1.group(3));
 
-					mi.Duration = Opt.of(h*3600 + m*60 + s);
+					duration = Opt.of(h*3600 + m*60 + s);
 					continue;
 				}
 
 				Matcher m2 = Pattern.compile("^.*Video - Visual Size ([0-9]+) x ([0-9]+)$").matcher(line);
 				if (m2.matches()) {
-					int w = Integer.parseInt(m2.group(1));
-					int h = Integer.parseInt(m2.group(2));
-
-					mi.PixelSize = Opt.of(Tuple.Create(w, h));
+					width  = Opt.of(Integer.parseInt(m2.group(1)));
+					height = Opt.of(Integer.parseInt(m2.group(2)));
 					continue;
 				}
 			}
 
-			return mi;
+			return PartialMediaInfo.create
+			(
+				Opt.empty(),
+				cdate, mdate, Opt.empty(), checksum,
+				duration, Opt.empty(),
+				Opt.empty(), width, height, Opt.empty(), Opt.empty(), Opt.empty(), Opt.empty(),
+				Opt.empty(), Opt.empty(), Opt.empty(), Opt.empty()
+			);
 
 		} catch (JSONException e) {
 			throw new MP4BoxQueryException(e.getMessage(), ExceptionUtils.getStackTrace(e) + "\n\n\n--------------\n\n\n" + ffoutput); //$NON-NLS-1$

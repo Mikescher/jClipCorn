@@ -3,6 +3,7 @@ package de.jClipCorn.gui.frames.batchEditFrame;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
+import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 
@@ -20,7 +21,7 @@ public class BatchEditEpisodeData implements IEpisodeData
 	public CCDate           addDate;
 	public CCDateTimeList   viewedHistory;
 	public CCDBLanguageList language;
-	public CCMediaInfo      mediaInfo;
+	public PartialMediaInfo mediaInfo;
 
 	public BatchEditEpisodeData(CCEpisode e) {
 		_source = e;
@@ -35,7 +36,7 @@ public class BatchEditEpisodeData implements IEpisodeData
 		addDate       = e.getAddDate();
 		viewedHistory = e.ViewedHistory.get();
 		language      = e.getLanguage();
-		mediaInfo     = e.mediaInfo().get();
+		mediaInfo     = e.mediaInfo().getPartial();
 	}
 
 	public CCEpisode getSource() {
@@ -52,7 +53,7 @@ public class BatchEditEpisodeData implements IEpisodeData
 	public boolean isDirty_AddDate()       { return !_source.getAddDate().isEqual(addDate); }
 	public boolean isDirty_ViewedHistory() { return !_source.ViewedHistory.get().isEqual(viewedHistory); }
 	public boolean isDirty_Language()      { return !_source.getLanguage().isEqual(language); }
-	public boolean isDirty_MediaInfo()     { return !_source.mediaInfo().get().isEqual(mediaInfo); }
+	public boolean isDirty_MediaInfo()     { return !_source.mediaInfo().getPartial().isEqual(mediaInfo); }
 
 	public boolean isDirty()
 	{
@@ -75,7 +76,8 @@ public class BatchEditEpisodeData implements IEpisodeData
 	@Override public CCDateTimeList getViewedHistory() { return CCDateTimeList.createEmpty(); }
 	@Override public CCTagList getTags() { return CCTagList.EMPTY; }
 	@Override public CCDBLanguageList getLanguage() { return language; }
-	@Override public CCMediaInfo getMediaInfo() { return mediaInfo; }
+	@Override public CCMediaInfo getMediaInfo() { return mediaInfo.toMediaInfo(); }
+	@Override public PartialMediaInfo getPartialMediaInfo() { return mediaInfo; }
 	@Override public int getEpisodeNumber() { return episodeNumber; }
 	@Override public String getTitle() { return title; }
 	@Override public int getLength() { return length; }

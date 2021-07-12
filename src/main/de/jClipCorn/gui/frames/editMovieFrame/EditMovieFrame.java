@@ -185,7 +185,7 @@ public class EditMovieFrame extends JFrame implements ParseResultHandler, UserDa
 		edReference.setValue(movie.getOnlineReference());
 		edGroups.setValue(movie.getGroups());
 
-		ctrlMediaInfo.setValue(movie.mediaInfo().get());
+		ctrlMediaInfo.setValue(movie.mediaInfo().getPartial());
 
 		updateByteDisp();
 		testPaths();

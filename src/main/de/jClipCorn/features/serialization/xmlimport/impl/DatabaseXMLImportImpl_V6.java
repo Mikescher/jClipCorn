@@ -2,8 +2,10 @@ package de.jClipCorn.features.serialization.xmlimport.impl;
 
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.serialization.xmlimport.IDatabaseXMLImporterImpl;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.helper.ByteUtilies;
@@ -75,24 +77,25 @@ public class DatabaseXMLImportImpl_V6 implements IDatabaseXMLImporterImpl
 
 			if (e.hasAllAttributes("mediainfo.filesize", "mediainfo.cdate", "mediainfo.mdate", "mediainfo.audioformat", "mediainfo.videoformat", "mediainfo.width", "mediainfo.height", "mediainfo.framerate", "mediainfo.duration", "mediainfo.bitdepth", "mediainfo.bitrate", "mediainfo.framecount", "mediainfo.audiochannels", "mediainfo.videocodec", "mediainfo.audiocodec", "mediainfo.audiosamplerate"))
 			{
-				o.MediaInfo.set(new CCMediaInfo(
-					e.getAttributeLongValueOrThrow("mediainfo.cdate"),
-					e.getAttributeLongValueOrThrow("mediainfo.mdate"),
-					new CCFileSize(e.getAttributeLongValueOrThrow("mediainfo.filesize")),
-					e.getAttributeDoubleValueOrThrow("mediainfo.duration"),
-					e.getAttributeIntValueOrThrow("mediainfo.bitrate"),
-					e.getAttributeValueOrThrow("mediainfo.videoformat"),
-					e.getAttributeIntValueOrThrow("mediainfo.width"),
-					e.getAttributeIntValueOrThrow("mediainfo.height"),
-					e.getAttributeDoubleValueOrThrow("mediainfo.framerate"),
-					e.getAttributeShortValueOrThrow("mediainfo.bitdepth"),
-					e.getAttributeIntValueOrThrow("mediainfo.framecount"),
-					e.getAttributeValueOrThrow("mediainfo.videocodec"),
-					e.getAttributeValueOrThrow("mediainfo.audioformat"),
-					e.getAttributeShortValueOrThrow("mediainfo.audiochannels"),
-					e.getAttributeValueOrThrow("mediainfo.audiocodec"),
-					e.getAttributeIntValueOrThrow("mediainfo.audiosamplerate"),
-					e.getAttributeValueOrThrow("mediainfo.checksum")));
+				o.MediaInfo.set(PartialMediaInfo.create(
+					Opt.empty(),
+					Opt.of(e.getAttributeLongValueOrThrow("mediainfo.cdate")),
+					Opt.of(e.getAttributeLongValueOrThrow("mediainfo.mdate")),
+					Opt.of(new CCFileSize(e.getAttributeLongValueOrThrow("mediainfo.filesize"))),
+					Opt.of(e.getAttributeValueOrThrow("mediainfo.checksum")),
+					Opt.of(e.getAttributeDoubleValueOrThrow("mediainfo.duration")),
+					Opt.of(e.getAttributeIntValueOrThrow("mediainfo.bitrate")),
+					Opt.of(e.getAttributeValueOrThrow("mediainfo.videoformat")),
+					Opt.of(e.getAttributeIntValueOrThrow("mediainfo.width")),
+					Opt.of(e.getAttributeIntValueOrThrow("mediainfo.height")),
+					Opt.of(e.getAttributeDoubleValueOrThrow("mediainfo.framerate")),
+					Opt.of(e.getAttributeShortValueOrThrow("mediainfo.bitdepth")),
+					Opt.of(e.getAttributeIntValueOrThrow("mediainfo.framecount")),
+					Opt.of(e.getAttributeValueOrThrow("mediainfo.videocodec")),
+					Opt.of(e.getAttributeValueOrThrow("mediainfo.audioformat")),
+					Opt.of(e.getAttributeShortValueOrThrow("mediainfo.audiochannels")),
+					Opt.of(e.getAttributeValueOrThrow("mediainfo.audiocodec")),
+					Opt.of(e.getAttributeIntValueOrThrow("mediainfo.audiosamplerate"))));
 			}
 		}
 		o.endUpdating();
@@ -169,24 +172,25 @@ public class DatabaseXMLImportImpl_V6 implements IDatabaseXMLImporterImpl
 
 			if (e.hasAllAttributes("mediainfo.filesize", "mediainfo.cdate", "mediainfo.mdate", "mediainfo.audioformat", "mediainfo.videoformat", "mediainfo.width", "mediainfo.height", "mediainfo.framerate", "mediainfo.duration", "mediainfo.bitdepth", "mediainfo.bitrate", "mediainfo.framecount", "mediainfo.audiochannels", "mediainfo.videocodec", "mediainfo.audiocodec", "mediainfo.audiosamplerate"))
 			{
-				o.MediaInfo.set(new CCMediaInfo(
-					e.getAttributeLongValueOrThrow("mediainfo.cdate"),
-					e.getAttributeLongValueOrThrow("mediainfo.mdate"),
-					new CCFileSize(e.getAttributeLongValueOrThrow("mediainfo.filesize")),
-					e.getAttributeDoubleValueOrThrow("mediainfo.duration"),
-					e.getAttributeIntValueOrThrow("mediainfo.bitrate"),
-					e.getAttributeValueOrThrow("mediainfo.videoformat"),
-					e.getAttributeIntValueOrThrow("mediainfo.width"),
-					e.getAttributeIntValueOrThrow("mediainfo.height"),
-					e.getAttributeDoubleValueOrThrow("mediainfo.framerate"),
-					e.getAttributeShortValueOrThrow("mediainfo.bitdepth"),
-					e.getAttributeIntValueOrThrow("mediainfo.framecount"),
-					e.getAttributeValueOrThrow("mediainfo.videocodec"),
-					e.getAttributeValueOrThrow("mediainfo.audioformat"),
-					e.getAttributeShortValueOrThrow("mediainfo.audiochannels"),
-					e.getAttributeValueOrThrow("mediainfo.audiocodec"),
-					e.getAttributeIntValueOrThrow("mediainfo.audiosamplerate"),
-					e.getAttributeValueOrThrow("mediainfo.checksum")));
+				o.MediaInfo.set(PartialMediaInfo.create(
+					Opt.empty(),
+					Opt.of(e.getAttributeLongValueOrThrow("mediainfo.cdate")),
+					Opt.of(e.getAttributeLongValueOrThrow("mediainfo.mdate")),
+					Opt.of(new CCFileSize(e.getAttributeLongValueOrThrow("mediainfo.filesize"))),
+					Opt.of(e.getAttributeValueOrThrow("mediainfo.checksum")),
+					Opt.of(e.getAttributeDoubleValueOrThrow("mediainfo.duration")),
+					Opt.of(e.getAttributeIntValueOrThrow("mediainfo.bitrate")),
+					Opt.of(e.getAttributeValueOrThrow("mediainfo.videoformat")),
+					Opt.of(e.getAttributeIntValueOrThrow("mediainfo.width")),
+					Opt.of(e.getAttributeIntValueOrThrow("mediainfo.height")),
+					Opt.of(e.getAttributeDoubleValueOrThrow("mediainfo.framerate")),
+					Opt.of(e.getAttributeShortValueOrThrow("mediainfo.bitdepth")),
+					Opt.of(e.getAttributeIntValueOrThrow("mediainfo.framecount")),
+					Opt.of(e.getAttributeValueOrThrow("mediainfo.videocodec")),
+					Opt.of(e.getAttributeValueOrThrow("mediainfo.audioformat")),
+					Opt.of(e.getAttributeShortValueOrThrow("mediainfo.audiochannels")),
+					Opt.of(e.getAttributeValueOrThrow("mediainfo.audiocodec")),
+					Opt.of(e.getAttributeIntValueOrThrow("mediainfo.audiosamplerate"))));
 			}
 		}
 		o.endUpdating();

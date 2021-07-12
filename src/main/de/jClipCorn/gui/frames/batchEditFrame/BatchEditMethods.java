@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.frames.batchEditFrame;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
@@ -177,21 +178,17 @@ public class BatchEditMethods
 	public static BatchEditMethod<Void> MEDIAINFO_FROM_FILE = new BatchEditMethod<>((ep, param, opt) ->
 	{
 		MediaQueryResult dat = MediaQueryRunner.query(ep.part.toFSPath(), true);
-		CCMediaInfo minfo = dat.toMediaInfo();
-
-		if (minfo.isSet()) ep.mediaInfo = minfo;
+		ep.mediaInfo = dat.toPartial();
 	});
 
 	public static BatchEditMethod<Void> MEDIAINFO_CLEAR = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.mediaInfo = CCMediaInfo.EMPTY;
+		ep.mediaInfo = PartialMediaInfo.EMPTY;
 	});
 
 	public static BatchEditMethod<Void> MEDIAINFO_CALC_HASH = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		var p = ep.mediaInfo.toPartial();
-		p.Checksum = Opt.of(ChecksumHelper.fastVideoHash(ep.part.toFSPath()));
-		ep.mediaInfo = p.toMediaInfo();
+		ep.mediaInfo = ep.mediaInfo.WithChecksum(Opt.of(ChecksumHelper.fastVideoHash(ep.part.toFSPath())));
 	});
 
 	public static BatchEditMethod<CCDateTime> VIEWED_ADD = new BatchEditMethod<>((ep, param, opt) ->
@@ -247,7 +244,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> MEDIAINFO_RESET = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.mediaInfo = ep.getSource().mediaInfo().get();
+		ep.mediaInfo = ep.getSource().mediaInfo().getPartial();
 	});
 
 	public static BatchEditMethod<Void> LANGUAGE_RESET = new BatchEditMethod<>((ep, param, opt) ->

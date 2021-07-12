@@ -7,7 +7,6 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.driver.DatabaseStructure;
-import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -50,7 +49,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		movWrite.Year.set(2012);
 		movWrite.Score.set(CCUserScore.RATING_III);
 		movWrite.OnlineReference.set("tmdb:movie/207703");
-		movWrite.MediaInfo.set(new CCMediaInfo(1565454159, 1565454169, new CCFileSize(1570732032), 5903.904, 2128398, "MPEG-4 Visual", 720, 304, 23.976, (short)8, 141552, "XVID", "AC-3", (short)6, "2000", 48000, Str.Empty));
+		movWrite.MediaInfo.set(CCMediaInfo.create(1565454159, 1565454169, new CCFileSize(1570732032), "[01-0015E036FC-75:78:FD:8B:56:3E:4E:DD]", 5903.904, 2128398, "MPEG-4 Visual", 720, 304, 23.976, (short)8, 141552, "XVID", "AC-3", (short)6, "2000", 48000));
 		movWrite.Parts.set(0, "C:\\test.mov");
 		movWrite.endUpdating();
 		
@@ -124,10 +123,11 @@ public class TestDatabase extends ClipCornBaseTest {
 		{
 			epiWrite.EpisodeNumber.set(1);
 			epiWrite.Title.set("This is my title: fight me");
-			epiWrite.MediaInfo.set(new CCMediaInfo(
+			epiWrite.MediaInfo.set(CCMediaInfo.create(
 					CCDateTime.create(15, 4, 2019, 6,  0, 0).toFileTimestamp(GMT_2), // long cdate
 					CCDateTime.create(15, 4, 2019, 8, 30, 0).toFileTimestamp(GMT_2), // long mdate
 					new CCFileSize(3570481288L),                                     // long filesize
+					"[01-00625B4F92-41:0F:9D:C6:6D:F4:D7:E1]",                       // String checksum
 					5932.933,                                                        // double duration
 					4814457,                                                         // int bitrate
 					"AVC",                                                           // String videoformat
@@ -140,8 +140,7 @@ public class TestDatabase extends ClipCornBaseTest {
 					"AC-3",                                                          // String audioformat
 					(short)2,                                                        // short audiochannels
 					"A_AC3",                                                         // String audiocodec
-					48000,                                                           // int audiosamplerate
-					""));                                                            // String checksum
+					48000));                                                         // int audiosamplerate
 			epiWrite.Length.set(98);
 			epiWrite.Tags.set(CCTagList.create(CCSingleTag.TAG_MISSING_TIME));
 			epiWrite.Format.set(CCFileFormat.MKV);

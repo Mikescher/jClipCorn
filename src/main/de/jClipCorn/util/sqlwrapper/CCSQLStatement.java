@@ -138,8 +138,59 @@ public class CCSQLStatement {
 		var idx = MapPrepFields.get(col);
 
 		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.isNullable()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
 
 		Statement.setNull(idx, col.Type.getSQLType());
+	}
+
+	public void setNullableInt(CCSQLColDef col, Integer value) throws SQLException, SQLWrapperException {
+		var idx = MapPrepFields.get(col);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsInteger()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+		if (!col.isNullable()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		if (value != null) Statement.setInt(idx, value); else Statement.setNull(idx, col.Type.getSQLType());
+	}
+
+	public void setNullableStr(CCSQLColDef col, String value) throws SQLException, SQLWrapperException {
+		var idx = MapPrepFields.get(col);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsString()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
+		if (!col.isNullable()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		if (value != null) Statement.setString(idx, value); else Statement.setNull(idx, col.Type.getSQLType());
+	}
+
+	public void setNullableLng(CCSQLColDef col, Long value) throws SQLWrapperException, SQLException {
+		var idx = MapPrepFields.get(col);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsLong()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
+		if (!col.isNullable()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		if (value != null) Statement.setLong(idx, value); else Statement.setNull(idx, col.Type.getSQLType());
+	}
+
+	public void setNullableSht(CCSQLColDef col, Short value) throws SQLWrapperException, SQLException {
+		var idx = MapPrepFields.get(col);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsShort()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
+		if (!col.isNullable()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		if (value != null) Statement.setShort(idx, value); else Statement.setNull(idx, col.Type.getSQLType());
+	}
+
+	public void setNullableFlt(CCSQLColDef col, Double value) throws SQLWrapperException, SQLException {
+		var idx = MapPrepFields.get(col);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsFloat()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
+		if (!col.isNullable()) throw new SQLWrapperException("Field ["+col+"] has wrong type");
+
+		if (value != null) Statement.setDouble(idx, value); else Statement.setNull(idx, col.Type.getSQLType());
 	}
 
 	public void tryClose() throws SQLException {

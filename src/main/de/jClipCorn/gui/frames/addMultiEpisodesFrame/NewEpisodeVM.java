@@ -3,6 +3,7 @@ package de.jClipCorn.gui.frames.addMultiEpisodesFrame;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
+import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.util.Str;
@@ -44,6 +45,11 @@ public class NewEpisodeVM implements IEpisodeData {
 	@Override public CCDBLanguageList getLanguage() { return Language; }
 
 	@Override public CCMediaInfo getMediaInfo() { return MediaInfo; }
+
+	@Override
+	public PartialMediaInfo getPartialMediaInfo() {
+		return MediaInfo.toPartial();
+	}
 
 	@Override public int getEpisodeNumber() { return EpisodeNumber; }
 

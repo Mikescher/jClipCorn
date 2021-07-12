@@ -2,6 +2,7 @@ package de.jClipCorn.gui.guiComponents.jMediaInfoControl;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
+import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.gui.frames.editMediaInfoDialog.EditMediaInfoDialog;
 import de.jClipCorn.gui.frames.editMediaInfoDialog.MediaInfoResultHandler;
@@ -27,7 +28,7 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 	private JButton btnEdit;
 	private ReadableTextField edit;
 
-	private CCMediaInfo value = null;
+	private PartialMediaInfo value = null;
 	private MediaQueryResult queryResult = null;
 
 	private final List<ActionListener> _changeListener = new ArrayList<>();
@@ -85,14 +86,12 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 		return new Dimension(80, 20);
 	}
 
-	public CCMediaInfo getValue() {
-		if (value == null) return CCMediaInfo.EMPTY;
+	public PartialMediaInfo getValue() {
+		if (value == null) return PartialMediaInfo.EMPTY;
 		return value;
 	}
 
-	public void setValue(CCMediaInfo ref) {
-		if (!ref.isSet()) ref = null;
-		
+	public void setValue(PartialMediaInfo ref) {
 		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(ref==null ? CCMediaInfo.EMPTY : ref, -1, Str.Empty));
 
 		value = ref;
@@ -102,27 +101,14 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 	}
 	
 	public void setValue(MediaQueryResult r) {
-		CCMediaInfo cc = r.toMediaInfo();
-		if (cc.isSet())
-		{
-			for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(cc, -1, Str.Empty));
+		PartialMediaInfo cc = r.toPartial();
 
-			value = cc;
-			queryResult = r;
+		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(cc, -1, Str.Empty));
 
-			updateUIControls();
-		}
-		else
-		{
-			for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(CCMediaInfo.EMPTY, -1, Str.Empty));
+		value = cc;
+		queryResult = r;
 
-			value = null;
-			queryResult = r;
-
-			updateUIControls();
-		}
-
-
+		updateUIControls();
 	}
 	
 	@Override
@@ -138,14 +124,14 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 			else edit.setText(LocaleBundle.getString("JMediaInfoControl.partial")); //$NON-NLS-1$
 			image.setIcon(Resources.ICN_TABLE_QUALITY_0.get());
 		} else {
-			edit.setText(value.getCategory(null).getLongText());
-			image.setIcon(value.getCategory(null).getIcon());
-			image.setToolTipText(value.getCategory(null).getTooltip());
+			edit.setText(value.toMediaInfo().getCategory(null).getLongText());
+			image.setIcon(value.toMediaInfo().getCategory(null).getIcon());
+			image.setToolTipText(value.toMediaInfo().getCategory(null).getTooltip());
 		}
 	}
 
 	@Override
 	public void onApplyMediaInfo(CCMediaInfo mi) {
-		setValue(mi);
+		setValue(mi.toPartial());
 	}
 }

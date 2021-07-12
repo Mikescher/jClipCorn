@@ -140,6 +140,17 @@ public class CCSQLResultSet {
 		return v;
 	}
 
+	public Short getNullableShort(CCSQLColDef col) throws SQLWrapperException, SQLException {
+		var idx = _statement.getSelectFieldIndex(col);
+
+		if (idx == null) throw new SQLWrapperException("Field ["+col.Name+"] not found in CCSQLStatement");
+		if (!col.Type.isCallableAsInteger()) throw new SQLWrapperException("Field ["+col.Name+"] has wrong type");
+
+		int v = _data.getInt(idx);
+		if (_data.wasNull()) return null;
+		return (short)v;
+	}
+
 	public Long getNullableLong(CCSQLColDef col) throws SQLWrapperException, SQLException {
 		var idx = _statement.getSelectFieldIndex(col);
 

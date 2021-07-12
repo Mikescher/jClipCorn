@@ -13,6 +13,10 @@ public class CCSQLColDef {
 		NonNullable = r;
 	}
 
+	public boolean isNullable() {
+		return !NonNullable;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

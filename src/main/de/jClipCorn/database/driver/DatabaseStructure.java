@@ -59,7 +59,7 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_MOV_MI_BITDEPTH      = new CCSQLColDef("MEDIAINFO.BITDEPTH",   CCSQLType.TINYINT,     NULLABLE);
 	public final static CCSQLColDef COL_MOV_MI_BITRATE       = new CCSQLColDef("MEDIAINFO.BITRATE",    CCSQLType.INTEGER,     NULLABLE);
 	public final static CCSQLColDef COL_MOV_MI_FRAMECOUNT    = new CCSQLColDef("MEDIAINFO.FRAMECOUNT", CCSQLType.INTEGER,     NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_ACHANNELS     = new CCSQLColDef("MEDIAINFO.ACHANNELS",  CCSQLType.INTEGER,     NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_ACHANNELS     = new CCSQLColDef("MEDIAINFO.ACHANNELS",  CCSQLType.SMALLINT,    NULLABLE);
 	public final static CCSQLColDef COL_MOV_MI_VCODEC        = new CCSQLColDef("MEDIAINFO.VCODEC",     CCSQLType.VARCHAR,     NULLABLE);
 	public final static CCSQLColDef COL_MOV_MI_ACODEC        = new CCSQLColDef("MEDIAINFO.ACODEC",     CCSQLType.VARCHAR,     NULLABLE);
 	public final static CCSQLColDef COL_MOV_MI_SAMPLERATE    = new CCSQLColDef("MEDIAINFO.SAMPLERATE", CCSQLType.INTEGER,     NULLABLE);
@@ -106,7 +106,7 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_EPIS_MI_BITDEPTH      = new CCSQLColDef("MEDIAINFO.BITDEPTH",   CCSQLType.TINYINT,     NULLABLE);
 	public final static CCSQLColDef COL_EPIS_MI_BITRATE       = new CCSQLColDef("MEDIAINFO.BITRATE",    CCSQLType.INTEGER,     NULLABLE);
 	public final static CCSQLColDef COL_EPIS_MI_FRAMECOUNT    = new CCSQLColDef("MEDIAINFO.FRAMECOUNT", CCSQLType.INTEGER,     NULLABLE);
-	public final static CCSQLColDef COL_EPIS_MI_ACHANNELS     = new CCSQLColDef("MEDIAINFO.ACHANNELS",  CCSQLType.INTEGER,     NULLABLE);
+	public final static CCSQLColDef COL_EPIS_MI_ACHANNELS     = new CCSQLColDef("MEDIAINFO.ACHANNELS",  CCSQLType.SMALLINT,    NULLABLE);
 	public final static CCSQLColDef COL_EPIS_MI_VCODEC        = new CCSQLColDef("MEDIAINFO.VCODEC",     CCSQLType.VARCHAR,     NULLABLE);
 	public final static CCSQLColDef COL_EPIS_MI_ACODEC        = new CCSQLColDef("MEDIAINFO.ACODEC",     CCSQLType.VARCHAR,     NULLABLE);
 	public final static CCSQLColDef COL_EPIS_MI_SAMPLERATE    = new CCSQLColDef("MEDIAINFO.SAMPLERATE", CCSQLType.INTEGER,     NULLABLE);

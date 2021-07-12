@@ -236,9 +236,7 @@ public class BatchEditFrame extends JFrame implements UserDataProblemHandler, Om
 
 		try {
 			MediaQueryResult dat = MediaQueryRunner.query(edPart.getPath().toFSPath(), true);
-			CCMediaInfo minfo = dat.toMediaInfo();
-
-			ctrlMediaInfo.setValue(minfo);
+			ctrlMediaInfo.setValue(dat.toPartial());
 		} catch (IOException | MediaQueryException e) {
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}

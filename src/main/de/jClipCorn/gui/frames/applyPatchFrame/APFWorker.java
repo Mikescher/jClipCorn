@@ -6,6 +6,7 @@ import de.jClipCorn.features.serialization.xmlimport.DatabaseXMLImporter;
 import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -273,7 +274,7 @@ public class APFWorker
 			SwingUtils.invokeAndWait(() ->
 			{
 				var cdate = attr.lastModifiedTime().toMillis();
-				elem.mediaInfo().MDate.set(cdate);
+				elem.mediaInfo().MDate.set(Opt.of(cdate));
 			});
 		}
 		else if (ielem instanceof CCEpisode)
@@ -287,7 +288,7 @@ public class APFWorker
 			SwingUtils.invokeAndWait(() ->
 			{
 				var cdate = attr.creationTime().toMillis();
-				elem.mediaInfo().CDate.set(cdate);
+				elem.mediaInfo().CDate.set(Opt.of(cdate));
 			});
 		}
 		else

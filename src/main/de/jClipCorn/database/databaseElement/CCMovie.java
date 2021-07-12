@@ -15,6 +15,7 @@ import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.NamedPathVar;
@@ -42,7 +43,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	public final EZyklusPropPack         Zyklus        = new EZyklusPropPack(   "Zyklus",        CCMovieZyklus.EMPTY,          this, EPropertyType.OBJECTIVE_METADATA);
 	public final EPartArrayPropPack      Parts         = new EPartArrayPropPack("Parts",         CCPath.Empty,                 this, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
-	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,            this);
+	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     PartialMediaInfo.EMPTY,       this);
 	public final EIntProp                Length        = new EIntProp(          "Length",        0,                            this, EPropertyType.OBJECTIVE_METADATA);
 	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
 	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(       "Format",        CCFileFormat.MKV,             this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
@@ -326,6 +327,11 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	@Override
 	public CCMediaInfo getMediaInfo() {
 		return MediaInfo.get();
+	}
+
+	@Override
+	public PartialMediaInfo getPartialMediaInfo() {
+		return MediaInfo.getPartial();
 	}
 
 	@Override

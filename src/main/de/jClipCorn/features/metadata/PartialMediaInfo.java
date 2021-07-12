@@ -4,53 +4,166 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
-import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.datatypes.RefParam;
+
+import java.util.Objects;
 
 public class PartialMediaInfo {
 
-	public Opt<String> RawOutput = Opt.empty();
+	public final static PartialMediaInfo EMPTY = new PartialMediaInfo
+	(
+		Opt.empty(),
+		Opt.empty(), Opt.empty(), Opt.empty(), Opt.empty(),
+		Opt.empty(), Opt.empty(),
+		Opt.empty(), Opt.empty(), Opt.empty(), Opt.empty(), Opt.empty(), Opt.empty(), Opt.empty(),
+		Opt.empty(), Opt.empty(), Opt.empty(), Opt.empty()
+	);
 
-	public Opt<Long>       CreationDate     = Opt.empty();
-	public Opt<Long>       ModificationDate = Opt.empty();
-	public Opt<CCFileSize> Filesize         = Opt.empty();
-	public Opt<String>     Checksum         = Opt.empty();
+	public final Opt<String> RawOutput;
 
-	public Opt<Double>  Duration = Opt.empty(); // seconds
-	public Opt<Integer> Bitrate  = Opt.empty();
+	public final Opt<Long>       CDate;
+	public final Opt<Long>       MDate;
+	public final Opt<CCFileSize> Filesize;
+	public final Opt<String>     Checksum;
 
-	public Opt<String>                  VideoFormat = Opt.empty();
-	public Opt<Tuple<Integer, Integer>> PixelSize   = Opt.empty();
-	public Opt<Double>                  Framerate   = Opt.empty();
-	public Opt<Short>                   Bitdepth    = Opt.empty();
-	public Opt<Integer>                 FrameCount  = Opt.empty();
-	public Opt<String>                  VideoCodec  = Opt.empty();
+	public final Opt<Double>  Duration; // seconds
+	public final Opt<Integer> Bitrate;
 
-	public Opt<String>  AudioFormat     = Opt.empty();
-	public Opt<Short>   AudioChannels   = Opt.empty();
-	public Opt<String>  AudioCodec      = Opt.empty();
-	public Opt<Integer> AudioSamplerate = Opt.empty();
+	public final Opt<String>  VideoFormat;
+	public final Opt<Integer> Width;
+	public final Opt<Integer> Height;
+	public final Opt<Double>  Framerate;
+	public final Opt<Short>   Bitdepth;
+	public final Opt<Integer> Framecount;
+	public final Opt<String>  VideoCodec;
+
+	public final Opt<String>  AudioFormat;
+	public final Opt<Short>   AudioChannels;
+	public final Opt<String>  AudioCodec;
+	public final Opt<Integer> AudioSamplerate;
+
+	private PartialMediaInfo(Opt<String> rawOutput,
+							 Opt<Long> cdate, Opt<Long> mdate, Opt<CCFileSize> filesize, Opt<String> checksum,
+							 Opt<Double> duration, Opt<Integer> bitrate,
+							 Opt<String> videoFormat, Opt<Integer> width, Opt<Integer> height, Opt<Double> framerate, Opt<Short> bitdepth, Opt<Integer> framecount, Opt<String> videoCodec,
+							 Opt<String> audioFormat, Opt<Short> audioChannels, Opt<String> audioCodec, Opt<Integer> audioSamplerate)
+	{
+		RawOutput        = rawOutput;
+		CDate            = cdate;
+		MDate            = mdate;
+		Filesize         = filesize;
+		Checksum         = checksum;
+		Duration         = duration;
+		Bitrate          = bitrate;
+		VideoFormat      = videoFormat;
+		Width            = width;
+		Height           = height;
+		Framerate        = framerate;
+		Bitdepth         = bitdepth;
+		Framecount       = framecount;
+		VideoCodec       = videoCodec;
+		AudioFormat      = audioFormat;
+		AudioChannels    = audioChannels;
+		AudioCodec       = audioCodec;
+		AudioSamplerate  = audioSamplerate;
+	}
+
+	public static PartialMediaInfo create(Opt<String> rawOutput,
+										  Opt<Long> creationDate, Opt<Long> modificationDate, Opt<CCFileSize> filesize, Opt<String> checksum,
+										  Opt<Double> duration, Opt<Integer> bitrate,
+										  Opt<String> videoFormat, Opt<Integer> width, Opt<Integer> height, Opt<Double> framerate, Opt<Short> bitdepth, Opt<Integer> frameCount, Opt<String> videoCodec,
+										  Opt<String> audioFormat, Opt<Short> audioChannels, Opt<String> audioCodec, Opt<Integer> audioSamplerate)
+	{
+		return new PartialMediaInfo
+		(
+			rawOutput,
+			creationDate, modificationDate, filesize, checksum,
+			duration, bitrate,
+			videoFormat, width, height, framerate, bitdepth, frameCount, videoCodec,
+			audioFormat, audioChannels, audioCodec, audioSamplerate
+		);
+	}
 
 	public CCMediaInfo toMediaInfo()
 	{
-		return new CCMediaInfo
+		return toMediaInfo(new RefParam<>());
+	}
+
+	private CCMediaInfo toMediaInfo(RefParam<String> valErr)
+	{
+		return CCMediaInfo.create
 		(
-				CreationDate.orElse(-1L),
-				ModificationDate.orElse(-1L),
-				Filesize.orElse(CCFileSize.ZERO),
-				Duration.orElse(-1.0),
-				Bitrate.orElse(-1),
-				VideoFormat.orElse(Str.Empty),
-				PixelSize.map(p -> p.Item1).orElse(-1),
-				PixelSize.map(p -> p.Item2).orElse(-1),
-				Framerate.orElse(-1.0),
-				Bitdepth.orElse((short)-1),
-				FrameCount.orElse(-1),
-				VideoCodec.orElse(Str.Empty),
-				AudioFormat.orElse(Str.Empty),
-				AudioChannels.orElse((short)-1),
-				AudioCodec.orElse(Str.Empty),
-				AudioSamplerate.orElse(-1),
-				Checksum.orElse(Str.Empty)
+			CDate.orElse(-1L),
+			MDate.orElse(-1L),
+			Filesize.orElse(CCFileSize.ZERO),
+			Checksum.orElse(Str.Empty),
+			Duration.orElse(-1.0),
+			Bitrate.orElse(-1),
+			VideoFormat.orElse(Str.Empty),
+			Width.orElse(-1),
+			Height.orElse(-1),
+			Framerate.orElse(-1.0),
+			Bitdepth.orElse((short)-1),
+			Framecount.orElse(-1),
+			VideoCodec.orElse(Str.Empty),
+			AudioFormat.orElse(Str.Empty),
+			AudioChannels.orElse((short)-1),
+			AudioCodec.orElse(Str.Empty),
+			AudioSamplerate.orElse(-1),
+			valErr
 		);
+	}
+
+	@SuppressWarnings("nls")
+	public String validate()
+	{
+		var validation = new RefParam<>(Str.Empty);
+		toMediaInfo(validation);
+
+		if (!Str.isNullOrEmpty(validation.Value)) return validation.Value;
+
+		if (Bitdepth.isPresent() && Bitdepth.get() != 8 && Bitdepth.get() != 10 && Bitdepth.get() != 12) return "Bitdepth";
+
+		return null;
+	}
+
+	public PartialMediaInfo WithChecksum(Opt<String> new_cs)
+	{
+		return new PartialMediaInfo
+		(
+			RawOutput,
+			CDate, MDate, Filesize, new_cs,
+			Duration, Bitrate,
+			VideoFormat, Width, Height, Framerate, Bitdepth, Framecount, VideoCodec,
+			AudioFormat, AudioChannels, AudioCodec, AudioSamplerate
+		);
+	}
+
+	public boolean isEqual(PartialMediaInfo that)
+	{
+		if (that == null) return false;
+
+		if (!this.CDate.isEqual(that.CDate, Objects::equals)) return false;
+		if (!this.MDate.isEqual(that.MDate, Objects::equals)) return false;
+		if (!this.Filesize.isEqual(that.Filesize, CCFileSize::equals)) return false;
+		if (!this.Checksum.isEqual(that.Checksum, Str::equals)) return false;
+
+		if (!this.Duration.isEqual(that.Duration, (a,b) -> Double.compare(a,b) == 0)) return false;
+		if (!this.Bitrate.isEqual(that.Bitrate, Objects::equals)) return false;
+
+		if (!this.VideoFormat.isEqual(that.VideoFormat, Str::equals)) return false;
+		if (!this.Width.isEqual(that.Width, Objects::equals)) return false;
+		if (!this.Height.isEqual(that.Height, Objects::equals)) return false;
+		if (!this.Framerate.isEqual(that.Framerate, (a,b) -> Double.compare(a,b) == 0)) return false;
+		if (!this.Bitdepth.isEqual(that.Bitdepth, Objects::equals)) return false;
+		if (!this.Framecount.isEqual(that.Framecount, Objects::equals)) return false;
+		if (!this.VideoCodec.isEqual(that.VideoCodec, Str::equals)) return false;
+
+		if (!this.AudioFormat.isEqual(that.AudioFormat, Str::equals)) return false;
+		if (!this.AudioChannels.isEqual(that.AudioChannels, Objects::equals)) return false;
+		if (!this.AudioCodec.isEqual(that.AudioCodec, Str::equals)) return false;
+		if (!this.AudioSamplerate.isEqual(that.AudioSamplerate, Objects::equals)) return false;
+
+		return true;
 	}
 }

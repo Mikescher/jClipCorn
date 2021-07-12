@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MediaInfo
+    xmlns="https://mediaarea.net/mediainfo"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://mediaarea.net/mediainfo https://mediaarea.net/mediainfo/mediainfo_2_0.xsd"
+    version="2.0">
+<creatingLibrary version="21.03" url="https://mediaarea.net/MediaInfo">MediaInfoLib</creatingLibrary>
+<media ref="demo_010.mpeg">
+<track type="General">
+<VideoCount>1</VideoCount>
+<AudioCount>1</AudioCount>
+<FileExtension>mpeg</FileExtension>
+<Format>MPEG-PS</Format>
+<FileSize>7712768</FileSize>
+<Duration>2402.000</Duration>
+<OverallBitRate_Mode>VBR</OverallBitRate_Mode>
+<OverallBitRate>25688</OverallBitRate>
+<FrameRate>25.000</FrameRate>
+<FrameCount>60050</FrameCount>
+<File_Created_Date>UTC 2021-07-12 20:31:50.527</File_Created_Date>
+<File_Created_Date_Local>2021-07-12 22:31:50.527</File_Created_Date_Local>
+<File_Modified_Date>UTC 2021-07-12 20:33:14.836</File_Modified_Date>
+<File_Modified_Date_Local>2021-07-12 22:33:14.836</File_Modified_Date_Local>
+</track>
+<track type="Video">
+<StreamOrder>0</StreamOrder>
+<FirstPacketOrder>0</FirstPacketOrder>
+<ID>224</ID>
+<Format>MPEG Video</Format>
+<Format_Version>1</Format_Version>
+<Format_Settings_BVOP>No</Format_Settings_BVOP>
+<Format_Settings_Matrix>Default</Format_Settings_Matrix>
+<Format_Settings_GOP>N=12</Format_Settings_GOP>
+<Duration>2402.000</Duration>
+<BitRate_Mode>VBR</BitRate_Mode>
+<Width>128</Width>
+<Height>96</Height>
+<Sampled_Width>128</Sampled_Width>
+<Sampled_Height>96</Sampled_Height>
+<PixelAspectRatio>1.000</PixelAspectRatio>
+<DisplayAspectRatio>1.333</DisplayAspectRatio>
+<FrameRate>25.000</FrameRate>
+<FrameCount>60050</FrameCount>
+<ColorSpace>YUV</ColorSpace>
+<ChromaSubsampling>4:2:0</ChromaSubsampling>
+<BitDepth>8</BitDepth>
+<ScanType>Progressive</ScanType>
+<Compression_Mode>Lossy</Compression_Mode>
+<Delay>0.540000000</Delay>
+<Delay_Original>0.000</Delay_Original>
+<TimeCode_FirstFrame>00:00:00:00</TimeCode_FirstFrame>
+<TimeCode_Source>Group of pictures header</TimeCode_Source>
+<Gop_OpenClosed>Open</Gop_OpenClosed>
+<Gop_OpenClosed_FirstFrame>Closed</Gop_OpenClosed_FirstFrame>
+<BufferSize>6144</BufferSize>
+</track>
+<track type="Audio">
+<StreamOrder>1</StreamOrder>
+<FirstPacketOrder>1</FirstPacketOrder>
+<ID>192</ID>
+<Format>MPEG Audio</Format>
+<Format_Version>1</Format_Version>
+<Format_Profile>Layer 2</Format_Profile>
+<Duration>11.024</Duration>
+<BitRate_Mode>CBR</BitRate_Mode>
+<BitRate>384000</BitRate>
+<Channels>2</Channels>
+<SamplesPerFrame>1152</SamplesPerFrame>
+<SamplingRate>44100</SamplingRate>
+<SamplingCount>486144</SamplingCount>
+<FrameRate>38.281</FrameRate>
+<FrameCount>422</FrameCount>
+<Compression_Mode>Lossy</Compression_Mode>
+<Delay>0.529088889</Delay>
+<Delay_Source>Container</Delay_Source>
+<StreamSize>529152</StreamSize>
+<StreamSize_Proportion>0.06861</StreamSize_Proportion>
+</track>
+</media>
+</MediaInfo>
+

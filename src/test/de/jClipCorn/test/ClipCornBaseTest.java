@@ -20,6 +20,7 @@ import org.junit.Before;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Stack;
 import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
@@ -30,6 +31,8 @@ public class ClipCornBaseTest {
 
 	protected static TimeZone GMT_2 = TimeZone.getTimeZone("GMT+2:00");
 
+	public static Stack<Func0to0> CLEANUP = new Stack<>();
+
 	@Before
 	public void Init() {
 		CCLog.initUnitTestMode();
@@ -37,17 +40,23 @@ public class ClipCornBaseTest {
 
 	@After
 	public void Finalize() {
+		while (!CLEANUP.empty()) CLEANUP.pop().invoke();
+
 		assertFalse(CCLog.hasErrors());
 		assertFalse(CCLog.hasUndefinieds());
 	}
-	
+
 	protected CCMovieList createEmptyDB() {
 		createInMemoryProperties();
 		CCProperties.createInMemory();
 		CCMovieList ml = CCMovieList.createInMemory();
 		ml.connectForTests(false);
-		
+
 		return ml;
+	}
+
+	protected CCMovieList createSeededDB() throws Exception {
+		return DatabaseSeeder.init();
 	}
 
 	protected CCMovieList createExampleDB() throws IOException { return createExampleDB(false); }

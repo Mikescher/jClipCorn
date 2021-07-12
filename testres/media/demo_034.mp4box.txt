@@ -1,0 +1,7 @@
+Import probing results for demo_034.avi:
+File has 1 tracks
+Duration: 6505.04 s
+	Track 1 type: Video Codec MPEG-4 Visual part 2 (ID 32)
+	Size 128x96 @ 25 FPS PAR: 1:1
+
+For more details, use `gpac -i demo_034.avi inspect[:deep][:analyze]`

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MediaInfo
+    xmlns="https://mediaarea.net/mediainfo"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://mediaarea.net/mediainfo https://mediaarea.net/mediainfo/mediainfo_2_0.xsd"
+    version="2.0">
+<creatingLibrary version="21.03" url="https://mediaarea.net/MediaInfo">MediaInfoLib</creatingLibrary>
+<media ref="demo_014.avi">
+<track type="General">
+<VideoCount>1</VideoCount>
+<AudioCount>1</AudioCount>
+<FileExtension>avi</FileExtension>
+<Format>AVI</Format>
+<Interleaved>Yes</Interleaved>
+<FileSize>20032670</FileSize>
+<Duration>5705.040</Duration>
+<OverallBitRate>28091</OverallBitRate>
+<FrameRate>25.000</FrameRate>
+<FrameCount>142626</FrameCount>
+<StreamSize>3460313</StreamSize>
+<File_Created_Date>UTC 2021-07-12 20:33:55.599</File_Created_Date>
+<File_Created_Date_Local>2021-07-12 22:33:55.599</File_Created_Date_Local>
+<File_Modified_Date>UTC 2021-07-12 20:34:17.184</File_Modified_Date>
+<File_Modified_Date_Local>2021-07-12 22:34:17.184</File_Modified_Date_Local>
+<Encoded_Application>Lavf58.76.100</Encoded_Application>
+</track>
+<track type="Video">
+<StreamOrder>0</StreamOrder>
+<ID>0</ID>
+<Format>MPEG-4 Visual</Format>
+<Format_Profile>Simple</Format_Profile>
+<Format_Level>1</Format_Level>
+<Format_Settings_BVOP>No</Format_Settings_BVOP>
+<Format_Settings_QPel>No</Format_Settings_QPel>
+<Format_Settings_GMC>0</Format_Settings_GMC>
+<Format_Settings_Matrix>Default (H.263)</Format_Settings_Matrix>
+<CodecID>FMP4</CodecID>
+<Duration>5705.040</Duration>
+<BitRate>22991</BitRate>
+<Width>128</Width>
+<Height>96</Height>
+<Sampled_Width>128</Sampled_Width>
+<Sampled_Height>96</Sampled_Height>
+<PixelAspectRatio>1.000</PixelAspectRatio>
+<DisplayAspectRatio>1.333</DisplayAspectRatio>
+<FrameRate>25.000</FrameRate>
+<FrameCount>142626</FrameCount>
+<ColorSpace>YUV</ColorSpace>
+<ChromaSubsampling>4:2:0</ChromaSubsampling>
+<BitDepth>8</BitDepth>
+<ScanType>Progressive</ScanType>
+<Compression_Mode>Lossy</Compression_Mode>
+<Delay>0.000</Delay>
+<StreamSize>16395561</StreamSize>
+<Encoded_Library>Lavc58.134.100</Encoded_Library>
+</track>
+<track type="Audio">
+<StreamOrder>1</StreamOrder>
+<ID>1</ID>
+<Format>MPEG Audio</Format>
+<Format_Version>1</Format_Version>
+<Format_Profile>Layer 3</Format_Profile>
+<Format_Settings_Mode>Joint stereo</Format_Settings_Mode>
+<Format_Settings_ModeExtension>MS Stereo</Format_Settings_ModeExtension>
+<CodecID>55</CodecID>
+<Duration>11.050</Duration>
+<BitRate_Mode>CBR</BitRate_Mode>
+<BitRate>128000</BitRate>
+<Channels>2</Channels>
+<SamplingRate>44100</SamplingRate>
+<SamplingCount>487305</SamplingCount>
+<Compression_Mode>Lossy</Compression_Mode>
+<Delay>0.000</Delay>
+<Delay_Source>Stream</Delay_Source>
+<StreamSize>176796</StreamSize>
+<StreamSize_Proportion>0.00883</StreamSize_Proportion>
+<Alignment>Aligned</Alignment>
+<Interleave_VideoFrames>337.18</Interleave_VideoFrames>
+<Interleave_Duration>13.487</Interleave_Duration>
+<Encoded_Library>LAME3.100</Encoded_Library>
+</track>
+</media>
+</MediaInfo>
+

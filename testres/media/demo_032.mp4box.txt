@@ -1,0 +1,44 @@
+* Movie Info *
+	Timescale 1000 - 2 tracks
+	Computed Duration 01:58:08.000 - Indicated Duration 01:58:08.000
+	Fragmented File: no
+	File Brand isom - version 512
+		Compatible brands: isom iso2 avc1 mp41
+	Created: UNKNOWN DATE	Modified: UNKNOWN DATE
+File has no MPEG4 IOD/OD
+
+iTunes Info:
+	Encoder Software: Lavf58.76.100
+1 UDTA types: meta (1) 
+
+Track # 1 Info - TrackID 1 - TimeScale 12800
+Media Duration 01:58:08.000 - Indicated Duration 01:58:08.000
+Track has 1 edit lists: track duration is 01:58:08.000
+Media Info: Language "Undetermined (und)" - Type "vide:avc1" - 177200 samples
+Visual Sample Entry Info: width=128 height=96 (depth=24 bits)
+Visual Track layout: x=0 y=0 width=128 height=96
+MPEG-4 Config: Visual Stream - ObjectTypeIndication 0x21
+AVC/H264 Video - Visual Size 128 x 96
+	AVC Info: 1 SPS - 1 PPS - Profile High @ Level 1
+	NAL Unit length bits: 32
+	Pixel Aspect Ratio 1:1 - Indicated track size 128 x 96
+	Chroma format YUV 4:2:0 - Luma bit depth 8 - chroma bit depth 8
+	SPS#1 hash: 32589EAEE111E26F2E2D809611034F94BA2F6573
+	PPS#1 hash: 21C2E72B7CA3529C02C020B17CE91BCF0B2FF1DC
+Self-synchronized
+	RFC6381 Codec Parameters: avc1.64000A
+	Average GOP length: 250 samples
+	Max sample duration: 512 / 12800
+
+Track # 2 Info - TrackID 2 - TimeScale 44100
+Media Duration 00:00:11.023 - Indicated Duration 00:00:11.000
+Track has 1 edit lists: track duration is 00:00:11.000
+Media Info: Language "Undetermined (und)" - Type "soun:mp4a" - 475 samples
+MPEG-4 Config: Audio Stream - ObjectTypeIndication 0x40
+MPEG-4 Audio AAC LC (AOT=2 implicit) - 2 Channel(s) - SampleRate 44100
+Synchronized on stream 1
+	RFC6381 Codec Parameters: mp4a.40.2
+Alternate Group ID 1
+	All samples are sync
+	Max sample duration: 1024 / 44100
+

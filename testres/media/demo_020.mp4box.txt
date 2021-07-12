@@ -1,0 +1,9 @@
+Import probing results for demo_020.wmv:
+File has 2 tracks
+Duration: 5015.05 s
+	Track 1 type: Video Codec FFMPEG unmapped codec (ID 1179011396)
+	Size 128x96 @ 25 FPS PAR: 1:1
+	Track 2 type: Audio Codec FFMPEG unmapped codec (ID 1179011396)
+	SampleRate 44100 - 2 channels
+
+For more details, use `gpac -i demo_020.wmv inspect[:deep][:analyze]`

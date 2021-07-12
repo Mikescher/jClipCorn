@@ -1,0 +1,9 @@
+Import probing results for demo_059.mkv:
+File has 2 tracks
+Duration: 5917 s
+	Track 1 type: Video Codec MPEG-4 AVC|H264 Video (ID 33)
+	Size 128x96 @ 25 FPS PAR: 1:1
+	Track 2 type: Audio Codec Vorbis Audio (ID 1987015266)
+	SampleRate 44100 - 2 channels
+
+For more details, use `gpac -i demo_059.mkv inspect[:deep][:analyze]`

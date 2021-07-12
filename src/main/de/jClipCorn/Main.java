@@ -46,7 +46,7 @@ public class Main {
 		{
 			Globals.TIMINGS.start(Globals.TIMING_INIT_LOAD_PROPERTIES);
 			{
-				CCProperties.create(PROPERTIES_PATH, arg); // FIRST ACTION - CACHE THIS SHIT - FUCKING IMPORTANT
+				CCProperties.create(FilesystemUtils.getRealSelfDirectory().append(PROPERTIES_PATH), arg); // FIRST ACTION - CACHE THIS SHIT - FUCKING IMPORTANT
 			}
 			Globals.TIMINGS.stop(Globals.TIMING_INIT_LOAD_PROPERTIES);
 

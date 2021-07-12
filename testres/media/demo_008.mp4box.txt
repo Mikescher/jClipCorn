@@ -1,0 +1,9 @@
+Import probing results for demo_008.mpeg:
+File has 2 tracks
+Duration: 5704.88 s
+	Track 480 type: Video Codec MPEG-1 Video (ID 106)
+	Size 128x96 @ 25 FPS
+	Track 448 type: Audio Codec MPEG-1 Audio (ID 107)
+	SampleRate 44100 - 2 channels
+
+For more details, use `gpac -i demo_008.mpeg inspect[:deep][:analyze]`

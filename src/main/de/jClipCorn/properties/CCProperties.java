@@ -64,7 +64,7 @@ public class CCProperties {
 	private static CCProperties mainInstance = null;
 	
 	private final Object _fileLock = new Object();
-	private List<CCProperty<Object>> propertylist = new Vector<>();
+	private final List<CCProperty<Object>> propertylist = new Vector<>();
 
 	public CCBoolProperty                                   PROP_ADD_MOVIE_RELATIVE_AUTO;
 	public CCStringProperty                                 PROP_DATABASE_NAME;
@@ -209,6 +209,7 @@ public class CCProperties {
 	public CCBoolProperty                                   PROP_VLC_ROBOT_QUEUE_PREEMPTIVE;
 	public CCStringProperty                                 PROP_MAINFRAME_COLUMN_SIZE_CACHE;
 	public CCBoolProperty                                   PROP_MAINFRAME_FILTERTREE_RECOLLAPSE;
+	public CCFSPathProperty                                 PROP_DATABASE_DIR;
 
 	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public boolean ARG_READONLY = false;
@@ -216,7 +217,7 @@ public class CCProperties {
 	public boolean firstLaunch = false;
 	
 	private final Properties properties;
-	private final String path;
+	private final FSPath path;
 	
 	private CCProperties() {
 		properties = new Properties();
@@ -227,7 +228,7 @@ public class CCProperties {
 		mainInstance = this;
 	}
 	
-	private CCProperties(String path, String[] args) {
+	private CCProperties(FSPath path, String[] args) {
 		properties = new Properties();
 		this.path = path;
 		load(path);
@@ -244,7 +245,7 @@ public class CCProperties {
 		LocaleBundle.updateLang();
 	}
 	
-	public static void create(String path, String[] args) {
+	public static void create(FSPath path, String[] args) {
 		new CCProperties(path, args);
 	}
 	
@@ -285,6 +286,7 @@ public class CCProperties {
 		PROP_MAINFRAME_VISIBLE_COLUMNS          = new CCEnumSetProperty<>(CAT_VIEW,         this,   "PROP_MAINFRAME_VISIBLE_COLUMNS",           getDefColumns(),                   MainFrameColumn.getWrapper());
 
 		PROP_DATABASE_NAME                      = new CCStringProperty(CAT_DATABASE,        this,   "PROP_DATABASE_NAME",                       "ClipCornDB");
+		PROP_DATABASE_DIR                       = new CCFSPathProperty(CAT_DATABASE,        this,   "PROP_DATABASE_DIR",                        FSPath.Empty,                       "",          CCPathPropertyMode.DIRECTORIES);
 		PROP_LOG_PATH                           = new CCStringProperty(CAT_DATABASE,        this,   "PROP_LOG_PATH",                            "jClipcorn.log");
 		PROP_SELF_DIRECTORY                     = new CCStringProperty(CAT_DATABASE,        this,   "PROP_SELF_DIRECTORY",                      "");
 		PROP_COVER_PREFIX                       = new CCStringProperty(CAT_DATABASE,        this,   "PROP_COVER_PREFIX",                        "cover_");
@@ -495,10 +497,10 @@ public class CCProperties {
 		return mainInstance;
 	}
 	
-	public void load(String path) {
+	public void load(FSPath path) {
 		try {
 			synchronized (_fileLock) {
-				FileInputStream stream = new FileInputStream(path);
+				FileInputStream stream = new FileInputStream(path.toFile());
 				properties.load(stream);
 				stream.close();
 			}
@@ -513,7 +515,7 @@ public class CCProperties {
 		
 		try {
 			synchronized (_fileLock) {
-				FileOutputStream stream = new FileOutputStream(path);
+				FileOutputStream stream = new FileOutputStream(path.toFile());
 				properties.store(stream, HEADER);
 				stream.close();
 			}

@@ -78,7 +78,7 @@ public class CCMovieList {
 	public static CCMovieList createInstanceMovieList() {
 		var db = CCDatabase.create(
 				CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue(),
-				FilesystemUtils.getRealSelfDirectory(),
+				CCProperties.getInstance().PROP_DATABASE_DIR.getValue().isEmpty() ? FilesystemUtils.getRealSelfDirectory() : CCProperties.getInstance().PROP_DATABASE_DIR.getValue(),
 				CCProperties.getInstance().PROP_DATABASE_NAME.getValue(),
 				CCProperties.getInstance().ARG_READONLY);
 

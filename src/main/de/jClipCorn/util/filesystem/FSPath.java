@@ -5,6 +5,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -220,6 +221,10 @@ public class FSPath implements IPath, Comparable<FSPath> {
 
 	public boolean deleteSafe() {
 		return toFile().delete();
+	}
+
+	public void deleteRecursive() throws IOException {
+		FileUtils.deleteDirectory(toFile());
 	}
 
 	public void deleteWithException() throws IOException {

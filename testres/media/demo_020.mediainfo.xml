@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MediaInfo
+    xmlns="https://mediaarea.net/mediainfo"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://mediaarea.net/mediainfo https://mediaarea.net/mediainfo/mediainfo_2_0.xsd"
+    version="2.0">
+<creatingLibrary version="21.03" url="https://mediaarea.net/MediaInfo">MediaInfoLib</creatingLibrary>
+<media ref="demo_020.wmv">
+<track type="General">
+<VideoCount>1</VideoCount>
+<AudioCount>1</AudioCount>
+<FileExtension>wmv</FileExtension>
+<Format>Windows Media</Format>
+<FileSize>9752591</FileSize>
+<Duration>5015.046</Duration>
+<OverallBitRate>15557</OverallBitRate>
+<OverallBitRate_Maximum>328000</OverallBitRate_Maximum>
+<FrameRate>25.000</FrameRate>
+<FrameCount>125376</FrameCount>
+<HeaderSize>765</HeaderSize>
+<DataSize>9721650</DataSize>
+<Encoded_Date>UTC 1970-01-01 00:00:00</Encoded_Date>
+<File_Created_Date>UTC 2021-07-12 20:35:25.905</File_Created_Date>
+<File_Created_Date_Local>2021-07-12 22:35:25.905</File_Created_Date_Local>
+<File_Modified_Date>UTC 2021-07-12 20:35:37.237</File_Modified_Date>
+<File_Modified_Date_Local>2021-07-12 22:35:37.237</File_Modified_Date_Local>
+<extra>
+<WM_EncodingSettings>Lavf58.76.100</WM_EncodingSettings>
+</extra>
+</track>
+<track type="Video">
+<StreamOrder>0</StreamOrder>
+<ID>1</ID>
+<Format>MPEG-4 Visual</Format>
+<CodecID>MP43</CodecID>
+<Duration>5015.040</Duration>
+<Width>128</Width>
+<Height>96</Height>
+<PixelAspectRatio>1.000</PixelAspectRatio>
+<DisplayAspectRatio>1.333</DisplayAspectRatio>
+<FrameRate>25.000</FrameRate>
+<FrameCount>125376</FrameCount>
+<BitDepth>8</BitDepth>
+<Compression_Mode>Lossy</Compression_Mode>
+</track>
+<track type="Audio">
+<StreamOrder>1</StreamOrder>
+<ID>2</ID>
+<Format>WMA</Format>
+<Format_Version>2</Format_Version>
+<CodecID>161</CodecID>
+<Duration>5015.046</Duration>
+<BitRate>128000</BitRate>
+<Channels>2</Channels>
+<SamplingRate>44100</SamplingRate>
+<SamplingCount>221163529</SamplingCount>
+<BitDepth>16</BitDepth>
+<StreamSize>80240736</StreamSize>
+</track>
+</media>
+</MediaInfo>
+

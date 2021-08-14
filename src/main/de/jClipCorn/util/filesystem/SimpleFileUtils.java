@@ -3,10 +3,13 @@ package de.jClipCorn.util.filesystem;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.lambda.Func2to0;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.UUID;
+import java.util.zip.GZIPInputStream;
 
 public class SimpleFileUtils {
 	public final static String LINE_END = System.getProperty("line.separator"); //$NON-NLS-1$
@@ -37,10 +40,26 @@ public class SimpleFileUtils {
 		return content.toString();
 	}
 
+	public static BufferedImage readImageResource(String resourcename, Class<?> c) throws IOException {
+		try (InputStream is = c.getResourceAsStream(resourcename)) {
+			if (is == null) throw new IOException();
+			return ImageIO.read(is);
+		}
+	}
+
 	public static void writeRawResource(FSPath out, String resourcename, Class<?> c) throws IOException {
 		try (InputStream is = c.getResourceAsStream(resourcename)) {
 			if (is == null) throw new IOException();
 			Files.copy(is, out.toPath());
+		}
+	}
+
+	public static void writeGzippedResource(FSPath out, String resourcename, Class<?> c) throws IOException {
+		try (InputStream is = c.getResourceAsStream(resourcename)) {
+			if (is == null) throw new IOException();
+			try (InputStream gzis = new GZIPInputStream(is)) {
+				Files.copy(gzis, out.toPath());
+			}
 		}
 	}
 

@@ -2,6 +2,7 @@ package de.jClipCorn.test;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.features.databaseErrors.DatabaseError;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.properties.CCProperties;
@@ -20,11 +21,11 @@ import org.junit.Before;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 import java.util.Stack;
 import java.util.TimeZone;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 @SuppressWarnings("nls")
 public class ClipCornBaseTest {
@@ -147,6 +148,14 @@ public class ClipCornBaseTest {
 				assertEquals(a.getRGB(x, y), b.getRGB(x, y));
 			}
 		}
+	}
+
+	protected void assertEmptyErrors(List<DatabaseError> errs) {
+		if (!errs.isEmpty()) {
+			for (var e : errs) System.err.println("Additional db-error: " + e.getErrorString());
+		}
+
+		assertArrayEquals(new Object[0], errs.toArray());
 	}
 
 	protected void assertException(Func0to0 fn)

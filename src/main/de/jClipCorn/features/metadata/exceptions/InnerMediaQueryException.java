@@ -6,4 +6,8 @@ public class InnerMediaQueryException extends MetadataQueryException {
 	public InnerMediaQueryException(String text) {
 		super(text);
 	}
+
+	public InnerMediaQueryException(String text, Throwable cause) {
+		super(text, cause);
+	}
 }

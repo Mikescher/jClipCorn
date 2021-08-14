@@ -69,7 +69,7 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 		errs.remove(e5);
 		errs.remove(e6);
 
-		assertArrayEquals(new Object[0], errs.toArray());
+		assertEmptyErrors(errs);
 	}
 
 	@Test

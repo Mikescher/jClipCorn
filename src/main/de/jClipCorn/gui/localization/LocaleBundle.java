@@ -1,16 +1,10 @@
 package de.jClipCorn.gui.localization;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
+
+import java.util.*;
 
 public class LocaleBundle {
 	private final static int DEFAULT = 1;
@@ -47,10 +41,11 @@ public class LocaleBundle {
 			return ""; //$NON-NLS-1$
 		}
 	}
-	
+
+	@SuppressWarnings("nls")
 	public static String getString(String ident) {
 		try {
-			if (ident.startsWith("@")) return ident.substring(1); //$NON-NLS-1$
+			if (ident.startsWith("@")) return ident.substring(1);
 			
 			if (bundle == null) {
 				return ResourceBundle.getBundle(DEFAULT_BASENAME, getDefaultLocale()).getString(ident);
@@ -58,8 +53,10 @@ public class LocaleBundle {
 				return bundle.getString(ident);
 			}
 		} catch (MissingResourceException e) {
+			if (ident.startsWith("CCLog.")) return Str.Empty; // prevent infinite log recursion if _no_ locales were found
+
 			CCLog.addError(e);
-			return ""; //$NON-NLS-1$
+			return Str.Empty;
 		}
 	}
 	

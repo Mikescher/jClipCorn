@@ -115,7 +115,7 @@ public class MediaQueryResult {
 		}
 
 		if (!foundGeneral) throw new InnerMediaQueryException("No track 'General' found");
-		if (!foundVideo) throw new InnerMediaQueryException("No track 'Video' found");
+		if (!foundVideo)   throw new InnerMediaQueryException("No track 'Video' found");
 
 		if (vtracks.size() == 1 && vtracks.get(0).Duration != -1) duration = vtracks.get(0).Duration;
 

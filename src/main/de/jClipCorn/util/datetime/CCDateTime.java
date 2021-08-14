@@ -207,6 +207,15 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 			return getStringRepresentation("yyyy-MM-dd HH:mm:ss");
 	}
 
+	public String toStringFilesystem() {
+		if (isUnspecifiedDateTime())
+			return "Unspecified";
+		else if (time.isUnspecifiedTime())
+			return date.getStringRepresentation("yyyy-MM-dd");
+		else
+			return getStringRepresentation("yyyy-MM-dd_HH-mm-ss");
+	}
+
 	public String toStringSQL() {
 		return getSQLStringRepresentation();
 	}

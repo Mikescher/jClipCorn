@@ -238,7 +238,7 @@ public class FSPath implements IPath, Comparable<FSPath> {
 
 	public void mkdirsWithException() throws IOException {
 		var r = toFile().mkdirs();
-		if (!r) throw new IOException("Failed to delete File '"+_path+"' (returned false)");
+		if (!r) throw new IOException("Failed to mkdir Direction '"+_path+"' (returned false)");
 	}
 
 	public boolean renameToSafe(FSPath pnew) {

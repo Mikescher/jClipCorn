@@ -14,6 +14,7 @@ import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.lambda.Func0to0;
+import de.jClipCorn.util.lambda.Func0to0WithException;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -32,7 +33,7 @@ public class ClipCornBaseTest {
 
 	protected static TimeZone GMT_2 = TimeZone.getTimeZone("GMT+2:00");
 
-	public static Stack<Func0to0> CLEANUP = new Stack<>();
+	public static Stack<Func0to0WithException> CLEANUP = new Stack<>();
 
 	@Before
 	public void Init() {
@@ -41,7 +42,19 @@ public class ClipCornBaseTest {
 
 	@After
 	public void Finalize() {
-		while (!CLEANUP.empty()) CLEANUP.pop().invoke();
+		while (!CLEANUP.empty())
+		{
+			try
+			{
+				CLEANUP.pop().invoke();
+			}
+			catch (Throwable e)
+			{
+				System.out.println();
+				System.out.println("[META-ERR]  ( Cleanup failed: " + e.getMessage() + " )");
+				System.out.println();
+			}
+		}
 
 		assertFalse(CCLog.hasErrors());
 		assertFalse(CCLog.hasUndefinieds());
@@ -57,7 +70,7 @@ public class ClipCornBaseTest {
 	}
 
 	protected CCMovieList createSeededDB() throws Exception {
-		return DatabaseSeeder.init();
+		return DatabaseSeeder.init(true);
 	}
 
 	protected CCMovieList createExampleDB() throws IOException { return createExampleDB(false); }
@@ -152,7 +165,7 @@ public class ClipCornBaseTest {
 
 	protected void assertEmptyErrors(List<DatabaseError> errs) {
 		if (!errs.isEmpty()) {
-			for (var e : errs) System.err.println("Additional db-error: " + e.getErrorString());
+			for (var e : errs) System.err.println("(db-error): " + e.getFullErrorString());
 		}
 
 		assertArrayEquals(new Object[0], errs.toArray());

@@ -49,6 +49,13 @@ public class CCGroup implements Comparable<CCGroup> {
 		
 		return g;
 	}
+
+	public static CCGroup create(String name, boolean ser, String parent, boolean visible) {
+		CCGroup g = new CCGroup(name, staticGroupCounter, TAG_COLORS[staticGroupCounter % TAG_COLORS.length], ser, parent, visible);
+		staticGroupCounter++;
+
+		return g;
+	}
 	
 	public static CCGroup create(String name, int order, int color, boolean ser, String parent, boolean visible) {
 		CCGroup g = new CCGroup(name, order, new Color(color), ser, parent, visible);

@@ -19,7 +19,10 @@ public class TestCCMovieList extends ClipCornBaseTest {
 	public void testDatabaseCreation() throws Exception {
 		CCMovieList ml = createSeededDB();
 
-		assertEquals(1, ml.getElementCount());
+		assertEquals(3, ml.getMovieCount());
+		assertEquals(1, ml.getSeriesCount());
+		assertEquals(2, ml.getSeasonCount());
+		assertEquals(5, ml.getEpisodeCount());
 	}
 
 	@Test
@@ -32,8 +35,8 @@ public class TestCCMovieList extends ClipCornBaseTest {
 				true,  // seasons
 				true,  // episodes
 				true,  // covers
-				false, // cover files
-				false, // video files
+				true,  // cover files
+				true,  // video files
 				true,  // groups
 				true,  // online-refs
 				true,  // internal db
@@ -43,7 +46,6 @@ public class TestCCMovieList extends ClipCornBaseTest {
 
 		var validator = new CCDatabaseValidator(ml);
 		validator.validate(errs, opt, DoubleProgressCallbackListener.EMPTY);
-
 
 		assertEmptyErrors(errs);
 	}

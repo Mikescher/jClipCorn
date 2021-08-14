@@ -66,6 +66,22 @@ public class CCSingleOnlineReference {
 		return new CCSingleOnlineReference(CCOnlineRefType.ANILIST, String.valueOf(id), Str.Empty);
 	}
 
+	public static CCSingleOnlineReference createKitsu(String id) {
+		return new CCSingleOnlineReference(CCOnlineRefType.KITSU, id, Str.Empty);
+	}
+
+	public static CCSingleOnlineReference createKitsu(String id, String comment) {
+		return new CCSingleOnlineReference(CCOnlineRefType.KITSU, id, comment);
+	}
+
+	public static CCSingleOnlineReference createAniDB(String id) {
+		return new CCSingleOnlineReference(CCOnlineRefType.ANIDB, id, Str.Empty);
+	}
+
+	public static CCSingleOnlineReference createAniDB(String id, String comment) {
+		return new CCSingleOnlineReference(CCOnlineRefType.ANIDB, id, comment);
+	}
+
 	public String toSerializationString() {
 		if (type == CCOnlineRefType.NONE) return ""; //$NON-NLS-1$
 		if (!hasDescription()) return type.getIdentifier() + ":" + id; //$NON-NLS-1$

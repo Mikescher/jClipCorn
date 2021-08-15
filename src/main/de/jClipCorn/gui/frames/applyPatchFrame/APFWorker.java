@@ -188,7 +188,7 @@ public class APFWorker
 
 			if (opt.Porcelain) return;
 
-			ptarget.getParent().mkdirsWithException();
+			ptarget.createFolders();
 			Files.move(pSource.toPath(), ptarget.toPath());
 
 			SwingUtils.invokeAndWait(() ->
@@ -293,8 +293,10 @@ public class APFWorker
 
 			SwingUtils.invokeAndWait(() ->
 			{
-				var cdate = attr.lastModifiedTime().toMillis();
-				elem.mediaInfo().MDate.set(Opt.of(cdate));
+				var cdate = attr.creationTime().toMillis();
+				elem.mediaInfo().CDate.set(Opt.of(cdate));
+				var mdate = attr.lastModifiedTime().toMillis();
+				elem.mediaInfo().MDate.set(Opt.of(mdate));
 			});
 		}
 		else if (ielem instanceof CCEpisode)
@@ -309,6 +311,8 @@ public class APFWorker
 			{
 				var cdate = attr.creationTime().toMillis();
 				elem.mediaInfo().CDate.set(Opt.of(cdate));
+				var mdate = attr.lastModifiedTime().toMillis();
+				elem.mediaInfo().MDate.set(Opt.of(mdate));
 			});
 		}
 		else

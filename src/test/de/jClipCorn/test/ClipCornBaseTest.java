@@ -1,5 +1,6 @@
 package de.jClipCorn.test;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.features.databaseErrors.DatabaseError;
@@ -7,24 +8,30 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.PathSyntaxVar;
-import de.jClipCorn.util.DriveMap;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.lambda.Func0to0WithException;
+import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.Stack;
-import java.util.TimeZone;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import static org.junit.Assert.*;
 
@@ -62,8 +69,7 @@ public class ClipCornBaseTest {
 
 	protected CCMovieList createEmptyDB() {
 		createInMemoryProperties();
-		CCProperties.createInMemory();
-		CCMovieList ml = CCMovieList.createInMemory();
+		CCMovieList ml = CCMovieList.createInMemory(CCProperties.createInMemory());
 		ml.connectForTests(false);
 
 		return ml;
@@ -78,7 +84,7 @@ public class ClipCornBaseTest {
 	protected CCMovieList createExampleDB(boolean reloadFromMemory) throws IOException {
 		createInMemoryProperties();
 
-		CCMovieList ml1 = CCMovieList.createInMemory();
+		CCMovieList ml1 = CCMovieList.createInMemory(CCProperties.createInMemory());
 		ml1.connectForTests(false);
 
 		var filep = SimpleFileUtils.getSystemTempFile("jxmlbkp");
@@ -109,7 +115,7 @@ public class ClipCornBaseTest {
 			// With reload the data is loaded again from the (in-mem) database,
 			// so ml2 is acting like the data was there all along and not just recently imported
 
-			var ml2 = CCMovieList.createRawForUnitTests(ml1.getDatabaseForUnitTests());
+			var ml2 = CCMovieList.createRawForUnitTests(ml1.getDatabaseForUnitTests(), ml1.ccprops());
 			ml2.connectForTests(true);
 			return ml2;
 		}
@@ -118,16 +124,16 @@ public class ClipCornBaseTest {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void createInMemoryProperties()
+	protected CCProperties createInMemoryProperties()
 	{
-		CCProperties.createInMemory();
+		var props = CCProperties.createInMemory();
 
 		if (ApplicationHelper.isWindows())
 		{
-			CCProperties.getInstance().PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", CCPath.create("C:/tmpfs/jcc/mov/")));
-			CCProperties.getInstance().PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", CCPath.create("C:/tmpfs/jcc/ser/")));
+			props.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", CCPath.create("C:/tmpfs/jcc/mov/")));
+			props.PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", CCPath.create("C:/tmpfs/jcc/ser/")));
 
-			DriveMap.initForTests(
+			props.getDriveMap().initForTests(
 				Tuple3.Create('C', "Local Disk",      ""),
 				Tuple3.Create('F', "Data",            ""),
 				Tuple3.Create('G', "Spine",           ""),
@@ -138,10 +144,10 @@ public class ClipCornBaseTest {
 		}
 		else
 		{
-			CCProperties.getInstance().PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", CCPath.create("/tmpfs/jcc/mov/")));
-			CCProperties.getInstance().PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", CCPath.create("/tmpfs/jcc/ser/")));
+			props.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", CCPath.create("/tmpfs/jcc/mov/")));
+			props.PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", CCPath.create("/tmpfs/jcc/ser/")));
 
-			DriveMap.initForTests(
+			props.getDriveMap().initForTests(
 					Tuple3.Create('C', "Local Disk",      ""),
 					Tuple3.Create('F', "Data",            ""),
 					Tuple3.Create('G', "Spine",           ""),
@@ -150,6 +156,8 @@ public class ClipCornBaseTest {
 					Tuple3.Create('O', "Network Drive 2", "")
 			);
 		}
+
+		return props;
 	}
 
 	protected void assertImageEquals(BufferedImage a, BufferedImage b) {
@@ -165,10 +173,56 @@ public class ClipCornBaseTest {
 
 	protected void assertEmptyErrors(List<DatabaseError> errs) {
 		if (!errs.isEmpty()) {
-			for (var e : errs) System.err.println("(db-error): " + e.getFullErrorString());
+			for (var e : errs)
+			{
+				System.err.println("(db-error): " + e.getFullErrorString());
+				for (var md: e.Metadata) System.err.println("              - " + md.Item1 + " -> " + md.Item2);
+			}
 		}
 
 		assertArrayEquals(new Object[0], errs.toArray());
+	}
+
+	protected void assertArchiveEquals(FSPath p1, FSPath p2) throws IOException {
+
+		var e1 = new HashMap<String, Tuple<String, byte[]>>();
+		try (var fs = new FileInputStream(p1.toFile())) {
+			try (var zs = new ZipInputStream(fs)) {
+				for (ZipEntry entry = zs.getNextEntry(); entry != null; entry = zs.getNextEntry()) {
+					if (entry.getName().toLowerCase().endsWith(".txt") || entry.getName().toLowerCase().endsWith(".xml"))
+						e1.put(entry.getName(), Tuple.Create(new String(zs.readAllBytes()), null));
+					else
+						e1.put(entry.getName(), Tuple.Create(null, zs.readAllBytes()));
+				}
+
+			}
+		}
+
+		var e2 = new HashMap<String, Tuple<String, byte[]>>();
+		try (var fs = new FileInputStream(p2.toFile())) {
+			try (var zs = new ZipInputStream(fs)) {
+				for (ZipEntry entry = zs.getNextEntry(); entry != null; entry = zs.getNextEntry()) {
+					if (entry.getName().toLowerCase().endsWith(".txt") || entry.getName().toLowerCase().endsWith(".xml"))
+						e2.put(entry.getName(), Tuple.Create(new String(zs.readAllBytes()), null));
+					else
+						e2.put(entry.getName(), Tuple.Create(null, zs.readAllBytes()));
+				}
+
+			}
+		}
+
+		assertEquals(CCStreams.iterate(e1.keySet()).autosort().stringjoin(e->e, "\n"), CCStreams.iterate(e2.keySet()).autosort().stringjoin(e->e, "\n"));
+
+		assertEquals(e1.size(), e2.size());
+
+		for (var k: e1.keySet())
+		{
+			var v1 = e1.get(k);
+			var v2 = e2.get(k);
+
+			assertEquals("ZipEntry::"+k, v1.Item1, v2.Item1);
+			assertEquals("ZipEntry::"+k, v1.Item2, v2.Item2);
+		}
 	}
 
 	protected void assertException(Func0to0 fn)
@@ -183,4 +237,32 @@ public class ClipCornBaseTest {
 			// Good!
 		}
 	}
+
+	protected static FSPath createAutocleanedDir(String ident) throws IOException {
+		var tempPath = FilesystemUtils.getTempPath().append("jcc_unittests").append(Str.format("{0}_{1}_{2}", ident, CCDateTime.getCurrentDateTime().toStringFilesystem(), UUID.randomUUID()));
+		tempPath.mkdirsWithException();
+
+		ClipCornBaseTest.CLEANUP.add(() -> { System.out.println("[CLEANUP] Clear dir " + tempPath.getDirectoryName()); tempPath.deleteRecursive(); });
+
+		System.out.println("[TESTS] Create (autoclean) dir: " + tempPath);
+
+		return tempPath;
+	}
+
+	public static CCMovieList reloadDBAfterShutdown(CCMovieList ml) throws Exception {
+
+		var dbPath = ml.getDatabaseDirectory().getParent();
+
+		var props = CCProperties.create(dbPath.getParent().append(Main.PROPERTIES_PATH), new String[0]);
+		props.PROP_DATABASE_DIR.setValue(dbPath);
+		props.PROP_DATABASE_NAME.setValue(ml.getDatabaseName());
+
+		var mlRet = CCMovieList.createInstanceMovieList(ml.ccprops());
+		mlRet.connectExternal(true);
+
+		ClipCornBaseTest.CLEANUP.add(() -> { System.out.println("[CLEANUP] Shutdown ML"); mlRet.shutdown(); });
+
+		return mlRet;
+	}
+
 }

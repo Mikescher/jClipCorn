@@ -20,7 +20,6 @@ import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.properties.types.NamedPathVar;
-import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;

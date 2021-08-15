@@ -1,5 +1,6 @@
 package de.jClipCorn.test;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
@@ -11,9 +12,9 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
+import de.jClipCorn.util.exceptions.FVHException;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
-import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.xml.CCXMLException;
@@ -21,41 +22,37 @@ import de.jClipCorn.util.xml.CCXMLException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.UUID;
+import java.util.Collections;
 
 @SuppressWarnings("nls")
 public class DatabaseSeeder {
 
 	public static CCMovieList init(boolean reloadAfterCreate) throws Exception {
 
-		var tempPath = FilesystemUtils.getTempPath().append("jcc_unittests").append(Str.format("databaseseeder_{0}_{1}", CCDateTime.getCurrentDateTime().toStringFilesystem(), UUID.randomUUID()));
-		tempPath.mkdirsWithException();
-
-		ClipCornBaseTest.CLEANUP.add(() -> { System.out.println("[CLEANUP] Clear db dir"); tempPath.deleteRecursive(); });
+		var tempPath = ClipCornBaseTest.createAutocleanedDir("databaseseeder");
 
 		var dbPath = tempPath.append("db");
 		dbPath.mkdirsWithException();
 
-		CCProperties.create(tempPath.append("jClipcorn.properties"), new String[0]);
+		var props = CCProperties.create(tempPath.append(Main.PROPERTIES_PATH), new String[0]);
 
-		CCProperties.getInstance().PROP_DATABASE_DIR.setValue(dbPath);
+		props.PROP_DATABASE_DIR.setValue(dbPath);
 
 		System.out.println("Load DB from: " + tempPath);
 
-
-		var ml = CCMovieList.createInstanceMovieList();
+		var ml = CCMovieList.createInstanceMovieList(props);
 		ml.connectExternal(true);
 		{
 			ml.getHistory().enableTrigger();
 
-			seed(CCProperties.getInstance(), ml, tempPath);
+			seed(props, ml, tempPath);
 		}
 
 		if (reloadAfterCreate)
 		{
 			ml.shutdown();
 
-			var mlRet = CCMovieList.createInstanceMovieList();
+			var mlRet = CCMovieList.createInstanceMovieList(props);
 			mlRet.connectExternal(true);
 
 			ClipCornBaseTest.CLEANUP.add(() -> { System.out.println("[CLEANUP] Shutdown ML"); mlRet.shutdown(); });
@@ -76,8 +73,8 @@ public class DatabaseSeeder {
 		var pathMov = dir.append("mov"); pathMov.mkdirsWithException();
 		var pathSer = dir.append("ser"); pathSer.mkdirsWithException();
 
-		prop.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", CCPath.createFromFSPath(pathMov, Opt.False)));
-		prop.PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", CCPath.createFromFSPath(pathSer, Opt.False)));
+		prop.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", CCPath.createFromFSPath(pathMov, Opt.False, ml)));
+		prop.PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", CCPath.createFromFSPath(pathSer, Opt.False, ml)));
 
 		//ml.addGroup(CCGroup.create("DCU Animated",        true,  Str.Empty,           false));
 		ml.addGroup(CCGroup.create("BruceWillis",         false, Str.Empty,           false));
@@ -99,7 +96,7 @@ public class DatabaseSeeder {
 				e.Zyklus.set(CCMovieZyklus.EMPTY);
 				e.OnlineScore.set(CCOnlineScore.STARS_4_5);
 				e.Score.set(CCUserScore.RATING_V);
-				e.MediaInfo.set(mi("000", f));
+				e.MediaInfo.set(mi(ml, "000", f));
 				e.Length.set(25);
 				e.Format.set(CCFileFormat.MP4);
 				e.FileSize.set(new CCFileSize(1_166_926));
@@ -113,7 +110,7 @@ public class DatabaseSeeder {
 				e.Tags.set(CCTagList.EMPTY);
 				e.setCover(cvr("000"));
 
-				e.Parts.Part0.set(CCPath.createFromFSPath(f));
+				e.Parts.Part0.set(CCPath.createFromFSPath(f, ml));
 				e.Parts.Part1.set(CCPath.Empty);
 				e.Parts.Part2.set(CCPath.Empty);
 				e.Parts.Part3.set(CCPath.Empty);
@@ -136,7 +133,7 @@ public class DatabaseSeeder {
 				e.Zyklus.set(new CCMovieZyklus("Stirb Langsam", 1));
 				e.OnlineScore.set(CCOnlineScore.STARS_4_0);
 				e.Score.set(CCUserScore.RATING_NO);
-				e.MediaInfo.set(mi("001", f));
+				e.MediaInfo.set(mi(ml, "001", f));
 				e.Length.set(42);
 				e.Format.set(CCFileFormat.MKV);
 				e.FileSize.set(new CCFileSize(1_545_782));
@@ -150,7 +147,7 @@ public class DatabaseSeeder {
 				e.Tags.set(CCTagList.create(CCSingleTag.TAG_WATCH_LATER));
 				e.setCover(cvr("001"));
 
-				e.Parts.Part0.set(CCPath.createFromFSPath(f));
+				e.Parts.Part0.set(CCPath.createFromFSPath(f, ml));
 				e.Parts.Part1.set(CCPath.Empty);
 				e.Parts.Part2.set(CCPath.Empty);
 				e.Parts.Part3.set(CCPath.Empty);
@@ -175,7 +172,7 @@ public class DatabaseSeeder {
 				e.Zyklus.set(new CCMovieZyklus("Stirb Langsam", 2));
 				e.OnlineScore.set(CCOnlineScore.STARS_3_5);
 				e.Score.set(CCUserScore.RATING_NO);
-				e.MediaInfo.set(mi("002", f1));
+				e.MediaInfo.set(mi(ml, "002", f1));
 				e.Length.set(58+125);
 				e.Format.set(CCFileFormat.AVI);
 				e.FileSize.set(new CCFileSize(12_170_130+21_899_356));
@@ -189,8 +186,8 @@ public class DatabaseSeeder {
 				e.Tags.set(CCTagList.create(CCSingleTag.TAG_BAD_QUALITY));
 				e.setCover(cvr("002"));
 
-				e.Parts.Part0.set(CCPath.createFromFSPath(f1));
-				e.Parts.Part1.set(CCPath.createFromFSPath(f2));
+				e.Parts.Part0.set(CCPath.createFromFSPath(f1, ml));
+				e.Parts.Part1.set(CCPath.createFromFSPath(f2, ml));
 				e.Parts.Part2.set(CCPath.Empty);
 				e.Parts.Part3.set(CCPath.Empty);
 				e.Parts.Part4.set(CCPath.Empty);
@@ -245,12 +242,12 @@ public class DatabaseSeeder {
 					{
 						epis.Title.set("Angriff der Engel");
 						epis.EpisodeNumber.set(1);
-						epis.MediaInfo.set(mi("003", f));
+						epis.MediaInfo.set(mi(ml, "003", f));
 						epis.Length.set(75);
 						epis.Tags.set(CCTagList.EMPTY);
 						epis.Format.set(CCFileFormat.MKV);
 						epis.FileSize.set(2_826_740);
-						epis.Part.set(CCPath.createFromFSPath(f));
+						epis.Part.set(CCPath.createFromFSPath(f, ml));
 						epis.AddDate.set(CCDate.create(14, 8, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.create(CCDateTime.getUnspecified(), CCDateTime.createFromSQL("2020-08-14 20:21:00")));
 						epis.Language.set(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE, CCDBLanguage.ENGLISH));
@@ -268,12 +265,12 @@ public class DatabaseSeeder {
 					{
 						epis.Title.set("Das Ungeheuer");
 						epis.EpisodeNumber.set(2);
-						epis.MediaInfo.set(mi("004", f));
+						epis.MediaInfo.set(mi(ml, "004", f));
 						epis.Length.set(91);
 						epis.Tags.set(CCTagList.EMPTY);
 						epis.Format.set(CCFileFormat.MP4);
 						epis.FileSize.set(4_230_401);
-						epis.Part.set(CCPath.createFromFSPath(f));
+						epis.Part.set(CCPath.createFromFSPath(f, ml));
 						epis.AddDate.set(CCDate.create(14, 8, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.create(CCDateTime.getUnspecified(), CCDateTime.createFromSQL("2020-08-14 20:52:00")));
 						epis.Language.set(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE, CCDBLanguage.ENGLISH));
@@ -291,12 +288,12 @@ public class DatabaseSeeder {
 					{
 						epis.Title.set("Ein neuer Schüler");
 						epis.EpisodeNumber.set(3);
-						epis.MediaInfo.set(mi("005", f));
+						epis.MediaInfo.set(mi(ml, "005", f));
 						epis.Length.set(108);
 						epis.Tags.set(CCTagList.EMPTY);
 						epis.Format.set(CCFileFormat.MKV);
 						epis.FileSize.set(4_097_053);
-						epis.Part.set(CCPath.createFromFSPath(f));
+						epis.Part.set(CCPath.createFromFSPath(f, ml));
 						epis.AddDate.set(CCDate.create(14, 8, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.create(CCDateTime.getUnspecified(), CCDateTime.createFromSQL("2020-08-14 21:19:00")));
 						epis.Language.set(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE, CCDBLanguage.ENGLISH));
@@ -317,7 +314,7 @@ public class DatabaseSeeder {
 				sea.endUpdating();
 
 				{
-					var f = pathSer.append("Neon Genesis Evangelion [GER+JAP]").append("02 - The End of Evangelion").append("S02E25 - Air.mkv");
+					var f = pathSer.append("Neon Genesis Evangelion [GER+JAP]").append("02 - The End of Evangelion").append("S02E01 - Air.mkv");
 					cp("007", "mkv", f);
 
 					var epis = ml.createNewEmptyEpisode(sea);
@@ -326,12 +323,12 @@ public class DatabaseSeeder {
 					{
 						epis.Title.set("Air");
 						epis.EpisodeNumber.set(1);
-						epis.MediaInfo.set(mi("007", f));
+						epis.MediaInfo.set(mi(ml, "007", f));
 						epis.Length.set(141);
 						epis.Tags.set(CCTagList.EMPTY);
 						epis.Format.set(CCFileFormat.MKV);
 						epis.FileSize.set(5_310_534);
-						epis.Part.set(CCPath.createFromFSPath(f));
+						epis.Part.set(CCPath.createFromFSPath(f, ml));
 						epis.AddDate.set(CCDate.create(1, 9, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.createEmpty());
 						epis.Language.set(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE));
@@ -340,7 +337,7 @@ public class DatabaseSeeder {
 				}
 
 				{
-					var f = pathSer.append("Neon Genesis Evangelion [GER+JAP]").append("02 - The End of Evangelion").append("S02E26 - My Purest Heart for You.mkv");
+					var f = pathSer.append("Neon Genesis Evangelion [GER+JAP]").append("02 - The End of Evangelion").append("S02E02 - My Purest Heart for You.mkv");
 					cp("009", "mkv", f);
 
 					var epis = ml.createNewEmptyEpisode(sea);
@@ -349,12 +346,12 @@ public class DatabaseSeeder {
 					{
 						epis.Title.set("My Purest Heart for You");
 						epis.EpisodeNumber.set(2);
-						epis.MediaInfo.set(mi("009", f));
+						epis.MediaInfo.set(mi(ml, "009", f));
 						epis.Length.set(120);
 						epis.Tags.set(CCTagList.EMPTY);
 						epis.Format.set(CCFileFormat.MKV);
 						epis.FileSize.set(4_538_071);
-						epis.Part.set(CCPath.createFromFSPath(f));
+						epis.Part.set(CCPath.createFromFSPath(f, ml));
 						epis.AddDate.set(CCDate.create(1, 9, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.createEmpty());
 						epis.Language.set(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE));
@@ -378,10 +375,10 @@ public class DatabaseSeeder {
 		SimpleFileUtils.writeGzippedResource(dest, "/media/demo_"+id+"."+ext+".gz", DatabaseSeeder.class);
 	}
 
-	private static PartialMediaInfo mi(String id, FSPath dest) throws InnerMediaQueryException, CCXMLException, IOException {
+	private static PartialMediaInfo mi(CCMovieList ml, String id, FSPath dest) throws InnerMediaQueryException, CCXMLException, IOException, FVHException {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", DatabaseSeeder.class);
-		var fvhash = ChecksumHelper.fastVideoHash(dest);
+		var fvhash = ChecksumHelper.fastVideoHash(Collections.singletonList(dest));
 		var attr = dest.readFileAttr();
-		return MediaQueryRunner.parse(out, fvhash, attr, false).toPartial();
+		return new MediaQueryRunner(ml).parse(out, fvhash, attr, false).toPartial();
 	}
 }

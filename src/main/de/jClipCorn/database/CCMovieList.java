@@ -587,6 +587,10 @@ public class CCMovieList implements ICCPropertySource {
 	public ICoverCache getCoverCache() {
 		return database.getCoverCache();
 	}
+
+	public int getCoverCount() {
+		return database.getCoverCache().getCoverCount();
+	}
 	
 	public void removeEpisodeFromDatabase(CCEpisode ep) {
 		database.removeFromEpisodes(ep.getLocalID());

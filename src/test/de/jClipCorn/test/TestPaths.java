@@ -16,7 +16,7 @@ public class TestPaths extends ClipCornBaseTest {
 
 	@Test
 	public void testFSPath() throws Exception {
-		createInMemoryProperties();
+		var ccprops = createInMemoryProperties();
 
 		assertEquals(loc("F:/dir1/dir2/file.txt"), FSPath.create(loc("F:/dir1/dir2/file.txt")).toString());
 		assertEquals(loc("F:/dir1/dir2/file.txt"), FSPath.create(loc("F:/dir1/dir2/file.txt")).toAbsolutePathString());
@@ -81,7 +81,7 @@ public class TestPaths extends ClipCornBaseTest {
 
 	@Test
 	public void testCCPathNormal() throws Exception {
-		createInMemoryProperties();
+		var ccprops = createInMemoryProperties();
 
 		assertEquals("F:/dir1/dir2/file.txt", CCPath.create("F:/dir1/dir2/file.txt").toString());
 		assertEquals("F:/dir1/dir2", CCPath.create("F:/dir1/dir2/").toString());
@@ -98,14 +98,14 @@ public class TestPaths extends ClipCornBaseTest {
 		assertEquals("file", CCPath.create("F:/dir1/dir2/file.txt").getFilenameWithoutExt());
 		assertEquals("file.txt", CCPath.create("F:/dir1/dir2/file.txt").getFilenameWithExt());
 
-		assertEquals("txt", CCPath.create("F:/dir1/dir2/file.txt").toFSPath().getExtension());
-		assertEquals("file", CCPath.create("F:/dir1/dir2/file.txt").toFSPath().getFilenameWithoutExt());
-		assertEquals("file.txt", CCPath.create("F:/dir1/dir2/file.txt").toFSPath().getFilenameWithExt());
+		assertEquals("txt", CCPath.create("F:/dir1/dir2/file.txt").toFSPath(ccprops).getExtension());
+		assertEquals("file", CCPath.create("F:/dir1/dir2/file.txt").toFSPath(ccprops).getFilenameWithoutExt());
+		assertEquals("file.txt", CCPath.create("F:/dir1/dir2/file.txt").toFSPath(ccprops).getFilenameWithExt());
 	}
 
 	@Test
 	public void testCCPathNormalWithVar() throws Exception {
-		createInMemoryProperties();
+		var ccprops = createInMemoryProperties();
 
 		assertEquals("<?[mov]>dir1/dir2/file.txt", CCPath.create("<?[mov]>dir1/dir2/file.txt").toString());
 		assertEquals("<?[mov]>dir1/dir2", CCPath.create("<?[mov]>dir1/dir2/").toString());
@@ -122,14 +122,14 @@ public class TestPaths extends ClipCornBaseTest {
 		assertEquals("file", CCPath.create("<?[mov]>dir1/dir2/file.txt").getFilenameWithoutExt());
 		assertEquals("file.txt", CCPath.create("<?[mov]>dir1/dir2/file.txt").getFilenameWithExt());
 
-		assertEquals("txt", CCPath.create("<?[mov]>dir1/dir2/file.txt").toFSPath().getExtension());
-		assertEquals("file", CCPath.create("<?[mov]>dir1/dir2/file.txt").toFSPath().getFilenameWithoutExt());
-		assertEquals("file.txt", CCPath.create("<?[mov]>dir1/dir2/file.txt").toFSPath().getFilenameWithExt());
+		assertEquals("txt", CCPath.create("<?[mov]>dir1/dir2/file.txt").toFSPath(ccprops).getExtension());
+		assertEquals("file", CCPath.create("<?[mov]>dir1/dir2/file.txt").toFSPath(ccprops).getFilenameWithoutExt());
+		assertEquals("file.txt", CCPath.create("<?[mov]>dir1/dir2/file.txt").toFSPath(ccprops).getFilenameWithExt());
 	}
 
 	@Test
 	public void testCCPathNormalWithSelf() throws Exception {
-		createInMemoryProperties();
+		var ccprops = createInMemoryProperties();
 
 		assertEquals("<?self>dir1/dir2/file.txt", CCPath.create("<?self>dir1/dir2/file.txt").toString());
 		assertEquals("<?self>dir1/dir2", CCPath.create("<?self>dir1/dir2/").toString());
@@ -146,14 +146,14 @@ public class TestPaths extends ClipCornBaseTest {
 		assertEquals("file", CCPath.create("<?self>dir1/dir2/file.txt").getFilenameWithoutExt());
 		assertEquals("file.txt", CCPath.create("<?self>dir1/dir2/file.txt").getFilenameWithExt());
 
-		assertEquals("txt", CCPath.create("<?self>dir1/dir2/file.txt").toFSPath().getExtension());
-		assertEquals("file", CCPath.create("<?self>dir1/dir2/file.txt").toFSPath().getFilenameWithoutExt());
-		assertEquals("file.txt", CCPath.create("<?self>dir1/dir2/file.txt").toFSPath().getFilenameWithExt());
+		assertEquals("txt", CCPath.create("<?self>dir1/dir2/file.txt").toFSPath(ccprops).getExtension());
+		assertEquals("file", CCPath.create("<?self>dir1/dir2/file.txt").toFSPath(ccprops).getFilenameWithoutExt());
+		assertEquals("file.txt", CCPath.create("<?self>dir1/dir2/file.txt").toFSPath(ccprops).getFilenameWithExt());
 	}
 
 	@Test
 	public void testCCPathNormalWithDriveLabel() throws Exception {
-		createInMemoryProperties();
+		var ccprops = createInMemoryProperties();
 
 		assertEquals("<?vLabel=\"Network Drive 0\">dir1/dir2/file.txt", CCPath.create("<?vLabel=\"Network Drive 0\">dir1/dir2/file.txt").toString());
 		assertEquals("<?vLabel=\"Network Drive 0\">dir1/dir2", CCPath.create("<?vLabel=\"Network Drive 0\">dir1/dir2/").toString());
@@ -170,14 +170,14 @@ public class TestPaths extends ClipCornBaseTest {
 		assertEquals("file", CCPath.create("<?vLabel=\"Network Drive 0\">dir1/dir2/file.txt").getFilenameWithoutExt());
 		assertEquals("file.txt", CCPath.create("<?vLabel=\"Network Drive 0\">dir1/dir2/file.txt").getFilenameWithExt());
 
-		assertEquals("txt", CCPath.create("<?vLabel=\"Network Drive 0\">dir1/dir2/file.txt").toFSPath().getExtension());
-		assertEquals("file", CCPath.create("<?vLabel=\"Network Drive 0\">dir1/dir2/file.txt").toFSPath().getFilenameWithoutExt());
-		assertEquals("file.txt", CCPath.create("<?vLabel=\"Network Drive 0\">dir1/dir2/file.txt").toFSPath().getFilenameWithExt());
+		assertEquals("txt", CCPath.create("<?vLabel=\"Network Drive 0\">dir1/dir2/file.txt").toFSPath(ccprops).getExtension());
+		assertEquals("file", CCPath.create("<?vLabel=\"Network Drive 0\">dir1/dir2/file.txt").toFSPath(ccprops).getFilenameWithoutExt());
+		assertEquals("file.txt", CCPath.create("<?vLabel=\"Network Drive 0\">dir1/dir2/file.txt").toFSPath(ccprops).getFilenameWithExt());
 	}
 
 	@Test
 	public void testCCPathNormalWithDriveLetter() throws Exception {
-		createInMemoryProperties();
+		var ccprops = createInMemoryProperties();
 
 		assertEquals("<?vLetter=\"C\">dir1/dir2/file.txt", CCPath.create("<?vLetter=\"C\">dir1/dir2/file.txt").toString());
 		assertEquals("<?vLetter=\"C\">dir1/dir2", CCPath.create("<?vLetter=\"C\">dir1/dir2/").toString());
@@ -194,14 +194,14 @@ public class TestPaths extends ClipCornBaseTest {
 		assertEquals("file", CCPath.create("<?vLetter=\"C\">dir1/dir2/file.txt").getFilenameWithoutExt());
 		assertEquals("file.txt", CCPath.create("<?vLetter=\"C\">dir1/dir2/file.txt").getFilenameWithExt());
 
-		assertEquals("txt", CCPath.create("<?vLetter=\"C\">dir1/dir2/file.txt").toFSPath().getExtension());
-		assertEquals("file", CCPath.create("<?vLetter=\"C\">dir1/dir2/file.txt").toFSPath().getFilenameWithoutExt());
-		assertEquals("file.txt", CCPath.create("<?vLetter=\"C\">dir1/dir2/file.txt").toFSPath().getFilenameWithExt());
+		assertEquals("txt", CCPath.create("<?vLetter=\"C\">dir1/dir2/file.txt").toFSPath(ccprops).getExtension());
+		assertEquals("file", CCPath.create("<?vLetter=\"C\">dir1/dir2/file.txt").toFSPath(ccprops).getFilenameWithoutExt());
+		assertEquals("file.txt", CCPath.create("<?vLetter=\"C\">dir1/dir2/file.txt").toFSPath(ccprops).getFilenameWithExt());
 	}
 
 	@Test
 	public void testCCPathNormalWithSelfDrive() throws Exception {
-		createInMemoryProperties();
+		var ccprops = createInMemoryProperties();
 
 		assertEquals("<?self[dir]>dir1/dir2/file.txt", CCPath.create("<?self[dir]>dir1/dir2/file.txt").toString());
 		assertEquals("<?self[dir]>dir1/dir2", CCPath.create("<?self[dir]>dir1/dir2/").toString());
@@ -218,62 +218,62 @@ public class TestPaths extends ClipCornBaseTest {
 		assertEquals("file", CCPath.create("<?self[dir]>dir1/dir2/file.txt").getFilenameWithoutExt());
 		assertEquals("file.txt", CCPath.create("<?self[dir]>dir1/dir2/file.txt").getFilenameWithExt());
 
-		assertEquals("txt", CCPath.create("<?self[dir]>dir1/dir2/file.txt").toFSPath().getExtension());
-		assertEquals("file", CCPath.create("<?self[dir]>dir1/dir2/file.txt").toFSPath().getFilenameWithoutExt());
-		assertEquals("file.txt", CCPath.create("<?self[dir]>dir1/dir2/file.txt").toFSPath().getFilenameWithExt());
+		assertEquals("txt", CCPath.create("<?self[dir]>dir1/dir2/file.txt").toFSPath(ccprops).getExtension());
+		assertEquals("file", CCPath.create("<?self[dir]>dir1/dir2/file.txt").toFSPath(ccprops).getFilenameWithoutExt());
+		assertEquals("file.txt", CCPath.create("<?self[dir]>dir1/dir2/file.txt").toFSPath(ccprops).getFilenameWithExt());
 	}
 
 	@Test
-	public void testCCPathToFSPath() throws Exception
+	public void testCCPathtoFSPath() throws Exception
 	{
-		createInMemoryProperties();
+		var ccprops = createInMemoryProperties();
 
 		assertEquals("<?self[dir]>dir1/dir2/file.txt", CCPath.create("<?self[dir]>dir1/dir2/file.txt").toString());
 
-		assertEquals(FilesystemUtils.getAbsoluteSelfDirectory().append("dir").append("file.txt").toString(),                          CCPath.create("<?self>dir/file.txt").toFSPath().toString());
-		assertEquals(FilesystemUtils.getAbsoluteSelfDirectory().append("dir").append("file.txt").toAbsolutePathString(),              CCPath.create("<?self>dir/file.txt").toFSPath().toAbsolutePathString());
-		assertEquals(FilesystemUtils.getAbsoluteSelfDirectory().append("dir").append("file.txt").toNormalizedAndAbsolutePathString(), CCPath.create("<?self>dir/file.txt").toFSPath().toNormalizedAndAbsolutePathString());
+		assertEquals(FilesystemUtils.getAbsoluteSelfDirectory(ccprops).append("dir").append("file.txt").toString(),                          CCPath.create("<?self>dir/file.txt").toFSPath(ccprops).toString());
+		assertEquals(FilesystemUtils.getAbsoluteSelfDirectory(ccprops).append("dir").append("file.txt").toAbsolutePathString(),              CCPath.create("<?self>dir/file.txt").toFSPath(ccprops).toAbsolutePathString());
+		assertEquals(FilesystemUtils.getAbsoluteSelfDirectory(ccprops).append("dir").append("file.txt").toNormalizedAndAbsolutePathString(), CCPath.create("<?self>dir/file.txt").toFSPath(ccprops).toNormalizedAndAbsolutePathString());
 
-		assertEquals(FilesystemUtils.getAbsoluteSelfDirectory().append("file.txt").toString(),                          CCPath.create("<?self>file.txt").toFSPath().toString());
-		assertEquals(FilesystemUtils.getAbsoluteSelfDirectory().append("file.txt").toAbsolutePathString(),              CCPath.create("<?self>file.txt").toFSPath().toAbsolutePathString());
-		assertEquals(FilesystemUtils.getAbsoluteSelfDirectory().append("file.txt").toNormalizedAndAbsolutePathString(), CCPath.create("<?self>file.txt").toFSPath().toNormalizedAndAbsolutePathString());
+		assertEquals(FilesystemUtils.getAbsoluteSelfDirectory(ccprops).append("file.txt").toString(),                          CCPath.create("<?self>file.txt").toFSPath(ccprops).toString());
+		assertEquals(FilesystemUtils.getAbsoluteSelfDirectory(ccprops).append("file.txt").toAbsolutePathString(),              CCPath.create("<?self>file.txt").toFSPath(ccprops).toAbsolutePathString());
+		assertEquals(FilesystemUtils.getAbsoluteSelfDirectory(ccprops).append("file.txt").toNormalizedAndAbsolutePathString(), CCPath.create("<?self>file.txt").toFSPath(ccprops).toNormalizedAndAbsolutePathString());
 
 		var selfdir = FSPath.create(ApplicationHelper.isWindows() ? (FilesystemUtils.getRealSelfDirectory().toString().charAt(0)+":\\") : ("/"));
 
-		assertEquals(selfdir.append("file.txt").toString(),                          CCPath.create("<?self[dir]>file.txt").toFSPath().toString());
-		assertEquals(selfdir.append("file.txt").toAbsolutePathString(),              CCPath.create("<?self[dir]>file.txt").toFSPath().toAbsolutePathString());
-		assertEquals(selfdir.append("file.txt").toNormalizedAndAbsolutePathString(), CCPath.create("<?self[dir]>file.txt").toFSPath().toNormalizedAndAbsolutePathString());
+		assertEquals(selfdir.append("file.txt").toString(),                          CCPath.create("<?self[dir]>file.txt").toFSPath(ccprops).toString());
+		assertEquals(selfdir.append("file.txt").toAbsolutePathString(),              CCPath.create("<?self[dir]>file.txt").toFSPath(ccprops).toAbsolutePathString());
+		assertEquals(selfdir.append("file.txt").toNormalizedAndAbsolutePathString(), CCPath.create("<?self[dir]>file.txt").toFSPath(ccprops).toNormalizedAndAbsolutePathString());
 
-		assertEquals(selfdir.append("dir").append("file.txt").toString(),                          CCPath.create("<?self[dir]>dir/file.txt").toFSPath().toString());
-		assertEquals(selfdir.append("dir").append("file.txt").toAbsolutePathString(),              CCPath.create("<?self[dir]>dir/file.txt").toFSPath().toAbsolutePathString());
-		assertEquals(selfdir.append("dir").append("file.txt").toNormalizedAndAbsolutePathString(), CCPath.create("<?self[dir]>dir/file.txt").toFSPath().toNormalizedAndAbsolutePathString());
+		assertEquals(selfdir.append("dir").append("file.txt").toString(),                          CCPath.create("<?self[dir]>dir/file.txt").toFSPath(ccprops).toString());
+		assertEquals(selfdir.append("dir").append("file.txt").toAbsolutePathString(),              CCPath.create("<?self[dir]>dir/file.txt").toFSPath(ccprops).toAbsolutePathString());
+		assertEquals(selfdir.append("dir").append("file.txt").toNormalizedAndAbsolutePathString(), CCPath.create("<?self[dir]>dir/file.txt").toFSPath(ccprops).toNormalizedAndAbsolutePathString());
 
-		var vdir = ApplicationHelper.isWindows() ? CCPath.create("C:/tmpfs/jcc/mov/").toFSPath() : CCPath.create("/tmpfs/jcc/mov/").toFSPath();
+		var vdir = ApplicationHelper.isWindows() ? CCPath.create("C:/tmpfs/jcc/mov/").toFSPath(ccprops) : CCPath.create("/tmpfs/jcc/mov/").toFSPath(ccprops);
 
-		assertEquals(vdir.append("file.txt").toString(),                          CCPath.create("<?[mov]>file.txt").toFSPath().toString());
-		assertEquals(vdir.append("file.txt").toAbsolutePathString(),              CCPath.create("<?[mov]>file.txt").toFSPath().toAbsolutePathString());
-		assertEquals(vdir.append("file.txt").toNormalizedAndAbsolutePathString(), CCPath.create("<?[mov]>file.txt").toFSPath().toNormalizedAndAbsolutePathString());
+		assertEquals(vdir.append("file.txt").toString(),                          CCPath.create("<?[mov]>file.txt").toFSPath(ccprops).toString());
+		assertEquals(vdir.append("file.txt").toAbsolutePathString(),              CCPath.create("<?[mov]>file.txt").toFSPath(ccprops).toAbsolutePathString());
+		assertEquals(vdir.append("file.txt").toNormalizedAndAbsolutePathString(), CCPath.create("<?[mov]>file.txt").toFSPath(ccprops).toNormalizedAndAbsolutePathString());
 	}
 
 	@Test
 	public void testFSPathToCCPath() throws Exception
 	{
-		createInMemoryProperties();
+		var ccprops = createInMemoryProperties();
 
-		assertEquals("<?[mov]>fname.ext",          CCPath.createFromFSPath(FSPath.create(loc("C:/tmpfs/jcc/mov/fname.ext"))).toString());
-		assertEquals("<?[mov]>fname.ext",          CCPath.createFromFSPath(FSPath.create(loc("C:/tmpfs/jcc/mov/fname.ext")), Opt.True).toString());
+		assertEquals("<?[mov]>fname.ext",          CCPath.createFromFSPath(FSPath.create(loc("C:/tmpfs/jcc/mov/fname.ext")), ccprops).toString());
+		assertEquals("<?[mov]>fname.ext",          CCPath.createFromFSPath(FSPath.create(loc("C:/tmpfs/jcc/mov/fname.ext")), Opt.True, ccprops).toString());
 
 		if (ApplicationHelper.isWindows())
 		{
-			assertEquals("<?vNetwork=\"\\\\server2\\drive2\">fname.ext", CCPath.createFromFSPath(FSPath.create(loc("O:/fname.ext"))).toString());
-			assertEquals("<?vNetwork=\"\\\\server2\\drive2\">fname.ext", CCPath.createFromFSPath(FSPath.create(loc("O:/fname.ext")), Opt.True).toString());
-			assertEquals("O:/fname.ext",                                 CCPath.createFromFSPath(FSPath.create(loc("O:/fname.ext")), Opt.False).toString());
+			assertEquals("<?vNetwork=\"\\\\server2\\drive2\">fname.ext", CCPath.createFromFSPath(FSPath.create(loc("O:/fname.ext")), ccprops).toString());
+			assertEquals("<?vNetwork=\"\\\\server2\\drive2\">fname.ext", CCPath.createFromFSPath(FSPath.create(loc("O:/fname.ext")), Opt.True, ccprops).toString());
+			assertEquals("O:/fname.ext",                                 CCPath.createFromFSPath(FSPath.create(loc("O:/fname.ext")), Opt.False, ccprops).toString());
 
-			assertEquals("C:/tmpfs/jcc/mov/fname.ext", CCPath.createFromFSPath(FSPath.create("C:\\tmpfs\\jcc\\mov\\fname.ext"), Opt.False).toString());
+			assertEquals("C:/tmpfs/jcc/mov/fname.ext", CCPath.createFromFSPath(FSPath.create("C:\\tmpfs\\jcc\\mov\\fname.ext"), Opt.False, ccprops).toString());
 		}
 		else
 		{
-			assertEquals("/tmpfs/jcc/mov/fname.ext", CCPath.createFromFSPath(FSPath.create("/tmpfs/jcc/mov/fname.ext"), Opt.False).toString());
+			assertEquals("/tmpfs/jcc/mov/fname.ext", CCPath.createFromFSPath(FSPath.create("/tmpfs/jcc/mov/fname.ext"), Opt.False, ccprops).toString());
 		}
 	}
 }

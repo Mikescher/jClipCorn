@@ -13,7 +13,7 @@ public class EOptShortProp extends EOptProperty<Short> {
 
 	@Override
 	protected String serializeInnerToString(Short v) {
-		return String.valueOf(v);
+		return String.valueOf((short)v);
 	}
 
 	@Override

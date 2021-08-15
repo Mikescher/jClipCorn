@@ -58,8 +58,6 @@ public class FilesystemUtils {
 	}
 
 	public static FSPath getAbsoluteSelfDirectory(CCProperties ccprops) {
-		if (Main.getCurrentGlobalCCProperties() == null) return FSPath.Empty; // For WindowBuilder
-
 		String sDir = ccprops.PROP_SELF_DIRECTORY.getValue();
 
 		return WORKINGDIR.append(sDir);

@@ -24,9 +24,9 @@ public abstract class EOptProperty<TTypeInner> extends EProperty<Opt<TTypeInner>
 
 	@Override
 	public void deserializeFromString(String v) throws CCFormatException {
-		if (Str.equals(v, "(empty)")) set(Opt.empty());
+		if (Str.equals(v, "(empty)")) { set(Opt.empty()); return; }
 
-		if (v.startsWith("[") && v.endsWith("]")) set(Opt.of(deserializeInnerFromString(v.substring(1, v.length()-2))));
+		if (v.startsWith("[") && v.endsWith("]")) { set(Opt.of(deserializeInnerFromString(v.substring(1, v.length()-1)))); return; }
 
 		throw new EOptPackFormatException(v, this.getClass());
 	}

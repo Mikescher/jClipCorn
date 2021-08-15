@@ -1,271 +1,139 @@
 package de.jClipCorn.gui.frames.checkDatabaseFrame;
 
-import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.databaseErrors.*;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.adapter.ItemChangeLambdaAdapter;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.CountAppendix;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.DoubleProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
+import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckDatabaseFrame extends JCCFrame {
-	private static final long serialVersionUID = 8481907373850170115L;
-
+public class CheckDatabaseFrame extends JCCFrame
+{
 	private List<DatabaseError> errorList;
-	
-	private final JPanel contentPanel = new JPanel();
-	private JPanel pnlTop;
-	private JScrollPane scrlPnlRight;
-	private JList<DatabaseError> lsMain;
-	private JButton btnValidate;
-	private JLabel lblInfo;
-	private JProgressBar pbProgress1;
-	private JButton btnAutofix;
-	private JScrollPane scrlPnlLeft;
-	private JList<CountAppendix<DatabaseErrorType>> lsCategories;
-	private JSplitPane pnlCenter;
-	private JButton btnFixselected;
-	private JPanel panel;
-	private JCheckBox cbValMovies;
-	private JCheckBox cbValSeries;
-	private JCheckBox cbValSeasons;
-	private JCheckBox cbValEpisodes;
-	private JCheckBox cbValCoverFiles;
-	private JCheckBox cbValAdditional;
-	private JCheckBox cbValVideoFiles;
-	private JProgressBar pbProgress2;
-	private JLabel lblProgress1;
-	private JLabel lblProgress2;
-	
-	public CheckDatabaseFrame(CCMovieList ml, MainFrame owner) {
+
+	public CheckDatabaseFrame(CCMovieList ml, MainFrame owner)
+	{
 		super(ml);
 
-		initGUI();
-		
+		initComponents();
+		postInit();
+
 		setLocationRelativeTo(owner);
 	}
-	
-	private void initGUI() {
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-		setTitle(LocaleBundle.getString("CheckDatabaseDialog.this.title")); //$NON-NLS-1$
-		setBounds(100, 100, 750, 500);
-		
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("225dlu"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				FormSpecs.PREF_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.PREF_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.PREF_ROWSPEC,}));
-		
-		pnlTop = new JPanel();
-		FlowLayout fl_pnlTop = (FlowLayout) pnlTop.getLayout();
-		fl_pnlTop.setAlignment(FlowLayout.LEFT);
-		contentPanel.add(pnlTop, "1, 1, 4, 1, fill, top"); //$NON-NLS-1$
-		
-		btnValidate = new JButton(LocaleBundle.getString("CheckDatabaseDialog.btnValidate.text")); //$NON-NLS-1$
-		btnValidate.addActionListener(arg0 -> startValidate());
-		pnlTop.add(btnValidate);
-		
-		pbProgress1 = new JProgressBar();
-		contentPanel.add(pbProgress1, "2, 4, fill, fill"); //$NON-NLS-1$
-		
-		lblInfo = new JLabel();
-		pnlTop.add(lblInfo);
-		
-		btnAutofix = new JButton(LocaleBundle.getString("CheckDatabaseDialog.btnAutofix.text")); //$NON-NLS-1$
-		btnAutofix.addActionListener(arg0 -> autoFix());
+
+	private void postInit()
+	{
+		btnFixSelected.setEnabled(false);
 		btnAutofix.setEnabled(false);
-		pnlTop.add(btnAutofix);
-		
-		pnlCenter = new JSplitPane();
-		pnlCenter.setContinuousLayout(true);
-		contentPanel.add(pnlCenter, "1, 2, 4, 1, fill, fill"); //$NON-NLS-1$
-		
-		scrlPnlLeft = new JScrollPane();
-		pnlCenter.setLeftComponent(scrlPnlLeft);
-		
-		lsCategories = new JList<>();
-		lsCategories.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lsCategories.setCellRenderer(new ErrorTypeListCellRenderer());
-		scrlPnlLeft.setViewportView(lsCategories);
-		
-		scrlPnlRight = new JScrollPane();
-		pnlCenter.setRightComponent(scrlPnlRight);
-		scrlPnlRight.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		
-		lsMain = new JList<>();
-		lsMain.setCellRenderer(new DatabaseErrorListCellRenderer());
-		lsMain.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		scrlPnlRight.setViewportView(lsMain);
-		lsMain.addMouseListener(new MouseListener() {			
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
-					onDblClick();
-				}
-			}
 
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// nothing
-			}
+		lblInfo.setText(LocaleBundle.getFormattedString("CheckDatabaseDialog.lblInfo.text", movielist.getElementCount()));
 
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// nothing
-			}
+		lblProgress1.setText(Str.Empty);
+		lblProgress2.setText(Str.Empty);
 
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// nothing
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// nothing
-			}
-		});
-		
-		lsCategories.addListSelectionListener(arg0 ->
-		{
-			ListModel<DatabaseError> lm = lsMain.getModel();
-			if (lm instanceof DatabaseErrorListModel) {
-				if (lsCategories.getSelectedValue() != null)
-					((DatabaseErrorListModel)lm).updateFilter(lsCategories.getSelectedValue().Value);
-				else
-					((DatabaseErrorListModel)lm).updateFilter(null);
-			}
-		});
-		
-		btnFixselected = new JButton(LocaleBundle.getString("CheckDatabaseDialog.btnFixSelected.text")); //$NON-NLS-1$
-		btnFixselected.addActionListener(arg0 -> fixSelected());
-		btnFixselected.setEnabled(false);
-		pnlTop.add(btnFixselected);
-
-		lblInfo.setText(LocaleBundle.getFormattedString("CheckDatabaseDialog.lblInfo.text", movielist.getElementCount())); //$NON-NLS-1$
-
-		lblProgress1 = new JLabel(""); //$NON-NLS-1$
-		contentPanel.add(lblProgress1, "4, 4, fill, fill"); //$NON-NLS-1$
-
-		pbProgress2 = new JProgressBar();
-		contentPanel.add(pbProgress2, "2, 6, fill, fill"); //$NON-NLS-1$
-
-		lblProgress2 = new JLabel(""); //$NON-NLS-1$
-		contentPanel.add(lblProgress2, "4, 6, fill, fill"); //$NON-NLS-1$
-
-		panel = new JPanel();
-		contentPanel.add(panel, "1, 8, 4, 1, fill, fill"); //$NON-NLS-1$
-		panel.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				ColumnSpec.decode("12dlu"), //$NON-NLS-1$
-				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-				new RowSpec[] {
-						FormSpecs.DEFAULT_ROWSPEC,
-						FormSpecs.RELATED_GAP_ROWSPEC,
-						FormSpecs.DEFAULT_ROWSPEC,
-						FormSpecs.RELATED_GAP_ROWSPEC,
-						FormSpecs.DEFAULT_ROWSPEC,
-						FormSpecs.RELATED_GAP_ROWSPEC,
-						FormSpecs.DEFAULT_ROWSPEC,}));
-
-		cbValMovies = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValMovies")); //$NON-NLS-1$
 		cbValMovies.setSelected(ccprops().PROP_CHECKDATABASE_OPT_MOVIES.getValue());
-		cbValMovies.addItemListener(new ItemChangeLambdaAdapter(() -> ccprops().PROP_CHECKDATABASE_OPT_MOVIES.setValue(cbValMovies.isSelected()), -1));
-		panel.add(cbValMovies, "2, 1, fill, fill"); //$NON-NLS-1$
-
-		cbValCoverFiles = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValCoverFiles")); //$NON-NLS-1$
 		cbValCoverFiles.setSelected(ccprops().PROP_CHECKDATABASE_OPT_COVERS.getValue());
-		cbValCoverFiles.addItemListener(new ItemChangeLambdaAdapter(() -> ccprops().PROP_CHECKDATABASE_OPT_COVERS.setValue(cbValCoverFiles.isSelected()), -1));
-		panel.add(cbValCoverFiles, "4, 1, fill, fill"); //$NON-NLS-1$
-
-		cbValSeries = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeries")); //$NON-NLS-1$
 		cbValSeries.setSelected(ccprops().PROP_CHECKDATABASE_OPT_SERIES.getValue());
-		cbValSeries.addItemListener(new ItemChangeLambdaAdapter(() -> ccprops().PROP_CHECKDATABASE_OPT_SERIES.setValue(cbValSeries.isSelected()), -1));
-		panel.add(cbValSeries, "2, 3, fill, fill"); //$NON-NLS-1$
-
-		cbValVideoFiles = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValVideoFiles")); //$NON-NLS-1$
 		cbValVideoFiles.setSelected(ccprops().PROP_CHECKDATABASE_OPT_FILES.getValue());
-		cbValVideoFiles.addItemListener(new ItemChangeLambdaAdapter(() -> ccprops().PROP_CHECKDATABASE_OPT_FILES.setValue(cbValVideoFiles.isSelected()), -1));
-		panel.add(cbValVideoFiles, "4, 3, fill, fill"); //$NON-NLS-1$
-
-		cbValSeasons = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeasons")); //$NON-NLS-1$
 		cbValSeasons.setSelected(ccprops().PROP_CHECKDATABASE_OPT_SEASONS.getValue());
-		cbValSeasons.addItemListener(new ItemChangeLambdaAdapter(() -> ccprops().PROP_CHECKDATABASE_OPT_SEASONS.setValue(cbValSeasons.isSelected()), -1));
-		panel.add(cbValSeasons, "2, 5, fill, fill"); //$NON-NLS-1$
-
-		cbValEpisodes = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValEpisodes")); //$NON-NLS-1$
 		cbValEpisodes.setSelected(ccprops().PROP_CHECKDATABASE_OPT_EPISODES.getValue());
-		cbValEpisodes.addItemListener(new ItemChangeLambdaAdapter(() -> ccprops().PROP_CHECKDATABASE_OPT_EPISODES.setValue(cbValEpisodes.isSelected()), -1));
-		panel.add(cbValEpisodes, "2, 7, fill, fill"); //$NON-NLS-1$
-
-		cbValAdditional = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValAdditional")); //$NON-NLS-1$
 		cbValAdditional.setSelected(ccprops().PROP_CHECKDATABASE_OPT_EXTRA.getValue());
-		cbValAdditional.addItemListener(new ItemChangeLambdaAdapter(() -> ccprops().PROP_CHECKDATABASE_OPT_EXTRA.setValue(cbValAdditional.isSelected()), -1));
-		panel.add(cbValAdditional, "4, 7, fill, fill"); //$NON-NLS-1$
 	}
-	
-	private void onDblClick() {
-		if (lsMain.getSelectedIndex() >= 0) {
-			lsMain.getSelectedValue().startEditing(this);
+
+	private void onErrorSelected() {
+		var err = lsMain.getSelectedValue();
+		if (err == null) { edMetadata.setText(Str.Empty); return; }
+
+		var len1 = CCStreams.iterate(err.Metadata).map(p -> p.Item1.length()).autoMaxOrDefault(0);
+
+		StringBuilder b = new StringBuilder();
+		for (var md: err.Metadata)
+		{
+			b.append(StringUtils.rightPad(md.Item1, len1)).append("  ->  ").append(md.Item2).append("\n");
 		}
+
+		edMetadata.setText(b.toString());
 	}
-	
+
+	private void onCategorySelected() {
+		ListModel<DatabaseError> lm = lsMain.getModel();
+		if (lm instanceof DatabaseErrorListModel) {
+			if (lsCategories.getSelectedValue() != null)
+				((DatabaseErrorListModel)lm).updateFilter(lsCategories.getSelectedValue().Value);
+			else
+				((DatabaseErrorListModel)lm).updateFilter(null);
+		}
+		edMetadata.setText(Str.Empty);
+	}
+
+	private void onErrorClicked(MouseEvent e) {
+		if (e.getClickCount() == 2 && lsMain.getSelectedIndex() >= 0) lsMain.getSelectedValue().startEditing(this);
+	}
+
+	private void cbValMoviesItemStateChanged(ItemEvent e) {
+		ccprops().PROP_CHECKDATABASE_OPT_MOVIES.setValue(cbValMovies.isSelected());
+	}
+
+	private void cbValSeriesItemStateChanged(ItemEvent e) {
+		ccprops().PROP_CHECKDATABASE_OPT_SERIES.setValue(cbValSeries.isSelected());
+	}
+
+	private void cbValSeasonsItemStateChanged(ItemEvent e) {
+		ccprops().PROP_CHECKDATABASE_OPT_EXTRA.setValue(cbValAdditional.isSelected());
+	}
+
+	private void cbValEpisodesItemStateChanged(ItemEvent e) {
+		ccprops().PROP_CHECKDATABASE_OPT_EPISODES.setValue(cbValEpisodes.isSelected());
+	}
+
+	private void cbValCoverFilesItemStateChanged(ItemEvent e) {
+		ccprops().PROP_CHECKDATABASE_OPT_COVERS.setValue(cbValCoverFiles.isSelected());
+	}
+
+	private void cbValVideoFilesItemStateChanged(ItemEvent e) {
+		ccprops().PROP_CHECKDATABASE_OPT_FILES.setValue(cbValVideoFiles.isSelected());
+	}
+
+	private void cbValAdditionalItemStateChanged(ItemEvent e) {
+		ccprops().PROP_CHECKDATABASE_OPT_SEASONS.setValue(cbValSeasons.isSelected());
+	}
+
 	private void autoFix() {
 		btnValidate.setEnabled(false);
 		btnAutofix.setEnabled(false);
-		
+
 		new Thread(() ->
 		{
 			pbProgress1.setVisible(true);
 			lblProgress1.setVisible(false);
 			pbProgress2.setVisible(false);
 			lblProgress2.setVisible(false);
-			
+
 			boolean succ = DatabaseAutofixer.fixErrors(movielist, errorList, new ProgressCallbackProgressBarHelper(pbProgress1, 500));
 			endFixThread(succ);
 		}, "THREAD_AUTOFIX_DB").start(); //$NON-NLS-1$
 	}
-	
-	private void endThread() {
-		SwingUtils.invokeLater(() ->
-		{
-			btnValidate.setEnabled(true);
-			btnFixselected.setEnabled(errorList.size() > 0);
-			btnAutofix.setEnabled(errorList.size() > 0);
-			lblInfo.setText(LocaleBundle.getFormattedString("CheckDatabaseDialog.lblInfo.text_2", errorList.size())); //$NON-NLS-1$
-		});
-	}
-	
+
 	private void endFixThread(final boolean success) {
 		SwingUtils.invokeLater(() ->
 		{
@@ -279,33 +147,9 @@ public class CheckDatabaseFrame extends JCCFrame {
 			}
 		});
 	}
-	
-	private void setMainListModel(final ListModel<DatabaseError> lm) {
-		if (SwingUtilities.isEventDispatchThread()) {
-			lsMain.setModel(lm);
-		} else {
-			try {
-				SwingUtils.invokeAndWait(() -> lsMain.setModel(lm));
-			} catch (InvocationTargetException | InterruptedException e) {
-				CCLog.addError(e);
-			}
-		}
-	}
-	
-	private void setCategoriesListModel(final ListModel<CountAppendix<DatabaseErrorType>> lm) {
-		if (SwingUtilities.isEventDispatchThread()) {
-			lsCategories.setModel(lm);
-		} else {
-			try {
-				SwingUtils.invokeAndWait(() -> lsCategories.setModel(lm));
-			} catch (InvocationTargetException | InterruptedException e) {
-				CCLog.addError(e);
-			}
-		}
-	}
-	
+
 	private void startValidate() {
-		btnFixselected.setEnabled(false);
+		btnFixSelected.setEnabled(false);
 		btnValidate.setEnabled(false);
 		btnAutofix.setEnabled(false);
 
@@ -332,10 +176,10 @@ public class CheckDatabaseFrame extends JCCFrame {
 			lblProgress1.setVisible(true);
 			pbProgress2.setVisible(true);
 			lblProgress2.setVisible(true);
-			
+
 			List<DatabaseError> errors = new ArrayList<>();
 
-			var validator = new CCDatabaseValidator(movielist);
+			CCDatabaseValidator validator = new CCDatabaseValidator(movielist);
 			validator.validate(errors, opts, new DoubleProgressCallbackProgressBarHelper(pbProgress1, lblProgress1, pbProgress2, lblProgress2));
 
 			errorList = errors;
@@ -346,17 +190,59 @@ public class CheckDatabaseFrame extends JCCFrame {
 		}, "THREAD_VALIDATE_DATABASE").start(); //$NON-NLS-1$
 	}
 
+	private void endThread() {
+		SwingUtils.invokeLater(() ->
+		{
+			btnValidate.setEnabled(true);
+			btnFixSelected.setEnabled(errorList.size() > 0);
+			btnAutofix.setEnabled(errorList.size() > 0);
+			lblInfo.setText(LocaleBundle.getFormattedString("CheckDatabaseDialog.lblInfo.text_2", errorList.size())); //$NON-NLS-1$
+			edMetadata.setText(Str.Empty);
+		});
+	}
+
+	private void fixSelected() {
+		List<DatabaseError> errlist = lsMain.getSelectedValuesList();
+
+		if (errlist == null || errlist.isEmpty()) {
+			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.NoSelection")); //$NON-NLS-1$
+			return;
+		}
+
+		if (! DatabaseAutofixer.canFix(errorList, errlist)) {
+			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Unfixable")); //$NON-NLS-1$
+			return;
+		}
+
+		boolean hasFixedAll = true;
+		for (DatabaseError err : errlist) {
+			if (err.autoFix()) {
+				errorList.remove(err);
+			} else {
+				hasFixedAll = false;
+			}
+		}
+
+		if (hasFixedAll) {
+			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Fixed")); //$NON-NLS-1$
+		} else {
+			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Failed")); //$NON-NLS-1$
+		}
+
+		updateLists();
+	}
+
 	private void updateLists() { // Threadsafe
 		DatabaseErrorListModel dlm = new DatabaseErrorListModel();
 		DefaultListModel<CountAppendix<DatabaseErrorType>> clm = new DefaultListModel<>();
-		
+
 		clm.addElement(null); //null = "All" (not sure if good code or lazy code)
-		
+
 		for (DatabaseError de : errorList) {
 			dlm.addElement(de);
-			
+
 			boolean found = false;
-			
+
 			for (int i = 0; i < clm.getSize(); i++) {
 				CountAppendix<DatabaseErrorType> idxval = clm.get(i);
 				if (idxval != null && de.getType().equals(idxval.Value)) {
@@ -365,19 +251,43 @@ public class CheckDatabaseFrame extends JCCFrame {
 					break;
 				}
 			}
-			
+
 			if (! found) {
 				clm.addElement(new CountAppendix<>(de.getType(), 1, this::typeToString));
 			}
 		}
-		
+
 		setMainListModel(dlm);
-		
+
 		if (clm.size() <= 1) {
 			clm.clear();
 		}
-		
+
 		setCategoriesListModel(clm);
+	}
+
+	private void setMainListModel(final ListModel<DatabaseError> lm) {
+		if (SwingUtilities.isEventDispatchThread()) {
+			lsMain.setModel(lm);
+		} else {
+			try {
+				SwingUtils.invokeAndWait(() -> lsMain.setModel(lm));
+			} catch (InvocationTargetException | InterruptedException e) {
+				CCLog.addError(e);
+			}
+		}
+	}
+
+	private void setCategoriesListModel(final ListModel<CountAppendix<DatabaseErrorType>> lm) {
+		if (SwingUtilities.isEventDispatchThread()) {
+			lsCategories.setModel(lm);
+		} else {
+			try {
+				SwingUtils.invokeAndWait(() -> lsCategories.setModel(lm));
+			} catch (InvocationTargetException | InterruptedException e) {
+				CCLog.addError(e);
+			}
+		}
 	}
 
 	private String typeToString(CountAppendix<DatabaseErrorType> v) {
@@ -388,34 +298,204 @@ public class CheckDatabaseFrame extends JCCFrame {
 		}
 	}
 
-	private void fixSelected() {
-		List<DatabaseError> errlist = lsMain.getSelectedValuesList();
-		
-		if (errlist == null || errlist.isEmpty()) {
-			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.NoSelection")); //$NON-NLS-1$
-			return;
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		panel1 = new JPanel();
+		btnValidate = new JButton();
+		lblInfo = new JLabel();
+		btnAutofix = new JButton();
+		btnFixSelected = new JButton();
+		splitPane1 = new JSplitPane();
+		scrollPane1 = new JScrollPane();
+		lsCategories = new JList<>();
+		splitPane2 = new JSplitPane();
+		scrollPane2 = new JScrollPane();
+		lsMain = new JList<>();
+		scrollPane3 = new JScrollPane();
+		edMetadata = new JTextArea();
+		pbProgress1 = new JProgressBar();
+		lblProgress1 = new JLabel();
+		pbProgress2 = new JProgressBar();
+		lblProgress2 = new JLabel();
+		panel2 = new JPanel();
+		cbValMovies = new JCheckBox();
+		cbValCoverFiles = new JCheckBox();
+		cbValSeries = new JCheckBox();
+		cbValVideoFiles = new JCheckBox();
+		cbValSeasons = new JCheckBox();
+		cbValEpisodes = new JCheckBox();
+		cbValAdditional = new JCheckBox();
+
+		//======== this ========
+		setTitle(LocaleBundle.getString("CheckDatabaseDialog.this.title")); //$NON-NLS-1$
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setMinimumSize(new Dimension(650, 400));
+		var contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$ugap, default:grow, $lcgap, 226dlu, $ugap", //$NON-NLS-1$
+			"$ugap, default, $lgap, default:grow, 3*($lgap, default), $ugap")); //$NON-NLS-1$
+
+		//======== panel1 ========
+		{
+			panel1.setLayout(new FormLayout(
+				"2*(default, $lcgap), default:grow, 2*($lcgap, default)", //$NON-NLS-1$
+				"default")); //$NON-NLS-1$
+
+			//---- btnValidate ----
+			btnValidate.setText(LocaleBundle.getString("CheckDatabaseDialog.btnValidate.text")); //$NON-NLS-1$
+			btnValidate.setFont(btnValidate.getFont().deriveFont(btnValidate.getFont().getStyle() | Font.BOLD));
+			btnValidate.addActionListener(e -> startValidate());
+			panel1.add(btnValidate, CC.xy(1, 1));
+
+			//---- lblInfo ----
+			lblInfo.setText(LocaleBundle.getString("CheckDatabaseDialog.lblInfo.text")); //$NON-NLS-1$
+			panel1.add(lblInfo, CC.xy(3, 1));
+
+			//---- btnAutofix ----
+			btnAutofix.setText(LocaleBundle.getString("CheckDatabaseDialog.btnAutofix.text")); //$NON-NLS-1$
+			btnAutofix.addActionListener(e -> autoFix());
+			panel1.add(btnAutofix, CC.xy(7, 1));
+
+			//---- btnFixSelected ----
+			btnFixSelected.setText(LocaleBundle.getString("CheckDatabaseDialog.btnFixSelected.text")); //$NON-NLS-1$
+			btnFixSelected.addActionListener(e -> fixSelected());
+			panel1.add(btnFixSelected, CC.xy(9, 1));
 		}
-		
-		if (! DatabaseAutofixer.canFix(errorList, errlist)) {
-			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Unfixable")); //$NON-NLS-1$
-			return;
-		}
-		
-		boolean hasFixedAll = true;
-		for (DatabaseError err : errlist) {
-			if (err.autoFix()) {
-				errorList.remove(err);
-			} else {
-				hasFixedAll = false;
+		contentPane.add(panel1, CC.xywh(2, 2, 3, 1));
+
+		//======== splitPane1 ========
+		{
+			splitPane1.setContinuousLayout(true);
+			splitPane1.setResizeWeight(0.25);
+
+			//======== scrollPane1 ========
+			{
+				scrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+				//---- lsCategories ----
+				lsCategories.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				lsCategories.addListSelectionListener(e -> onCategorySelected());
+				scrollPane1.setViewportView(lsCategories);
 			}
+			splitPane1.setLeftComponent(scrollPane1);
+
+			//======== splitPane2 ========
+			{
+				splitPane2.setOrientation(JSplitPane.VERTICAL_SPLIT);
+				splitPane2.setResizeWeight(0.7);
+				splitPane2.setContinuousLayout(true);
+
+				//======== scrollPane2 ========
+				{
+					scrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+					//---- lsMain ----
+					lsMain.addListSelectionListener(e -> onErrorSelected());
+					lsMain.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							onErrorClicked(e);
+						}
+					});
+					scrollPane2.setViewportView(lsMain);
+				}
+				splitPane2.setTopComponent(scrollPane2);
+
+				//======== scrollPane3 ========
+				{
+
+					//---- edMetadata ----
+					edMetadata.setEditable(false);
+					scrollPane3.setViewportView(edMetadata);
+				}
+				splitPane2.setBottomComponent(scrollPane3);
+			}
+			splitPane1.setRightComponent(splitPane2);
 		}
-		
-		if (hasFixedAll) {
-			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Fixed")); //$NON-NLS-1$
-		} else {
-			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Failed")); //$NON-NLS-1$
+		contentPane.add(splitPane1, CC.xywh(2, 4, 3, 1, CC.FILL, CC.FILL));
+		contentPane.add(pbProgress1, CC.xy(2, 6));
+
+		//---- lblProgress1 ----
+		lblProgress1.setText("<dynamic>"); //$NON-NLS-1$
+		contentPane.add(lblProgress1, CC.xy(4, 6));
+		contentPane.add(pbProgress2, CC.xy(2, 8));
+
+		//---- lblProgress2 ----
+		lblProgress2.setText("<dynamic>"); //$NON-NLS-1$
+		contentPane.add(lblProgress2, CC.xy(4, 8));
+
+		//======== panel2 ========
+		{
+			panel2.setLayout(new FormLayout(
+				"0dlu:grow, $lcgap, 1dlu:grow", //$NON-NLS-1$
+				"3*(default, $lgap), default")); //$NON-NLS-1$
+
+			//---- cbValMovies ----
+			cbValMovies.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValMovies")); //$NON-NLS-1$
+			cbValMovies.addItemListener(e -> cbValMoviesItemStateChanged(e));
+			panel2.add(cbValMovies, CC.xy(1, 1));
+
+			//---- cbValCoverFiles ----
+			cbValCoverFiles.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValCoverFiles")); //$NON-NLS-1$
+			cbValCoverFiles.addItemListener(e -> cbValCoverFilesItemStateChanged(e));
+			panel2.add(cbValCoverFiles, CC.xy(3, 1));
+
+			//---- cbValSeries ----
+			cbValSeries.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeries")); //$NON-NLS-1$
+			cbValSeries.addItemListener(e -> cbValSeriesItemStateChanged(e));
+			panel2.add(cbValSeries, CC.xy(1, 3));
+
+			//---- cbValVideoFiles ----
+			cbValVideoFiles.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValVideoFiles")); //$NON-NLS-1$
+			cbValVideoFiles.addItemListener(e -> cbValVideoFilesItemStateChanged(e));
+			panel2.add(cbValVideoFiles, CC.xy(3, 3));
+
+			//---- cbValSeasons ----
+			cbValSeasons.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeasons")); //$NON-NLS-1$
+			cbValSeasons.addItemListener(e -> cbValSeasonsItemStateChanged(e));
+			panel2.add(cbValSeasons, CC.xy(1, 5));
+
+			//---- cbValEpisodes ----
+			cbValEpisodes.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValEpisodes")); //$NON-NLS-1$
+			cbValEpisodes.addItemListener(e -> cbValEpisodesItemStateChanged(e));
+			panel2.add(cbValEpisodes, CC.xy(1, 7));
+
+			//---- cbValAdditional ----
+			cbValAdditional.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValAdditional")); //$NON-NLS-1$
+			cbValAdditional.addItemListener(e -> cbValAdditionalItemStateChanged(e));
+			panel2.add(cbValAdditional, CC.xy(3, 7));
 		}
-		
-		updateLists();
+		contentPane.add(panel2, CC.xywh(2, 10, 3, 1));
+		setSize(950, 600);
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JPanel panel1;
+	private JButton btnValidate;
+	private JLabel lblInfo;
+	private JButton btnAutofix;
+	private JButton btnFixSelected;
+	private JSplitPane splitPane1;
+	private JScrollPane scrollPane1;
+	private JList<CountAppendix<DatabaseErrorType>> lsCategories;
+	private JSplitPane splitPane2;
+	private JScrollPane scrollPane2;
+	private JList<DatabaseError> lsMain;
+	private JScrollPane scrollPane3;
+	private JTextArea edMetadata;
+	private JProgressBar pbProgress1;
+	private JLabel lblProgress1;
+	private JProgressBar pbProgress2;
+	private JLabel lblProgress2;
+	private JPanel panel2;
+	private JCheckBox cbValMovies;
+	private JCheckBox cbValCoverFiles;
+	private JCheckBox cbValSeries;
+	private JCheckBox cbValVideoFiles;
+	private JCheckBox cbValSeasons;
+	private JCheckBox cbValEpisodes;
+	private JCheckBox cbValAdditional;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

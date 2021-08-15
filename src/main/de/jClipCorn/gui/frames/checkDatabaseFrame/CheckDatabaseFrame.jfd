@@ -1,0 +1,213 @@
+JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.11" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "CheckDatabaseFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, default:grow, labelcompgap, 226dlu, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default:grow, linegap, default, linegap, default, linegap, default, unrelgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": new FormMessage( null, "CheckDatabaseDialog.this.title" )
+			"defaultCloseOperation": 2
+			"minimumSize": new java.awt.Dimension( 650, 400 )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default, labelcompgap, default, labelcompgap, default:grow, labelcompgap, default, labelcompgap, default"
+				"$rowSpecs": "default"
+			} ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnValidate"
+					"text": new FormMessage( null, "CheckDatabaseDialog.btnValidate.text" )
+					"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 0, false )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "startValidate", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblInfo"
+					"text": new FormMessage( null, "CheckDatabaseDialog.lblInfo.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnAutofix"
+					"text": new FormMessage( null, "CheckDatabaseDialog.btnAutofix.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "autoFix", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnFixSelected"
+					"text": new FormMessage( null, "CheckDatabaseDialog.btnFixSelected.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "fixSelected", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 9
+					"gridY": 1
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"gridWidth": 3
+			} )
+			add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
+				name: "splitPane1"
+				"continuousLayout": true
+				"resizeWeight": 0.25
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "scrollPane1"
+					"verticalScrollBarPolicy": 22
+					add( new FormComponent( "javax.swing.JList" ) {
+						name: "lsCategories"
+						"selectionMode": 0
+						auxiliary() {
+							"JavaCodeGenerator.typeParameters": "CountAppendix<DatabaseErrorType>"
+						}
+						addEvent( new FormEvent( "javax.swing.event.ListSelectionListener", "valueChanged", "onCategorySelected", false ) )
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "left"
+				} )
+				add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
+					name: "splitPane2"
+					"orientation": 0
+					"resizeWeight": 0.7
+					"continuousLayout": true
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane2"
+						"verticalScrollBarPolicy": 22
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "lsMain"
+							auxiliary() {
+								"JavaCodeGenerator.typeParameters": "DatabaseError"
+							}
+							addEvent( new FormEvent( "javax.swing.event.ListSelectionListener", "valueChanged", "onErrorSelected", false ) )
+							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "onErrorClicked", true ) )
+						} )
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "left"
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane3"
+						add( new FormComponent( "javax.swing.JTextArea" ) {
+							name: "edMetadata"
+							"editable": false
+						} )
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "right"
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "right"
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"gridWidth": 3
+			} )
+			add( new FormComponent( "javax.swing.JProgressBar" ) {
+				name: "pbProgress1"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 6
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblProgress1"
+				"text": "<dynamic>"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 6
+			} )
+			add( new FormComponent( "javax.swing.JProgressBar" ) {
+				name: "pbProgress2"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 8
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblProgress2"
+				"text": "<dynamic>"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 8
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "0dlu:grow, labelcompgap, 1dlu:grow"
+				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default"
+			} ) {
+				name: "panel2"
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValMovies"
+					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValMovies" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbValMoviesItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValCoverFiles"
+					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValCoverFiles" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbValCoverFilesItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValSeries"
+					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValSeries" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbValSeriesItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValVideoFiles"
+					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValVideoFiles" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbValVideoFilesItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValSeasons"
+					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValSeasons" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbValSeasonsItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValEpisodes"
+					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValEpisodes" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbValEpisodesItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 7
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValAdditional"
+					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValAdditional" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbValAdditionalItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 7
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 10
+				"gridWidth": 3
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 950, 600 )
+		} )
+	}
+}

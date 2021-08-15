@@ -9,6 +9,8 @@ import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class CCMediaInfo {
@@ -116,29 +118,33 @@ public class CCMediaInfo {
 									 double duration, int bitrate,
 									 String videoformat, int width, int height, double framerate, short bitdepth, int framecount, String videocodec,
 									 String audioformat, short audiochannels, String audiocodec, int audiosamplerate,
-									 RefParam<String> valErr)
+									 RefParam<List<String>> valErr)
 	{
 
-		if (cdate <= 0)                     { valErr.Value = "CDate";           return CCMediaInfo.EMPTY; }
-		if (mdate <= 0)                     { valErr.Value = "MDate";           return CCMediaInfo.EMPTY; }
-		if (filesize.getBytes() <= 0)       { valErr.Value = "Filesize";        return CCMediaInfo.EMPTY; }
-		if (Str.isNullOrEmpty(checksum))    { valErr.Value = "Checksum";        return CCMediaInfo.EMPTY; }
+		var errs = new ArrayList<String>();
 
-		if (duration <= 0)                  { valErr.Value = "Duration";        return CCMediaInfo.EMPTY; }
-		if (bitrate <= 0)                   { valErr.Value = "Bitrate";         return CCMediaInfo.EMPTY; }
+		if (cdate <= 0)                     errs.add("CDate");
+		if (mdate <= 0)                     errs.add("MDate");
+		if (filesize.getBytes() <= 0)       errs.add("Filesize");
+		if (Str.isNullOrEmpty(checksum))    errs.add("Checksum");
 
-		if (Str.isNullOrEmpty(videoformat)) { valErr.Value = "VideoFormat";     return CCMediaInfo.EMPTY; }
-		if (width <= 0)                     { valErr.Value = "Width";           return CCMediaInfo.EMPTY; }
-		if (height <= 0)                    { valErr.Value = "Height";          return CCMediaInfo.EMPTY; }
-		if (framerate <= 0)                 { valErr.Value = "Framerate";       return CCMediaInfo.EMPTY; }
-		if (bitdepth <= 0)                  { valErr.Value = "Bitdepth";        return CCMediaInfo.EMPTY; }
-		if (framecount <= 0)                { valErr.Value = "Framecount";      return CCMediaInfo.EMPTY; }
-		if (Str.isNullOrEmpty(videocodec))  { valErr.Value = "VideoCodec";      return CCMediaInfo.EMPTY; }
+		if (duration <= 0)                  errs.add("Duration");
+		if (bitrate <= 0)                   errs.add("Bitrate");
 
-		if (Str.isNullOrEmpty(audioformat)) { valErr.Value = "AudioFormat";     return CCMediaInfo.EMPTY; }
-		if (audiochannels <= 0)             { valErr.Value = "AudioChannels";   return CCMediaInfo.EMPTY; }
-		if (Str.isNullOrEmpty(audiocodec))  { valErr.Value = "AudioCodec";      return CCMediaInfo.EMPTY; }
-		if (audiosamplerate <= 0)           { valErr.Value = "AudioSamplerate"; return CCMediaInfo.EMPTY; }
+		if (Str.isNullOrEmpty(videoformat)) errs.add("VideoFormat");
+		if (width <= 0)                     errs.add("Width");
+		if (height <= 0)                    errs.add("Height");
+		if (framerate <= 0)                 errs.add("Framerate");
+		if (bitdepth <= 0)                  errs.add("Bitdepth");
+		if (framecount <= 0)                errs.add("Framecount");
+		if (Str.isNullOrEmpty(videocodec))  errs.add("VideoCodec");
+
+		if (Str.isNullOrEmpty(audioformat)) errs.add("AudioFormat");
+		if (audiochannels <= 0)             errs.add("AudioChannels");
+		if (Str.isNullOrEmpty(audiocodec))  errs.add("AudioCodec");
+		if (audiosamplerate <= 0)           errs.add("AudioSamplerate");
+
+		if (errs.size() > 0) { valErr.Value = errs; return CCMediaInfo.EMPTY; }
 
 		return new CCMediaInfo
 		(

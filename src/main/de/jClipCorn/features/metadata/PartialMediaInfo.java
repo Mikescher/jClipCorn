@@ -5,7 +5,10 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.RefParam;
+import de.jClipCorn.util.helper.ChecksumHelper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class PartialMediaInfo {
@@ -89,7 +92,7 @@ public class PartialMediaInfo {
 		return toMediaInfo(new RefParam<>());
 	}
 
-	private CCMediaInfo toMediaInfo(RefParam<String> valErr)
+	private CCMediaInfo toMediaInfo(RefParam<List<String>> valErr)
 	{
 		return CCMediaInfo.create
 		(
@@ -114,17 +117,29 @@ public class PartialMediaInfo {
 		);
 	}
 
-	@SuppressWarnings("nls")
-	public String validate()
+	public List<String> validate()
 	{
-		var validation = new RefParam<>(Str.Empty);
+		return validate(true);
+	}
+
+	@SuppressWarnings("nls")
+	public List<String> validate(boolean additional)
+	{
+		var validation = new RefParam<List<String>>(null);
 		toMediaInfo(validation);
 
-		if (!Str.isNullOrEmpty(validation.Value)) return validation.Value;
+		if (validation.Value != null) return validation.Value;
 
-		if (Bitdepth.isPresent() && Bitdepth.get() != 8 && Bitdepth.get() != 10 && Bitdepth.get() != 12) return "Bitdepth";
+		var r = new ArrayList<String>();
 
-		return null;
+		if (additional)
+		{
+
+			if (Bitdepth.isPresent() && Bitdepth.get() != 8 && Bitdepth.get() != 10 && Bitdepth.get() != 12) r.add("Bitdepth");
+			if (Checksum.isPresent() && !ChecksumHelper.isValidVideoHash(Checksum.get())) r.add("Checksum");
+		}
+
+		return r;
 	}
 
 	public PartialMediaInfo WithChecksum(Opt<String> new_cs)

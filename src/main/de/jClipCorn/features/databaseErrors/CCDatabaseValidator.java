@@ -455,18 +455,22 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					DatabaseErrorType.ERROR_MEDIAINFO_UNSET,
 					o -> o.ValidateMovies,
 					mov -> mov.mediaInfo().get().isUnset(),
-					mov -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_UNSET, mov));
+					mov -> DatabaseError.createSingle(
+							movielist,
+							DatabaseErrorType.ERROR_MEDIAINFO_UNSET, mov,
+							CCStreams.iterate(mov.getMediaInfo().toPartial().validate(false)).map(p -> Tuple.Create("MediaInfo."+p+".IsSet", "false")).toList()
+					));
 
 			// invalid MediaInfo
 			addMovieValidation(
 					DatabaseErrorType.ERROR_MEDIAINFO_INVALID,
 					o -> o.ValidateMovies,
-					mov -> mov.mediaInfo().get().isSet() && (mov.mediaInfo().getPartial().validate()!=null),
+					mov -> mov.mediaInfo().get().isSet() && !mov.mediaInfo().getPartial().validate().isEmpty(),
 					mov -> DatabaseError.createSingleAdditional(
 							movielist,
 							DatabaseErrorType.ERROR_MEDIAINFO_INVALID, mov,
-							mov.mediaInfo().getPartial().validate(),
-							"MediaInfo.validate", mov.mediaInfo().getPartial().validate()
+							mov.mediaInfo().getPartial().validate().stream().findFirst().orElse("?"),
+							"MediaInfo.validate", String.join(";", mov.mediaInfo().getPartial().validate())
 					));
 
 			// MediaInfo size does not match movie filesize
@@ -969,7 +973,10 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					DatabaseErrorType.ERROR_MEDIAINFO_UNSET,
 					o -> o.ValidateEpisodes,
 					episode -> episode.mediaInfo().get().isUnset(),
-					episode -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_UNSET, episode));
+					episode -> DatabaseError.createSingle(
+							movielist,
+							DatabaseErrorType.ERROR_MEDIAINFO_UNSET, episode,
+							CCStreams.iterate(episode.getMediaInfo().toPartial().validate(false)).map(p -> Tuple.Create("MediaInfo."+p+".IsSet", "false")).toList()));
 
 			// MediaInfo size does not match movie filesize
 			addEpisodeValidation(
@@ -1175,11 +1182,11 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_MEDIAINFO_INVALID,
 					o -> o.ValidateEpisodes,
-					episode -> episode.mediaInfo().get().isSet() && (episode.mediaInfo().getPartial().validate()!=null),
+					episode -> episode.mediaInfo().get().isSet() && !episode.mediaInfo().getPartial().validate().isEmpty(),
 					episode -> DatabaseError.createSingleAdditional(
 							movielist, DatabaseErrorType.ERROR_MEDIAINFO_INVALID, episode,
-							episode.mediaInfo().getPartial().validate(),
-							"MediaInfo.validate", episode.mediaInfo().getPartial().validate()
+							episode.mediaInfo().getPartial().validate().stream().findFirst().orElse("?"),
+							"MediaInfo.validate", String.join(";", episode.mediaInfo().getPartial().validate())
 					));
 
 			// Hash is invalid

@@ -1,5 +1,6 @@
 package de.jClipCorn.util;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.lambda.Func3to0;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -19,11 +20,14 @@ public class UpdateConnector implements Runnable {
 	private String updateVersion;
 	private boolean updateAvailable = false;
 	private String updateName;
-	
-	public UpdateConnector(String title, String version, Func3to0<UpdateConnector, Boolean, String> listener, boolean threaded) {
+
+	private final CCMovieList movielist;
+
+	public UpdateConnector(CCMovieList ml, String title, String version, Func3to0<UpdateConnector, Boolean, String> listener, boolean threaded) {
 		this.listener = listener;
 		this.title = title;
 		this.version = version;
+		this.movielist = ml;
 		
 		if (threaded) {
 			new Thread(this, "THREAD_CHECK_FOR_UPDATES").start(); //$NON-NLS-1$
@@ -35,7 +39,7 @@ public class UpdateConnector implements Runnable {
 	@Override
 	@SuppressWarnings("nls")
 	public void run() {
-		String resultCode = HTTPUtilities.getHTML(HIGHSCORE_URL, false, true);
+		String resultCode = HTTPUtilities.getHTML(movielist, HIGHSCORE_URL, false, true);
 
 		if (resultCode == null || resultCode.isEmpty()) {
 			updateName = title;

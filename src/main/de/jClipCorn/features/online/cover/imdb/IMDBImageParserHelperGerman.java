@@ -70,7 +70,7 @@ public class IMDBImageParserHelperGerman extends IMDBImageParserHelper {
 	public BufferedImage getMainpageImage(String html) {
 		String url = parser.getCoverURL(html);
 		if (url == null) return null;
-		return HTTPUtilities.getImage(url);
+		return HTTPUtilities.getImage(movielist, url);
 	}
 	
 	@Override
@@ -78,7 +78,7 @@ public class IMDBImageParserHelperGerman extends IMDBImageParserHelper {
 		String curl = RegExHelper.find(IMDBParserGerman.REGEX_COVER_DIREKT_1, html);
 		curl = RegExHelper.find(IMDBParserGerman.REGEX_COVER_DIREKT_2, curl);
 		
-		BufferedImage result = HTTPUtilities.getImage(curl);
+		BufferedImage result = HTTPUtilities.getImage(movielist, curl);
 		
 		if (result == null) {
 			return null;

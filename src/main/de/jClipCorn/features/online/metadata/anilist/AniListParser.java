@@ -72,7 +72,7 @@ public class AniListParser extends Metadataparser {
 				break;
 		}
 
-		JSONObject result = HTTPUtilities.getGraphQL(GRAPHQL_URL, cmd, CollectionHelper.createHashMap("stxt", text));
+		JSONObject result = HTTPUtilities.getGraphQL(movielist, GRAPHQL_URL, cmd, CollectionHelper.createHashMap("stxt", text));
 		if (result == null) return null;
 
 		List<Tuple<String, CCSingleOnlineReference>> rdat = new ArrayList<>();
@@ -94,7 +94,7 @@ public class AniListParser extends Metadataparser {
 	@Override
 	public OnlineMetadata getMetadata(CCSingleOnlineReference ref, boolean downloadCover) {
 
-		JSONObject result = HTTPUtilities.getGraphQL(GRAPHQL_URL, gql_select, CollectionHelper.createHashMap("id", ref.id));
+		JSONObject result = HTTPUtilities.getGraphQL(movielist, GRAPHQL_URL, gql_select, CollectionHelper.createHashMap("id", ref.id));
 		if (result == null) return null;
 
 		JSONObject med = result.getJSONObject("data").getJSONObject("Media");
@@ -110,7 +110,7 @@ public class AniListParser extends Metadataparser {
 		om.Year        = med.getJSONObject("startDate").getInt("year");
 		om.Genres      = new CCGenreList(CCStreams.iterate(med.getJSONArray("genres")).<String>cast().map(CCGenre::parseFromAniList).flatten(CCStreams::iterate).unique().enumerate());
 
-		if (downloadCover && om.CoverURL != null) om.Cover = HTTPUtilities.getImage(om.CoverURL);
+		if (downloadCover && om.CoverURL != null) om.Cover = HTTPUtilities.getImage(movielist, om.CoverURL);
 
 		return om;
 	}

@@ -174,7 +174,7 @@ public class IMDBParserEnglish extends IMDBParserCommon {
 		else
 			url += "/parentalguide";
 		
-		String fsk_html = HTTPUtilities.getHTML(url, true, false);
+		String fsk_html = HTTPUtilities.getHTML(movielist, url, true, false);
 		
 		List<String> genarr = getContentListBySelector(fsk_html, JSOUP_FSK);
 		
@@ -269,7 +269,7 @@ public class IMDBParserEnglish extends IMDBParserCommon {
 			
 		String cpageurl = BASE_URL + find;
 		
-		String cpagehtml = HTTPUtilities.getHTML(cpageurl, true, false);
+		String cpagehtml = HTTPUtilities.getHTML(movielist, cpageurl, true, false);
 		
 		if (cpagehtml.isEmpty()) {
 			return null;

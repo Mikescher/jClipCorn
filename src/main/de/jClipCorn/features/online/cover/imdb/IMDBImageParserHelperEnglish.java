@@ -72,7 +72,7 @@ public class IMDBImageParserHelperEnglish extends IMDBImageParserHelper{
 	public BufferedImage getMainpageImage(String html) {
 		String url = parser.getCoverURL(html);
 		if (url == null) return null;
-		return HTTPUtilities.getImage(url);
+		return HTTPUtilities.getImage(movielist, url);
 	}
 	
 	@Override
@@ -84,7 +84,7 @@ public class IMDBImageParserHelperEnglish extends IMDBImageParserHelper{
 			return null;
 		}
 		
-		BufferedImage result = HTTPUtilities.getImage(curl);
+		BufferedImage result = HTTPUtilities.getImage(movielist, curl);
 		
 		if (result == null) {
 			return null;

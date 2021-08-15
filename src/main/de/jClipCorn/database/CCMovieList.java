@@ -38,6 +38,7 @@ import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.http.WebConnectionLayer;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
 import de.jClipCorn.util.stream.CCStream;
@@ -61,6 +62,7 @@ public class CCMovieList implements ICCPropertySource {
 
 	private final CCProperties ccproperties;
 
+	private final WebConnectionLayer _webConn;
 	private final MovieListCache _cache;
 
 	private boolean blocked   = false;
@@ -76,6 +78,7 @@ public class CCMovieList implements ICCPropertySource {
 		this.databaseGroups = new ArrayList<>();
 		this.database = db;
 
+		_webConn = WebConnectionLayer.create(ccprops);
 		_cache = new MovieListCache(this);
 
 		addChangeListener(new CCDBUpdateAdapter(){ @Override public void onChangeDatabaseElement(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] p) { CCLog.addMovieListChangeEvent(root, el, p); } });
@@ -1255,5 +1258,9 @@ public class CCMovieList implements ICCPropertySource {
 
 	public DriveMap getDriveMap() {
 		return ccprops().getDriveMap();
+	}
+
+	public WebConnectionLayer getWebConnection() {
+		return _webConn;
 	}
 }

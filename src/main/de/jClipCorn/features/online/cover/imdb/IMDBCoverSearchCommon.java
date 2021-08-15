@@ -27,10 +27,10 @@ public abstract class IMDBCoverSearchCommon extends AbstractImageSearch {
 	@Override
 	public void start(CopyOnWriteArrayList<String> exclusions, String searchText, OnlineSearchType typ, CCSingleOnlineReference reference) {
 		String searchurl = helper.getSearchURL(searchText, typ);
-		String searchhtml = HTTPUtilities.getHTML(searchurl, true, false);
+		String searchhtml = HTTPUtilities.getHTML(movielist, searchurl, true, false);
 		String direkturl = getSearchResultFromHTML(searchhtml);
 		if (!direkturl.isEmpty()) {
-			String direkthtml = HTTPUtilities.getHTML(direkturl, true, false);
+			String direkthtml = HTTPUtilities.getHTML(movielist, direkturl, true, false);
 
 			progressCallback.step();
 
@@ -47,7 +47,7 @@ public abstract class IMDBCoverSearchCommon extends AbstractImageSearch {
 			}
 
 			String posterurl = helper.getCoverUrlPoster(direkturl);
-			String posterhtml = HTTPUtilities.getHTML(posterurl, true, false);
+			String posterhtml = HTTPUtilities.getHTML(movielist, posterurl, true, false);
 
 			List<String> posterlinks = helper.extractImageLinks(posterhtml);
 
@@ -60,7 +60,7 @@ public abstract class IMDBCoverSearchCommon extends AbstractImageSearch {
 					if (currCID++ >= 23)
 						continue;
 
-					String urlhtml = HTTPUtilities.getHTML(url, true, false);
+					String urlhtml = HTTPUtilities.getHTML(movielist, url, true, false);
 
 					BufferedImage imgurl = helper.getDirectImage(urlhtml);
 					if (imgurl != null) {
@@ -76,7 +76,7 @@ public abstract class IMDBCoverSearchCommon extends AbstractImageSearch {
 				}
 			} else {
 				String allurl = helper.getCoverUrlAll(direkturl);
-				String allhtml = HTTPUtilities.getHTML(allurl, true, false);
+				String allhtml = HTTPUtilities.getHTML(movielist, allurl, true, false);
 
 				List<String> alllinks = helper.extractImageLinks(allhtml);
 
@@ -88,7 +88,7 @@ public abstract class IMDBCoverSearchCommon extends AbstractImageSearch {
 					if (currCID++ >= 23)
 						continue;
 
-					String urlhtml = HTTPUtilities.getHTML(url, true, false);
+					String urlhtml = HTTPUtilities.getHTML(movielist, url, true, false);
 
 					BufferedImage imgurl = helper.getDirectImage(urlhtml);
 					if (imgurl != null) {

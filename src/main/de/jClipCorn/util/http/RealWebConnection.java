@@ -30,7 +30,7 @@ public class RealWebConnection extends WebConnectionLayer {
 		StringBuilder resultbuilder = new StringBuilder();
 		boolean first = true;
 		try {
-			WebConnectionLayer.RequestCountGet.incrementAndGet();
+			RequestCountGet.incrementAndGet();
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			conn.setRequestProperty("Accept-Charset", "UTF-8");
@@ -76,7 +76,7 @@ public class RealWebConnection extends WebConnectionLayer {
 		StringBuilder resultbuilder = new StringBuilder();
 		List<Tuple<String, String>> resultHeader = null;
 		try {
-			WebConnectionLayer.RequestCountPost.incrementAndGet();
+			RequestCountPost.incrementAndGet();
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Accept-Charset", "UTF-8");
@@ -127,7 +127,7 @@ public class RealWebConnection extends WebConnectionLayer {
 	public BufferedImage getImage(String urlToRead) {
 		try {
 			URL url = new URL(urlToRead);
-			WebConnectionLayer.RequestCountImage.incrementAndGet();
+			RequestCountImage.incrementAndGet();
 			URLConnection conn = url.openConnection();
 			conn.setRequestProperty("User-Agent", "Mozilla/4.76");
 

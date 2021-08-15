@@ -47,7 +47,7 @@ public class MALParser extends Metadataparser {
 	@Override
 	public List<Tuple<String, CCSingleOnlineReference>> searchByText(String title, OnlineSearchType type) {
 		String url = String.format(SEARCH_URL, HTTPUtilities.escapeURL(title));
-		String html = HTTPUtilities.getHTML(url, true, true);
+		String html = HTTPUtilities.getHTML(movielist, url, true, true);
 
 		List<Tuple<String, CCSingleOnlineReference>> result = new ArrayList<>();
 		
@@ -72,7 +72,7 @@ public class MALParser extends Metadataparser {
 	@Override
 	public OnlineMetadata getMetadata(CCSingleOnlineReference ref, boolean downloadCover) {
 		String url = ref.getURL(ccprops());
-		String html = HTTPUtilities.getHTML(url, true, true);
+		String html = HTTPUtilities.getHTML(movielist, url, true, true);
 		Document soup = Jsoup.parse(html);
 
 		OnlineMetadata result = new OnlineMetadata(ref);
@@ -126,7 +126,7 @@ public class MALParser extends Metadataparser {
 			}
 		}
 
-		if (downloadCover && !Str.isNullOrWhitespace(result.CoverURL)) result.Cover = HTTPUtilities.getImage(result.CoverURL);
+		if (downloadCover && !Str.isNullOrWhitespace(result.CoverURL)) result.Cover = HTTPUtilities.getImage(movielist, result.CoverURL);
 		
 		return result;
 	}

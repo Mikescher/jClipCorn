@@ -65,7 +65,7 @@ public class TMDBParser extends Metadataparser {
 		
 		if (year > 0) url += "&year="+year;
 		
-		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
+		String json = HTTPUtilities.getRateLimitedHTML(movielist, url, false, false);
 		try {
 			JSONObject root = new JSONObject(new JSONTokener(json));
 			
@@ -95,7 +95,7 @@ public class TMDBParser extends Metadataparser {
 		if (year > 0)
 			url += "&year="+year;
 		
-		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
+		String json = HTTPUtilities.getRateLimitedHTML(movielist, url, false, false);
 		try {
 			JSONObject root = new JSONObject(new JSONTokener(json));
 			
@@ -125,7 +125,7 @@ public class TMDBParser extends Metadataparser {
 		if (year > 0)
 			url += "&year="+year;
 		
-		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
+		String json = HTTPUtilities.getRateLimitedHTML(movielist, url, false, false);
 		try {
 			JSONObject root = new JSONObject(new JSONTokener(json));
 			
@@ -187,7 +187,7 @@ public class TMDBParser extends Metadataparser {
 		
 		url += "&append_to_response=release_dates,content_ratings";
 		
-		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
+		String json = HTTPUtilities.getRateLimitedHTML(movielist, url, false, false);
 		try {
 			OnlineMetadata result = new OnlineMetadata(ref);
 
@@ -203,13 +203,13 @@ public class TMDBParser extends Metadataparser {
 				
 				if (!url.equals(urlRaw)) {
 					// sometimes runtime is only set in en-US (??)
-					JSONObject fallback = new JSONObject(new JSONTokener(HTTPUtilities.getRateLimitedHTML(urlRaw, false, false)));
+					JSONObject fallback = new JSONObject(new JSONTokener(HTTPUtilities.getRateLimitedHTML(movielist, urlRaw, false, false)));
 					if (fallback.optInt("runtime", 0) != 0) result.Length = fallback.optInt("runtime", 0);
 				}
 			}
 			
 			result.CoverURL = hasString(root, "poster_path") ? (URL_IMAGE_BASE + root.getString("poster_path")) : null;
-			if (result.CoverURL != null && downloadCover) result.Cover = HTTPUtilities.getImage(result.CoverURL);
+			if (result.CoverURL != null && downloadCover) result.Cover = HTTPUtilities.getImage(movielist, result.CoverURL);
 			
 			result.OnlineScore = (int) Math.round(root.optDouble("vote_average", 0));
 			if (result.OnlineScore == 0) result.OnlineScore = null;
@@ -376,7 +376,7 @@ public class TMDBParser extends Metadataparser {
 	public List<String> findCovers(CCSingleOnlineReference ref) {
 		String url = URL_BASE + ref.id + URL_SEARCHCOVER + "?api_key=" + API_KEY;
 		
-		String json = HTTPUtilities.getRateLimitedHTML(url, false, false);
+		String json = HTTPUtilities.getRateLimitedHTML(movielist, url, false, false);
 		try {
 			JSONObject root = new JSONObject(new JSONTokener(json));
 

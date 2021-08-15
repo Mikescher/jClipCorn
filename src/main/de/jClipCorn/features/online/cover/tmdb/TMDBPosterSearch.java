@@ -59,7 +59,7 @@ public class TMDBPosterSearch extends AbstractImageSearch {
 		
 		for (int i = 0; i < 8; i++) {
 			if (covers.size() > i) {
-				BufferedImage biu = HTTPUtilities.getImage(covers.get(i));
+				BufferedImage biu = HTTPUtilities.getImage(movielist, covers.get(i));
 				if (biu != null) 
 					updateCallback.onUpdate(biu);
 				else

@@ -254,7 +254,7 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 
 	public void onMovieListAfterLoad() {
 		if (ccprops().PROP_COMMON_CHECKFORUPDATES.getValue() && ! Main.BETA) {
-			new UpdateConnector(Main.TITLE, Main.VERSION, (src, available, version) -> SwingUtils.invokeLater(() ->
+			new UpdateConnector(movielist, Main.TITLE, Main.VERSION, (src, available, version) -> SwingUtils.invokeLater(() ->
 			{
 				if (available) {
 					if (Main.DEBUG) {

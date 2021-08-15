@@ -8,13 +8,12 @@ import de.jClipCorn.database.databaseElement.caches.CalculationCache;
 import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.features.log.*;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
-import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.http.WebConnectionLayer;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang.StringUtils;
 
@@ -77,7 +76,7 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 		displUndefiniedCount.setText(String.valueOf(CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED)));
 
 		displQueryCount.setText(String.valueOf(CCLog.getSQLCount()));
-		displRequestCount.setText(String.valueOf(WebConnectionLayer.getTotalRequestCount()));
+		displRequestCount.setText(String.valueOf(movielist.getWebConnection().getTotalRequestCount()));
 
 		displUptime.setText(String.valueOf(System.currentTimeMillis() - Globals.MILLIS_MAIN));
 

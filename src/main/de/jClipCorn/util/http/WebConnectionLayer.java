@@ -1,6 +1,6 @@
 package de.jClipCorn.util.http;
 
-import de.jClipCorn.Main;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
 
@@ -12,29 +12,28 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class WebConnectionLayer {
 
-	public static AtomicInteger RequestCountGet   = new AtomicInteger();
-	public static AtomicInteger RequestCountPost  = new AtomicInteger();
-	public static AtomicInteger RequestCountImage = new AtomicInteger();
+	public AtomicInteger RequestCountGet   = new AtomicInteger();
+	public AtomicInteger RequestCountPost  = new AtomicInteger();
+	public AtomicInteger RequestCountImage = new AtomicInteger();
 
-	private static WebConnectionLayer connReal;
-	private static WebConnectionLayer connCache;
-	
-	public static WebConnectionLayer instance;
-	
-	static {
-		connReal = new RealWebConnection();
-		connCache = new CachedWebConnection(connReal);
-		
-		if (Main.getCurrentGlobalCCProperties().PROP_DEBUG_USE_HTTPCACHE.getValue()) {
-			instance = connCache;
-		} else {
-			instance = connReal;
+	public static WebConnectionLayer create(CCProperties ccprops)
+	{
+		var connReal = new RealWebConnection();
+		connReal.init();
+
+		if (ccprops.PROP_DEBUG_USE_HTTPCACHE.getValue())
+		{
+			var cache = new CachedWebConnection(connReal, ccprops);
+			cache.init();
+			return cache;
 		}
-		
-		instance.init();
+		else
+		{
+			return connReal;
+		}
 	}
 
-	public static int getTotalRequestCount() {
+	public int getTotalRequestCount() {
 		return RequestCountGet.get() + RequestCountPost.get() + RequestCountImage.get();
 	}
 

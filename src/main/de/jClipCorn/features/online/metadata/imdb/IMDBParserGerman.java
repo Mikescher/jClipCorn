@@ -213,7 +213,7 @@ public class IMDBParserGerman extends IMDBParserCommon {
 	public String getCoverURL(String html) {
 		String cpageurl = BASE_URL + RegExHelper.find(REGEX_COVER, html);
 		
-		String cpagehtml = HTTPUtilities.getHTML(cpageurl, true, false);
+		String cpagehtml = HTTPUtilities.getHTML(movielist, cpageurl, true, false);
 		
 		if (cpagehtml.isEmpty()) {
 			return null;

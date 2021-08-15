@@ -195,7 +195,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		if (url == null)
 			return false;
 
-		BufferedImage img = HTTPUtilities.getImage(url);
+		BufferedImage img = HTTPUtilities.getImage(ownerWindow.getMovieList(), url);
 
 		if (img == null)
 			return false;

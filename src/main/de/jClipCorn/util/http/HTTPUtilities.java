@@ -4,6 +4,7 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
@@ -32,7 +33,7 @@ public class HTTPUtilities {
 	private final static int MAX_CONNECTION_TRY = 6;
 	private final static int MAX_RATELIMIT_TIME = 10*1000;
 
-	public static String getRateLimitedHTML(String urlToRead, boolean stripLineBreaks, boolean followRedirects) {
+	public static String getRateLimitedHTML(CCMovieList ml, String urlToRead, boolean stripLineBreaks, boolean followRedirects) {
 		if (urlToRead.isEmpty()) {
 			return "";
 		}
@@ -46,7 +47,7 @@ public class HTTPUtilities {
 
 			while (true) {
 				try {
-					return WebConnectionLayer.instance.getUncaughtHTML(url, stripLineBreaks);
+					return ml.getWebConnection().getUncaughtHTML(url, stripLineBreaks);
 				} catch (HTTPErrorCodeException e) {
 					if (e.Errorcode == HTTP_TOO_MANY_REQUESTS)
 					{
@@ -88,7 +89,7 @@ public class HTTPUtilities {
 		}
 	}
 	
-	public static String getHTML(String urlToRead, boolean stripLineBreaks, boolean followRedirects) {
+	public static String getHTML(CCMovieList ml, String urlToRead, boolean stripLineBreaks, boolean followRedirects) {
 		if (urlToRead.isEmpty()) {
 			return "";
 		}
@@ -98,7 +99,7 @@ public class HTTPUtilities {
 
 			for (int i = 0; i < MAX_CONNECTION_TRY; i++) {
 				try {
-					return WebConnectionLayer.instance.getUncaughtHTML(url, stripLineBreaks);
+					return ml.getWebConnection().getUncaughtHTML(url, stripLineBreaks);
 				} catch (IOException | HTTPErrorCodeException e) {
 					if ((i + 1) == MAX_CONNECTION_TRY) {
 						CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotGetHTML", urlToRead), e);
@@ -151,8 +152,8 @@ public class HTTPUtilities {
 		return true;
 	}
 
-	public static BufferedImage getImage(String urlToRead) {
-		return WebConnectionLayer.instance.getImage(urlToRead);
+	public static BufferedImage getImage(CCMovieList ml, String urlToRead) {
+		return ml.getWebConnection().getImage(urlToRead);
 	}
 
 	public static String getJavascriptHTML(String urlToRead, int jsTimeout) {
@@ -212,7 +213,7 @@ public class HTTPUtilities {
 		openInBrowser("https://www.google.de/search?q=" + escapeURL(text));
 	}
 
-	public static JSONObject getGraphQL(String apiurl, String command, HashMap<String, Object> variables) {
+	public static JSONObject getGraphQL(CCMovieList ml, String apiurl, String command, HashMap<String, Object> variables) {
 
 		JSONObject jvars = new JSONObject();
 		for (Map.Entry<String, Object> v : variables.entrySet()) jvars.put(v.getKey(), v.getValue());
@@ -227,7 +228,7 @@ public class HTTPUtilities {
 
 			for (int i = 0; i < MAX_CONNECTION_TRY; i++) {
 				try {
-					Tuple<String, List<Tuple<String, String>>> html = WebConnectionLayer.instance.getUncaughtPostContent(url, jobj.toString());
+					Tuple<String, List<Tuple<String, String>>> html = ml.getWebConnection().getUncaughtPostContent(url, jobj.toString());
 
 					return new JSONObject(new JSONTokener(html.Item1));
 

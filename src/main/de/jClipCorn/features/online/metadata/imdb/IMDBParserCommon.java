@@ -43,7 +43,7 @@ public abstract class IMDBParserCommon extends Metadataparser {
 	@Override
 	public List<Tuple<String, CCSingleOnlineReference>> searchByText(String text, OnlineSearchType type) {
 		String url = getSearchURL(text, type);
-		String html = HTTPUtilities.getHTML(url, true, true);
+		String html = HTTPUtilities.getHTML(movielist, url, true, true);
 		List<Tuple<String, CCSingleOnlineReference>> res = extractImDBLinks(html);
 		
 		return res;
@@ -63,7 +63,7 @@ public abstract class IMDBParserCommon extends Metadataparser {
 	public OnlineMetadata getMetadata(CCSingleOnlineReference ref, boolean downloadCover) {
 		final String url = getURL(ref);
 
-		String html = HTTPUtilities.getHTML(url, true, true);
+		String html = HTTPUtilities.getHTML(movielist, url, true, true);
 
 		OnlineMetadata result = new OnlineMetadata(ref);
 		
@@ -73,7 +73,7 @@ public abstract class IMDBParserCommon extends Metadataparser {
 		result.Length = getLength(html);
 		result.Genres = getGenres(html);
 		result.CoverURL = getCoverURL(html);
-		if (downloadCover && result.CoverURL != null)result.Cover = HTTPUtilities.getImage(result.CoverURL);
+		if (downloadCover && result.CoverURL != null)result.Cover = HTTPUtilities.getImage(movielist, result.CoverURL);
 		result.FSKList = getFSKList(html, url);
 		if (result.FSKList != null) result.FSK = getFSK(result.FSKList, html, url);
 		
@@ -82,7 +82,7 @@ public abstract class IMDBParserCommon extends Metadataparser {
 	
 	public CCSingleOnlineReference getFirstResultReference(String title, OnlineSearchType type) {
 		String url = getSearchURL(title, type);
-		String html = HTTPUtilities.getHTML(url, true, true);
+		String html = HTTPUtilities.getHTML(movielist, url, true, true);
 		final List<Tuple<String,CCSingleOnlineReference>> res = extractImDBLinks(html);
 		
 		if (res.isEmpty()) return CCSingleOnlineReference.EMPTY;

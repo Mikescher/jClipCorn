@@ -28,7 +28,7 @@ public class GoogleCoverSearch extends AbstractImageSearch {
 		for (String s : links) {
 			progressCallback.step();
 
-			BufferedImage biu = HTTPUtilities.getImage(s);
+			BufferedImage biu = HTTPUtilities.getImage(movielist, s);
 			if (biu != null) {
 				updateCallback.onUpdate(biu);
 			}

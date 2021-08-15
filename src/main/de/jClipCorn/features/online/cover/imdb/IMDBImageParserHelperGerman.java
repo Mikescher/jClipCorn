@@ -1,11 +1,6 @@
 package de.jClipCorn.features.online.cover.imdb;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.metadata.imdb.IMDBParserCommon;
@@ -13,6 +8,12 @@ import de.jClipCorn.features.online.metadata.imdb.IMDBParserGerman;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.http.HTTPUtilities;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 @SuppressWarnings("nls")
 public class IMDBImageParserHelperGerman extends IMDBImageParserHelper {
 	private final static String COVER_URL_ALL_APPENDIX = "mediaindex";
@@ -20,9 +21,16 @@ public class IMDBImageParserHelperGerman extends IMDBImageParserHelper {
 	
 	private final static String REGEX_THUMBLIST = "<div class=\"thumb_list\".+?</div>"; // <div class="thumb_list".+?</div>
 	private final static String REGEX_IMAGELINK = "(?<= href=\"/rg/mediaindex/unknown-thumbnail)/media/rm[0-9]+/tt[0-9]+(?=\")"; // (?<= href="/rg/mediaindex/unknown-thumbnail)/media/rm[0-9]+/tt[0-9]+(?=")
-	
-	private static final IMDBParserCommon parser = new IMDBParserGerman();
-	
+
+	private final IMDBParserCommon parser;
+	private final CCMovieList movielist;
+
+	public IMDBImageParserHelperGerman(CCMovieList ml) {
+		super();
+		movielist = ml;
+		parser = new IMDBParserGerman(ml);
+	}
+
 	@Override
 	public String getSearchURL(String title, OnlineSearchType typ) {
 		return parser.getSearchURL(title, typ);
@@ -42,7 +50,7 @@ public class IMDBImageParserHelperGerman extends IMDBImageParserHelper {
 	public String getFirstSearchResult(String html) {
 		List<Tuple<String, CCSingleOnlineReference>> alds = parser.extractImDBLinks(html);
 		if (!alds.isEmpty()) {
-			return alds.get(0).Item2.getURL();
+			return alds.get(0).Item2.getURL(movielist.ccprops());
 		} else {
 			return "";
 		}
@@ -52,7 +60,7 @@ public class IMDBImageParserHelperGerman extends IMDBImageParserHelper {
 	public String getSecondSearchResult(String html) {
 		List<Tuple<String, CCSingleOnlineReference>> alds = parser.extractImDBLinks(html);
 		if (alds.size() >= 2) {
-			return alds.get(1).Item2.getURL();
+			return alds.get(1).Item2.getURL(movielist.ccprops());
 		} else {
 			return "";
 		}

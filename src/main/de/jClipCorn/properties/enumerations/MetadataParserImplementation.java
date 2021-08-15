@@ -1,5 +1,6 @@
 package de.jClipCorn.properties.enumerations;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.Metadataparser;
@@ -66,16 +67,16 @@ public enum MetadataParserImplementation implements ContinoousEnum<MetadataParse
 		return MetadataParserImplementation.values();
 	}
 	
-	public Metadataparser getImplementation() {
+	public Metadataparser getImplementation(CCMovieList ml) {
 		switch (this) {
 		case IMDB:
-			return IMDBParserCommon.GetConfiguredParser();
+			return IMDBParserCommon.GetConfiguredParser(ml);
 		case TMDB:
-			return new TMDBParser();
+			return new TMDBParser(ml);
 		case MAL:
-			return new MALParser();
+			return new MALParser(ml);
 		case ANILIST:
-			return new AniListParser();
+			return new AniListParser(ml);
 		default:
 			CCLog.addDefaultSwitchError(this, this);
 			return null;

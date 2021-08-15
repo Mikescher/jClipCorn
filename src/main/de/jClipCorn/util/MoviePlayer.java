@@ -40,22 +40,22 @@ public class MoviePlayer {
 	
 	public static void play(CCMovie mov, NamedPathVar player) {
 		List<FSPath> al = new ArrayList<>();
-		for (var p: mov.getParts()) al.add(p.toFSPath());
-		play(al, player);
+		for (var p: mov.getParts()) al.add(p.toFSPath(mov.ccprops()));
+		play(al, player, mov.getMovieList().ccprops());
 	}
 	
 	public static void play(CCEpisode ep, NamedPathVar player) {
-		play(ep.Part.get().toFSPath(), player);
+		play(ep.Part.get().toFSPath(ep.ccprops()), player, ep.getMovieList().ccprops());
 	}
 	
-	public static void play(FSPath abspath, NamedPathVar player) {
+	public static void play(FSPath abspath, NamedPathVar player, CCProperties ccprops) {
 		List<FSPath> al = new ArrayList<>();
 		al.add(abspath);
-		play(al, player);
+		play(al, player, ccprops);
 	}
 
 	@SuppressWarnings("nls")
-	public static List<String> getParameters(FSPath path, NamedPathVar player) {
+	public static List<String> getParameters(FSPath path, NamedPathVar player, CCProperties ccprops) {
 		List<String> parameters = new ArrayList<>();
 
 		parameters.add(path.toString());
@@ -73,15 +73,15 @@ public class MoviePlayer {
 			parameters.add("--no-repeat");
 			parameters.add("--playlist-enqueue");
 
-			if (CCProperties.getInstance().PROP_PLAY_VLC_FULLSCREEN.getValue()) parameters.add("--fullscreen");
-			if (! CCProperties.getInstance().PROP_PLAY_VLC_AUTOPLAY.getValue()) parameters.add("--no-playlist-autostart");
-			if (CCProperties.getInstance().PROP_PLAY_VLCSINGLEINSTANCEMODE.getValue()) parameters.add("--one-instance");
+			if (ccprops.PROP_PLAY_VLC_FULLSCREEN.getValue()) parameters.add("--fullscreen");
+			if (!ccprops.PROP_PLAY_VLC_AUTOPLAY.getValue()) parameters.add("--no-playlist-autostart");
+			if (ccprops.PROP_PLAY_VLCSINGLEINSTANCEMODE.getValue()) parameters.add("--one-instance");
 
-			if (CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue())
+			if (ccprops.PROP_VLC_ROBOT_ENABLED.getValue())
 			{
 				parameters.add("--http-host=127.0.0.1");
-				parameters.add("--http-port=" + CCProperties.getInstance().PROP_VLC_ROBOT_PORT.getValue());
-				parameters.add("--http-password=" + CCProperties.getInstance().PROP_VLC_ROBOT_PASSWORD.getValue());
+				parameters.add("--http-port=" + ccprops.PROP_VLC_ROBOT_PORT.getValue());
+				parameters.add("--http-password=" + ccprops.PROP_VLC_ROBOT_PASSWORD.getValue());
 			}
 
 			return parameters;
@@ -89,13 +89,13 @@ public class MoviePlayer {
 	}
 
 	@SuppressWarnings("nls")
-	public static void play(List<FSPath> abspaths, NamedPathVar player) {
-		var playerpath = (player == null) ? getVLCPath() : player.Path;
+	public static void play(List<FSPath> abspaths, NamedPathVar player, CCProperties ccprops) {
+		var playerpath = (player == null) ? getVLCPath(ccprops) : player.Path;
 		
 		if (FSPath.isNullOrEmpty(playerpath)) {
 			CCLog.addWarning(LocaleBundle.getString("LogMessage.VLCNotFound"));
 			
-			if (CCProperties.getInstance().PROP_PLAY_USESTANDARDONMISSINGVLC.getValue()) {
+			if (ccprops.PROP_PLAY_USESTANDARDONMISSINGVLC.getValue()) {
 				try {
 					for (var s : abspaths) {
 						Desktop.getDesktop().open(s.toFile());
@@ -105,7 +105,7 @@ public class MoviePlayer {
 				}
 			}
 		} else {
-			List<String> parameters = getParameters(playerpath, player);
+			List<String> parameters = getParameters(playerpath, player, ccprops);
 			
 			for (var abspath : abspaths) {
 				if (ApplicationHelper.isWindows()) {
@@ -128,8 +128,8 @@ public class MoviePlayer {
 		}
 	}
 	
-	public static FSPath getVLCPath() {
-		var vlcpath = CCProperties.getInstance().PROP_PLAY_VLC_PATH.getValue();
+	public static FSPath getVLCPath(CCProperties ccprops) {
+		var vlcpath = ccprops.PROP_PLAY_VLC_PATH.getValue();
 		
 		if (!FSPath.isNullOrEmpty(lastVLCPath)) {
 			if (lastVLCPath.exists()) {

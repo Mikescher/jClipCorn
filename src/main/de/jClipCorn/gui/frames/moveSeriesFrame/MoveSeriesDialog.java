@@ -9,6 +9,7 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.filesystem.CCPath;
@@ -21,7 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
-public class MoveSeriesDialog extends JDialog {
+public class MoveSeriesDialog extends JCCDialog {
 	private static final long serialVersionUID = 8795232362998343872L;
 	
 	private final CCSeries series;
@@ -41,7 +42,7 @@ public class MoveSeriesDialog extends JDialog {
 	private JLabel lblWith;
 
 	public MoveSeriesDialog(Component owner, CCSeries series) {
-		super();
+		super(series.getMovieList());
 		setSize(new Dimension(500, 600));
 		this.series = series;
 		
@@ -63,7 +64,7 @@ public class MoveSeriesDialog extends JDialog {
 		getContentPane().add(pnlTop, BorderLayout.NORTH);
 		pnlTop.setLayout(new BorderLayout(0, 0));
 		
-		lblCover = new CoverLabel(false);
+		lblCover = new CoverLabel(movielist, false);
 		pnlTop.add(lblCover, BorderLayout.WEST);
 		
 		pnlLeft = new JPanel();
@@ -177,8 +178,8 @@ public class MoveSeriesDialog extends JDialog {
 				var oldp = ep.getPart();
 				var newp = CCPath.create(ep.getPart().toString().replace(edSearch.getText(), edReplace.getText()));
 
-				String identOld = oldp.toFSPath().exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
-				String identNew = newp.toFSPath().exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+				String identOld = oldp.toFSPath(this).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+				String identNew = newp.toFSPath(this).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
 				
 				Vector<String> tmp = new Vector<>();
 				tmp.add(identOld + oldp);

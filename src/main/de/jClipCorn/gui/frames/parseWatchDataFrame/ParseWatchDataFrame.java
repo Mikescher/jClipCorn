@@ -1,10 +1,20 @@
 package de.jClipCorn.gui.frames.parseWatchDataFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
+import de.jClipCorn.util.parser.watchdata.WatchDataChangeSet;
+import de.jClipCorn.util.parser.watchdata.WatchDataParser;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -12,30 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableModel;
-
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.filesystem.SimpleFileUtils;
-import de.jClipCorn.util.parser.watchdata.WatchDataChangeSet;
-import de.jClipCorn.util.parser.watchdata.WatchDataParser;
-
-public class ParseWatchDataFrame extends JFrame {
+public class ParseWatchDataFrame extends JCCFrame {
 	private static final long serialVersionUID = 7237565086883500709L;
-	
-	private final CCMovieList movielist;
 	
 	private List<WatchDataChangeSet> changeSet = null;
 	
@@ -64,9 +52,8 @@ public class ParseWatchDataFrame extends JFrame {
 	private JButton btnShowExample;
 
 	public ParseWatchDataFrame(Component owner, CCMovieList ml) {
-		super();
-		this.movielist = ml;
-		
+		super(ml);
+
 		initGUI();
 		
 		setLocationRelativeTo(owner);

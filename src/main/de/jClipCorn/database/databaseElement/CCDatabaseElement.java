@@ -10,6 +10,8 @@ import de.jClipCorn.database.elementProps.impl.*;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -18,7 +20,7 @@ import de.jClipCorn.util.stream.CCStreams;
 
 import java.awt.image.BufferedImage;
 
-public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, ICCTaggedElement, IDatabaseElementData, IPropertyParent {
+public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, ICCTaggedElement, IDatabaseElementData, IPropertyParent, ICCPropertySource {
 
 	public final EIntProp                  LocalID         = new EIntProp(          "LocalID",         -1,                          this, EPropertyType.DATABASE_PRIMARY_ID);
 	public final EIntProp                  CoverID         = new EIntProp(          "CoverID",         -1,                          this, EPropertyType.DATABASE_REF);
@@ -40,6 +42,10 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		LocalID.setReadonlyPropToInitial(id);
 
 		this.movielist = ml;
+	}
+
+	public CCProperties ccprops() {
+		return movielist.ccprops();
 	}
 
 	public IEProperty[] getProperties()

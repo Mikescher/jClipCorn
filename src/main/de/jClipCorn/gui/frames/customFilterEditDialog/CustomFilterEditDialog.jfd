@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.3.0.337" Java: "11.0.10" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.11" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -6,15 +6,13 @@ new FormModel {
 	"i18n.keyPrefix": "CustomFilterEditDialog"
 	contentType: "form/swing"
 	root: new FormRoot {
-		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCDialog", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "labelcompgap, default:grow, labelcompgap"
 			"$rowSpecs": "linegap, default, linegap, default:grow, linegap, default, linegap"
 		} ) {
 			name: "this"
-			"defaultCloseOperation": 2
 			"title": new FormMessage( null, "CustomFilterEditDialog.Title" )
 			"$sizePolicy": 1
-			"modal": true
 			"minimumSize": new java.awt.Dimension( 600, 400 )
 			add( new FormComponent( "javax.swing.JTextField" ) {
 				name: "edName"

@@ -1,26 +1,23 @@
 package de.jClipCorn.gui.frames.displayGenresDialog;
 
-import java.awt.Component;
-import java.awt.GridLayout;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.ListSelectionModel;
-
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-
-public class DisplayGenresDialog extends JDialog {
+public class DisplayGenresDialog extends JCCDialog {
 	private static final long serialVersionUID = 7628037231286957759L;
 	
 	private final CCGenreList genreList;
 	private final int cwidth;
 	private JList<Object> lsGenres;
 
-	public DisplayGenresDialog(CCGenreList list, int width, Component rel) {
-		super();
+	public DisplayGenresDialog(CCMovieList ml, CCGenreList list, int width, Component rel) {
+		super(ml);
 		setUndecorated(true);
 		this.genreList = list;
 		this.cwidth = Math.max(width, 10);

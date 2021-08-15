@@ -7,10 +7,10 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.databaseErrors.*;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.adapter.ItemChangeLambdaAdapter;
 import de.jClipCorn.util.datatypes.CountAppendix;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -26,11 +26,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckDatabaseFrame extends JFrame {
+public class CheckDatabaseFrame extends JCCFrame {
 	private static final long serialVersionUID = 8481907373850170115L;
 
-	private final CCMovieList movielist;
-	
 	private List<DatabaseError> errorList;
 	
 	private final JPanel contentPanel = new JPanel();
@@ -58,9 +56,8 @@ public class CheckDatabaseFrame extends JFrame {
 	private JLabel lblProgress2;
 	
 	public CheckDatabaseFrame(CCMovieList ml, MainFrame owner) {
-		super();
-		this.movielist = ml; 
-		
+		super(ml);
+
 		initGUI();
 		
 		setLocationRelativeTo(owner);
@@ -202,38 +199,38 @@ public class CheckDatabaseFrame extends JFrame {
 						FormSpecs.DEFAULT_ROWSPEC,}));
 
 		cbValMovies = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValMovies")); //$NON-NLS-1$
-		cbValMovies.setSelected(CCProperties.getInstance().PROP_CHECKDATABASE_OPT_MOVIES.getValue());
-		cbValMovies.addItemListener(new ItemChangeLambdaAdapter(() -> CCProperties.getInstance().PROP_CHECKDATABASE_OPT_MOVIES.setValue(cbValMovies.isSelected()), -1));
+		cbValMovies.setSelected(ccprops().PROP_CHECKDATABASE_OPT_MOVIES.getValue());
+		cbValMovies.addItemListener(new ItemChangeLambdaAdapter(() -> ccprops().PROP_CHECKDATABASE_OPT_MOVIES.setValue(cbValMovies.isSelected()), -1));
 		panel.add(cbValMovies, "2, 1, fill, fill"); //$NON-NLS-1$
 
 		cbValCoverFiles = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValCoverFiles")); //$NON-NLS-1$
-		cbValCoverFiles.setSelected(CCProperties.getInstance().PROP_CHECKDATABASE_OPT_COVERS.getValue());
-		cbValCoverFiles.addItemListener(new ItemChangeLambdaAdapter(() -> CCProperties.getInstance().PROP_CHECKDATABASE_OPT_COVERS.setValue(cbValCoverFiles.isSelected()), -1));
+		cbValCoverFiles.setSelected(ccprops().PROP_CHECKDATABASE_OPT_COVERS.getValue());
+		cbValCoverFiles.addItemListener(new ItemChangeLambdaAdapter(() -> ccprops().PROP_CHECKDATABASE_OPT_COVERS.setValue(cbValCoverFiles.isSelected()), -1));
 		panel.add(cbValCoverFiles, "4, 1, fill, fill"); //$NON-NLS-1$
 
 		cbValSeries = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeries")); //$NON-NLS-1$
-		cbValSeries.setSelected(CCProperties.getInstance().PROP_CHECKDATABASE_OPT_SERIES.getValue());
-		cbValSeries.addItemListener(new ItemChangeLambdaAdapter(() -> CCProperties.getInstance().PROP_CHECKDATABASE_OPT_SERIES.setValue(cbValSeries.isSelected()), -1));
+		cbValSeries.setSelected(ccprops().PROP_CHECKDATABASE_OPT_SERIES.getValue());
+		cbValSeries.addItemListener(new ItemChangeLambdaAdapter(() -> ccprops().PROP_CHECKDATABASE_OPT_SERIES.setValue(cbValSeries.isSelected()), -1));
 		panel.add(cbValSeries, "2, 3, fill, fill"); //$NON-NLS-1$
 
 		cbValVideoFiles = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValVideoFiles")); //$NON-NLS-1$
-		cbValVideoFiles.setSelected(CCProperties.getInstance().PROP_CHECKDATABASE_OPT_FILES.getValue());
-		cbValVideoFiles.addItemListener(new ItemChangeLambdaAdapter(() -> CCProperties.getInstance().PROP_CHECKDATABASE_OPT_FILES.setValue(cbValVideoFiles.isSelected()), -1));
+		cbValVideoFiles.setSelected(ccprops().PROP_CHECKDATABASE_OPT_FILES.getValue());
+		cbValVideoFiles.addItemListener(new ItemChangeLambdaAdapter(() -> ccprops().PROP_CHECKDATABASE_OPT_FILES.setValue(cbValVideoFiles.isSelected()), -1));
 		panel.add(cbValVideoFiles, "4, 3, fill, fill"); //$NON-NLS-1$
 
 		cbValSeasons = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeasons")); //$NON-NLS-1$
-		cbValSeasons.setSelected(CCProperties.getInstance().PROP_CHECKDATABASE_OPT_SEASONS.getValue());
-		cbValSeasons.addItemListener(new ItemChangeLambdaAdapter(() -> CCProperties.getInstance().PROP_CHECKDATABASE_OPT_SEASONS.setValue(cbValSeasons.isSelected()), -1));
+		cbValSeasons.setSelected(ccprops().PROP_CHECKDATABASE_OPT_SEASONS.getValue());
+		cbValSeasons.addItemListener(new ItemChangeLambdaAdapter(() -> ccprops().PROP_CHECKDATABASE_OPT_SEASONS.setValue(cbValSeasons.isSelected()), -1));
 		panel.add(cbValSeasons, "2, 5, fill, fill"); //$NON-NLS-1$
 
 		cbValEpisodes = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValEpisodes")); //$NON-NLS-1$
-		cbValEpisodes.setSelected(CCProperties.getInstance().PROP_CHECKDATABASE_OPT_EPISODES.getValue());
-		cbValEpisodes.addItemListener(new ItemChangeLambdaAdapter(() -> CCProperties.getInstance().PROP_CHECKDATABASE_OPT_EPISODES.setValue(cbValEpisodes.isSelected()), -1));
+		cbValEpisodes.setSelected(ccprops().PROP_CHECKDATABASE_OPT_EPISODES.getValue());
+		cbValEpisodes.addItemListener(new ItemChangeLambdaAdapter(() -> ccprops().PROP_CHECKDATABASE_OPT_EPISODES.setValue(cbValEpisodes.isSelected()), -1));
 		panel.add(cbValEpisodes, "2, 7, fill, fill"); //$NON-NLS-1$
 
 		cbValAdditional = new JCheckBox(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValAdditional")); //$NON-NLS-1$
-		cbValAdditional.setSelected(CCProperties.getInstance().PROP_CHECKDATABASE_OPT_EXTRA.getValue());
-		cbValAdditional.addItemListener(new ItemChangeLambdaAdapter(() -> CCProperties.getInstance().PROP_CHECKDATABASE_OPT_EXTRA.setValue(cbValAdditional.isSelected()), -1));
+		cbValAdditional.setSelected(ccprops().PROP_CHECKDATABASE_OPT_EXTRA.getValue());
+		cbValAdditional.addItemListener(new ItemChangeLambdaAdapter(() -> ccprops().PROP_CHECKDATABASE_OPT_EXTRA.setValue(cbValAdditional.isSelected()), -1));
 		panel.add(cbValAdditional, "4, 7, fill, fill"); //$NON-NLS-1$
 	}
 	
@@ -254,7 +251,7 @@ public class CheckDatabaseFrame extends JFrame {
 			pbProgress2.setVisible(false);
 			lblProgress2.setVisible(false);
 			
-			boolean succ = DatabaseAutofixer.fixErrors(errorList, new ProgressCallbackProgressBarHelper(pbProgress1, 500));
+			boolean succ = DatabaseAutofixer.fixErrors(movielist, errorList, new ProgressCallbackProgressBarHelper(pbProgress1, 500));
 			endFixThread(succ);
 		}, "THREAD_AUTOFIX_DB").start(); //$NON-NLS-1$
 	}
@@ -325,8 +322,8 @@ public class CheckDatabaseFrame extends JFrame {
 			cbValAdditional.isSelected(),
 			cbValAdditional.isSelected(),
 			cbValAdditional.isSelected(),
-			CCProperties.getInstance().PROP_VALIDATE_CHECK_SERIES_STRUCTURE.getValue(),
-			CCProperties.getInstance().PROP_VALIDATE_DUP_IGNORE_IFO.getValue()
+			ccprops().PROP_VALIDATE_CHECK_SERIES_STRUCTURE.getValue(),
+			ccprops().PROP_VALIDATE_DUP_IGNORE_IFO.getValue()
 		);
 
 		new Thread(() ->

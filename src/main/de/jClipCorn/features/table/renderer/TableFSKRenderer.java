@@ -1,12 +1,13 @@
 package de.jClipCorn.features.table.renderer;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 
 public class TableFSKRenderer extends TableRenderer {
 	private static final long serialVersionUID = -7556536853620039148L;
 
-	public TableFSKRenderer() {
-		super();
+	public TableFSKRenderer(CCMovieList ml) {
+		super(ml);
 	}
 
 	@Override

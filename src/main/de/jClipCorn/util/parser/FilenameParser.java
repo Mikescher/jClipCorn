@@ -5,7 +5,6 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 
@@ -23,7 +22,7 @@ public class FilenameParser {
 	public static FilenameParserResult parse(CCMovieList movielist, FSPath filepath) {
 		Map<Integer, FSPath> addFiles = new HashMap<>();
 		CCGroupList groups = CCGroupList.EMPTY;
-		CCDBLanguageList lang = CCDBLanguageList.single(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
+		CCDBLanguageList lang = CCDBLanguageList.single(movielist.ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		CCMovieZyklus zyklus = null;
 		CCFileFormat format = null;
 		String title = "";

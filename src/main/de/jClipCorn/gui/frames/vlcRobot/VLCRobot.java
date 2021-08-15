@@ -1,6 +1,9 @@
 package de.jClipCorn.gui.frames.vlcRobot;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.CCPath;
@@ -16,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class VLCRobot {
+public class VLCRobot implements ICCPropertySource {
 	// Wait {x} ms before attempting to manually set the VLC position
 	// and then wait {y} ms more before doing the second run
 	// and then wait {z} ms more before doing the third run
@@ -51,12 +54,27 @@ public class VLCRobot {
 	public volatile boolean FixVLCPosition;
 	public volatile boolean QueuePreemptive;
 
-	public VLCRobot(VLCRobotFrequency f, boolean fixPos, boolean preempt, VLCRobotEventListener lstr) {
+	private final CCMovieList movielist;
+	private final VLCConnection _vlcConnection;
+
+	public VLCRobot(CCMovieList ml, VLCRobotFrequency f, boolean fixPos, boolean preempt, VLCRobotEventListener lstr) {
 		_listener = lstr;
+		movielist = ml;
 
 		UpdateFrequency = f;
 		FixVLCPosition = fixPos;
 		QueuePreemptive = preempt;
+
+		_vlcConnection = new VLCConnection(ml);
+	}
+
+	@Override
+	public CCProperties ccprops() {
+		return movielist.ccprops();
+	}
+
+	public VLCConnection getVLCConnection() {
+		return _vlcConnection;
 	}
 
 	public void start() {
@@ -136,7 +154,7 @@ public class VLCRobot {
 
 	private void onBackgroundUpdate(int idx)
 	{
-		final VLCStatus status = VLCConnection.getStatus();
+		final VLCStatus status = _vlcConnection.getStatus();
 
 		if (status.doSkipStatusInStateMachine())
 		{
@@ -149,9 +167,9 @@ public class VLCRobot {
 
 		_skipCount = 0;
 
-		if (status.Status == VLCPlayerStatus.PLAYING && status.Repeat) VLCConnection.toggleRepeat();
-		if (status.Status == VLCPlayerStatus.PLAYING && status.Random) VLCConnection.toggleRandom();
-		if (status.Status == VLCPlayerStatus.PLAYING && status.Loop)   VLCConnection.toggleLoop();
+		if (status.Status == VLCPlayerStatus.PLAYING && status.Repeat) _vlcConnection.toggleRepeat();
+		if (status.Status == VLCPlayerStatus.PLAYING && status.Random) _vlcConnection.toggleRandom();
+		if (status.Status == VLCPlayerStatus.PLAYING && status.Loop)   _vlcConnection.toggleLoop();
 
 		SwingUtils.invokeLater(() ->
 		{
@@ -200,7 +218,7 @@ public class VLCRobot {
 		if (sold == null && snew.Status == VLCPlayerStatus.NOT_RUNNING && clientQueueRealCount>0)
 		{
 			CCLog.addDebug("VLCRobot Status changed (NULL --> NOT_RUNNING)"); //$NON-NLS-1$
-			VLCConnection.startPlayer();
+			_vlcConnection.startPlayer();
 			return;
 		}
 
@@ -321,7 +339,7 @@ public class VLCRobot {
 				List<CCPath> parts = q.Element.getParts();
 				for (int i=0; i<parts.size(); i++)
 				{
-					boolean ok = VLCConnection.enqueue(parts.get(i).toFSPath(), startPlayback && i==0) != null;
+					boolean ok = _vlcConnection.enqueue(parts.get(i).toFSPath(this), startPlayback && i==0) != null;
 					if (!ok)
 					{
 						SwingUtils.invokeLater(() -> _clientQueue.add(0, q));
@@ -333,12 +351,12 @@ public class VLCRobot {
 
 				if (startPlayback)
 				{
-					VLCStatus s = VLCConnection.getStatus();
+					VLCStatus s = _vlcConnection.getStatus();
 					if (s.Status == VLCPlayerStatus.STOPPED)
 					{
 						for (int i=0; i<parts.size(); i++)
 						{
-							boolean ok = VLCConnection.enqueue(parts.get(i).toFSPath(), i==0) != null;
+							boolean ok = _vlcConnection.enqueue(parts.get(i).toFSPath(this), i==0) != null;
 							if (!ok)
 							{
 								SwingUtils.invokeLater(() -> _clientQueue.add(0, q));
@@ -367,7 +385,7 @@ public class VLCRobot {
 				List<CCPath> parts = nextSub.getParts();
 				for (int i=0; i<parts.size(); i++)
 				{
-					boolean ok = VLCConnection.enqueue(parts.get(i).toFSPath(), startPlayback && i==0) != null;
+					boolean ok = _vlcConnection.enqueue(parts.get(i).toFSPath(this), startPlayback && i==0) != null;
 					if (!ok)
 					{
 						SwingUtils.invokeLater(() -> q.ElementQueue.add(0, nextSub));
@@ -379,12 +397,12 @@ public class VLCRobot {
 
 				if (startPlayback)
 				{
-					VLCStatus s = VLCConnection.getStatus();
+					VLCStatus s = _vlcConnection.getStatus();
 					if (s.Status == VLCPlayerStatus.STOPPED)
 					{
 						for (int i=0; i<parts.size(); i++)
 						{
-							boolean ok = VLCConnection.enqueue(parts.get(i).toFSPath(), i==0) != null;
+							boolean ok = _vlcConnection.enqueue(parts.get(i).toFSPath(this), i==0) != null;
 							if (!ok)
 							{
 								SwingUtils.invokeLater(() -> q.ElementQueue.add(0, nextSub));
@@ -422,7 +440,7 @@ public class VLCRobot {
 				List<String> uris = new ArrayList<>();
 				for (int i=0; i<parts.size(); i++)
 				{
-					var uri_ok = VLCConnection.enqueue(parts.get(i).toFSPath(), false);
+					var uri_ok = _vlcConnection.enqueue(parts.get(i).toFSPath(this), false);
 					if (uri_ok == null)
 					{
 						SwingUtils.invokeLater(() -> _clientQueue.add(0, q));
@@ -451,7 +469,7 @@ public class VLCRobot {
 				List<String> uris = new ArrayList<>();
 				for (int i=0; i<parts.size(); i++)
 				{
-					var uri_ok = VLCConnection.enqueue(parts.get(i).toFSPath(), false);
+					var uri_ok = _vlcConnection.enqueue(parts.get(i).toFSPath(this), false);
 					if (uri_ok == null)
 					{
 						SwingUtils.invokeLater(() -> q.ElementQueue.add(0, nextSub));
@@ -515,7 +533,7 @@ public class VLCRobot {
 			{
 				//if (current.Fullscreen) return;
 				//
-				//VLCConnection.toggleFullscreen();
+				//_vlcConnection.toggleFullscreen();
 				return;
 			}
 
@@ -527,11 +545,11 @@ public class VLCRobot {
 
 			SwingUtils.invokeLater(() -> _listener.addLog(VLCRobotLogEntry.UpdateWindowPos(index, CCDateTime.getCurrentDateTime(), current.WindowRect, lps.WindowRect, reason)));
 
-			VLCConnection.setWindowPosition(rect);
+			_vlcConnection.setWindowPosition(rect);
 			ThreadUtils.safeSleep(DELAY_SET_VLC_POSITION_RUN_2);
-			VLCConnection.setWindowPosition(rect);
+			_vlcConnection.setWindowPosition(rect);
 			ThreadUtils.safeSleep(DELAY_SET_VLC_POSITION_RUN_3);
-			VLCConnection.setWindowPosition(rect);
+			_vlcConnection.setWindowPosition(rect);
 
 		}).start();
 	}
@@ -555,7 +573,7 @@ public class VLCRobot {
 			_clientQueue.add(e);
 			_queueChangedFromInitialEmpty = true;
 			_listener.updateList(_lastStatus);
-			VLCConnection.startPlayer();
+			_vlcConnection.startPlayer();
 		}
 		else
 		{
@@ -574,11 +592,11 @@ public class VLCRobot {
 
 		if (_lastStatus.Status == VLCPlayerStatus.PLAYING)
 		{
-			new Thread(VLCConnection::pause).start();
+			new Thread(_vlcConnection::pause).start();
 		}
 		else if (_lastStatus.Status == VLCPlayerStatus.PAUSED)
 		{
-			new Thread(VLCConnection::play).start();
+			new Thread(_vlcConnection::play).start();
 		}
 	}
 }

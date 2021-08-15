@@ -2,19 +2,19 @@ package de.jClipCorn.gui.frames.vlcRobot;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.util.NextEpisodeHelper;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.stream.CCStreams;
-import de.jClipCorn.util.vlcquery.VLCConnection;
 import de.jClipCorn.util.vlcquery.VLCPlayerStatus;
 import de.jClipCorn.util.vlcquery.VLCStatus;
 import de.jClipCorn.util.vlcquery.VLCStatusPlaylistEntry;
@@ -27,18 +27,18 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VLCRobotFrame extends JFrame {
+public class VLCRobotFrame extends JCCFrame {
 
 	private static VLCRobotFrame _instance = null;
 	private final VLCRobot _robot;
 
-	private VLCRobotFrame(Component owner) {
-		super();
+	private VLCRobotFrame(Component owner, CCMovieList ml) {
+		super(ml);
 
-		var freq = CCProperties.getInstance().PROP_VLC_ROBOT_FREQUENCY.getValue();
-		var fixvlc = ApplicationHelper.isWindows() && CCProperties.getInstance().PROP_VLC_ROBOT_KEEP_POSITION.getValue();
-		var qpreempt = CCProperties.getInstance().PROP_VLC_ROBOT_QUEUE_PREEMPTIVE.getValue();
-		_robot = new VLCRobot(freq, fixvlc, qpreempt, createRobotListener());
+		var freq = ccprops().PROP_VLC_ROBOT_FREQUENCY.getValue();
+		var fixvlc = ApplicationHelper.isWindows() && ccprops().PROP_VLC_ROBOT_KEEP_POSITION.getValue();
+		var qpreempt = ccprops().PROP_VLC_ROBOT_QUEUE_PREEMPTIVE.getValue();
+		_robot = new VLCRobot(ml, freq, fixvlc, qpreempt, createRobotListener());
 
 		initComponents();
 		postInit();
@@ -239,11 +239,11 @@ public class VLCRobotFrame extends JFrame {
 		return false;
 	}
 
-	public static VLCRobotFrame show(Component owner)
+	public static VLCRobotFrame show(Component owner, CCMovieList ml)
 	{
-		if (_instance == null || !_instance.isVisible())
+		if (_instance == null || !_instance.isVisible() || _instance.movielist != ml)
 		{
-			_instance = new VLCRobotFrame(owner);
+			_instance = new VLCRobotFrame(owner, ml);
 			_instance.setVisible(true);
 		}
 		else
@@ -279,17 +279,17 @@ public class VLCRobotFrame extends JFrame {
 
 	private void onFrequencyChanged() {
 		_robot.UpdateFrequency = cbxFreq.getSelectedEnum();
-		CCProperties.getInstance().PROP_VLC_ROBOT_FREQUENCY.setValue(_robot.UpdateFrequency);
+		ccprops().PROP_VLC_ROBOT_FREQUENCY.setValue(_robot.UpdateFrequency);
 	}
 
 	private void onKeepPositionChanged() {
 		_robot.FixVLCPosition = cbxKeepPosition.isSelected();
-		CCProperties.getInstance().PROP_VLC_ROBOT_KEEP_POSITION.setValue(_robot.FixVLCPosition);
+		ccprops().PROP_VLC_ROBOT_KEEP_POSITION.setValue(_robot.FixVLCPosition);
 	}
 
 	private void onQueuePreemptiveChanged() {
 		_robot.QueuePreemptive = cbxQueuePreemptive.isSelected();
-		CCProperties.getInstance().PROP_VLC_ROBOT_QUEUE_PREEMPTIVE.setValue(_robot.QueuePreemptive);
+		ccprops().PROP_VLC_ROBOT_QUEUE_PREEMPTIVE.setValue(_robot.QueuePreemptive);
 	}
 
 	public void showLogEntry(VLCRobotLogEntry element) {
@@ -325,7 +325,7 @@ public class VLCRobotFrame extends JFrame {
 	}
 
 	private void onStart() {
-		VLCConnection.startPlayer();
+		_robot.getVLCConnection().startPlayer();
 	}
 
 	private void onPlayPause() {
@@ -346,7 +346,7 @@ public class VLCRobotFrame extends JFrame {
 		label2 = new JLabel();
 		cbxFreq = new CCEnumComboBox<>(VLCRobotFrequency.getWrapper());
 		lblFrequency = new JLabel();
-		lsData = new VLCPlaylistTable();
+		lsData = new VLCPlaylistTable(this);
 		lblStatus = new JLabel();
 		progressBar = new JProgressBar();
 		lblTime = new JLabel();

@@ -11,7 +11,6 @@ import de.jClipCorn.database.util.iterators.DirectEpisodesIterator;
 import de.jClipCorn.database.util.iterators.DirectSeasonsIterator;
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
 import de.jClipCorn.util.datatypes.Opt;
@@ -153,7 +152,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 	@Override
 	public CCDate getAddDate() {
-		switch (CCProperties.getInstance().PROP_SERIES_ADDDATECALCULATION.getValue()) {
+		switch (getMovieList().ccprops().PROP_SERIES_ADDDATECALCULATION.getValue()) {
 			case OLDEST_DATE:
 				return calcMinimumAddDate();
 			case NEWEST_DATE:
@@ -492,7 +491,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 			for(var episode: iteratorEpisodes())
 			{
-				var path = episode.getPart().toFSPath().getParent(3); // season-folder -> series-folder -> root-folder
+				var path = episode.getPart().toFSPath(this).getParent(3); // season-folder -> series-folder -> root-folder
 				result.put(path, result.getOrDefault(path, 0) + 1);
 
 				if (result.getOrDefault(path, 0) > countMax) {
@@ -523,7 +522,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		if (Tags.get(CCSingleTag.TAG_WATCH_NEVER))
 			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, CCDateTimeList.createEmpty(), getFullViewCount());
 
-		if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue() && isPartialViewed())
+		if (getMovieList().ccprops().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue() && isPartialViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.PARTIAL_VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
 
 		return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
@@ -583,7 +582,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	}
 
 	public CCDBLanguageList getSemiCommonLanguages() {
-		return _cache.get(SeriesCache.SEMI_COMMON_LANGUAGES, Tuple1.Create(CCProperties.getInstance().PROP_FOLDERLANG_IGNORE_PERC.getValue()), ser->
+		return _cache.get(SeriesCache.SEMI_COMMON_LANGUAGES, Tuple1.Create(getMovieList().ccprops().PROP_FOLDERLANG_IGNORE_PERC.getValue()), ser->
 		{
 			if (getEpisodeCount() == 0) return CCDBLanguageList.EMPTY;
 
@@ -617,7 +616,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 			if (langsEqual != null) return langsEqual;
 
-			var maxPerc = CCProperties.getInstance().PROP_FOLDERLANG_IGNORE_PERC.getValue();
+			var maxPerc = getMovieList().ccprops().PROP_FOLDERLANG_IGNORE_PERC.getValue();
 
 			if (maxPerc > 0) // if maxPerc is set we can use a Language set that satisifies at least (100-maxPerc)% of the total length
 			{
@@ -677,7 +676,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	public Pattern getValidSeasonIndexRegex() {
 		Pattern regexInt = Pattern.compile("^[0-9]+$");
 		
-		for (String rex : CCProperties.getInstance().PROP_SEASON_INDEX_REGEXPRESSIONS.getNonEmptyValues()) {
+		for (String rex : getMovieList().ccprops().PROP_SEASON_INDEX_REGEXPRESSIONS.getNonEmptyValues()) {
 			Pattern p = Pattern.compile("^" + rex + "$");
 			
 			boolean fitsAllSeasons = true;

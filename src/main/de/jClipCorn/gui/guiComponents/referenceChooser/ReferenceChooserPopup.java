@@ -1,27 +1,16 @@
 package de.jClipCorn.gui.guiComponents.referenceChooser;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.gui.localization.LocaleBundle;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
-
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import java.awt.FlowLayout;
-import java.awt.Insets;
-import java.awt.Component;
-import javax.swing.Box;
 
 public class ReferenceChooserPopup extends JDialog implements WindowFocusListener {
 	private static final long serialVersionUID = 1286034649164678546L;
@@ -41,9 +30,12 @@ public class ReferenceChooserPopup extends JDialog implements WindowFocusListene
 	private JPanel panel;
 	private JButton btnPopout;
 	private Component horizontalStrut;
-	
-	public ReferenceChooserPopup(List<CCSingleOnlineReference> data, JReferenceChooser parent) {
+
+	private final CCMovieList movielist;
+
+	public ReferenceChooserPopup(CCMovieList ml, List<CCSingleOnlineReference> data, JReferenceChooser parent) {
 		super();
+		movielist = ml;
 		
 		if (instance != null) {
 			instance.dispose();
@@ -93,7 +85,7 @@ public class ReferenceChooserPopup extends JDialog implements WindowFocusListene
 		btnPopout = new JButton("..."); //$NON-NLS-1$
 		btnPopout.addActionListener(e ->
 		{
-			ReferenceChooserDialog dialog = new ReferenceChooserDialog(parent.getValue().Main, parent.getValue().Additional, parent);
+			ReferenceChooserDialog dialog = new ReferenceChooserDialog(movielist, parent.getValue().Main, parent.getValue().Additional, parent);
 			dialog.setVisible(true);
 
 			dispose();
@@ -130,7 +122,7 @@ public class ReferenceChooserPopup extends JDialog implements WindowFocusListene
 	}
 
 	private void addSingleControl(CCSingleOnlineReference soref) {
-		JSingleSubReferenceChooser chsr = new JSingleSubReferenceChooser();
+		JSingleSubReferenceChooser chsr = new JSingleSubReferenceChooser(movielist);
 		chsr.setValue(soref);
 		chsr.setSize(pnlContent.getWidth(), (int) chsr.getPreferredSize().getHeight());
 		chsr.setBorder(new EmptyBorder(2, 2, 2, 2));

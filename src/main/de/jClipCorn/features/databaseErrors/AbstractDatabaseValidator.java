@@ -3,6 +3,7 @@ package de.jClipCorn.features.databaseErrors;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.lambda.Func2to0;
 import de.jClipCorn.util.lambda.Func2to1;
@@ -13,7 +14,7 @@ import de.jClipCorn.util.stream.CCStreams;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractDatabaseValidator {
+public abstract class AbstractDatabaseValidator implements ICCPropertySource {
 
 	public enum ValidationTarget { MOVIE, SERIES, SEASON, EPISODE }
 
@@ -33,6 +34,10 @@ public abstract class AbstractDatabaseValidator {
 	protected AbstractDatabaseValidator(CCMovieList ml) {
 		movielist = ml;
 		init();
+	}
+
+	public CCProperties ccprops() {
+		return movielist.ccprops();
 	}
 
 	protected abstract void init();
@@ -80,7 +85,7 @@ public abstract class AbstractDatabaseValidator {
 
 	protected double getMaxSizeFileDrift()
 	{
-		return CCProperties.getInstance().PROP_VALIDATE_FILESIZEDRIFT.getValue() / 100d;
+		return movielist.ccprops().PROP_VALIDATE_FILESIZEDRIFT.getValue() / 100d;
 	}
 
 	protected double getRelativeDifference(long size1, long size2) {

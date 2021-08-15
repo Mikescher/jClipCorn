@@ -8,6 +8,7 @@ import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
 import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -44,7 +45,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	private final ParseResultHandler owner;
 	private final JFileChooser coverFileChooser;
 
-	private final Window ownerWindow; //JDialog or JWindow
+	private final ICCWindow ownerWindow; //JDialog or JWindow
 	
 	private CoverLabel lblCover;
 	private JSplitButton btnFind;
@@ -58,10 +59,10 @@ public class EditCoverControl extends AbstractEditCoverControl {
 
 	private List<ActionListener> _changeListener = new ArrayList<>();
 
-	public EditCoverControl(Window owner, ParseResultHandler handler) {
+	public EditCoverControl(ICCWindow owner, ParseResultHandler handler) {
 		super();
 		
-		this.coverFileChooser = new JFileChooser(FilesystemUtils.getAbsoluteSelfDirectory().toFile());
+		this.coverFileChooser = new JFileChooser(FilesystemUtils.getAbsoluteSelfDirectory(owner.ccprops()).toFile());
 		this.owner = handler;
 		this.ownerWindow = owner;
 
@@ -77,7 +78,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	private void initGUI() {
 		setLayout(null);
 
-		lblCover = new CoverLabel(false);
+		lblCover = new CoverLabel(ownerWindow.getMovieList(), false);
 		lblCover.setPosition(0, 34);
 		add(lblCover, 1);
 		
@@ -178,14 +179,14 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	}
 
 	private void showFindCoverDialog() {
-		(new FindCoverDialog(ownerWindow, this, CCDBElementTyp.MOVIE)).setVisible(true);
+		(new FindCoverDialog((Component)ownerWindow, ownerWindow.getMovieList(), this, CCDBElementTyp.MOVIE)).setVisible(true);
 	}
 
 	private void showCropDialog() {
 		if (!isCoverSet())
 			return;
 
-		(new CoverCropDialog(this, fullImage, this)).setVisible(true);
+		(new CoverCropDialog(this, ownerWindow.getMovieList(), fullImage, this)).setVisible(true);
 	}
 
 	private boolean parseURL() {
@@ -227,7 +228,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		if (!isCoverSet())
 			return null;
 
-		return ImageUtilities.resizeCoverImageForStorage(getFullImage());
+		return ImageUtilities.resizeCoverImageForStorage(getFullImage(), ownerWindow.ccprops());
 	}
 
 	@Override

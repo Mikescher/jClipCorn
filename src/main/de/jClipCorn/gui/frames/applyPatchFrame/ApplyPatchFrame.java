@@ -4,6 +4,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.serialization.ExportHelper;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.JFSPathTextField;
 import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -15,25 +16,20 @@ import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.DoubleProgressCallbackProgressBarHelper;
-import de.jClipCorn.util.xml.CCXMLParser;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 
-public class ApplyPatchFrame extends JFrame
+public class ApplyPatchFrame extends JCCFrame
 {
-	private final CCMovieList movielist;
-
 	private java.util.List<ActionVM> _actions = null;
 	private PatchExecState _state = null;
 	private Thread activeThread = null;
 
 	public ApplyPatchFrame(Component owner, CCMovieList ml)
 	{
-		super();
-		movielist = ml;
+		super(ml);
 
 		initComponents();
 		postInit();
@@ -43,8 +39,7 @@ public class ApplyPatchFrame extends JFrame
 
 	public ApplyPatchFrame(Component owner, CCMovieList ml, FSPath f)
 	{
-		super();
-		movielist = ml;
+		super(ml);
 
 		initComponents();
 		postInit();
@@ -58,11 +53,11 @@ public class ApplyPatchFrame extends JFrame
 	{
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 
-		edPathDestMovies.setPath(movielist.getCommonMoviesPath().toFSPath());
-		edPathDestSeries.setPath(movielist.getCommonSeriesPath().toFSPath());
+		edPathDestMovies.setPath(movielist.getCommonMoviesPath().toFSPath(this));
+		edPathDestSeries.setPath(movielist.getCommonSeriesPath().toFSPath(this));
 
-		edPathDestTrashMov.setPath(movielist.getCommonMoviesPath().toFSPath().getParent().append("trash")); //$NON-NLS-1$
-		edPathDestTrashSer.setPath(movielist.getCommonSeriesPath().toFSPath().getParent().append("trash")); //$NON-NLS-1$
+		edPathDestTrashMov.setPath(movielist.getCommonMoviesPath().toFSPath(this).getParent().append("trash")); //$NON-NLS-1$
+		edPathDestTrashSer.setPath(movielist.getCommonSeriesPath().toFSPath(this).getParent().append("trash")); //$NON-NLS-1$
 	}
 
 	private void updateUI()
@@ -105,22 +100,12 @@ public class ApplyPatchFrame extends JFrame
 
 		try
 		{
-			var state = new PatchExecState();
-			state.load(FSPath.create(edPathPatchfile.getPath().toString() + ".state"));
+			var r = APFWorker.readPatch(edPathPatchfile.getPath());
 
-			CCXMLParser doc = CCXMLParser.parse(edPathPatchfile.getPath().readAsUTF8TextFile());
-
-			var actions = new ArrayList<ActionVM>();
-
-			for (var xelem: doc.getRoot().getAllChildren("action").autosortByProperty(p -> Integer.parseInt(p.getAttributeValueOrDefault("ctr", null))))
-			{
-				actions.add(new ActionVM(xelem, state));
-			}
-
-			tableMain.setData(actions);
+			tableMain.setData(r.Item1);
 			tableMain.autoResize();
-			_actions = actions;
-			_state = state;
+			_actions = r.Item1;
+			_state = r.Item2;
 		}
 		catch (Exception e)
 		{

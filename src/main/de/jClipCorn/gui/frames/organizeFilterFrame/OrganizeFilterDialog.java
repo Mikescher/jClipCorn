@@ -7,6 +7,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.table.filter.customFilter.operators.CustomAndOperator;
 import de.jClipCorn.gui.frames.customFilterEditDialog.CustomFilterEditDialog;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.filterTree.CustomFilterList;
 import de.jClipCorn.gui.mainFrame.filterTree.CustomFilterObject;
@@ -22,7 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class OrganizeFilterDialog extends JDialog {
+public class OrganizeFilterDialog extends JCCDialog {
 	private static final long serialVersionUID = -8210148094781041350L;
 	
 	private CustomFilterList filterlist;
@@ -39,14 +40,11 @@ public class OrganizeFilterDialog extends JDialog {
 	private JButton btnUp;
 	private JButton btnDown;
 	
-	private final CCMovieList movielist;
-
 	public OrganizeFilterDialog(CCMovieList ml, Component owner, CustomFilterList flist, FinishListener okAction) {
-		super();
+		super(ml);
 		this.filterlist = flist;
 		this.action = okAction;
-		this.movielist = ml;
-		
+
 		setSize(350, 300);
 		
 		initGUI();

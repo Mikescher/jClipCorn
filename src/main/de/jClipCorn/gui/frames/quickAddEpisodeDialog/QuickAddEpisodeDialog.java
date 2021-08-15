@@ -6,7 +6,10 @@ import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.databaseElement.datapacks.EpisodeDataPack;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
 import de.jClipCorn.features.log.CCLog;
@@ -18,13 +21,13 @@ import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.guiComponents.JCCPathTextField;
 import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
 import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
@@ -48,7 +51,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuickAddEpisodeDialog extends JDialog {
+public class QuickAddEpisodeDialog extends JCCDialog {
 	private static final long serialVersionUID = -184393538006518026L;
 
 	private final JPanel contentPanel = new JPanel();
@@ -72,7 +75,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 	 * @wbp.parser.constructor
 	 */
 	private QuickAddEpisodeDialog(Component owner, UpdateCallbackListener listener, CCSeason s, FSPath f) {
-		super();
+		super(s.getMovieList());
 		ucListener = listener;
 		season = s;
 		source = f;
@@ -179,7 +182,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		JLabel lblQuality = new JLabel("MediaInfo"); //$NON-NLS-1$
 		contentPanel.add(lblQuality, "1, 13, right, default"); //$NON-NLS-1$
 		
-		edMediaInfo = new JMediaInfoControl(() -> edSource.getPath());
+		edMediaInfo = new JMediaInfoControl(movielist, () -> edSource.getPath());
 		contentPanel.add(edMediaInfo, "3, 13, fill, default"); //$NON-NLS-1$
 		
 		pbar = new JProgressBar();
@@ -293,11 +296,11 @@ public class QuickAddEpisodeDialog extends JDialog {
 
 		edTarget.setPath(createTarget());
 
-		cbCopy.setSelected(!edTarget.getPath().toFSPath().equalsOnFilesystem(edSource.getPath()));
+		cbCopy.setSelected(!edTarget.getPath().toFSPath(this).equalsOnFilesystem(edSource.getPath()));
 		cbRename.setSelected(cbCopy.isSelected());
 		
 		CCEpisode last = season.getSeries().getLastAddedEpisode();
-		CCDBLanguageList lang = CCDBLanguageList.single(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
+		CCDBLanguageList lang = CCDBLanguageList.single(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		if (last != null) lang = last.getLanguage();
 		ctrlLang.setValue(lang);
 
@@ -305,7 +308,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		new Thread(() ->  {
 
 			try {
-				MediaQueryResult dat = MediaQueryRunner.query(edSource.getPath(), true);
+				MediaQueryResult dat = new MediaQueryRunner(movielist).query(edSource.getPath(), true);
 
 				SwingUtils.invokeLater(() ->
 				{
@@ -349,7 +352,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		var dst = season.getPathForCreatedFolderstructure(root, title, episode, CCFileFormat.getMovieFormatFromPath(edSource.getPath()), null);
 		if (dst == null) return CCPath.Empty;
 
-		return CCPath.createFromFSPath(dst);
+		return CCPath.createFromFSPath(dst, this);
 	}
 
 	private volatile int progressValueCache;
@@ -360,7 +363,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 	private void tryAdd(boolean check) {
 
 		var src = edSource.getPath();
-		var dst = cbCopy.isSelected() ? edTarget.getPath().toFSPath() : edSource.getPath();
+		var dst = cbCopy.isSelected() ? edTarget.getPath().toFSPath(this) : edSource.getPath();
 
 		int episodenumber = (int)spnEpisode.getValue();
 		int length = (int)spnLength.getValue();
@@ -376,7 +379,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		CCFileFormat format = CCFileFormat.getMovieFormatFromPath(src);
 		PartialMediaInfo minfo = edMediaInfo.getValue();
 
-		var epack = new EpisodeDataPack(episodenumber, title, length, format, filesize, CCPath.createFromFSPath(dst), adddate, history, tags, lang, minfo);
+		var epack = new EpisodeDataPack(episodenumber, title, length, format, filesize, CCPath.createFromFSPath(dst, this), adddate, history, tags, lang, minfo);
 
 		List<UserDataProblem> problems = new ArrayList<>();
 		boolean probvalue = !check || checkUserDataEpisode(problems, epack, src, dst);
@@ -388,7 +391,7 @@ public class QuickAddEpisodeDialog extends JDialog {
 		}
 
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(problems, () -> tryAdd(false), this);
+			InputErrorDialog amied = new InputErrorDialog(movielist, problems, () -> tryAdd(false), this);
 			amied.setVisible(true);
 			return;
 		}
@@ -433,13 +436,13 @@ public class QuickAddEpisodeDialog extends JDialog {
 					newEp.FileSize.set(filesize);
 					newEp.AddDate.set(adddate);
 					newEp.ViewedHistory.set(history);
-					newEp.Part.set(CCPath.createFromFSPath(imd, Opt.False));
+					newEp.Part.set(CCPath.createFromFSPath(imd, Opt.False, this));
 					newEp.Tags.set(tags);
 					newEp.Language.set(lang);
 					newEp.endUpdating();
 
 					newEp.beginUpdating();
-					newEp.Part.set(CCPath.createFromFSPath(dst));
+					newEp.Part.set(CCPath.createFromFSPath(dst, this));
 					newEp.endUpdating();
 
 					if (ucListener != null) ucListener.onUpdate(newEp);
@@ -474,14 +477,14 @@ public class QuickAddEpisodeDialog extends JDialog {
 	}
 	
 	private void parseCodecMetadata_Lang() {
-		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(edSource.getPath(), false);
+			MediaQueryResult dat = new MediaQueryRunner(movielist).query(edSource.getPath(), false);
 
 			if (dat.AudioLanguages == null) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
@@ -504,14 +507,14 @@ public class QuickAddEpisodeDialog extends JDialog {
 	}
 
 	private void parseCodecMetadata_Len() {
-		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
 
 		try {
-			MediaQueryResult dat = MediaQueryRunner.query(edSource.getPath(), true);
+			MediaQueryResult dat = new MediaQueryRunner(movielist).query(edSource.getPath(), true);
 
 			int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
 			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
@@ -524,14 +527,14 @@ public class QuickAddEpisodeDialog extends JDialog {
 	}
 
 	private void showCodecMetadata() {
-		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
 
 		try {
-			String dat = MediaQueryRunner.queryRaw(edSource.getPath());
+			String dat = new MediaQueryRunner(movielist).queryRaw(edSource.getPath());
 
 			GenericTextDialog.showText(this, getTitle(), dat, false);
 		} catch (IOException | MediaQueryException e) {

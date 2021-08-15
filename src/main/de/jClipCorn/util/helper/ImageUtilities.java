@@ -1,13 +1,13 @@
 package de.jClipCorn.util.helper;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Transparency;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datatypes.Tuple;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.DataBufferByte;
@@ -15,14 +15,6 @@ import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.datatypes.Tuple;
 
 public class ImageUtilities {
 	public final static int BASE_COVER_WIDTH  = 182;
@@ -37,12 +29,12 @@ public class ImageUtilities {
 	private final static int SERIES_MASK_WIDTH  = 56;
 	private final static int SERIES_MASK_HEIGHT = 56;
 
-	public static int getCoverWidth() {
-		return CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.getValue().getWidth();
+	public static int getCoverWidth(CCProperties ccprops) {
+		return ccprops.PROP_DATABASE_MAX_COVER_SIZE.getValue().getWidth();
 	}
 
-	public static int getCoverHeight() {
-		return CCProperties.getInstance().PROP_DATABASE_MAX_COVER_SIZE.getValue().getHeight();
+	public static int getCoverHeight(CCProperties ccprops) {
+		return ccprops.PROP_DATABASE_MAX_COVER_SIZE.getValue().getHeight();
 	}
 	
 	public static BufferedImage resizeCoverImageForFullSizeUI(BufferedImage bi) {
@@ -53,12 +45,12 @@ public class ImageUtilities {
 		return resizeImageProportional(bi, HALF_COVER_WIDTH, HALF_COVER_HEIGHT, COVER_RATIO);
 	}
 
-	public static BufferedImage resizeCoverImageForStorage(BufferedImage bi) {
-		return resizeImageToBounds(bi, BASE_COVER_WIDTH, BASE_COVER_HEIGHT, getCoverWidth(), getCoverHeight());
+	public static BufferedImage resizeCoverImageForStorage(BufferedImage bi, CCProperties ccprops) {
+		return resizeImageToBounds(bi, BASE_COVER_WIDTH, BASE_COVER_HEIGHT, getCoverWidth(ccprops), getCoverHeight(ccprops));
 	}
 
-	public static Tuple<Integer, Integer> calcImageSizeForStorage(int widthCurr, int heightCurr) {
-		return calcImagesizeToBounds(widthCurr, heightCurr, BASE_COVER_WIDTH, BASE_COVER_HEIGHT, getCoverWidth(), getCoverHeight());
+	public static Tuple<Integer, Integer> calcImageSizeForStorage(int widthCurr, int heightCurr, CCProperties ccprops) {
+		return calcImagesizeToBounds(widthCurr, heightCurr, BASE_COVER_WIDTH, BASE_COVER_HEIGHT, getCoverWidth(ccprops), getCoverHeight(ccprops));
 	}
 
 	public static Tuple<Integer, Integer> calcImageSizeToFit(int widthCurr, int heightCurr, int fitWidth, int fitHeight) {

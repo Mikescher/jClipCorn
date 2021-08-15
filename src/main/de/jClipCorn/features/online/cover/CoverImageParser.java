@@ -1,19 +1,19 @@
 package de.jClipCorn.features.online.cover;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.OnlineSearchType;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.ImageSearchImplementation;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CoverImageParser implements FinishListener {
 	private final ProgressCallbackListener proglistener;
@@ -24,12 +24,18 @@ public class CoverImageParser implements FinishListener {
 	private final CCOnlineReferenceList reference;
 	
 	private final List<AbstractImageSearch> searchImplementations;
-	
-	public CoverImageParser(ProgressCallbackListener pcl, UpdateCallbackListener ucl, UpdateCallbackListener fcl, CCDBElementTyp typ, String search, CCOnlineReferenceList ref) {
+
+	private final CCMovieList movielist;
+
+	public CoverImageParser(CCMovieList ml, ProgressCallbackListener pcl, UpdateCallbackListener ucl, UpdateCallbackListener fcl, CCDBElementTyp typ, String search, CCOnlineReferenceList ref) {
+		super();
+
+		this.movielist = ml;
 		this.proglistener = pcl;
 		this.updatelistener = ucl;
 		this.finishlistener = fcl;
 		this.searchText = search;
+
 		switch (typ) {
 		case MOVIE:
 			this.typ = OnlineSearchType.MOVIES;
@@ -42,12 +48,13 @@ public class CoverImageParser implements FinishListener {
 			CCLog.addDefaultSwitchError(this, typ);
 			break;
 		}
+
 		this.reference = ref;
 		
 		searchImplementations = new ArrayList<>();
 		
-		for (ImageSearchImplementation impl : CCProperties.getInstance().PROP_IMAGESEARCH_IMPL.getValue()) {
-			searchImplementations.add(impl.getImplementation(this, updatelistener, proglistener));
+		for (ImageSearchImplementation impl : movielist.ccprops().PROP_IMAGESEARCH_IMPL.getValue()) {
+			searchImplementations.add(impl.getImplementation(movielist, this, updatelistener, proglistener));
 		}
 	}
 	

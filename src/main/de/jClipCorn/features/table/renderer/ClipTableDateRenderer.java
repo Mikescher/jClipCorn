@@ -1,13 +1,14 @@
 package de.jClipCorn.features.table.renderer;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.util.datetime.CCDate;
 
 public class ClipTableDateRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
 
-	public ClipTableDateRenderer() {
-		super();
+	public ClipTableDateRenderer(CCMovieList ml) {
+		super(ml);
 	}
 
 	@Override

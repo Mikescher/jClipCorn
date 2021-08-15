@@ -1,33 +1,27 @@
 package de.jClipCorn.features.statistics.charts;
 
-import java.awt.BorderLayout;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.features.statistics.StatisticsHelper;
+import de.jClipCorn.features.statistics.timeline.TimelineCaptionComponent;
+import de.jClipCorn.features.statistics.timeline.TimelineDateCaptionComponent;
+import de.jClipCorn.features.statistics.timeline.TimelineDisplayComponent;
+import de.jClipCorn.features.statistics.timeline.TimelineEmptyCaptionComponent;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDatespan;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
-
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.features.statistics.StatisticsHelper;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
-import de.jClipCorn.features.statistics.timeline.TimelineCaptionComponent;
-import de.jClipCorn.features.statistics.timeline.TimelineDateCaptionComponent;
-import de.jClipCorn.features.statistics.timeline.TimelineDisplayComponent;
-import de.jClipCorn.features.statistics.timeline.TimelineEmptyCaptionComponent;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.datetime.CCDatespan;
-
 public class StatisticsSeriesTimeline extends StatisticsPanel {
-	private CCMovieList movielist;
-	
 	private Map<CCSeries, Boolean> mapCache = null;
 	
 	private HashMap<CCSeries, List<CCDatespan>> seriesMap;
@@ -37,12 +31,11 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 	private CCDate seriesMapEnd;
 	
 	public StatisticsSeriesTimeline(CCMovieList ml, StatisticsTypeFilter _source) {
-		super(_source);
-		movielist = ml;
+		super(ml, _source);
 	}
 	
 	private void collectData() {
-		seriesMap = StatisticsHelper.getAllSeriesTimespans(movielist, CCProperties.getInstance().PROP_STATISTICS_TIMELINEGRAVITY.getValue(), StatisticsHelper.OrderMode.ENFORCED);
+		seriesMap = StatisticsHelper.getAllSeriesTimespans(movielist, ccprops().PROP_STATISTICS_TIMELINEGRAVITY.getValue(), StatisticsHelper.OrderMode.ENFORCED);
 		seriesMapZero = StatisticsHelper.getAllSeriesTimespans(movielist, 0, StatisticsHelper.OrderMode.IGNORED);
 		seriesList = StatisticsHelper.convertMapToOrderedKeyList(seriesMap, Comparator.comparing(o -> o.getTitle().toLowerCase()));
 		seriesMapStart = StatisticsHelper.getSeriesTimespansStart(seriesMap);

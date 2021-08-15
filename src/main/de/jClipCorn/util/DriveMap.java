@@ -28,22 +28,32 @@ public class DriveMap {
 	
 	private final static int MAX_DELAY_COUNT = 24; // = 24s
 	
-	private static Map<Character, Tuple<String, String>> driveMap = null;
-	private static Map<String, Character> driveLabelToLetterMap = null;
-	private static Map<String, Character> driveUNCToLetterMap = null;
+	private Map<Character, Tuple<String, String>> driveMap = null;
+	private Map<String, Character> driveLabelToLetterMap = null;
+	private Map<String, Character> driveUNCToLetterMap = null;
 
-	private static volatile boolean is_created    = false;
-	private static volatile boolean is_creating   = false;
-	private static volatile boolean is_rescanning = false;
+	private volatile boolean is_created    = false;
+	private volatile boolean is_creating   = false;
+	private volatile boolean is_rescanning = false;
 
-	private static int current_delay = 0;
+	private int current_delay = 0;
 
-	private static long lastScanStart = 0;
+	private long lastScanStart = 0;
 
-	private static final Object _rescanLock = new Object();
-	private static final Object _scanLock = new Object();
+	private final Object _rescanLock = new Object();
+	private final Object _scanLock = new Object();
 
-	public static Character getDriveLetterByLabel(String name) {
+	private final CCProperties owner;
+
+	public DriveMap(CCProperties ccp) {
+		owner = ccp;
+	}
+
+	public CCProperties ccprops() {
+		return owner;
+	}
+
+	public Character getDriveLetterByLabel(String name) {
 		waitOrCreate();
 
 		synchronized (_scanLock) {
@@ -52,7 +62,7 @@ public class DriveMap {
 		}
 	}
 
-	public static Character getDriveLetterByUNC(String netident) {
+	public Character getDriveLetterByUNC(String netident) {
 		waitOrCreate();
 
 		synchronized (_scanLock) {
@@ -62,7 +72,7 @@ public class DriveMap {
 
 	}
 
-	public static String getDriveLabel(Character letter) {
+	public String getDriveLabel(Character letter) {
 		waitOrCreate();
 
 		synchronized (_scanLock) {
@@ -71,7 +81,7 @@ public class DriveMap {
 		}
 	}
 
-	public static String getDriveUNC(Character letter) {
+	public String getDriveUNC(Character letter) {
 		waitOrCreate();
 
 		synchronized (_scanLock) {
@@ -80,7 +90,7 @@ public class DriveMap {
 		}
 	}
 	
-	public static boolean hasDriveLabel(Character letter) {
+	public boolean hasDriveLabel(Character letter) {
 		waitOrCreate();
 
 		synchronized (_scanLock) {
@@ -89,7 +99,7 @@ public class DriveMap {
 		}
 	}
 
-	public static boolean hasDriveUNC(Character letter) {
+	public boolean hasDriveUNC(Character letter) {
 		waitOrCreate();
 
 		synchronized (_scanLock) {
@@ -98,7 +108,7 @@ public class DriveMap {
 		}
 	}
 
-	private static void waitOrCreate() {
+	private void waitOrCreate() {
 		if (!is_created) {
 			if (is_creating) {
 				waitForCreateFinished();
@@ -108,7 +118,7 @@ public class DriveMap {
 		}
 	}
 
-	private static void createMap() {
+	private void createMap() {
 		Globals.TIMINGS.start(Globals.TIMING_BACKGROUND_SCAN_DRIVES);
 		
 		is_creating = true;
@@ -146,7 +156,7 @@ public class DriveMap {
 			}
 		}
 
-		if (ApplicationHelper.isWindows() && CCProperties.getInstance().PROP_DRIVEMAP_REMOUNT_NETDRIVES.getValue())
+		if (ApplicationHelper.isWindows() && ccprops().PROP_DRIVEMAP_REMOUNT_NETDRIVES.getValue())
 		{
 			autoMountWinNetDrives(threadDriveMap, threadDriveLabelToLetterMap, threadDriveUNCToLetterMap);
 		}
@@ -165,7 +175,7 @@ public class DriveMap {
 		Globals.TIMINGS.stop(Globals.TIMING_BACKGROUND_SCAN_DRIVES);
 	}
 
-	private static String getDriveNetworkIdents(List<FileStore> fstores, List<Tuple4<String, String, String, String>> netuse, File f, String name)
+	private String getDriveNetworkIdents(List<FileStore> fstores, List<Tuple4<String, String, String, String>> netuse, File f, String name)
 	{
 		try {
 			for (var fs : fstores) {
@@ -184,7 +194,7 @@ public class DriveMap {
 		}
 	}
 
-	private static void updateMap() {
+	private void updateMap() {
 		try {
 			long startTime = lastScanStart = System.currentTimeMillis();
 
@@ -216,7 +226,7 @@ public class DriveMap {
 				}
 			}
 
-			if (ApplicationHelper.isWindows() && CCProperties.getInstance().PROP_DRIVEMAP_REMOUNT_NETDRIVES.getValue())
+			if (ApplicationHelper.isWindows() && ccprops().PROP_DRIVEMAP_REMOUNT_NETDRIVES.getValue())
 			{
 				autoMountWinNetDrives(threadDriveMap, threadDriveLabelToLetterMap, threadDriveUNCToLetterMap);
 			}
@@ -239,7 +249,7 @@ public class DriveMap {
 	}
 
 	@SuppressWarnings("nls")
-	private static void autoMountWinNetDrives(Map<Character, Tuple<String, String>> driveMap, Map<String, Character> driveLabelToLetterMap, Map<String, Character> driveUNCToLetterMap)
+	private void autoMountWinNetDrives(Map<Character, Tuple<String, String>> driveMap, Map<String, Character> driveLabelToLetterMap, Map<String, Character> driveUNCToLetterMap)
 	{
 		try
 		{
@@ -274,7 +284,7 @@ public class DriveMap {
 		}
 	}
 
-	private static String getDriveName(File f) {
+	private String getDriveName(File f) {
 		String drive =  FileSystemView.getFileSystemView().getSystemDisplayName(f);
 
 		drive = RegExHelper.replace(REGEX_DRIVENAME_ESCAPE, drive, "");      //$NON-NLS-1$
@@ -283,20 +293,20 @@ public class DriveMap {
 		return drive;
 	}
 
-	private static String cleanDriveName(String drive) {
+	private String cleanDriveName(String drive) {
 		drive = RegExHelper.replace(REGEX_INVALID_DRIVE_CHARS, drive, "_"); //$NON-NLS-1$
 		return drive;
 	}
 
-	private static boolean isFileSystem(File f) {
+	private boolean isFileSystem(File f) {
 		return FileSystemView.getFileSystemView().isFileSystemRoot(f);
 	}
 	
-	public static void preScan() {
-		new Thread(DriveMap::createMap, "THREAD_SCAN_FILESYSTEM").start(); //$NON-NLS-1$
+	public void preScan() {
+		new Thread(this::createMap, "THREAD_SCAN_FILESYSTEM").start(); //$NON-NLS-1$
 	}
 
-	private static void waitForCreateFinished() {
+	private void waitForCreateFinished() {
 		while(is_creating) {
 			if (current_delay > MAX_DELAY_COUNT) {
 				CCLog.addError(LocaleBundle.getString("LogMessage.DriveMapTookTooLong")); //$NON-NLS-1$
@@ -314,33 +324,33 @@ public class DriveMap {
 		}
 	}
 	
-	public static void tryWait() {
+	public void tryWait() {
 		if (! is_created && is_creating) {
 			waitForCreateFinished();
 		}
 	}
 
-	public static void conditionalRescan() {
+	public void conditionalRescan() {
 		if (! is_created) return;
 		if (is_creating) return;
 		if (is_rescanning) return;
 
-		if (System.currentTimeMillis() - lastScanStart <= CCProperties.getInstance().PROP_MIN_DRIVEMAP_RESCAN_TIME.getValue()) return;
+		if (System.currentTimeMillis() - lastScanStart <= ccprops().PROP_MIN_DRIVEMAP_RESCAN_TIME.getValue()) return;
 		synchronized (_rescanLock) {
 			if (is_rescanning) return;
-			if (System.currentTimeMillis() - lastScanStart <= CCProperties.getInstance().PROP_MIN_DRIVEMAP_RESCAN_TIME.getValue()) return;
+			if (System.currentTimeMillis() - lastScanStart <= ccprops().PROP_MIN_DRIVEMAP_RESCAN_TIME.getValue()) return;
 
 			lastScanStart = System.currentTimeMillis();
 			is_rescanning = true;
 
 			triggerOnChanged();
 
-			new Thread(DriveMap::updateMap, "THREAD_RESCAN_FILESYSTEM").start(); //$NON-NLS-1$
+			new Thread(this::updateMap, "THREAD_RESCAN_FILESYSTEM").start(); //$NON-NLS-1$
 		}
 
 	}
 
-	public static String getStatus()
+	public String getStatus()
 	{
 		if (! is_created)  return LocaleBundle.getString("DriveMap.Status.NotCreated"); //$NON-NLS-1$
 		if (is_creating)   return LocaleBundle.getString("DriveMap.Status.Creating"); //$NON-NLS-1$
@@ -349,7 +359,7 @@ public class DriveMap {
 		return LocaleBundle.getString("DriveMap.Status.Idle"); //$NON-NLS-1$
 	}
 
-	public static List<Tuple3<Character, String, String>> getCopy() {
+	public List<Tuple3<Character, String, String>> getCopy() {
 		if (! is_created)  return new ArrayList<>();
 		if (is_creating)   return new ArrayList<>();
 		if (is_rescanning) return new ArrayList<>();
@@ -364,7 +374,7 @@ public class DriveMap {
 		}
 	}
 
-	private static void triggerOnChanged() {
+	private void triggerOnChanged() {
 		SwingUtils.invokeLater(() ->
 		{
 			MainFrame inst = MainFrame.getInstance();
@@ -375,7 +385,7 @@ public class DriveMap {
 		});
 	}
 
-	public static void initForTests(Tuple3<Character, String, String>... entries) {
+	public void initForTests(Tuple3<Character, String, String>... entries) {
 		driveMap              = new HashMap<>();
 		driveLabelToLetterMap = new HashMap<>();
 		driveUNCToLetterMap   = new HashMap<>();

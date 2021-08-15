@@ -1,13 +1,12 @@
 package de.jClipCorn.gui.guiComponents;
 
 import com.jformdesigner.annotations.DesignCreate;
-import com.jformdesigner.annotations.PropertyDesc;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
@@ -47,14 +46,14 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	private CCDatabaseElement element;
 
 	@DesignCreate
-	private static DatabaseElementPreviewLabel designCreate() { return new DatabaseElementPreviewLabel(); }
+	private static DatabaseElementPreviewLabel designCreate() { return new DatabaseElementPreviewLabel(null); }
 
-	public DatabaseElementPreviewLabel() {
-		this(false);
+	public DatabaseElementPreviewLabel(CCMovieList ml) {
+		this(ml, false);
 	}
 
-	public DatabaseElementPreviewLabel(boolean noOverlayRender) {
-		super(false);
+	public DatabaseElementPreviewLabel(CCMovieList ml, boolean noOverlayRender) {
+		super(ml, false);
 		
 		noOverlay = noOverlayRender;
 
@@ -81,7 +80,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	}
 	
 	private BufferedImage getImageWithoutOverlay(CCDatabaseElement el) {
-		boolean drawSCorner = CCProperties.getInstance().PROP_MAINFRAME_SHOWCOVERCORNER.getValue()  && el.isSeries();
+		boolean drawSCorner = movielist.ccprops().PROP_MAINFRAME_SHOWCOVERCORNER.getValue()  && el.isSeries();
 		
 		if (drawSCorner && !noOverlay) {
 			BufferedImage biorig = el.getCover();
@@ -100,9 +99,9 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	private BufferedImage getImageWithOverlay(CCDatabaseElement el, boolean alpha) {
 		if (noOverlay) return getImageWithoutOverlay(el);
 		
-		boolean drawSCorner = CCProperties.getInstance().PROP_MAINFRAME_SHOWCOVERCORNER.getValue()  && el.isSeries();
-		boolean drawTag = CCProperties.getInstance().PROP_MAINFRAME_SHOWTAGS.getValue() && el.isMovie() && el.Tags.get().hasTags();
-		boolean drawGroups = CCProperties.getInstance().PROP_MAINFRAME_SHOWGROUPS.getValue() && el.hasGroups();
+		boolean drawSCorner = movielist.ccprops().PROP_MAINFRAME_SHOWCOVERCORNER.getValue()  && el.isSeries();
+		boolean drawTag = movielist.ccprops().PROP_MAINFRAME_SHOWTAGS.getValue() && el.isMovie() && el.Tags.get().hasTags();
+		boolean drawGroups = movielist.ccprops().PROP_MAINFRAME_SHOWGROUPS.getValue() && el.hasGroups();
 		
 		if (drawSCorner || drawTag || drawGroups) {
 			BufferedImage biorig = el.getCover();
@@ -217,7 +216,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	}
 	
 	public void setModeCover(CCDatabaseElement el) {
-		if (CCProperties.getInstance().PROP_MAINFRAME_ASYNC_COVER_LOADING.getValue()) {
+		if (movielist.ccprops().PROP_MAINFRAME_ASYNC_COVER_LOADING.getValue()) {
 
 			if (el.getMovieList().getCoverCache().isCached(el.getCoverID()))
 				setModeCoverSync(el);
@@ -236,7 +235,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	
 		element = el;
 		
-		if (CCProperties.getInstance().PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER.getValue()) {
+		if (movielist.ccprops().PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER.getValue()) {
 			image_original = el.getCover();
 			image_normal   = getImageWithoutOverlay(el);
 			image_hover    = getImageWithOverlay(el, false);
@@ -299,7 +298,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		BufferedImage i2;
 		BufferedImage i3;
 		
-		if (CCProperties.getInstance().PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER.getValue()) {
+		if (movielist.ccprops().PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER.getValue()) {
 			i1 = el.getCover();
 			i2 = getImageWithoutOverlay(el);
 			i3 = getImageWithOverlay(el, false);

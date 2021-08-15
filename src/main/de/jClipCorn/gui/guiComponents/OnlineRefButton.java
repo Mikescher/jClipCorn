@@ -1,20 +1,16 @@
 package de.jClipCorn.gui.guiComponents;
 
-import java.awt.BorderLayout;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.util.http.HTTPUtilities;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import javax.swing.JButton;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.util.http.HTTPUtilities;
-import java.awt.Insets;
 
 public class OnlineRefButton extends JPanel {
 	private static final long serialVersionUID = -4894887510061074387L;
@@ -23,9 +19,12 @@ public class OnlineRefButton extends JPanel {
 	private JButton btnMain;
 
 	private CCOnlineReferenceList value = null;
-	
-	public OnlineRefButton() {
+
+	private final CCMovieList movielist;
+
+	public OnlineRefButton(CCMovieList ml) {
 		super();
+		movielist = ml;
 		initGUI();
 	}
 
@@ -39,7 +38,7 @@ public class OnlineRefButton extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				if (value == null || value.Main.isUnset()) return;
 				
-				HTTPUtilities.openInBrowser(value.Main.getURL());
+				HTTPUtilities.openInBrowser(value.Main.getURL(movielist.ccprops()));
 			}
 		});
 		
@@ -56,7 +55,7 @@ public class OnlineRefButton extends JPanel {
 					mi.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							HTTPUtilities.openInBrowser(soref.getURL());
+							HTTPUtilities.openInBrowser(soref.getURL(movielist.ccprops()));
 						}
 					});
 					menu.add(mi);

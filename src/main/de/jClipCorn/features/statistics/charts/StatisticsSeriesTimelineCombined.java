@@ -7,7 +7,6 @@ import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.guiComponents.HorizontalScalablePane;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.datetime.CCChronos;
@@ -19,16 +18,14 @@ import org.apache.commons.lang3.StringUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 	private final static Color LIGHT_RED  = new Color(255,   0,   0, 159);
 	private final static Color DARK_RED   = new Color(255,   0,   0, 207);
 	private final static Color BORDER_RED = new Color(191,   0,   0, 255);
 	private final static Color LINE_GRAY  = new Color(192, 192, 192, 255);
-
-	private CCMovieList movielist;
 
 	private Map<CCSeries, Boolean> serFilter = null;
 	private int yearFilter = -1;
@@ -39,13 +36,12 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 	private JScrollPane scrlPane;
 
 	public StatisticsSeriesTimelineCombined(CCMovieList ml, StatisticsTypeFilter _source) {
-		super(_source);
-		movielist = ml;
+		super(ml, _source);
 	}
 	
 	private void collectData()
 	{
-		HashMap<CCSeries, List<CCDatespan>> seriesMapStretch = StatisticsHelper.getAllSeriesTimespans(movielist, CCProperties.getInstance().PROP_STATISTICS_TIMELINEGRAVITY.getValue(), StatisticsHelper.OrderMode.STRICT);
+		HashMap<CCSeries, List<CCDatespan>> seriesMapStretch = StatisticsHelper.getAllSeriesTimespans(movielist, ccprops().PROP_STATISTICS_TIMELINEGRAVITY.getValue(), StatisticsHelper.OrderMode.STRICT);
 		HashMap<CCSeries, List<CCDatespan>> seriesMapZero    = StatisticsHelper.getAllSeriesTimespans(movielist, 0, StatisticsHelper.OrderMode.IGNORED);
 
 		CCDate start = StatisticsHelper.getSeriesTimespansStart(seriesMapZero);

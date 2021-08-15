@@ -1,5 +1,6 @@
 package de.jClipCorn.features.metadata.mp4box;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.metadata.MetadataSource;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.MP4BoxQueryException;
@@ -7,7 +8,6 @@ import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
-import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
@@ -27,10 +27,20 @@ public class MP4BoxRunner implements MetadataSource {
 
 	// https://stackoverflow.com/a/28376817/1761622
 
+	private final CCMovieList movielist;
+
+	public MP4BoxRunner(CCMovieList ml) {
+		this.movielist = ml;
+	}
+
+	public CCProperties ccprops() {
+		return movielist.ccprops();
+	}
+
 	@SuppressWarnings("nls")
 	@Override
 	public PartialMediaInfo run(FSPath filename) throws IOException, MetadataQueryException {
-		var boxppath = CCProperties.getInstance().PROP_PLAY_MP4BOX_PATH.getValue();
+		var boxppath = ccprops().PROP_PLAY_MP4BOX_PATH.getValue();
 		if (! boxppath.exists()) throw new MP4BoxQueryException("MP4Box not found"); //$NON-NLS-1$
 
 		BasicFileAttributes attr = filename.readFileAttr();
@@ -96,7 +106,7 @@ public class MP4BoxRunner implements MetadataSource {
 
 	@Override
 	public boolean isConfiguredAndRunnable() {
-		var ffpath = CCProperties.getInstance().PROP_PLAY_MP4BOX_PATH.getValue();
+		var ffpath = ccprops().PROP_PLAY_MP4BOX_PATH.getValue();
 		if (FSPath.isNullOrEmpty(ffpath)) return false;
 
 		if (!ffpath.exists()) return false;

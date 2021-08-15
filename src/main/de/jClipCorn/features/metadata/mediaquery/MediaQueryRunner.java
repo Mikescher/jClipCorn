@@ -1,5 +1,6 @@
 package de.jClipCorn.features.metadata.mediaquery;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.metadata.MetadataSource;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.InnerMediaQueryException;
@@ -25,9 +26,19 @@ public class MediaQueryRunner implements MetadataSource {
 
 	// https://mediaarea.net/mediainfo/mediainfo_2_0.xsd
 
+	private final CCMovieList movielist;
+
+	public MediaQueryRunner(CCMovieList ml) {
+		this.movielist = ml;
+	}
+
+	public CCProperties ccprops() {
+		return movielist.ccprops();
+	}
+
 	@SuppressWarnings("nls")
-	public static MediaQueryResult query(FSPath file, boolean doNotValidateLangs) throws IOException, MediaQueryException {
-		var mqpath = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+	public MediaQueryResult query(FSPath file, boolean doNotValidateLangs) throws IOException, MediaQueryException {
+		var mqpath = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (! mqpath.exists()) throw new MediaQueryException("MediaQuery not found");
 
 		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath.toAbsolutePathString(), file.toString(), "--Output=XML");
@@ -59,7 +70,7 @@ public class MediaQueryRunner implements MetadataSource {
 	}
 
 	@SuppressWarnings("nls")
-	public static MediaQueryResult parse(String output, String fvhash, BasicFileAttributes attr, boolean doNotValidateLangs) throws InnerMediaQueryException, CCXMLException
+	public MediaQueryResult parse(String output, String fvhash, BasicFileAttributes attr, boolean doNotValidateLangs) throws InnerMediaQueryException, CCXMLException
 	{
 		CCXMLParser doc = CCXMLParser.parse(output);
 		var mqxml = doc.getXMLString();
@@ -81,8 +92,8 @@ public class MediaQueryRunner implements MetadataSource {
 	}
 
 	@SuppressWarnings("nls")
-	public static String queryRaw(FSPath filename) throws IOException, MediaQueryException {
-		var mqpath = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+	public String queryRaw(FSPath filename) throws IOException, MediaQueryException {
+		var mqpath = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (!mqpath.exists()) throw new MediaQueryException("MediaQuery not found");
 
 		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath.toAbsolutePathString(), filename.toString());
@@ -104,7 +115,7 @@ public class MediaQueryRunner implements MetadataSource {
 
 	@Override
 	public boolean isConfiguredAndRunnable() {
-		var mqpath = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		var mqpath = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (FSPath.isNullOrEmpty(mqpath)) return false;
 
 		if (!mqpath.exists())     return false;

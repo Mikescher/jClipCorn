@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.guiComponents;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -23,9 +24,12 @@ public class CoverLabel extends JLabel implements MouseListener {
 	private final boolean isHalfSize;
 
 	private BufferedImage original = null;
+
+	protected final CCMovieList movielist;
 	
-	public CoverLabel(boolean halfsize) {
+	public CoverLabel(CCMovieList ml, boolean halfsize) {
 		super();
+		movielist = ml;
 		isHalfSize = halfsize;
 		addMouseListener(this);
 	}
@@ -119,7 +123,7 @@ public class CoverLabel extends JLabel implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getClickCount() == 2) {
-			new CoverPreviewFrame(CoverLabel.this, getOriginalCover()).setVisible(true);
+			new CoverPreviewFrame(CoverLabel.this, movielist, getOriginalCover()).setVisible(true);
 		}
 	}
 
@@ -157,7 +161,7 @@ public class CoverLabel extends JLabel implements MouseListener {
 
 			item1.addActionListener(e2 -> saveIconAction());
 
-			item2.addActionListener(e2 -> new CoverPreviewFrame(CoverLabel.this, getOriginalCover()).setVisible(true));
+			item2.addActionListener(e2 -> new CoverPreviewFrame(CoverLabel.this, movielist, getOriginalCover()).setVisible(true));
 
 			menu.show(this, e.getX(), e.getY());
 		}

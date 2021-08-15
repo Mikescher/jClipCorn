@@ -2,8 +2,10 @@ package de.jClipCorn.gui.frames.extendedSettingsFrame;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.extendedSettingsFrame.settingsTable.SettingsTableEditor;
 import de.jClipCorn.gui.frames.extendedSettingsFrame.settingsTable.SettingsTableModel;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
@@ -20,17 +22,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-public class ExtendedSettingsFrame extends JFrame
+public class ExtendedSettingsFrame extends JCCFrame
 {
 	private final CCProperties properties;
+
 	private SettingsTableModel lsModel = null;
 	private SettingsTableEditor lsEditor;
 	private TableRowSorter<SettingsTableModel> rowsorter;
 	private Component currentEditComponent;
 
-	public ExtendedSettingsFrame(Component owner, CCProperties properties)
+	public ExtendedSettingsFrame(Component owner, CCMovieList ml, CCProperties properties)
 	{
-		super();
+		super(ml);
 		this.properties = properties;
 
 		initComponents();

@@ -32,7 +32,7 @@ public class SerTable extends JScrollPane implements ListSelectionListener, Mous
 
 		model = new SerTableModel(null);
 		
-		table = new SFixSerTable(model);
+		table = new SFixSerTable(owner.getMovieList(), model);
 		configureTable();
 		
 		setViewportView(table);

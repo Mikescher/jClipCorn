@@ -7,10 +7,10 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
@@ -25,7 +25,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
+public class ScanFolderFrame extends JCCFrame implements Runnable, MouseListener {
 	private static final long serialVersionUID = 7341007586104986521L;
 	
 	@SuppressWarnings("nls")
@@ -50,14 +50,14 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 	private boolean excludeIfos;
 	
 	public ScanFolderFrame(MainFrame mf, CCMovieList ml) {
-		super();
+		super(ml);
 		this.folderchooser = new JFileChooser(ml.getCommonPathForMovieFileChooser().toFile());
 		this.owner = mf;
 		
 		initGUI();
 		
-		cbIncludeSeries.setSelected(CCProperties.getInstance().PROP_SCANFOLDER_INCLUDESERIES.getValue());
-		cbExcludeIfo.setSelected(CCProperties.getInstance().PROP_SCANFOLDER_EXCLUDEIFOS.getValue());
+		cbIncludeSeries.setSelected(ccprops().PROP_SCANFOLDER_INCLUDESERIES.getValue());
+		cbExcludeIfo.setSelected(ccprops().PROP_SCANFOLDER_EXCLUDEIFOS.getValue());
 		
 		setLocationRelativeTo(mf);
 		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnOpenFolder, btnRemoveAdditionalParts, btnAddAll, cbIncludeSeries, cbExcludeIfo}));
@@ -140,7 +140,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 		cbIncludeSeries.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				CCProperties.getInstance().PROP_SCANFOLDER_INCLUDESERIES.setValue(cbIncludeSeries.isSelected());
+				ccprops().PROP_SCANFOLDER_INCLUDESERIES.setValue(cbIncludeSeries.isSelected());
 			}
 		});
 		panel.add(cbIncludeSeries, "2, 4, 3, 1"); //$NON-NLS-1$
@@ -149,7 +149,7 @@ public class ScanFolderFrame extends JFrame implements Runnable, MouseListener {
 		cbExcludeIfo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CCProperties.getInstance().PROP_SCANFOLDER_EXCLUDEIFOS.setValue(cbExcludeIfo.isSelected());
+				ccprops().PROP_SCANFOLDER_EXCLUDEIFOS.setValue(cbExcludeIfo.isSelected());
 			}
 		});
 		panel.add(cbExcludeIfo, "6, 4, 3, 1"); //$NON-NLS-1$

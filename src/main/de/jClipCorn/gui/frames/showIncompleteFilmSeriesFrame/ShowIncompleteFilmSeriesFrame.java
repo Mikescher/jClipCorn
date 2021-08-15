@@ -4,6 +4,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 
@@ -18,22 +19,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class ShowIncompleteFilmSeriesFrame extends JDialog {
+public class ShowIncompleteFilmSeriesFrame extends JCCDialog {
 	private static final long serialVersionUID = 4396672523833844038L;
 	
 	private JPanel contentPane;
 
-	private CCMovieList movielist;
 	private JList<MissingZyklusElement> listMain;
 	private JPanel pnlBottom;
 	private JButton btnRescan;
 	private JScrollPane scrlMain;
 
-	public ShowIncompleteFilmSeriesFrame(Component owner, CCMovieList list) {
-		super();
+	public ShowIncompleteFilmSeriesFrame(Component owner, CCMovieList ml) {
+		super(ml);
 		setMinimumSize(new Dimension(350, 350));
 		setSize(new Dimension(450, 550));
-		this.movielist = list;
 		initGUI();
 		setLocationRelativeTo(owner);
 		

@@ -1,12 +1,13 @@
 package de.jClipCorn.features.table.renderer;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 
 public class TableOnlinescoreRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
 	
-	public TableOnlinescoreRenderer() {
-		super();
+	public TableOnlinescoreRenderer(CCMovieList ml) {
+		super(ml);
 	}
 
 	@Override

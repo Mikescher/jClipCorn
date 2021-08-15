@@ -1,11 +1,14 @@
 package de.jClipCorn.gui.frames.addMultiEpisodesFrame;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
@@ -15,7 +18,7 @@ import de.jClipCorn.util.stream.CCStreams;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewEpisodeVM implements IEpisodeData {
+public class NewEpisodeVM implements IEpisodeData, ICCPropertySource {
 
 	public FSPath SourcePath = FSPath.Empty;
 	public CCPath TargetPath = CCPath.Empty;
@@ -34,7 +37,19 @@ public class NewEpisodeVM implements IEpisodeData {
 	public MediaQueryResult MediaQueryResult = null;
 	public FSPath TargetRoot = FSPath.Empty;
 
+	private final CCMovieList movielist;
+
 	// -------- -------- -------- -------- -------- -------- -------- --------
+
+
+	public NewEpisodeVM(CCMovieList ml) {
+		movielist = ml;
+	}
+
+	@Override
+	public CCProperties ccprops() {
+		return movielist.ccprops();
+	}
 
 	@Override public CCDate getAddDate() { return CCDate.getCurrentDate(); }
 
@@ -67,7 +82,7 @@ public class NewEpisodeVM implements IEpisodeData {
 	{
 		if (NoMove)
 		{
-			TargetPath = CCPath.createFromFSPath(SourcePath);
+			TargetPath = CCPath.createFromFSPath(SourcePath, this);
 			return;
 		}
 
@@ -85,7 +100,7 @@ public class NewEpisodeVM implements IEpisodeData {
 			return;
 		}
 
-		TargetPath = CCPath.createFromFSPath(t);
+		TargetPath = CCPath.createFromFSPath(t, this);
 	}
 
 	public void validate(CCSeason s)

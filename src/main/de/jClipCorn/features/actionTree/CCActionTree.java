@@ -52,6 +52,7 @@ import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -69,7 +70,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 @SuppressWarnings("unused")
-public class CCActionTree extends UIActionTree{
+public class CCActionTree extends UIActionTree implements ICCPropertySource {
 	public final static String EVENT_ON_MOVIE_EXECUTED_0 = "PlayMovie"; //$NON-NLS-1$
 	public final static String EVENT_ON_MOVIE_EXECUTED_1 = "PrevMovie"; //$NON-NLS-1$
 	public final static String EVENT_ON_MOVIE_EXECUTED_2 = "EditMovie"; //$NON-NLS-1$
@@ -88,7 +89,7 @@ public class CCActionTree extends UIActionTree{
 	private final CCMovieList movielist;
 
 	public CCActionTree(MainFrame mf) {
-		super();
+		super(mf.getMovielist().ccprops());
 		
 		this.movielist = mf.getMovielist();
 	}
@@ -168,7 +169,7 @@ public class CCActionTree extends UIActionTree{
 				add(extras, "ShowSettings",             null,      "ClipMenuBar.Extras.Settings",                 Resources.ICN_MENUBAR_SETTINGS,             false, this::onClickExtrasSettings);
 			}
 			
-			CCActionElement maintenance = addMaster("Maintenance", null, "ClipMenuBar.Maintenance", null, CCProperties.getInstance().PROP_SHOW_EXTENDED_FEATURES);
+			CCActionElement maintenance = addMaster("Maintenance", null, "ClipMenuBar.Maintenance", null, ccprops().PROP_SHOW_EXTENDED_FEATURES);
 			{
 				add(maintenance, "XML",                null, "ClipMenuBar.Maintenance.XML",                Resources.ICN_MENUBAR_PARSEXML,        true, this::onClickMaintenanceXML);
 				add(maintenance, "MassChangeViewed",   null, "ClipMenuBar.Maintenance.MassChangeViewed",   Resources.ICN_MENUBAR_MCHANGE_VIEWED,  true, this::onClickMaintenanceMassChangeViewed);
@@ -302,6 +303,10 @@ public class CCActionTree extends UIActionTree{
 		}
 	}
 
+	public CCProperties ccprops() {
+		return movielist.ccprops();
+	}
+
 	@Override
 	protected boolean isDatabaseReadonly() {
 		return movielist.isReadonly();
@@ -391,7 +396,7 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickExtrasSettings(CCTreeActionEvent e) {
-		new SettingsFrame(MainFrame.getInstance(), CCProperties.getInstance()).setVisible(true);
+		new SettingsFrame(MainFrame.getInstance(), ccprops()).setVisible(true);
 	}
 	
 	private void onClickExtrasScanFolder(CCTreeActionEvent e) {
@@ -463,7 +468,7 @@ public class CCActionTree extends UIActionTree{
 	}
 
 	private void onClickExtrasShowVLCRobot(CCTreeActionEvent e) {
-		VLCRobotFrame.show(e.SwingOwner);
+		VLCRobotFrame.show(e.SwingOwner, movielist);
 	}
 	
 	private void onClickMaintenanceMassChangeViewed(CCTreeActionEvent e) {
@@ -709,7 +714,7 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickHelpShowRules(CCTreeActionEvent e) {
-		new FilenameRuleFrame(e.SwingOwner).setVisible(true);
+		new FilenameRuleFrame(e.SwingOwner, movielist).setVisible(true);
 	}
 
 	private void onClickHelpCheckUpdates(CCTreeActionEvent e) {
@@ -721,13 +726,13 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickHelpShowAbout(CCTreeActionEvent e) {
-		new AboutFrame(e.SwingOwner).setVisible(true);
+		new AboutFrame(e.SwingOwner, movielist).setVisible(true);
 	}
 	
 	private void onClickOtherOpenFolder(CCTreeActionEvent e) {
 		e.ifMovieOrSeriesSource(
-			m -> FilesystemUtils.showInExplorer(m.Parts.get(0).toFSPath()),
-			s -> FilesystemUtils.showInExplorer(s.getCommonPathStart(false).toFSPath())
+			m -> FilesystemUtils.showInExplorer(m.Parts.get(0).toFSPath(this)),
+			s -> FilesystemUtils.showInExplorer(s.getCommonPathStart(false).toFSPath(this))
 		);
 	}
 
@@ -753,7 +758,7 @@ public class CCActionTree extends UIActionTree{
 			{
 				var hours = m.ViewedHistory.get().getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
 
-				var max = CCProperties.getInstance().PROP_MAX_UNDOLASTWATCH_HOUR_DIFF.getValue();
+				var max = ccprops().PROP_MAX_UNDOLASTWATCH_HOUR_DIFF.getValue();
 
 				if (hours > max)
 				{
@@ -780,7 +785,7 @@ public class CCActionTree extends UIActionTree{
 	}
 	
 	private void onClickOtherShowInBrowser(CCTreeActionEvent e) {
-		e.ifDatabaseElementSource(d -> d.OnlineReference.get().Main.openInBrowser(d));
+		e.ifDatabaseElementSource(d -> d.OnlineReference.get().Main.openInBrowser(d, ccprops()));
 	}
 	
 	private void onClickOtherShowCover(CCTreeActionEvent e) {
@@ -802,10 +807,10 @@ public class CCActionTree extends UIActionTree{
 	private void onClickOtherSeasonQuickAddEpisodes(CCTreeActionEvent e) {
 		e.ifSeasonSource(s ->
 		{
-			var p = s.getCommonPathStart().toFSPath();
+			var p = s.getCommonPathStart().toFSPath(this);
 			if (p.isEmpty()) p = FilesystemUtils.getRealSelfDirectory();
 			final JFileChooser chooser = new JFileChooser(p.toAbsolutePathString());
-			var cps = s.getCommonPathStart().toFSPath();
+			var cps = s.getCommonPathStart().toFSPath(this);
 			if (!cps.isEmpty()) chooser.setCurrentDirectory(cps.toFile());
 			if (chooser.showOpenDialog(e.SwingOwner) == JFileChooser.APPROVE_OPTION)
 			{
@@ -834,7 +839,7 @@ public class CCActionTree extends UIActionTree{
 	}
 
 	private void onClickOtherSeasonOpenFolder(CCTreeActionEvent e) {
-		e.ifSeasonSource(s -> FilesystemUtils.showInExplorer(s.getCommonPathStart().toFSPath()));
+		e.ifSeasonSource(s -> FilesystemUtils.showInExplorer(s.getCommonPathStart().toFSPath(this)));
 	}
 
 	private void onClickOtherSeriesResumePlay(CCTreeActionEvent e) {
@@ -915,7 +920,7 @@ public class CCActionTree extends UIActionTree{
 			{
 				var hours = p.ViewedHistory.get().getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
 
-				var max = CCProperties.getInstance().PROP_MAX_UNDOLASTWATCH_HOUR_DIFF.getValue();
+				var max = ccprops().PROP_MAX_UNDOLASTWATCH_HOUR_DIFF.getValue();
 
 				if (hours > max)
 				{
@@ -931,7 +936,7 @@ public class CCActionTree extends UIActionTree{
 	}
 
 	private void onClickOtherEpisodeOpenFolder(CCTreeActionEvent e) {
-		e.ifEpisodeSource(p -> FilesystemUtils.showInExplorer(p.getPart().toFSPath()));
+		e.ifEpisodeSource(p -> FilesystemUtils.showInExplorer(p.getPart().toFSPath(this)));
 	}
 
 	private void onClickOtherEpisodeEdit(CCTreeActionEvent e) {
@@ -948,33 +953,33 @@ public class CCActionTree extends UIActionTree{
 
 	private void onClickMoviesPlayInRobot(CCTreeActionEvent e) {
 
-		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue()) return;
-		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath())) return;
+		if (!ccprops().PROP_VLC_ROBOT_ENABLED.getValue()) return;
+		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()))) return;
 
-		e.ifMovieSource(p -> VLCRobotFrame.show(e.SwingOwner).enqueue(p));
+		e.ifMovieSource(p -> VLCRobotFrame.show(e.SwingOwner, movielist).enqueue(p));
 	}
 
 	private void onClickOtherSeasonPlayInRobot(CCTreeActionEvent e) {
 
-		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue()) return;
-		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath())) return;
+		if (!ccprops().PROP_VLC_ROBOT_ENABLED.getValue()) return;
+		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()))) return;
 
-		e.ifSeasonSource(p -> VLCRobotFrame.show(e.SwingOwner).enqueue(p));
+		e.ifSeasonSource(p -> VLCRobotFrame.show(e.SwingOwner, movielist).enqueue(p));
 	}
 
 	private void onClickOtherSeriesPlayInRobot(CCTreeActionEvent e) {
 
-		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue()) return;
-		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath())) return;
+		if (!ccprops().PROP_VLC_ROBOT_ENABLED.getValue()) return;
+		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()))) return;
 
-		e.ifSeriesSource(p -> VLCRobotFrame.show(e.SwingOwner).enqueue(p));
+		e.ifSeriesSource(p -> VLCRobotFrame.show(e.SwingOwner, movielist).enqueue(p));
 	}
 
 	private void onClickOtherEpisodePlayInRobot(CCTreeActionEvent e) {
 
-		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue()) return;
-		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath())) return;
+		if (!ccprops().PROP_VLC_ROBOT_ENABLED.getValue()) return;
+		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()))) return;
 
-		e.ifEpisodeSource(p -> VLCRobotFrame.show(e.SwingOwner).enqueue(p));
+		e.ifEpisodeSource(p -> VLCRobotFrame.show(e.SwingOwner, movielist).enqueue(p));
 	}
 }

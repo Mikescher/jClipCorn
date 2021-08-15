@@ -1,10 +1,10 @@
 package de.jClipCorn.util.datetime;
 
+import de.jClipCorn.Main;
+import de.jClipCorn.gui.localization.LocaleBundle;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.properties.CCProperties;
 
 @SuppressWarnings("nls")
 public final class InternationalDateTimeFormatHelper {
@@ -52,10 +52,6 @@ public final class InternationalDateTimeFormatHelper {
 	public static Map<CCDateTimeFormat, String> FORMAT_DATETIME_NORMAL;
 	public static Map<CCDateTimeFormat, String> FORMAT_DATETIME_INPUT;
 
-	// cache for of performance reasons
-	public static CCDateTimeFormat currentFormat;
-	static { currentFormat = CCProperties.getInstance().PROP_UI_DATETIME_FORMAT.getValue(); }
-	
 	static {
 		FORMAT_DATE_SHORT = new HashMap<>();
 		FORMAT_DATE_SHORT.put(CCDateTimeFormat.ISO_8601, "yy-MM-dd");
@@ -116,53 +112,59 @@ public final class InternationalDateTimeFormatHelper {
 		FORMAT_DATETIME_INPUT.put(CCDateTimeFormat.AMERICA, "MM/dd/yyyy HH:mm:ss");
 		FORMAT_DATETIME_INPUT.put(CCDateTimeFormat.GERMAN, "dd.MM.yyyy HH:mm:ss");
 	}
+
+	private static CCDateTimeFormat _currentFormatCache;
+	public static CCDateTimeFormat getCurrentFormat() {
+		if (_currentFormatCache != null) return _currentFormatCache;
+		return _currentFormatCache = Main.getCurrentGlobalCCProperties().PROP_UI_DATETIME_FORMAT.getValue();
+	}
 	
 	public static String fmtUIShort(CCDate d) {
-		return d.getStringRepresentation(FORMAT_DATE_SHORT.get(currentFormat));
+		return d.getStringRepresentation(FORMAT_DATE_SHORT.get(getCurrentFormat()));
 	}
 
 	public static String fmtUINormal(CCDate d) {
-		return d.getStringRepresentation(FORMAT_DATE_NORMAL.get(currentFormat));
+		return d.getStringRepresentation(FORMAT_DATE_NORMAL.get(getCurrentFormat()));
 	}
 
 	public static String fmtUIVerbose(CCDate d) {
-		return d.getStringRepresentation(FORMAT_DATE_VERBOSE.get(currentFormat));
+		return d.getStringRepresentation(FORMAT_DATE_VERBOSE.get(getCurrentFormat()));
 	}
 	
 	public static String fmtInput(CCDate d) {
-		return d.getStringRepresentation(FORMAT_DATE_INPUT.get(currentFormat));
+		return d.getStringRepresentation(FORMAT_DATE_INPUT.get(getCurrentFormat()));
 	}
 
 	public static String fmtUINormal(CCTime t) {
-		return t.getStringRepresentation(FORMAT_TIME_NORMAL.get(currentFormat));
+		return t.getStringRepresentation(FORMAT_TIME_NORMAL.get(getCurrentFormat()));
 	}
 
 	public static String fmtUIShort(CCTime t) {
-		return t.getStringRepresentation(FORMAT_TIME_SHORT.get(currentFormat));
+		return t.getStringRepresentation(FORMAT_TIME_SHORT.get(getCurrentFormat()));
 	}
 
 	public static String fmtInput(CCTime t) {
-		return t.getStringRepresentation(FORMAT_TIME_INPUT.get(currentFormat));
+		return t.getStringRepresentation(FORMAT_TIME_INPUT.get(getCurrentFormat()));
 	}
 
 	public static String fmtUIDateOnly(CCDateTime s) {
-		return s.getStringRepresentation(FORMAT_DATETIME_DATEONLY.get(currentFormat));
+		return s.getStringRepresentation(FORMAT_DATETIME_DATEONLY.get(getCurrentFormat()));
 	}
 	
 	public static String fmtUIShort(CCDateTime s) {
-		return s.getStringRepresentation(FORMAT_DATETIME_SHORT.get(currentFormat));
+		return s.getStringRepresentation(FORMAT_DATETIME_SHORT.get(getCurrentFormat()));
 	}
 
 	public static String fmtUINormal(CCDateTime s) {
-		return s.getStringRepresentation(FORMAT_DATETIME_NORMAL.get(currentFormat));
+		return s.getStringRepresentation(FORMAT_DATETIME_NORMAL.get(getCurrentFormat()));
 	}
 
 	public static String fmtInput(CCDateTime s) {
 		if (s.isUnspecifiedDateTime())
 			return LocaleBundle.getString("CCDate.STRINGREP_UNSPEC");
 		else if (s.time.isUnspecifiedTime()) 
-			return s.date.getStringRepresentation(FORMAT_DATE_INPUT.get(currentFormat));
+			return s.date.getStringRepresentation(FORMAT_DATE_INPUT.get(getCurrentFormat()));
 		else
-			return s.getStringRepresentation(FORMAT_DATETIME_INPUT.get(currentFormat));
+			return s.getStringRepresentation(FORMAT_DATETIME_INPUT.get(getCurrentFormat()));
 	}
 }

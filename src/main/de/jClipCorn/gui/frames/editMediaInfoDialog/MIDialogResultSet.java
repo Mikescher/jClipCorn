@@ -4,6 +4,7 @@ import de.jClipCorn.features.metadata.MetadataSourceType;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.Opt;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
@@ -57,7 +58,7 @@ public class MIDialogResultSet {
 	}
 
 	private void onRun(ActionEvent actionEvent) {
-		owner.doQuery(Type.getMetadataSource(), this);
+		owner.doQuery(Type.getMetadataSource(owner.getMovieList()), this);
 	}
 
 	public void updateEnabled(boolean isRunning) {

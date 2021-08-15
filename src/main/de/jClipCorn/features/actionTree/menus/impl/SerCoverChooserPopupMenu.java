@@ -26,7 +26,7 @@ public class SerCoverChooserPopupMenu extends ClipPopupMenu {
 	private final PreviewSeriesFrame owner;
 
 	public SerCoverChooserPopupMenu(CCSeason s, PreviewSeriesFrame frame) {
-		super();
+		super(s.getMovieList());
 		this.season = s;
 		this.owner = frame;
 		init();

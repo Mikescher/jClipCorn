@@ -6,7 +6,7 @@ new FormModel {
 	"i18n.keyPrefix": "ApplyPatchFrame"
 	contentType: "form/swing"
 	root: new FormRoot {
-		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "unrelgap, default, labelcompgap, default:grow, labelcompgap, default, labelcompgap, 80dlu, unrelgap"
 			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default:grow, linegap, default, linegap, default, linegap, default, unrelgap"
 		} ) {

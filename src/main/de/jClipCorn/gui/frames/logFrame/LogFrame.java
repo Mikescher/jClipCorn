@@ -8,6 +8,7 @@ import de.jClipCorn.database.databaseElement.caches.CalculationCache;
 import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.features.log.*;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -25,17 +26,13 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LogFrame extends JFrame implements CCLogChangedListener
+public class LogFrame extends JCCFrame implements CCLogChangedListener
 {
-	private final CCMovieList _movielist;
-
 	private Timer liveDisplayTimer;
 
 	public LogFrame(Component owner, CCMovieList movielist)
 	{
-		super();
-
-		this._movielist = movielist;
+		super(movielist);
 
 		initComponents();
 		postInit();
@@ -139,10 +136,10 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 
 	private void showCacheDistribution() {
 		var caches = new ArrayList<ICalculationCache>();
-		caches.add(_movielist.getCache());
-		for (var v: _movielist.iteratorElements()) caches.add(v.getCache());
-		for (var v: _movielist.iteratorSeasons())  caches.add(v.getCache());
-		for (var v: _movielist.iteratorEpisodes()) caches.add(v.getCache());
+		caches.add(movielist.getCache());
+		for (var v: movielist.iteratorElements()) caches.add(v.getCache());
+		for (var v: movielist.iteratorSeasons())  caches.add(v.getCache());
+		for (var v: movielist.iteratorEpisodes()) caches.add(v.getCache());
 
 		var counter = new HashMap<String, Integer>();
 
@@ -196,7 +193,7 @@ public class LogFrame extends JFrame implements CCLogChangedListener
 		memoSQL = new JTextArea();
 		button5 = new JButton();
 		tabChanges = new JPanel();
-		lsChanges = new LogChangesTable(this, _movielist);
+		lsChanges = new LogChangesTable(this, movielist);
 		tabLiveDisplay = new JPanel();
 		label8 = new JLabel();
 		displUptime = new ReadableTextField();

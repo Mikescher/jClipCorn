@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.guiComponents.jCCSimpleTable;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.table.renderer.TableRenderer;
 import de.jClipCorn.util.lambda.Func2to1;
 
@@ -11,8 +12,8 @@ public class JCCSimpleCustomTableCellRenderer<TData> extends TableRenderer {
 
 	private final Func2to1<TData, Component, Component> component;
 
-	public JCCSimpleCustomTableCellRenderer(Func2to1<TData, Component, Component> _comp) {
-		super();
+	public JCCSimpleCustomTableCellRenderer(CCMovieList ml, Func2to1<TData, Component, Component> _comp) {
+		super(ml);
 
 		component = _comp;
 	}

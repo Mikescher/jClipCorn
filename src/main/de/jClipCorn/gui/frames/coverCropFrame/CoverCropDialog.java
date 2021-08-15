@@ -2,6 +2,8 @@ package de.jClipCorn.gui.frames.coverCropFrame;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.jCanvasLabel.JCanvasLabel;
 import de.jClipCorn.gui.guiComponents.jCanvasLabel.PaintComponentEvent;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -19,7 +21,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.regex.Pattern;
 
-public class CoverCropDialog extends JFrame
+public class CoverCropDialog extends JCCFrame
 {
 	private final static int MAX_DRAG_PIXELDISTANCE = 5;
 	private final static int MIN_WIDTH = 50;
@@ -61,20 +63,22 @@ public class CoverCropDialog extends JFrame
 
 	private TexturePaint transparencyPattern;
 
-	public CoverCropDialog(Component owner, BufferedImage i, ImageCropperResultListener rl)
+	public CoverCropDialog(Component owner, CCMovieList ml, BufferedImage i, ImageCropperResultListener rl)
 	{
-		this(owner, i, rl, false);
+		this(owner, ml, i, rl, false);
 	}
 
-	public CoverCropDialog(Component owner, BufferedImage i, ImageCropperResultListener rl, boolean isSeries)
+	public CoverCropDialog(Component owner, CCMovieList ml, BufferedImage i, ImageCropperResultListener rl, boolean isSeries)
 	{
-		super();
+		super(ml);
 
 		initComponents();
 
 		this.img = ImageUtilities.deepCopyImage(i);
 		this.listener = rl;
 		chckbxSeriesPreview.setSelected(isSeries);
+
+		setLocationRelativeTo(owner);
 
 		postInit();
 	}
@@ -294,8 +298,8 @@ public class CoverCropDialog extends JFrame
 
 		int widthCurr = crop_br.x - crop_tl.x;
 		int heightCurr = crop_br.y - crop_tl.y;
-		int widthStorage = ImageUtilities.calcImageSizeForStorage(widthCurr, heightCurr).Item1;
-		int heightStorage = ImageUtilities.calcImageSizeForStorage(widthCurr, heightCurr).Item2;
+		int widthStorage = ImageUtilities.calcImageSizeForStorage(widthCurr, heightCurr, movielist.ccprops()).Item1;
+		int heightStorage = ImageUtilities.calcImageSizeForStorage(widthCurr, heightCurr, movielist.ccprops()).Item2;
 
 		lblPosition.setText(LocaleBundle.getFormattedString("CoverCropFrame.lblPosition.text", crop_tl.x, crop_tl.y)); //$NON-NLS-1$
 		lblSize.setText(LocaleBundle.getFormattedString("CoverCropFrame.lblSize.text", widthCurr, heightCurr, widthStorage, heightStorage)); //$NON-NLS-1$

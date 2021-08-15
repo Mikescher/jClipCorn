@@ -1,11 +1,11 @@
 package de.jClipCorn.features.backupManager;
 
 import de.jClipCorn.Main;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
@@ -37,9 +37,13 @@ public class CCBackup {
 	
 	private final FSPath archive;
 	private final Properties properties;
+
+	private final CCMovieList movielist;
 	
-	public CCBackup(FSPath archive) throws IOException {
+	public CCBackup(CCMovieList ml, FSPath archive) throws IOException {
 		this.archive = archive;
+		this.movielist = ml;
+
 		if (! archive.exists()) throw new FileNotFoundException();
 		
 		Tuple<Properties, Boolean> result = loadProperties(archive);
@@ -49,8 +53,9 @@ public class CCBackup {
 		if (! result.Item2) saveToFile();
 	}
 
-	public CCBackup(FSPath archive, String name, CCDate date, boolean persistent, String jccversion, String dbversion, boolean excludeCovers) {
+	public CCBackup(CCMovieList ml, FSPath archive, String name, CCDate date, boolean persistent, String jccversion, String dbversion, boolean excludeCovers) {
 		this.archive = archive;
+		this.movielist = ml;
 
 		properties = new Properties();
 
@@ -200,7 +205,7 @@ public class CCBackup {
 	
 	public boolean isExpired() {
 		if (isPersistent()) return false;
-		return getDate().getDayDifferenceTo(CCDate.getCurrentDate()) >= CCProperties.getInstance().PROP_BACKUP_LIFETIME.getValue();
+		return getDate().getDayDifferenceTo(CCDate.getCurrentDate()) >= movielist.ccprops().PROP_BACKUP_LIFETIME.getValue();
 	}
 
 	public boolean delete() {

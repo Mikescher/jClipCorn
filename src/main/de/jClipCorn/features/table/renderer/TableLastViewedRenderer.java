@@ -1,5 +1,6 @@
 package de.jClipCorn.features.table.renderer;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -7,8 +8,8 @@ import de.jClipCorn.util.datetime.CCDateTime;
 public class TableLastViewedRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
 
-	public TableLastViewedRenderer() {
-		super();
+	public TableLastViewedRenderer(CCMovieList ml) {
+		super(ml);
 	}
 
 	@Override

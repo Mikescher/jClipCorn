@@ -29,6 +29,8 @@ public class CCLogInternal {
 	private static boolean isUnitTest = false;
 
 	private static String path = null;
+	private static CCProperties ccprops = null;
+
 	private static volatile boolean changed = false;
 
 	private static volatile boolean fatalExit = false;
@@ -60,6 +62,10 @@ public class CCLogInternal {
 
 	public static void setPath(String p) {
 		path = p;
+	}
+
+	public static void setCCProps(CCProperties ccp) {
+		ccprops = ccp;
 	}
 
 	public static void add(String txt, CCLogType type, StackTraceElement[] trace) {
@@ -134,7 +140,7 @@ public class CCLogInternal {
 	public static void save() {
 		if (isUnitTest) return;
 
-		if (CCProperties.getInstance().ARG_READONLY) {
+		if (ccprops.ARG_READONLY) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			return;
 		}
@@ -143,10 +149,10 @@ public class CCLogInternal {
 			FileWriter file = null;
 			PrintWriter out = null;
 			try {
-				file = new FileWriter(path, CCProperties.getInstance().PROP_LOG_APPEND.getValue());
+				file = new FileWriter(path, ccprops.PROP_LOG_APPEND.getValue());
 				out = new PrintWriter(file);
 
-				if (CCProperties.getInstance().PROP_LOG_APPEND.getValue()) {
+				if (ccprops.PROP_LOG_APPEND.getValue()) {
 					out.print('\n');
 					out.print("--------------------------------  " + CCDate.getCurrentDate().toStringSerialize() + "  --------------------------------" + '\n'); //$NON-NLS-1$ //$NON-NLS-2$
 					out.print('\n');
@@ -172,7 +178,7 @@ public class CCLogInternal {
 				}
 			}
 
-			if (CCProperties.getInstance().PROP_LOG_APPEND.getValue()) {
+			if (ccprops.PROP_LOG_APPEND.getValue()) {
 				try {
 					BufferedReader reader = new BufferedReader(new FileReader(path));
 					int lines = 0;
@@ -181,7 +187,7 @@ public class CCLogInternal {
 					}
 					reader.close();
 
-					lines -= CCProperties.getInstance().PROP_LOG_MAX_LINECOUNT.getValue();
+					lines -= ccprops.PROP_LOG_MAX_LINECOUNT.getValue();
 
 					removeFirstNLine(new File(path), lines);
 				} catch (IOException e) {

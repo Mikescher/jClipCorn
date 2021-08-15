@@ -1,9 +1,15 @@
 package de.jClipCorn.gui.guiComponents;
 
+import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.database.CCMovieList;
+
 public class CoverLabelHalfsize extends CoverLabel
 {
-	public CoverLabelHalfsize()
+	@DesignCreate
+	private static CoverLabelHalfsize designCreate() { return new CoverLabelHalfsize(null); }
+
+	public CoverLabelHalfsize(CCMovieList ml)
 	{
-		super(true);
+		super(ml, true);
 	}
 }

@@ -4,7 +4,9 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.guiComponents.VerticalScrollPaneSynchronizer;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -29,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class OmniParserFrame extends JDialog {
+public class OmniParserFrame extends JCCDialog {
 	private static final long serialVersionUID = -4511912406011331076L;
 	
 	private final static String[] COLUMN_HEADERS = {LocaleBundle.getString("OmniParserFrame.Header.title_A"), LocaleBundle.getString("OmniParserFrame.Header.title_B")};  //$NON-NLS-1$//$NON-NLS-2$
@@ -71,8 +73,8 @@ public class OmniParserFrame extends JDialog {
 	private JLabel lblParsedText;
 	private JLabel lblCheck;
 
-	public OmniParserFrame(Component owner, OmniParserCallbackListener listener, List<String> oldtitles, FSPath chooserdir, String initial, boolean modal) {
-		super();
+	public OmniParserFrame(Component owner, CCMovieList ml, OmniParserCallbackListener listener, List<String> oldtitles, FSPath chooserdir, String initial, boolean modal) {
+		super(ml);
 		
 		this.callbacklistener = listener;
 		this.old_titles = oldtitles;

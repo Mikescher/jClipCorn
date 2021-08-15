@@ -19,7 +19,6 @@ import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.language.LanguageDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -43,7 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TimeZone;
 
-public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener
+public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListener
 {
 	private final static java.util.List<Tuple<CCMovie, PreviewMovieFrame>> _activeFrames = new ArrayList<>();
 
@@ -53,7 +52,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener
 
 	public PreviewMovieFrame(Component owner, CCMovie m)
 	{
-		super();
+		super(m.getMovieList());
 		movie = m;
 
 		initComponents();
@@ -72,7 +71,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener
 
 		updateData();
 
-		movie.getMovieList().addChangeListener(_mlListener = new CCDBUpdateAdapter() {
+		movielist.addChangeListener(_mlListener = new CCDBUpdateAdapter() {
 			@Override
 			public void onChangeDatabaseElement(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] props) {
 				if (root.equals(movie)) updateData();
@@ -86,7 +85,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener
 	}
 
 	public static void show(Component owner, CCMovie data, boolean forceNoSingleton) {
-		if (forceNoSingleton || !CCProperties.getInstance().PROP_PREVIEWMOVIE_SINGLETON.getValue()) {
+		if (forceNoSingleton || !data.getMovieList().ccprops().PROP_PREVIEWMOVIE_SINGLETON.getValue()) {
 			new PreviewMovieFrame(owner, data).setVisible(true);
 			return;
 		}
@@ -228,14 +227,14 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener
 	}
 
 	private void showMediaInfo(int index) {
-		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
 
 		try {
-			GenericTextDialog.showText(this, getTitle(), MediaQueryRunner.queryRaw(movie.Parts.get(index).toFSPath()), false);
+			GenericTextDialog.showText(this, getTitle(), new MediaQueryRunner(movielist).queryRaw(movie.Parts.get(index).toFSPath(this)), false);
 		} catch (IOException | MediaQueryException e) {
 			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
@@ -243,12 +242,12 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener
 	}
 
 	private void openDir(int index) {
-		FilesystemUtils.showInExplorer(movie.Parts.get(index).toFSPath());
+		FilesystemUtils.showInExplorer(movie.Parts.get(index).toFSPath(this));
 	}
 
 	private void onWindowClosed() {
 		_activeFrames.removeIf(p -> p.Item2 == this);
-		movie.getMovieList().removeChangeListener(_mlListener);
+		movielist.removeChangeListener(_mlListener);
 	}
 
 	private void playMovie() {
@@ -261,7 +260,7 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener
 
 	private void queryHistory() {
 		try {
-			var data = movie.getMovieList().getHistory().query(movie.getMovieList(), false, false, false, true, null, null, Integer.toString(movie.getLocalID()));
+			var data = movielist.getHistory().query(movielist, false, false, false, true, null, null, Integer.toString(movie.getLocalID()));
 			tabHistoryEntries.setData(data);
 			tabHistoryChanges.clearData();
 			tabHistoryEntries.autoResize();
@@ -327,12 +326,12 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener
 		btnPlay = new JPlayButton();
 		btnPlayNoHistory = new JPlayButton();
 		pnlLeft = new JPanel();
-		lblCover = new CoverLabelFullsize();
+		lblCover = new CoverLabelFullsize(movielist);
 		tabbedPane1 = new JTabbedPane();
 		pnlTabMain = new JPanel();
 		label1 = new JLabel();
 		lblTitle = new JLabel();
-		btnOnlineRef = new OnlineRefButton();
+		btnOnlineRef = new OnlineRefButton(movielist);
 		label2 = new JLabel();
 		lblZyklus = new JLabel();
 		label3 = new JLabel();
@@ -425,8 +424,8 @@ public class PreviewMovieFrame extends JFrame implements UpdateCallbackListener
 		btnMediaInfo5 = new JMediaInfoButton();
 		btnOpenDir5 = new JOpenFolderButton();
 		pnlTabHistory = new JPanel();
-		tabHistoryEntries = new PMHistoryTableEntries();
-		tabHistoryChanges = new PMHistoryTableChanges();
+		tabHistoryEntries = new PMHistoryTableEntries(this);
+		tabHistoryChanges = new PMHistoryTableChanges(this);
 		btnQueryHistory = new JButton();
 
 		//======== this ========

@@ -73,7 +73,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(mov, e) ->
 					{
 						CCFileSize size = CCFileSize.ZERO;
-						for (int i = 0; i < mov.getPartcount(); i++) size = CCFileSize.add(size, mov.Parts.get(i).toFSPath().filesize());
+						for (int i = 0; i < mov.getPartcount(); i++) size = CCFileSize.add(size, mov.Parts.get(i).toFSPath(this).filesize());
 						if (getRelativeDifference(size.getBytes(), mov.getFilesize().getBytes()) > getMaxSizeFileDrift()) {
 							e.add(DatabaseError.createSingle(
 									movielist,
@@ -160,13 +160,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(mov, e) ->
 					{
 						for (int i = 0; i < mov.getPartcount(); i++) {
-							if (! mov.Parts.get(i).toFSPath().exists()) {
+							if (! mov.Parts.get(i).toFSPath(this).exists()) {
 								e.add(DatabaseError.createSingle(
 										movielist,
 										DatabaseErrorType.ERROR_PATH_NOT_FOUND, mov,
 										"Index", String.valueOf(i),
 										"CCPath", mov.Parts.get(i).toString(),
-										"FSPath", mov.Parts.get(i).toFSPath().toString()
+										"FSPath", mov.Parts.get(i).toFSPath(this).toString()
 								));
 							}
 						}
@@ -239,7 +239,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						boolean wrongfn = false;
 						for (int i = 0; i < mov.getPartcount(); i++) {
 							var should = mov.generateFilename(i);
-							var actual = mov.Parts.get(i).toFSPath().getFilenameWithExt();
+							var actual = mov.Parts.get(i).toFSPath(this).getFilenameWithExt();
 							if (!Str.equals(actual, should))
 							{
 								wrongfn = true;
@@ -386,7 +386,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addMovieValidation(
 					DatabaseErrorType.ERROR_COVER_TOO_BIG,
 					o -> o.ValidateMovies,
-					mov -> mov.getCoverDimensions().Item1 > ImageUtilities.getCoverWidth() && mov.getCoverDimensions().Item2 < ImageUtilities.getCoverHeight(),
+					mov -> mov.getCoverDimensions().Item1 > ImageUtilities.getCoverWidth(movielist.ccprops()) && mov.getCoverDimensions().Item2 < ImageUtilities.getCoverHeight(movielist.ccprops()),
 					mov -> DatabaseError.createSingle(
 							movielist, DatabaseErrorType.ERROR_COVER_TOO_BIG, mov,
 							"Cover.Width", String.valueOf(mov.getCoverDimensions().Item1),
@@ -420,14 +420,14 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(mov, e) ->
 					{
 						for (int i = 0; i < mov.getPartcount(); i++) {
-							var should = CCPath.createFromFSPath(mov.Parts.get(i).toFSPath());
+							var should = CCPath.createFromFSPath(mov.Parts.get(i).toFSPath(this), this);
 							var actual = mov.Parts.get(i);
 							if (!CCPath.isEqual(should, actual)) {
 								e.add(DatabaseError.createSingle(
 										movielist,
 										DatabaseErrorType.ERROR_NON_NORMALIZED_PATH, mov,
 										"Path.Index", String.valueOf(i),
-										"Path.FSPath", mov.Parts.get(i).toFSPath().toString(),
+										"Path.FSPath", mov.Parts.get(i).toFSPath(this).toString(),
 										"Path.CCPath[Actual]", actual.toString(),
 										"Path.CCPath[Should]", should.toString()
 										));
@@ -509,7 +509,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					{
 						if (mov.mediaInfo().get().isSet()) {
 							try {
-								BasicFileAttributes attr = mov.Parts.get(0).toFSPath().readFileAttr();
+								BasicFileAttributes attr = mov.Parts.get(0).toFSPath(this).readFileAttr();
 								if (attr.creationTime().toMillis() != mov.mediaInfo().get().getCDate())
 									e.add(DatabaseError.createSingle(
 											movielist,
@@ -529,7 +529,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					{
 						if (mov.mediaInfo().get().isSet()) {
 							try {
-								BasicFileAttributes attr = mov.Parts.get(0).toFSPath().readFileAttr();
+								BasicFileAttributes attr = mov.Parts.get(0).toFSPath(this).readFileAttr();
 								if (attr.lastModifiedTime().toMillis() != mov.mediaInfo().get().getMDate())
 									e.add(DatabaseError.createSingle(
 											movielist,
@@ -550,7 +550,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(mov, e) ->
 					{
 						if (mov.mediaInfo().get().isSet()) {
-							if (!CCFileSize.isEqual(mov.Parts.get(0).toFSPath().filesize(), mov.mediaInfo().get().getFilesize()))
+							if (!CCFileSize.isEqual(mov.Parts.get(0).toFSPath(this).filesize(), mov.mediaInfo().get().getFilesize()))
 								e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED, mov));
 						}
 					});
@@ -746,7 +746,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addSeriesValidation(
 					DatabaseErrorType.ERROR_COVER_TOO_BIG,
 					o -> o.ValidateSeries,
-					series -> series.getCoverDimensions().Item1 > ImageUtilities.getCoverWidth() && series.getCoverDimensions().Item2 < ImageUtilities.getCoverHeight(),
+					series -> series.getCoverDimensions().Item1 > ImageUtilities.getCoverWidth(movielist.ccprops()) && series.getCoverDimensions().Item2 < ImageUtilities.getCoverHeight(movielist.ccprops()),
 					series -> DatabaseError.createSingle(
 							movielist,
 							DatabaseErrorType.ERROR_COVER_TOO_BIG, series,
@@ -856,7 +856,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addSeasonValidation(
 					DatabaseErrorType.ERROR_COVER_TOO_BIG,
 					o -> o.ValidateSeasons,
-					season -> season.getCoverDimensions().Item1 > ImageUtilities.getCoverWidth() && season.getCoverDimensions().Item2 < ImageUtilities.getCoverHeight(),
+					season -> season.getCoverDimensions().Item1 > ImageUtilities.getCoverWidth(movielist.ccprops()) && season.getCoverDimensions().Item2 < ImageUtilities.getCoverHeight(movielist.ccprops()),
 					season -> DatabaseError.createSingle(
 							movielist,
 							DatabaseErrorType.ERROR_COVER_TOO_BIG, season,
@@ -903,23 +903,23 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_PATH_NOT_FOUND,
 					o -> o.ValidateVideoFiles,
-					episode -> !episode.getPart().toFSPath().exists(),
+					episode -> !episode.getPart().toFSPath(this).exists(),
 					episode -> DatabaseError.createSingle(
 							movielist,
 							DatabaseErrorType.ERROR_PATH_NOT_FOUND, episode,
 							"CCPath", episode.Part.get().toString(),
-							"FSPath", episode.Part.get().toFSPath().toString()
+							"FSPath", episode.Part.get().toFSPath(this).toString()
 					));
 
 			// Moviesize <> Real size
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_WRONG_FILESIZE,
 					o -> o.ValidateVideoFiles,
-					episode -> getRelativeDifference(episode.getPart().toFSPath().filesize().getBytes(), episode.getFilesize().getBytes()) > getMaxSizeFileDrift(),
+					episode -> getRelativeDifference(episode.getPart().toFSPath(this).filesize().getBytes(), episode.getFilesize().getBytes()) > getMaxSizeFileDrift(),
 					episode -> DatabaseError.createSingle(
 							movielist,
 							DatabaseErrorType.ERROR_WRONG_FILESIZE, episode,
-							"Filesize[Filesystem]", String.valueOf(episode.getPart().toFSPath().filesize().getBytes()),
+							"Filesize[Filesystem]", String.valueOf(episode.getPart().toFSPath(this).filesize().getBytes()),
 							"Filesize[Database]", String.valueOf(episode.getFilesize().getBytes()),
 							"MaxSizeFileDrift", String.valueOf(getMaxSizeFileDrift())
 					));
@@ -1009,7 +1009,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					{
 						if (episode.mediaInfo().get().isSet()) {
 							try {
-								BasicFileAttributes attr = episode.getPart().toFSPath().readFileAttr();
+								BasicFileAttributes attr = episode.getPart().toFSPath(this).readFileAttr();
 								if (attr.creationTime().toMillis() != episode.mediaInfo().get().getCDate())
 									e.add(DatabaseError.createSingle(
 											movielist,
@@ -1029,7 +1029,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					{
 						if (episode.mediaInfo().get().isSet()) {
 							try {
-								BasicFileAttributes attr = episode.getPart().toFSPath().readFileAttr();
+								BasicFileAttributes attr = episode.getPart().toFSPath(this).readFileAttr();
 								if (attr.lastModifiedTime().toMillis() != episode.mediaInfo().get().getMDate())
 									e.add(DatabaseError.createSingle(
 											movielist,
@@ -1050,7 +1050,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					(episode, e) ->
 					{
 						if (episode.mediaInfo().get().isSet()) {
-							if (!CCFileSize.isEqual(episode.getPart().toFSPath().filesize(), episode.mediaInfo().get().getFilesize()))
+							if (!CCFileSize.isEqual(episode.getPart().toFSPath(this).filesize(), episode.mediaInfo().get().getFilesize()))
 								e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED, episode));
 						}
 					});
@@ -1082,7 +1082,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 							DatabaseErrorType.ERROR_INVALID_SERIES_STRUCTURE, episode,
 							"Actual<CCPath>", episode.getPart().toString(),
 							"Should<CCPath>", episode.getRelativeFileForCreatedFolderstructure(),
-							"Actual<FSPath>", episode.getPart().toFSPath().toString(),
+							"Actual<FSPath>", episode.getPart().toFSPath(this).toString(),
 							"Should<FSPath>", episode.getRelativeFileForCreatedFolderstructure()));
 
 			// Invalid path characters
@@ -1137,13 +1137,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			addEpisodeValidation(
 					DatabaseErrorType.ERROR_NON_NORMALIZED_PATH,
 					o -> o.ValidateEpisodes,
-					episode -> !CCPath.isEqual(CCPath.createFromFSPath(episode.getPart().toFSPath()), episode.getPart()),
+					episode -> !CCPath.isEqual(CCPath.createFromFSPath(episode.getPart().toFSPath(this), this), episode.getPart()),
 					episode -> DatabaseError.createSingle(
 							movielist,
 							DatabaseErrorType.ERROR_NON_NORMALIZED_PATH, episode,
-							"Path.FSPath", episode.Part.get().toFSPath().toString(),
+							"Path.FSPath", episode.Part.get().toFSPath(this).toString(),
 							"Path.CCPath[Actual]", episode.getPart().toString(),
-							"Path.CCPath[Should]", CCPath.createFromFSPath(episode.getPart().toFSPath()).toString()
+							"Path.CCPath[Should]", CCPath.createFromFSPath(episode.getPart().toFSPath(this), this).toString()
 					));
 
 			// No language

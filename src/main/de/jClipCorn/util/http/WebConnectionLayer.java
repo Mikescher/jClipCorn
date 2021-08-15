@@ -1,6 +1,6 @@
 package de.jClipCorn.util.http;
 
-import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.Main;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
 
@@ -25,7 +25,7 @@ public abstract class WebConnectionLayer {
 		connReal = new RealWebConnection();
 		connCache = new CachedWebConnection(connReal);
 		
-		if (CCProperties.getInstance().PROP_DEBUG_USE_HTTPCACHE.getValue()) {
+		if (Main.getCurrentGlobalCCProperties().PROP_DEBUG_USE_HTTPCACHE.getValue()) {
 			instance = connCache;
 		} else {
 			instance = connReal;

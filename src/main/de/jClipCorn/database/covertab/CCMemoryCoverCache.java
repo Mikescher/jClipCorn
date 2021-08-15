@@ -35,6 +35,10 @@ public class CCMemoryCoverCache implements ICoverCache {
 		data = new HashMap<>();
 	}
 
+	public CCProperties ccprops() {
+		return _db.ccprops();
+	}
+
 	@Override
 	public void addInternal(CCCoverData elem) {
 		_elements.put(elem.ID, elem);
@@ -87,15 +91,15 @@ public class CCMemoryCoverCache implements ICoverCache {
 		try {
 			int cid = getNewCoverID();
 
-			String fname = CCProperties.getInstance().PROP_COVER_PREFIX.getValue() + StringUtils.leftPad(Integer.toString(cid), 5, '0') + '.' + CCProperties.getInstance().PROP_COVER_TYPE.getValue();
+			String fname = ccprops().PROP_COVER_PREFIX.getValue() + StringUtils.leftPad(Integer.toString(cid), 5, '0') + '.' + ccprops().PROP_COVER_TYPE.getValue();
 
 			FSPath f = SimpleFileUtils.getSystemTempFile(".png"); //$NON-NLS-1$
-			ImageIO.write(newCover, CCProperties.getInstance().PROP_COVER_TYPE.getValue(), f.toFile());
+			ImageIO.write(newCover, ccprops().PROP_COVER_TYPE.getValue(), f.toFile());
 
 			String checksum;
 			try (FileInputStream fis = new FileInputStream(f.toFile())) { checksum = DigestUtils.sha256Hex(fis).toUpperCase(); }
 
-			ColorQuantizerMethod ptype = CCProperties.getInstance().PROP_DATABASE_COVER_QUANTIZER.getValue();
+			ColorQuantizerMethod ptype = ccprops().PROP_DATABASE_COVER_QUANTIZER.getValue();
 			ColorQuantizer quant = ptype.create();
 			quant.analyze(newCover, 16);
 			byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(newCover, ColorQuantizerConverter.PREVIEW_WIDTH));

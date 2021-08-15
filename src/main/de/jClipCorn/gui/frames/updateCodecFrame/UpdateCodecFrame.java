@@ -13,9 +13,9 @@ import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -31,12 +31,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateCodecFrame extends JFrame {
+public class UpdateCodecFrame extends JCCFrame {
 	private static final long serialVersionUID = -2163175118745491143L;
 
 	private enum FilterState { ALL, CHANGED, CHANGED_LANG, CHANGED_LEN, CHANGED_LEN_DYN, CHANGED_MEDIAINFO, ELEM_ERROR, ELEM_WARN }
 	
-	private final CCMovieList movielist;
 	private FilterState selectedFilter;
 	
 	private UpdateCodecTable tableMain;
@@ -67,9 +66,8 @@ public class UpdateCodecFrame extends JFrame {
 	private JButton btnUpdateSelectedMediaInfo;
 	
 	public UpdateCodecFrame(Component owner, CCMovieList mlist) {
-		super();
+		super(mlist);
 		setSize(new Dimension(1200, 600));
-		movielist = mlist;
 
 		initGUI();
 		setLocationRelativeTo(owner);
@@ -296,7 +294,7 @@ public class UpdateCodecFrame extends JFrame {
 		if (collThread != null && collThread.isAlive()) {
 			cancelBackground = true;
 		} else {
-			var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+			var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 			if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 				return;
@@ -338,12 +336,12 @@ public class UpdateCodecFrame extends JFrame {
 					List<MediaQueryResult> dat = new ArrayList<>();
 
 					for (int pi = 0; pi < parts.size(); pi++) {
-						dat.add(MediaQueryRunner.query(parts.get(pi).toFSPath(), false));
+						dat.add(new MediaQueryRunner(movielist).query(parts.get(pi).toFSPath(this), false));
 
 						if (cancelBackground) return;
 
 						if (pi > 0) raw.append("\n\n--------------------------------------\n\n"); //$NON-NLS-1$
-						raw.append(MediaQueryRunner.queryRaw(parts.get(pi).toFSPath()));
+						raw.append(new MediaQueryRunner(movielist).queryRaw(parts.get(pi).toFSPath(this)));
 
 						if (cancelBackground) return;
 					}

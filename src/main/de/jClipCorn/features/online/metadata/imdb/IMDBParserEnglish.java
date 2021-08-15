@@ -1,28 +1,28 @@
 package de.jClipCorn.features.online.metadata.imdb;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.online.OnlineSearchType;
+import de.jClipCorn.features.online.cover.imdb.AgeRatingParser;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.helper.RegExHelper;
+import de.jClipCorn.util.http.HTTPUtilities;
+import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.online.OnlineSearchType;
-import de.jClipCorn.features.online.cover.imdb.AgeRatingParser;
-import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.helper.RegExHelper;
-import de.jClipCorn.util.http.HTTPUtilities;
-import de.jClipCorn.util.stream.CCStreams;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("nls")
 public class IMDBParserEnglish extends IMDBParserCommon {
@@ -56,7 +56,11 @@ public class IMDBParserEnglish extends IMDBParserCommon {
 	private static final String JSOUP_ALT_YEAR = "meta[property=og:title][content~=.*\\([0-9]{4}\\)]"; // meta[property=og:title][content~=.*\([0-9]{4}\)]
 	private static final String JSOUP_ALT_COVER = "div[class=poster] a[href~=/media/rm[0-9]+?/tt[0-9]+.*]";
 	private static final String JSOUP_ALT_COVER_2 = "div[class=poster] a img[src*=/images/]";
-	
+
+	public IMDBParserEnglish(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public String getSearchURL(String title, OnlineSearchType typ) {
 		switch (typ) {

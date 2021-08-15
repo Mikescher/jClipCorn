@@ -1,5 +1,6 @@
 package de.jClipCorn.properties.enumerations;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.cover.AbstractImageSearch;
@@ -72,18 +73,18 @@ public enum ImageSearchImplementation implements ContinoousEnum<ImageSearchImple
 		return ImageSearchImplementation.values();
 	}
 	
-	public AbstractImageSearch getImplementation(FinishListener fl, UpdateCallbackListener uc, ProgressCallbackListener pc) {
+	public AbstractImageSearch getImplementation(CCMovieList ml, FinishListener fl, UpdateCallbackListener uc, ProgressCallbackListener pc) {
 		switch (this) {
 		case GOOGLE_COVER:
-			return new GoogleCoverSearch(fl, uc, pc);
+			return new GoogleCoverSearch(ml, fl, uc, pc);
 		case GOOGLE_POSTER:
-			return new GooglePosterSearch(fl, uc, pc);
+			return new GooglePosterSearch(ml, fl, uc, pc);
 		case IMDB_COVER:
-			return new IMDBPrimaryCoverSearch(fl, uc, pc);
+			return new IMDBPrimaryCoverSearch(ml, fl, uc, pc);
 		case IMDB_SEC_COVER:
-			return new IMDBSecondaryCoverSearch(fl, uc, pc);
+			return new IMDBSecondaryCoverSearch(ml, fl, uc, pc);
 		case TMDP_POSTER:
-			return new TMDBPosterSearch(fl, uc, pc);
+			return new TMDBPosterSearch(ml, fl, uc, pc);
 		default:
 			CCLog.addDefaultSwitchError(this, this);
 			return null;

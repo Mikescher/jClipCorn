@@ -4,6 +4,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.log.CCLog;
@@ -13,6 +14,7 @@ import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.guiComponents.JFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -34,7 +36,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.TimeZone;
 
-public class EditMediaInfoDialog extends JDialog {
+public class EditMediaInfoDialog extends JCCDialog {
 	private static final long serialVersionUID = -9200470525584039395L;
 	
 	private JFSPathTextField edFilepath;
@@ -130,8 +132,8 @@ public class EditMediaInfoDialog extends JDialog {
 	 * @wbp.parser.constructor
 	 */
 	@SuppressWarnings("unused")
-	private EditMediaInfoDialog(Component owner) {
-		super();
+	private EditMediaInfoDialog(Component owner, CCMovieList ml) {
+		super(ml);
 		
 		initGUI();
 
@@ -142,8 +144,8 @@ public class EditMediaInfoDialog extends JDialog {
 		doShowHints(Opt.empty(), null);
 	}
 
-	public EditMediaInfoDialog(Component owner, FSPath path, MediaQueryResult r, MediaInfoResultHandler h) {
-		super();
+	public EditMediaInfoDialog(Component owner, CCMovieList ml, FSPath path, MediaQueryResult r, MediaInfoResultHandler h) {
+		super(ml);
 		_handler = h;
 		
 		initGUI();
@@ -159,8 +161,8 @@ public class EditMediaInfoDialog extends JDialog {
 		doShowHints(Opt.of(r.toPartial()), MetadataSourceType.MEDIAINFO);
 	}
 
-	public EditMediaInfoDialog(Component owner, FSPath path, PartialMediaInfo r, MediaInfoResultHandler h) {
-		super();
+	public EditMediaInfoDialog(Component owner, CCMovieList ml, FSPath path, PartialMediaInfo r, MediaInfoResultHandler h) {
+		super(ml);
 		_handler = h;
 		
 		initGUI();
@@ -176,8 +178,8 @@ public class EditMediaInfoDialog extends JDialog {
 		doShowHints(Opt.of(r), MetadataSourceType.MEDIAINFO);
 	}
 
-	public EditMediaInfoDialog(Component owner, FSPath path, MediaInfoResultHandler h) {
-		super();
+	public EditMediaInfoDialog(Component owner, CCMovieList ml, FSPath path, MediaInfoResultHandler h) {
+		super(ml);
 		_handler = h;
 		
 		initGUI();

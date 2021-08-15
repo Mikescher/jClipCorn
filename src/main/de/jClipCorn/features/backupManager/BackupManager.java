@@ -50,7 +50,7 @@ public class BackupManager {
 	public void init() {
 		Globals.TIMINGS.start(Globals.TIMING_LOAD_INIT_BACKUPMANAGER);
 		{
-			if (CCProperties.getInstance().PROP_LOADING_INITBACKUPMANAGERASYNC.getValue()) {
+			if (ccprops().PROP_LOADING_INITBACKUPMANAGERASYNC.getValue()) {
 				new Thread(() ->
 				{
 					ThreadUtils.safeSleep(Globals.ASYNC_TIME_OFFSET_BACKUPMANAGER);
@@ -66,8 +66,12 @@ public class BackupManager {
 		Globals.TIMINGS.stop(Globals.TIMING_LOAD_INIT_BACKUPMANAGER);
 	}
 
+	public CCProperties ccprops() {
+		return movielist.ccprops();
+	}
+
 	private FSPath getBackupDirectory() {
-		var d = FilesystemUtils.getRealSelfDirectory().append(CCProperties.getInstance().PROP_BACKUP_FOLDERNAME.getValue());
+		var d = FilesystemUtils.getRealSelfDirectory().append(ccprops().PROP_BACKUP_FOLDERNAME.getValue());
 
 		if (!d.exists()) d.mkdirsSafe();
 
@@ -84,7 +88,7 @@ public class BackupManager {
 
 			for (FSPath f : archives) {
 				try {
-					CCBackup backup = new CCBackup(f);
+					CCBackup backup = new CCBackup(movielist, f);
 
 					backuplist.add(backup);
 				} catch (Exception e) {
@@ -99,13 +103,13 @@ public class BackupManager {
 	public void doActions(Component c) {
 		if (movielist.isReadonly()) return;
 
-		if (CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.getValue() && needsCreateBackup()) {
+		if (ccprops().PROP_BACKUP_CREATEBACKUPS.getValue() && needsCreateBackup()) {
 			Globals.TIMINGS.start(Globals.TIMING_LOAD_CREATEBACKUP);
 			waitForInitialized(() -> tryCreateBackup(c));
 			Globals.TIMINGS.stop(Globals.TIMING_LOAD_CREATEBACKUP);
 		}
 
-		if (CCProperties.getInstance().PROP_BACKUP_AUTODELETEBACKUPS.getValue()) {
+		if (ccprops().PROP_BACKUP_AUTODELETEBACKUPS.getValue()) {
 			runWhenInitialized(this::tryDeleteOldBackups);
 		}
 	}
@@ -133,8 +137,8 @@ public class BackupManager {
 	}
 
 	private boolean needsCreateBackup() {
-		int minDiff = CCProperties.getInstance().PROP_BACKUP_BACKUPTIME.getValue();
-		CCDate lastBackup = CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.getValue();
+		int minDiff = ccprops().PROP_BACKUP_BACKUPTIME.getValue();
+		CCDate lastBackup = ccprops().PROP_BACKUP_LASTBACKUP.getValue();
 		CCDate now = CCDate.getCurrentDate();
 
 		return lastBackup.getDayDifferenceTo(now) > minDiff && movielist.getDatabaseDirectory().exists();
@@ -159,7 +163,7 @@ public class BackupManager {
 	}
 
 	public String getStandardBackupname() {
-		return String.format(BACKUPNAME, CCProperties.getInstance().PROP_DATABASE_NAME.getValue());
+		return String.format(BACKUPNAME, ccprops().PROP_DATABASE_NAME.getValue());
 	}
 
 	public void createBackupWithWait(Component c) {
@@ -209,7 +213,7 @@ public class BackupManager {
 		monitor.close();
 
 		CCLog.addInformation(LocaleBundle.getString("LogMessage.BackupCreated")); //$NON-NLS-1$
-		CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.setValue(CCDate.getCurrentDate());
+		ccprops().PROP_BACKUP_LASTBACKUP.setValue(CCDate.getCurrentDate());
 	}
 
 	private void createBackupInternal(String name, CCDate date, boolean persistent, String jccversion, String dbversion, ProgressCallbackListener mon, boolean forceExcludeCovers) throws IOException {
@@ -217,12 +221,12 @@ public class BackupManager {
 
 		FileOutputStream os = new FileOutputStream(file.toFile());
 		ZipOutputStream zos = new ZipOutputStream(os);
-		zos.setLevel(CCProperties.getInstance().PROP_BACKUP_COMPRESSION.getValue());
+		zos.setLevel(ccprops().PROP_BACKUP_COMPRESSION.getValue());
 
 		final List<String> excludedFolders = new ArrayList<>();
 		final List<String> excludedFiles   = new ArrayList<>();
 
-		boolean excludeCovers = forceExcludeCovers || (CCProperties.getInstance().PROP_BACKUP_EXCLUDECOVERS.getValue() && !persistent);
+		boolean excludeCovers = forceExcludeCovers || (ccprops().PROP_BACKUP_EXCLUDECOVERS.getValue() && !persistent);
 
 		if (excludeCovers) {
 			movielist.getCoverCache().getBackupExclusions(excludedFolders, excludedFiles);
@@ -238,7 +242,7 @@ public class BackupManager {
 
 		zos.close();
 
-		CCBackup backup = new CCBackup(file, name, date, persistent, jccversion, dbversion, excludeCovers);
+		CCBackup backup = new CCBackup(movielist, file, name, date, persistent, jccversion, dbversion, excludeCovers);
 		boolean ok = backup.saveToFile();
 		if (!ok) {
 			if (file.exists()) FileUtils.deleteQuietly(file.toFile());

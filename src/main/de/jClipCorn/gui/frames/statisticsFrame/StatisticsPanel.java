@@ -1,12 +1,13 @@
 package de.jClipCorn.gui.frames.statisticsFrame;
 
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.properties.CCProperties;
+
+import javax.swing.*;
 import java.awt.event.ComponentEvent;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.swing.JComponent;
-
-import de.jClipCorn.database.databaseElement.CCSeries;
 
 public abstract class StatisticsPanel {
 
@@ -23,10 +24,17 @@ public abstract class StatisticsPanel {
 	private int yearRangeCache = -1;
 	private Map<CCSeries, Boolean> seriesFilterCache = null;
 	protected final StatisticsTypeFilter source;
-	
-	public StatisticsPanel(StatisticsTypeFilter _source) {
+
+	protected final CCMovieList movielist;
+
+	public StatisticsPanel(CCMovieList ml, StatisticsTypeFilter _source) {
 		super();
+		movielist = ml;
 		source = _source;
+	}
+
+	public CCProperties ccprops() {
+		return movielist.ccprops();
 	}
 	
 	public void onResize(ComponentEvent e) {

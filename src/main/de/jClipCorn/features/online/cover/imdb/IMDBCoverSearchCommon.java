@@ -1,9 +1,6 @@
 package de.jClipCorn.features.online.cover.imdb;
 
-import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.cover.AbstractImageSearch;
@@ -12,12 +9,17 @@ import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public abstract class IMDBCoverSearchCommon extends AbstractImageSearch {
 
-	protected IMDBImageParserHelper helper = IMDBImageParserHelper.GetConfiguredHelper();
+	protected final IMDBImageParserHelper helper;
 	
-	public IMDBCoverSearchCommon(FinishListener fc, UpdateCallbackListener uc, ProgressCallbackListener pc) {
-		super(fc, uc, pc);
+	public IMDBCoverSearchCommon(CCMovieList ml, FinishListener fc, UpdateCallbackListener uc, ProgressCallbackListener pc) {
+		super(ml, fc, uc, pc);
+		helper = IMDBImageParserHelper.GetConfiguredHelper(ml);
 	}
 	
 	protected abstract String getSearchResultFromHTML(String searchhtml);

@@ -1,26 +1,28 @@
 package de.jClipCorn.features.online.cover.tmdb;
 
-import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.cover.AbstractImageSearch;
 import de.jClipCorn.features.online.metadata.tmdb.TMDBParser;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public class TMDBPosterSearch extends AbstractImageSearch {
 
-	private final static TMDBParser parser = new TMDBParser();
+	private final TMDBParser parser;
 	
-	public TMDBPosterSearch(FinishListener fl, UpdateCallbackListener uc, ProgressCallbackListener pc) {
-		super(fl, uc, pc);
+	public TMDBPosterSearch(CCMovieList ml, FinishListener fl, UpdateCallbackListener uc, ProgressCallbackListener pc) {
+		super(ml, fl, uc, pc);
+		parser = new TMDBParser(ml);
 	}
 
 	@Override

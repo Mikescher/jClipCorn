@@ -12,6 +12,7 @@ import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.listener.ActionCallbackListener;
@@ -31,13 +32,18 @@ public abstract class ClipMenuBar extends JMenuBar {
 	private final List<CCActionElement> actions = new ArrayList<>();
 
 	private final Func0to0 _postAction;
-	private final CCMovieList _movielist;
+
+	protected final CCMovieList movielist;
 
 	public ClipMenuBar(CCMovieList ml, Func0to0 postAction) {
 		super();
 
 		_postAction = (postAction==null) ? Func0to0.NOOP : postAction;
-		_movielist  = ml;
+		movielist = ml;
+	}
+
+	public CCProperties ccprops() {
+		return movielist.ccprops();
 	}
 
 	protected abstract void init();
@@ -68,7 +74,7 @@ public abstract class ClipMenuBar extends JMenuBar {
 
 		node.addActionListener(e -> {
 			if (action == null) return;
-			if (readOnlyRestriction && _movielist.isReadonly()) return;
+			if (readOnlyRestriction && movielist.isReadonly()) return;
 			action.invoke();
 			_postAction.invoke();
 		});
@@ -80,7 +86,7 @@ public abstract class ClipMenuBar extends JMenuBar {
 			node.setFont(f2);
 		}
 
-		if (readOnlyRestriction && _movielist.isReadonly()) node.setEnabled(false);
+		if (readOnlyRestriction && movielist.isReadonly()) node.setEnabled(false);
 
 		lastMaster.add(node);
 	}
@@ -95,7 +101,7 @@ public abstract class ClipMenuBar extends JMenuBar {
 
 		node.addActionListener(e -> {
 			if (action == null) return;
-			if (readOnlyRestriction && _movielist.isReadonly()) return;
+			if (readOnlyRestriction && movielist.isReadonly()) return;
 			action.invoke();
 			_postAction.invoke();
 		});
@@ -107,7 +113,7 @@ public abstract class ClipMenuBar extends JMenuBar {
 			node.setFont(f2);
 		}
 
-		if (readOnlyRestriction && _movielist.isReadonly()) node.setEnabled(false);
+		if (readOnlyRestriction && movielist.isReadonly()) node.setEnabled(false);
 
 		lastSubMaster.add(node);
 	}
@@ -191,7 +197,7 @@ public abstract class ClipMenuBar extends JMenuBar {
 	}
 
 	private void openRef(CCSingleOnlineReference r) {
-		if (r.isSet() && r.isValid()) HTTPUtilities.openInBrowser(r.getURL());
+		if (r.isSet() && r.isValid()) HTTPUtilities.openInBrowser(r.getURL(ccprops()));
 	}
 
 	public void implementDirectKeyListener(PreviewSeriesFrame frame, JPanel contentPane)

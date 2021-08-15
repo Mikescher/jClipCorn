@@ -5,7 +5,6 @@ import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.CCPath;
@@ -20,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseAutofixer {
-	public static boolean fixErrors(List<DatabaseError> list, ProgressCallbackListener pcl) {
-		DriveMap.tryWait();
+	public static boolean fixErrors(CCMovieList ml, List<DatabaseError> list, ProgressCallbackListener pcl) {
+		ml.getDriveMap().tryWait();
 		
 		pcl.setMax(list.size());
 		pcl.reset();
@@ -135,7 +134,7 @@ public class DatabaseAutofixer {
 		if (err.getElement1() instanceof CCMovie) {
 			CCFileSize size = CCFileSize.ZERO;
 			for (int i = 0; i < ((CCMovie) err.getElement1()).getPartcount(); i++) {
-				size = CCFileSize.add(size, ((CCMovie) err.getElement1()).Parts.get(i).toFSPath().filesize());
+				size = CCFileSize.add(size, ((CCMovie) err.getElement1()).Parts.get(i).toFSPath(ml).filesize());
 			}
 			
 			if (size.getBytes() == 0) {
@@ -150,7 +149,7 @@ public class DatabaseAutofixer {
 		} else if (err.getElement1() instanceof CCSeason) {
 			return false;
 		} else if (err.getElement1() instanceof CCEpisode) {
-			var size = ((CCEpisode) err.getElement1()).getPart().toFSPath().filesize();
+			var size = ((CCEpisode) err.getElement1()).getPart().toFSPath(ml).filesize();
 
 			if (size.getBytes() == 0) {
 				return false;
@@ -239,12 +238,12 @@ public class DatabaseAutofixer {
 			CCMovie mov = ((CCMovie)err.getElement1());
 			
 			for (int i = 0; i < mov.getPartcount(); i++) {
-				FSPath opath = mov.Parts.get(i).toFSPath();
+				FSPath opath = mov.Parts.get(i).toFSPath(ml);
 				if (! opath.exists()) return false;
 				FSPath npath = opath.replaceFilename(mov.generateFilename(i));
 
 				boolean succ = opath.renameToSafe(npath);
-				mov.Parts.set(i, CCPath.createFromFSPath(npath));
+				mov.Parts.set(i, CCPath.createFromFSPath(npath, ml));
 				
 				if (! succ) return false;
 			}
@@ -316,7 +315,7 @@ public class DatabaseAutofixer {
 			CCMovie mov = ((CCMovie)err.getElement1());
 			
 			BufferedImage cover = mov.getCover();
-			cover = ImageUtilities.resizeCoverImageForStorage(cover);
+			cover = ImageUtilities.resizeCoverImageForStorage(cover, ml.ccprops());
 			mov.setCover(cover);
 
 			return true;
@@ -324,7 +323,7 @@ public class DatabaseAutofixer {
 			CCSeries ser = ((CCSeries)err.getElement1());
 			
 			BufferedImage cover = ser.getCover();
-			cover = ImageUtilities.resizeCoverImageForStorage(cover);
+			cover = ImageUtilities.resizeCoverImageForStorage(cover, ml.ccprops());
 			ser.setCover(cover);
 
 			return true;
@@ -332,7 +331,7 @@ public class DatabaseAutofixer {
 			CCSeason sea = ((CCSeason)err.getElement1());
 			
 			BufferedImage cover = sea.getCover();
-			cover = ImageUtilities.resizeCoverImageForStorage(cover);
+			cover = ImageUtilities.resizeCoverImageForStorage(cover, ml.ccprops());
 			sea.setCover(cover);
 
 			return true;
@@ -348,7 +347,7 @@ public class DatabaseAutofixer {
 			CCMovie mov = ((CCMovie)err.getElement1());
 			
 			BufferedImage cover = mov.getCover();
-			cover = ImageUtilities.resizeCoverImageForStorage(cover);
+			cover = ImageUtilities.resizeCoverImageForStorage(cover, ml.ccprops());
 			mov.setCover(cover);
 
 			return true;
@@ -356,7 +355,7 @@ public class DatabaseAutofixer {
 			CCSeries ser = ((CCSeries)err.getElement1());
 			
 			BufferedImage cover = ser.getCover();
-			cover = ImageUtilities.resizeCoverImageForStorage(cover);
+			cover = ImageUtilities.resizeCoverImageForStorage(cover, ml.ccprops());
 			ser.setCover(cover);
 
 			return true;
@@ -364,7 +363,7 @@ public class DatabaseAutofixer {
 			CCSeason sea = ((CCSeason)err.getElement1());
 			
 			BufferedImage cover = sea.getCover();
-			cover = ImageUtilities.resizeCoverImageForStorage(cover);
+			cover = ImageUtilities.resizeCoverImageForStorage(cover, ml.ccprops());
 			sea.setCover(cover);
 
 			return true;
@@ -389,7 +388,7 @@ public class DatabaseAutofixer {
 		if (err.getElement1() instanceof CCEpisode) {
 
 			var pold = ((CCEpisode)err.getElement1()).getPart();
-			var pnew = CCPath.createFromFSPath(pold.toFSPath());
+			var pnew = CCPath.createFromFSPath(pold.toFSPath(ml), ml);
 
 			if (pold.equals(pnew)) return false;
 
@@ -399,7 +398,7 @@ public class DatabaseAutofixer {
 		} else if (err.getElement1() instanceof CCMovie) {
 			for (int i = 0; i < ((CCMovie)err.getElement1()).getPartcount(); i++) {
 				var pold = ((CCMovie)err.getElement1()).Parts.get(i);
-				var pnew = CCPath.createFromFSPath(pold.toFSPath());
+				var pnew = CCPath.createFromFSPath(pold.toFSPath(ml), ml);
 
 				if (pold.equals(pnew)) continue;
 
@@ -421,7 +420,7 @@ public class DatabaseAutofixer {
 
 			long fsz = 0;
 			for (var p : elem.getParts()) {
-				var f = p.toFSPath();
+				var f = p.toFSPath(ml);
 				if (!f.exists()) return false;
 				fsz += f.filesize().getBytes();
 			}
@@ -478,7 +477,7 @@ public class DatabaseAutofixer {
 			if (!mi.isSet()) return false;
 
 			try {
-				BasicFileAttributes attr = elem.getParts().get(0).toFSPath().readFileAttr();
+				BasicFileAttributes attr = elem.getParts().get(0).toFSPath(ml).readFileAttr();
 
 				var cdate = attr.creationTime().toMillis();
 
@@ -500,7 +499,7 @@ public class DatabaseAutofixer {
 			if (!mi.isSet()) return false;
 
 			try {
-				BasicFileAttributes attr = elem.getParts().get(0).toFSPath().readFileAttr();
+				BasicFileAttributes attr = elem.getParts().get(0).toFSPath(ml).readFileAttr();
 
 				var mdate = attr.lastModifiedTime().toMillis();
 

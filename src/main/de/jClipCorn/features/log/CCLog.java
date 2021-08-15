@@ -2,6 +2,7 @@ package de.jClipCorn.features.log;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.sqlwrapper.StatementType;
 
 import java.util.List;
@@ -14,6 +15,10 @@ public class CCLog {
 	
 	public static void setPath(String p) {
 		CCLogInternal.setPath(p);
+	}
+
+	public static void setCCProps(CCProperties ccprops) {
+		CCLogInternal.setCCProps(ccprops);
 	}
 
 	public static void addInformation(Throwable e) {

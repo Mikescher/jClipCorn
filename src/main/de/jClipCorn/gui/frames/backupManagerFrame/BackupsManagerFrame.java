@@ -8,9 +8,9 @@ import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.features.backupManager.CCBackup;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class BackupsManagerFrame extends JFrame {
+public class BackupsManagerFrame extends JCCFrame {
 	private static final long serialVersionUID = 1277211351977537864L;
 	private JPanel panel;
 	private JList<CCBackup> lsBackups;
@@ -49,8 +49,7 @@ public class BackupsManagerFrame extends JFrame {
 	private JButton btnInsert;
 	
 	private final BackupManager manager;
-	private final CCMovieList movielist;
-	
+
 	private CCBackup currentSelected = null;
 	private JButton btnChangeName;
 	private JPanel panel_1;
@@ -61,10 +60,9 @@ public class BackupsManagerFrame extends JFrame {
 	private JLabel lblInfoLastBackup;
 
 	public BackupsManagerFrame(BackupManager bm, Component parent, CCMovieList ml) {
-		super();
+		super(ml);
 		this.manager = bm;
-		this.movielist = ml;
-		
+
 		initGUI();
 		updateList();
 		updateInfo(null);
@@ -302,11 +300,11 @@ public class BackupsManagerFrame extends JFrame {
 		String on = LocaleBundle.getString("BackupsManagerFrame.infoLabels.lblON"); //$NON-NLS-1$
 		String off = LocaleBundle.getString("BackupsManagerFrame.infoLabels.lblOFF"); //$NON-NLS-1$
 		
-		lblInfoCreateBackups.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.CreateBackups", CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.getValue() ? on : off)); //$NON-NLS-1$
-		lblInfoCreationTime.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.CreationTime", CCProperties.getInstance().PROP_BACKUP_BACKUPTIME.getValue())); //$NON-NLS-1$
-		lblInfoAutoDelete.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.AutoDelete", CCProperties.getInstance().PROP_BACKUP_AUTODELETEBACKUPS.getValue() ? on : off)); //$NON-NLS-1$
-		lblInfoAutoDeletAfter.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.DeletionTime", CCProperties.getInstance().PROP_BACKUP_LIFETIME.getValue())); //$NON-NLS-1$
-		lblInfoLastBackup.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.LastBackup", CCProperties.getInstance().PROP_BACKUP_LASTBACKUP.getValue().toStringUIVerbose())); //$NON-NLS-1$
+		lblInfoCreateBackups.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.CreateBackups", ccprops().PROP_BACKUP_CREATEBACKUPS.getValue() ? on : off)); //$NON-NLS-1$
+		lblInfoCreationTime.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.CreationTime", ccprops().PROP_BACKUP_BACKUPTIME.getValue())); //$NON-NLS-1$
+		lblInfoAutoDelete.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.AutoDelete", ccprops().PROP_BACKUP_AUTODELETEBACKUPS.getValue() ? on : off)); //$NON-NLS-1$
+		lblInfoAutoDeletAfter.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.DeletionTime", ccprops().PROP_BACKUP_LIFETIME.getValue())); //$NON-NLS-1$
+		lblInfoLastBackup.setText(LocaleBundle.getFormattedString("BackupsManagerFrame.infoLabels.LastBackup", ccprops().PROP_BACKUP_LASTBACKUP.getValue().toStringUIVerbose())); //$NON-NLS-1$
 		
 		updateButtonStates();
 	}
@@ -314,11 +312,11 @@ public class BackupsManagerFrame extends JFrame {
 	private String getDaysUntilDeletion(CCBackup bkp) {
 		if (bkp.isPersistent()) return "-"; //$NON-NLS-1$
 		
-		if (! CCProperties.getInstance().PROP_BACKUP_AUTODELETEBACKUPS.getValue()) return "-"; //$NON-NLS-1$
+		if (! ccprops().PROP_BACKUP_AUTODELETEBACKUPS.getValue()) return "-"; //$NON-NLS-1$
 		
 		int age = bkp.getDate().getDayDifferenceTo(CCDate.getCurrentDate());
 		
-		int dud = CCProperties.getInstance().PROP_BACKUP_LIFETIME.getValue() - age;
+		int dud = ccprops().PROP_BACKUP_LIFETIME.getValue() - age;
 		
 		return String.valueOf(dud);
 	}

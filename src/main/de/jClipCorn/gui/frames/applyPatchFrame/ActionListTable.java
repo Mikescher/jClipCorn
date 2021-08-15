@@ -14,7 +14,7 @@ public class ActionListTable extends JCCSimpleTable<ActionVM> {
 	private final ApplyPatchFrame _owner;
 
 	public ActionListTable(ApplyPatchFrame f) {
-		super();
+		super(f);
 		_owner  = f;
 	}
 
@@ -23,11 +23,11 @@ public class ActionListTable extends JCCSimpleTable<ActionVM> {
 	protected List<JCCSimpleColumnPrototype<ActionVM>> configureColumns() {
 		List<JCCSimpleColumnPrototype<ActionVM>> r = new ArrayList<>();
 
-		r.add(new JCCSimpleColumnPrototype<>("auto",       "ApplyPatchFrame.table.column_State",       null,                                   ActionVM::getStateIcon, null, false));
-		r.add(new JCCSimpleColumnPrototype<>("auto",       "ApplyPatchFrame.table.column_Ctr",         e -> String.valueOf(e.Ctr),             null,                   null, false));
-		r.add(new JCCSimpleColumnPrototype<>("auto",       "ApplyPatchFrame.table.column_Type",        e -> e.Type,                            null,                   null, false));
-		r.add(new JCCSimpleColumnPrototype<>("auto",       "ApplyPatchFrame.table.column_CmdCount",    e -> String.valueOf(e.Commands.size()), null,                   null, false));
-		r.add(new JCCSimpleColumnPrototype<>("*,min=auto", "ApplyPatchFrame.table.column_Description", e -> e.Description,                     null,                   null, false));
+		r.add(new JCCSimpleColumnPrototype<>(this, "auto",       "ApplyPatchFrame.table.column_State",       null,                                   ActionVM::getStateIcon, null, false));
+		r.add(new JCCSimpleColumnPrototype<>(this, "auto",       "ApplyPatchFrame.table.column_Ctr",         e -> String.valueOf(e.Ctr),             null,                   null, false));
+		r.add(new JCCSimpleColumnPrototype<>(this, "auto",       "ApplyPatchFrame.table.column_Type",        e -> e.Type,                            null,                   null, false));
+		r.add(new JCCSimpleColumnPrototype<>(this, "auto",       "ApplyPatchFrame.table.column_CmdCount",    e -> String.valueOf(e.Commands.size()), null,                   null, false));
+		r.add(new JCCSimpleColumnPrototype<>(this, "*,min=auto", "ApplyPatchFrame.table.column_Description", e -> e.Description,                     null,                   null, false));
 
 		return r;
 	}

@@ -208,10 +208,14 @@ public class FSPath implements IPath, Comparable<FSPath> {
 	}
 
 	public String getFilenameWithExt() {
-		return _path.substring(_path.lastIndexOf(SEPERATOR) + 1);
+		return getLastPathSegment();
 	}
 
 	public String getDirectoryName() {
+		return getLastPathSegment();
+	}
+
+	public String getLastPathSegment() {
 		return _path.substring(_path.lastIndexOf(SEPERATOR) + 1);
 	}
 

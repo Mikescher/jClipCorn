@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.3.0.337" Java: "11.0.9.1" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.11" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -6,7 +6,7 @@ new FormModel {
 	"i18n.keyPrefix": "SearchFrame"
 	contentType: "form/swing"
 	root: new FormRoot {
-		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 			name: "this"
 			"title": new FormMessage( null, "VLCRobotFrame.title" )
 			"$sizePolicy": 1
@@ -58,6 +58,9 @@ new FormModel {
 					} )
 					add( new FormContainer( "de.jClipCorn.gui.frames.vlcRobot.VLCPlaylistTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "lsData"
+						auxiliary() {
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(this);"
+						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
 						"gridY": 4

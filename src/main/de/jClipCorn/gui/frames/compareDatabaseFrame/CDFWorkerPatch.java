@@ -125,7 +125,7 @@ public class CDFWorkerPatch
 				{
 					for (int i = 0; i < e.MovieLocal.getPartcount(); i++)
 					{
-						var source = e.MovieLocal.Parts.get(i).toFSPath();
+						var source = e.MovieLocal.Parts.get(i).toFSPath(state.ccpropsLocal());
 						var newfilename = "m_" + e.MovieLocal.LocalID.get() + "_" + i + "." + source.getExtension();
 						var target = datadir.append(newfilename);
 
@@ -260,7 +260,7 @@ public class CDFWorkerPatch
 
 					for (int i = 0; i < e.MovieLocal.getPartcount(); i++)
 					{
-						var source = e.MovieLocal.Parts.get(i).toFSPath();
+						var source = e.MovieLocal.Parts.get(i).toFSPath(state.ccpropsLocal());
 						var newfilename = "m_" + e.MovieLocal.LocalID.get() + "_" + i + "." + source.getExtension();
 						var target = datadir.append(newfilename);
 
@@ -637,7 +637,7 @@ public class CDFWorkerPatch
 
 				{
 					{
-						var source = e.EpisodeLocal.getPart().toFSPath();
+						var source = e.EpisodeLocal.getPart().toFSPath(state.ccpropsLocal());
 						var newfilename = "e_" + e.EpisodeLocal.LocalID.get() + "." + source.getExtension();
 						var target = datadir.append(newfilename);
 
@@ -739,7 +739,7 @@ public class CDFWorkerPatch
 					}
 
 					{
-						var source = e.EpisodeLocal.getPart().toFSPath();
+						var source = e.EpisodeLocal.getPart().toFSPath(state.ccpropsLocal());
 						var newfilename = "e_" + e.EpisodeLocal.LocalID.get() + "." + source.getExtension();
 						var target = datadir.append(newfilename);
 

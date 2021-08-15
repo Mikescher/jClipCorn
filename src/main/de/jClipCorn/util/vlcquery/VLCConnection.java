@@ -1,5 +1,6 @@
 package de.jClipCorn.util.vlcquery;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
@@ -34,7 +35,17 @@ public class VLCConnection {
 
 	// https://wiki.videolan.org/VLC_HTTP_requests/
 
-	private static CCXMLParser getXML(String path) throws IOException, CCXMLException, HTTPErrorCodeException {
+	private final CCMovieList movielist;
+
+	public VLCConnection(CCMovieList ml) {
+		movielist = ml;
+	}
+
+	public CCProperties ccprops() {
+		return movielist.ccprops();
+	}
+
+	private CCXMLParser getXML(String path) throws IOException, CCXMLException, HTTPErrorCodeException {
 		HttpURLConnection conn = null;
 		BufferedReader rd = null;
 		boolean first = true;
@@ -44,13 +55,13 @@ public class VLCConnection {
 			if (ApplicationHelper.isUnix()    && !ApplicationHelper.isProcessRunning("vlc")) return null;
 			if (ApplicationHelper.isMac()     && !ApplicationHelper.isProcessRunning("vlc")) return null;
 
-			conn = (HttpURLConnection) new URL("http://127.0.0.1:" + CCProperties.getInstance().PROP_VLC_ROBOT_PORT.getValue() + path).openConnection();
+			conn = (HttpURLConnection) new URL("http://127.0.0.1:" + ccprops().PROP_VLC_ROBOT_PORT.getValue() + path).openConnection();
 
 			conn.setRequestMethod("GET");
 
 			conn.setRequestProperty("Accept-Charset", "UTF-8");
 			conn.addRequestProperty("User-Agent", "Mozilla/4.76");
-			conn.addRequestProperty("Authorization", "Basic " + Str.toBase64(":" + CCProperties.getInstance().PROP_VLC_ROBOT_PASSWORD.getValue()));
+			conn.addRequestProperty("Authorization", "Basic " + Str.toBase64(":" + ccprops().PROP_VLC_ROBOT_PASSWORD.getValue()));
 
 			String encoding = conn.getContentEncoding();
 			if (encoding == null) encoding = "UTF-8";
@@ -83,9 +94,9 @@ public class VLCConnection {
 		}
 	}
 
-	public static VLCStatus getStatus()
+	public VLCStatus getStatus()
 	{
-		if (!CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue())
+		if (!ccprops().PROP_VLC_ROBOT_ENABLED.getValue())
 			return new VLCStatus(VLCPlayerStatus.DISABLED, -1, -1, null, null, new ArrayList<>(), null, false, 0, false, false, false, null);
 
 		try
@@ -173,7 +184,7 @@ public class VLCConnection {
 		}
 	}
 
-	private static Tuple<VLCStatusPlaylistEntry, List<VLCStatusPlaylistEntry>> parsePlaylist(CCXMLParser xmlPlaylist) throws CCXMLException {
+	private Tuple<VLCStatusPlaylistEntry, List<VLCStatusPlaylistEntry>> parsePlaylist(CCXMLParser xmlPlaylist) throws CCXMLException {
 		List<VLCStatusPlaylistEntry> playlist = new ArrayList<>();
 		VLCStatusPlaylistEntry activeEntry = null;
 
@@ -196,7 +207,7 @@ public class VLCConnection {
 		return Tuple.Create(activeEntry, playlist);
 	}
 
-	public static boolean toggleRandom() {
+	public boolean toggleRandom() {
 		try	{
 			getXML("/requests/status.xml?command=pl_random");
 			return true;
@@ -206,7 +217,7 @@ public class VLCConnection {
 		}
 	}
 
-	public static boolean toggleLoop() {
+	public boolean toggleLoop() {
 		try	{
 			getXML("/requests/status.xml?command=pl_loop");
 			return true;
@@ -216,7 +227,7 @@ public class VLCConnection {
 		}
 	}
 
-	public static boolean toggleRepeat() {
+	public boolean toggleRepeat() {
 		try	{
 			getXML("/requests/status.xml?command=pl_repeat");
 			return true;
@@ -226,7 +237,7 @@ public class VLCConnection {
 		}
 	}
 
-	public static boolean toggleFullscreen() {
+	public boolean toggleFullscreen() {
 		try	{
 			getXML("/requests/status.xml?command=fullscreen");
 			return true;
@@ -236,7 +247,7 @@ public class VLCConnection {
 		}
 	}
 
-	public static boolean play() {
+	public boolean play() {
 		try	{
 			getXML("/requests/status.xml?command=pl_play");
 			return true;
@@ -246,7 +257,7 @@ public class VLCConnection {
 		}
 	}
 
-	public static boolean playID(int id) {
+	public boolean playID(int id) {
 		try	{
 			getXML("/requests/status.xml?command=pl_play&id="+id);
 			return true;
@@ -256,7 +267,7 @@ public class VLCConnection {
 		}
 	}
 
-	public static boolean pause() {
+	public boolean pause() {
 		try	{
 			getXML("/requests/status.xml?command=pl_pause");
 			return true;
@@ -266,7 +277,7 @@ public class VLCConnection {
 		}
 	}
 
-	public static boolean stop() {
+	public boolean stop() {
 		try	{
 			getXML("/requests/status.xml?command=pl_stop");
 			return true;
@@ -276,7 +287,7 @@ public class VLCConnection {
 		}
 	}
 
-	public static String enqueue(FSPath filepath, boolean startPlayback)
+	public String enqueue(FSPath filepath, boolean startPlayback)
 	{
 		try
 		{
@@ -304,9 +315,9 @@ public class VLCConnection {
 		}
 	}
 
-	public static void startPlayer()
+	public void startPlayer()
 	{
-		var vlc = MoviePlayer.getVLCPath();
+		var vlc = MoviePlayer.getVLCPath(ccprops());
 
 		if (FSPath.isNullOrEmpty(vlc)) {
 			CCLog.addWarning(LocaleBundle.getString("LogMessage.VLCNotFound")); //$NON-NLS-1$
@@ -314,7 +325,7 @@ public class VLCConnection {
 		}
 
 		try {
-			List<String> parameters = MoviePlayer.getParameters(vlc, null);
+			List<String> parameters = MoviePlayer.getParameters(vlc, null, ccprops());
 
 			ProcessBuilder pb = new ProcessBuilder(parameters);
 			pb.redirectOutput(new File(ApplicationHelper.getNullFile()));
@@ -325,7 +336,7 @@ public class VLCConnection {
 		}
 	}
 
-	public static void setWindowPosition(Rectangle rect)
+	public void setWindowPosition(Rectangle rect)
 	{
 		WindowsJNAHelper.setSingleWindowPositionOrNull("vlc.exe", rect);
 	}

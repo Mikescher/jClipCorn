@@ -19,6 +19,9 @@ new FormModel {
 				name: "panelTop"
 				add( new FormContainer( "de.jClipCorn.gui.mainFrame.toolbar.ClipToolbar", new FormLayoutManager( class javax.swing.JToolBar ) ) {
 					name: "toolbar"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
+					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 1
 					"gridY": 1
@@ -71,7 +74,7 @@ new FormModel {
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel" ) {
 					name: "coverImage"
 					auxiliary() {
-						"JavaCodeGenerator.customCreateCode": "new DatabaseElementPreviewLabel(false);"
+						"JavaCodeGenerator.customCreateCode": "new DatabaseElementPreviewLabel(movielist, false);"
 					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 1

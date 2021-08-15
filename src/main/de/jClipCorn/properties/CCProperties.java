@@ -12,6 +12,7 @@ import de.jClipCorn.properties.property.CCEnumSetProperty.EnumSetValue;
 import de.jClipCorn.properties.property.CCFSPathProperty.CCPathPropertyMode;
 import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.properties.types.PathSyntaxVar;
+import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.datetime.CCDate;
@@ -26,7 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-public class CCProperties {
+public class CCProperties implements ICCPropertySource {
 	private final static String HEADER = "jClipCorn Configuration File"; //$NON-NLS-1$
 	
 	public final static CCPropertyCategory NONVISIBLE			= new CCPropertyCategory();
@@ -60,9 +61,7 @@ public class CCProperties {
 	
 	@SuppressWarnings("nls")
 	public final static String[] readOnlyArgs = {"readonly", "-readonly", "--readonly", "read-only", "-read-only", "--read-only", "ro", "-ro", "--ro"};
-	
-	private static CCProperties mainInstance = null;
-	
+
 	private final Object _fileLock = new Object();
 	private final List<CCProperty<Object>> propertylist = new Vector<>();
 
@@ -218,19 +217,20 @@ public class CCProperties {
 	
 	private final Properties properties;
 	private final FSPath path;
-	
+	private final DriveMap driveMap;
+
 	private CCProperties() {
 		properties = new Properties();
 		this.path = null;
+		this.driveMap = new DriveMap(this);
 		
 		createProperties();
-		
-		mainInstance = this;
 	}
 	
 	private CCProperties(FSPath path, String[] args) {
 		properties = new Properties();
 		this.path = path;
+		this.driveMap = new DriveMap(this);
 		load(path);
 		
 		createProperties();
@@ -239,20 +239,26 @@ public class CCProperties {
 		CCLog.addDebug(propertylist.size() + " Properties in List intialized"); //$NON-NLS-1$
 		
 		if (firstLaunch) save();
-		
-		mainInstance = this;
 
-		LocaleBundle.updateLang();
+		LocaleBundle.updateLang(this);
+	}
+
+	public static CCProperties create(FSPath path, String[] args) {
+		return new CCProperties(path, args);
+	}
+
+	public static CCProperties createReadonly(FSPath path) {
+		return new CCProperties(path, new String[]{readOnlyArgs[0]});
 	}
 	
-	public static void create(FSPath path, String[] args) {
-		new CCProperties(path, args);
+	public static CCProperties createInMemory() {
+		return new CCProperties();
 	}
-	
-	public static void createInMemory() {
-		new CCProperties();
+
+	public DriveMap getDriveMap() {
+		return driveMap;
 	}
-	
+
 	@SuppressWarnings("nls")
 	private void createProperties() {
 		PROP_UI_LANG                            = new CCEnumProperty<>(CAT_COMMON,          this,   "PROP_UI_LANG",                             getDefLanguage(),                   UILanguage.getWrapper());
@@ -488,15 +494,6 @@ public class CCProperties {
 			return (getDefTheme() == AppTheme.METAL) ? 670 : 660;
 	}
 
-	public static CCProperties getInstance() {
-		if (mainInstance == null && java.beans.Beans.isDesignTime()) //ONLY FOR WindowBuilder & jCoodiesFormDesigner
-		{
-			CCLog.addUndefinied("Properties accessed but not initialized"); //$NON-NLS-1$
-			return new CCProperties();
-		}
-		return mainInstance;
-	}
-	
 	public void load(FSPath path) {
 		try {
 			synchronized (_fileLock) {
@@ -622,5 +619,10 @@ public class CCProperties {
 		if (!PROP_PLAY_ALT_PROG_4.getValue().isEmpty()) r.add(PROP_PLAY_ALT_PROG_4.getValue());
 		if (!PROP_PLAY_ALT_PROG_5.getValue().isEmpty()) r.add(PROP_PLAY_ALT_PROG_5.getValue());
 		return r;
+	}
+
+	@Override
+	public CCProperties ccprops() {
+		return this;
 	}
 }

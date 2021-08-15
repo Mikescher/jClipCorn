@@ -1,26 +1,18 @@
 package de.jClipCorn.gui.frames.allRatingsFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.border.EmptyBorder;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
-
-public class AllRatingsDialog extends JDialog {
+public class AllRatingsDialog extends JCCDialog {
 	private static final long serialVersionUID = 568186116244028190L;
 	
 	private JPanel contentPane;
@@ -33,7 +25,8 @@ public class AllRatingsDialog extends JDialog {
 	/**
 	 * Create the frame.
 	 */
-	public AllRatingsDialog(Map<String, Integer> list, Component owner) {
+	public AllRatingsDialog(Map<String, Integer> list, Component owner, CCMovieList ml) {
+		super(ml);
 		initGUI(owner);
 		createContent(list);
 	}

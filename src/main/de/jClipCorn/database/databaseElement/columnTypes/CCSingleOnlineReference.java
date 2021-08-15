@@ -1,5 +1,6 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
@@ -11,6 +12,7 @@ import de.jClipCorn.features.online.metadata.imdb.IMDBParserCommon;
 import de.jClipCorn.features.online.metadata.mal.MALParser;
 import de.jClipCorn.features.online.metadata.tmdb.TMDBParser;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.http.HTTPUtilities;
@@ -123,8 +125,8 @@ public class CCSingleOnlineReference {
 		return type != CCOnlineRefType.NONE & !id.trim().isEmpty();
 	}
 
-	public String getURL() {
-		return CCOnlineRefTypeHelper.getURL(this);
+	public String getURL(CCProperties ccprops) {
+		return CCOnlineRefTypeHelper.getURL(ccprops, this);
 	}
 
 	public Icon getIcon() {
@@ -170,24 +172,24 @@ public class CCSingleOnlineReference {
 		return obj.id.equals(id) && obj.type == type && Str.equals(obj.description, description);
 	}
 
-	public Metadataparser getMetadataParser() {
+	public Metadataparser getMetadataParser(CCMovieList ml) {
 		switch (type) {
 		case NONE:
 			return null;
 		case IMDB:
-			return IMDBParserCommon.GetConfiguredParser();
+			return IMDBParserCommon.GetConfiguredParser(ml);
 		case AMAZON:
 			return null;
 		case MOVIEPILOT:
 			return null;
 		case THEMOVIEDB:
-			return new TMDBParser();
+			return new TMDBParser(ml);
 		case PROXERME:
 			return null;
 		case MYANIMELIST:
-			return new MALParser();
+			return new MALParser(ml);
 		case ANILIST:
-			return new AniListParser();
+			return new AniListParser(ml);
 		default:
 			CCLog.addDefaultSwitchError(this, this);
 			return null;
@@ -198,7 +200,7 @@ public class CCSingleOnlineReference {
 		return !Str.isNullOrWhitespace(description);
 	}
 	
-	public void openInBrowser(CCDatabaseElement src) {
+	public void openInBrowser(CCDatabaseElement src, CCProperties ccprops) {
 		if (isUnset()) {
 			if (src.isMovie()) {
 				HTTPUtilities.searchInBrowser(((CCMovie)src).getCompleteTitle());
@@ -206,7 +208,7 @@ public class CCSingleOnlineReference {
 				HTTPUtilities.searchInBrowser(((CCSeries)src).Title.get());
 			}
 		} else {
-			HTTPUtilities.openInBrowser(getURL());
+			HTTPUtilities.openInBrowser(getURL(ccprops));
 		}
 	}
 }

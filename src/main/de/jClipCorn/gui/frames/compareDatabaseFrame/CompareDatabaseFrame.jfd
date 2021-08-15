@@ -6,7 +6,7 @@ new FormModel {
 	"i18n.keyPrefix": "BatchEditFrame"
 	contentType: "form/swing"
 	root: new FormRoot {
-		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "unrelgap, default, labelcompgap, 0dlu:grow, labelcompgap, default, labelcompgap, 70dlu, unrelgap"
 			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default, linegap, 80dlu, linegap, 20dlu, linegap, default:grow, linegap, 80dlu, linegap, default, linegap, default, linegap, default, unrelgap"
 		} ) {

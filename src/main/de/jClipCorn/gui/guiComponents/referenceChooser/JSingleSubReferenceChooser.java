@@ -3,6 +3,7 @@ package de.jClipCorn.gui.guiComponents.referenceChooser;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.guiComponents.WideComboBox;
@@ -29,7 +30,11 @@ public class JSingleSubReferenceChooser extends JPanel {
 	private JPanel panel_1;
 	private JTextField edDesc;
 
-	public JSingleSubReferenceChooser() {
+	private final CCMovieList movielist;
+
+	public JSingleSubReferenceChooser(CCMovieList ml) {
+		super();
+		movielist = ml;
 		initGUI();
 	}
 
@@ -120,7 +125,7 @@ public class JSingleSubReferenceChooser extends JPanel {
 				super.mouseClicked(e);
 				if (e.getClickCount() == 2) {
 					CCSingleOnlineReference v = getValue();
-					if (v.isSet() && v.isValid()) HTTPUtilities.openInBrowser(v.getURL());
+					if (v.isSet() && v.isValid()) HTTPUtilities.openInBrowser(v.getURL(movielist.ccprops()));
 				}
 			}
 		});

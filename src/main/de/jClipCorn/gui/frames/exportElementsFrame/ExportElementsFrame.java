@@ -1,7 +1,9 @@
 package de.jClipCorn.gui.frames.exportElementsFrame;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.features.serialization.ExportHelper;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -17,7 +19,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExportElementsFrame extends JFrame {
+public class ExportElementsFrame extends JCCFrame {
 	private static final long serialVersionUID = 1568672663044965879L;
 	
 	private static ExportElementsFrame instance = null;
@@ -29,8 +31,8 @@ public class ExportElementsFrame extends JFrame {
 	private JPanel pnlBottom;
 	private JButton btnExport;
 	
-	public ExportElementsFrame(Component owner) {
-		super();
+	public ExportElementsFrame(Component owner, CCMovieList ml) {
+		super(ml);
 		initGUI();
 		setLocationRelativeTo(owner);
 	}
@@ -94,16 +96,23 @@ public class ExportElementsFrame extends JFrame {
 		lsModel.addElement(el);
 	}
 	
-	public static ExportElementsFrame getVisibleInstance(Component owner) {
+	public static ExportElementsFrame getVisibleInstance(Component owner, CCMovieList ml) {
 		if (instance == null) {
-			instance = new ExportElementsFrame(owner);
+			instance = new ExportElementsFrame(owner, ml);
 			instance.setVisible(true);
 			return instance;
 		}
 		
 		if (! instance.isVisible()) {
 			instance.dispose();
-			instance = new ExportElementsFrame(owner);
+			instance = new ExportElementsFrame(owner, ml);
+			instance.setVisible(true);
+			return instance;
+		}
+
+		if (instance.movielist != ml) {
+			instance.dispose();
+			instance = new ExportElementsFrame(owner, ml);
 			instance.setVisible(true);
 			return instance;
 		}
@@ -112,7 +121,7 @@ public class ExportElementsFrame extends JFrame {
 	}
 	
 	public static void addElementToList(Component owner, CCDatabaseElement el) {
-		getVisibleInstance(owner).addElement(el);
+		getVisibleInstance(owner, el.getMovieList()).addElement(el);
 	}
 	
 	public static void clearAndDispose() {

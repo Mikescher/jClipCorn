@@ -1,6 +1,8 @@
 package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
@@ -15,7 +17,7 @@ public class CDFWorkerCompare
 		cb.setMaxAndResetValueBoth(3, 1);
 		cb.setValueBoth(0, 0, "Connecting", "");
 
-		var mlExt = CCMovieList.loadExtern(null, dbPath, dbName, true);
+		var mlExt = CCMovieList.loadExtern(null, dbPath, dbName, true, CCProperties.createReadonly(dbPath.append(Main.PROPERTIES_PATH)));
 
 		if (!mlExt.databaseExists()) throw new Exception("Database " + dbPath + " | " + dbName + " not found");
 
@@ -29,7 +31,7 @@ public class CDFWorkerCompare
 			cb.setValueBoth(2, 0, "Comparing", "");
 			cb.setSubMax(mlExt.getTotalDatabaseElementCount() + mlLoc.getTotalDatabaseElementCount() + 1);
 
-			var state = new CompareState(cb, ruleset);
+			var state = new CompareState(mlLoc, mlExt, cb, ruleset);
 
 			compareAndMatchMovies(mlExt, mlLoc, state);
 			compareAndMatchSeries(mlExt, mlLoc, state);

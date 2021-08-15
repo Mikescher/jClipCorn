@@ -3,6 +3,7 @@ package de.jClipCorn.gui.frames.randomMovieFrame;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -13,7 +14,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RandomMovieFrame extends JFrame implements Runnable {
+public class RandomMovieFrame extends JCCFrame implements Runnable {
 	private static final long serialVersionUID = -8142348609793380058L;
 
 	private final static int CVRCOUNT = 100;
@@ -28,8 +29,8 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 	private boolean isShuffled = false;
 
 	public RandomMovieFrame(Component parent, CCMovieList movielist) {
-		super();
-		generateList(movielist);
+		super(movielist);
+		generateList();
 		initGUI();
 		setLocationRelativeTo(parent);
 	}
@@ -39,7 +40,7 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setTitle(LocaleBundle.getString("RandomMovieFrame.this.title")); //$NON-NLS-1$
 
-		chooser = new JCoverChooser(true);
+		chooser = new JCoverChooser(movielist, true);
 		chooser.set3DMode(true);
 		chooser.setEnabled(false);
 		chooser.setCoverHalfSize(true);
@@ -68,7 +69,7 @@ public class RandomMovieFrame extends JFrame implements Runnable {
 		pack();
 	}
 
-	private void generateList(CCMovieList movielist) {
+	private void generateList() {
 		choosableList = new ArrayList<>();
 
 		for (CCMovie mov : movielist.iteratorMovies()) {

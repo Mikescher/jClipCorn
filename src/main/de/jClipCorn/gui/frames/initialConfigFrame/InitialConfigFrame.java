@@ -42,8 +42,11 @@ public class InitialConfigFrame extends JDialog {
 	private JReadableFSPathTextField edVLCPath;
 	private JButton btnVLCChooser;
 
-	public InitialConfigFrame() {
+	private final CCProperties ccprops;
+
+	public InitialConfigFrame(CCProperties ccprops) {
 		super();
+		this.ccprops = ccprops;
 		initGUI();
 	}
 
@@ -73,7 +76,7 @@ public class InitialConfigFrame extends JDialog {
 		getContentPane().add(lblDatenbanktyp);
 
 		cbxDatabaseDriver = new JComboBox<>(new DefaultComboBoxModel<>(CCDatabaseDriver.getSelectableValues()));
-		cbxDatabaseDriver.setSelectedItem(CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue());
+		cbxDatabaseDriver.setSelectedItem(ccprops.PROP_DATABASE_DRIVER.getValue());
 		cbxDatabaseDriver.setBounds(273, 147, 175, 25);
 		getContentPane().add(cbxDatabaseDriver);
 		
@@ -93,13 +96,13 @@ public class InitialConfigFrame extends JDialog {
 		
 		cbxLanguage = new JComboBox<>();
 		cbxLanguage.setModel(new DefaultComboBoxModel<>(UILanguage.getWrapper().getList()));
-		cbxLanguage.setSelectedIndex(CCProperties.getInstance().PROP_UI_LANG.getValue().asInt());
+		cbxLanguage.setSelectedIndex(ccprops.PROP_UI_LANG.getValue().asInt());
 		cbxLanguage.addActionListener(e -> updateLanguage());
 		cbxLanguage.setBounds(273, 184, 175, 25);
 		getContentPane().add(cbxLanguage);
 		
 		cbCheckForUpdates = new JCheckBox();
-		cbCheckForUpdates.setSelected(CCProperties.getInstance().PROP_COMMON_CHECKFORUPDATES.getValue());
+		cbCheckForUpdates.setSelected(ccprops.PROP_COMMON_CHECKFORUPDATES.getValue());
 		cbCheckForUpdates.setBounds(269, 221, 175, 24);
 		cbCheckForUpdates.setSelected(true);
 		getContentPane().add(cbCheckForUpdates);
@@ -113,7 +116,7 @@ public class InitialConfigFrame extends JDialog {
 		getContentPane().add(lblLooknfeel);
 		
 		cbxLooknFeel = new CCEnumComboBox<>(AppTheme.getWrapper());
-		cbxLooknFeel.setSelectedEnum(CCProperties.getInstance().PROP_UI_APPTHEME.getValue());
+		cbxLooknFeel.setSelectedEnum(ccprops.PROP_UI_APPTHEME.getValue());
 		cbxLooknFeel.addActionListener(e -> updateLNF());
 		cbxLooknFeel.setBounds(273, 258, 175, 25);
 		getContentPane().add(cbxLooknFeel);
@@ -124,7 +127,7 @@ public class InitialConfigFrame extends JDialog {
 		
 		edDatabasename = new JTextField();
 		edDatabasename.setBounds(273, 112, 175, 20);
-		edDatabasename.setText(CCProperties.getInstance().PROP_DATABASE_NAME.getValue());
+		edDatabasename.setText(ccprops.PROP_DATABASE_NAME.getValue());
 		getContentPane().add(edDatabasename);
 		edDatabasename.setColumns(10);
 		
@@ -133,7 +136,7 @@ public class InitialConfigFrame extends JDialog {
 		getContentPane().add(lblCreatePeriodicallyBackups);
 		
 		cbBackups = new JCheckBox();
-		cbBackups.setSelected(CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.getValue());
+		cbBackups.setSelected(ccprops.PROP_BACKUP_CREATEBACKUPS.getValue());
 		cbBackups.setBounds(269, 295, 175, 24);
 		getContentPane().add(cbBackups);
 		
@@ -221,25 +224,25 @@ public class InitialConfigFrame extends JDialog {
 			if (!b) return;
 		}
 
-		CCProperties.getInstance().PROP_DATABASE_DRIVER.setValue((CCDatabaseDriver) cbxDatabaseDriver.getSelectedItem());
+		ccprops.PROP_DATABASE_DRIVER.setValue((CCDatabaseDriver) cbxDatabaseDriver.getSelectedItem());
 		
-		CCProperties.getInstance().PROP_COMMON_CHECKFORUPDATES.setValue(cbCheckForUpdates.isSelected());
+		ccprops.PROP_COMMON_CHECKFORUPDATES.setValue(cbCheckForUpdates.isSelected());
 		
-		CCProperties.getInstance().PROP_DATABASE_NAME.setValue(edDatabasename.getText());
+		ccprops.PROP_DATABASE_NAME.setValue(edDatabasename.getText());
 		
-		CCProperties.getInstance().PROP_BACKUP_CREATEBACKUPS.setValue(cbBackups.isSelected());
+		ccprops.PROP_BACKUP_CREATEBACKUPS.setValue(cbBackups.isSelected());
 		
-		if (CCProperties.getInstance().PROP_UI_LANG.getValue().asInt() != cbxLanguage.getSelectedIndex()) {
-			CCProperties.getInstance().PROP_UI_LANG.setValue(UILanguage.getWrapper().findOrDefault(cbxLanguage.getSelectedIndex(), UILanguage.ENGLISCH));
-			LocaleBundle.updateLang();
+		if (ccprops.PROP_UI_LANG.getValue().asInt() != cbxLanguage.getSelectedIndex()) {
+			ccprops.PROP_UI_LANG.setValue(UILanguage.getWrapper().findOrDefault(cbxLanguage.getSelectedIndex(), UILanguage.ENGLISCH));
+			LocaleBundle.updateLang(ccprops);
 		}
 
-		if (CCProperties.getInstance().PROP_UI_APPTHEME.getValue() != cbxLooknFeel.getSelectedEnum()) {
-			CCProperties.getInstance().PROP_UI_APPTHEME.setValue(cbxLooknFeel.getSelectedEnum());
+		if (ccprops.PROP_UI_APPTHEME.getValue() != cbxLooknFeel.getSelectedEnum()) {
+			ccprops.PROP_UI_APPTHEME.setValue(cbxLooknFeel.getSelectedEnum());
 			LookAndFeelManager.setLookAndFeel(cbxLooknFeel.getSelectedEnum(), false);
 		}
 				
-		if (!edVLCPath.getPath().isEmpty()) CCProperties.getInstance().PROP_PLAY_VLC_PATH.setValue(edVLCPath.getPath());
+		if (!edVLCPath.getPath().isEmpty()) ccprops.PROP_PLAY_VLC_PATH.setValue(edVLCPath.getPath());
 		
 		result = true;
 
@@ -254,8 +257,8 @@ public class InitialConfigFrame extends JDialog {
 		dispose();
 	}
 
-	public static boolean ShowWizard() {
-		InitialConfigFrame f = new InitialConfigFrame();
+	public static boolean ShowWizard(CCProperties ccprops) {
+		InitialConfigFrame f = new InitialConfigFrame(ccprops);
 		
 		f.setVisible(true);
 		

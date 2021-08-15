@@ -1,9 +1,15 @@
 package de.jClipCorn.gui.guiComponents;
 
+import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.database.CCMovieList;
+
 public class CoverLabelFullsize extends CoverLabel
 {
-	public CoverLabelFullsize()
+	@DesignCreate
+	private static CoverLabelFullsize designCreate() { return new CoverLabelFullsize(null); }
+
+	public CoverLabelFullsize(CCMovieList ml)
 	{
-		super(false);
+		super(ml, false);
 	}
 }

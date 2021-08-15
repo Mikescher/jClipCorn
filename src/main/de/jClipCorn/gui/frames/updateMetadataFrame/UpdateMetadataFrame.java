@@ -10,6 +10,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.exceptions.EnumFormatException;
@@ -23,12 +24,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-public class UpdateMetadataFrame extends JFrame {
+public class UpdateMetadataFrame extends JCCFrame {
 	private static final long serialVersionUID = -2163175118745491143L;
 	
 	private enum FilterState { ALL, CHANGED }
 	
-	private final CCMovieList movielist;
 	private FilterState selectedFilter;
 	
 	private UpdateMetadataTable tableMain;
@@ -50,9 +50,8 @@ public class UpdateMetadataFrame extends JFrame {
 	private JButton btnUpdateAllReferences;
 	
 	public UpdateMetadataFrame(Component owner, CCMovieList mlist) {
-		super();
+		super(mlist);
 		setSize(new Dimension(1200, 475));
-		movielist = mlist;
 
 		initGUI();
 		setLocationRelativeTo(owner);
@@ -262,7 +261,7 @@ public class UpdateMetadataFrame extends JFrame {
 				
 				if (elem.OnlineMeta != null && elem.OnlineMeta.OnlineScore != null) continue;
 				
-				Metadataparser mp = ref.getMetadataParser();
+				Metadataparser mp = ref.getMetadataParser(movielist);
 				if (mp == null) continue;
 				
 				try {

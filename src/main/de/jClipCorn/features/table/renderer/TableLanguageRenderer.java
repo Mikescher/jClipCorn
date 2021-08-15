@@ -1,5 +1,6 @@
 package de.jClipCorn.features.table.renderer;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 
 import javax.swing.*;
@@ -7,8 +8,8 @@ import javax.swing.*;
 public class TableLanguageRenderer extends TableRenderer {
 	private static final long serialVersionUID = 5357005350195701739L;
 
-	public TableLanguageRenderer() {
-		super();
+	public TableLanguageRenderer(CCMovieList ml) {
+		super(ml);
 	}
 
 	@Override

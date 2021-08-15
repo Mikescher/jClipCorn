@@ -7,6 +7,7 @@ import de.jClipCorn.database.history.CCCombinedHistoryEntry;
 import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -25,17 +26,13 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
-public class DatabaseHistoryFrame extends JFrame
+public class DatabaseHistoryFrame extends JCCFrame
 {
-	private final CCMovieList movielist;
-
 	private String _triggerError = Str.Empty;
 	private int _tcount;
 
 	public DatabaseHistoryFrame(Component owner, CCMovieList mlist) {
-		super();
-
-		movielist = mlist;
+		super(mlist);
 
 		initComponents();
 		postInit();
@@ -46,9 +43,7 @@ public class DatabaseHistoryFrame extends JFrame
 	}
 
 	public DatabaseHistoryFrame(Component owner, CCMovieList mlist, String idfilter) {
-		super();
-
-		movielist = mlist;
+		super(mlist);
 
 		initComponents();
 		postInit();
@@ -64,10 +59,6 @@ public class DatabaseHistoryFrame extends JFrame
 			edFilter.setText(idfilter);
 			queryHistory(null, true);
 		}
-	}
-
-	public CCMovieList getMovieList() {
-		return movielist;
 	}
 
 	private void postInit()
@@ -295,7 +286,7 @@ public class DatabaseHistoryFrame extends JFrame
 		progressBar = new JProgressBar();
 		splitPane1 = new JSplitPane();
 		tableEntries = new DatabaseHistoryTable(this);
-		tableChanges = new DatabaseHistoryChangesTable();
+		tableChanges = new DatabaseHistoryChangesTable(this);
 		label5 = new JLabel();
 		tfOldValue = new ReadableTextField();
 		label6 = new JLabel();

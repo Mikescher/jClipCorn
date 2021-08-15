@@ -29,12 +29,13 @@ public abstract class StatisticsChart extends StatisticsPanel {
 	
 	protected final static Color HISTOGRAMMCHART_COLOR = Color.BLUE;
 	protected final static Color HISTOGRAMMACKGROUND_COLOR = Color.LIGHT_GRAY;
-	
-	private final CCMovieList movielist;
-	
+
 	public StatisticsChart(CCMovieList ml, StatisticsTypeFilter _source) {
-		super(_source);
-		movielist = ml;
+		super(ml, _source);
+	}
+
+	public CCProperties ccprops() {
+		return movielist.ccprops();
 	}
 
 	private JFreeChart getChart() {
@@ -50,7 +51,7 @@ public abstract class StatisticsChart extends StatisticsPanel {
 		
 		ChartPanel chartPanel;
 		
-		if (CCProperties.getInstance().PROP_STATISTICS_INTERACTIVECHARTS.getValue()) {
+		if (movielist.ccprops().PROP_STATISTICS_INTERACTIVECHARTS.getValue()) {
 			chartPanel = new ChartPanel(new JFreeChart(new XYPlot()));
 		} else {
 			chartPanel = new FixedChartPanel(new JFreeChart(new XYPlot()));

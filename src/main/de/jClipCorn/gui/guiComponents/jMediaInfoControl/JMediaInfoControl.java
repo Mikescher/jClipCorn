@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.guiComponents.jMediaInfoControl;
 
 import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
@@ -34,16 +35,18 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 	private final List<ActionListener> _changeListener = new ArrayList<>();
 
 	private final Func0to1<FSPath> _pathProvider;
+	private final CCMovieList movielist;
 
 	@DesignCreate
 	private static JMediaInfoControl designCreate()
 	{
-		return new JMediaInfoControl(() -> null);
+		return new JMediaInfoControl(null, () -> null);
 	}
 
-	public JMediaInfoControl(Func0to1<FSPath> pathProvider) {
+	public JMediaInfoControl(CCMovieList ml, Func0to1<FSPath> pathProvider) {
 		super();
 		_pathProvider = pathProvider;
+		movielist = ml;
 
 		initGUI();
 		updateUIControls();
@@ -57,11 +60,11 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 		btnEdit.addActionListener(e ->
 		{
 			if (value != null)
-				new EditMediaInfoDialog(JMediaInfoControl.this, _pathProvider.invoke(), value, JMediaInfoControl.this).setVisible(true);
+				new EditMediaInfoDialog(JMediaInfoControl.this, movielist, _pathProvider.invoke(), value, JMediaInfoControl.this).setVisible(true);
 			else if (queryResult != null)
-				new EditMediaInfoDialog(JMediaInfoControl.this, _pathProvider.invoke(), queryResult, JMediaInfoControl.this).setVisible(true);
+				new EditMediaInfoDialog(JMediaInfoControl.this, movielist, _pathProvider.invoke(), queryResult, JMediaInfoControl.this).setVisible(true);
 			else
-				new EditMediaInfoDialog(JMediaInfoControl.this, _pathProvider.invoke(), JMediaInfoControl.this).setVisible(true);
+				new EditMediaInfoDialog(JMediaInfoControl.this, movielist, _pathProvider.invoke(), JMediaInfoControl.this).setVisible(true);
 		});
 		btnEdit.setMargin(new Insets(2, 4, 2, 4));
 		btnEdit.setFocusable(false);

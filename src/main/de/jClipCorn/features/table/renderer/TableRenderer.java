@@ -1,6 +1,8 @@
 package de.jClipCorn.features.table.renderer;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.LookAndFeelManager;
+import de.jClipCorn.properties.CCProperties;
 import org.pushingpixels.substance.api.renderer.SubstanceDefaultTableCellRenderer;
 
 import javax.swing.*;
@@ -9,8 +11,15 @@ import java.awt.*;
 public class TableRenderer extends SubstanceDefaultTableCellRenderer implements ResizableColumnRenderer {
 	private static final long serialVersionUID = -5742763325569140076L;
 
-	public TableRenderer() {
+	protected final CCMovieList movielist;
+
+	public TableRenderer(CCMovieList ml) {
 		super();
+		movielist = ml;
+	}
+
+	public CCProperties ccprops() {
+		return movielist.ccprops();
 	}
 
 	@Override

@@ -1,51 +1,40 @@
 package de.jClipCorn.gui.frames.importElementsFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import de.jClipCorn.features.serialization.xmlimport.DatabaseXMLImporter;
-import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
-import de.jClipCorn.features.serialization.xmlimport.ImportState;
-import de.jClipCorn.util.exceptions.SerializationException;
-import de.jClipCorn.util.xml.CCXMLElement;
-import de.jClipCorn.util.xml.CCXMLException;
-import de.jClipCorn.util.xml.CCXMLParser;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.serialization.xmlimport.DatabaseXMLImporter;
+import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
+import de.jClipCorn.features.serialization.xmlimport.ImportState;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.SerializationException;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.xml.CCXMLElement;
+import de.jClipCorn.util.xml.CCXMLException;
+import de.jClipCorn.util.xml.CCXMLParser;
 
-public class ImportElementsFrame extends JFrame {
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
+public class ImportElementsFrame extends JCCFrame {
 	private static final long serialVersionUID = -7243383487017811810L;
 	
 	private JPanel contentPane;
@@ -76,14 +65,12 @@ public class ImportElementsFrame extends JFrame {
 	
 	private DefaultListModel<CCXMLElement> listModel;
 
-	private CCMovieList movielist;
 	private int data_xmlver = 1;
 	private CCXMLParser document;
 
 	public ImportElementsFrame(Component owner, String xmlcontent, CCMovieList movielist) {
-		super();
-		this.movielist = movielist;
-		
+		super(movielist);
+
 		initGUI();
 		setLocationRelativeTo(owner);
 		
@@ -129,7 +116,7 @@ public class ImportElementsFrame extends JFrame {
 		pnlTopRight.add(pnlTopRightInner, BorderLayout.EAST);
 		pnlTopRightInner.setLayout(new BorderLayout(0, 0));
 		
-		chckbxOnlyCover = new PropertyCheckbox(CCProperties.getInstance().PROP_IMPORT_ONLYWITHCOVER);
+		chckbxOnlyCover = new PropertyCheckbox(ccprops().PROP_IMPORT_ONLYWITHCOVER);
 		pnlTopRightInner.add(chckbxOnlyCover, BorderLayout.EAST);
 		
 		pnlCenter = new JPanel();
@@ -233,16 +220,16 @@ public class ImportElementsFrame extends JFrame {
 		btnAdd.setEnabled(false);
 		pnlInfo.add(btnAdd, "7, 12"); //$NON-NLS-1$
 		
-		chckbxResetDate = new PropertyCheckbox(CCProperties.getInstance().PROP_IMPORT_RESETADDDATE);
+		chckbxResetDate = new PropertyCheckbox(ccprops().PROP_IMPORT_RESETADDDATE);
 		pnlInfo.add(chckbxResetDate, "2, 14, 6, 1"); //$NON-NLS-1$
 		
-		chcbxResetViewed = new PropertyCheckbox(CCProperties.getInstance().PROP_IMPORT_RESETVIEWED);
+		chcbxResetViewed = new PropertyCheckbox(ccprops().PROP_IMPORT_RESETVIEWED);
 		pnlInfo.add(chcbxResetViewed, "2, 16, 6, 1"); //$NON-NLS-1$
 		
-		chcbxResetScore = new PropertyCheckbox(CCProperties.getInstance().PROP_IMPORT_RESETSCORE);
+		chcbxResetScore = new PropertyCheckbox(ccprops().PROP_IMPORT_RESETSCORE);
 		pnlInfo.add(chcbxResetScore, "2, 18, 6, 1"); //$NON-NLS-1$
 		
-		chckbxResetTags = new PropertyCheckbox(CCProperties.getInstance().PROP_IMPORT_RESETTAGS);
+		chckbxResetTags = new PropertyCheckbox(ccprops().PROP_IMPORT_RESETTAGS);
 		pnlInfo.add(chckbxResetTags, "2, 20, 6, 1"); //$NON-NLS-1$
 		
 		setSize(new Dimension(650, 350));
@@ -357,7 +344,7 @@ public class ImportElementsFrame extends JFrame {
 		AddMovieFrame amf = new AddMovieFrame(this, movielist);
 		
 		try {
-			CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
+			CCMovie tmpMov = new CCMovie(CCMovieList.createStub(CCProperties.createInMemory()), -1);
 			tmpMov.setDefaultValues(false);
 			DatabaseXMLImporter.parseSingleMovie(tmpMov, value, f->null, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), false, true)));
 		} catch (CCFormatException | SerializationException | CCXMLException e) {

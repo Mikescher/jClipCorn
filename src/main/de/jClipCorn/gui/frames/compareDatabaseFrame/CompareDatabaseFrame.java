@@ -5,11 +5,10 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
-import de.jClipCorn.gui.guiComponents.*;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
@@ -25,18 +24,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
-public class CompareDatabaseFrame extends JFrame
+public class CompareDatabaseFrame extends JCCFrame
 {
-	private final CCMovieList movielist;
-
 	private CompareState currState = null;
 	private Thread activeThread = null;
 
 	public CompareDatabaseFrame(Component owner, CCMovieList ml)
 	{
-		super();
-
-		movielist = ml;
+		super(ml);
 
 		initComponents();
 		postInit();
@@ -49,7 +44,7 @@ public class CompareDatabaseFrame extends JFrame
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setTitle(LocaleBundle.getString("CompareDatabaseFrame.this.title")); //$NON-NLS-1$
 
-		edDatabaseName.setText(CCProperties.getInstance().PROP_DATABASE_NAME.getDefault());
+		edDatabaseName.setText(ccprops().PROP_DATABASE_NAME.getDefault());
 
 		try {
 			edRules.setText(SimpleFileUtils.readTextResource("/compare_rules_example.txt", this.getClass())); //$NON-NLS-1$

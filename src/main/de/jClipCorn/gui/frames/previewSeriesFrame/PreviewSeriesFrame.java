@@ -25,7 +25,6 @@ import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupListener;
 import de.jClipCorn.gui.guiComponents.language.LanguageDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -50,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener, ActionCallbackListener, IActionRootFrame
+public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListener, ActionCallbackListener, IActionRootFrame
 {
 	private static final List<Tuple<CCSeries, PreviewSeriesFrame>> _activeFrames = new ArrayList<>();
 
@@ -60,7 +59,7 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 
 	private PreviewSeriesFrame(Component owner, CCSeries ser)
 	{
-		super();
+		super(ser.getMovieList());
 
 		series = ser;
 
@@ -75,7 +74,7 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 
 	private PreviewSeriesFrame(Component owner, CCSeason sea)
 	{
-		super();
+		super(sea.getMovieList());
 
 		series = sea.getSeries();
 
@@ -90,7 +89,7 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 
 	private PreviewSeriesFrame(Component owner, CCEpisode epi)
 	{
-		super();
+		super(epi.getMovieList());
 
 		series = epi.getSeries();
 
@@ -121,7 +120,7 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 		setSize(size1.width, Math.max(size1.height, size2.height));
 		setMinimumSize(new Dimension(getMinimumSize().width, size2.height));
 
-		series.getMovieList().addChangeListener(_mlListener = new CCDBUpdateAdapter() {
+		movielist.addChangeListener(_mlListener = new CCDBUpdateAdapter() {
 			@Override
 			public void onChangeDatabaseElement(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] props) {
 				if (root.equals(series)) updateData();
@@ -164,7 +163,7 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 	}
 
 	public static void show(Component owner, CCSeries data, boolean forceNoSingleton) {
-		if (forceNoSingleton || !CCProperties.getInstance().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
+		if (forceNoSingleton || !data.getMovieList().ccprops().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
 			new PreviewSeriesFrame(owner, data).setVisible(true);
 			return;
 		}
@@ -181,7 +180,7 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 	}
 
 	public static void show(Component owner, CCSeason data, boolean forceNoSingleton) {
-		if (forceNoSingleton || !CCProperties.getInstance().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
+		if (forceNoSingleton || !data.getMovieList().ccprops().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
 			new PreviewSeriesFrame(owner, data).setVisible(true);
 			return;
 		}
@@ -201,7 +200,7 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 	}
 
 	public static void show(Component owner, CCEpisode data, boolean forceNoSingleton) {
-		if (forceNoSingleton || !CCProperties.getInstance().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
+		if (forceNoSingleton || !data.getMovieList().ccprops().PROP_PREVIEWSERIES_SINGLETON.getValue()) {
 			new PreviewSeriesFrame(owner, data).setVisible(true);
 			return;
 		}
@@ -271,7 +270,7 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 
 	private void autoPlay() {
 		var next = NextEpisodeHelper.findNextEpisode(series);
-		VLCRobotFrame.show(this).enqueue(series);
+		VLCRobotFrame.show(this, movielist).enqueue(series);
 		if (next != null) {
 			changeSeason(next.getSeason());
 			tabSeason.select(next);
@@ -377,7 +376,7 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 
 	private void onWindowClosed() {
 		_activeFrames.removeIf(p -> p.Item2 == this);
-		series.getMovieList().removeChangeListener(_mlListener);
+		movielist.removeChangeListener(_mlListener);
 	}
 
 	private void onPlayNext() {
@@ -418,9 +417,9 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 		pnlSearch = new JPanel();
 		edSearch = new JTextField();
 		btnSearch = new JSearchButton();
-		cvrChooser = new JCoverChooser();
+		cvrChooser = new JCoverChooser(movielist);
 		pnlInfo = new JPanel();
-		lblCover = new DatabaseElementPreviewLabel();
+		lblCover = new DatabaseElementPreviewLabel(movielist);
 		lblOnlineScore = new OnlineScoreDisplay();
 		label1 = new JLabel();
 		lblLength = new JLabel();
@@ -440,7 +439,7 @@ public class PreviewSeriesFrame extends JFrame implements UpdateCallbackListener
 		lblGroups = new MultiLineTextLabel();
 		label8 = new JLabel();
 		lblGenres = new MultiLineTextLabel();
-		btnOnline = new OnlineRefButton();
+		btnOnline = new OnlineRefButton(movielist);
 		pnlMain = new JPanel();
 		lblSeason = new JLabel();
 		tabSeason = new SerTable(this);

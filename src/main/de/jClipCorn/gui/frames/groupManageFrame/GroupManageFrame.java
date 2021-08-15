@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.jCheckBoxList.CheckBoxChangedActionListener;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -24,13 +25,9 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupManageFrame extends JFrame {
-	private final CCMovieList movielist;
-
+public class GroupManageFrame extends JCCFrame {
 	public GroupManageFrame(CCMovieList ml, Component owner) {
-		super();
-
-		movielist = ml;
+		super(ml);
 
 		initComponents();
 		postInit();
@@ -331,7 +328,7 @@ public class GroupManageFrame extends JFrame {
 		btnAdd = new JButton();
 		edFilterOnlyActive = new JCheckBox();
 		edFilter = new JTextField();
-		tabGroups = new GroupManageTable();
+		tabGroups = new GroupManageTable(this);
 		scrollPane1 = new JScrollPane();
 		listElements = new GroupManagerCheckBoxList();
 		pnlData = new JPanel();

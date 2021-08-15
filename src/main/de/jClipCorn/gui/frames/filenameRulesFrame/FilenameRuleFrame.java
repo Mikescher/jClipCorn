@@ -1,33 +1,28 @@
 package de.jClipCorn.gui.frames.filenameRulesFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.filesystem.SimpleFileUtils;
-
-public class FilenameRuleFrame extends JFrame {
+public class FilenameRuleFrame extends JCCFrame {
 	private static final long serialVersionUID = 692779597355844596L;
+
 	private JScrollPane scrollPane;
 	private JTextArea memoMain;
 	private JPanel pnlBottom;
 	private JButton btnOK;
 	
-	public FilenameRuleFrame(Component owner) {
-		super();
+	public FilenameRuleFrame(Component owner, CCMovieList ml) {
+		super(ml);
 		
 		initGUI();
 		setLocationRelativeTo(owner);

@@ -6,7 +6,7 @@ new FormModel {
 	"i18n.keyPrefix": "LogFrame"
 	contentType: "form/swing"
 	root: new FormRoot {
-		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "relgap, default:grow, relgap"
 			"$rowSpecs": "relgap, default:grow, relgap"
 		} ) {
@@ -255,7 +255,7 @@ new FormModel {
 					add( new FormContainer( "de.jClipCorn.gui.frames.logFrame.LogChangesTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "lsChanges"
 						auxiliary() {
-							"JavaCodeGenerator.customCreateCode": "new ${field_type}(this, _movielist);"
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(this, movielist);"
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 1

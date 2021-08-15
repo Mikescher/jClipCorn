@@ -13,6 +13,7 @@ import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
@@ -28,14 +29,11 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler
+public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, UserDataProblemHandler
 {
-	private final CCMovieList movieList;
-
 	public AddSeriesFrame(Component owner, CCMovieList mlist)
 	{
-		super();
-		movieList = mlist;
+		super(mlist);
 
 		initComponents();
 		postInit();
@@ -53,7 +51,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 
 	private void onParseOnline(ActionEvent e)
 	{
-		(new ParseOnlineDialog(this, this, CCDBElementTyp.SERIES)).setVisible(true);
+		(new ParseOnlineDialog(this, movielist, this, CCDBElementTyp.SERIES)).setVisible(true);
 	}
 
 	private void onOK(ActionEvent e)
@@ -89,12 +87,12 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		}
 
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(problems, this, this);
+			InputErrorDialog amied = new InputErrorDialog(movielist, problems, this, this);
 			amied.setVisible(true);
 			return;
 		}
 
-		CCSeries newS = movieList.createNewEmptySeries();
+		CCSeries newS = movielist.createNewEmptySeries();
 
 		newS.beginUpdating();
 
@@ -146,7 +144,7 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 			edCvrControl.getResizedImageForStorage()
 		);
 
-		UserDataProblem.testSeriesData(ret, movieList, null, spack);
+		UserDataProblem.testSeriesData(ret, movielist, null, spack);
 
 		return ret.isEmpty();
 	}
@@ -254,12 +252,12 @@ public class AddSeriesFrame extends JFrame implements ParseResultHandler, UserDa
 		label1 = new JLabel();
 		edTitle = new JTextField();
 		label13 = new JLabel();
-		edReference = new JReferenceChooser();
+		edReference = new JReferenceChooser(movielist);
 		label2 = new JLabel();
 		spnOnlinescore = new JSpinner();
 		label12 = new JLabel();
 		label14 = new JLabel();
-		edGroups = new GroupListEditor(movieList);
+		edGroups = new GroupListEditor(movielist);
 		label3 = new JLabel();
 		cbxFSK = new CCEnumComboBox<>(CCOptionalFSK.getWrapper());
 		label4 = new JLabel();

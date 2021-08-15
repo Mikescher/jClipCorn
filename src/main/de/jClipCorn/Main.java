@@ -12,7 +12,6 @@ import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.ResourcePreloadMode;
-import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.SwingUtils;
 
@@ -32,11 +31,13 @@ public class Main {
 	public final static String DBVERSION = "19";    //$NON-NLS-1$
 	public final static String JXMLVER   = "6";     //$NON-NLS-1$
 
-	private final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
+	public final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
 	
 	public static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
 	public static boolean BETA = true;
-		
+
+	private static CCProperties _uiPropertyAcc;
+
 	public static void main(String[] arg) {
 		Globals.MILLIS_MAIN = System.currentTimeMillis();
 
@@ -44,65 +45,68 @@ public class Main {
 
 		Globals.TIMINGS.start(Globals.TIMING_INIT_TOTAL);
 		{
+			CCProperties ccprops;
+
 			Globals.TIMINGS.start(Globals.TIMING_INIT_LOAD_PROPERTIES);
 			{
-				CCProperties.create(FilesystemUtils.getRealSelfDirectory().append(PROPERTIES_PATH), arg); // FIRST ACTION - CACHE THIS SHIT - FUCKING IMPORTANT
+				_uiPropertyAcc = ccprops = CCProperties.create(FilesystemUtils.getRealSelfDirectory().append(PROPERTIES_PATH), arg);
 			}
 			Globals.TIMINGS.stop(Globals.TIMING_INIT_LOAD_PROPERTIES);
 
-			CCLog.setPath(CCProperties.getInstance().PROP_LOG_PATH.getValue());
+			CCLog.setPath(ccprops.PROP_LOG_PATH.getValue());
+			CCLog.setCCProps(ccprops);
 
 			Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler.getInstance()); // For Main Thread
 
 			Globals.TIMINGS.start(Globals.TIMING_INIT_TESTREADONLY);
 			{
-				FilesystemUtils.testWritePermissions();
+				FilesystemUtils.testWritePermissions(ccprops);
 			}
 			Globals.TIMINGS.stop(Globals.TIMING_INIT_TESTREADONLY);
 
-			final CCMovieList mList = CCMovieList.createInstanceMovieList();
+			final CCMovieList mList = CCMovieList.createInstanceMovieList(ccprops);
 
-			init();
+			init(mList);
 
 			SwingUtils.invokeLater(() ->
 			{
-				LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_APPTHEME.getValue(), false);
+				LookAndFeelManager.setLookAndFeel(ccprops.PROP_UI_APPTHEME.getValue(), false);
 
 				mList.showInitialWizard();
 
 				final MainFrame myFrame = new MainFrame(mList);
 				myFrame.start();
 
-				mList.connect(myFrame, () -> post_init(arg));
+				mList.connect(myFrame, () -> post_init(ccprops, arg));
 			});
 		}
 		Globals.TIMINGS.stop(Globals.TIMING_INIT_TOTAL);
 	}
 	
-	private static void init() {
-		DEBUG |= CCProperties.getInstance().PROP_OTHER_DEBUGMODE.getValue();
+	private static void init(CCMovieList ml) {
+		DEBUG |= ml.ccprops().PROP_OTHER_DEBUGMODE.getValue();
 
-		if (CCProperties.getInstance().PROP_COMMON_PRESCANFILESYSTEM.getValue()) {
-			DriveMap.preScan(); // creates a new Thread
+		if (ml.ccprops().PROP_COMMON_PRESCANFILESYSTEM.getValue()) {
+			ml.getDriveMap().preScan(); // creates a new Thread
 		}
 
 		Resources.init();
 		
-		if (CCProperties.getInstance().PROP_LOADING_PRELOADRESOURCES.getValue() == ResourcePreloadMode.SYNC_PRELOAD) {
+		if (ml.ccprops().PROP_LOADING_PRELOADRESOURCES.getValue() == ResourcePreloadMode.SYNC_PRELOAD) {
 			Globals.TIMINGS.start(Globals.TIMING_INIT_PRELOADRESOURCES);
 			Resources.preload();
 			Globals.TIMINGS.stop(Globals.TIMING_INIT_PRELOADRESOURCES);
-		} else if (CCProperties.getInstance().PROP_LOADING_PRELOADRESOURCES.getValue() == ResourcePreloadMode.ASYNC_PRELOAD) {
+		} else if (ml.ccprops().PROP_LOADING_PRELOADRESOURCES.getValue() == ResourcePreloadMode.ASYNC_PRELOAD) {
 			Globals.TIMINGS.start(Globals.TIMING_INIT_PRELOADRESOURCES);
 			Resources.preload_async();
 			Globals.TIMINGS.stop(Globals.TIMING_INIT_PRELOADRESOURCES);
 		}
 		
-		CCLog.addDebug(LocaleBundle.getTranslationCount() + " Translations in Locale " + LocaleBundle.getCurrentLocale()); //$NON-NLS-1$
+		CCLog.addDebug(LocaleBundle.getTranslationCount(ml.ccprops()) + " Translations in Locale " + LocaleBundle.getCurrentLocale(ml.ccprops())); //$NON-NLS-1$
 	}
 
 	@SuppressWarnings({"unchecked", "nls"})
-	private static void post_init(String[] args) {
+	private static void post_init(CCProperties ccprops, String[] args) {
 		try {
 			for (String a : args) {
 				if (a.toLowerCase().startsWith("--statistics="))
@@ -119,13 +123,24 @@ public class Main {
 
 				if (a.toLowerCase().startsWith("--settings"))
 				{
-					SettingsFrame sf = new SettingsFrame(MainFrame.getInstance(), CCProperties.getInstance());
+					SettingsFrame sf = new SettingsFrame(MainFrame.getInstance(), ccprops);
 					sf.setVisible(true);
 				}
 			}
 		} catch (Exception e) {
 			CCLog.addFatalError(e);
 		}
+	}
+
+	/**
+	 * This method should only be used in very specific cases
+	 * Almost always you should have a CCMovieList instance and take its ccprops()
+	 * Because there can exist multiple CCProperties, and they kinda are related with their databases
+	 *
+	 * But anyway - if you really need the CCProperties that were loaded on startup - use these...
+	 */
+	public static CCProperties getCurrentGlobalCCProperties() {
+		return _uiPropertyAcc;
 	}
 }
 

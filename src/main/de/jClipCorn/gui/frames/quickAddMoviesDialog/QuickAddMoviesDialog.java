@@ -8,6 +8,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.guiComponents.JFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -28,12 +29,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuickAddMoviesDialog extends JDialog {
+public class QuickAddMoviesDialog extends JCCDialog {
 	private static final long serialVersionUID = 5295134501386181860L;
 
 	private final JPanel contentPanel = new JPanel();
 
-	private final CCMovieList movielist;
 	private final FSPath[] inputFiles;
 	private JFSPathTextField edRoot;
 	private QuickAddMoviesTable lstData;
@@ -44,20 +44,19 @@ public class QuickAddMoviesDialog extends JDialog {
 	 * @wbp.parser.constructor
 	 */
 	public QuickAddMoviesDialog(JFrame owner, CCMovieList mlist, FSPath[] files) {
-		super();
+		super(mlist);
 
-		movielist = mlist;
 		inputFiles = files;
 		
 		initGUI();
 
 		setLocationRelativeTo(owner);
 		
-		edRoot.setPath(mlist.getCommonMoviesPath().toFSPath());
+		edRoot.setPath(mlist.getCommonMoviesPath().toFSPath(this));
 		if (edRoot.getPath().isEmpty()) {
 			CCMovie m = mlist.iteratorMovies().lastOrNull();
 			if (m != null) {
-				edRoot.setPath(m.Parts.get(0).toFSPath().getParent());
+				edRoot.setPath(m.Parts.get(0).toFSPath(this).getParent());
 			}
 		}
 		lstData.setData(CCStreams.iterate(files).map(this::getPaths).enumerate());
@@ -100,7 +99,7 @@ public class QuickAddMoviesDialog extends JDialog {
 		});
 		edRoot.setColumns(10);
 		
-		lstData = new QuickAddMoviesTable();
+		lstData = new QuickAddMoviesTable(this);
 		contentPanel.add(lstData, "1, 3, fill, fill"); //$NON-NLS-1$
 
 		JPanel buttonPane = new JPanel();
@@ -139,7 +138,7 @@ public class QuickAddMoviesDialog extends JDialog {
 	}
 
 	private Tuple<FSPath, CCPath> getPaths(FSPath f0) {
-		var f1 = CCPath.createFromFSPath(edRoot.getPath().append(f0.getFilenameWithExt()));
+		var f1 = CCPath.createFromFSPath(edRoot.getPath().append(f0.getFilenameWithExt()), this);
 		
 		return Tuple.Create(f0, f1);
 	}
@@ -152,7 +151,7 @@ public class QuickAddMoviesDialog extends JDialog {
 			var p = getPaths(file);
 
 			var src = p.Item1;
-			var dst = p.Item2.toFSPath();
+			var dst = p.Item2.toFSPath(this);
 
 			if (!src.fileExists()) return;
 
@@ -188,7 +187,7 @@ public class QuickAddMoviesDialog extends JDialog {
 					var p = getPaths(file);
 
 					var src = p.Item1;
-					var dst = p.Item2.toFSPath();
+					var dst = p.Item2.toFSPath(this);
 
 					final int iv = i;
 					SwingUtils.invokeLater(() ->

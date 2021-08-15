@@ -20,7 +20,7 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 	private static WatchHistoryTable designCreate() { return new WatchHistoryTable(null); }
 
 	public WatchHistoryTable(WatchHistoryFrame owner) {
-		super();
+		super(owner);
 		this.owner = owner;
 	}
 	
@@ -30,6 +30,7 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 		List<JCCSimpleColumnPrototype<WatchHistoryElement>> r = new ArrayList<>();
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"star,min=auto,max=400,expandonly",
 				"ClipTableModel.Title",
 				WatchHistoryElement::getName,
@@ -38,6 +39,7 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"WatchHistoryFrame.tableHeaders.Date",
 				e -> e.getTimestamp().toStringUIShort(),
@@ -46,6 +48,7 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"ClipTableModel.Quality",
 				e -> e.getMediaInfoCategory().getShortText(),
@@ -54,6 +57,7 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				Str.Empty,
 				e -> Str.Empty,
@@ -62,6 +66,7 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"ClipTableModel.Length",
 				e -> TimeIntervallFormatter.formatShort(e.getLength()),
@@ -70,6 +75,7 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"ClipTableModel.Tags",
 				null,
@@ -78,6 +84,7 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"ClipTableModel.Format",
 				e -> e.getFormat().asString(),
@@ -86,6 +93,7 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"ClipTableModel.Size",
 				e -> e.getSize().getFormatted(),

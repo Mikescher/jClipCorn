@@ -3,7 +3,6 @@ package de.jClipCorn.features.actionTree.menus.impl;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.actionTree.menus.ClipPopupMenu;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.listener.ActionCallbackListener;
@@ -17,7 +16,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 	private final Component _frame;
 
 	public ClipMoviePopup(Component f, CCMovie m) {
-		super();
+		super(m.getMovieList());
 		_movie = m;
 		_frame = f;
 		init();
@@ -29,7 +28,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		addPlayAction(_movie, false);
 		addPlayAction(_movie, true);
 
-		if (CCProperties.getInstance().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath()))
+		if (ccprops().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops())))
 		{
 			addAction("QueueMovieInRobot");
 		}

@@ -35,13 +35,13 @@ public class CCDefaultCoverCache implements ICoverCache {
 	protected final HashMap<Integer, CCCoverData> _elements;
 	protected final List<CCCoverData> _elementsList;
 
-	private FSPath _coverPath;
+	private final FSPath _coverPath;
 
 	public CCDefaultCoverCache(CCDatabase database) {
 		_db = database;
 		_elements = new HashMap<>();
 		_elementsList = new ArrayList<>();
-		_cache = new CachedHashMap<>(CCProperties.getInstance().PROP_DATABASE_COVERCACHESIZE.getValue());
+		_cache = new CachedHashMap<>(ccprops().PROP_DATABASE_COVERCACHESIZE.getValue());
 
 		_coverPath = database.getDBPath().append(COVER_DIRECTORY_NAME);
 	}
@@ -49,6 +49,10 @@ public class CCDefaultCoverCache implements ICoverCache {
 	@Override
 	public void init() {
 		tryCreatePath();
+	}
+
+	public CCProperties ccprops() {
+		return _db.ccprops();
 	}
 
 	private void tryCreatePath() {
@@ -66,8 +70,8 @@ public class CCDefaultCoverCache implements ICoverCache {
 	}
 
 	public List<Tuple<String, Func0to1WithIOException<BufferedImage>>> listCoversInFilesystem() {
-		final String prefix = CCProperties.getInstance().PROP_COVER_PREFIX.getValue();
-		final String suffix = "." + CCProperties.getInstance().PROP_COVER_TYPE.getValue();  //$NON-NLS-1$
+		final String prefix = ccprops().PROP_COVER_PREFIX.getValue();
+		final String suffix = "." + ccprops().PROP_COVER_TYPE.getValue();  //$NON-NLS-1$
 
 		var files = getCoverDirectory().listFilenames((path, name) -> name.startsWith(prefix) && name.endsWith(suffix));
 
@@ -159,19 +163,19 @@ public class CCDefaultCoverCache implements ICoverCache {
 	public int addCover(BufferedImage newCover) {
 		int cid = getNewCoverID();
 
-		String fname = CCProperties.getInstance().PROP_COVER_PREFIX.getValue() + StringUtils.leftPad(Integer.toString(cid), 5, '0') + '.' + CCProperties.getInstance().PROP_COVER_TYPE.getValue();
+		String fname = ccprops().PROP_COVER_PREFIX.getValue() + StringUtils.leftPad(Integer.toString(cid), 5, '0') + '.' + ccprops().PROP_COVER_TYPE.getValue();
 
 		CCLog.addDebug("addingCoverToFolder: " + fname); //$NON-NLS-1$
 
 		try {
 			var f = _coverPath.append(fname);
 			if (! f.exists()) {
-				ImageIO.write(newCover, CCProperties.getInstance().PROP_COVER_TYPE.getValue(), f.toFile());
+				ImageIO.write(newCover, ccprops().PROP_COVER_TYPE.getValue(), f.toFile());
 
 				String checksum;
 				try (FileInputStream fis = new FileInputStream(f.toFile())) { checksum = DigestUtils.sha256Hex(fis).toUpperCase(); }
 
-				ColorQuantizerMethod ptype = CCProperties.getInstance().PROP_DATABASE_COVER_QUANTIZER.getValue();
+				ColorQuantizerMethod ptype = ccprops().PROP_DATABASE_COVER_QUANTIZER.getValue();
 				ColorQuantizer quant = ptype.create();
 				quant.analyze(newCover, 16);
 				byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(newCover, ColorQuantizerConverter.PREVIEW_WIDTH));

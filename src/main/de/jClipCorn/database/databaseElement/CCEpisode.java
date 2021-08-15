@@ -18,7 +18,9 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.properties.types.NamedPathVar;
+import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
@@ -35,7 +37,7 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
-public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElement, IActionSourceObject, ICCTaggedElement, IEpisodeData, IPropertyParent {
+public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElement, IActionSourceObject, ICCTaggedElement, IEpisodeData, IPropertyParent, ICCPropertySource {
 	private final CCSeason owner;
 
 	private final EpisodeCache _cache = new EpisodeCache(this);
@@ -100,6 +102,10 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public EDateProp               addDate()       { return AddDate;       }
 	public EDateTimeListProp       viewedHistory() { return ViewedHistory; }
 	public ELanguageListProp       language()      { return Language;      }
+
+	public CCProperties ccprops() {
+		return getMovieList().ccprops();
+	}
 
 	@Override
 	public CCTagList getTags() {
@@ -211,7 +217,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public void addToViewedHistory(CCDateTime datetime) {
 		ViewedHistory.set(ViewedHistory.get().add(datetime));
 
-		if (Tags.get(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+		if (Tags.get(CCSingleTag.TAG_WATCH_LATER) && getMovieList().ccprops().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
 			Tags.set(CCSingleTag.TAG_WATCH_LATER, false);
 		}
 	}
@@ -221,11 +227,11 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		{
 			ViewedHistory.setWithException(ViewedHistory.get().add(datetime));
 
-			if (Tags.get(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+			if (Tags.get(CCSingleTag.TAG_WATCH_LATER) && getMovieList().ccprops().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
 				Tags.setWithException(CCSingleTag.TAG_WATCH_LATER, false);
 			}
 
-			if (getSeries().Tags.get(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+			if (getSeries().Tags.get(CCSingleTag.TAG_WATCH_LATER) && getMovieList().ccprops().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
 				getSeries().Tags.setWithException(CCSingleTag.TAG_WATCH_LATER, false);
 			}
 		}
@@ -318,7 +324,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 	
 	public CCDate getDisplayDate() {
-		switch (CCProperties.getInstance().PROP_SERIES_DISPLAYED_DATE.getValue()) {
+		switch (getMovieList().ccprops().PROP_SERIES_DISPLAYED_DATE.getValue()) {
 		case LAST_VIEWED:
 			return getViewedHistoryLast();
 		case FIRST_VIEWED:
@@ -340,7 +346,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		if (updateViewedAndHistory && !ViewedHistory.get().getLastOrInvalid().isUnspecifiedOrMinimum())
 		{
 			var hours = ViewedHistory.get().getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
-			var max = CCProperties.getInstance().PROP_MAX_FASTREWATCH_HOUR_DIFF.getValue();
+			var max = getMovieList().ccprops().PROP_MAX_FASTREWATCH_HOUR_DIFF.getValue();
 
 			if (hours < max)
 			{
@@ -387,7 +393,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	public String getFastMD5() {
 		FSPath[] f = new FSPath[1];
-		f[0] = getPart().toFSPath();
+		f[0] = getPart().toFSPath(this);
 		
 		return ChecksumHelper.calculateFastMD5(f);
 	}
@@ -420,7 +426,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	public boolean checkFolderStructure() {
-		var abspath = getPart().toFSPath().toString();
+		var abspath = getPart().toFSPath(this).toString();
 		var relpath = getRelativeFileForCreatedFolderstructure();
 
 		if (ApplicationHelper.isWindows()) {

@@ -1,5 +1,6 @@
 package de.jClipCorn.features.online.metadata.tmdb;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
@@ -10,7 +11,6 @@ import de.jClipCorn.features.online.cover.imdb.AgeRatingParser;
 import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.BrowserLanguage;
 import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
 import de.jClipCorn.util.Str;
@@ -39,6 +39,10 @@ public class TMDBParser extends Metadataparser {
 	private final static String URL_SEARCHSERIES = "search/tv"; //$NON-NLS-1$
 	private final static String URL_SEARCHMULTI = "search/multi"; //$NON-NLS-1$
 	private final static String URL_SEARCHCOVER = "/images"; //$NON-NLS-1$
+
+	public TMDBParser(CCMovieList ml) {
+		super(ml);
+	}
 
 	@Override
 	public List<Tuple<String, CCSingleOnlineReference>> searchByText(String text, OnlineSearchType type) {
@@ -152,7 +156,7 @@ public class TMDBParser extends Metadataparser {
 
 	@Override
 	public OnlineMetadata getMetadata(CCSingleOnlineReference ref, boolean downloadCover) {
-		if (CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue() == BrowserLanguage.ENGLISH) {
+		if (ccprops().PROP_TMDB_LANGUAGE.getValue() == BrowserLanguage.ENGLISH) {
 			
 			// simple call
 			
@@ -161,7 +165,7 @@ public class TMDBParser extends Metadataparser {
 			// specific call but fallback to en-Us for missing fields
 			
 			OnlineMetadata base = getMetadataInternal(ref, BrowserLanguage.ENGLISH, downloadCover);
-			OnlineMetadata ext = getMetadataInternal(ref, CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue(), downloadCover);
+			OnlineMetadata ext = getMetadataInternal(ref, ccprops().PROP_TMDB_LANGUAGE.getValue(), downloadCover);
 			
 			if (ext == null) return base;
 			
@@ -177,8 +181,8 @@ public class TMDBParser extends Metadataparser {
 		
 		String url = urlRaw;
 		
-		if (CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue() != BrowserLanguage.ENGLISH) {
-			url += "&language=" + CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue().asDinIsoID();
+		if (ccprops().PROP_TMDB_LANGUAGE.getValue() != BrowserLanguage.ENGLISH) {
+			url += "&language=" + ccprops().PROP_TMDB_LANGUAGE.getValue().asDinIsoID();
 		}
 		
 		url += "&append_to_response=release_dates,content_ratings";
@@ -252,7 +256,7 @@ public class TMDBParser extends Metadataparser {
 							int release_age = AgeRatingParser.getMinimumAge(release_cert, url);
 							if (release_age < 0) continue;
 							
-							if (release_country.equals(CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue().asCountryID())) result.FSK = CCFSK.getNearest(release_age);
+							if (release_country.equals(ccprops().PROP_TMDB_LANGUAGE.getValue().asCountryID())) result.FSK = CCFSK.getNearest(release_age);
 							
 							String iso = release_lang + "-" + release_country;
 							if (release_lang.isEmpty()) iso = release_country;
@@ -273,7 +277,7 @@ public class TMDBParser extends Metadataparser {
 								int release_age = AgeRatingParser.getMinimumAge(release_cert, url);
 								if (release_age < 0) continue;
 								
-								if (release_country.equals(CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue().asCountryID())) result.FSK = CCFSK.getNearest(release_age);
+								if (release_country.equals(ccprops().PROP_TMDB_LANGUAGE.getValue().asCountryID())) result.FSK = CCFSK.getNearest(release_age);
 
 								String iso = release_lang + "-" + release_country;
 								if (release_lang.isEmpty()) iso = release_country;
@@ -309,7 +313,7 @@ public class TMDBParser extends Metadataparser {
 						int release_age = AgeRatingParser.getMinimumAge(release_cert, url);
 						if (release_age < 0) continue;
 						
-						if (release_country.equals(CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue().asCountryID())) result.FSK = CCFSK.getNearest(release_age);
+						if (release_country.equals(ccprops().PROP_TMDB_LANGUAGE.getValue().asCountryID())) result.FSK = CCFSK.getNearest(release_age);
 						
 						result.FSKList.put(release_country, release_age);
 					}

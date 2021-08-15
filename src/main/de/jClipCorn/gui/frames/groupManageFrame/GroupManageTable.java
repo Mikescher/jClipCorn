@@ -1,6 +1,8 @@
 package de.jClipCorn.gui.frames.groupManageFrame;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
+import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -14,18 +16,27 @@ import java.util.List;
 
 public class GroupManageTable extends JCCSimpleTable<Tuple<CCGroup, Integer>> {
 
+	@DesignCreate
+	private static GroupManageTable designCreate() { return new GroupManageTable(null); }
+
+	public GroupManageTable(ICCWindow f) {
+		super(f);
+	}
+
 	@Override
 	@SuppressWarnings("nls")
 	protected List<JCCSimpleColumnPrototype<Tuple<CCGroup, Integer>>> configureColumns() {
 		List<JCCSimpleColumnPrototype<Tuple<CCGroup, Integer>>> r = new ArrayList<>();
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"GroupManagerFrame.colColor",
 				this::renderColor,
 				e -> e.Item1.getHexColor()));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"2*,min=auto",
 				"GroupManagerFrame.colName",
 				e -> e.Item1.Name,
@@ -33,6 +44,7 @@ public class GroupManageTable extends JCCSimpleTable<Tuple<CCGroup, Integer>> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"GroupManagerFrame.colSerialization",
 				e -> e.Item1.DoSerialize
@@ -42,6 +54,7 @@ public class GroupManageTable extends JCCSimpleTable<Tuple<CCGroup, Integer>> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"GroupManagerFrame.colVisible",
 				e -> e.Item1.Visible
@@ -51,6 +64,7 @@ public class GroupManageTable extends JCCSimpleTable<Tuple<CCGroup, Integer>> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"1*,min=auto",
 				"GroupManagerFrame.colParent",
 				e -> e.Item1.Parent,
@@ -58,6 +72,7 @@ public class GroupManageTable extends JCCSimpleTable<Tuple<CCGroup, Integer>> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"GroupManagerFrame.colCount",
 				e -> String.valueOf(e.Item2),

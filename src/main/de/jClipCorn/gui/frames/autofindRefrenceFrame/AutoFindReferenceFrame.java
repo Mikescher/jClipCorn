@@ -15,6 +15,7 @@ import de.jClipCorn.features.online.metadata.tmdb.TMDBParser;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -29,12 +30,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AutoFindReferenceFrame extends JFrame {
+public class AutoFindReferenceFrame extends JCCFrame {
 	private static final long serialVersionUID = 4658458278263596774L;
 	
 	private boolean isThreadRunning = false;
-	private final CCMovieList database;
-	
+
 	private JPanel contentPane;
 	private JScrollPane list;
 	private DefaultListModel<AutoFindRefElement> listModel;
@@ -67,10 +67,8 @@ public class AutoFindReferenceFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AutoFindReferenceFrame(Component parent, CCMovieList db) {
-		super();
-		
-		database = db;
+	public AutoFindReferenceFrame(Component parent, CCMovieList ml) {
+		super(ml);
 		
 		initGUI();
 		initMap();
@@ -181,11 +179,11 @@ public class AutoFindReferenceFrame extends JFrame {
 		edTitleTmdb.setBounds(194, 54, 153, 20);
 		pnlRight.add(edTitleTmdb);
 		
-		cvrLocal = new CoverLabel(true);
+		cvrLocal = new CoverLabel(movielist, true);
 		cvrLocal.setBounds(12, 150, 91, 127);
 		pnlRight.add(cvrLocal);
 		
-		cvrTmdb = new CoverLabel(true);
+		cvrTmdb = new CoverLabel(movielist, true);
 		cvrTmdb.setBounds(194, 150, 91, 127);
 		pnlRight.add(cvrTmdb);
 		
@@ -240,7 +238,7 @@ public class AutoFindReferenceFrame extends JFrame {
 		btnApplyImdb.setBounds(379, 355, 153, 26);
 		pnlRight.add(btnApplyImdb);
 		
-		cvrImDB = new CoverLabel(true);
+		cvrImDB = new CoverLabel(movielist, true);
 		cvrImDB.setBounds(379, 150, 91, 127);
 		pnlRight.add(cvrImDB);
 		
@@ -381,7 +379,7 @@ public class AutoFindReferenceFrame extends JFrame {
 		pbProgress.setValue(0);
 		
 		List<CCDatabaseElement> elements = new ArrayList<>();
-		for (CCDatabaseElement el : database.iteratorElements()) {
+		for (CCDatabaseElement el : movielist.iteratorElements()) {
 			if (el.getOnlineReference().Main.isUnset())
 				elements.add(el);
 			
@@ -439,8 +437,8 @@ public class AutoFindReferenceFrame extends JFrame {
 	private List<AutoFindRefElement> run(List<CCDatabaseElement> source) {
 		List<AutoFindRefElement> result = new ArrayList<>();
 
-		TMDBParser tmdbParser = new TMDBParser();
-		IMDBParserCommon imdbParser = IMDBParserCommon.GetConfiguredParser();
+		TMDBParser tmdbParser = new TMDBParser(movielist);
+		IMDBParserCommon imdbParser = IMDBParserCommon.GetConfiguredParser(movielist);
 		
 		int count = 0;
 		for (CCDatabaseElement element : source) {

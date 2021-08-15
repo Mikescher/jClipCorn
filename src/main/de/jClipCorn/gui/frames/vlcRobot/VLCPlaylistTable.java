@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.frames.vlcRobot;
 
+import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 
@@ -9,12 +11,20 @@ import java.util.List;
 public class VLCPlaylistTable extends JCCSimpleTable<VLCPlaylistEntry> {
 	private static final long serialVersionUID = 630505973662401189L;
 
+	@DesignCreate
+	private static VLCPlaylistTable designCreate() { return new VLCPlaylistTable(null); }
+
+	public VLCPlaylistTable(ICCWindow f) {
+		super(f);
+	}
+
 	@Override
 	@SuppressWarnings("nls")
 	protected List<JCCSimpleColumnPrototype<VLCPlaylistEntry>> configureColumns() {
 		List<JCCSimpleColumnPrototype<VLCPlaylistEntry>> r = new ArrayList<>();
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"",
 				null,
@@ -22,6 +32,7 @@ public class VLCPlaylistTable extends JCCSimpleTable<VLCPlaylistEntry> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"*,min=auto",
 				"VLCRobotFrame.table.col_title",
 				VLCPlaylistEntry::getText,
@@ -29,6 +40,7 @@ public class VLCPlaylistTable extends JCCSimpleTable<VLCPlaylistEntry> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"VLCRobotFrame.table.col_len",
 				VLCPlaylistEntry::getLengthText,

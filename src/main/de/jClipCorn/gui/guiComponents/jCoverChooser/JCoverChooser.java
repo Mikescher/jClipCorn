@@ -1,9 +1,9 @@
 package de.jClipCorn.gui.guiComponents.jCoverChooser;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -33,7 +33,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	private int coverGap = 10;
 	private int circleRadius = 500;
 	
-	private boolean mode3d = CCProperties.getInstance().PROP_PREVSERIES_3DCOVER.getValue();
+	private boolean mode3d;
 
 	private final List<BufferedImage> images_full  = new ArrayList<>();
 	private final List<BufferedImage> images_scale = new ArrayList<>();
@@ -41,16 +41,20 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	private int currSelected = 0;
 
 	private int lastClickTarget = -1;
-	
+
+	private final CCMovieList movielist;
 	private final boolean asyncLoading;
 
-	public JCoverChooser() {
-		this(false);
+	public JCoverChooser(CCMovieList ml) {
+		this(ml, false);
 	}
 
-	public JCoverChooser(boolean forcenoAsync) {
-		asyncLoading = CCProperties.getInstance().PROP_MAINFRAME_ASYNC_COVER_LOADING.getValue() && !forcenoAsync;
-		
+	public JCoverChooser(CCMovieList ml, boolean forcenoAsync) {
+		super();
+		asyncLoading = ml.ccprops().PROP_MAINFRAME_ASYNC_COVER_LOADING.getValue() && !forcenoAsync;
+		movielist = ml;
+		mode3d = ml.ccprops().PROP_PREVSERIES_3DCOVER.getValue();
+
 		addMouseListener(this);
 		update(false);
 	}
@@ -286,9 +290,9 @@ public class JCoverChooser extends JComponent implements MouseListener {
 			TransformRectangle tr;
 
 			if (mode3d) {
-				tr = new TransformRectangle3D(new Point(getCoverX(i), y1), new Point(getCoverX(i) + cw, y2));
+				tr = new TransformRectangle3D(movielist.ccprops(), new Point(getCoverX(i), y1), new Point(getCoverX(i) + cw, y2));
 			} else {
-				tr = new TransformRectangle2D(new Point(getCoverX(i), y1), new Point(getCoverX(i) + cw, y2));
+				tr = new TransformRectangle2D(movielist.ccprops(), new Point(getCoverX(i), y1), new Point(getCoverX(i) + cw, y2));
 			}
 				
 			
@@ -321,7 +325,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 						if (o instanceof ICCCoveredElement) {
 							new CoverPreviewFrame(this, (ICCCoveredElement)o).setVisible(true);
 						} else if (i != null) {
-							new CoverPreviewFrame(this, i).setVisible(true);
+							new CoverPreviewFrame(this, movielist, i).setVisible(true);
 						}
 						
 					}

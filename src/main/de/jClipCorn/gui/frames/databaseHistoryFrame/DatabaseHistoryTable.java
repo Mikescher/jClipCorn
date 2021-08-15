@@ -28,6 +28,7 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 	private static DatabaseHistoryTable designCreate() { return new DatabaseHistoryTable(null); }
 
 	public DatabaseHistoryTable(DatabaseHistoryFrame frame) {
+		super(frame);
 		_parent = frame;
 	}
 
@@ -37,6 +38,7 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 		List<JCCSimpleColumnPrototype<CCCombinedHistoryEntry>> r = new ArrayList<>();
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				Str.Empty,
 				null,
@@ -44,6 +46,7 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 				e -> Str.toProperCase(e.Table.Name)));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"DatabaseHistoryFrame.Table.ColumnAction",
 				e -> Str.toProperCase(e.Action.Name),
@@ -51,6 +54,7 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"*",
 				"DatabaseHistoryFrame.Table.ColumnElement",
 				e -> format(e, e.getSourceElement()),
@@ -58,6 +62,7 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 				e -> e.ID));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"DatabaseHistoryFrame.Table.ColumnTime",
 				CCCombinedHistoryEntry::formatTime,
@@ -65,6 +70,7 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"DatabaseHistoryFrame.Table.ColumnChangeCount",
 				e -> Integer.toString(e.Changes.size()),
@@ -119,7 +125,7 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 			BufferedImage bi = _parent.getMovieList().getCoverCache().getCover(data);
 			if (bi == null) return;
 
-			new CoverPreviewFrame(_parent, bi).setVisible(true);
+			new CoverPreviewFrame(_parent, _parent.getMovieList(), bi).setVisible(true);
 		}
 	}
 

@@ -11,7 +11,6 @@ import de.jClipCorn.features.table.filter.TableCustomFilter;
 import de.jClipCorn.features.table.filter.customFilter.CustomUserScoreFilter;
 import de.jClipCorn.features.table.filter.customFilter.CustomZyklusFilter;
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.MainFrameColumn;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.TableColumnAdjuster;
@@ -57,7 +56,7 @@ public class ClipTable extends JScrollPane implements ListSelectionListener, Mou
 
 		model = new ClipTableModel(ml);
 
-		table = new SFixClipTable(model);
+		table = new SFixClipTable(ml, model);
 		model.setTable(table);
 		configureTable();
 
@@ -65,7 +64,7 @@ public class ClipTable extends JScrollPane implements ListSelectionListener, Mou
 
 		adjuster = new TableColumnAdjuster(this, table);
 
-		var icfg = CCProperties.getInstance().PROP_MAINFRAME_COLUMN_SIZE_CACHE.getValue();
+		var icfg = owner.ccprops().PROP_MAINFRAME_COLUMN_SIZE_CACHE.getValue();
 		if (Str.isNullOrWhitespace(icfg)) icfg = CCStreams.iterate(MainFrameColumn.values()).stringjoin(e-> "keep", "|"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (!adjuster.isValidConfig(icfg)) icfg = CCStreams.iterate(MainFrameColumn.values()).stringjoin(e-> "10", "|"); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -103,7 +102,7 @@ public class ClipTable extends JScrollPane implements ListSelectionListener, Mou
 					autoResize();
 
 					var columnconfig = adjuster.getCurrentStateAsConfig();
-					CCProperties.getInstance().PROP_MAINFRAME_COLUMN_SIZE_CACHE.setValueIfDiff(columnconfig);
+					owner.ccprops().PROP_MAINFRAME_COLUMN_SIZE_CACHE.setValueIfDiff(columnconfig);
 				}
 
 			});
@@ -157,7 +156,7 @@ public class ClipTable extends JScrollPane implements ListSelectionListener, Mou
 		TableRowSorter<ClipTableModel> sorter = ((TableRowSorter<ClipTableModel>)table.getRowSorter());
 		List<SortKey> list = new ArrayList<>();	
 		
-		switch (CCProperties.getInstance().PROP_VIEW_DB_START_SORT.getValue()) {
+		switch (owner.ccprops().PROP_VIEW_DB_START_SORT.getValue()) {
 		case LOCALID:
 			//Do nothing
 			return;
@@ -333,7 +332,7 @@ public class ClipTable extends JScrollPane implements ListSelectionListener, Mou
 	}
 	
 	private CCMovieZyklus getZyklusUnderMouse(Point p) {
-		if (! CCProperties.getInstance().PROP_MAINFRAME_CLICKABLEZYKLUS.getValue()) return null;
+		if (! owner.ccprops().PROP_MAINFRAME_CLICKABLEZYKLUS.getValue()) return null;
 		
 		int vcol = table.columnAtPoint(p);
 		int vrow = table.rowAtPoint(p);
@@ -366,7 +365,7 @@ public class ClipTable extends JScrollPane implements ListSelectionListener, Mou
 	}
 	
 	private CCUserScore getScoreUnderMouse(Point p) {
-		if (! CCProperties.getInstance().PROP_MAINFRAME_CLICKABLESCORE.getValue()) return null;
+		if (! owner.ccprops().PROP_MAINFRAME_CLICKABLESCORE.getValue()) return null;
 		
 		int vcol = table.columnAtPoint(p);
 		int vrow = table.rowAtPoint(p);

@@ -43,6 +43,7 @@ import static de.jClipCorn.database.driver.DatabaseStructure.*;
 
 public class DatabaseMigration {
 	private final GenericDatabase db;
+	private final CCProperties ccprops;
 	private final FSPath databaseDirectory;
 	private final String databaseName;
 	private final boolean readonly;
@@ -53,13 +54,14 @@ public class DatabaseMigration {
 	
 	private final List<UpgradeAction> afterConnectActions = new ArrayList<>();
 	
-	public DatabaseMigration(GenericDatabase db, FSPath dbpath, String dbName, boolean readonly) {
+	public DatabaseMigration(CCProperties ccprops, GenericDatabase db, FSPath dbpath, String dbName, boolean readonly) {
 		super();
 		
 		this.db                = db;
 		this.databaseDirectory = dbpath;
 		this.databaseName      = dbName;
 		this.readonly          = readonly;
+		this.ccprops           = ccprops;
 	}
 	
 	private String getDBVersion() throws SQLException {
@@ -294,8 +296,8 @@ public class DatabaseMigration {
 
 		var cvrdir = databaseDirectory.append(databaseName, CCDefaultCoverCache.COVER_DIRECTORY_NAME);
 
-		final String prefix = CCProperties.getInstance().PROP_COVER_PREFIX.getValue();
-		final String suffix = "." + CCProperties.getInstance().PROP_COVER_TYPE.getValue();  //$NON-NLS-1$
+		final String prefix = ccprops.PROP_COVER_PREFIX.getValue();
+		final String suffix = "." + ccprops.PROP_COVER_TYPE.getValue();  //$NON-NLS-1$
 
 		String[] files = cvrdir.listFilenames((path, name) -> name.startsWith(prefix) && name.endsWith(suffix));
 		for (String _f : files) {
@@ -308,7 +310,7 @@ public class DatabaseMigration {
 			String checksum;
 			try (FileInputStream fis = new FileInputStream(f.toFile())) { checksum = DigestUtils.sha256Hex(fis).toUpperCase(); }
 
-			ColorQuantizerMethod ptype = CCProperties.getInstance().PROP_DATABASE_COVER_QUANTIZER.getValue();
+			ColorQuantizerMethod ptype = ccprops.PROP_DATABASE_COVER_QUANTIZER.getValue();
 			ColorQuantizer quant = ptype.create();
 			quant.analyze(img, 16);
 			byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(img, ColorQuantizerConverter.PREVIEW_WIDTH));

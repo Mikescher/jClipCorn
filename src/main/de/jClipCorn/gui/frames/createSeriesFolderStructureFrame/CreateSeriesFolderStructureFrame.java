@@ -8,6 +8,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CreateSeriesFolderStructureFrame extends JFrame {
+public class CreateSeriesFolderStructureFrame extends JCCFrame {
 	private static final long serialVersionUID = 8494757660196292481L;
 	
 	private CCSeries series;
@@ -39,7 +40,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	private JLabel lblCommonPath;
 
 	public CreateSeriesFolderStructureFrame(Component owner, CCSeries ser) {
-		super();
+		super(ser.getMovieList());
 		this.series = ser;
 		
 		initGUI();
@@ -58,7 +59,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 		getContentPane().add(pnlTop, BorderLayout.NORTH);
 		pnlTop.setLayout(new BorderLayout(0, 0));
 		
-		lblCover = new CoverLabel(false);
+		lblCover = new CoverLabel(movielist, false);
 		pnlTop.add(lblCover, BorderLayout.WEST);
 		
 		pnlLeft = new JPanel();
@@ -114,7 +115,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 		btnTest.setEnabled(false);
 		pnlLeft.add(btnTest, "4, 10, center, default"); //$NON-NLS-1$
 
-		lsTest = new CSFSTable();
+		lsTest = new CSFSTable(this);
 		getContentPane().add(lsTest, BorderLayout.CENTER);
 		
 		setSize(1050, 800);
@@ -123,14 +124,14 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 	private void init() {
 		lblCover.setAndResizeCover(series.getCover());
 		lblTitel.setText(series.getTitle());
-		lblCommonPath.setText(series.getCommonPathStart(false).toFSPath().toString());
+		lblCommonPath.setText(series.getCommonPathStart(false).toFSPath(this).toString());
 		edPath.setPath(series.guessSeriesRootPath());
 		btnTest.setEnabled(! edPath.getPath().isEmpty());
 	}
 	
 	private void onBtnChoose() {
 		var pStart = series.guessSeriesRootPath();
-		if (pStart.isEmpty()) pStart = series.getCommonPathStart(false).toFSPath();
+		if (pStart.isEmpty()) pStart = series.getCommonPathStart(false).toFSPath(this);
 				
 		JFileChooser folderchooser = new JFileChooser(pStart.toFile());
 		folderchooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -160,10 +161,10 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 				var fileNew = episode.getPathForCreatedFolderstructure(parentfolder);
 
 				elem.CCPathOld = episode.getPart();
-				elem.FSPathOld = episode.getPart().toFSPath();
+				elem.FSPathOld = episode.getPart().toFSPath(this);
 
 				elem.FSPathNew = (fileNew==null)? FSPath.Empty : fileNew;
-				elem.CCPathNew = CCPath.createFromFSPath(elem.FSPathNew);
+				elem.CCPathNew = CCPath.createFromFSPath(elem.FSPathNew, this);
 
 				if (fileNew==null)
 				{
@@ -196,7 +197,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 
 		lsTest.autoResize();
 
-		btnOk.setEnabled(!CCStreams.iterate(elements).any(e -> e.State== CSFSElement.CSFSState.Error) && ! series.getMovieList().isReadonly());
+		btnOk.setEnabled(!CCStreams.iterate(elements).any(e -> e.State== CSFSElement.CSFSState.Error) && ! movielist.isReadonly());
 	}
 	
 	private boolean startMoving() {
@@ -216,7 +217,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 				for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
 					CCEpisode episode = season.getEpisodeByArrayIndex(epi);
 					
-					var file = episode.getPart().toFSPath();
+					var file = episode.getPart().toFSPath(this);
 					var newfile = episode.getPathForCreatedFolderstructure(parentfolder);
 					
 					var mkdirfolder = newfile.getParent();
@@ -245,7 +246,7 @@ public class CreateSeriesFolderStructureFrame extends JFrame {
 						return false;
 					}
 					
-					episode.Part.set(CCPath.createFromFSPath(newfile));
+					episode.Part.set(CCPath.createFromFSPath(newfile, this));
 				}
 			}
 		}

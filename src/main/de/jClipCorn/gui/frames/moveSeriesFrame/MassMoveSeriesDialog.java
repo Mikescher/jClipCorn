@@ -7,6 +7,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.filesystem.CCPath;
@@ -20,10 +21,9 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Vector;
 
-public class MassMoveSeriesDialog extends JDialog {
+public class MassMoveSeriesDialog extends JCCDialog {
 	private static final long serialVersionUID = 8795232362998343872L;
 
-	private final CCMovieList movielist;
 	private final List<CCEpisode> episodes;
 	
 	private JLabel lblReplace;
@@ -39,9 +39,8 @@ public class MassMoveSeriesDialog extends JDialog {
 	private JLabel lblWith;
 
 	public MassMoveSeriesDialog(Component owner, CCMovieList mlist) {
-		super();
+		super(mlist);
 		setSize(new Dimension(800, 600));
-		this.movielist = mlist;
 		this.episodes = mlist.iteratorEpisodes().enumerate();
 		
 		initGUI();
@@ -154,8 +153,8 @@ public class MassMoveSeriesDialog extends JDialog {
 			var oldp = ep.getPart();
 			var newp = CCPath.create(ep.getPart().toString().replace(edSearch.getText(), edReplace.getText()));
 
-			String identOld = oldp.toFSPath().exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
-			String identNew = newp.toFSPath().exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+			String identOld = oldp.toFSPath(this).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
+			String identNew = newp.toFSPath(this).exists() ? "1" : "0"; //$NON-NLS-1$ //$NON-NLS-2$
 
 			Vector<String> tmp = new Vector<>();
 

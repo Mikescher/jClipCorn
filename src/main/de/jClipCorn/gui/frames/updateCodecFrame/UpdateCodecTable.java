@@ -14,7 +14,7 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 	private final UpdateCodecFrame owner;
 
 	public UpdateCodecTable(UpdateCodecFrame owner) {
-		super();
+		super(owner);
 		this.owner = owner;
 	}
 	
@@ -24,6 +24,7 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 		List<JCCSimpleColumnPrototype<UpdateCodecTableElement>> r = new ArrayList<>();
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"",
 				null,
@@ -32,6 +33,7 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"*,min=auto",
 				"UpdateCodecFrame.Table.ColumnTitle",
 				e -> e.getFullDisplayTitle(),
@@ -40,6 +42,7 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateCodecFrame.Table.ColumnLangOld",
 				e -> e.getOldLanguage().toShortOutputString(Str.Empty),
@@ -48,6 +51,7 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateCodecFrame.Table.ColumnLangNew",
 				e -> e.getNewLanguage().toShortOutputString(Str.Empty),
@@ -56,6 +60,7 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateCodecFrame.Table.ColumnLengthOld",
 				e -> e.getOldLengthStr(),
@@ -64,6 +69,7 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateCodecFrame.Table.ColumnLengthNew",
 				e -> e.getNewLengthStr(),
@@ -72,6 +78,7 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateCodecFrame.Table.ColumnQualityOld",
 				e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getLongText(),
@@ -80,6 +87,7 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateCodecFrame.Table.ColumnQualityNew",
 				e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getLongText(),

@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.guiComponents.referenceChooser;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.util.Str;
@@ -22,7 +23,11 @@ public class JReferenceChooser extends JPanel {
 
 	private final List<ActionListener> _changeListener = new ArrayList<>();
 
-	public JReferenceChooser() {
+	private final CCMovieList movielist;
+
+	public JReferenceChooser(CCMovieList ml) {
+		super();
+		movielist = ml;
 		initGUI();
 	}
 
@@ -34,17 +39,17 @@ public class JReferenceChooser extends JPanel {
 		btnAdditional.addActionListener(e ->
 		{
 			if ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK) {
-				ReferenceChooserDialog dialog = new ReferenceChooserDialog(mainChooser.getValue(), _additional, JReferenceChooser.this);
+				ReferenceChooserDialog dialog = new ReferenceChooserDialog(movielist, mainChooser.getValue(), _additional, JReferenceChooser.this);
 				dialog.setVisible(true);
 			} else {
-				ReferenceChooserPopup popup = new ReferenceChooserPopup(_additional, JReferenceChooser.this);
+				ReferenceChooserPopup popup = new ReferenceChooserPopup(movielist, _additional, JReferenceChooser.this);
 				popup.setVisible(true);
 			}
 		});
 		btnAdditional.setMargin(new Insets(2, 4, 2, 4));
 		btnAdditional.setFocusable(false);
 		
-		mainChooser = new JSingleReferenceChooser();
+		mainChooser = new JSingleReferenceChooser(movielist);
 		add(mainChooser, BorderLayout.CENTER);
 	}
 

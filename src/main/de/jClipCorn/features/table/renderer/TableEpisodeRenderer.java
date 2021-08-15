@@ -1,10 +1,12 @@
 package de.jClipCorn.features.table.renderer;
 
+import de.jClipCorn.database.CCMovieList;
+
 public class TableEpisodeRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
 
-	public TableEpisodeRenderer() {
-		super();
+	public TableEpisodeRenderer(CCMovieList ml) {
+		super(ml);
 	}
 
 	@Override

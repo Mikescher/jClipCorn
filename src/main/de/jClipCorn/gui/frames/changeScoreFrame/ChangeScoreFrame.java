@@ -5,20 +5,19 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-public class ChangeScoreFrame extends JFrame {
+public class ChangeScoreFrame extends JCCFrame {
 	private static final long serialVersionUID = 9048482551231383355L;
 	
-	private final CCMovieList movielist;
 	private int position;
 	private boolean running = false;
 	
@@ -44,10 +43,9 @@ public class ChangeScoreFrame extends JFrame {
 	private JButton btnScoreM;
 	private JLabel label_4;
 
-	public ChangeScoreFrame(Component owner, CCMovieList list) {
-		super();
-		this.movielist = list;
-		
+	public ChangeScoreFrame(Component owner, CCMovieList ml) {
+		super(ml);
+
 		initGUI();
 		
 		initMap();
@@ -64,7 +62,7 @@ public class ChangeScoreFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
-		lblCover = new CoverLabel(false);
+		lblCover = new CoverLabel(movielist, false);
 		lblCover.setPosition(10, 36);
 		getContentPane().add(lblCover);
 		
@@ -158,11 +156,11 @@ public class ChangeScoreFrame extends JFrame {
 		lblbackspace.setBounds(332, 278, 80, 14);
 		getContentPane().add(lblbackspace);
 		
-		cbSkipRated = new PropertyCheckbox(CCProperties.getInstance().PROP_MASSCHANGESCORE_SKIPRATED);
+		cbSkipRated = new PropertyCheckbox(ccprops().PROP_MASSCHANGESCORE_SKIPRATED);
 		cbSkipRated.setBounds(10, 331, 402, 23);
 		getContentPane().add(cbSkipRated);
 		
-		cbOnlyViewed = new PropertyCheckbox(CCProperties.getInstance().PROP_MASSCHANGESCORE_ONLYVIEWED);
+		cbOnlyViewed = new PropertyCheckbox(ccprops().PROP_MASSCHANGESCORE_ONLYVIEWED);
 		cbOnlyViewed.setBounds(10, 357, 402, 23);
 		getContentPane().add(cbOnlyViewed);
 	}

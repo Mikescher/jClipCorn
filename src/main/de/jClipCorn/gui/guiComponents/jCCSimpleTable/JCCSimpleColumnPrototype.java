@@ -17,34 +17,34 @@ public class JCCSimpleColumnPrototype<TData> {
 	public final boolean IsSortable;
 
 	@SuppressWarnings("nls")
-	public JCCSimpleColumnPrototype(String autoResize, String _captionIdent, Func1to1<TData, String> _rendererText, Func1to1<TData, Icon> _rendererIcon, Func1to1<TData, String> _getTooltip) {
+	public JCCSimpleColumnPrototype(IJCCSimpleTable o, String autoResize, String _captionIdent, Func1to1<TData, String> _rendererText, Func1to1<TData, Icon> _rendererIcon, Func1to1<TData, String> _getTooltip) {
 		super();
 
 		AutoResizeConfig = autoResize;
 		Caption = _captionIdent.isEmpty() ? "" : LocaleBundle.getString(_captionIdent);
-		CellRenderer = new JCCSimpleTableCellRenderer<>(_rendererText, _rendererIcon);
+		CellRenderer = new JCCSimpleTableCellRenderer<>(o.getMovielist(), _rendererText, _rendererIcon);
 		GetTooltip = (_getTooltip == null) ? (e -> null) : (_getTooltip);
 		IsSortable = false;
 	}
 
 	@SuppressWarnings("nls")
-	public JCCSimpleColumnPrototype(String autoResize, String _captionIdent, Func2to1<TData, Component, Component> _renderer, Func1to1<TData, String> _getTooltip) {
+	public JCCSimpleColumnPrototype(IJCCSimpleTable o, String autoResize, String _captionIdent, Func2to1<TData, Component, Component> _renderer, Func1to1<TData, String> _getTooltip) {
 		super();
 
 		AutoResizeConfig = autoResize;
 		Caption = _captionIdent.isEmpty() ? "" : LocaleBundle.getString(_captionIdent);
-		CellRenderer = new JCCSimpleCustomTableCellRenderer<>(_renderer);
+		CellRenderer = new JCCSimpleCustomTableCellRenderer<>(o.getMovielist(), _renderer);
 		GetTooltip = (_getTooltip == null) ? (e -> null) : (_getTooltip);
 		IsSortable = false;
 	}
 
 	@SuppressWarnings("nls")
-	public JCCSimpleColumnPrototype(String autoResize, String _captionIdent, Func1to1<TData, String> _rendererText, Func1to1<TData, Icon> _rendererIcon, Func1to1<TData, String> _getTooltip, boolean sortable) {
+	public JCCSimpleColumnPrototype(IJCCSimpleTable o, String autoResize, String _captionIdent, Func1to1<TData, String> _rendererText, Func1to1<TData, Icon> _rendererIcon, Func1to1<TData, String> _getTooltip, boolean sortable) {
 		super();
 
 		AutoResizeConfig = autoResize;
 		Caption = _captionIdent.isEmpty() ? "" : LocaleBundle.getString(_captionIdent);
-		CellRenderer = new JCCSimpleTableCellRenderer<>(_rendererText, _rendererIcon);
+		CellRenderer = new JCCSimpleTableCellRenderer<>(o.getMovielist(), _rendererText, _rendererIcon);
 		GetTooltip = (_getTooltip == null) ? (e -> null) : (_getTooltip);
 		IsSortable = sortable;
 	}

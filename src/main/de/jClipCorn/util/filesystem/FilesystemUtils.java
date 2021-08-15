@@ -1,5 +1,6 @@
 package de.jClipCorn.util.filesystem;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
@@ -56,10 +57,10 @@ public class FilesystemUtils {
 		return WORKINGDIR;
 	}
 
-	public static FSPath getAbsoluteSelfDirectory() {
-		if (CCProperties.getInstance() == null) return FSPath.Empty; // For WindowBuilder
+	public static FSPath getAbsoluteSelfDirectory(CCProperties ccprops) {
+		if (Main.getCurrentGlobalCCProperties() == null) return FSPath.Empty; // For WindowBuilder
 
-		String sDir = CCProperties.getInstance().PROP_SELF_DIRECTORY.getValue();
+		String sDir = ccprops.PROP_SELF_DIRECTORY.getValue();
 
 		return WORKINGDIR.append(sDir);
 	}
@@ -180,8 +181,8 @@ public class FilesystemUtils {
 		return true;
 	}
 
-	public static void testWritePermissions() {
-		if (! canWriteInWorkingDir() && !CCProperties.getInstance().ARG_READONLY) {
+	public static void testWritePermissions(CCProperties ccprops) {
+		if (! canWriteInWorkingDir() && !ccprops.ARG_READONLY) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.NoWritePermissions"));
 		}
 	}

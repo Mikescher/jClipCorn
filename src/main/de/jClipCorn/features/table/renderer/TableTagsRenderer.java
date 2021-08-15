@@ -1,12 +1,13 @@
 package de.jClipCorn.features.table.renderer;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 
 public class TableTagsRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
 
-	public TableTagsRenderer() {
-		super();
+	public TableTagsRenderer(CCMovieList ml) {
+		super(ml);
 	}
 
 	@Override

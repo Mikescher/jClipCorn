@@ -1,7 +1,7 @@
 package de.jClipCorn.gui.mainFrame.toolbar;
 
 import com.jformdesigner.annotations.DesignCreate;
-import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.database.CCMovieList;
 
 
 public class ClipToolbar extends AbstractClipToolbar {
@@ -10,15 +10,18 @@ public class ClipToolbar extends AbstractClipToolbar {
 	public final static String IDENT_SEPERATOR = "#"; //$NON-NLS-1$
 	public final static String STANDARD_CONFIG = "Open|#|PlayMovie|#|AddMovie|AddSeries|#|EditMovie|RemMovie|#|ScanFolder|ShowSettings|#|CheckDatabase|ShowStatistics"; //$NON-NLS-1$
 
-	@DesignCreate
-	private static ClipToolbar designCreate() { return new ClipToolbar(true); }
+	private final CCMovieList movielist;
 
-	public ClipToolbar() {
-		this(false);
+	@DesignCreate
+	private static ClipToolbar designCreate() { return new ClipToolbar(null, true); }
+
+	public ClipToolbar(CCMovieList ml) {
+		this(ml, false);
 	}
 
-	public ClipToolbar(boolean dummy) {
+	public ClipToolbar(CCMovieList ml, boolean dummy) {
 		super();
+		movielist = ml;
 
 		setFloatable(false);
 
@@ -35,7 +38,7 @@ public class ClipToolbar extends AbstractClipToolbar {
 	}
 
 	private void create() {
-		for (String elem : CCProperties.getInstance().PROP_TOOLBAR_ELEMENTS.getValueAsArray()) {
+		for (String elem : movielist.ccprops().PROP_TOOLBAR_ELEMENTS.getValueAsArray()) {
 			if (elem.equals(IDENT_SEPERATOR)) {
 				addSeparator();
 			} else {

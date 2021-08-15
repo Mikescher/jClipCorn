@@ -19,6 +19,7 @@ import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.importElementsFrame.ImportElementsFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.TimeKeeper;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.exceptions.CCFormatException;
@@ -450,7 +451,7 @@ public class ExportHelper {
 				Tuple3<Integer, CCXMLElement, CCXMLParser> value = CCStreams.iterate(ExportHelper.getAllElementsOfExport(xml)).firstOrNull();
 				if (value != null)
 				{
-					CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
+					CCMovie tmpMov = new CCMovie(CCMovieList.createStub(CCProperties.createInMemory()), -1);
 					tmpMov.setDefaultValues(false);
 					DatabaseXMLImporter.parseSingleMovie(tmpMov, value.Item2, fn->null, new ImportState(value.Item3, value.Item1, new ImportOptions(resetDate, resetViewed, resetScore, false, true)));
 

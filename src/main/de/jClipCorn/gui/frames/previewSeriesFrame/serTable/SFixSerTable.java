@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.frames.previewSeriesFrame.serTable;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
@@ -29,8 +30,8 @@ public class SFixSerTable extends SFixTable {
 	private TableFormatRenderer renderer_format;
 	private TableFilesizeRenderer renderer_filesize;
 
-	public SFixSerTable(TableModel dm) {
-		super(dm);
+	public SFixSerTable(CCMovieList ml, TableModel dm) {
+		super(ml, dm);
 		init();
 		
 		this.getTableHeader().setReorderingAllowed(false);
@@ -44,17 +45,17 @@ public class SFixSerTable extends SFixTable {
 	}
 	
 	private void createCellRenderer() {
-		renderer_episode   = new TableEpisodeRenderer();
-		renderer_viewed    = new TableViewedRenderer();
-		renderer_title     = new TableStringTitleRenderer();
-		renderer_mediainfo = new TableMediaInfoCatRenderer();
-		renderer_language  = new TableLanguageRenderer();
-		renderer_length    = new TableLengthRenderer();
-		renderer_tags      = new TableTagsRenderer();
-		renderer_date      = new TableDateRenderer();
-		renderer_datelist  = new TableDateListRenderer();
-		renderer_format    = new TableFormatRenderer();
-		renderer_filesize  = new TableFilesizeRenderer();
+		renderer_episode   = new TableEpisodeRenderer(movielist);
+		renderer_viewed    = new TableViewedRenderer(movielist);
+		renderer_title     = new TableStringTitleRenderer(movielist);
+		renderer_mediainfo = new TableMediaInfoCatRenderer(movielist);
+		renderer_language  = new TableLanguageRenderer(movielist);
+		renderer_length    = new TableLengthRenderer(movielist);
+		renderer_tags      = new TableTagsRenderer(movielist);
+		renderer_date      = new TableDateRenderer(movielist);
+		renderer_datelist  = new TableDateListRenderer(movielist);
+		renderer_format    = new TableFormatRenderer(movielist);
+		renderer_filesize  = new TableFilesizeRenderer(movielist);
 	}
 	
 	@Override

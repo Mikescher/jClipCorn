@@ -1,8 +1,8 @@
 package de.jClipCorn.database.util;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 
 import javax.swing.*;
 
@@ -33,10 +33,10 @@ public class ExtendedViewedState {
 		return _type.toBool();
 	}
 
-	public ImageIcon getIconTable() {
+	public ImageIcon getIconTable(CCMovieList ml) {
 		switch (_type) {
 			case VIEWED:
-				if (CCProperties.getInstance().PROP_MAINFRAME_SHOW_VIEWCOUNT.getValue()) {
+				if (ml.ccprops().PROP_MAINFRAME_SHOW_VIEWCOUNT.getValue()) {
 					if (_count <= 1) return Resources.ICN_TABLE_VIEWED_TRUE.get();
 					if (_count < Resources.ICN_TABLE_VIEWED_TRUE_CTR.length) return Resources.ICN_TABLE_VIEWED_TRUE_CTR[_count].get();
 					return Resources.ICN_TABLE_VIEWED_TRUE_CTR_MORE.get();
@@ -52,7 +52,7 @@ public class ExtendedViewedState {
 			case PARTIAL_VIEWED:
 				return Resources.ICN_TABLE_VIEWED_PARTIAL.get();
 			case MARKED_FOR_AGAIN:
-				if (CCProperties.getInstance().PROP_MAINFRAME_SHOW_VIEWCOUNT.getValue()) {
+				if (ml.ccprops().PROP_MAINFRAME_SHOW_VIEWCOUNT.getValue()) {
 					if (_count <= 1) return Resources.ICN_TABLE_VIEWED_AGAIN.get();
 					if (_count < Resources.ICN_TABLE_VIEWED_AGAIN_CTR.length) return Resources.ICN_TABLE_VIEWED_AGAIN_CTR[_count].get();
 					return Resources.ICN_TABLE_VIEWED_AGAIN_CTR_MORE.get();

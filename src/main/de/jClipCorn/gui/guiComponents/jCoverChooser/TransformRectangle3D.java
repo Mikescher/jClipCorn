@@ -1,17 +1,19 @@
 package de.jClipCorn.gui.guiComponents.jCoverChooser;
 
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.helper.ImageUtilities;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
 public class TransformRectangle3D extends TransformRectangle{
 	private final static double FLEEDEPTH = 2.0;
-		
-	public TransformRectangle3D(Point tl, Point br) {
+
+	private final CCProperties ccprops;
+
+	public TransformRectangle3D(CCProperties ccprops, Point tl, Point br) {
 		super(tl, br);
+		this.ccprops = ccprops;
 	}
 	
 	private int getTopAt(double d) {
@@ -38,7 +40,7 @@ public class TransformRectangle3D extends TransformRectangle{
 		BufferedImage i = new BufferedImage(oi.getWidth(), oi.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		i.getGraphics().drawImage(oi, 0, 0, null);
 		
-		if (CCProperties.getInstance().PROP_PREVSERIES_COVERBORDER.getValue()) {
+		if (ccprops.PROP_PREVSERIES_COVERBORDER.getValue()) {
 			if (focused) {
 				ImageUtilities.drawActualBorder(i, FOCUSBORDERCOLOR, FOCUSBORDERWIDTH);
 			} else {

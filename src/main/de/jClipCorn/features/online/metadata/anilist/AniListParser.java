@@ -1,5 +1,6 @@
 package de.jClipCorn.features.online.metadata.anilist;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
@@ -7,7 +8,6 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.AniListTitleLang;
 import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
 import de.jClipCorn.util.Str;
@@ -40,7 +40,8 @@ public class AniListParser extends Metadataparser {
 	private String gql_search_mov = Str.Empty;
 	private String gql_search_any = Str.Empty;
 
-	public AniListParser() {
+	public AniListParser(CCMovieList ml) {
+		super(ml);
 		try {
 			gql_select     = SimpleFileUtils.readTextResource("/scripts/graphql/anilist_select.graphql",     this.getClass());
 			gql_search_tv  = SimpleFileUtils.readTextResource("/scripts/graphql/anilist_search_tv.graphql",  this.getClass());
@@ -115,7 +116,7 @@ public class AniListParser extends Metadataparser {
 	}
 
 	private String getTitle(JSONObject media) {
-		AniListTitleLang v = CCProperties.getInstance().PROP_ANILIST_PREFERRED_TITLE_LANG.getValue();
+		AniListTitleLang v = movielist.ccprops().PROP_ANILIST_PREFERRED_TITLE_LANG.getValue();
 
 		switch (v) {
 			case NATIVE:    return media.getJSONObject("title").getString("native");

@@ -17,7 +17,6 @@ import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
@@ -197,7 +196,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		{
 			ViewedHistory.setWithException(ViewedHistory.get().add(datetime));
 
-			if (Tags.get(CCSingleTag.TAG_WATCH_LATER) && CCProperties.getInstance().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
+			if (Tags.get(CCSingleTag.TAG_WATCH_LATER) && getMovieList().ccprops().PROP_MAINFRAME_AUTOMATICRESETWATCHLATER.getValue()) {
 				Tags.setWithException(CCSingleTag.TAG_WATCH_LATER, false);
 			}
 
@@ -234,7 +233,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		if (updateViewedAndHistory && !ViewedHistory.get().getLastOrInvalid().isUnspecifiedOrMinimum())
 		{
 			var hours = ViewedHistory.get().getLastOrInvalid().getSecondDifferenceTo(CCDateTime.getCurrentDateTime()) / (60.0 * 60.0);
-			var max = CCProperties.getInstance().PROP_MAX_FASTREWATCH_HOUR_DIFF.getValue();
+			var max = getMovieList().ccprops().PROP_MAX_FASTREWATCH_HOUR_DIFF.getValue();
 
 			if (hours < max)
 			{
@@ -255,7 +254,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	public String getFastMD5() {
 		var f = new FSPath[getPartcount()];
-		for (int i = 0; i < getPartcount(); i++) f[i] = Parts.get(i).toFSPath();
+		for (int i = 0; i < getPartcount(); i++) f[i] = Parts.get(i).toFSPath(this);
 		return ChecksumHelper.calculateFastMD5(f);
 	}
 	
@@ -280,7 +279,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 			if (group.DoSerialize) filename.append(" [[").append(group.Name).append("]]");
 		}
 				
-		if (!Language.get().isExact(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue())) {
+		if (!Language.get().isExact(getMovieList().ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue())) {
 			filename.append(" [").append(Language.get().serializeToFilenameString()).append("]");
 		}
 		

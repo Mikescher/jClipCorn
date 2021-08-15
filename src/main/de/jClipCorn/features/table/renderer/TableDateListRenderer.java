@@ -1,13 +1,13 @@
 package de.jClipCorn.features.table.renderer;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.properties.CCProperties;
 
 public class TableDateListRenderer extends TableRenderer {
 	private static final long serialVersionUID = 1L;
 
-	public TableDateListRenderer() {
-		super();
+	public TableDateListRenderer(CCMovieList ml) {
+		super(ml);
 	}
 
 	@Override
@@ -16,7 +16,7 @@ public class TableDateListRenderer extends TableRenderer {
 		if (d.isEmptyOrOnlyUnspecified()) {
 			setText(" - "); //$NON-NLS-1$
 		} else {
-			switch (CCProperties.getInstance().PROP_SERIES_DISPLAYED_DATE.getValue()) {
+			switch (ccprops().PROP_SERIES_DISPLAYED_DATE.getValue()) {
 			case AVERAGE:
 				setText(d.getAverageDateOrInvalid().toStringUINormal());
 				break;

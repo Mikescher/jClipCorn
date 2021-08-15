@@ -17,6 +17,7 @@ public class VLCRobotLogTable extends JCCSimpleTable<VLCRobotLogEntry> {
 	private static WatchHistoryTable designCreate() { return new WatchHistoryTable(null); }
 
 	public VLCRobotLogTable(VLCRobotFrame frame) {
+		super(frame);
 		owner = frame;
 	}
 
@@ -26,6 +27,7 @@ public class VLCRobotLogTable extends JCCSimpleTable<VLCRobotLogEntry> {
 		List<JCCSimpleColumnPrototype<VLCRobotLogEntry>> r = new ArrayList<>();
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"@Index",
 				e -> String.valueOf(e.Index),
@@ -33,6 +35,7 @@ public class VLCRobotLogTable extends JCCSimpleTable<VLCRobotLogEntry> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"@Event",
 				VLCRobotLogEntry::getEventType,
@@ -40,6 +43,7 @@ public class VLCRobotLogTable extends JCCSimpleTable<VLCRobotLogEntry> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"@Timestamp",
 				e -> e.Timestamp.toStringUINormal(),
@@ -47,6 +51,7 @@ public class VLCRobotLogTable extends JCCSimpleTable<VLCRobotLogEntry> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"*",
 				"@Change",
 				VLCRobotLogEntry::format,

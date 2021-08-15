@@ -218,7 +218,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 
 	@Override
 	public Opt<Color> getRowColor(int row) {
-		switch (CCProperties.getInstance().PROP_MAINFRAME_TABLEBACKGROUND.getValue()) {
+		switch (movielist.ccprops().PROP_MAINFRAME_TABLEBACKGROUND.getValue()) {
 		case DEFAULT:
 			return Opt.empty();
 		case WHITE:

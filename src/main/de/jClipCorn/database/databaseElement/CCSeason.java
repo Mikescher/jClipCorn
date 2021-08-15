@@ -6,7 +6,8 @@ import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.database.databaseElement.caches.SeasonCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.ISeasonData;
-import de.jClipCorn.database.elementProps.*;
+import de.jClipCorn.database.elementProps.IEProperty;
+import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.database.elementProps.impl.EIntProp;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
 import de.jClipCorn.database.elementProps.impl.EStringProp;
@@ -15,6 +16,7 @@ import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
@@ -32,7 +34,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, IEpisodeOwner, ISeasonData, IPropertyParent {
+public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, IEpisodeOwner, ISeasonData, IPropertyParent, ICCPropertySource {
 	private final CCSeries owner;
 
 	private final SeasonCache _cache = new SeasonCache(this);
@@ -72,6 +74,10 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	public EIntProp    year()  { return  Year;  }
 	public EStringProp title() { return  Title; }
+
+	public CCProperties ccprops() {
+		return getMovieList().ccprops();
+	}
 
 	public void setDefaultValues(boolean updateDB) {
 		beginUpdating();
@@ -251,7 +257,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	
 	@Override
 	public CCDate getAddDate() {
-		switch (CCProperties.getInstance().PROP_SERIES_ADDDATECALCULATION.getValue()) {
+		switch (getMovieList().ccprops().PROP_SERIES_ADDDATECALCULATION.getValue()) {
 			case OLDEST_DATE:
 			case NEWEST_BY_SEASON:
 				return calcMinimumAddDate();
@@ -477,7 +483,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		List<FSPath> result = new ArrayList<>();
 		
 		for (int i = 0; i < episodes.size(); i++) {
-			result.add(getEpisodeByArrayIndex(i).getPart().toFSPath());
+			result.add(getEpisodeByArrayIndex(i).getPart().toFSPath(this));
 		}
 		
 		return result;
@@ -485,7 +491,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	
 	public boolean isFileInList(FSPath path) {
 		for (int i = 0; i < episodes.size(); i++) {
-			if (getEpisodeByArrayIndex(i).Part.get().toFSPath().equalsOnFilesystem(path)) {
+			if (getEpisodeByArrayIndex(i).Part.get().toFSPath(this).equalsOnFilesystem(path)) {
 				return true;
 			}
 		}
@@ -609,7 +615,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	public ExtendedViewedState getExtendedViewedState() {
 		if (isViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
-		else if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue() && isPartialViewed())
+		else if (getMovieList().ccprops().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue() && isPartialViewed())
 			return new ExtendedViewedState(ExtendedViewedStateType.PARTIAL_VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
 		else
 			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());

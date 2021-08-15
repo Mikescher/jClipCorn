@@ -1,23 +1,24 @@
 package de.jClipCorn.gui.guiComponents.referenceChooser;
 
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.datatypes.Tuple;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.datatypes.Tuple;
-
-public class ReferenceChooserDialog extends JDialog {
+public class ReferenceChooserDialog extends JCCDialog {
 	private static final long serialVersionUID = -3812579297074052719L;
 	
 	private final JReferenceChooser parent;
@@ -26,8 +27,8 @@ public class ReferenceChooserDialog extends JDialog {
 
 	private JPanel pnlData;
 
-	public ReferenceChooserDialog(CCSingleOnlineReference dataMain, List<CCSingleOnlineReference> dataAdditional, JReferenceChooser parent) {
-		super();
+	public ReferenceChooserDialog(CCMovieList ml, CCSingleOnlineReference dataMain, List<CCSingleOnlineReference> dataAdditional, JReferenceChooser parent) {
+		super(ml);
 
 		this.parent = parent;
 				
@@ -123,7 +124,7 @@ public class ReferenceChooserDialog extends JDialog {
 
 		pnlData.setLayout(new FormLayout(cspec.toArray(new ColumnSpec[0]), rspec.toArray(new RowSpec[0])));
 
-		chsrMain = new JSingleReferenceChooser();
+		chsrMain = new JSingleReferenceChooser(movielist);
 		chsrMain.setValue(dataMain);
 		pnlData.add(chsrMain, "1, 1, 6, 1, fill, fill"); //$NON-NLS-1$
 
@@ -132,7 +133,7 @@ public class ReferenceChooserDialog extends JDialog {
 		for (int i = 0; i < dataAdditional.size(); i++) {
 			final int fi = i;
 
-			JSingleSubReferenceChooser c = new JSingleSubReferenceChooser();
+			JSingleSubReferenceChooser c = new JSingleSubReferenceChooser(movielist);
 			c.setValue(dataAdditional.get(i));
 			pnlData.add(c, "1, "+(4 + i*2)+", fill, fill"); //$NON-NLS-1$ //$NON-NLS-2$
 

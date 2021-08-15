@@ -21,6 +21,7 @@ import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.guiComponents.FileDrop;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.charSelector.ClipCharSortSelector;
 import de.jClipCorn.gui.mainFrame.filterTree.FilterTree;
@@ -31,7 +32,6 @@ import de.jClipCorn.gui.mainFrame.table.ClipTable;
 import de.jClipCorn.gui.mainFrame.table.RowFilterSource;
 import de.jClipCorn.gui.mainFrame.toolbar.ClipToolbar;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
@@ -48,17 +48,14 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
-public class MainFrame extends JFrame implements FileDrop.Listener, IActionRootFrame
+public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRootFrame
 {
 	private static MainFrame instance = null;
 
 	private final CCDBUpdateListener _mlListener;
 
-	private final CCMovieList movielist;
-
 	public MainFrame(CCMovieList movielist) {
-		super();
-		this.movielist = movielist;
+		super(movielist);
 
 		movielist.addChangeListener(_mlListener = new CCDBUpdateAdapter() { @Override public void onAfterLoad() { onMovieListAfterLoad(); } });
 		CCActionTree actionTree = new CCActionTree(this);
@@ -70,7 +67,7 @@ public class MainFrame extends JFrame implements FileDrop.Listener, IActionRootF
 
 		instance = this;
 
-		if (CCProperties.getInstance().firstLaunch) {
+		if (ccprops().firstLaunch) {
 			JOptionPane.showMessageDialog(this,
 					LocaleBundle.getString("MainFrame.disclaimer.text"),  //$NON-NLS-1$
 					LocaleBundle.getString("MainFrame.disclaimer.caption"),  //$NON-NLS-1$
@@ -88,9 +85,9 @@ public class MainFrame extends JFrame implements FileDrop.Listener, IActionRootF
 
 		if (CCLog.hasErrors()) coverImage.setModeError();
 
-		setSize(CCProperties.getInstance().PROP_MAINFRAME_WIDTH.getValue(), CCProperties.getInstance().PROP_MAINFRAME_HEIGHT.getValue());
+		setSize(ccprops().PROP_MAINFRAME_WIDTH.getValue(), ccprops().PROP_MAINFRAME_HEIGHT.getValue());
 
-		clipTable.configureColumnVisibility(CCProperties.getInstance().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), true);
+		clipTable.configureColumnVisibility(ccprops().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), true);
 
 		new FileDrop(clipTable, true, this);
 
@@ -199,7 +196,7 @@ public class MainFrame extends JFrame implements FileDrop.Listener, IActionRootF
 		}
 
 		if (cde.isMovie()) {
-			switch (CCProperties.getInstance().PROP_ON_DBLCLICK_MOVE.getValue()) {
+			switch (ccprops().PROP_ON_DBLCLICK_MOVE.getValue()) {
 				case PLAY:
 					CCActionTree.getInstance().find(CCActionTree.EVENT_ON_MOVIE_EXECUTED_0).execute(this, ActionSource.DIRECT_CLICK, cde, null);
 					break;
@@ -256,7 +253,7 @@ public class MainFrame extends JFrame implements FileDrop.Listener, IActionRootF
 	}
 
 	public void onMovieListAfterLoad() {
-		if (CCProperties.getInstance().PROP_COMMON_CHECKFORUPDATES.getValue() && ! Main.BETA) {
+		if (ccprops().PROP_COMMON_CHECKFORUPDATES.getValue() && ! Main.BETA) {
 			new UpdateConnector(Main.TITLE, Main.VERSION, (src, available, version) -> SwingUtils.invokeLater(() ->
 			{
 				if (available) {
@@ -294,20 +291,20 @@ public class MainFrame extends JFrame implements FileDrop.Listener, IActionRootF
 
 	public void onSettingsChanged(java.util.List<String> changes)
 	{
-		if (CCStreams.iterate(changes).any(c -> Str.equals(c, CCProperties.getInstance().PROP_MAINFRAME_VISIBLE_COLUMNS.getIdentifier())))
+		if (CCStreams.iterate(changes).any(c -> Str.equals(c, ccprops().PROP_MAINFRAME_VISIBLE_COLUMNS.getIdentifier())))
 		{
-			clipTable.configureColumnVisibility(CCProperties.getInstance().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), false);
+			clipTable.configureColumnVisibility(ccprops().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), false);
 			clipTable.autoResize();
 		}
 
-		if (CCStreams.iterate(changes).any(c -> Str.equals(c, CCProperties.getInstance().PROP_TOOLBAR_ELEMENTS.getIdentifier())))
+		if (CCStreams.iterate(changes).any(c -> Str.equals(c, ccprops().PROP_TOOLBAR_ELEMENTS.getIdentifier())))
 		{
 			toolbar.recreate();
 		}
 
-		//if (CCStreams.iterate(changes).any(c -> Str.equals(c, CCProperties.getInstance().PROP_UI_APPTHEME.getIdentifier())))
+		//if (CCStreams.iterate(changes).any(c -> Str.equals(c, ccprops().PROP_UI_APPTHEME.getIdentifier())))
 		//{
-		//	LookAndFeelManager.setLookAndFeel(CCProperties.getInstance().PROP_UI_APPTHEME.getValue(), true);
+		//	LookAndFeelManager.setLookAndFeel(ccprops().PROP_UI_APPTHEME.getValue(), true);
 		//}
 	}
 
@@ -326,12 +323,12 @@ public class MainFrame extends JFrame implements FileDrop.Listener, IActionRootF
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		panelTop = new JPanel();
-		toolbar = new ClipToolbar();
+		toolbar = new ClipToolbar(movielist);
 		edSearch = new SearchField(this);
 		btnSearch = new JButton();
 		panelLeft = new JPanel();
 		filterTree = new FilterTree(movielist);
-		coverImage = new DatabaseElementPreviewLabel(false);
+		coverImage = new DatabaseElementPreviewLabel(movielist, false);
 		clipTable = new ClipTable(movielist, this);
 		clipCharSelector = new ClipCharSortSelector(this);
 		statusbar = new ClipStatusBar(this, movielist);

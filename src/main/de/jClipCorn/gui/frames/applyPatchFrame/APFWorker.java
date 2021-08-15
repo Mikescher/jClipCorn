@@ -7,17 +7,21 @@ import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.lambda.Func2to0;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
+import de.jClipCorn.util.xml.CCXMLParser;
 
 import javax.imageio.ImageIO;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,6 +29,22 @@ import java.util.concurrent.atomic.AtomicReference;
 @SuppressWarnings("nls")
 public class APFWorker
 {
+	public static Tuple<List<ActionVM>, PatchExecState> readPatch(FSPath patchFilePath) throws Exception {
+		var state = new PatchExecState();
+		state.load(FSPath.create(patchFilePath.toString() + ".state"));
+
+		CCXMLParser doc = CCXMLParser.parse(patchFilePath.readAsUTF8TextFile());
+
+		var actions = new ArrayList<ActionVM>();
+
+		for (var xelem: doc.getRoot().getAllChildren("action").autosortByProperty(p -> Integer.parseInt(p.getAttributeValueOrDefault("ctr", null))))
+		{
+			actions.add(new ActionVM(xelem, state));
+		}
+
+		return Tuple.Create(actions, state);
+	}
+
 	public static void applyPatch(List<ActionVM> actlist, CCMovieList ml, PatchExecState state, PatchExecOptions opt, DoubleProgressCallbackListener cb, Func2to0<ActionVM, ActionVM> lstr) throws Exception
 	{
 		cb.setMaxAndResetValueBoth(actlist.size() + 1, 1);
@@ -93,7 +113,7 @@ public class APFWorker
 
 			for (int i = 0; i < elem.getPartcount(); i++)
 			{
-				var src = elem.Parts.get(i).toFSPath();
+				var src = elem.Parts.get(i).toFSPath(ml);
 				var dst = opt.DestinationTrashMovies.append("movie_" + elem.getLocalID() + "_" + i + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
 				Files.move(src.toPath(), dst.toPath());
 			}
@@ -109,7 +129,7 @@ public class APFWorker
 
 			if (opt.Porcelain) return;
 
-			var src = elem.getPart().toFSPath();
+			var src = elem.getPart().toFSPath(ml);
 			var dst = opt.DestinationTrashSeries.append("episode_" + elem.getLocalID() + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
 			Files.move(src.toPath(), dst.toPath());
 
@@ -144,7 +164,7 @@ public class APFWorker
 
 			SwingUtils.invokeAndWait(() ->
 			{
-				elem.Parts.set(index, CCPath.createFromFSPath(finptarget));
+				elem.Parts.set(index, CCPath.createFromFSPath(finptarget, ml));
 			});
 		}
 		else if (ielem instanceof CCEpisode)
@@ -173,7 +193,7 @@ public class APFWorker
 
 			SwingUtils.invokeAndWait(() ->
 			{
-				elem.Part.set(CCPath.createFromFSPath(finptarget));
+				elem.Part.set(CCPath.createFromFSPath(finptarget, ml));
 			});
 		}
 		else
@@ -269,7 +289,7 @@ public class APFWorker
 
 			if (opt.Porcelain) return;
 
-			BasicFileAttributes attr = elem.getParts().get(0).toFSPath().readFileAttr();
+			BasicFileAttributes attr = elem.getParts().get(0).toFSPath(ml).readFileAttr();
 
 			SwingUtils.invokeAndWait(() ->
 			{
@@ -283,7 +303,7 @@ public class APFWorker
 
 			if (opt.Porcelain) return;
 
-			BasicFileAttributes attr = elem.getParts().get(0).toFSPath().readFileAttr();
+			BasicFileAttributes attr = elem.getParts().get(0).toFSPath(ml).readFileAttr();
 
 			SwingUtils.invokeAndWait(() ->
 			{
@@ -451,7 +471,7 @@ public class APFWorker
 
 			for (int i = 0; i < elem.getPartcount(); i++)
 			{
-				var src = elem.Parts.get(i).toFSPath();
+				var src = elem.Parts.get(i).toFSPath(ml);
 				var dst = opt.DestinationTrashMovies.append("movie_" + elem.getLocalID() + "_" + i + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
 				Files.move(src.toPath(), dst.toPath());
 			}
@@ -480,7 +500,7 @@ public class APFWorker
 
 			if (opt.Porcelain) return;
 
-			var src = elem.getPart().toFSPath();
+			var src = elem.getPart().toFSPath(ml);
 			var dst = opt.DestinationTrashSeries.append("episode_" + elem.getLocalID() + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
 			Files.move(src.toPath(), dst.toPath());
 

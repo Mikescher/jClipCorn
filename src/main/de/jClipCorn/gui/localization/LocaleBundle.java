@@ -13,8 +13,8 @@ public class LocaleBundle {
 	
 	private static ResourceBundle bundle = null; 
 	
-	private static Locale getLocale() {
-		return LOCALES[CCProperties.getInstance().PROP_UI_LANG.getValue().asInt()];
+	private static Locale getLocale(CCProperties ccprops) {
+		return LOCALES[ccprops.PROP_UI_LANG.getValue().asInt()];
 	}
 
 	private static Locale getLocale(int langID) {
@@ -100,25 +100,25 @@ public class LocaleBundle {
 		return builder.toString();
 	}
 
-	public static void updateLang() {
-		bundle = ResourceBundle.getBundle(DEFAULT_BASENAME, getLocale());
+	public static void updateLang(CCProperties ccprops) {
+		bundle = ResourceBundle.getBundle(DEFAULT_BASENAME, getLocale(ccprops));
 	}
 
 	public static void updateLangManual(int overrideLang) {
 		bundle = ResourceBundle.getBundle(DEFAULT_BASENAME, getLocale(overrideLang));
 	}
 	
-	public static int getTranslationCount() {
+	public static int getTranslationCount(CCProperties ccprops) {
 		int c = 0;
-		for (Enumeration<String> enum_s = ResourceBundle.getBundle(DEFAULT_BASENAME, getLocale()).getKeys(); enum_s.hasMoreElements(); enum_s.nextElement()) {
+		for (Enumeration<String> enum_s = ResourceBundle.getBundle(DEFAULT_BASENAME, getLocale(ccprops)).getKeys(); enum_s.hasMoreElements(); enum_s.nextElement()) {
 			c++;
 		}
 		
 		return c;
 	}
 	
-	public static Locale getCurrentLocale() {
-		return getLocale();
+	public static Locale getCurrentLocale(CCProperties ccprops) {
+		return getLocale(ccprops);
 	}
 	
 	@SuppressWarnings("nls")

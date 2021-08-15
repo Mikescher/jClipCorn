@@ -4,10 +4,12 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 
-public class BatchEditEpisodeData implements IEpisodeData
+public class BatchEditEpisodeData implements IEpisodeData, ICCPropertySource
 {
 	private final CCEpisode _source;
 
@@ -103,5 +105,9 @@ public class BatchEditEpisodeData implements IEpisodeData
 			if (isDirty_MediaInfo())     _source.MediaInfo.set(mediaInfo);
 		}
 		_source.endUpdating();
+	}
+
+	public CCProperties ccprops() {
+		return getSource().getMovieList().ccprops();
 	}
 }

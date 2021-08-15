@@ -19,6 +19,7 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 	private static MultiEpisodesTable designCreate() { return new MultiEpisodesTable(null); }
 
 	public MultiEpisodesTable(CCSeries src) {
+		super(src != null ? src.getMovieList() : null);
 		_src = src;
 	}
 
@@ -28,6 +29,7 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 		List<JCCSimpleColumnPrototype<NewEpisodeVM>> r = new ArrayList<>();
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				Str.Empty,
 				null,
@@ -35,6 +37,7 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 				e -> Str.isNullOrWhitespace(e.Problems) ? null : e.Problems));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"MultiEpisodesTable.Source",
 				e -> e.SourcePath.getFilenameWithExt(),
@@ -42,6 +45,7 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 				e -> e.SourcePath.toString()));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"MultiEpisodesTable.Target",
 				e -> e.TargetPath.toString(),
@@ -49,6 +53,7 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"MultiEpisodesTable.Episode",
 				e -> e.EpisodeNumber + "",
@@ -56,6 +61,7 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"*,min=auto",
 				"MultiEpisodesTable.Title",
 				e -> e.Title,
@@ -63,6 +69,7 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"MultiEpisodesTable.Length",
 				e -> e.Length + "",
@@ -70,6 +77,7 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"MultiEpisodesTable.Language",
 				null,
@@ -77,6 +85,7 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 				e -> e.Language.toOutputString()));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"MultiEpisodesTable.Quality",
 				e -> e.MediaInfo.getCategory(_src.getGenres()).getLongText(),

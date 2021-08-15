@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.textExportFrame;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -14,10 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-public class TextExportFrame extends JFrame {
+public class TextExportFrame extends JCCFrame {
 	private static final long serialVersionUID = -807033167837187549L;
-	
-	private final CCMovieList movielist;
 	
 	private JTextArea memoResult;
 	private JScrollPane scrollPane;
@@ -36,9 +35,8 @@ public class TextExportFrame extends JFrame {
 	private JCheckBox cbxIncludeViewed;
 	
 	public TextExportFrame(CCMovieList mlist, Component owner) {
-		super();
+		super(mlist);
 		setSize(new Dimension(600, 620));
-		movielist = mlist;
 
 		initGUI();
 		setLocationRelativeTo(owner);

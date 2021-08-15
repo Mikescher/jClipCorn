@@ -1,16 +1,18 @@
 package de.jClipCorn.gui.frames._template;
 
 import com.jgoodies.forms.layout.FormLayout;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.resources.Resources;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class Template extends JFrame
+public class Template extends JCCFrame
 {
-	public Template(Component owner)
+	public Template(Component owner, CCMovieList ml)
 	{
-		super();
+		super(ml);
 
 		initComponents();
 		postInit();

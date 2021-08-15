@@ -1,24 +1,25 @@
 package de.jClipCorn.gui.guiComponents.jCoverChooser;
 
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.helper.ImageUtilities;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
 public class TransformRectangle2D extends TransformRectangle{
-	
-	
-	public TransformRectangle2D(Point tl, Point br) {
+
+	private final CCProperties ccprops;
+
+	public TransformRectangle2D(CCProperties ccprops, Point tl, Point br) {
 		super(tl, br);
+		this.ccprops = ccprops;
 	}
 
 	private BufferedImage transformImg(BufferedImage oi, boolean focused) {
 		BufferedImage i = new BufferedImage(oi.getWidth(), oi.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		i.getGraphics().drawImage(oi, 0, 0, null);
 		
-		if (CCProperties.getInstance().PROP_PREVSERIES_COVERBORDER.getValue()) {
+		if (ccprops.PROP_PREVSERIES_COVERBORDER.getValue()) {
 			if (focused) {
 				ImageUtilities.drawActualBorder(i, FOCUSBORDERCOLOR, FOCUSBORDERWIDTH);
 			} else {

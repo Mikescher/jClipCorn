@@ -16,14 +16,18 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 
 	public static String NAME_TEMPORARY = "{{temporary}}"; //$NON-NLS-1$
 
-	private final CCMovieList _movielist;
+	private final CCMovieList movielist;
 
 	public CustomFilterList(CCMovieList ml) {
-		_movielist = ml;
+		movielist = ml;
+	}
+
+	public CCProperties ccprops() {
+		return movielist.ccprops();
 	}
 
 	public void save() {
-		if (_movielist.isReadonly()) {
+		if (movielist.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			return;
 		}
@@ -38,7 +42,7 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 			b.append(get(i).exportToString());
 		}
 		
-		var f = CCProperties.getInstance().PROP_MAINFRAME_FILTERLISTPATH.getValue().toFSPath();
+		var f = ccprops().PROP_MAINFRAME_FILTERLISTPATH.getValue().toFSPath(movielist);
 		
 		try {
 			f.writeAsUTF8TextFile(b.toString());
@@ -48,7 +52,7 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 	}
 
 	public void load() {
-		var f = CCProperties.getInstance().PROP_MAINFRAME_FILTERLISTPATH.getValue().toFSPath();
+		var f = ccprops().PROP_MAINFRAME_FILTERLISTPATH.getValue().toFSPath(movielist);
 		
 		if (f.exists()) {
 			String txt;
@@ -74,7 +78,7 @@ public class CustomFilterList extends ArrayList<CustomFilterObject> {
 				}
 				
 				CustomOperator op;
-				if ((op = new CustomAndOperator(_movielist)).importFromString(line[1])) {
+				if ((op = new CustomAndOperator(movielist)).importFromString(line[1])) {
 					add(new CustomFilterObject(line[0], op));
 				} else {
 					CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotParseFilterList", i+1)); //$NON-NLS-1$

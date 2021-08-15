@@ -22,7 +22,9 @@ import de.jClipCorn.gui.frames.initialConfigFrame.InitialConfigFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
+import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
 import de.jClipCorn.util.comparator.CCDatabaseElementComparator;
 import de.jClipCorn.util.comparator.CCMovieComparator;
@@ -49,7 +51,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.*;
 
-public class CCMovieList {
+public class CCMovieList implements ICCPropertySource {
 	private final List<CCDatabaseElement> list;
 	
 	private final List<CCDBUpdateListener> listener;
@@ -57,15 +59,19 @@ public class CCMovieList {
 	private CCDatabase database;
 	private List<CCGroup> databaseGroups;
 
+	private final CCProperties ccproperties;
+
 	private final MovieListCache _cache;
 
 	private boolean blocked   = false;
 	private boolean isLoading = false;
 	private boolean isLoaded  = false;
 
-	private CCMovieList(CCDatabase db) {
+	private CCMovieList(CCDatabase db, CCProperties ccprops) {
 		this.list     = new Vector<>();
 		this.listener = new Vector<>();
+
+		this.ccproperties = ccprops;
 
 		this.databaseGroups = new ArrayList<>();
 		this.database = db;
@@ -75,35 +81,40 @@ public class CCMovieList {
 		addChangeListener(new CCDBUpdateAdapter(){ @Override public void onChangeDatabaseElement(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] p) { CCLog.addMovieListChangeEvent(root, el, p); } });
 	}
 	
-	public static CCMovieList createInstanceMovieList() {
+	public static CCMovieList createInstanceMovieList(CCProperties ccprops) {
 		var db = CCDatabase.create(
-				CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue(),
-				CCProperties.getInstance().PROP_DATABASE_DIR.getValue().isEmpty() ? FilesystemUtils.getRealSelfDirectory() : CCProperties.getInstance().PROP_DATABASE_DIR.getValue(),
-				CCProperties.getInstance().PROP_DATABASE_NAME.getValue(),
-				CCProperties.getInstance().ARG_READONLY);
+				ccprops,
+				ccprops.PROP_DATABASE_DRIVER.getValue(),
+				ccprops.PROP_DATABASE_DIR.getValue().isEmpty() ? FilesystemUtils.getRealSelfDirectory() : ccprops.PROP_DATABASE_DIR.getValue(),
+				ccprops.PROP_DATABASE_NAME.getValue(),
+				ccprops.ARG_READONLY);
 
-		return new CCMovieList(db);
+		return new CCMovieList(db, ccprops);
 	}
 
-	public static CCMovieList createRawForUnitTests(CCDatabase db) {
-		return new CCMovieList(db);
+	public static CCMovieList createRawForUnitTests(CCDatabase db, CCProperties ccprops) {
+		return new CCMovieList(db, ccprops);
 	}
 	
-	public static CCMovieList createInMemory() {
-		return new CCMovieList(CCDatabase.createInMemory());
+	public static CCMovieList createInMemory(CCProperties ccprops) {
+		return new CCMovieList(CCDatabase.createInMemory(ccprops), ccprops);
 	}
 	
-	public static CCMovieList createStub() {
-		return new CCMovieList(CCDatabase.createStub());
+	public static CCMovieList createStub(CCProperties ccprops) {
+		return new CCMovieList(CCDatabase.createStub(ccprops), ccprops);
 	}
 
-	public static CCMovieList loadExtern(CCDatabaseDriver drv, FSPath directory, String dbName, boolean readonly) {
-		return new CCMovieList(CCDatabase.create(drv, directory, dbName, readonly));
+	public static CCMovieList loadExtern(CCDatabaseDriver drv, FSPath directory, String dbName, boolean readonly, CCProperties ccprops) {
+		return new CCMovieList(CCDatabase.create(ccprops, drv, directory, dbName, readonly), ccprops);
+	}
+
+	public CCProperties ccprops() {
+		return ccproperties;
 	}
 
 	public void showInitialWizard() {
 		if (!database.exists()) {
-			boolean cont = InitialConfigFrame.ShowWizard();
+			boolean cont = InitialConfigFrame.ShowWizard(ccprops());
 			
 			if (! cont) {
 				ApplicationHelper.exitApplication(0, true);
@@ -111,10 +122,11 @@ public class CCMovieList {
 
 			// in case db type has changed
 			database = CCDatabase.create(
-					CCProperties.getInstance().PROP_DATABASE_DRIVER.getValue(),
+					ccprops(),
+					ccprops().PROP_DATABASE_DRIVER.getValue(),
 					FilesystemUtils.getRealSelfDirectory(),
-					CCProperties.getInstance().PROP_DATABASE_NAME.getValue(),
-					CCProperties.getInstance().ARG_READONLY);
+					ccprops().PROP_DATABASE_NAME.getValue(),
+					ccprops().ARG_READONLY);
 		}
 	}
 	
@@ -160,7 +172,7 @@ public class CCMovieList {
 					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_ELEMENTS);
 					Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
 					{
-						database.fillCoverCache(CCProperties.getInstance().PROP_DATABASE_LOAD_ALL_COVERDATA.getValue());
+						database.fillCoverCache(ccprops().PROP_DATABASE_LOAD_ALL_COVERDATA.getValue());
 					}
 					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
 				}
@@ -279,7 +291,7 @@ public class CCMovieList {
 	}
 
 	public int getViewedCount() {
-		return _cache.get(MovieListCache.VIEWED_COUNT, Tuple1.Create(CCProperties.getInstance().PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT.getValue()), ml->
+		return _cache.get(MovieListCache.VIEWED_COUNT, Tuple1.Create(ccprops().PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT.getValue()), ml->
 		{
 			int v = 0;
 			for (CCDatabaseElement m : list) {
@@ -287,7 +299,7 @@ public class CCMovieList {
 					if (((CCMovie) m).isViewed()) {
 						v++;
 					}
-				} else if (CCProperties.getInstance().PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT.getValue()) {
+				} else if (ccprops().PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT.getValue()) {
 					if (((CCSeries) m).isViewed()) {
 						v++;
 					}
@@ -743,7 +755,7 @@ public class CCMovieList {
 
 	public void shutdown() {
 		if (database != null) { // Close even after Intialize AV's
-			database.disconnect(CCProperties.getInstance().PROP_DATABASE_CLEANSHUTDOWN.getValue());
+			database.disconnect(ccprops().PROP_DATABASE_CLEANSHUTDOWN.getValue());
 		}
 	}
 
@@ -760,9 +772,9 @@ public class CCMovieList {
 		
 		for (CCDatabaseElement el : list) {
 			if (el.isMovie()) {
-				for (var p: ((CCMovie) el).getParts()) result.add(p.toFSPath());
+				for (var p: ((CCMovie) el).getParts()) result.add(p.toFSPath(this));
 			} else if (includeSeries){
-				for (var e: ((CCSeries) el).getEpisodeList()) if (!e.Part.get().isEmpty()) result.add(e.Part.get().toFSPath());
+				for (var e: ((CCSeries) el).getEpisodeList()) if (!e.Part.get().isEmpty()) result.add(e.Part.get().toFSPath(this));
 			}
 		}
 		
@@ -784,18 +796,18 @@ public class CCMovieList {
 	}
 
 	public FSPath getCommonPathForMovieFileChooser() {
-		var p = getCommonMoviesPath().toFSPath();
-		if (p.isEmpty()) p = getCommonSeriesPath().toFSPath();
+		var p = getCommonMoviesPath().toFSPath(this);
+		if (p.isEmpty()) p = getCommonSeriesPath().toFSPath(this);
 		if (p.isEmpty()) p = FilesystemUtils.getRealSelfDirectory();
-		if (p.isEmpty()) p = FilesystemUtils.getAbsoluteSelfDirectory();
+		if (p.isEmpty()) p = FilesystemUtils.getAbsoluteSelfDirectory(ccprops());
 		return p;
 	}
 
 	public FSPath getCommonPathForSeriesFileChooser() {
-		var p = getCommonSeriesPath().toFSPath();
-		if (p.isEmpty()) p = getCommonMoviesPath().toFSPath();
+		var p = getCommonSeriesPath().toFSPath(this);
+		if (p.isEmpty()) p = getCommonMoviesPath().toFSPath(this);
 		if (p.isEmpty()) p = FilesystemUtils.getRealSelfDirectory();
-		if (p.isEmpty()) p = FilesystemUtils.getAbsoluteSelfDirectory();
+		if (p.isEmpty()) p = FilesystemUtils.getAbsoluteSelfDirectory(ccprops());
 		return p;
 	}
 
@@ -1022,7 +1034,7 @@ public class CCMovieList {
 	public void testDatabaseVersion() {
 		String real = database.getInformation_DBVersion();
 		String expected = Main.DBVERSION;
-		String name = CCProperties.getInstance().PROP_DATABASE_NAME.getValue();
+		String name = ccprops().PROP_DATABASE_NAME.getValue();
 		String type = database.getDBTypeName();
 		
 		if (! real.equals(Main.DBVERSION)) {
@@ -1235,5 +1247,9 @@ public class CCMovieList {
 		}
 
 		return Opt.empty();
+	}
+
+	public DriveMap getDriveMap() {
+		return ccprops().getDriveMap();
 	}
 }

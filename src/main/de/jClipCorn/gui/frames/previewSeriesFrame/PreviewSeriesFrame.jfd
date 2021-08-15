@@ -6,7 +6,7 @@ new FormModel {
 	"i18n.keyPrefix": "PreviewSeriesFrame"
 	contentType: "form/swing"
 	root: new FormRoot {
-		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "unrelgap, 182px, labelcompgap, default:grow, unrelgap"
 			"$rowSpecs": "unrelgap, default, linegap, default:grow, unrelgap"
 		} ) {
@@ -86,6 +86,9 @@ new FormModel {
 					name: "cvrChooser"
 					"circleRadius": 300
 					"coverHalfSize": true
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
+					}
 					addEvent( new FormEvent( "javax.swing.event.ListSelectionListener", "valueChanged", "onCoverChooserSelected", false ) )
 					addEvent( new FormEvent( "de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupListener", "onPopup", "onCoverChooserPopup", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
@@ -110,6 +113,9 @@ new FormModel {
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel" ) {
 					name: "lblCover"
 					"noOverlay": true
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
+					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridWidth": 3
 				} )
@@ -294,6 +300,9 @@ new FormModel {
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.OnlineRefButton" ) {
 					name: "btnOnline"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
+					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridY": 25
 					"gridWidth": 3

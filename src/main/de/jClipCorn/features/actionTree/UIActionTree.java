@@ -13,9 +13,9 @@ public abstract class UIActionTree {
 
 	protected CCActionElement root;
 
-	public UIActionTree() {
+	public UIActionTree(CCProperties ccprops) {
 		createStructure();
-		createProperties();
+		createProperties(ccprops);
 
 		instance = this;
 	}
@@ -67,8 +67,8 @@ public abstract class UIActionTree {
 		getRoot().implementAllKeyListener(f, comp);
 	}
 	
-	private void createProperties() {
-		getRoot().createAllProperties(CCProperties.getInstance());
+	private void createProperties(CCProperties ccprops) {
+		getRoot().createAllProperties(ccprops);
 	}
 	
 	public String getCompleteToolbarConfig() {

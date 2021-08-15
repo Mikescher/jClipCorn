@@ -9,6 +9,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.customFilter.operators.CustomOperator;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.filterTree.CustomFilterObject;
 import de.jClipCorn.gui.resources.Resources;
@@ -27,20 +28,18 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomFilterEditDialog extends JDialog {
+public class CustomFilterEditDialog extends JCCDialog {
 	private final CustomFilterObject filterObject;
 	private CustomFilterEditTreeNode root;
-	private final CCMovieList movielist;
 	private final FinishListener finListener;
 
 	private final List<Tuple<CustomFilterConfig, JComponent>> _currentConfigEntries = new ArrayList<>();
 	private AbstractCustomFilter _currentSelectedFilter = null;
 
 	public CustomFilterEditDialog(Component owner, CCMovieList ml, CustomFilterObject filter, FinishListener fl) {
-		super();
+		super(ml);
 
 		filterObject = filter;
-		movielist = ml;
 		finListener = fl;
 
 		initComponents();
@@ -398,9 +397,7 @@ public class CustomFilterEditDialog extends JDialog {
 		btnImport = new JButton();
 
 		//======== this ========
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(LocaleBundle.getString("CustomFilterEditDialog.Title")); //$NON-NLS-1$
-		setModal(true);
 		setMinimumSize(new Dimension(600, 400));
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(

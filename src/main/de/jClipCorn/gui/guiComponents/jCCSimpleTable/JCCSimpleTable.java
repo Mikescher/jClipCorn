@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.guiComponents.jCCSimpleTable;
 
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.util.TableColumnAdjuster;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.stream.CCStreams;
@@ -16,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("restriction")
-public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListSelectionListener, MouseListener {
+public abstract class JCCSimpleTable<TData> extends JScrollPane implements IJCCSimpleTable, ListSelectionListener, MouseListener {
 	private static final long serialVersionUID = -87600498201225357L;
 	
 	private List<JCCSimpleColumnPrototype<TData>> columns;
@@ -26,11 +28,22 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 
 	private String _autoResizeConfig;
 	private TableColumnAdjuster adjuster;
-	
-	public JCCSimpleTable() {
+
+	protected final CCMovieList movielist;
+
+	public JCCSimpleTable(ICCWindow mlo) {
+		this(mlo == null ? null : mlo.getMovieList());
+	}
+
+	public JCCSimpleTable(CCMovieList ml) {
 		super();
+		movielist = ml;
 
 		init(configureColumns());
+	}
+
+	public CCMovieList getMovielist() {
+		return movielist;
 	}
 
 	protected void setColumnConfig(List<JCCSimpleColumnPrototype<TData>> cfg) {
@@ -45,7 +58,7 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements ListS
 		sorter = new TableRowSorter<>(model);
 		sorter.setSortsOnUpdates(true);
 
-		table = new JCCSimpleSFixTable<>(model, columns);
+		table = new JCCSimpleSFixTable<>(movielist, model, columns);
 		configureTable();
 
 		this.setViewportView(table);

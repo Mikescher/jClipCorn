@@ -1,5 +1,6 @@
 package de.jClipCorn.features.metadata.ffprobe;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.metadata.MetadataSource;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.FFProbeQueryException;
@@ -26,9 +27,19 @@ public abstract class FFProbeRunner implements MetadataSource {
 
 	// https://stackoverflow.com/a/28376817/1761622
 
+	private final CCMovieList movielist;
+
+	public FFProbeRunner(CCMovieList ml) {
+		this.movielist = ml;
+	}
+
+	public CCProperties ccprops() {
+		return movielist.ccprops();
+	}
+
 	@SuppressWarnings("nls")
 	public FFProbeResult query(FSPath filename) throws IOException, FFProbeQueryException {
-		var ffppath = CCProperties.getInstance().PROP_PLAY_FFPROBE_PATH.getValue();
+		var ffppath = ccprops().PROP_PLAY_FFPROBE_PATH.getValue();
 		if (! ffppath.exists()) throw new FFProbeQueryException("FFProbe not found"); //$NON-NLS-1$
 
 		BasicFileAttributes attr = filename.readFileAttr();
@@ -162,7 +173,7 @@ public abstract class FFProbeRunner implements MetadataSource {
 
 	@Override
 	public boolean isConfiguredAndRunnable() {
-		var ffpath = CCProperties.getInstance().PROP_PLAY_FFPROBE_PATH.getValue();
+		var ffpath = ccprops().PROP_PLAY_FFPROBE_PATH.getValue();
 		if (FSPath.isNullOrEmpty(ffpath)) return false;
 
 		if (!ffpath.exists()) return false;

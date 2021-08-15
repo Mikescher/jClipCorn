@@ -1,8 +1,10 @@
 package de.jClipCorn.gui.frames.findCoverFrame;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBElementTyp;
 import de.jClipCorn.features.online.cover.CoverImageParser;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.guiComponents.ScalablePane;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -15,7 +17,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class FindCoverDialog extends JDialog {
+public class FindCoverDialog extends JCCDialog {
 	private static final long serialVersionUID = -5790203846014201695L;
 
 	private JPanel pnlTopInner;
@@ -42,8 +44,8 @@ public class FindCoverDialog extends JDialog {
 	private JPanel pnCenterRight;
 	private JLabel lblSize;
 	
-	public FindCoverDialog(Component owner, ParseResultHandler handler, CCDBElementTyp typ) {
-		super();
+	public FindCoverDialog(Component owner, CCMovieList ml, ParseResultHandler handler, CCDBElementTyp typ) {
+		super(ml);
 		this.handler = handler;
 		this.typ = typ;
 		
@@ -164,7 +166,7 @@ public class FindCoverDialog extends JDialog {
 			btnStop.setEnabled(false);
 		});
 		
-		parser = new CoverImageParser(new ProgressCallbackProgressBarHelper(progressBar, 100), pnlCover, finishlistener, typ, edSearchTerm.getText(), handler.getSearchReference());
+		parser = new CoverImageParser(movielist, new ProgressCallbackProgressBarHelper(progressBar, 100), pnlCover, finishlistener, typ, edSearchTerm.getText(), handler.getSearchReference());
 		parser.start();
 	}
 }

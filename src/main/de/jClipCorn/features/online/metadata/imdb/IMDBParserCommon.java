@@ -1,10 +1,6 @@
 package de.jClipCorn.features.online.metadata.imdb;
 
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
@@ -13,23 +9,31 @@ import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.cover.imdb.IMDBLanguage;
 import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.MetadataParserImplementation;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.http.HTTPUtilities;
+
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class IMDBParserCommon extends Metadataparser {
 	
 	private final Pattern REGEX_IMDB_ID = Pattern.compile("^.*imdb\\.com/[a-z]+/(tt[0-9]+)(/.*)?$", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
-	public static IMDBParserCommon GetConfiguredParser() {
-		IMDBLanguage lang = IMDBLanguage.getWrapper().findOrNull(CCProperties.getInstance().PROP_PARSEIMDB_LANGUAGE.getValue());
+	protected IMDBParserCommon(CCMovieList ml) {
+		super(ml);
+	}
+
+	public static IMDBParserCommon GetConfiguredParser(CCMovieList ml) {
+		IMDBLanguage lang = IMDBLanguage.getWrapper().findOrNull(ml.ccprops().PROP_PARSEIMDB_LANGUAGE.getValue());
 		
 		switch (lang) {
 		case GERMAN:
-			return new IMDBParserGerman();
+			return new IMDBParserGerman(ml);
 		case ENGLISH:
-			return new IMDBParserEnglish();
+			return new IMDBParserEnglish(ml);
 		default:
 			CCLog.addDefaultSwitchError(IMDBParserCommon.class, lang);
 			return null;

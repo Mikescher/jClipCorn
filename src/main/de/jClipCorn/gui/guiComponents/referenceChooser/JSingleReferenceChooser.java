@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.guiComponents.referenceChooser;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.guiComponents.WideComboBox;
@@ -26,7 +27,11 @@ public class JSingleReferenceChooser extends JPanel {
 	private JPanel pnlState;
 	private JPanel panel_1;
 
-	public JSingleReferenceChooser() {
+	private final CCMovieList movielist;
+
+	public JSingleReferenceChooser(CCMovieList ml) {
+		super();
+		movielist = ml;
 		initGUI();
 	}
 
@@ -111,7 +116,7 @@ public class JSingleReferenceChooser extends JPanel {
 				super.mouseClicked(e);
 				if (e.getClickCount() == 2) {
 					CCSingleOnlineReference v = getValue();
-					if (v.isSet() && v.isValid()) HTTPUtilities.openInBrowser(v.getURL());
+					if (v.isSet() && v.isValid()) HTTPUtilities.openInBrowser(v.getURL(movielist.ccprops()));
 				}
 			}
 		});

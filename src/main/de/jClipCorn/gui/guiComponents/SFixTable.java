@@ -1,6 +1,8 @@
 package de.jClipCorn.gui.guiComponents;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.LookAndFeelManager;
+import de.jClipCorn.properties.CCProperties;
 
 import javax.swing.*;
 import javax.swing.RowSorter.SortKey;
@@ -17,9 +19,12 @@ public abstract class SFixTable extends JTable {
 	private static final long serialVersionUID = 1082882838948078289L;
 
 	public boolean MultiSelect = false;
-	
-	public SFixTable(TableModel dm) {
+
+	protected final CCMovieList movielist;
+
+	public SFixTable(CCMovieList ml, TableModel dm) {
 		super(dm);
+		movielist = ml;
 
 		fixTableSort();
 
@@ -28,12 +33,17 @@ public abstract class SFixTable extends JTable {
 		initLnF();
 	}
 
-	public SFixTable() {
+	public SFixTable(CCMovieList ml) {
 		super();
+		movielist = ml;
 
 		fixTableSort();
 
 		initListener();
+	}
+
+	public CCProperties ccprops() {
+		return movielist.ccprops();
 	}
 
 	private void initListener() {

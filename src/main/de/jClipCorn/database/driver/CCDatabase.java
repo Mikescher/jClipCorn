@@ -42,16 +42,19 @@ public class CCDatabase {
 	private final ICoverCache coverCache;
 	private final Statements stmts;
 	private final CCDatabaseHistory _history;
+	private final CCProperties ccproperties;
 
 	private final boolean _readonly;
 
-	private CCDatabase(CCDatabaseDriver driver, FSPath dbDir, String dbName, boolean readonly) {
+	private CCDatabase(CCProperties ccprops, CCDatabaseDriver driver, FSPath dbDir, String dbName, boolean readonly) {
 		super();
 
 		_readonly = readonly;
 
 		databaseDirectory = dbDir;
 		databaseName      = dbName;
+
+		ccproperties = ccprops;
 
 		if (driver == null) driver = autoDetermineDriver(dbDir, dbName);
 
@@ -76,9 +79,13 @@ public class CCDatabase {
 		
 		_history = new CCDatabaseHistory(this);
 		
-		upgrader = new DatabaseMigration(db, databaseDirectory, databaseName, readonly);
+		upgrader = new DatabaseMigration(ccprops, db, databaseDirectory, databaseName, readonly);
 
 		stmts = new Statements();
+	}
+
+	public CCProperties ccprops() {
+		return ccproperties;
 	}
 
 	private static CCDatabaseDriver autoDetermineDriver(FSPath dbDir, String dbName) {
@@ -98,16 +105,16 @@ public class CCDatabase {
 		((CCMemoryCoverCache)coverCache).resetForTestReload();
 	}
 	
-	public static CCDatabase create(CCDatabaseDriver dbDriver, FSPath dbPath, String dbName, boolean dbReadonly) {
-		return new CCDatabase(dbDriver, dbPath, dbName, dbReadonly);
+	public static CCDatabase create(CCProperties ccprops, CCDatabaseDriver dbDriver, FSPath dbPath, String dbName, boolean dbReadonly) {
+		return new CCDatabase(ccprops, dbDriver, dbPath, dbName, dbReadonly);
 	}
 	
-	public static CCDatabase createStub() {
-		return new CCDatabase(CCDatabaseDriver.STUB, FSPath.Empty, "STUB", false); //$NON-NLS-1$
+	public static CCDatabase createStub(CCProperties ccprops) {
+		return new CCDatabase(ccprops, CCDatabaseDriver.STUB, FSPath.Empty, "STUB", false); //$NON-NLS-1$
 	}
 	
-	public static CCDatabase createInMemory() {
-		return new CCDatabase(CCDatabaseDriver.INMEMORY, FSPath.Empty, "INMEMORY", false); //$NON-NLS-1$
+	public static CCDatabase createInMemory(CCProperties ccprops) {
+		return new CCDatabase(ccprops, CCDatabaseDriver.INMEMORY, FSPath.Empty, "INMEMORY", false); //$NON-NLS-1$
 	}
 	
 	public boolean exists() {
@@ -832,7 +839,7 @@ public class CCDatabase {
 	public void fillMovieList(CCMovieList ml) {
 		try
 		{
-			if (CCProperties.getInstance().PROP_LOADING_LIVEUPDATE.getValue())
+			if (ccprops().PROP_LOADING_LIVEUPDATE.getValue())
 			{
 				{
 					CCSQLStatement stmt1 = stmts.selectAllMoviesTabStatement;

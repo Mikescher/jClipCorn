@@ -1,8 +1,14 @@
 package de.jClipCorn.features.metadata.ffprobe;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.filesystem.FSPath;
 
 public class FFProbeFullRunner extends FFProbeRunner {
+
+	public FFProbeFullRunner(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	protected String[] getArgs(FSPath filename) {
 		return new String[]

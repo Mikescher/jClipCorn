@@ -1,7 +1,9 @@
 package de.jClipCorn.gui.frames.aboutFrame;
 
 import de.jClipCorn.Main;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
@@ -12,11 +14,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
-public class AboutFrame extends JFrame
+public class AboutFrame extends JCCFrame
 {
-	public AboutFrame(Component owner)
+	public AboutFrame(Component owner, CCMovieList ml)
 	{
-		super();
+		super(ml);
 
 		initComponents();
 		postInit();

@@ -1,9 +1,6 @@
 package de.jClipCorn.features.online.cover.google;
 
-import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.cover.AbstractImageSearch;
@@ -12,10 +9,14 @@ import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public class GooglePosterSearch extends AbstractImageSearch {
 
-	public GooglePosterSearch(FinishListener fl, UpdateCallbackListener uc, ProgressCallbackListener pc) {
-		super(fl, uc, pc);
+	public GooglePosterSearch(CCMovieList ml, FinishListener fl, UpdateCallbackListener uc, ProgressCallbackListener pc) {
+		super(ml, fl, uc, pc);
 	}
 
 	@Override

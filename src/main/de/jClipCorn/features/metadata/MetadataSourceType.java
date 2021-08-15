@@ -1,28 +1,29 @@
 package de.jClipCorn.features.metadata;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.enumextension.IEnumWrapper;
-import de.jClipCorn.util.lambda.Func0to1;
+import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.stream.CCStreams;
 
 @SuppressWarnings("nls")
 public enum MetadataSourceType implements ContinoousEnum<MetadataSourceType> {
-	MEDIAINFO(0, "MediaInfo",      Resources.ICN_MENUBAR_MEDIAINFO,    () -> MetadataSources.MEDIAQUERY),
-	FFPROBE(1,   "ffprobe (full)", Resources.ICN_MENUBAR_FFPROBE_FULL, () -> MetadataSources.FFPROBE_FULL),
-	FFMPEG(2,    "ffprobe (fast)", Resources.ICN_MENUBAR_FFPROBE_FAST, () -> MetadataSources.FFPROBE_FAST),
-	MP4BOX(3,    "MP4Box",         Resources.ICN_MENUBAR_MP4BOX,       () -> MetadataSources.MP4BOX);
+	MEDIAINFO(0, "MediaInfo",      Resources.ICN_MENUBAR_MEDIAINFO,    MetadataSources.MEDIAQUERY),
+	FFPROBE(1,   "ffprobe (full)", Resources.ICN_MENUBAR_FFPROBE_FULL, MetadataSources.FFPROBE_FULL),
+	FFMPEG(2,    "ffprobe (fast)", Resources.ICN_MENUBAR_FFPROBE_FAST, MetadataSources.FFPROBE_FAST),
+	MP4BOX(3,    "MP4Box",         Resources.ICN_MENUBAR_MP4BOX,       MetadataSources.MP4BOX);
 
 	private final int id;
 	private final String desc;
-	private final Func0to1<MetadataSource> getter;
+	private final Func1to1<CCMovieList, MetadataSource> getter;
 	private final MultiSizeIconRef icon;
 
 	private static final EnumWrapper<MetadataSourceType> wrapper = new EnumWrapper<>(MEDIAINFO);
 
-	private MetadataSourceType(int val, String description, MultiSizeIconRef srcicon, Func0to1<MetadataSource> valueGetter) {
+	private MetadataSourceType(int val, String description, MultiSizeIconRef srcicon, Func1to1<CCMovieList, MetadataSource> valueGetter) {
 		id     = val;
 		desc   = description;
 		getter = valueGetter;
@@ -38,8 +39,8 @@ public enum MetadataSourceType implements ContinoousEnum<MetadataSourceType> {
 		return getWrapper();
 	}
 
-	public MetadataSource getMetadataSource() {
-		return getter.invoke();
+	public MetadataSource getMetadataSource(CCMovieList ml) {
+		return getter.invoke(ml);
 	}
 
 	public MultiSizeIconRef getIcon() {

@@ -1,24 +1,25 @@
 package de.jClipCorn.features.online.metadata.imdb;
 
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.online.OnlineSearchType;
+import de.jClipCorn.features.online.cover.imdb.AgeRatingParser;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.helper.RegExHelper;
+import de.jClipCorn.util.http.HTTPUtilities;
+import de.jClipCorn.util.stream.CCStreams;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.online.OnlineSearchType;
-import de.jClipCorn.features.online.cover.imdb.AgeRatingParser;
-import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.helper.RegExHelper;
-import de.jClipCorn.util.http.HTTPUtilities;
-import de.jClipCorn.util.stream.CCStreams;
 
 @SuppressWarnings("nls")
 public class IMDBParserGerman extends IMDBParserCommon {
@@ -46,7 +47,11 @@ public class IMDBParserGerman extends IMDBParserCommon {
 	private static final String REGEX_COVER = "(?<=<a\\x20name=\"poster\"\\x20href=\")/rg/action-box-title/primary-photo/media/rm[0-9]+/tt[0-9]+(?=\"\\x20title=\")"; // (?<=<a\x20name="poster"\x20href=")/rg/action-box-title/primary-photo/media/rm[0-9]+/tt[0-9]+(?="\x20title=")
 	public  static final String REGEX_COVER_DIREKT_1 = "id=\"primary-img\"[^>]+src=\"[^\"]+\"[^>]*\\>"; // <img id="primary-img"[^>]+src="[^"]"[^>]\>
 	public  static final String REGEX_COVER_DIREKT_2 = "(?<=src=\")[^\"]+(?=\")"; // (?<=src=")[^"]+(?=")
-	
+
+	public IMDBParserGerman(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public String getSearchURL(String title, OnlineSearchType typ) {
 		switch (typ) {

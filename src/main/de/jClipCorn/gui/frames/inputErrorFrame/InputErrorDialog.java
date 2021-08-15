@@ -1,7 +1,9 @@
 package de.jClipCorn.gui.frames.inputErrorFrame;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
@@ -15,7 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class InputErrorDialog extends JDialog {
+public class InputErrorDialog extends JCCDialog {
 	private static final long serialVersionUID = 2988199599783528024L;
 
 	private final JPanel contentPanel = new JPanel();
@@ -29,15 +31,15 @@ public class InputErrorDialog extends JDialog {
 
 	private final UserDataProblemHandler owner;
 
-	public InputErrorDialog(List<UserDataProblem> problems, UserDataProblemHandler owner, Component parent) {
-		super();
+	public InputErrorDialog(CCMovieList ml, List<UserDataProblem> problems, UserDataProblemHandler owner, Component parent) {
+		super(ml);
 		this.owner = owner;
 		initGUI(parent);
 		fillMemo(CCStreams.iterate(problems).map(p -> Tuple.Create(Str.Empty, p)).toList(), false);
 	}
 
-	public InputErrorDialog(List<Tuple<String, UserDataProblem>> problems, UserDataProblemHandler owner, Component parent, boolean showsource) {
-		super();
+	public InputErrorDialog(CCMovieList ml, List<Tuple<String, UserDataProblem>> problems, UserDataProblemHandler owner, Component parent, boolean showsource) {
+		super(ml);
 		this.owner = owner;
 		initGUI(parent);
 		fillMemo(problems, showsource);

@@ -4,7 +4,6 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.NextEpisodeHeuristic;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -26,7 +25,7 @@ public class NextEpisodeHelper {
 	private static CCEpisode findNextEpisode(List<CCEpisode> el) {
 		if (el.size() == 0) return null;
 
-		NextEpisodeHeuristic heuristic = CCProperties.getInstance().PROP_SERIES_NEXT_EPISODE_HEURISTIC.getValue();
+		NextEpisodeHeuristic heuristic = el.get(0).getMovieList().ccprops().PROP_SERIES_NEXT_EPISODE_HEURISTIC.getValue();
 
 		switch (heuristic) {
 			case AUTOMATIC:       return findNextEpisode_Automatic(el);

@@ -1,23 +1,16 @@
 package de.jClipCorn.gui.frames.showUpdateFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
+import de.jClipCorn.util.UpdateConnector;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-
-import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.UpdateConnector;
-
-public class ShowUpdateFrame extends JDialog {
+public class ShowUpdateFrame extends JCCDialog {
 	private static final long serialVersionUID = -2550625269769000346L;
 	private JLabel lblText;
 	private JLabel lblVersion;
@@ -25,7 +18,7 @@ public class ShowUpdateFrame extends JDialog {
 	private JButton btnDownload;
 	
 	public ShowUpdateFrame(MainFrame owner, UpdateConnector uc, boolean found) {
-		super();
+		super(owner.getMovielist());
 		
 		initGUI(uc, found);
 		

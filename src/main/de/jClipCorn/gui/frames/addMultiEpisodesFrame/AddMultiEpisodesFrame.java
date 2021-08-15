@@ -12,10 +12,10 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.gui.frames.omniParserFrame.OmniParserFrame;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.language.LanguageChooserDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddMultiEpisodesFrame extends JFrame
+public class AddMultiEpisodesFrame extends JCCFrame
 {
 	private enum CopyMode { KeepFile, Rename, Move, Copy }
 
@@ -51,7 +51,7 @@ public class AddMultiEpisodesFrame extends JFrame
 
 	public AddMultiEpisodesFrame(Component owner, CCSeason season, UpdateCallbackListener ucl)
 	{
-		super();
+		super(season.getMovieList());
 		this.callback  = ucl;
 		this.target    = season;
 
@@ -68,7 +68,7 @@ public class AddMultiEpisodesFrame extends JFrame
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 
 		var cPathStart = target.getSeries().getCommonPathStart(true);
-		massVideoFileChooser = new JFileChooser(cPathStart.toFSPath().toFile());
+		massVideoFileChooser = new JFileChooser(cPathStart.toFSPath(this).toFile());
 		massVideoFileChooser.setMultiSelectionEnabled(true);
 		massVideoFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.videoFileChooser.filterDescription", CCFileFormat::isValidMovieFormat)); //$NON-NLS-1$
 		massVideoFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.videoFileChooser.title")); //$NON-NLS-1$
@@ -125,7 +125,7 @@ public class AddMultiEpisodesFrame extends JFrame
 		File[] files = massVideoFileChooser.getSelectedFiles();
 
 		CCEpisode last = target.getSeries().getLastAddedEpisode();
-		CCDBLanguageList lang = CCDBLanguageList.single(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
+		CCDBLanguageList lang = CCDBLanguageList.single(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		if (last != null) lang = last.getLanguage();
 
 		List<NewEpisodeVM> data = new ArrayList<>();
@@ -134,7 +134,7 @@ public class AddMultiEpisodesFrame extends JFrame
 		for (File f : files) {
 			var fp = FSPath.create(f);
 
-			NewEpisodeVM vm  = new NewEpisodeVM();
+			NewEpisodeVM vm  = new NewEpisodeVM(movielist);
 			vm.SourcePath    = fp;
 			vm.EpisodeNumber = epid;
 			vm.Length        = 0;
@@ -168,7 +168,7 @@ public class AddMultiEpisodesFrame extends JFrame
 		File[] files = massVideoFileChooser.getSelectedFiles();
 
 		CCEpisode last = target.getSeries().getLastAddedEpisode();
-		CCDBLanguageList lang = CCDBLanguageList.single(CCProperties.getInstance().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
+		CCDBLanguageList lang = CCDBLanguageList.single(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		if (last != null) lang = last.getLanguage();
 
 		List<NewEpisodeVM> data = new ArrayList<>(lsData.getDataCopy());
@@ -177,7 +177,7 @@ public class AddMultiEpisodesFrame extends JFrame
 		for (File f : files) {
 			var fp = FSPath.create(f);
 
-			NewEpisodeVM vm  = new NewEpisodeVM();
+			NewEpisodeVM vm  = new NewEpisodeVM(movielist);
 			vm.SourcePath    = fp;
 			vm.EpisodeNumber = epid;
 			vm.Length        = 0;
@@ -209,6 +209,7 @@ public class AddMultiEpisodesFrame extends JFrame
 
 		OmniParserFrame oframe = new OmniParserFrame(
 				this,
+				movielist,
 				(d) ->
 				{
 					List<NewEpisodeVM> data = lsData.getDataCopy();
@@ -254,7 +255,7 @@ public class AddMultiEpisodesFrame extends JFrame
 					if (data.get(i).MediaQueryResult == null)
 					{
 						try {
-							data.get(i).MediaQueryResult = MediaQueryRunner.query(data.get(i).SourcePath, true);
+							data.get(i).MediaQueryResult = new MediaQueryRunner(movielist).query(data.get(i).SourcePath, true);
 						} catch (IOException | MediaQueryException e) {
 							data.get(i).MediaQueryResult = null;
 						}
@@ -391,7 +392,7 @@ public class AddMultiEpisodesFrame extends JFrame
 					if (data.get(i).MediaQueryResult == null)
 					{
 						try {
-							data.get(i).MediaQueryResult = MediaQueryRunner.query(data.get(i).SourcePath, true);
+							data.get(i).MediaQueryResult = new MediaQueryRunner(movielist).query(data.get(i).SourcePath, true);
 						} catch (IOException | MediaQueryException e) {
 							data.get(i).MediaQueryResult = null;
 						}
@@ -467,7 +468,7 @@ public class AddMultiEpisodesFrame extends JFrame
 					if (data.get(i).MediaQueryResult == null)
 					{
 						try {
-							data.get(i).MediaQueryResult = MediaQueryRunner.query(data.get(i).SourcePath, true);
+							data.get(i).MediaQueryResult = new MediaQueryRunner(movielist).query(data.get(i).SourcePath, true);
 						} catch (IOException | MediaQueryException e) {
 							data.get(i).MediaQueryResult = null;
 						}
@@ -608,7 +609,7 @@ public class AddMultiEpisodesFrame extends JFrame
 						i++;
 
 						var srcFile = vm.SourcePath;
-						var dstFile = vm.TargetPath.toFSPath();
+						var dstFile = vm.TargetPath.toFSPath(this);
 
 						if (mode == CopyMode.KeepFile) { dstFile = srcFile; }
 
@@ -666,8 +667,8 @@ public class AddMultiEpisodesFrame extends JFrame
 							dstFile = srcFile;
 						}
 
-						final var final_realImmediatePath = CCPath.createFromFSPath(dstFile.getParent().append(srcFile.getFilenameWithExt()));
-						final var final_realTargetPath    = CCPath.createFromFSPath(dstFile);
+						final var final_realImmediatePath = CCPath.createFromFSPath(dstFile.getParent().append(srcFile.getFilenameWithExt()), this);
+						final var final_realTargetPath    = CCPath.createFromFSPath(dstFile, this);
 
 						SwingUtils.invokeAndWait(() ->
 						{

@@ -6,7 +6,7 @@ new FormModel {
 	"i18n.keyPrefix": "EditSeriesFrame"
 	contentType: "form/swing"
 	root: new FormRoot {
-		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "unrelgap, 0dlu:grow, unrelgap, 0dlu:grow, unrelgap, 0dlu:grow, unrelgap"
 			"$rowSpecs": "unrelgap, default:grow, unrelgap"
 		} ) {
@@ -294,7 +294,7 @@ new FormModel {
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor" ) {
 						name: "edSeriesGroups"
 						auxiliary() {
-							"JavaCodeGenerator.customCreateCode": "new ${field_type}(movieList);"
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
@@ -586,7 +586,7 @@ new FormModel {
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl" ) {
 					name: "ctrlEpisodeMediaInfo"
 					auxiliary() {
-						"JavaCodeGenerator.customCreateCode": "new ${field_type}(() -> edEpisodePart.getPath().toFSPath());"
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist, () -> edEpisodePart.getPath().toFSPath(this));"
 					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 4

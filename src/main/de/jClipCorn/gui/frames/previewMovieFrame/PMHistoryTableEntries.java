@@ -1,6 +1,8 @@
 package de.jClipCorn.gui.frames.previewMovieFrame;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.history.CCCombinedHistoryEntry;
+import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
@@ -13,6 +15,13 @@ public class PMHistoryTableEntries extends JCCSimpleTable<CCCombinedHistoryEntry
 
 	private final List<PMHSelectionListener> _handler = new ArrayList<>();
 
+	@DesignCreate
+	private static PMHistoryTableEntries designCreate() { return new PMHistoryTableEntries(null); }
+
+	public PMHistoryTableEntries(ICCWindow f) {
+		super(f);
+	}
+
 	public void addSelectionListener(final PMHSelectionListener l) {
 		_handler.add(l);
 	}
@@ -21,13 +30,13 @@ public class PMHistoryTableEntries extends JCCSimpleTable<CCCombinedHistoryEntry
 		_handler.remove(l);
 	}
 
-
 	@Override
 	@SuppressWarnings("nls")
 	protected List<JCCSimpleColumnPrototype<CCCombinedHistoryEntry>> configureColumns() {
 		List<JCCSimpleColumnPrototype<CCCombinedHistoryEntry>> r = new ArrayList<>();
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				Str.Empty,
 				null,
@@ -35,6 +44,7 @@ public class PMHistoryTableEntries extends JCCSimpleTable<CCCombinedHistoryEntry
 				e -> Str.toProperCase(e.Table.Name)));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"DatabaseHistoryFrame.Table.ColumnAction",
 				e -> Str.toProperCase(e.Action.Name),
@@ -42,6 +52,7 @@ public class PMHistoryTableEntries extends JCCSimpleTable<CCCombinedHistoryEntry
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"DatabaseHistoryFrame.Table.ColumnTime",
 				CCCombinedHistoryEntry::formatTime,
@@ -49,6 +60,7 @@ public class PMHistoryTableEntries extends JCCSimpleTable<CCCombinedHistoryEntry
 				null));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"*,min=auto",
 				"DatabaseHistoryFrame.Table.ColumnChangeCount",
 				e -> Integer.toString(e.Changes.size()),

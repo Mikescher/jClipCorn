@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.frames.parseOnlineFrame;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.OnlineSearchType;
@@ -7,10 +8,11 @@ import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.gui.frames.allRatingsFrame.AllRatingsDialog;
-import de.jClipCorn.gui.guiComponents.enumComboBox.CCReadableEnumComboBox;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.guiComponents.ReadableSpinner;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.enumComboBox.CCReadableEnumComboBox;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JSingleReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -33,7 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class ParseOnlineDialog extends JDialog {
+public class ParseOnlineDialog extends JCCDialog {
 	private static final long serialVersionUID = 3777677368743220383L;
 	
 	private DefaultListModel<ParseOnlineDialogElement> mdlLsDBList;
@@ -100,7 +102,9 @@ public class ParseOnlineDialog extends JDialog {
 	private JButton btnExtendedParse;
 	private JSingleReferenceChooser ctrlAltRef;
 
-	public ParseOnlineDialog(Component owner, ParseResultHandler handler, CCDBElementTyp typ) {
+	public ParseOnlineDialog(Component owner, CCMovieList ml, ParseResultHandler handler, CCDBElementTyp typ) {
+		super(ml);
+
 		setResizable(false);
 		this.owner = handler;
 		this.typ = typ;
@@ -334,7 +338,7 @@ public class ParseOnlineDialog extends JDialog {
 		lblGenre_4.setBounds(322, 130, 46, 14);
 		pnlMain.add(lblGenre_4);
 		
-		imgCover = new CoverLabel(false);
+		imgCover = new CoverLabel(movielist, false);
 		imgCover.setHorizontalAlignment(SwingConstants.CENTER);
 		imgCover.setBounds(107, 164, 182, 254);
 		pnlMain.add(imgCover);
@@ -351,7 +355,7 @@ public class ParseOnlineDialog extends JDialog {
 		btnRef.addActionListener(arg0 ->
 		{
 			if (lsDBList.getSelectedIndex() >= 0) {
-				HTTPUtilities.openInBrowser(lsDBList.getSelectedValue().Reference.getURL());
+				HTTPUtilities.openInBrowser(lsDBList.getSelectedValue().Reference.getURL(ccprops()));
 			}
 		});
 		btnRef.setBounds(377, 287, 169, 23);
@@ -371,7 +375,7 @@ public class ParseOnlineDialog extends JDialog {
 		btnFSKAll.setBounds(377, 354, 169, 23);
 		pnlMain.add(btnFSKAll);
 		
-		ctrlAltRef = new JSingleReferenceChooser();
+		ctrlAltRef = new JSingleReferenceChooser(movielist);
 		ctrlAltRef.setBounds(377, 322, 169, 20);
 		ctrlAltRef.setEnabled(false);
 		pnlMain.add(ctrlAltRef);
@@ -388,7 +392,7 @@ public class ParseOnlineDialog extends JDialog {
 	
 	private void showAllRatingsDialog() {
 		if (lsDBList.getSelectedIndex() >= 0 && cbFSKlsAll != null) {
-			(new AllRatingsDialog(cbFSKlsAll, this)).setVisible(true);
+			(new AllRatingsDialog(cbFSKlsAll, this, movielist)).setVisible(true);
 		}
 	}
 
@@ -467,7 +471,7 @@ public class ParseOnlineDialog extends JDialog {
 
 		ThreadGroup group = new ThreadGroup("THREADGROUP_SEARCH_ONLINE"); //$NON-NLS-1$
 
-		for (Metadataparser p : Metadataparser.listParser()) {
+		for (Metadataparser p : Metadataparser.listParser(movielist)) {
 			Thread t = new Thread(group, () -> runSearch(p, parseAll), "THREAD_SEARCH_ONLINE_" + p.getImplType().toString() + "_PA"); //$NON-NLS-1$ //$NON-NLS-2$
 			t.start();
 		}
@@ -540,7 +544,7 @@ public class ParseOnlineDialog extends JDialog {
 	}
 	
 	private void parseAndDisplayRef(final CCSingleOnlineReference ref) {
-		final Metadataparser parser = ref.getMetadataParser();
+		final Metadataparser parser = ref.getMetadataParser(movielist);
 		
 		if (parser == null) return;
 		

@@ -5,10 +5,10 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDateTime;
 
 import javax.swing.*;
@@ -16,10 +16,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ChangeViewedFrame extends JFrame {
+public class ChangeViewedFrame extends JCCFrame {
 	private static final long serialVersionUID = 9048482551231383355L;
 	
-	private final CCMovieList movielist;
 	private int position;
 	private boolean running = false;
 	
@@ -32,10 +31,9 @@ public class ChangeViewedFrame extends JFrame {
 	private JLabel lblTitle;
 	private PropertyCheckbox cbOnlyUnviewed;
 
-	public ChangeViewedFrame(Component owner, CCMovieList list) {
-		super();
-		this.movielist = list;
-		
+	public ChangeViewedFrame(Component owner, CCMovieList ml) {
+		super(ml);
+
 		initGUI();
 		
 		initMap();
@@ -53,7 +51,7 @@ public class ChangeViewedFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 		
-		lblCover = new CoverLabel(false);
+		lblCover = new CoverLabel(movielist, false);
 		lblCover.setPosition(100, 47);
 		getContentPane().add(lblCover);
 		
@@ -97,7 +95,7 @@ public class ChangeViewedFrame extends JFrame {
 		lblTitle.setBounds(10, 11, 356, 14);
 		getContentPane().add(lblTitle);
 		
-		cbOnlyUnviewed = new PropertyCheckbox(CCProperties.getInstance().PROP_MASSCHANGEVIEWED_ONLYUNVIEWED);
+		cbOnlyUnviewed = new PropertyCheckbox(ccprops().PROP_MASSCHANGEVIEWED_ONLYUNVIEWED);
 		cbOnlyUnviewed.setBounds(10, 388, 356, 23);
 		getContentPane().add(cbOnlyUnviewed);
 	}

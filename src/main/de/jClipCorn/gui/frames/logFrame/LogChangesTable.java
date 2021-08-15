@@ -24,6 +24,7 @@ public class LogChangesTable extends JCCSimpleTable<CCChangeLogElement> {
 	private static LogChangesTable designCreate() { return new LogChangesTable(null, null); }
 
 	public LogChangesTable(LogFrame lf, CCMovieList ml) {
+		super(ml);
 		_frame     = lf;
 		_movielist = ml;
 	}
@@ -33,13 +34,13 @@ public class LogChangesTable extends JCCSimpleTable<CCChangeLogElement> {
 	protected List<JCCSimpleColumnPrototype<CCChangeLogElement>> configureColumns() {
 		List<JCCSimpleColumnPrototype<CCChangeLogElement>> r = new ArrayList<>();
 
-		r.add(new JCCSimpleColumnPrototype<>("auto",          "@Time",         p -> p.Time.toStringUINormal(),                                          null, null));
-		r.add(new JCCSimpleColumnPrototype<>("auto",          "@Root.Type",    p -> p.RootType,                                                         null, null));
-		r.add(new JCCSimpleColumnPrototype<>("auto",          "@Root.ID",      p -> String.valueOf(p.RootID),                                           null, null));
-		r.add(new JCCSimpleColumnPrototype<>("auto",          "@Element.Type", p -> p.ActualType,                                                       null, null));
-		r.add(new JCCSimpleColumnPrototype<>("auto",          "@Element.ID",   p -> String.valueOf(p.ActualID),                                         null, null));
-		r.add(new JCCSimpleColumnPrototype<>("auto",          "@Element",      p -> getElem(p.RootID).mapOrElse(q -> q.getQualifiedTitle(), Str.Empty), null, null));
-		r.add(new JCCSimpleColumnPrototype<>("star,min=auto", "@Properties",   p -> "["+CCStreams.iterate(p.Properties).stringjoin(q->q, ", ")+"]",     null, null));
+		r.add(new JCCSimpleColumnPrototype<>(this, "auto",          "@Time",         p -> p.Time.toStringUINormal(),                                          null, null));
+		r.add(new JCCSimpleColumnPrototype<>(this, "auto",          "@Root.Type",    p -> p.RootType,                                                         null, null));
+		r.add(new JCCSimpleColumnPrototype<>(this, "auto",          "@Root.ID",      p -> String.valueOf(p.RootID),                                           null, null));
+		r.add(new JCCSimpleColumnPrototype<>(this, "auto",          "@Element.Type", p -> p.ActualType,                                                       null, null));
+		r.add(new JCCSimpleColumnPrototype<>(this, "auto",          "@Element.ID",   p -> String.valueOf(p.ActualID),                                         null, null));
+		r.add(new JCCSimpleColumnPrototype<>(this, "auto",          "@Element",      p -> getElem(p.RootID).mapOrElse(q -> q.getQualifiedTitle(), Str.Empty), null, null));
+		r.add(new JCCSimpleColumnPrototype<>(this, "star,min=auto", "@Properties",   p -> "["+CCStreams.iterate(p.Properties).stringjoin(q->q, ", ")+"]",     null, null));
 
 		return r;
 	}

@@ -1,7 +1,7 @@
 package de.jClipCorn.util.http;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.SimpleSerializableData;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
@@ -38,7 +38,7 @@ public class CachedWebConnection extends WebConnectionLayer {
 	@Override
 	public void init() {
 		synchronized(dblock) {
-			cachePath = CCProperties.getInstance().PROP_DEBUG_HTTPCACHE_PATH.getValue();
+			cachePath = Main.getCurrentGlobalCCProperties().PROP_DEBUG_HTTPCACHE_PATH.getValue();
 			cacheDatabasePath = cachePath.append("cache.xml");
 
 			try {

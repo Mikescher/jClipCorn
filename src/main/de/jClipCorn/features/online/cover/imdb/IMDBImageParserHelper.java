@@ -1,11 +1,11 @@
 package de.jClipCorn.features.online.cover.imdb;
 
-import java.awt.image.BufferedImage;
-import java.util.List;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.OnlineSearchType;
-import de.jClipCorn.properties.CCProperties;
+
+import java.awt.image.BufferedImage;
+import java.util.List;
 
 public abstract class IMDBImageParserHelper {
 	public abstract String getSearchURL(String title, OnlineSearchType typ);
@@ -17,14 +17,14 @@ public abstract class IMDBImageParserHelper {
 	public abstract BufferedImage getDirectImage(String html);
 	public abstract List<String> extractImageLinks(String html);
 	
-	public static IMDBImageParserHelper GetConfiguredHelper() {
-		IMDBLanguage lang = IMDBLanguage.getWrapper().findOrNull(CCProperties.getInstance().PROP_PARSEIMDB_LANGUAGE.getValue());
+	public static IMDBImageParserHelper GetConfiguredHelper(CCMovieList ml) {
+		IMDBLanguage lang = IMDBLanguage.getWrapper().findOrNull(ml.ccprops().PROP_PARSEIMDB_LANGUAGE.getValue());
 		
 		switch (lang) {
 		case GERMAN:
-			return new IMDBImageParserHelperGerman();
+			return new IMDBImageParserHelperGerman(ml);
 		case ENGLISH:
-			return new IMDBImageParserHelperEnglish();
+			return new IMDBImageParserHelperEnglish(ml);
 		default:
 			CCLog.addDefaultSwitchError(IMDBImageParserHelper.class, lang);
 			return null;

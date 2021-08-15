@@ -1,5 +1,6 @@
 package de.jClipCorn.features.online.metadata.mal;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
@@ -38,7 +39,11 @@ public class MALParser extends Metadataparser {
 	private final static String SOUP_COVER = "img.ac"; //$NON-NLS-1$
 	private final static String SOUP_SCORE = "div.score"; //$NON-NLS-1$
 	private final static String SOUP_BORDER = "#content .borderClass div"; //$NON-NLS-1$
-	
+
+	public MALParser(CCMovieList ml) {
+		super(ml);
+	}
+
 	@Override
 	public List<Tuple<String, CCSingleOnlineReference>> searchByText(String title, OnlineSearchType type) {
 		String url = String.format(SEARCH_URL, HTTPUtilities.escapeURL(title));
@@ -66,7 +71,7 @@ public class MALParser extends Metadataparser {
 
 	@Override
 	public OnlineMetadata getMetadata(CCSingleOnlineReference ref, boolean downloadCover) {
-		String url = ref.getURL();
+		String url = ref.getURL(ccprops());
 		String html = HTTPUtilities.getHTML(url, true, true);
 		Document soup = Jsoup.parse(html);
 

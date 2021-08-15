@@ -1,9 +1,11 @@
 package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
@@ -22,9 +24,22 @@ public class CompareState {
 	public final DoubleProgressCallbackListener ProgressCallback;
 	public final CompareDatabaseRuleset Ruleset;
 
-	public CompareState(DoubleProgressCallbackListener cb, CompareDatabaseRuleset ruleset) {
+	private final CCMovieList movielistLocal;
+	private final CCMovieList movielistExtern;
+
+	public CompareState(CCMovieList mlLoc, CCMovieList mlExt, DoubleProgressCallbackListener cb, CompareDatabaseRuleset ruleset) {
 		ProgressCallback = cb;
 		Ruleset          = ruleset;
+		movielistLocal   = mlLoc;
+		movielistExtern  = mlExt;
+	}
+
+	public CCProperties ccpropsLocal() {
+		return movielistLocal.ccprops();
+	}
+
+	public CCProperties ccpropsExtern() {
+		return movielistExtern.ccprops();
 	}
 
 	public MovieMatch addMovieMatch(CCMovie loc, CCMovie ext) {

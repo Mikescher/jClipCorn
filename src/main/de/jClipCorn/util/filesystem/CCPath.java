@@ -3,8 +3,8 @@ package de.jClipCorn.util.filesystem;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.properties.types.PathSyntaxVar;
-import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.helper.ApplicationHelper;
@@ -47,60 +47,62 @@ public class CCPath implements IPath, Comparable<CCPath> {
 		return new CCPath(v);
 	}
 
-	public static CCPath createFromFSPath(FSPath p) {
-		return createFromFSPath(p, Opt.empty());
+	public static CCPath createFromFSPath(FSPath p, ICCPropertySource ccps) {
+		return createFromFSPath(p, Opt.empty(), ccps);
 	}
 
-	public static CCPath createFromFSPath(FSPath p, Opt<Boolean> makeRelative) {
+	public static CCPath createFromFSPath(FSPath p, Opt<Boolean> makeRelative, ICCPropertySource ccps) {
 		if (p.isEmpty()) return CCPath.Empty;
+
+		var ccprops = ccps.ccprops();
 
 		var aPath = p.toString();
 
 		aPath = aPath.replace(FSPath.SEPERATOR, CCPath.SEPERATOR);
 
-		var mkBase   = makeRelative.orElse(CCProperties.getInstance().PROP_ADD_MOVIE_RELATIVE_AUTO.getValue());
-		var mkNet    = makeRelative.orElse(CCProperties.getInstance().PROP_PATHSYNTAX_NETDRIVE.getValue());
-		var mkSelf   = makeRelative.orElse(CCProperties.getInstance().PROP_PATHSYNTAX_SELF.getValue());
-		var mkSDir   = makeRelative.orElse(CCProperties.getInstance().PROP_PATHSYNTAX_SELFDIR.getValue());
-		var mkDLabel = makeRelative.orElse(CCProperties.getInstance().PROP_PATHSYNTAX_DRIVELABEL.getValue());
-		var mkVars   = makeRelative.orElse(CCProperties.getInstance().getActivePathVariables().size()>0);
+		var mkBase   = makeRelative.orElse(ccprops.PROP_ADD_MOVIE_RELATIVE_AUTO.getValue());
+		var mkNet    = makeRelative.orElse(ccprops.PROP_PATHSYNTAX_NETDRIVE.getValue());
+		var mkSelf   = makeRelative.orElse(ccprops.PROP_PATHSYNTAX_SELF.getValue());
+		var mkSDir   = makeRelative.orElse(ccprops.PROP_PATHSYNTAX_SELFDIR.getValue());
+		var mkDLabel = makeRelative.orElse(ccprops.PROP_PATHSYNTAX_DRIVELABEL.getValue());
+		var mkVars   = makeRelative.orElse(ccprops.getActivePathVariables().size()>0);
 
 		if (! mkBase) return CCPath.create(aPath);
 
 		// <?[...]">
-		if (mkVars) aPath = insertCCPathVariables(aPath);
+		if (mkVars) aPath = insertCCPathVariables(aPath, ccprops);
 
 		// <?vNetwork="...">
-		if (mkNet && FilesystemUtils.isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveUNC(aPath.charAt(0))) {
-			String unc = DriveMap.getDriveUNC(aPath.charAt(0));
+		if (mkNet && FilesystemUtils.isWinDriveIdentifiedPath(aPath) && ccprops.getDriveMap().hasDriveUNC(aPath.charAt(0))) {
+			String unc = ccprops.getDriveMap().getDriveUNC(aPath.charAt(0));
 			aPath = String.format(WILDCARD_NETDRIVE, unc).concat(aPath.substring(3));
 		}
 
 		// <?self>
-		String self = FilesystemUtils.getAbsoluteSelfDirectory().toString().replace(FSPath.SEPERATOR, CCPath.SEPERATOR);
+		String self = FilesystemUtils.getAbsoluteSelfDirectory(ccprops).toString().replace(FSPath.SEPERATOR, CCPath.SEPERATOR);
 		if (mkSelf && !Str.isNullOrWhitespace(self) && aPath.startsWith(self)) {
 			aPath = WILDCARD_SELF.concat(aPath.substring(self.length()));
 		}
 
 		// <?self[dir]>
-		if (mkSDir && ApplicationHelper.isWindows() && aPath.charAt(0) == FilesystemUtils.getAbsoluteSelfDirectory().toString().charAt(0)) {
+		if (mkSDir && ApplicationHelper.isWindows() && aPath.charAt(0) == FilesystemUtils.getAbsoluteSelfDirectory(ccprops).toString().charAt(0)) {
 			aPath = WILDCARD_SELFDRIVE.concat(aPath.substring(3));
 		}
 
 		// <?vLabel="...">
-		if (mkDLabel && FilesystemUtils.isWinDriveIdentifiedPath(aPath) && DriveMap.hasDriveLabel(aPath.charAt(0))){
-			aPath = String.format(WILDCARD_DRIVENAME, DriveMap.getDriveLabel(aPath.charAt(0))).concat(aPath.substring(3));
+		if (mkDLabel && FilesystemUtils.isWinDriveIdentifiedPath(aPath) && ccprops.getDriveMap().hasDriveLabel(aPath.charAt(0))){
+			aPath = String.format(WILDCARD_DRIVENAME, ccprops.getDriveMap().getDriveLabel(aPath.charAt(0))).concat(aPath.substring(3));
 		}
 
 		// <?[...]">
-		if (mkVars) aPath = insertCCPathVariables(aPath);
+		if (mkVars) aPath = insertCCPathVariables(aPath, ccprops);
 
 		return CCPath.create(aPath);
 	}
 
-	private static String insertCCPathVariables(String path) {
+	private static String insertCCPathVariables(String path, CCProperties ccprops) {
 
-		for (PathSyntaxVar psv : CCProperties.getInstance().getActivePathVariables()) {
+		for (PathSyntaxVar psv : ccprops.getActivePathVariables()) {
 
 			var repl = psv.Value.toStringWithTraillingSeparator();
 
@@ -112,8 +114,10 @@ public class CCPath implements IPath, Comparable<CCPath> {
 		return path;
 	}
 
-	public FSPath toFSPath() {
+	public FSPath toFSPath(ICCPropertySource ccps) {
 		if (isEmpty()) return FSPath.Empty;
+
+		var ccprops = ccps.ccprops();
 
 		var rPath = _path;
 
@@ -121,7 +125,7 @@ public class CCPath implements IPath, Comparable<CCPath> {
 		{
 			String card = RegExHelper.find(REGEX_VARIABLE, rPath);
 			String keyident = card.substring(3, card.length() - 2);
-			for (PathSyntaxVar psv : CCProperties.getInstance().getActivePathVariables()) {
+			for (PathSyntaxVar psv : ccprops.getActivePathVariables()) {
 				if (psv.Key.equals(keyident)) {
 					rPath =  RegExHelper.replace(REGEX_VARIABLE, rPath, psv.Value.toStringWithTraillingSeparator());
 					break;
@@ -131,17 +135,17 @@ public class CCPath implements IPath, Comparable<CCPath> {
 
 		if (RegExHelper.startsWithRegEx(REGEX_SELF, rPath))
 		{
-			rPath =  RegExHelper.replace(REGEX_SELF, rPath, FilesystemUtils.getAbsoluteSelfDirectory() + FSPath.SEPERATOR);
+			rPath = RegExHelper.replace(REGEX_SELF, rPath, FilesystemUtils.getAbsoluteSelfDirectory(ccprops) + FSPath.SEPERATOR);
 		}
 		else if (RegExHelper.startsWithRegEx(REGEX_DRIVENAME, rPath))
 		{
 			String card = RegExHelper.find(REGEX_DRIVENAME, rPath);
 			String name = card.substring(10, card.length() - 2);
-			char letter = DriveMap.getDriveLetterByLabel(name);
+			char letter = ccprops.getDriveMap().getDriveLetterByLabel(name);
 			if (letter != '#') {
 				rPath = RegExHelper.replace(REGEX_DRIVENAME, rPath, letter + ":" + FSPath.SEPERATOR);
 			} else {
-				DriveMap.conditionalRescan();
+				ccprops.getDriveMap().conditionalRescan();
 				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.DriveNotFound", name));
 				return FSPath.Empty;
 			}
@@ -165,11 +169,11 @@ public class CCPath implements IPath, Comparable<CCPath> {
 		{
 			String card = RegExHelper.find(REGEX_NETDRIVE, rPath);
 			String name = card.substring(12, card.length() - 2);
-			char letter = DriveMap.getDriveLetterByUNC(name);
+			char letter = ccprops.getDriveMap().getDriveLetterByUNC(name);
 			if (letter != '#') {
 				rPath = RegExHelper.replace(REGEX_NETDRIVE, rPath, letter + ":" + FSPath.SEPERATOR);
 			} else {
-				DriveMap.conditionalRescan();
+				ccprops.getDriveMap().conditionalRescan();
 				CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.DriveNotFound", name));
 				rPath = RegExHelper.replace(REGEX_NETDRIVE, rPath, name + FSPath.SEPERATOR);
 			}

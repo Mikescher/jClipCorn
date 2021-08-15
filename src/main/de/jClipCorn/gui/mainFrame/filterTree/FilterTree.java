@@ -94,7 +94,7 @@ public class FilterTree extends AbstractFilterTree {
 
 	private void parentClicked(SimpleTreeEvent evt) {
 
-		if (CCProperties.getInstance().PROP_MAINFRAME_FILTERTREE_RECOLLAPSE.getValue())
+		if (movielist.ccprops().PROP_MAINFRAME_FILTERTREE_RECOLLAPSE.getValue())
 		{
 			if (tree.isExpanded(evt.path)) tree.collapsePath(evt.path);
 			else expand(evt);
@@ -140,7 +140,7 @@ public class FilterTree extends AbstractFilterTree {
 	private void initViewed(DefaultMutableTreeNode parent) {
 		addNodeF(parent, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed.Viewed"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.VIEWED)); //$NON-NLS-1$
 
-		if (CCProperties.getInstance().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue()) 
+		if (movielist.ccprops().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue()) 
 			addNodeF(parent, Resources.ICN_SIDEBAR_PARTIALLY, LocaleBundle.getString("FilterTree.Viewed.Partial"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.PARTIAL_VIEWED)); //$NON-NLS-1$
 		
 		addNodeF(parent, Resources.ICN_SIDEBAR_UNVIEWED, LocaleBundle.getString("FilterTree.Viewed.Unviewed"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.NOT_VIEWED)); //$NON-NLS-1$

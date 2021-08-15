@@ -6,7 +6,7 @@ new FormModel {
 	"i18n.keyPrefix": "PreviewMovieFrame"
 	contentType: "form/swing"
 	root: new FormRoot {
-		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "unrelgap, default, labelcompgap, default:grow, unrelgap"
 			"$rowSpecs": "unrelgap, default, unrelgap, default:grow, unrelgap"
 		} ) {
@@ -69,6 +69,9 @@ new FormModel {
 				name: "pnlLeft"
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.CoverLabelFullsize" ) {
 					name: "lblCover"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
+					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 1
 					"gridY": 1
@@ -775,6 +778,9 @@ new FormModel {
 					name: "pnlTabHistory"
 					add( new FormContainer( "de.jClipCorn.gui.frames.previewMovieFrame.PMHistoryTableEntries", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "tabHistoryEntries"
+						auxiliary() {
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(this);"
+						}
 						addEvent( new FormEvent( "de.jClipCorn.gui.frames.previewMovieFrame.PMHSelectionListener", "actionPerformed", "onHistorySelected", true ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
@@ -784,6 +790,9 @@ new FormModel {
 					} )
 					add( new FormContainer( "de.jClipCorn.gui.frames.previewMovieFrame.PMHistoryTableChanges", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "tabHistoryChanges"
+						auxiliary() {
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(this);"
+						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
 						"gridY": 4

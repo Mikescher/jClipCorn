@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.mainFrame.table;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
@@ -8,7 +9,6 @@ import de.jClipCorn.features.table.renderer.*;
 import de.jClipCorn.features.table.sorter.*;
 import de.jClipCorn.gui.guiComponents.SFixTable;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.MainFrameColumn;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
@@ -63,8 +63,9 @@ public class SFixClipTable extends SFixTable {
 	private TableSizeComparator sorter_size;
 	private TableLastViewedComparator sorter_lastviewed;
 
-	public SFixClipTable(TableModel dm) {
-		super(dm);
+	public SFixClipTable(CCMovieList ml, TableModel dm) {
+		super(ml, dm);
+
 		init();
 		
 		getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "null"); //$NON-NLS-1$
@@ -81,28 +82,28 @@ public class SFixClipTable extends SFixTable {
 	}
 	
 	private void createCellRenderer() {
-		renderer_score       = new TableScoreRenderer();
-		renderer_viewed      = new TableViewedRenderer();
-		renderer_title       = new ClipTableTitleRenderer();
-		renderer_zyklus      = new TableZyklusRenderer();
-		renderer_mediainfo   = new TableMediaInfoCatRenderer();
-		renderer_language    = new TableLanguageRenderer();
-		renderer_genre       = new TableGenreRenderer();
-		renderer_parts       = new TablePartRenderer();
-		renderer_length      = new TableLengthRenderer();
-		renderer_tags        = new TableTagsRenderer();
-		renderer_adddate     = new ClipTableDateRenderer();
-		renderer_onlinescore = new TableOnlinescoreRenderer();
-		renderer_fsk         = new TableFSKRenderer();
-		renderer_format      = new TableFormatRenderer();
-		renderer_year        = new TableYearRenderer();
-		renderer_filesize    = new TableFilesizeRenderer();
-		renderer_lastviewed  = new TableLastViewedRenderer();
+		renderer_score       = new TableScoreRenderer(movielist);
+		renderer_viewed      = new TableViewedRenderer(movielist);
+		renderer_title       = new ClipTableTitleRenderer(movielist);
+		renderer_zyklus      = new TableZyklusRenderer(movielist);
+		renderer_mediainfo   = new TableMediaInfoCatRenderer(movielist);
+		renderer_language    = new TableLanguageRenderer(movielist);
+		renderer_genre       = new TableGenreRenderer(movielist);
+		renderer_parts       = new TablePartRenderer(movielist);
+		renderer_length      = new TableLengthRenderer(movielist);
+		renderer_tags        = new TableTagsRenderer(movielist);
+		renderer_adddate     = new ClipTableDateRenderer(movielist);
+		renderer_onlinescore = new TableOnlinescoreRenderer(movielist);
+		renderer_fsk         = new TableFSKRenderer(movielist);
+		renderer_format      = new TableFormatRenderer(movielist);
+		renderer_year        = new TableYearRenderer(movielist);
+		renderer_filesize    = new TableFilesizeRenderer(movielist);
+		renderer_lastviewed  = new TableLastViewedRenderer(movielist);
 	}
 	
 	private void createRowSorter() {
 		sorter_score       = new TableScoreComparator();
-		sorter_title       = CCProperties.getInstance().PROP_USE_INTELLISORT.getValue() ? new TableIntelliTitleComparator() : new TableTitleComparator();
+		sorter_title       = movielist.ccprops().PROP_USE_INTELLISORT.getValue() ? new TableIntelliTitleComparator() : new TableTitleComparator();
 		sorter_viewed      = new TableViewedComparator();
 		sorter_zyklus      = new TableZyklusComparator();
 		sorter_mediainfo   = new TableMediaInfoCatComparator();
@@ -190,7 +191,7 @@ public class SFixClipTable extends SFixTable {
 	
 	@Override
 	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-		return CCProperties.getInstance().PROP_MAINFRAME_SCROLLSPEED.getValue();
+		return movielist.ccprops().PROP_MAINFRAME_SCROLLSPEED.getValue();
 	}
 	
 	@Override

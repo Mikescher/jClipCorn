@@ -20,7 +20,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 	public boolean DeleteLocalReferences;
 
 	public UpdateMetadataTable(UpdateMetadataFrame owner) {
-		super();
+		super(owner);
 		this.owner = owner;
 	}
 	
@@ -30,6 +30,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 		List<JCCSimpleColumnPrototype<UpdateMetadataTableElement>> r = new ArrayList<>();
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"",
 				null,
@@ -38,6 +39,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"*,min=auto",
 				"UpdateMetadataFrame.Table.ColumnTitle",
 				e -> e.Element.getFullDisplayTitle(),
@@ -46,6 +48,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnChangedScore",
 				this::getScoreChange,
@@ -54,6 +57,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnChangedGenres",
 				this::getGenreChange,
@@ -62,6 +66,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnChangedReferences",
 				this::getReferencesChange,
@@ -70,6 +75,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnLocalScore",
 				null,
@@ -78,6 +84,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnOnlineScore",
 				null,
@@ -86,6 +93,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnLocalGenres",
 				e -> e.Element.getGenres().asSortedString(),
@@ -94,6 +102,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnOnlineGenres",
 				e -> (e.OnlineMeta != null && e.OnlineMeta.Genres != null) ? e.OnlineMeta.Genres.asSortedString() : (null),
@@ -102,6 +111,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnLocalReferences",
 				e -> e.Element.getOnlineReference().toSourceConcatString(),
@@ -110,6 +120,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnOnlineReferences",
 				e -> (e.OnlineMeta != null) ? e.OnlineMeta.getFullReference().toSourceConcatString() : (null),

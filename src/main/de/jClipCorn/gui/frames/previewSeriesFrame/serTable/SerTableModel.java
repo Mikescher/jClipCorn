@@ -4,7 +4,6 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.features.table.renderer.TableModelRowColorInterface;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Opt;
 
 import javax.swing.table.AbstractTableModel;
@@ -45,7 +44,7 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 		super();
 		this.season = sea;
 		
-		switch (CCProperties.getInstance().PROP_SERIES_DISPLAYED_DATE.getValue()) {
+		switch (season.getMovieList().ccprops().PROP_SERIES_DISPLAYED_DATE.getValue()) {
 		case LAST_VIEWED:
 			COLUMN_NAMES[3] = LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_1"); //$NON-NLS-1$
 			break;

@@ -1,23 +1,22 @@
 package de.jClipCorn.features.table.renderer;
 
-import java.awt.Component;
-
-import javax.swing.JTable;
-
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
-import de.jClipCorn.properties.CCProperties;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class TableZyklusRenderer extends TableRenderer {
 	private static final long serialVersionUID = -6477856445849848822L;
 
-	public TableZyklusRenderer() {
-		super();
+	public TableZyklusRenderer(CCMovieList ml) {
+		super(ml);
 	}
 
 	@Override
     public void setValue(Object value) {
-		if (CCProperties.getInstance().PROP_MAINFRAME_CLICKABLEZYKLUS.getValue()) {
-			if (CCProperties.getInstance().PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR.getValue()) {
+		if (ccprops().PROP_MAINFRAME_CLICKABLEZYKLUS.getValue()) {
+			if (ccprops().PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR.getValue()) {
 				setText(((CCMovieZyklus)value).getSimpleHTMLFormatted());
 			} else {
 				setText(((CCMovieZyklus)value).getHTMLFormatted());

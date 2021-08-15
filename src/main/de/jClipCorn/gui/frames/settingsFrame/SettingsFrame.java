@@ -16,7 +16,7 @@ public class SettingsFrame extends AutomaticSettingsFrame {
 
 	@Override
 	protected boolean validateValues() {
-		if (!CCDatabase.validateDatabaseName((String)getCurrentInputValue(CCProperties.getInstance().PROP_DATABASE_NAME))) {
+		if (!CCDatabase.validateDatabaseName((String)getCurrentInputValue(ccprops().PROP_DATABASE_NAME))) {
 			DialogHelper.showLocalError(this, "Dialogs.DatabasenameAssertion"); //$NON-NLS-1$
 			
 			return false;

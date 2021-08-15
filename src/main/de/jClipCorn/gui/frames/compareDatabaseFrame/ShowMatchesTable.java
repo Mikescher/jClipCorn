@@ -21,7 +21,7 @@ public class ShowMatchesTable extends JCCSimpleTable<ComparisonMatch> {
 	private final boolean _hasExt;
 
 	public ShowMatchesTable(CompareDatabaseFrame f, boolean hasLoc, boolean hasExt) {
-		super();
+		super(f);
 
 		_hasLoc = hasLoc;
 		_hasExt = hasExt;
@@ -35,14 +35,14 @@ public class ShowMatchesTable extends JCCSimpleTable<ComparisonMatch> {
 	protected List<JCCSimpleColumnPrototype<ComparisonMatch>> configureColumns() {
 		List<JCCSimpleColumnPrototype<ComparisonMatch>> r = new ArrayList<>();
 
-		r.add(new JCCSimpleColumnPrototype<>("auto", "CompareDatabaseFrame.table.column_Type", ComparisonMatch::getTypeStr, null, null, true));
+		r.add(new JCCSimpleColumnPrototype<>(this, "auto", "CompareDatabaseFrame.table.column_Type", ComparisonMatch::getTypeStr, null, null, true));
 
-		if (_hasLoc) r.add(new JCCSimpleColumnPrototype<>("auto",         "CompareDatabaseFrame.table.column_LocID",    e -> String.valueOf(e.getLocID().mapOrElse(String::valueOf, Str.Empty)), null, null, true));
-		if (_hasExt) r.add(new JCCSimpleColumnPrototype<>("auto",         "CompareDatabaseFrame.table.column_ExtID",    e -> String.valueOf(e.getExtID().mapOrElse(String::valueOf, Str.Empty)), null, null, true));
-		if (_hasLoc) r.add(new JCCSimpleColumnPrototype<>("auto,max=400", "CompareDatabaseFrame.table.column_LocTitle", e -> e.getLocTitle().orElse(Str.Empty),                                  null, null, true));
-		if (_hasExt) r.add(new JCCSimpleColumnPrototype<>("auto,max=400", "CompareDatabaseFrame.table.column_ExtTitle", e -> e.getExtTitle().orElse(Str.Empty),                                  null, null, true));
+		if (_hasLoc) r.add(new JCCSimpleColumnPrototype<>(this, "auto",         "CompareDatabaseFrame.table.column_LocID",    e -> String.valueOf(e.getLocID().mapOrElse(String::valueOf, Str.Empty)), null, null, true));
+		if (_hasExt) r.add(new JCCSimpleColumnPrototype<>(this, "auto",         "CompareDatabaseFrame.table.column_ExtID",    e -> String.valueOf(e.getExtID().mapOrElse(String::valueOf, Str.Empty)), null, null, true));
+		if (_hasLoc) r.add(new JCCSimpleColumnPrototype<>(this, "auto,max=400", "CompareDatabaseFrame.table.column_LocTitle", e -> e.getLocTitle().orElse(Str.Empty),                                  null, null, true));
+		if (_hasExt) r.add(new JCCSimpleColumnPrototype<>(this, "auto,max=400", "CompareDatabaseFrame.table.column_ExtTitle", e -> e.getExtTitle().orElse(Str.Empty),                                  null, null, true));
 
-		r.add(new JCCSimpleColumnPrototype<>("auto", "CompareDatabaseFrame.table.column_Action", ComparisonMatch::getStrAction, null, null, true));
+		r.add(new JCCSimpleColumnPrototype<>(this, "auto", "CompareDatabaseFrame.table.column_Action", ComparisonMatch::getStrAction, null, null, true));
 
 		return r;
 	}

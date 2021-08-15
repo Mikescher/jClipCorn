@@ -9,6 +9,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.LambdaListCellRenderer;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -24,16 +25,13 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class SearchFrame extends JFrame
+public class SearchFrame extends JCCFrame
 {
-	private final CCMovieList movielist;
-
 	private DefaultListModel<ICCDatabaseStructureElement> listModel;
 
 	public SearchFrame(CCMovieList mlist, Component owner)
 	{
-		super();
-		movielist = mlist;
+		super(mlist);
 
 		initComponents();
 		postInit();
@@ -162,7 +160,7 @@ public class SearchFrame extends JFrame
 
 			for (int i = 0; i < mov.getPartcount(); i++)
 			{
-				if (StringUtils.containsIgnoreCase(mov.Parts.get(i).toFSPath().toString(), searchString)) { result.add(mov); movFound = true; break; }
+				if (StringUtils.containsIgnoreCase(mov.Parts.get(i).toFSPath(this).toString(), searchString)) { result.add(mov); movFound = true; break; }
 			}
 			if (movFound) continue;
 

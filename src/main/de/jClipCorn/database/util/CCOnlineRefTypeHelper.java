@@ -41,8 +41,8 @@ public final class CCOnlineRefTypeHelper {
 	public static final Pattern REGEX_PASTE_OFDB = Pattern.compile("^(https?://)?(www\\.)?(ssl\\.)?ofdb\\.de/film/(?<id>[0-9]+),.*(#.*)?$");                                                        //$NON-NLS-1$
 
 	@SuppressWarnings("nls")
-	public static String getURL(CCSingleOnlineReference ref) {
-		BrowserLanguage lang = CCProperties.getInstance().PROP_TMDB_LANGUAGE.getValue();
+	public static String getURL(CCProperties ccprops, CCSingleOnlineReference ref) {
+		BrowserLanguage lang = ccprops.PROP_TMDB_LANGUAGE.getValue();
 
 		switch (ref.type) {
 			case NONE:

@@ -5,7 +5,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.Main;
+import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.gui.frames.extendedSettingsFrame.ExtendedSettingsFrame;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
@@ -14,7 +16,6 @@ import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
-import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.util.helper.SwingUtils;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AutomaticSettingsFrame extends JFrame {
+public abstract class AutomaticSettingsFrame extends JCCFrame {
 	private static final long serialVersionUID = 4681197289662529891L;
 
 	private final CCProperties properties;
@@ -37,7 +38,7 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 	private List<PropertyElement> elements = new ArrayList<>();
 	
 	public AutomaticSettingsFrame(MainFrame owner, CCProperties properties){
-		super();
+		super(owner.getMovielist());
 		this.properties = properties;
 		this.owner = owner;
 	}
@@ -121,12 +122,12 @@ public abstract class AutomaticSettingsFrame extends JFrame {
 		btnExtended = new JButton(LocaleBundle.getString("Settingsframe.btnExtended.title")); //$NON-NLS-1$
 		btnExtended.addActionListener(e ->
 		{
-			(new ExtendedSettingsFrame(AutomaticSettingsFrame.this, properties)).setVisible(true);
+			(new ExtendedSettingsFrame(AutomaticSettingsFrame.this, movielist, properties)).setVisible(true);
 			dispose();
 		});
 		pnlBottom.add(btnExtended, "10, 2"); //$NON-NLS-1$
 		tabOrder.add(btnExtended);
-		btnExtended.setVisible(CCProperties.getInstance().PROP_SHOW_EXTENDED_FEATURES.getValue());
+		btnExtended.setVisible(ccprops().PROP_SHOW_EXTENDED_FEATURES.getValue());
 		
 		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(tabOrder));
 	}

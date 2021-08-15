@@ -6,7 +6,7 @@ new FormModel {
 	"i18n.keyPrefix": "AddSeriesFrame"
 	contentType: "form/swing"
 	root: new FormRoot {
-		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "relgap, default, unrelgap, default:grow, labelcompgap, pref, 13dlu, default, labelcompgap, default, labelcompgap, default:grow, labelcompgap"
 			"$rowSpecs": "relgap, default, relgap, default, linegap, default, 30dlu, unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, pref, linegap, pref:grow, default, linegap"
 		} ) {
@@ -37,6 +37,9 @@ new FormModel {
 			} )
 			add( new FormComponent( "de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser" ) {
 				name: "edReference"
+				auxiliary() {
+					"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
+				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 10
 				"gridY": 2
@@ -74,7 +77,7 @@ new FormModel {
 			add( new FormComponent( "de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor" ) {
 				name: "edGroups"
 				auxiliary() {
-					"JavaCodeGenerator.customCreateCode": "new GroupListEditor(movieList);"
+					"JavaCodeGenerator.customCreateCode": "new GroupListEditor(movielist);"
 				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 10

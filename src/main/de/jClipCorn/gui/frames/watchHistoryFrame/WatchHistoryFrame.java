@@ -12,6 +12,7 @@ import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryElement;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryEpisodeElement;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryMovieElement;
 import de.jClipCorn.gui.guiComponents.CoverLabelFullsize;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.JSimpleTree;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.SimpleTreeNode;
@@ -39,10 +40,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class WatchHistoryFrame extends JFrame {
+public class WatchHistoryFrame extends JCCFrame {
 	private static final long serialVersionUID = 7210078286644540662L;
 	
-	private final CCMovieList movielist;
 	private final List<WatchHistoryElement> data = new ArrayList<>();
 
 	private Tuple<WatchHistoryFilterType, WatchHistoryTimespanType> _currentFilter = null;
@@ -52,10 +52,8 @@ public class WatchHistoryFrame extends JFrame {
 	private DefaultMutableTreeNode treeTimespanRoot;
 
 	public WatchHistoryFrame(Component owner, CCMovieList mlist) {
-		super();
+		super(mlist);
 		
-		movielist = mlist;
-
 		initComponents();
 		postInit();
 
@@ -235,7 +233,7 @@ public class WatchHistoryFrame extends JFrame {
 		label2 = new JLabel();
 		scrollPane1 = new JScrollPane();
 		listHistory = new JList<>();
-		lblCover = new CoverLabelFullsize();
+		lblCover = new CoverLabelFullsize(movielist);
 
 		//======== this ========
 		setTitle(LocaleBundle.getString("WatchHistoryFrame.title")); //$NON-NLS-1$

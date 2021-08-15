@@ -15,8 +15,8 @@ public class DatabaseHistoryChangesTable extends JCCSimpleTable<CCHistorySingleC
 	private JTextComponent edValueOld;
 	private JTextComponent edValueNew;
 
-	public DatabaseHistoryChangesTable()
-	{
+	public DatabaseHistoryChangesTable(DatabaseHistoryFrame frame) {
+		super(frame);
 	}
 
 	public void initRefs(JTextComponent tfOldValue, JTextComponent tfNewValue)
@@ -31,6 +31,7 @@ public class DatabaseHistoryChangesTable extends JCCSimpleTable<CCHistorySingleC
 		List<JCCSimpleColumnPrototype<CCHistorySingleChange>> r = new ArrayList<>();
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"auto",
 				"DatabaseHistoryFrame.Table.ColumnField",
 				e -> e.Field,
@@ -39,6 +40,7 @@ public class DatabaseHistoryChangesTable extends JCCSimpleTable<CCHistorySingleC
 				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"*",
 				"DatabaseHistoryFrame.Table.ColumnOld",
 				e -> e.OldValue==null ? "<NULL>" : limit(e.OldValue),
@@ -47,6 +49,7 @@ public class DatabaseHistoryChangesTable extends JCCSimpleTable<CCHistorySingleC
 				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
+				this,
 				"*",
 				"DatabaseHistoryFrame.Table.ColumnNew",
 				e -> e.NewValue==null ? "<NULL>" : limit(e.NewValue),

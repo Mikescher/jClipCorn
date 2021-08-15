@@ -16,6 +16,7 @@ import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.JMediaInfoButton;
 import de.jClipCorn.gui.guiComponents.JReadableCCPathTextField;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
@@ -28,7 +29,6 @@ import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.EnumFormatException;
@@ -54,13 +54,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDataProblemHandler
+public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserDataProblemHandler
 {
 	private boolean firstChooseClick = true;
 
 	private final JFileChooser videoFileChooser;
-
-	private final CCMovieList movieList;
 
 	private CCDateTimeList forceViewedHistory = null;
 
@@ -73,8 +71,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 	public AddMovieFrame(Component owner, CCMovieList mlist, FSPath firstPath)
 	{
-		super();
-		this.movieList = mlist;
+		super(mlist);
 		this.videoFileChooser = new JFileChooser(mlist.getCommonPathForMovieFileChooser().toFile());
 
 		initComponents();
@@ -156,12 +153,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		}
 
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(problems, this, this);
+			InputErrorDialog amied = new InputErrorDialog(movielist, problems, this, this);
 			amied.setVisible(true);
 			return;
 		}
 
-		CCMovie newM = movieList.createNewEmptyMovie();
+		CCMovie newM = movielist.createNewEmptyMovie();
 
 		newM.beginUpdating();
 
@@ -220,7 +217,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	private void showOnlineParser() {
-		(new ParseOnlineDialog(this, this, CCDBElementTyp.MOVIE)).setVisible(true);
+		(new ParseOnlineDialog(this, movielist, this, CCDBElementTyp.MOVIE)).setVisible(true);
 	}
 
 	private void initFileChooser() {
@@ -313,7 +310,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	private void parseFromFile(FSPath fp) {
-		FilenameParserResult r = FilenameParser.parse(movieList, fp);
+		FilenameParserResult r = FilenameParser.parse(movielist, fp);
 
 		if (r == null) return;
 
@@ -362,7 +359,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	public void setFilepath(int p, FSPath t) {
-		setDirectFilepath(p, CCPath.createFromFSPath(t));
+		setDirectFilepath(p, CCPath.createFromFSPath(t, this));
 
 		updateFilesize();
 	}
@@ -497,12 +494,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	private void updateFilesize() {
 		CCFileSize size = CCFileSize.ZERO;
 
-		if (! edPart0.getPath().isEmpty()) size = CCFileSize.add(size, edPart0.getPath().toFSPath().filesize());
-		if (! edPart1.getPath().isEmpty()) size = CCFileSize.add(size, edPart1.getPath().toFSPath().filesize());
-		if (! edPart2.getPath().isEmpty()) size = CCFileSize.add(size, edPart2.getPath().toFSPath().filesize());
-		if (! edPart3.getPath().isEmpty()) size = CCFileSize.add(size, edPart3.getPath().toFSPath().filesize());
-		if (! edPart4.getPath().isEmpty()) size = CCFileSize.add(size, edPart4.getPath().toFSPath().filesize());
-		if (! edPart5.getPath().isEmpty()) size = CCFileSize.add(size, edPart5.getPath().toFSPath().filesize());
+		if (! edPart0.getPath().isEmpty()) size = CCFileSize.add(size, edPart0.getPath().toFSPath(this).filesize());
+		if (! edPart1.getPath().isEmpty()) size = CCFileSize.add(size, edPart1.getPath().toFSPath(this).filesize());
+		if (! edPart2.getPath().isEmpty()) size = CCFileSize.add(size, edPart2.getPath().toFSPath(this).filesize());
+		if (! edPart3.getPath().isEmpty()) size = CCFileSize.add(size, edPart3.getPath().toFSPath(this).filesize());
+		if (! edPart4.getPath().isEmpty()) size = CCFileSize.add(size, edPart4.getPath().toFSPath(this).filesize());
+		if (! edPart5.getPath().isEmpty()) size = CCFileSize.add(size, edPart5.getPath().toFSPath(this).filesize());
 
 		setFilesize(size);
 	}
@@ -547,7 +544,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 				edCvrControl.getResizedImageForStorage()
 			);
 
-			UserDataProblem.testMovieData(ret, movieList, null, mpack);
+			UserDataProblem.testMovieData(ret, movielist, null, mpack);
 
 			return ret.isEmpty();
 		}
@@ -568,7 +565,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	private void calculateMediaInfoAndSetLength() {
-		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
@@ -577,12 +574,14 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		try {
 			List<MediaQueryResult> dat = new ArrayList<>();
 
-			if (!edPart0.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart0.getPath().toFSPath(), false));
-			if (!edPart1.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart1.getPath().toFSPath(), false));
-			if (!edPart2.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart2.getPath().toFSPath(), false));
-			if (!edPart3.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart3.getPath().toFSPath(), false));
-			if (!edPart4.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart4.getPath().toFSPath(), false));
-			if (!edPart5.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart5.getPath().toFSPath(), false));
+			var mq = new MediaQueryRunner(movielist);
+
+			if (!edPart0.getPath().isEmpty()) dat.add(mq.query(edPart0.getPath().toFSPath(this), false));
+			if (!edPart1.getPath().isEmpty()) dat.add(mq.query(edPart1.getPath().toFSPath(this), false));
+			if (!edPart2.getPath().isEmpty()) dat.add(mq.query(edPart2.getPath().toFSPath(this), false));
+			if (!edPart3.getPath().isEmpty()) dat.add(mq.query(edPart3.getPath().toFSPath(this), false));
+			if (!edPart4.getPath().isEmpty()) dat.add(mq.query(edPart4.getPath().toFSPath(this), false));
+			if (!edPart5.getPath().isEmpty()) dat.add(mq.query(edPart5.getPath().toFSPath(this), false));
 
 			if (dat.isEmpty()) {
 				lblLenAuto.setText(Str.Empty);
@@ -603,7 +602,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	private void calculateMediaInfoAndSetLanguage() {
-		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
@@ -612,12 +611,14 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		try {
 			List<MediaQueryResult> dat = new ArrayList<>();
 
-			if (!edPart0.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart0.getPath().toFSPath(), false));
-			if (!edPart1.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart1.getPath().toFSPath(), false));
-			if (!edPart2.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart2.getPath().toFSPath(), false));
-			if (!edPart3.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart3.getPath().toFSPath(), false));
-			if (!edPart4.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart4.getPath().toFSPath(), false));
-			if (!edPart5.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart5.getPath().toFSPath(), false));
+			var mq = new MediaQueryRunner(movielist);
+
+			if (!edPart0.getPath().isEmpty()) dat.add(mq.query(edPart0.getPath().toFSPath(this), false));
+			if (!edPart1.getPath().isEmpty()) dat.add(mq.query(edPart1.getPath().toFSPath(this), false));
+			if (!edPart2.getPath().isEmpty()) dat.add(mq.query(edPart2.getPath().toFSPath(this), false));
+			if (!edPart3.getPath().isEmpty()) dat.add(mq.query(edPart3.getPath().toFSPath(this), false));
+			if (!edPart4.getPath().isEmpty()) dat.add(mq.query(edPart4.getPath().toFSPath(this), false));
+			if (!edPart5.getPath().isEmpty()) dat.add(mq.query(edPart5.getPath().toFSPath(this), false));
 
 			if (dat.isEmpty()) {
 				lblLenAuto.setText(Str.Empty);
@@ -651,7 +652,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	private void calculateAndSetMediaInfo() {
-		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
@@ -660,12 +661,14 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		try {
 			List<MediaQueryResult> dat = new ArrayList<>();
 
-			if (!edPart0.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart0.getPath().toFSPath(), true));
-			if (!edPart1.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart1.getPath().toFSPath(), true));
-			if (!edPart2.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart2.getPath().toFSPath(), true));
-			if (!edPart3.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart3.getPath().toFSPath(), true));
-			if (!edPart4.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart4.getPath().toFSPath(), true));
-			if (!edPart5.getPath().isEmpty()) dat.add(MediaQueryRunner.query(edPart5.getPath().toFSPath(), true));
+			var mq = new MediaQueryRunner(movielist);
+
+			if (!edPart0.getPath().isEmpty()) dat.add(mq.query(edPart0.getPath().toFSPath(this), true));
+			if (!edPart1.getPath().isEmpty()) dat.add(mq.query(edPart1.getPath().toFSPath(this), true));
+			if (!edPart2.getPath().isEmpty()) dat.add(mq.query(edPart2.getPath().toFSPath(this), true));
+			if (!edPart3.getPath().isEmpty()) dat.add(mq.query(edPart3.getPath().toFSPath(this), true));
+			if (!edPart4.getPath().isEmpty()) dat.add(mq.query(edPart4.getPath().toFSPath(this), true));
+			if (!edPart5.getPath().isEmpty()) dat.add(mq.query(edPart5.getPath().toFSPath(this), true));
 
 			if (dat.isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
@@ -685,7 +688,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 	}
 
 	private void calculateAndShowMediaInfo() {
-		var mqp = CCProperties.getInstance().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
@@ -693,13 +696,15 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 		StringBuilder b = new StringBuilder();
 
+		var mq = new MediaQueryRunner(movielist);
+
 		try {
-			if (!edPart0.getPath().isEmpty()) b.append(MediaQueryRunner.queryRaw(edPart0.getPath().toFSPath())).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!edPart1.getPath().isEmpty()) b.append(MediaQueryRunner.queryRaw(edPart1.getPath().toFSPath())).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!edPart2.getPath().isEmpty()) b.append(MediaQueryRunner.queryRaw(edPart2.getPath().toFSPath())).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!edPart3.getPath().isEmpty()) b.append(MediaQueryRunner.queryRaw(edPart3.getPath().toFSPath())).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!edPart4.getPath().isEmpty()) b.append(MediaQueryRunner.queryRaw(edPart4.getPath().toFSPath())).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!edPart5.getPath().isEmpty()) b.append(MediaQueryRunner.queryRaw(edPart5.getPath().toFSPath())).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart0.getPath().isEmpty()) b.append(mq.queryRaw(edPart0.getPath().toFSPath(this))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart1.getPath().isEmpty()) b.append(mq.queryRaw(edPart1.getPath().toFSPath(this))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart2.getPath().isEmpty()) b.append(mq.queryRaw(edPart2.getPath().toFSPath(this))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart3.getPath().isEmpty()) b.append(mq.queryRaw(edPart3.getPath().toFSPath(this))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart4.getPath().isEmpty()) b.append(mq.queryRaw(edPart4.getPath().toFSPath(this))).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart5.getPath().isEmpty()) b.append(mq.queryRaw(edPart5.getPath().toFSPath(this))).append("\n\n\n\n\n"); //$NON-NLS-1$
 
 			GenericTextDialog.showText(this, getTitle(), b.toString(), false);
 		} catch (IOException | MediaQueryException e) {
@@ -720,24 +725,26 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 
 		new Thread(() -> {
 
+			var mq = new MediaQueryRunner(movielist);
+
 			try	{
 
 				SwingUtils.invokeLater(() -> pbLanguageLoad.setVisible(true));
 
 				MediaQueryResult dat0 = null;
-				if (!CCPath.isNullOrEmpty(p0)) dat0 = MediaQueryRunner.query(p0.toFSPath(), true);
+				if (!CCPath.isNullOrEmpty(p0)) dat0 = mq.query(p0.toFSPath(this), true);
 
 				final MediaQueryResult _fdat0 = dat0;
 				if (dat0 != null && !_isDirtyMediaInfo) SwingUtils.invokeLater(() -> ctrlMediaInfo.setValue(_fdat0));
 
 				List<MediaQueryResult> dat = new ArrayList<>();
 
-				if (!CCPath.isNullOrEmpty(p0)) dat.add(MediaQueryRunner.query(p0.toFSPath(), false));
-				if (!CCPath.isNullOrEmpty(p1)) dat.add(MediaQueryRunner.query(p1.toFSPath(), false));
-				if (!CCPath.isNullOrEmpty(p2)) dat.add(MediaQueryRunner.query(p2.toFSPath(), false));
-				if (!CCPath.isNullOrEmpty(p3)) dat.add(MediaQueryRunner.query(p3.toFSPath(), false));
-				if (!CCPath.isNullOrEmpty(p4)) dat.add(MediaQueryRunner.query(p4.toFSPath(), false));
-				if (!CCPath.isNullOrEmpty(p5)) dat.add(MediaQueryRunner.query(p5.toFSPath(), false));
+				if (!CCPath.isNullOrEmpty(p0)) dat.add(mq.query(p0.toFSPath(this), false));
+				if (!CCPath.isNullOrEmpty(p1)) dat.add(mq.query(p1.toFSPath(this), false));
+				if (!CCPath.isNullOrEmpty(p2)) dat.add(mq.query(p2.toFSPath(this), false));
+				if (!CCPath.isNullOrEmpty(p3)) dat.add(mq.query(p3.toFSPath(this), false));
+				if (!CCPath.isNullOrEmpty(p4)) dat.add(mq.query(p4.toFSPath(this), false));
+				if (!CCPath.isNullOrEmpty(p5)) dat.add(mq.query(p5.toFSPath(this), false));
 
 				if (dat.isEmpty()) return;
 
@@ -861,12 +868,12 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		label15 = new JLabel();
 		edTitle = new JTextField();
 		label16 = new JLabel();
-		edReference = new JReferenceChooser();
+		edReference = new JReferenceChooser(movielist);
 		label17 = new JLabel();
 		edZyklus = new JTextField();
 		spnZyklus = new JSpinner();
 		label18 = new JLabel();
-		edGroups = new GroupListEditor(movieList);
+		edGroups = new GroupListEditor(movielist);
 		label19 = new JLabel();
 		spnLength = new JSpinner();
 		label29 = new JLabel();
@@ -877,7 +884,7 @@ public class AddMovieFrame extends JFrame implements ParseResultHandler, UserDat
 		btnMediaInfoLang = new JMediaInfoButton();
 		btnQueryMediaInfo = new JButton();
 		label21 = new JLabel();
-		ctrlMediaInfo = new JMediaInfoControl(() -> edPart0.getPath().toFSPath());
+		ctrlMediaInfo = new JMediaInfoControl(movielist, () -> edPart0.getPath().toFSPath(this));
 		btnMediaInfoMain = new JMediaInfoButton();
 		pbLanguageLoad = new JProgressBar();
 		label22 = new JLabel();

@@ -10,6 +10,7 @@ import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.jYearSpinner.JYearSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -23,7 +24,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, ParseResultHandler
+public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, ParseResultHandler
 {
 	private final CCSeries parent;
 
@@ -31,7 +32,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 
 	public AddSeasonFrame(Component owner, CCSeries ser, UpdateCallbackListener ucl)
 	{
-		super();
+		super(ser.getMovieList());
 		this.parent = ser;
 		this.listener = ucl;
 
@@ -71,7 +72,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 		}
 
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(problems, this, this);
+			InputErrorDialog amied = new InputErrorDialog(movielist, problems, this, this);
 			amied.setVisible(true);
 			return;
 		}
@@ -106,7 +107,7 @@ public class AddSeasonFrame extends JFrame implements UserDataProblemHandler, Pa
 						edCvrControl.getResizedImageForStorage()
 				);
 
-		UserDataProblem.testSeasonData(ret, parent.getMovieList(), null, spack);
+		UserDataProblem.testSeasonData(ret, movielist, null, spack);
 
 		return ret.isEmpty();
 	}

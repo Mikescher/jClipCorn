@@ -1,7 +1,9 @@
 package de.jClipCorn.gui.frames.coverPreviewFrame;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.guiComponents.ScalablePane;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
@@ -25,7 +27,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class CoverPreviewFrame extends JDialog {
+public class CoverPreviewFrame extends JCCDialog {
 	private static final long serialVersionUID = -807033167837187549L;
 
 	private final BufferedImage _image;
@@ -34,7 +36,7 @@ public class CoverPreviewFrame extends JDialog {
 	private ScalablePane lblImg;
 	
 	public CoverPreviewFrame(Component owner, ICCCoveredElement elem) {
-		super();
+		super(elem.getMovieList());
 
 		_image = elem.getCover();
 		_path = elem.getMovieList().getCoverCache().getFilepath(elem.getCoverInfo());
@@ -68,8 +70,8 @@ public class CoverPreviewFrame extends JDialog {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public CoverPreviewFrame(Component owner, BufferedImage img) {
-		super();
+	public CoverPreviewFrame(Component owner, CCMovieList ml, BufferedImage img) {
+		super(ml);
 
 		_image = img;
 		_path = null;

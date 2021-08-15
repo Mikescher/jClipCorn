@@ -124,7 +124,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> FILESIZE_FROM_FILE = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		if (ep.part.toFSPath().toFile().exists()) ep.filesize = ep.part.toFSPath().filesize();
+		if (ep.part.toFSPath(ep.ccprops()).toFile().exists()) ep.filesize = ep.part.toFSPath(ep.ccprops()).filesize();
 	});
 
 	public static BatchEditMethod<Void> VIEWED_CLEAR = new BatchEditMethod<>((ep, param, opt) ->
@@ -156,7 +156,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> LANGUAGE_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		MediaQueryResult dat = MediaQueryRunner.query(ep.part.toFSPath(), false);
+		MediaQueryResult dat = new MediaQueryRunner(ep.getSource().getMovieList()).query(ep.part.toFSPath(ep.ccprops()), false);
 
 		if (dat.AudioLanguages == null) throw new MediaQueryException("No language in file"); //$NON-NLS-1$
 
@@ -168,7 +168,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> LENGTH_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		MediaQueryResult dat = MediaQueryRunner.query(ep.part.toFSPath(), true);
+		MediaQueryResult dat = new MediaQueryRunner(ep.getSource().getMovieList()).query(ep.part.toFSPath(ep.ccprops()), true);
 
 		int dur = dat.Duration==-1 ? -1 :(int)(dat.Duration/60);
 		if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
@@ -177,7 +177,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> MEDIAINFO_FROM_FILE = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		MediaQueryResult dat = MediaQueryRunner.query(ep.part.toFSPath(), true);
+		MediaQueryResult dat = new MediaQueryRunner(ep.getSource().getMovieList()).query(ep.part.toFSPath(ep.ccprops()), true);
 		ep.mediaInfo = dat.toPartial();
 	});
 
@@ -188,7 +188,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> MEDIAINFO_CALC_HASH = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.mediaInfo = ep.mediaInfo.WithChecksum(Opt.of(ChecksumHelper.fastVideoHash(ep.part.toFSPath())));
+		ep.mediaInfo = ep.mediaInfo.WithChecksum(Opt.of(ChecksumHelper.fastVideoHash(ep.part.toFSPath(ep.ccprops()))));
 	});
 
 	public static BatchEditMethod<CCDateTime> VIEWED_ADD = new BatchEditMethod<>((ep, param, opt) ->
@@ -198,17 +198,17 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> PATH_TO_CCPATH = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = CCPath.createFromFSPath(FSPath.create(ep.part.toString()));
+		ep.part = CCPath.createFromFSPath(FSPath.create(ep.part.toString()), ep.ccprops());
 	});
 
 	public static BatchEditMethod<Void> PATH_FROM_CCPATH = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = CCPath.create(ep.part.toFSPath().toString());
+		ep.part = CCPath.create(ep.part.toFSPath(ep.ccprops()).toString());
 	});
 
 	public static BatchEditMethod<Void> PATH_DELETE_EXTENSION = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		var fs = ep.part.toFSPath();
+		var fs = ep.part.toFSPath(ep.ccprops());
 		ep.part = ep.part.getParent().append(ep.part.getFilenameWithoutExt());
 	});
 
@@ -298,7 +298,7 @@ public class BatchEditMethods
 
 		var file = param.Item1[opt.Item1-param.Item2];
 
-		ep.part = CCPath.createFromFSPath(FSPath.create(file));
+		ep.part = CCPath.createFromFSPath(FSPath.create(file), ep.ccprops());
 	});
 
 	public static BatchEditMethod<CCSingleTag> TAG_ADD = new BatchEditMethod<>((ep, param, opt) ->

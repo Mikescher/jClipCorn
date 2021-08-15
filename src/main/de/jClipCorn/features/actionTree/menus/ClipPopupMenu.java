@@ -1,5 +1,6 @@
 package de.jClipCorn.features.actionTree.menus;
 
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
@@ -30,8 +31,11 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 
 	private final List<CCActionElement> actions = new ArrayList<>();
 
-	public ClipPopupMenu() {
+	protected final CCMovieList movielist;
+
+	public ClipPopupMenu(CCMovieList ml) {
 		super();
+		movielist = ml;
 	}
 	
 	protected abstract void init();
@@ -39,6 +43,10 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 	protected abstract IActionSourceObject getSourceObject();
 	protected abstract Component getSourceFrame();
 	protected abstract ActionCallbackListener getSourceListener();
+
+	public CCProperties ccprops() {
+		return movielist.ccprops();
+	}
 
 	protected JMenuItem addAction(String actionIdent) {
 		final CCActionElement el = CCActionTree.getInstance().find(actionIdent);
@@ -139,7 +147,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 			JMenuItem subitem = menu.add(ref.Main.hasDescription() ? ref.Main.description : ref.Main.type.asString());
 			subitem.setIcon(ref.Main.type.getIcon16x16());
 			if (!KeyStrokeUtil.isEmpty(el0.getKeyStroke())) subitem.setAccelerator(el0.getKeyStroke());
-			subitem.addActionListener(arg0 -> ref.Main.openInBrowser(src));
+			subitem.addActionListener(arg0 -> ref.Main.openInBrowser(src, ccprops()));
 			menu.add(subitem);
 
 			if (ref.hasAdditional()) menu.addSeparator();
@@ -149,7 +157,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 			for (CCSingleOnlineReference soref : CCStreams.iterate(ref.Additional).filter(r -> !r.hasDescription())) {
 				JMenuItem subitem = menu.add(soref.hasDescription() ? soref.description : soref.type.asString());
 				subitem.setIcon(soref.type.getIcon16x16());
-				subitem.addActionListener(arg0 -> soref.openInBrowser(src));
+				subitem.addActionListener(arg0 -> soref.openInBrowser(src, ccprops()));
 				menu.add(subitem);
 			}
 
@@ -162,7 +170,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 				for (CCSingleOnlineReference soref : soreflist.getValue()) {
 					JMenuItem subitem = menu.add(soref.type.asString());
 					subitem.setIcon(soref.type.getIcon16x16());
-					subitem.addActionListener(arg0 -> soref.openInBrowser(src));
+					subitem.addActionListener(arg0 -> soref.openInBrowser(src, ccprops()));
 					submenu.add(subitem);
 				}
 
@@ -174,7 +182,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 	@SuppressWarnings("nls")
 	protected void addPlayAction(ICCPlayableElement src, boolean anonymous)
 	{
-		var alts = CCProperties.getInstance().getAlternativeMediaPlayers();
+		var alts = ccprops().getAlternativeMediaPlayers();
 
 		var actname = (src instanceof CCMovie)
 				? (anonymous ? "PlayMovieAnonymous"   : "PlayMovie"  )

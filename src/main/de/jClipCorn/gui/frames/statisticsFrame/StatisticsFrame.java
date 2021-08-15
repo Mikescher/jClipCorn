@@ -1,29 +1,18 @@
 package de.jClipCorn.gui.frames.statisticsFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.statistics.ClipCornStatistics;
 import de.jClipCorn.features.statistics.StatisticsGroup;
 import de.jClipCorn.features.statistics.StatisticsHelper;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.TimeKeeper;
 import de.jClipCorn.util.datetime.CCDate;
@@ -32,10 +21,16 @@ import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.lambda.Func1to1;
 
-public class StatisticsFrame extends JFrame {
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class StatisticsFrame extends JCCFrame {
 	private static final long serialVersionUID = 2443934162053374481L;
 
-	private final CCMovieList movielist;
 	private List<JLabel> sidebarValueLabels = new ArrayList<>();
 	private StatisticsGroup currentChart = null;
 
@@ -68,9 +63,8 @@ public class StatisticsFrame extends JFrame {
 	private JList<StatisticsGroup> lsAltLeft;
 	
 	public StatisticsFrame(Component owner, CCMovieList mlist) {
-		super();
-		this.movielist = mlist;
-		
+		super(mlist);
+
 		initGUI();
 
 		TimeKeeper.start();

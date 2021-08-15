@@ -14,8 +14,6 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.log.CCLogType;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.CCLogChangedAdapter;
 import de.jClipCorn.util.datatypes.Tuple3;
@@ -89,15 +87,15 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 	}
 	
 	private void intializeGUI() {
-		boolean propMov  = CCProperties.getInstance().PROP_STATBAR_ELCOUNT.getValue();
-		boolean propBar  = CCProperties.getInstance().PROP_STATBAR_PROGRESSBAR.getValue();
-		boolean propLog  = CCProperties.getInstance().PROP_STATBAR_LOG.getValue();
-		boolean propView = CCProperties.getInstance().PROP_STATBAR_VIEWEDCOUNT.getValue();
-		boolean propSer  = CCProperties.getInstance().PROP_STATBAR_SERIESCOUNT.getValue();
-		boolean propLen  = CCProperties.getInstance().PROP_STATBAR_LENGTH.getValue();
-		boolean propSize = CCProperties.getInstance().PROP_STATBAR_SIZE.getValue();
-		boolean propTime = CCProperties.getInstance().PROP_STATBAR_STARTTIME.getValue();
-		boolean propScan = CCProperties.getInstance().PROP_STATBAR_DRIVESCAN.getValue();
+		boolean propMov  = owner.ccprops().PROP_STATBAR_ELCOUNT.getValue();
+		boolean propBar  = owner.ccprops().PROP_STATBAR_PROGRESSBAR.getValue();
+		boolean propLog  = owner.ccprops().PROP_STATBAR_LOG.getValue();
+		boolean propView = owner.ccprops().PROP_STATBAR_VIEWEDCOUNT.getValue();
+		boolean propSer  = owner.ccprops().PROP_STATBAR_SERIESCOUNT.getValue();
+		boolean propLen  = owner.ccprops().PROP_STATBAR_LENGTH.getValue();
+		boolean propSize = owner.ccprops().PROP_STATBAR_SIZE.getValue();
+		boolean propTime = owner.ccprops().PROP_STATBAR_STARTTIME.getValue();
+		boolean propScan = owner.ccprops().PROP_STATBAR_DRIVESCAN.getValue();
 
 		//##################################################
 		startInitColumns();
@@ -248,7 +246,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 	}
 	
 	private void updateLables_Length() {
-		lblLength.setText(LocaleBundle.getFormattedString("ClipStatusBar.Length", TimeIntervallFormatter.formatPointed(movielist.getTotalLength(true, CCProperties.getInstance().PROP_STATUSBAR_CALC_SERIES_IN_LENGTH.getValue())))); //$NON-NLS-1$
+		lblLength.setText(LocaleBundle.getFormattedString("ClipStatusBar.Length", TimeIntervallFormatter.formatPointed(movielist.getTotalLength(true, owner.ccprops().PROP_STATUSBAR_CALC_SERIES_IN_LENGTH.getValue())))); //$NON-NLS-1$
 
 		StringBuilder tooltip = new StringBuilder();
 		tooltip.append("<html>"); //$NON-NLS-1$
@@ -260,7 +258,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 	}
 	
 	private void updateLables_Size() {
-		lblSize.setText(  LocaleBundle.getFormattedString("ClipStatusBar.Size", FileSizeFormatter.format(movielist.getTotalSize(true, CCProperties.getInstance().PROP_STATUSBAR_CALC_SERIES_IN_SIZE.getValue())))); //$NON-NLS-1$
+		lblSize.setText(  LocaleBundle.getFormattedString("ClipStatusBar.Size", FileSizeFormatter.format(movielist.getTotalSize(true, owner.ccprops().PROP_STATUSBAR_CALC_SERIES_IN_SIZE.getValue())))); //$NON-NLS-1$
 
 		StringBuilder tooltip = new StringBuilder();
 		tooltip.append("<html>"); //$NON-NLS-1$
@@ -310,7 +308,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 
 		tooltip.append("<html>"); //$NON-NLS-1$
 
-		List<Tuple3<Character, String, String>> drives = DriveMap.getCopy();
+		List<Tuple3<Character, String, String>> drives = movielist.getDriveMap().getCopy();
 
 		int l2 = 0;
 		int l3 = 0;
@@ -338,7 +336,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 		else
 			lblDriveScan.setToolTipText(tooltip.toString());
 
-		lblDriveScan.setText(String.format("%s: %s", LocaleBundle.getString("ClipStatusBar.DriveScan"), DriveMap.getStatus())); //$NON-NLS-1$ //$NON-NLS-2$
+		lblDriveScan.setText(String.format("%s: %s", LocaleBundle.getString("ClipStatusBar.DriveScan"), movielist.getDriveMap().getStatus())); //$NON-NLS-1$ //$NON-NLS-2$
 		lblDriveScan.setToolTipText(tooltip.toString());
 	}
 

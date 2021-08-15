@@ -200,7 +200,7 @@ dependencies {
 	implementation 'commons-codec:commons-codec:1.15'
 	implementation 'commons-io:commons-io:2.11.0'
 	implementation 'commons-logging:commons-logging:1.2'
-	implementation name: 'commons-beanutils-1.8.3-custombuild'
+	implementation 'commons-beanutils:commons-beanutils:1.9.4'
 
 	implementation 'org.xerial:sqlite-jdbc:3.36.0.1'
 

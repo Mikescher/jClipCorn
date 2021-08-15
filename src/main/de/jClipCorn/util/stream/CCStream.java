@@ -389,6 +389,12 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		for (TType t : this) v += op.invoke(t);
 		return v;
 	}
+
+	public long sumLong(Func1to1<TType, Long> op) {
+		long v = 0;
+		for (TType t : this) v += op.invoke(t);
+		return v;
+	}
 	
 	public float sumFloat(Func1to1<TType, Float> op) {
 		float v = 0;

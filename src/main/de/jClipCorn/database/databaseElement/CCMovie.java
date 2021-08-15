@@ -24,14 +24,15 @@ import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
+import de.jClipCorn.util.exceptions.FVHException;
 import de.jClipCorn.util.filesystem.CCPath;
-import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -252,10 +253,13 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		addToViewedHistoryFromUI(CCDateTime.getCurrentDateTime());
 	}
 
-	public String getFastMD5() {
-		var f = new FSPath[getPartcount()];
-		for (int i = 0; i < getPartcount(); i++) f[i] = Parts.get(i).toFSPath(this);
-		return ChecksumHelper.calculateFastMD5(f);
+	public String getFastViewHashSafe() {
+		try {
+			return ChecksumHelper.fastVideoHash(CCStreams.iterate(getParts()).map(p -> p.toFSPath(this)).enumerate());
+		} catch (IOException | FVHException e) {
+			CCLog.addError(e);
+			return "00";
+		}
 	}
 	
 	@Override

@@ -85,7 +85,7 @@ public class DatabaseXMLExporterImpl {
 			e.setAttribute("mediainfo.checksum",        minfo.getChecksum());
 		}
 
-		if (s.FileHash) e.setAttribute("filehash", o.getFastMD5());
+		if (s.FileHash) e.setAttribute("filehash", o.getFastViewHashSafe());
 	}
 
 	public static void exportSeries(Element e, CCSeries o, ExportOptions s) {
@@ -143,6 +143,6 @@ public class DatabaseXMLExporterImpl {
 			e.setAttribute("mediainfo.checksum",        minfo.getChecksum());
 		}
 
-		if (s.FileHash) e.setAttribute("filehash", o.getFastMD5());
+		if (s.FileHash) e.setAttribute("filehash", o.getFastViewHashSafe());
 	}
 }

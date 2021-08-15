@@ -26,6 +26,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
+import de.jClipCorn.util.exceptions.FVHException;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.ApplicationHelper;
@@ -34,6 +35,7 @@ import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -391,11 +393,13 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		return Title.get();
 	}
 
-	public String getFastMD5() {
-		FSPath[] f = new FSPath[1];
-		f[0] = getPart().toFSPath(this);
-		
-		return ChecksumHelper.calculateFastMD5(f);
+	public String getFastViewHashSafe() {
+		try {
+			return ChecksumHelper.fastVideoHash(getPart().toFSPath(this));
+		} catch (IOException | FVHException e) {
+			CCLog.addError(e);
+			return "00";
+		}
 	}
 
 	public FSPath getPathForCreatedFolderstructure() {

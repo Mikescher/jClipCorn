@@ -1,5 +1,6 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
@@ -216,11 +217,9 @@ public class CCDateTimeList implements CCIterable<CCDateTime> {
 		
 		b.append("<html>");
 		for (CCDateTime datetime : list) {
-			b.append(datetime.toStringUIShort() + "<br/>");
+			b.append(datetime.toStringUIShort()).append("<br/>");
 		}
-		for (int i = 0; i < hiddenHack; i++) {
-			b.append("<!--HACK-->");
-		}
+		b.append(Str.repeat("<!--HACK-->", Math.max(0, hiddenHack)));
 		b.append("</html>");
 		
 		return b.toString();

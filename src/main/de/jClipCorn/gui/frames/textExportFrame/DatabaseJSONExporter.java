@@ -83,7 +83,7 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 
 					if (addYear) {
 						builder.append("\t\t\t\t");
-						builder.append("\"year\": " + season.getYear() + ",");
+						builder.append("\"year\": ").append(season.getYear()).append(",");
 						builder.append(System.lineSeparator());
 					}
 					

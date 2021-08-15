@@ -40,7 +40,7 @@ public class ClipCornBaseTest {
 
 	protected static TimeZone GMT_2 = TimeZone.getTimeZone("GMT+2:00");
 
-	public static Stack<Func0to0WithException> CLEANUP = new Stack<>();
+	public static Stack<Func0to0WithException<Exception>> CLEANUP = new Stack<>();
 
 	@Before
 	public void Init() {

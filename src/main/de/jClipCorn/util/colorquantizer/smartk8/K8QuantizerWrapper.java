@@ -21,7 +21,7 @@ public class K8QuantizerWrapper implements ColorQuantizer
 	}
 
 	@Override
-	public void analyze(BufferedImage img, int colorcount) throws ColorQuantizerException {
+	public void analyze(BufferedImage img, int colorcount) {
 		quant.ChangeCacheProvider(new EuclideanDistanceColorCache());
 		
 		quant.OnPrepare(img);
@@ -32,12 +32,12 @@ public class K8QuantizerWrapper implements ColorQuantizer
 	}
 
 	@Override
-	public List<RGBColor> getPalette() throws ColorQuantizerException {
+	public List<RGBColor> getPalette() {
 		return palette;
 	}
 
 	@Override
-	public BufferedImage quantize(BufferedImage img) throws ColorQuantizerException {
+	public BufferedImage quantize(BufferedImage img) {
 		BufferedImage out = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
 
 		for (int x = 0; x < img.getWidth(); x++) {
@@ -55,7 +55,7 @@ public class K8QuantizerWrapper implements ColorQuantizer
 	}
 
 	@Override
-	public int getPaletteIndex(RGBColor c, int x, int y) throws OctreeException {
+	public int getPaletteIndex(RGBColor c, int x, int y) {
 		return quant.GetPaletteIndex(c, x, y);
 	}
 }

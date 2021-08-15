@@ -2,20 +2,17 @@ package de.jClipCorn.util.colorquantizer.wadcolors;
 
 import de.jClipCorn.util.colorquantizer.ColorQuantizer;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerException;
-import de.jClipCorn.util.colorquantizer.octree.OctreeException;
 import de.jClipCorn.util.colorquantizer.smartk8.ColorModelEnum;
 import de.jClipCorn.util.colorquantizer.smartk8.ColorModelHelper;
 import de.jClipCorn.util.colorquantizer.util.RGBColor;
 
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 // @source: https://alumni.media.mit.edu/~wad/color/palette.html
 public class WadColorPaletteQuantizer implements ColorQuantizer {
 
-	private static RGBColor[] palette = new RGBColor[]
+	private static final RGBColor[] palette = new RGBColor[]
 	{
 		RGBColor.FromRGB(0,   0,   0),
 		RGBColor.FromRGB(87,  87,  87),
@@ -35,7 +32,7 @@ public class WadColorPaletteQuantizer implements ColorQuantizer {
 		RGBColor.FromRGB(255, 255, 255),
 	};
 
-	private	List<RGBColor> paletteList = Collections.unmodifiableList(Arrays.asList(palette));
+	private final List<RGBColor> paletteList = List.of(palette);
 
 	@Override
 	public void analyze(BufferedImage img, int colorcount) throws ColorQuantizerException {
@@ -43,7 +40,7 @@ public class WadColorPaletteQuantizer implements ColorQuantizer {
 	}
 
 	@Override
-	public List<RGBColor> getPalette() throws ColorQuantizerException {
+	public List<RGBColor> getPalette() {
 		return paletteList;
 	}
 
@@ -61,7 +58,7 @@ public class WadColorPaletteQuantizer implements ColorQuantizer {
 	}
 
 	@Override
-	public int getPaletteIndex(RGBColor c, int x, int y) throws OctreeException {
+	public int getPaletteIndex(RGBColor c, int x, int y) {
 		return ColorModelHelper.GetEuclideanDistance(c, ColorModelEnum.LabColorSpace, paletteList);
 	}
 }

@@ -71,9 +71,6 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 	private boolean suppressEdTargetEvents = false;
 	private JProgressBar progressBar;
 
-	/**
-	 * @wbp.parser.constructor
-	 */
 	private QuickAddEpisodeDialog(Component owner, UpdateCallbackListener listener, CCSeason s, FSPath f) {
 		super(s.getMovieList());
 		ucListener = listener;

@@ -16,7 +16,7 @@ import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
-import de.jClipCorn.gui.guiComponents.*;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.JMediaInfoButton;
 import de.jClipCorn.gui.guiComponents.JReadableCCPathTextField;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
@@ -31,7 +31,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -137,7 +136,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		firstChooseClick = false;
 	}
 
-	private void onBtnOK(boolean check) throws EnumFormatException, EnumValueNotFoundException {
+	private void onBtnOK(boolean check) throws EnumValueNotFoundException {
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserData(problems);
@@ -559,7 +558,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 	{
 		try {
 			onBtnOK(false);
-		} catch (EnumFormatException | EnumValueNotFoundException e) {
+		} catch (EnumValueNotFoundException e) {
 			CCLog.addError(e);
 		}
 	}
@@ -832,7 +831,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		try {
 			onBtnOK(true);
 		}
-		catch (EnumFormatException | EnumValueNotFoundException e1) {
+		catch (EnumValueNotFoundException e1) {
 			CCLog.addError(e1);
 		}
 	}

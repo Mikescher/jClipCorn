@@ -23,7 +23,7 @@ public enum UILanguage implements ContinoousEnum<UILanguage> {
 
 	private static final EnumWrapper<UILanguage> wrapper = new EnumWrapper<>(DEFAULT);
 
-	private UILanguage(int val) {
+	UILanguage(int val) {
 		id = val;
 	}
 	

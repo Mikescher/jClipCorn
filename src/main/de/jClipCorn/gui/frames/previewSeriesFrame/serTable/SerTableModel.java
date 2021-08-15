@@ -2,8 +2,10 @@ package de.jClipCorn.gui.frames.previewSeriesFrame.serTable;
 
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.table.renderer.TableModelRowColorInterface;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Opt;
 
 import javax.swing.table.AbstractTableModel;
@@ -40,26 +42,33 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 
 	private CCSeason season;
 
-	public SerTableModel(CCSeason sea) {
+	public SerTableModel(CCSeason sea, CCProperties ccprops) {
 		super();
 		this.season = sea;
-		
-		switch (season.getMovieList().ccprops().PROP_SERIES_DISPLAYED_DATE.getValue()) {
-		case LAST_VIEWED:
-			COLUMN_NAMES[3] = LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_1"); //$NON-NLS-1$
-			break;
-		case FIRST_VIEWED:
-			COLUMN_NAMES[3] = LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_2"); //$NON-NLS-1$
-			break;
-		case AVERAGE:
-			COLUMN_NAMES[3] = LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_3"); //$NON-NLS-1$
-			break;
+
+		if (ccprops != null)
+		{
+			switch (ccprops.PROP_SERIES_DISPLAYED_DATE.getValue()) {
+				case LAST_VIEWED:
+					COLUMN_NAMES[3] = LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_1"); //$NON-NLS-1$
+					break;
+				case FIRST_VIEWED:
+					COLUMN_NAMES[3] = LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_2"); //$NON-NLS-1$
+					break;
+				case AVERAGE:
+					COLUMN_NAMES[3] = LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_3"); //$NON-NLS-1$
+					break;
+			}
+		}
+		else
+		{
+			CCLog.addUndefinied("SerTableModel :: ccprops == null"); //$NON-NLS-1$
 		}
 	}
 
 	@Override
 	public String getColumnName(int col) {
-		return COLUMN_NAMES[col].toString();
+		return COLUMN_NAMES[col];
 	}
 
 	@Override

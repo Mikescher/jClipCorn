@@ -6,7 +6,7 @@ import javax.swing.tree.TreePath;
 import de.jClipCorn.util.lambda.Func1to0;
 
 public class SimpleTreeObject {
-	public class SimpleTreeEvent { public boolean ctrlDown; public SimpleTreeObject source; public TreePath path; }
+	public static class SimpleTreeEvent { public boolean ctrlDown; public SimpleTreeObject source; public TreePath path; }
 	
 	private final Icon icon;
 	private final String text;

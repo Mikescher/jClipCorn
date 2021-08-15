@@ -138,10 +138,10 @@ public class LocaleBundle {
 						newPrefix = s.substring(0, s.indexOf('.', newPrefix.length()+1));
 					else
 						newPrefix = s;
-					
-					for (int c = 0; c < depth; c++) builder.append("   ");
-					builder.append(newPrefix.substring(newPrefix.lastIndexOf('.')+1, newPrefix.length()));
-					if (bundle.containsKey(s)) builder.append("   (\"" + getString(s).replaceAll("\r\n", "\\\\r\\\\n") + "\")");
+
+					builder.append(Str.repeat("   ", Math.max(0, depth)));
+					builder.append(newPrefix.substring(newPrefix.lastIndexOf('.')+1));
+					if (bundle.containsKey(s)) builder.append("   (\"").append(getString(s).replaceAll("\r\n", "\\\\r\\\\n")).append("\")");
 					builder.append("\r\n");
 					addSubListToBuilder(builder, newPrefix, list, depth + 1);
 					break;

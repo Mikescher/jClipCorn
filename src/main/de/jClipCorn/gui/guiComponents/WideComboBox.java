@@ -13,7 +13,7 @@ public class WideComboBox<T> extends JComboBox<T> {
 		//
 	}
 
-	public WideComboBox(final T items[]) {
+	public WideComboBox(final T[] items) {
 		super(items);
 	}
 

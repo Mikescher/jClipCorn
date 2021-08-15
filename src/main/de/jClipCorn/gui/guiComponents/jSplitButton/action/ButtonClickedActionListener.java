@@ -40,5 +40,5 @@ import java.util.EventListener;
  * @author Randall Wood
  */
 public interface ButtonClickedActionListener extends EventListener {
-	public void actionPerformed(ActionEvent e);
+	void actionPerformed(ActionEvent e);
 }

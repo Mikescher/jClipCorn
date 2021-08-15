@@ -21,7 +21,7 @@ public enum ResourcePreloadMode implements ContinoousEnum<ResourcePreloadMode> {
 
 	private static final EnumWrapper<ResourcePreloadMode> wrapper = new EnumWrapper<>(NO_PRELOAD);
 
-	private ResourcePreloadMode(int val) {
+	ResourcePreloadMode(int val) {
 		id = val;
 	}
 	

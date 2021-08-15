@@ -38,7 +38,7 @@ public class EmptyColorQuantizer implements ColorQuantizer {
 	}
 
 	@Override
-	public int getPaletteIndex(RGBColor c, int x, int y) throws OctreeException {
+	public int getPaletteIndex(RGBColor c, int x, int y) {
 		return 0;
 	}
 }

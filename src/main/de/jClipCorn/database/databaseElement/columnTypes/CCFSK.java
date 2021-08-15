@@ -28,7 +28,7 @@ public enum CCFSK implements ContinoousEnum<CCFSK> {
 	
 	private static final EnumWrapper<CCFSK> wrapper = new EnumWrapper<>(RATING_0);
 
-	private CCFSK(int val) {
+	CCFSK(int val) {
 		id = val;
 	}
 	

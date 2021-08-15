@@ -23,7 +23,7 @@ public enum MetadataSourceType implements ContinoousEnum<MetadataSourceType> {
 
 	private static final EnumWrapper<MetadataSourceType> wrapper = new EnumWrapper<>(MEDIAINFO);
 
-	private MetadataSourceType(int val, String description, MultiSizeIconRef srcicon, Func1to1<CCMovieList, MetadataSource> valueGetter) {
+	MetadataSourceType(int val, String description, MultiSizeIconRef srcicon, Func1to1<CCMovieList, MetadataSource> valueGetter) {
 		id     = val;
 		desc   = description;
 		getter = valueGetter;

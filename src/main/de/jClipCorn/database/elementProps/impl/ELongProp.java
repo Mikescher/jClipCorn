@@ -21,12 +21,12 @@ public class ELongProp extends EProperty<Long> {
 	}
 
 	@Override
-	public void deserializeFromString(String v) throws CCFormatException {
+	public void deserializeFromString(String v) {
 		set(Long.parseLong(v));
 	}
 
 	@Override
-	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
+	public void deserializeFromDatabaseValue(Object v) {
 		set((long)v);
 	}
 

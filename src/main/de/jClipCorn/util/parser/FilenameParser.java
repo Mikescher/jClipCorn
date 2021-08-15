@@ -70,7 +70,7 @@ public class FilenameParser {
 			if (idx+group.length() == moviename.length())
 				moviename = moviename.substring(0, idx-1);
 			else
-				moviename = moviename.substring(0, idx-1) + moviename.substring(idx+group.length(), moviename.length());
+				moviename = moviename.substring(0, idx-1) + moviename.substring(idx+group.length());
 			
 			grouplist = grouplist.getAdd(movielist, groupname);
 		}

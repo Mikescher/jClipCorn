@@ -7,7 +7,7 @@ import de.jClipCorn.util.datatypes.Opt;
 
 import java.awt.*;
 
-public abstract class CCProperty<T extends Object> {
+public abstract class CCProperty<T> {
 	protected final CCProperties properties;
 	protected final String identifier;
 	protected final T standard;

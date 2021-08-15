@@ -117,11 +117,7 @@ public class HTTPUtilities {
 	public static String escapeURL(String url) {
 		url = url.trim();
 
-		try {
-			return URLEncoder.encode(url, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			return url;
-		}
+		return URLEncoder.encode(url, StandardCharsets.UTF_8);
 	}
 
 	public static String descapeHTML(String html) {
@@ -193,7 +189,7 @@ public class HTTPUtilities {
 	    
 	    for (String pair : pairs) {
 	        int idx = pair.indexOf("=");
-	        query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+	        query_pairs.put(URLDecoder.decode(pair.substring(0, idx), StandardCharsets.UTF_8), URLDecoder.decode(pair.substring(idx + 1), StandardCharsets.UTF_8));
 	    }
 	    
 	    return query_pairs;

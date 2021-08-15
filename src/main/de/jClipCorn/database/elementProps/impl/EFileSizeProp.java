@@ -24,12 +24,12 @@ public class EFileSizeProp extends EProperty<CCFileSize> {
 	}
 
 	@Override
-	public void deserializeFromString(String v) throws CCFormatException {
+	public void deserializeFromString(String v) {
 		set(Long.parseLong(v));
 	}
 
 	@Override
-	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
+	public void deserializeFromDatabaseValue(Object v) {
 		set((Long)v);
 	}
 

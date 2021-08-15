@@ -130,7 +130,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 
 		List<NewEpisodeVM> data = new ArrayList<>();
 
-		int epid = (int)spnFirstEpNumber.getValue();;
+		int epid = (int)spnFirstEpNumber.getValue();
 		for (File f : files) {
 			var fp = FSPath.create(f);
 

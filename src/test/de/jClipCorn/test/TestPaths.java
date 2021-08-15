@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 public class TestPaths extends ClipCornBaseTest {
 
 	@Test
-	public void testFSPath() throws Exception {
+	public void testFSPath() {
 		var ccprops = createInMemoryProperties();
 
 		assertEquals(loc("F:/dir1/dir2/file.txt"), FSPath.create(loc("F:/dir1/dir2/file.txt")).toString());
@@ -80,7 +80,7 @@ public class TestPaths extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testCCPathNormal() throws Exception {
+	public void testCCPathNormal() {
 		var ccprops = createInMemoryProperties();
 
 		assertEquals("F:/dir1/dir2/file.txt", CCPath.create("F:/dir1/dir2/file.txt").toString());
@@ -104,7 +104,7 @@ public class TestPaths extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testCCPathNormalWithVar() throws Exception {
+	public void testCCPathNormalWithVar() {
 		var ccprops = createInMemoryProperties();
 
 		assertEquals("<?[mov]>dir1/dir2/file.txt", CCPath.create("<?[mov]>dir1/dir2/file.txt").toString());
@@ -128,7 +128,7 @@ public class TestPaths extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testCCPathNormalWithSelf() throws Exception {
+	public void testCCPathNormalWithSelf() {
 		var ccprops = createInMemoryProperties();
 
 		assertEquals("<?self>dir1/dir2/file.txt", CCPath.create("<?self>dir1/dir2/file.txt").toString());
@@ -152,7 +152,7 @@ public class TestPaths extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testCCPathNormalWithDriveLabel() throws Exception {
+	public void testCCPathNormalWithDriveLabel() {
 		var ccprops = createInMemoryProperties();
 
 		assertEquals("<?vLabel=\"Network Drive 0\">dir1/dir2/file.txt", CCPath.create("<?vLabel=\"Network Drive 0\">dir1/dir2/file.txt").toString());
@@ -176,7 +176,7 @@ public class TestPaths extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testCCPathNormalWithDriveLetter() throws Exception {
+	public void testCCPathNormalWithDriveLetter() {
 		var ccprops = createInMemoryProperties();
 
 		assertEquals("<?vLetter=\"C\">dir1/dir2/file.txt", CCPath.create("<?vLetter=\"C\">dir1/dir2/file.txt").toString());
@@ -200,7 +200,7 @@ public class TestPaths extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testCCPathNormalWithSelfDrive() throws Exception {
+	public void testCCPathNormalWithSelfDrive() {
 		var ccprops = createInMemoryProperties();
 
 		assertEquals("<?self[dir]>dir1/dir2/file.txt", CCPath.create("<?self[dir]>dir1/dir2/file.txt").toString());
@@ -224,8 +224,7 @@ public class TestPaths extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testCCPathtoFSPath() throws Exception
-	{
+	public void testCCPathtoFSPath() {
 		var ccprops = createInMemoryProperties();
 
 		assertEquals("<?self[dir]>dir1/dir2/file.txt", CCPath.create("<?self[dir]>dir1/dir2/file.txt").toString());
@@ -256,8 +255,7 @@ public class TestPaths extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testFSPathToCCPath() throws Exception
-	{
+	public void testFSPathToCCPath() {
 		var ccprops = createInMemoryProperties();
 
 		assertEquals("<?[mov]>fname.ext",          CCPath.createFromFSPath(FSPath.create(loc("C:/tmpfs/jcc/mov/fname.ext")), ccprops).toString());

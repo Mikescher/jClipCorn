@@ -5,8 +5,6 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.guiComponents.*;
-import de.jClipCorn.gui.guiComponents.JFSPathTextField;
-import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;

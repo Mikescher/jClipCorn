@@ -3,6 +3,7 @@ package de.jClipCorn.gui.guiComponents;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 
 import javax.swing.*;
 import javax.swing.RowSorter.SortKey;
@@ -157,9 +158,7 @@ public abstract class SFixTable extends JTable {
 				b.append("<html>"); //$NON-NLS-1$
 				b.append(tip);
 
-				for (int i = 0; i < row; i++) {
-					b.append("<!--HACK-->"); //$NON-NLS-1$
-				}
+				b.append(Str.repeat("<!--HACK-->", Math.max(0, row))); //$NON-NLS-1$
 				b.append("</html>"); //$NON-NLS-1$
 				
 				tip = b.toString();
@@ -167,7 +166,7 @@ public abstract class SFixTable extends JTable {
 			else if (tip != null && tip.toLowerCase().startsWith("<html")) //$NON-NLS-1$
 			{
 				StringBuilder b = new StringBuilder();
-				for (int i = 0; i < row; i++) b.append("<!--HACK-->"); //$NON-NLS-1$
+				b.append(Str.repeat("<!--HACK-->", Math.max(0, row))); //$NON-NLS-1$
 
 				int idx = tip.toLowerCase().indexOf("</html>"); //$NON-NLS-1$
 				if (idx >= 0) tip = tip.substring(0, idx) + b.toString() + tip.substring(idx);

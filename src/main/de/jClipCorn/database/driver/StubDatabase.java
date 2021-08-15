@@ -21,12 +21,12 @@ public class StubDatabase extends GenericDatabase {
 	}
 
 	@Override
-	public void establishDBConnection(FSPath dbDir, String dbName) throws Exception {
+	public void establishDBConnection(FSPath dbDir, String dbName) {
 		// NOP
 	}
 
 	@Override
-	public void closeDBConnection(FSPath dbDir, String dbName, boolean cleanshutdown) throws SQLException {
+	public void closeDBConnection(FSPath dbDir, String dbName, boolean cleanshutdown) {
 		// NOP
 	}
 
@@ -44,22 +44,22 @@ public class StubDatabase extends GenericDatabase {
 	public boolean isInMemory() {return true;}
 
 	@Override
-	public List<String> listTables() throws SQLException {
+	public List<String> listTables() {
 		return new ArrayList<>();
 	}
 
 	@Override
-	public List<String> listTrigger() throws SQLException {
+	public List<String> listTrigger() {
 		return new ArrayList<>();
 	}
 
 	@Override
-	public List<String> listViews() throws SQLException {
+	public List<String> listViews() {
 		return new ArrayList<>();
 	}
 
 	@Override
-	public List<Tuple<String, String>> listTriggerWithStatements() throws SQLException {
+	public List<Tuple<String, String>> listTriggerWithStatements() {
 		return new ArrayList<>();
 	}
 }

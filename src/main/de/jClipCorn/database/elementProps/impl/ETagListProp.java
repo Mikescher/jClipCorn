@@ -59,7 +59,7 @@ public class ETagListProp extends EProperty<CCTagList> {
 	}
 
 	@Override
-	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
+	public void deserializeFromDatabaseValue(Object v) {
 		set(CCTagList.fromShort((short)v));
 	}
 

@@ -56,7 +56,7 @@ public class CustomFilterStringConfig extends CustomFilterConfig {
 		StringBuilder b = new StringBuilder();
 		int len = r.nextInt(128);
 		for (int i = 0; i < len; i++) {
-			b.append(String.valueOf((char)(Math.abs(r.nextInt())+1)));
+			b.append((char) (Math.abs(r.nextInt()) + 1));
 		}
 		valueSetter.invoke(b.toString());
 	}

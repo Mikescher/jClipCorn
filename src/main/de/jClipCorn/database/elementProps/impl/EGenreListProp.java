@@ -10,7 +10,7 @@ public class EGenreListProp extends EProperty<CCGenreList> {
 		super(name, defValue, p, t);
 	}
 
-	public void set(long v) throws CCFormatException {
+	public void set(long v) {
 		set(new CCGenreList(v));
 	}
 

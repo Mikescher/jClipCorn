@@ -65,7 +65,7 @@ public class WatchDataParser {
 		for (int currLine = 0; currLine < lines.length; currLine++) {
 			String line = StringUtils.stripEnd(lines[currLine], null);
 			
-			if (line.indexOf("//") >= 0) {
+			if (line.contains("//")) {
 				line = line.substring(0, line.indexOf("//"));
 			}
 

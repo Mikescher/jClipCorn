@@ -40,5 +40,5 @@ import java.util.EventListener;
  * @author Randall Wood
  */
 public interface SplitButtonClickedActionListener extends EventListener {
-	public void actionPerformed(ActionEvent e);
+	void actionPerformed(ActionEvent e);
 }

@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class TestFilenameParser extends ClipCornBaseTest {
 
 	@Test
-	public void testFilenameParser() throws Exception {
+	public void testFilenameParser() {
 		CCMovieList ml = createEmptyDB();
 		
 		{

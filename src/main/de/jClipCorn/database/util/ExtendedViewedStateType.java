@@ -31,7 +31,7 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 	
 	private static final EnumWrapper<ExtendedViewedStateType> wrapper = new EnumWrapper<>(VIEWED);
 
-	private ExtendedViewedStateType(int val) {
+	ExtendedViewedStateType(int val) {
 		id = val;
 	}
 	

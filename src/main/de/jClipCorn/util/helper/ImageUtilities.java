@@ -15,6 +15,7 @@ import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class ImageUtilities {
 	public final static int BASE_COVER_WIDTH  = 182;
@@ -412,10 +413,8 @@ public class ImageUtilities {
 
 	public static void alphaClearImage(BufferedImage img) {
 		byte[] a = ((DataBufferByte)img.getRaster().getDataBuffer()).getData();
-		
-		for (int i = 0; i < a.length; i++) {
-			a[i] = 0;
-		}
+
+		Arrays.fill(a, (byte) 0);
 	}
 
 	public static ImageIcon sliceImage(ImageIcon icn, double percStart, double percStop) {

@@ -658,7 +658,7 @@ public class EditSeriesFrame extends JCCFrame
 		updateSeriesPanel();
 	}
 
-	private boolean onOKSeries(boolean check) throws EnumFormatException {
+	private boolean onOKSeries(boolean check) {
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserDataSeries(problems);
@@ -675,11 +675,7 @@ public class EditSeriesFrame extends JCCFrame
 
 		if (! probvalue) {
 			InputErrorDialog amied = new InputErrorDialog(movielist, problems, () -> {
-				try {
-					onOKSeries(false);
-				} catch (CCFormatException e) {
-					CCLog.addError(e);
-				}
+				onOKSeries(false);
 			}, this) ;
 			amied.setVisible(true);
 			return false;
@@ -1016,19 +1012,11 @@ public class EditSeriesFrame extends JCCFrame
 	}
 
 	private void onSeriesOkay() {
-		try {
-			onOKSeries(true);
-		} catch (EnumFormatException e1) {
-			CCLog.addError(e1);
-		}
+		onOKSeries(true);
 	}
 
 	private void onSeriesOkayAndClose() {
-		try {
-			if (onOKSeries(true)) EditSeriesFrame.this.dispatchEvent(new WindowEvent(EditSeriesFrame.this, WindowEvent.WINDOW_CLOSING));
-		} catch (EnumFormatException e1) {
-			CCLog.addError(e1);
-		}
+		if (onOKSeries(true)) EditSeriesFrame.this.dispatchEvent(new WindowEvent(EditSeriesFrame.this, WindowEvent.WINDOW_CLOSING));
 	}
 
 	private void onSeasonOkay() {

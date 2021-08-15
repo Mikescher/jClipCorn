@@ -2,8 +2,6 @@ package de.jClipCorn.gui.guiComponents;
 
 import de.jClipCorn.util.filesystem.FSPath;
 
-import javax.swing.*;
-
 public class JReadableFSPathTextField extends ReadableTextField {
 
 	public JReadableFSPathTextField() { }

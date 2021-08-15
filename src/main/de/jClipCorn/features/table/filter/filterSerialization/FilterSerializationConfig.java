@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class FilterSerializationConfig {
 
-	public class FSCProperty  {
+	public static class FSCProperty  {
 		public final String Name; 
 		public final Func1to1<String, Boolean> SetterSingle;
 		public final Func1to1<String[], Boolean> SetterParams;
@@ -370,14 +370,14 @@ public class FilterSerializationConfig {
 			resultlist.add(builder.toString());
 		}
 		
-		return resultlist.toArray(new String[resultlist.size()]);
+		return resultlist.toArray(new String[0]);
 	}
 
 	public String serialize() {
 		StringBuilder b = new StringBuilder();
 
 		b.append("["); //$NON-NLS-1$
-		b.append(ID + ""); //$NON-NLS-1$
+		b.append(ID); //$NON-NLS-1$
 		if (Properties.isEmpty() || Properties.size()==1 && Properties.get(0).IsParams && Properties.get(0).GetterParams.invoke().length==0) {
 			
 			// empty

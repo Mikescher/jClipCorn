@@ -5,6 +5,7 @@ import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.DateFormatException;
 import de.jClipCorn.util.parser.StringSpecParser;
 import de.jClipCorn.util.parser.StringSpecSupplier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -541,7 +542,7 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	}
 
 	@Override
-	public int compareTo(CCDate o) {
+	public int compareTo(@NotNull CCDate o) {
 		return compare(this, o);
 	}
 

@@ -50,7 +50,7 @@ public enum CCSingleTag implements ContinoousEnum<CCSingleTag>
 
 	private final static EnumWrapper<CCSingleTag> wrapper = new EnumWrapper<>(TAG_BAD_QUALITY);
 
-	private CCSingleTag(int idx, String dscIdent, MultiSizeIconRef off, MultiSizeIconRef on, MultiSizeIconRef img, boolean mov, boolean ser, boolean epi) {
+	CCSingleTag(int idx, String dscIdent, MultiSizeIconRef off, MultiSizeIconRef on, MultiSizeIconRef img, boolean mov, boolean ser, boolean epi) {
 		Index = idx;
 		Description = LocaleBundle.getString(dscIdent);
 		IconOff = off;

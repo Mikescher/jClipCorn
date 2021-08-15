@@ -36,7 +36,7 @@ public enum CCUserScore implements ContinoousEnum<CCUserScore> {
 
 	private final static EnumWrapper<CCUserScore> wrapper = new EnumWrapper<>(RATING_NO, p -> p.order);
 
-	private CCUserScore(int val, int ord) {
+	CCUserScore(int val, int ord) {
 		id    = val;
 		order = ord;
 	}

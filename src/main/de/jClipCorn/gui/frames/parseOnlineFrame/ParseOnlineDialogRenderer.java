@@ -10,7 +10,7 @@ public class ParseOnlineDialogRenderer extends DefaultListCellRenderer {
 	private static final long serialVersionUID = -7161746402093910645L;
 
 	@Override
-	public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		JLabel lbl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 		
 		ParseOnlineDialogElement el = (ParseOnlineDialogElement) value;

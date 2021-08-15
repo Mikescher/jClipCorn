@@ -22,12 +22,12 @@ public class EOptLongProp extends EOptProperty<Long> {
 	}
 
 	@Override
-	protected Long deserializeInnerFromString(String v) throws CCFormatException {
+	protected Long deserializeInnerFromString(String v) {
 		return Long.parseLong(v);
 	}
 
 	@Override
-	protected Long deserializeInnerFromDatabaseValue(Object v) throws CCFormatException {
+	protected Long deserializeInnerFromDatabaseValue(Object v) {
 		return (long)v;
 	}
 

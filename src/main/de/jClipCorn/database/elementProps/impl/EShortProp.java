@@ -21,12 +21,12 @@ public class EShortProp extends EProperty<Short> {
 	}
 
 	@Override
-	public void deserializeFromString(String v) throws CCFormatException {
+	public void deserializeFromString(String v) {
 		set(Short.parseShort(v));
 	}
 
 	@Override
-	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
+	public void deserializeFromDatabaseValue(Object v) {
 		set((short)v);
 	}
 

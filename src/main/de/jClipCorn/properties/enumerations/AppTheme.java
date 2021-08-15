@@ -66,7 +66,7 @@ public enum AppTheme implements ContinoousEnum<AppTheme>
 
 	private static final EnumWrapper<AppTheme> wrapper = new EnumWrapper<>(METAL, p -> p.id, AppTheme::shouldShowInComboBox);
 
-	private AppTheme(int id, AppThemePackage pack, boolean dark, String name, String classname)
+	AppTheme(int id, AppThemePackage pack, boolean dark, String name, String classname)
 	{
 		this.id           = id;
 		this.themepackage = pack;

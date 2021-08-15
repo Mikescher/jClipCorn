@@ -19,7 +19,6 @@ import de.jClipCorn.gui.mainFrame.table.ClipTable;
 import de.jClipCorn.gui.mainFrame.table.RowFilterSource;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.stream.CCStreams;

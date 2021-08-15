@@ -1,17 +1,11 @@
 package de.jClipCorn.gui.guiComponents.referenceChooser;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.SystemColor;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
-
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
+import java.awt.*;
 
 public class RefChooserComboBoxEditor extends BasicComboBoxEditor {
     private final JPanel component;
@@ -46,7 +40,7 @@ public class RefChooserComboBoxEditor extends BasicComboBoxEditor {
      
     @Override
 	public void setItem(Object item) {
-        if (item == null || !(item instanceof CCOnlineRefType)) {
+        if (!(item instanceof CCOnlineRefType)) {
             return;
         }
 

@@ -1,10 +1,10 @@
 package de.jClipCorn.util.parser;
 
-import java.util.HashSet;
-import java.util.Map;
-
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.StringSpecFormatException;
+
+import java.util.HashSet;
+import java.util.Map;
 
 public class StringSpecParser {
 
@@ -91,20 +91,20 @@ public class StringSpecParser {
 			}
 			
 			if (specifier.contains(c)) {
-				String drep = ""; //$NON-NLS-1$
+				StringBuilder drep = new StringBuilder(); //$NON-NLS-1$
 				
 				if (Character.isDigit(rawData.charAt(rp))) {
-					drep += rawData.charAt(rp);
+					drep.append(rawData.charAt(rp));
 					rp++;
 				} else {
 					return null;
 				}
 				
 				for (; Character.isDigit(rawData.charAt(rp)) ; rp++) {
-					drep += rawData.charAt(rp);
+					drep.append(rawData.charAt(rp));
 				}
 				
-				values.put(c, Integer.parseInt(drep));
+				values.put(c, Integer.parseInt(drep.toString()));
 			}  else {
 				if (rawData.charAt(rp) == c) {
 					rp++;

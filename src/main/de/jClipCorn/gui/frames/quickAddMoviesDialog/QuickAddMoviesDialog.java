@@ -39,10 +39,7 @@ public class QuickAddMoviesDialog extends JCCDialog {
 	private QuickAddMoviesTable lstData;
 	private JProgressBar progressBar1;
 	private JProgressBar progressBar2;
-	
-	/**
-	 * @wbp.parser.constructor
-	 */
+
 	public QuickAddMoviesDialog(JFrame owner, CCMovieList mlist, FSPath[] files) {
 		super(mlist);
 

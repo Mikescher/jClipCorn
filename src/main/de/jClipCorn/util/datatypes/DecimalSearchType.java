@@ -22,7 +22,7 @@ public enum DecimalSearchType implements ContinoousEnum<DecimalSearchType> {
 	
 	private static final EnumWrapper<DecimalSearchType> wrapper = new EnumWrapper<>(LESSER);
 
-	private DecimalSearchType(int val) {
+	DecimalSearchType(int val) {
 		id = val;
 	}
 	

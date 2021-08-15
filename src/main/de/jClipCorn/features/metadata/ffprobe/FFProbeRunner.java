@@ -167,7 +167,7 @@ public abstract class FFProbeRunner implements MetadataSource {
 	}
 
 	@Override
-	public String getFullOutput(FSPath filename, PartialMediaInfo result) throws IOException, MetadataQueryException {
+	public String getFullOutput(FSPath filename, PartialMediaInfo result) {
 		return result.RawOutput.orElse(Str.Empty);
 	}
 

@@ -200,11 +200,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 
 	@Override
 	public void onAMIEDIgnoreClicked() {
-		try {
-			onBtnOK(false);
-		} catch (EnumFormatException e) {
-			CCLog.addError(e);
-		}
+		onBtnOK(false);
 	}
 
 	private String getMovieTitle() {
@@ -355,7 +351,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		setFilepath(cNmbr, FSPath.Empty); //$NON-NLS-1$
 	}
 
-	private void onBtnOK(boolean check) throws EnumFormatException {
+	private void onBtnOK(boolean check) {
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserData(problems);
@@ -678,11 +674,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	}
 
 	private void onOkay() {
-		try {
-			onBtnOK(true);
-		} catch (EnumFormatException e1) {
-			CCLog.addError(e1);
-		}
+		onBtnOK(true);
 	}
 
 	private void cancel() {

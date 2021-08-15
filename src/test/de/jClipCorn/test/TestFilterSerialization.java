@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 public class TestFilterSerialization extends ClipCornBaseTest {
 
 	@Test
-	public void testFilterSerialization() throws Exception {
+	public void testFilterSerialization() {
 		CCMovieList ml = createEmptyDB();
 
 		String[] T1 = new String[]
@@ -46,7 +46,7 @@ public class TestFilterSerialization extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testFilterSerialization2() throws Exception {
+	public void testFilterSerialization2() {
 		CCMovieList ml = createEmptyDB();
 
 		String[] T1 = new String[]
@@ -71,7 +71,7 @@ public class TestFilterSerialization extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testFilterSerialization3() throws Exception {
+	public void testFilterSerialization3() {
 		CCMovieList ml = createEmptyDB();
 
 		CustomAndOperator parent = new CustomAndOperator(ml);
@@ -120,7 +120,7 @@ public class TestFilterSerialization extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testFilterSerialization4() throws Exception {
+	public void testFilterSerialization4() {
 		CCMovieList ml = createEmptyDB();
 
 		for (int i = 0; i < 32; i++) {

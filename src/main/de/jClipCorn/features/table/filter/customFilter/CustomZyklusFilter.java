@@ -40,7 +40,7 @@ public class CustomZyklusFilter extends AbstractCustomMovieOrSeriesFilter {
 		case SM_STARTSWITH:
 			return zyklus.startsWith(search);
 		case SM_INCLUDES:
-			return zyklus.indexOf(search) != -1;
+			return zyklus.contains(search);
 		case SM_ENDSWITH:
 			return zyklus.endsWith(search);
 		case SM_EQUALS:

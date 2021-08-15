@@ -128,9 +128,6 @@ public class EditMediaInfoDialog extends JCCDialog {
 	private Color colOK;
 	private Color colErr;
 
-	/**	 
-	 * @wbp.parser.constructor
-	 */
 	@SuppressWarnings("unused")
 	private EditMediaInfoDialog(Component owner, CCMovieList ml) {
 		super(ml);

@@ -11,7 +11,7 @@ import javax.swing.event.ListDataListener;
 public class CBListModel extends AbstractListModel<JCheckBox> {
 	private static final long serialVersionUID = 4465608143562507521L;
 
-	public static interface CBFilter {
+	public interface CBFilter {
         boolean accept(JCheckBox element);
     }
 

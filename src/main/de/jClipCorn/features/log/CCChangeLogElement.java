@@ -3,6 +3,7 @@ package de.jClipCorn.features.log;
 import de.jClipCorn.util.datetime.CCTime;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class CCChangeLogElement {
 	public final String   RootType;
@@ -31,8 +32,8 @@ public class CCChangeLogElement {
 
 		if (RootID != that.RootID) return false;
 		if (ActualID != that.ActualID) return false;
-		if (RootType != null ? !RootType.equals(that.RootType) : that.RootType != null) return false;
-		if (ActualType != null ? !ActualType.equals(that.ActualType) : that.ActualType != null) return false;
+		if (!Objects.equals(RootType, that.RootType)) return false;
+		if (!Objects.equals(ActualType, that.ActualType)) return false;
 		// Probably incorrect - comparing Object[] arrays with Arrays.equals
 		if (!Arrays.equals(Properties, that.Properties)) return false;
 		return Time != null ? Time.equals(that.Time) : that.Time == null;

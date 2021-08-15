@@ -21,12 +21,12 @@ public class EOptFileSizeProp extends EOptProperty<CCFileSize> {
 	}
 
 	@Override
-	protected CCFileSize deserializeInnerFromString(String v) throws CCFormatException {
+	protected CCFileSize deserializeInnerFromString(String v) {
 		return new CCFileSize(Long.parseLong(v));
 	}
 
 	@Override
-	protected CCFileSize deserializeInnerFromDatabaseValue(Object v) throws CCFormatException {
+	protected CCFileSize deserializeInnerFromDatabaseValue(Object v) {
 		return new CCFileSize((long)v);
 	}
 

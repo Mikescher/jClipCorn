@@ -171,7 +171,6 @@ public class ExportHelper {
 					filestream.close();
 			} catch (IOException e) {
 				CCLog.addError(e);
-				return false;
 			}
 		}
 		

@@ -1,7 +1,5 @@
 package de.jClipCorn.util.exceptions;
 
-import de.jClipCorn.util.enumextension.ContinoousEnum;
-
 @SuppressWarnings("nls")
 public class EOptPackFormatException extends CCFormatException {
 	@SuppressWarnings("rawtypes")

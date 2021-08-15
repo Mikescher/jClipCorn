@@ -68,7 +68,7 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 		List<String> result = new ArrayList<>();
 		
 		if (isConnected()) {
-			String s[] = null;
+			String[] s = null;
 			if (type != null) {
 				s = new String[1];
 				s[0] = type;

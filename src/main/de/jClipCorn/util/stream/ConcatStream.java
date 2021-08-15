@@ -1,6 +1,7 @@
 package de.jClipCorn.util.stream;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ConcatStream<TType> extends CCSimpleStream<TType> {
@@ -24,7 +25,7 @@ public class ConcatStream<TType> extends CCSimpleStream<TType> {
 		streams = new ArrayList<>();
 		
 		streams.add(_s1);
-		for (CCStream<TType> strm : _more) streams.add(strm);
+		streams.addAll(Arrays.asList(_more));
 		
 		index = 0;
 	}

@@ -1,6 +1,5 @@
 package de.jClipCorn.util.filesystem;
 
-import de.jClipCorn.Main;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;

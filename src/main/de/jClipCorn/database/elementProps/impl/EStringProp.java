@@ -20,12 +20,12 @@ public class EStringProp extends EProperty<String> {
 	}
 
 	@Override
-	public void deserializeFromString(String v) throws CCFormatException {
+	public void deserializeFromString(String v) {
 		set(v);
 	}
 
 	@Override
-	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
+	public void deserializeFromDatabaseValue(Object v) {
 		set((String)v);
 	}
 

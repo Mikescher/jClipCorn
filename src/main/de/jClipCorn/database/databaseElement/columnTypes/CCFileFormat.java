@@ -26,7 +26,7 @@ public enum CCFileFormat implements ContinoousEnum<CCFileFormat> {
 	
 	private static final EnumWrapper<CCFileFormat> wrapper = new EnumWrapper<>(MKV);
 	
-	private CCFileFormat(int val) {
+	CCFileFormat(int val) {
 		id = val;
 	}
 	

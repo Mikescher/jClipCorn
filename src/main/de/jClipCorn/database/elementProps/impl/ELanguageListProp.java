@@ -24,12 +24,12 @@ public class ELanguageListProp extends EProperty<CCDBLanguageList> {
 	}
 
 	@Override
-	public void deserializeFromString(String v) throws CCFormatException {
+	public void deserializeFromString(String v) {
 		set(CCDBLanguageList.parseFromString(v));
 	}
 
 	@Override
-	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
+	public void deserializeFromDatabaseValue(Object v) {
 		set((Long)v);
 	}
 

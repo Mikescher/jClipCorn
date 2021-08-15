@@ -1,12 +1,11 @@
 package de.jClipCorn.gui.frames.extendedSettingsFrame.settingsTable;
 
-import java.awt.Component;
-
-import javax.swing.table.AbstractTableModel;
-
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCProperty;
+
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
 
 public class SettingsTableModel extends AbstractTableModel{
 	private static final long serialVersionUID = 1222130050102832876L;
@@ -35,7 +34,7 @@ public class SettingsTableModel extends AbstractTableModel{
 	
 	@Override
 	public String getColumnName(int col) {
-		return COLUMN_NAMES[col].toString();
+		return COLUMN_NAMES[col];
 	}
 
 	@Override

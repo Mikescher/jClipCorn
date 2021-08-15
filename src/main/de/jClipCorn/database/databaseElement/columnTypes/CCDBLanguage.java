@@ -170,7 +170,7 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	}
 
 	public long asBitMask() {
-		return 1<<id;
+		return 1L<<id;
 	}
 
 	public CCDBLanguage nextLanguage() {

@@ -58,7 +58,7 @@ public enum BrowserLanguage implements ContinoousEnum<BrowserLanguage> {
 
 	private static final EnumWrapper<BrowserLanguage> wrapper = new EnumWrapper<>(ENGLISH);
 
-	private BrowserLanguage(int val) {
+	BrowserLanguage(int val) {
 		id = val;
 	}
 	

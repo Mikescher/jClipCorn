@@ -39,7 +39,7 @@ public class TestStatisticsCharts extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testStatisticsChartCreationWithEmptyDB() throws Exception {
+	public void testStatisticsChartCreationWithEmptyDB() {
 		CCMovieList ml = createEmptyDB();
 
 		StatisticsGroup group = supplier.invoke(ml);

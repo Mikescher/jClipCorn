@@ -1,16 +1,13 @@
 package de.jClipCorn.util.helper;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.FocusTraversalPolicy;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 
-import javax.swing.JSpinner;
-
 public class ExtendedFocusTraversalOnArray extends FocusTraversalPolicy {
-	private final Component m_Components[];
+	private final Component[] m_Components;
 
-	public ExtendedFocusTraversalOnArray(Component components[]) {
+	public ExtendedFocusTraversalOnArray(Component[] components) {
 		m_Components = components;
 		
 		fixSpinner();

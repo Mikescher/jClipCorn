@@ -5,9 +5,9 @@ import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.DateTimeFormatException;
 import de.jClipCorn.util.parser.StringSpecParser;
 import de.jClipCorn.util.parser.StringSpecSupplier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 @SuppressWarnings("nls")
 public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
@@ -45,7 +45,7 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 			return new CCDateTime(CCDate.createFromSQL(parts[0]), CCTime.createFromSQL(parts[1]));
 		} else if (str.length() == 10) {
 			return new CCDateTime(CCDate.createFromSQL(str), CCTime.getUnspecified());
-		} else if (str.length() == UNSPECIFIED_REPRESENTATION.length() && str.equals(UNSPECIFIED_REPRESENTATION)) {
+		} else if (str.equals(UNSPECIFIED_REPRESENTATION)) {
 			return new CCDateTime(CCDate.getUnspecified(), CCTime.getUnspecified());
 		}
 
@@ -147,7 +147,7 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	}
 
 	@Override
-	public int compareTo(CCDateTime o) {
+	public int compareTo(@NotNull CCDateTime o) {
 		if (isUnspecifiedDateTime() && o.isUnspecifiedDateTime()) return 0;
 		if (isUnspecifiedDateTime()) return -1;
 
@@ -352,12 +352,10 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 		
 		if (stringSpecifier == null) {
 			stringSpecifier = new HashSet<>();
-			
-			for (Character chr : stringSpecifierDate)
-				stringSpecifier.add(chr);
-			
-			for (Character chr : stringSpecifierTime)
-				stringSpecifier.add(chr);
+
+			stringSpecifier.addAll(stringSpecifierDate);
+
+			stringSpecifier.addAll(stringSpecifierTime);
 		}
 		
 		return stringSpecifier;
@@ -376,12 +374,10 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	@Override
 	public Map<Character, Integer> getSpecDefaults() {
 		Map<Character, Integer> d = new Hashtable<>();
-		
-		for (Entry<Character, Integer> entry : CCDate.STATIC_SUPPLIER.getSpecDefaults().entrySet())
-			d.put(entry.getKey(), entry.getValue());
-		
-		for (Entry<Character, Integer> entry : CCTime.STATIC_SUPPLIER.getSpecDefaults().entrySet())
-			d.put(entry.getKey(), entry.getValue());
+
+		d.putAll(CCDate.STATIC_SUPPLIER.getSpecDefaults());
+
+		d.putAll(CCTime.STATIC_SUPPLIER.getSpecDefaults());
 
 		return d;
 	}
@@ -441,7 +437,7 @@ public class CCDateTime implements Comparable<CCDateTime>, StringSpecSupplier {
 	
 	@Override
 	public boolean equals(Object other) {
-		return other != null && (other instanceof CCDateTime) && isEqual((CCDateTime)other);
+		return (other instanceof CCDateTime) && isEqual((CCDateTime) other);
 	}
 
 	public boolean isMidnight() {

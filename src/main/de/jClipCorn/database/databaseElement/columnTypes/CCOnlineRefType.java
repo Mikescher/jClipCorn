@@ -46,7 +46,7 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 
 	private static final EnumWrapper<CCOnlineRefType> wrapper = new EnumWrapper<>(NONE);
 
-	private CCOnlineRefType(int refid, String strid, String bundleid, Pattern regex_value, Pattern regex_paste, MultiSizeIconRef icnSquare, IconRef icnButton) {
+	CCOnlineRefType(int refid, String strid, String bundleid, Pattern regex_value, Pattern regex_paste, MultiSizeIconRef icnSquare, IconRef icnButton) {
 		id                = refid;
 		identifier        = strid;
 		name              = LocaleBundle.getString(bundleid);

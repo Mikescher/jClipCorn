@@ -29,7 +29,7 @@ public enum CCOptionalFSK implements ContinoousEnum<CCOptionalFSK> {
 
 	private final static EnumWrapper<CCOptionalFSK> wrapper = new EnumWrapper<>(NULL, p -> p.order);
 
-	private CCOptionalFSK(int val, int ord) {
+	CCOptionalFSK(int val, int ord) {
 		id    = val;
 		order = ord;
 	}

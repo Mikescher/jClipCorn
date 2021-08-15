@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface ISmartK8ColorQuantizer
 {
-	void AddColor(RGBColor color) throws ColorQuantizerException;
+	void AddColor(RGBColor color);
 
 	List<RGBColor> GetPalette(int colorCount) throws ColorQuantizerException;
 
-	int GetPaletteIndex(RGBColor color) throws ColorQuantizerException;
+	int GetPaletteIndex(RGBColor color);
 
-	int GetColorCount() throws ColorQuantizerException;
+	int GetColorCount();
 
-	void Clear() throws ColorQuantizerException;
+	void Clear();
 }

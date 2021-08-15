@@ -18,7 +18,7 @@ import java.util.Random;
 
 public class CustomFilterDateSearchConfig extends CustomFilterConfig {
 
-	private class CFDAFContainer {
+	private static class CFDAFContainer {
 		public Runnable onChange;
 		
 		public JCCDateSpinner spnContains;

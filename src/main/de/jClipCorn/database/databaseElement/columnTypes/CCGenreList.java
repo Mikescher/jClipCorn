@@ -1,16 +1,16 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import de.jClipCorn.database.util.iterators.GenresIterator;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.exceptions.GenreOverflowException;
 import de.jClipCorn.util.stream.CCStream;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CCGenreList {
 	public static final CCGenreList EMPTY = new CCGenreList();
@@ -307,12 +307,12 @@ public class CCGenreList {
 	}
 	
 	public static Optional<Long> calcAddGenre(Optional<Long> rawval, CCGenre val) {
-		if (!rawval.isPresent()) return Optional.empty();
+		if (rawval.isEmpty()) return Optional.empty();
 		return calcAddGenre(rawval.get(), val.asInt());
 	}
 	
 	public static Optional<Long> calcAddGenre(Optional<Long> rawval, int val) {
-		if (!rawval.isPresent()) return Optional.empty();
+		if (rawval.isEmpty()) return Optional.empty();
 		return calcAddGenre(rawval.get(), val);
 	}
 
@@ -354,7 +354,7 @@ public class CCGenreList {
 		for (String str : v.split(";")) { //$NON-NLS-1$
 			if (!Str.isNullOrWhitespace(str)) _g = calcAddGenre(_g, CCGenre.getWrapper().findOrException(Integer.parseInt(str)));
 		}
-		if (!_g.isPresent()) throw new GenreOverflowException();
+		if (_g.isEmpty()) throw new GenreOverflowException();
 
 		return new CCGenreList(_g.get());
 	}

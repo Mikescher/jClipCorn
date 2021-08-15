@@ -22,7 +22,7 @@ import java.awt.event.ActionListener;
 
 public class CCNamedPathProperty extends CCProperty<NamedPathVar> {
 
-	private class CCNamedPathPropertyPanel extends JPanel {
+	private static class CCNamedPathPropertyPanel extends JPanel {
 		private static final long serialVersionUID = -9214196751986446909L;
 		JTextField       Field1;
 		JFSPathTextField Field2;

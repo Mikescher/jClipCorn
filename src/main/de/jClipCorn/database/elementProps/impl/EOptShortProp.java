@@ -22,12 +22,12 @@ public class EOptShortProp extends EOptProperty<Short> {
 	}
 
 	@Override
-	protected Short deserializeInnerFromString(String v) throws CCFormatException {
+	protected Short deserializeInnerFromString(String v) {
 		return Short.parseShort(v);
 	}
 
 	@Override
-	protected Short deserializeInnerFromDatabaseValue(Object v) throws CCFormatException {
+	protected Short deserializeInnerFromDatabaseValue(Object v) {
 		return (short)v;
 	}
 

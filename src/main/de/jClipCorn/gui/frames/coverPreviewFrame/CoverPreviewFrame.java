@@ -66,10 +66,7 @@ public class CoverPreviewFrame extends JCCDialog {
 
 		fixModality(owner);
 	}
-	
-	/**
-	 * @wbp.parser.constructor
-	 */
+
 	public CoverPreviewFrame(Component owner, CCMovieList ml, BufferedImage img) {
 		super(ml);
 

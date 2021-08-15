@@ -2,6 +2,7 @@ package de.jClipCorn.util;
 
 import de.jClipCorn.util.datatypes.Opt;
 import org.apache.commons.codec.binary.Base64;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -121,5 +122,9 @@ public final class Str {
 
 	public static boolean isUntrimmed(String s) {
 		return !s.equals(s.trim());
+	}
+
+	public static String repeat(@NotNull String str, int count) {
+		return str.repeat(count);
 	}
 }

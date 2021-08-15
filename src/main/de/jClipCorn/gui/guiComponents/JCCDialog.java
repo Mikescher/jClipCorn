@@ -4,7 +4,6 @@ import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.DriveMap;
 
 import javax.swing.*;
 

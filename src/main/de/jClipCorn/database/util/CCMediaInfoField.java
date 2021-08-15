@@ -46,7 +46,7 @@ public enum CCMediaInfoField implements ContinoousEnum<CCMediaInfoField>
 
 	private static final EnumWrapper<CCMediaInfoField> wrapper = new EnumWrapper<>(IS_SET);
 
-	private CCMediaInfoField(int val, String description, Func1to1<CCMediaInfo, String> valueGetter) {
+	CCMediaInfoField(int val, String description, Func1to1<CCMediaInfo, String> valueGetter) {
 		id = val;
 		desc = description;
 		getter = valueGetter;

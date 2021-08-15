@@ -44,7 +44,7 @@ public class StatisticsSeriesTotalViewedChart extends StatisticsChart {
 	private long domainTotalRangeMax;
 	private ValueAxis domainAxis;
 	
-	private class TupleSeriesEpList {
+	private static class TupleSeriesEpList {
 		public CCSeries series;
 		public List<CCEpisode> episodes;
 	}

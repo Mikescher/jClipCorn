@@ -184,16 +184,13 @@ public class DateTimeListEditor extends JPanel {
 	}
 
 	private void resortList() {
-	    HashSet<CCDateTime> hash = new HashSet<>();
-	    for (int i = 0; i < data.size(); i++) {
-	    	hash.add(data.get(i));
-	    }
+		HashSet<CCDateTime> hash = new HashSet<>(data);
 	    
 	    List<CCDateTime> list = new ArrayList<>(hash);
 	    Collections.sort(list);
 	    
 	    data.clear();
-	    for (CCDateTime s : list) data.add(s);
+		data.addAll(list);
 	    
 	    lblCount.setText(Integer.toString(data.size()));
 	}

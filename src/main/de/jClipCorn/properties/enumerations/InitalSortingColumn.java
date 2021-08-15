@@ -21,7 +21,7 @@ public enum InitalSortingColumn implements ContinoousEnum<InitalSortingColumn> {
 
 	private static final EnumWrapper<InitalSortingColumn> wrapper = new EnumWrapper<>(LOCALID);
 
-	private InitalSortingColumn(int val) {
+	InitalSortingColumn(int val) {
 		id = val;
 	}
 	

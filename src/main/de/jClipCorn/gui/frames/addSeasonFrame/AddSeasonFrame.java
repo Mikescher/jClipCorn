@@ -103,7 +103,7 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 		var spack = new SeasonDataPack
 				(
 						edTitle.getText(),
-						(int) spnYear.getValue(),
+						spnYear.getValue(),
 						edCvrControl.getResizedImageForStorage()
 				);
 

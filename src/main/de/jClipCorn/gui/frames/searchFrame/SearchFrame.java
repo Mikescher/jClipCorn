@@ -10,7 +10,6 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.guiComponents.*;
-import de.jClipCorn.gui.guiComponents.LambdaListCellRenderer;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;

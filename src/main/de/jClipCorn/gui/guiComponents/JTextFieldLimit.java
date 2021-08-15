@@ -8,7 +8,7 @@ import javax.swing.text.PlainDocument;
 public class JTextFieldLimit extends JTextField {
 	private static final long serialVersionUID = -7729248331983545397L;
 
-	private class JTextFieldLimitDoc extends PlainDocument {
+	private static class JTextFieldLimitDoc extends PlainDocument {
 		private static final long serialVersionUID = 8123868080590292667L;
 		
 		private int limit;

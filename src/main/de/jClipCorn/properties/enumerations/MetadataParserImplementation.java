@@ -30,7 +30,7 @@ public enum MetadataParserImplementation implements ContinoousEnum<MetadataParse
 
 	private static final EnumWrapper<MetadataParserImplementation> wrapper = new EnumWrapper<>(IMDB);
 
-	private MetadataParserImplementation(int val) {
+	MetadataParserImplementation(int val) {
 		id = val;
 	}
 	

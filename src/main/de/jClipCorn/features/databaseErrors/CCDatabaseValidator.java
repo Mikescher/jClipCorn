@@ -896,7 +896,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 							movielist,
 							DatabaseErrorType.ERROR_FORMAT_NOT_FOUND_IN_PARTS, episode,
 							"Format[Database]", episode.getFormat().asString(),
-							"Format[Files]", CCFileFormat.getMovieFormat(episode.getPart().getExtension()).asString()
+							"Format[Files]", String.valueOf(CCFileFormat.getMovieFormat(episode.getPart().getExtension()))
 					));
 
 			// Inexistent Paths

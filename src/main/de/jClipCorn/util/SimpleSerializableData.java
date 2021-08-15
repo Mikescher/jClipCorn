@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
@@ -164,7 +165,7 @@ public class SimpleSerializableData {
 			if (child.getName().equals("element"))
 				r.children.put(child.getAttributeValue("id"), deserialize(child, sbs));
 			else if (child.getName().equals("attr_str"))
-				r.dataString.put(child.getAttributeValue("name"), new String(B64_DECODER.decode(child.getText()), Charset.forName("UTF-8")));
+				r.dataString.put(child.getAttributeValue("name"), new String(B64_DECODER.decode(child.getText()), StandardCharsets.UTF_8));
 			else if (child.getName().equals("attr_int"))
 				r.dataInt.put(child.getAttributeValue("name"), Integer.parseInt(child.getText()));
 			else if (child.getName().equals("attr_bool"))
@@ -198,7 +199,7 @@ public class SimpleSerializableData {
 				e.setAttribute("str_"+data.getKey(), data.getValue());				
 			} else {
 				Element sub = new Element("attr_str");
-				sub.setText(B64_ENCODER.encodeToString(Charset.forName("UTF-8").encode(data.getValue()).array()));
+				sub.setText(B64_ENCODER.encodeToString(StandardCharsets.UTF_8.encode(data.getValue()).array()));
 				e.addContent(sub);
 			}
 		}

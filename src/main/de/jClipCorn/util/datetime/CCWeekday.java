@@ -30,7 +30,7 @@ public enum CCWeekday implements ContinoousEnum<CCWeekday> {
 	
 	private static final EnumWrapper<CCWeekday> wrapper = new EnumWrapper<>(UNKNOWN);
 
-	private CCWeekday(int val) {
+	CCWeekday(int val) {
 		id = val;
 	}
 	

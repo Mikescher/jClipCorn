@@ -17,7 +17,7 @@ public enum CoverImageSize implements ContinoousEnum<CoverImageSize> {
 	NONT_SIZE(8), 
 	DEC_SIZE(9);
 
-	private final static int WIDTHS[] = {
+	private final static int[] WIDTHS = {
 		1  * ImageUtilities.BASE_COVER_WIDTH,
 		2  * ImageUtilities.BASE_COVER_WIDTH,
 		3  * ImageUtilities.BASE_COVER_WIDTH,
@@ -30,7 +30,7 @@ public enum CoverImageSize implements ContinoousEnum<CoverImageSize> {
 		10 * ImageUtilities.BASE_COVER_WIDTH,
 	};
 
-	private final static int HEIGHTS[] = {
+	private final static int[] HEIGHTS = {
 		1  * ImageUtilities.BASE_COVER_HEIGHT,
 		2  * ImageUtilities.BASE_COVER_HEIGHT,
 		3  * ImageUtilities.BASE_COVER_HEIGHT,
@@ -61,7 +61,7 @@ public enum CoverImageSize implements ContinoousEnum<CoverImageSize> {
 
 	private static final EnumWrapper<CoverImageSize> wrapper = new EnumWrapper<>(BASE_SIZE);
 
-	private CoverImageSize(int val) {
+	CoverImageSize(int val) {
 		id = val;
 	}
 	

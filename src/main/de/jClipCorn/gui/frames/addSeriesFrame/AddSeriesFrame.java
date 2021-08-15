@@ -60,7 +60,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		{
 			onBtnOK(true);
 		}
-		catch (EnumFormatException | EnumValueNotFoundException e1)
+		catch (EnumValueNotFoundException e1)
 		{
 			CCLog.addError(e1);
 		}
@@ -71,7 +71,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		this.dispose();
 	}
 
-	private void onBtnOK(boolean check) throws EnumFormatException, EnumValueNotFoundException {
+	private void onBtnOK(boolean check) throws EnumValueNotFoundException {
 		java.util.List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserData(problems);
@@ -153,7 +153,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 	public void onAMIEDIgnoreClicked() {
 		try {
 			onBtnOK(false);
-		} catch (EnumFormatException | EnumValueNotFoundException e) {
+		} catch (EnumValueNotFoundException e) {
 			CCLog.addError(e);
 		}
 	}

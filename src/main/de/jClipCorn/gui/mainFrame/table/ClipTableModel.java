@@ -9,7 +9,6 @@ import de.jClipCorn.features.table.renderer.TableModelRowColorInterface;
 import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.gui.guiComponents.SFixTable;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.YearRange;
 

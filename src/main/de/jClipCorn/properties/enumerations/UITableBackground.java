@@ -24,7 +24,7 @@ public enum UITableBackground implements ContinoousEnum<UITableBackground> {
 
 	private static final EnumWrapper<UITableBackground> wrapper = new EnumWrapper<>(WHITE, p -> p.order);
 
-	private UITableBackground(int val, int ord) {
+	UITableBackground(int val, int ord) {
 		id    = val;
 		order = ord;
 	}

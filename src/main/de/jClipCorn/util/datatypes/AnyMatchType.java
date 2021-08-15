@@ -26,7 +26,7 @@ public enum AnyMatchType implements ContinoousEnum<AnyMatchType> {
 
 	private static final EnumWrapper<AnyMatchType> wrapper = new EnumWrapper<>(LESSER);
 
-	private AnyMatchType(int val) {
+	AnyMatchType(int val) {
 		id = val;
 	}
 	

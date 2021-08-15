@@ -4,6 +4,7 @@ import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.TimeFormatException;
 import de.jClipCorn.util.parser.StringSpecParser;
 import de.jClipCorn.util.parser.StringSpecSupplier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -191,7 +192,7 @@ public class CCTime implements Comparable<CCTime>, StringSpecSupplier {
 	}
 
 	@Override
-	public int compareTo(CCTime o) {
+	public int compareTo(@NotNull CCTime o) {
 		return compare(this, o);
 	}
 

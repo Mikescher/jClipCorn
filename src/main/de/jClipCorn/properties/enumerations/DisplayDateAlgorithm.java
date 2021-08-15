@@ -21,7 +21,7 @@ public enum DisplayDateAlgorithm implements ContinoousEnum<DisplayDateAlgorithm>
 
 	private static final EnumWrapper<DisplayDateAlgorithm> wrapper = new EnumWrapper<>(LAST_VIEWED);
 
-	private DisplayDateAlgorithm(int val) {
+	DisplayDateAlgorithm(int val) {
 		id = val;
 	}
 	

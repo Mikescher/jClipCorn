@@ -16,7 +16,7 @@ import java.util.Random;
 
 public class CustomFilterIntAreaConfig extends CustomFilterConfig {
 
-	private class CFIAFContainer {
+	private static class CFIAFContainer {
 		public Runnable onChange;
 		
 		public JSpinner spnLesser;

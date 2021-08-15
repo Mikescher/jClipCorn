@@ -22,12 +22,12 @@ public class EOptIntProp extends EOptProperty<Integer> {
 	}
 
 	@Override
-	protected Integer deserializeInnerFromString(String v) throws CCFormatException {
+	protected Integer deserializeInnerFromString(String v) {
 		return Integer.parseInt(v);
 	}
 
 	@Override
-	protected Integer deserializeInnerFromDatabaseValue(Object v) throws CCFormatException {
+	protected Integer deserializeInnerFromDatabaseValue(Object v) {
 		return (int)v;
 	}
 

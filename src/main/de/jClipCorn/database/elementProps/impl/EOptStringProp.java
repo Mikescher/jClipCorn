@@ -21,12 +21,12 @@ public class EOptStringProp extends EOptProperty<String> {
 	}
 
 	@Override
-	protected String deserializeInnerFromString(String v) throws CCFormatException {
+	protected String deserializeInnerFromString(String v) {
 		return v;
 	}
 
 	@Override
-	protected String deserializeInnerFromDatabaseValue(Object v) throws CCFormatException {
+	protected String deserializeInnerFromDatabaseValue(Object v) {
 		return (String)v;
 	}
 

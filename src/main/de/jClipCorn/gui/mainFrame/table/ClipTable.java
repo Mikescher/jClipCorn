@@ -6,6 +6,7 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.TableCustomFilter;
 import de.jClipCorn.features.table.filter.customFilter.CustomUserScoreFilter;
@@ -64,9 +65,11 @@ public class ClipTable extends JScrollPane implements ListSelectionListener, Mou
 
 		adjuster = new TableColumnAdjuster(this, table);
 
-		var icfg = owner.ccprops().PROP_MAINFRAME_COLUMN_SIZE_CACHE.getValue();
+		var icfg = (owner == null) ? "" : owner.ccprops().PROP_MAINFRAME_COLUMN_SIZE_CACHE.getValue();
 		if (Str.isNullOrWhitespace(icfg)) icfg = CCStreams.iterate(MainFrameColumn.values()).stringjoin(e-> "keep", "|"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (!adjuster.isValidConfig(icfg)) icfg = CCStreams.iterate(MainFrameColumn.values()).stringjoin(e-> "10", "|"); //$NON-NLS-1$ //$NON-NLS-2$
+
+		if (owner == null) CCLog.addUndefinied("ClipTable :: owner == null"); //$NON-NLS-1$
 
 		adjuster.adjustColumns(icfg);
 

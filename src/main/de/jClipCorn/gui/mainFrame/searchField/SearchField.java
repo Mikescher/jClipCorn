@@ -1,7 +1,6 @@
 package de.jClipCorn.gui.mainFrame.searchField;
 
 import com.jformdesigner.annotations.DesignCreate;
-import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.util.helper.SwingUtils;

@@ -1,6 +1,5 @@
 package de.jClipCorn.features.actionTree;
 
-import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
@@ -9,6 +8,7 @@ import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCCaptionedKeyStrokeProperty;
 import de.jClipCorn.properties.property.CCKeyStrokeProperty;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 import org.apache.commons.lang.StringUtils;
@@ -198,9 +198,7 @@ public class CCActionElement {
 	
 	public void printTree(int deep) {
 		StringBuilder build = new StringBuilder();
-		for (int i = 0; i < deep; i++) {
-			build.append("    "); //$NON-NLS-1$
-		}
+		build.append(Str.repeat("    ", Math.max(0, deep))); //$NON-NLS-1$
 		build.append("|>"); //$NON-NLS-1$
 		build.append(name);
 		CCLog.addDebug(build.toString());

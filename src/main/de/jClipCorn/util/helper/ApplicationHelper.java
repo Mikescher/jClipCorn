@@ -219,7 +219,7 @@ public class ApplicationHelper {
 				while ((line = br.readLine()) != null) {
 					String[] split = line.split(" "); //$NON-NLS-1$
 					String pname = split[split.length-1];
-					if (pname.trim().toLowerCase().equals(name.trim().toLowerCase())) return true;
+					if (pname.trim().equalsIgnoreCase(name.trim())) return true;
 				}
 
 				return false;

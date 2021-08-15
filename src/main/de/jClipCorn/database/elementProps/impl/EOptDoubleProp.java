@@ -22,12 +22,12 @@ public class EOptDoubleProp extends EOptProperty<Double> {
 	}
 
 	@Override
-	protected Double deserializeInnerFromString(String v) throws CCFormatException {
+	protected Double deserializeInnerFromString(String v) {
 		return Double.parseDouble(v);
 	}
 
 	@Override
-	protected Double deserializeInnerFromDatabaseValue(Object v) throws CCFormatException {
+	protected Double deserializeInnerFromDatabaseValue(Object v) {
 		return (double)v;
 	}
 

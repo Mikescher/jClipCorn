@@ -13,11 +13,13 @@ public abstract class UIActionTree {
 
 	protected CCActionElement root;
 
-	public UIActionTree(CCProperties ccprops) {
+	public UIActionTree() {
+		instance = this;
+	}
+
+	protected void init(CCProperties ccprops) {
 		createStructure();
 		createProperties(ccprops);
-
-		instance = this;
 	}
 
 	protected void createRoot() {

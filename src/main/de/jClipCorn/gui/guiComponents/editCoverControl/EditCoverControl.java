@@ -61,8 +61,10 @@ public class EditCoverControl extends AbstractEditCoverControl {
 
 	public EditCoverControl(ICCWindow owner, ParseResultHandler handler) {
 		super();
-		
-		this.coverFileChooser = new JFileChooser(FilesystemUtils.getAbsoluteSelfDirectory(owner.ccprops()).toFile());
+
+		if (owner == null) CCLog.addUndefinied("EditCoverControl :: owner == null"); //$NON-NLS-1$
+
+		this.coverFileChooser = (owner == null) ? new JFileChooser() : new JFileChooser(FilesystemUtils.getAbsoluteSelfDirectory(owner.ccprops()).toFile());
 		this.owner = handler;
 		this.ownerWindow = owner;
 

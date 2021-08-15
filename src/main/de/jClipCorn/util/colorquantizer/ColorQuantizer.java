@@ -8,7 +8,7 @@ import java.util.List;
 public interface ColorQuantizer {
 
 	void analyze(BufferedImage img, int colorcount) throws ColorQuantizerException;
-	List<RGBColor> getPalette() throws ColorQuantizerException;
+	List<RGBColor> getPalette();
 	BufferedImage quantize(BufferedImage img) throws ColorQuantizerException;
 
 	int getPaletteIndex(RGBColor c, int x, int y) throws ColorQuantizerException;

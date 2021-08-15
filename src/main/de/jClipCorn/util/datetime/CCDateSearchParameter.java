@@ -21,7 +21,7 @@ public class CCDateSearchParameter {
 
 		private static final EnumWrapper<DateSearchType> wrapper = new EnumWrapper<>(CONTAINS);
 
-		private DateSearchType(int val) { id = val; }
+		DateSearchType(int val) { id = val; }
 		
 		public static EnumWrapper<DateSearchType> getWrapper() {
 			return wrapper;

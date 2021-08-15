@@ -458,7 +458,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					mov -> DatabaseError.createSingle(
 							movielist,
 							DatabaseErrorType.ERROR_MEDIAINFO_UNSET, mov,
-							CCStreams.iterate(mov.getMediaInfo().toPartial().validate(false)).map(p -> Tuple.Create("MediaInfo."+p+".IsSet", "false")).toList()
+							CCStreams.iterate(mov.mediaInfo().getPartial().validate(false)).map(p -> Tuple.Create("MediaInfo."+p+".IsSet", "false")).toList()
 					));
 
 			// invalid MediaInfo
@@ -976,7 +976,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					episode -> DatabaseError.createSingle(
 							movielist,
 							DatabaseErrorType.ERROR_MEDIAINFO_UNSET, episode,
-							CCStreams.iterate(episode.getMediaInfo().toPartial().validate(false)).map(p -> Tuple.Create("MediaInfo."+p+".IsSet", "false")).toList()));
+							CCStreams.iterate(episode.mediaInfo().getPartial().validate(false)).map(p -> Tuple.Create("MediaInfo."+p+".IsSet", "false")).toList()));
 
 			// MediaInfo size does not match movie filesize
 			addEpisodeValidation(
@@ -1413,6 +1413,8 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		ICoverCache cc = movielist.getCoverCache();
 		List<Tuple<String, Func0to1WithIOException<BufferedImage>>> files = new ArrayList<>();
 		if (cc instanceof CCDefaultCoverCache) files = ((CCDefaultCoverCache)cc).listCoversInFilesystem();
+
+		files = CCStreams.iterate(files).filter(p -> !Str.equals(p.Item1, "Thumbs.db")).toList();
 
 		pcl.setSubMax(files.size() + cc.getCoverCount());
 

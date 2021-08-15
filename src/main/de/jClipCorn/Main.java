@@ -227,7 +227,7 @@ public class Main {
  - [X] AddSeriesFrame
  - [ ] AllRatingsFrame
  - [ ] AutofindRefrenceFrame
- - [ ] BackupManagerFrame
+ - [X] BackupManagerFrame
  - [X] BatchEditFrame
  - [ ] ChangeScoreFrame
  - [ ] ChangeViewedFrame

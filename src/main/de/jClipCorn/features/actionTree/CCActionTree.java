@@ -442,7 +442,7 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 	}
 	
 	private void onClickExtrasBackupManager(CCTreeActionEvent e) {
-		BackupManager.getInstanceDirect().runWhenInitializedWithProgress(e.SwingOwner, bm -> new BackupsManagerFrame(bm, e.SwingOwner, movielist).setVisible(true));
+		BackupManager.getInstanceDirect().runWhenInitializedWithProgress(e.SwingOwner, bm -> new BackupsManagerFrame(e.SwingOwner, movielist, bm).setVisible(true));
 	}
 	
 	private void onClickExtrasShowStatistics(CCTreeActionEvent e) {

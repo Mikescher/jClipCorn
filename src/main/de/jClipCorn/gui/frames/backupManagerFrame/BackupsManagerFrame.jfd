@@ -1,0 +1,269 @@
+JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.11" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "BackupsManagerFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, default:grow, labelcompgap, default:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default:grow, unrelgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": new FormMessage( null, "BackupsManagerFrame.this.title" )
+			"defaultCloseOperation": 2
+			"minimumSize": new java.awt.Dimension( 620, 450 )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "pref, relgap, 0dlu:grow, labelcompgap, default"
+				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default:grow, linegap, default"
+				"$rowGroupIds": "0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0"
+			} ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnCreateBackup"
+					"text": new FormMessage( null, "BackupsManagerFrame.btnCreateBackup.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "createNormalBackup", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridWidth": 5
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnCreatePersistentBackup"
+					"text": new FormMessage( null, "BackupsManagerFrame.btnCreatePersistentBackup.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "createPersistentBackup", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 3
+					"gridWidth": 5
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label1"
+					"text": new FormMessage( null, "BackupsManagerFrame.lblName.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblName"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 5
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnChangeName"
+					"text": "..."
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "editBackupName", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label2"
+					"text": new FormMessage( null, "BackupsManagerFrame.lblDate.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 7
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblDate"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 7
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label3"
+					"text": new FormMessage( null, "BackupsManagerFrame.lblSize.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 9
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblSize"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 9
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label4"
+					"text": new FormMessage( null, "BackupsManagerFrame.lblPersistent.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 11
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblPermanent"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 11
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnMakePersistent"
+					"text": new FormMessage( null, "BackupsManagerFrame.btnSwitchPersistent.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "toggleBackupPersistent", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 11
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label5"
+					"text": new FormMessage( null, "BackupsManagerFrame.lblVersion.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 13
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblVersion"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 13
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label6"
+					"text": new FormMessage( null, "BackupsManagerFrame.lblDBVersion.textEmpty" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 15
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblDBVersion"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 15
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label7"
+					"text": new FormMessage( null, "BackupsManagerFrame.lblDeletion.textEmpty" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 17
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblDeletion"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 17
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "pref, 12dlu, default:grow"
+					"$rowSpecs": "default, linegap, default, linegap, default, linegap, default"
+				} ) {
+					name: "panel2"
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnRestore"
+						"text": new FormMessage( null, "BackupsManagerFrame.btnRestoreBackup.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "restoreBackup", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 1
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+					} )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+						"$columnSpecs": "labelcompgap, pref:grow, labelcompgap"
+						"$rowSpecs": "default, linegap, default, 5dlu, default, linegap, default, 5dlu, default"
+					} ) {
+						name: "panel3"
+						"border": new javax.swing.border.EtchedBorder( 1, null, null )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "lblInfoCreateBackups"
+							"text": new FormMessage( null, "BackupsManagerFrame.infoLabels.CreateBackups" )
+						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+							"gridX": 2
+							"gridY": 1
+						} )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "lblInfoCreationTime"
+							"text": new FormMessage( null, "BackupsManagerFrame.infoLabels.CreationTime" )
+						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+							"gridX": 2
+							"gridY": 3
+						} )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "lblInfoAutoDelete"
+							"text": new FormMessage( null, "BackupsManagerFrame.infoLabels.AutoDelete" )
+						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+							"gridX": 2
+							"gridY": 5
+						} )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "lblInfoAutoDeletAfter"
+							"text": new FormMessage( null, "BackupsManagerFrame.infoLabels.DeletionTime" )
+						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+							"gridX": 2
+							"gridY": 7
+						} )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "lblInfoLastBackup"
+							"text": new FormMessage( null, "BackupsManagerFrame.infoLabels.LastBackup" )
+						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+							"gridX": 2
+							"gridY": 9
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 3
+						"gridHeight": 7
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnOpenInExplorer"
+						"text": new FormMessage( null, "BackupsManagerFrame.btnOpenInExplorer.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openBackupDir", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 3
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "btnDelete"
+						"text": new FormMessage( null, "BackupsManagerFrame.btnDelete.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "deleteBackup", false ) )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 5
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 21
+					"gridWidth": 5
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JList" ) {
+					name: "lsBackups"
+					auxiliary() {
+						"JavaCodeGenerator.typeParameters": "CCBackup"
+					}
+					addEvent( new FormEvent( "javax.swing.event.ListSelectionListener", "valueChanged", "onSelection", false ) )
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 2
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 800, 500 )
+		} )
+	}
+}

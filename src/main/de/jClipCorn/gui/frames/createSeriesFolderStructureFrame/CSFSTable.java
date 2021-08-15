@@ -13,7 +13,7 @@ public class CSFSTable extends JCCSimpleTable<CSFSElement> {
 	private static final long serialVersionUID = 1363346001268230117L;
 
 	@DesignCreate
-	private static CSFSTable designCreate() { return new CSFSTable(null); }
+	private static CSFSTable designCreate() { return new CSFSTable(ICCWindow.Dummy.frame()); }
 
 	public CSFSTable(ICCWindow f) {
 		super(f);

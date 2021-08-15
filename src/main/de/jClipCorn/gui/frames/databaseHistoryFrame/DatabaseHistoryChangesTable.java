@@ -1,6 +1,9 @@
 package de.jClipCorn.gui.frames.databaseHistoryFrame;
 
+import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.history.CCHistorySingleChange;
+import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
@@ -14,6 +17,9 @@ public class DatabaseHistoryChangesTable extends JCCSimpleTable<CCHistorySingleC
 
 	private JTextComponent edValueOld;
 	private JTextComponent edValueNew;
+
+	@DesignCreate
+	private static DatabaseHistoryChangesTable designCreate() { return new DatabaseHistoryChangesTable(new DatabaseHistoryFrame(ICCWindow.Dummy.frame(), CCMovieList.createStub())); }
 
 	public DatabaseHistoryChangesTable(DatabaseHistoryFrame frame) {
 		super(frame);

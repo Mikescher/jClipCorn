@@ -450,7 +450,7 @@ public class ExportHelper {
 				Tuple3<Integer, CCXMLElement, CCXMLParser> value = CCStreams.iterate(ExportHelper.getAllElementsOfExport(xml)).firstOrNull();
 				if (value != null)
 				{
-					CCMovie tmpMov = new CCMovie(CCMovieList.createStub(CCProperties.createInMemory()), -1);
+					CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
 					tmpMov.setDefaultValues(false);
 					DatabaseXMLImporter.parseSingleMovie(tmpMov, value.Item2, fn->null, new ImportState(value.Item3, value.Item1, new ImportOptions(resetDate, resetViewed, resetScore, false, true)));
 

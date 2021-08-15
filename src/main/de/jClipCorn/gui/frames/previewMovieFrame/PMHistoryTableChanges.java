@@ -13,7 +13,7 @@ public class PMHistoryTableChanges extends JCCSimpleTable<CCHistorySingleChange>
 	private static final long serialVersionUID = -7175124665697003916L;
 
 	@DesignCreate
-	private static PMHistoryTableChanges designCreate() { return new PMHistoryTableChanges(null); }
+	private static PMHistoryTableChanges designCreate() { return new PMHistoryTableChanges(ICCWindow.Dummy.frame()); }
 
 	public PMHistoryTableChanges(ICCWindow f) {
 		super(f);

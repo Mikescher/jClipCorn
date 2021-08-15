@@ -1,6 +1,7 @@
 package de.jClipCorn.util.datetime;
 
 import de.jClipCorn.Main;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 
 import java.util.HashMap;
@@ -116,6 +117,7 @@ public final class InternationalDateTimeFormatHelper {
 	private static CCDateTimeFormat _currentFormatCache;
 	public static CCDateTimeFormat getCurrentFormat() {
 		if (_currentFormatCache != null) return _currentFormatCache;
+		if (Main.getCurrentGlobalCCProperties() == null) { CCLog.addUndefinied("Failed to get UI_DATETIME_FORMAT - ccprops is empty"); return CCDateTimeFormat.ISO_8601; }
 		return _currentFormatCache = Main.getCurrentGlobalCCProperties().PROP_UI_DATETIME_FORMAT.getValue();
 	}
 	

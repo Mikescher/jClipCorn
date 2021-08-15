@@ -1,13 +1,17 @@
 package de.jClipCorn.gui.frames.updateMetadataFrame;
 
+import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.stream.CCStreams;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +22,9 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 
 	public boolean DeleteLocalGenres;
 	public boolean DeleteLocalReferences;
+
+	@DesignCreate
+	private static UpdateMetadataTable designCreate() { return new UpdateMetadataTable(new UpdateMetadataFrame(ICCWindow.Dummy.frame(), CCMovieList.createStub())); }
 
 	public UpdateMetadataTable(UpdateMetadataFrame owner) {
 		super(owner);

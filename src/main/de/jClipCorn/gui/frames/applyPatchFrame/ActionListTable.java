@@ -1,6 +1,8 @@
 package de.jClipCorn.gui.frames.applyPatchFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 
@@ -9,7 +11,7 @@ import java.util.List;
 
 public class ActionListTable extends JCCSimpleTable<ActionVM> {
 	@DesignCreate
-	private static ActionListTable designCreate() { return new ActionListTable(null); }
+	private static ActionListTable designCreate() { return new ActionListTable(new ApplyPatchFrame(ICCWindow.Dummy.frame(), CCMovieList.createStub())); }
 
 	private final ApplyPatchFrame _owner;
 

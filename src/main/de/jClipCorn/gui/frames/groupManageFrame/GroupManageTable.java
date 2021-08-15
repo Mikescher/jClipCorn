@@ -17,7 +17,7 @@ import java.util.List;
 public class GroupManageTable extends JCCSimpleTable<Tuple<CCGroup, Integer>> {
 
 	@DesignCreate
-	private static GroupManageTable designCreate() { return new GroupManageTable(null); }
+	private static GroupManageTable designCreate() { return new GroupManageTable(ICCWindow.Dummy.frame()); }
 
 	public GroupManageTable(ICCWindow f) {
 		super(f);

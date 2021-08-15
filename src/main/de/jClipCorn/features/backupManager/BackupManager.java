@@ -190,6 +190,14 @@ public class BackupManager {
 		});
 	}
 
+	public void createPatchBackupWithWait() throws IOException {
+		waitForInitialized_IO(() ->
+		{
+			String name = "Backup before applying patch"; //$NON-NLS-1$ //$NON-NLS-2$
+			createBackupInternal(name, CCDate.getCurrentDate(), false, Main.VERSION, Main.DBVERSION, new ProgressCallbackSink(), true);
+		});
+	}
+
 	private void createBackup(Component c, String name, CCDate date, boolean persistent, String jccversion, String dbversion) {
 		if (movielist.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$

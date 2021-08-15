@@ -5,6 +5,7 @@ import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.util.TableColumnAdjuster;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.stream.CCStreams;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -31,8 +32,8 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements IJCCS
 
 	protected final CCMovieList movielist;
 
-	public JCCSimpleTable(ICCWindow mlo) {
-		this(mlo == null ? null : mlo.getMovieList());
+	public JCCSimpleTable(@NotNull ICCWindow mlo) {
+		this(mlo.getMovieList());
 	}
 
 	public JCCSimpleTable(CCMovieList ml) {

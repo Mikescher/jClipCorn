@@ -3,6 +3,7 @@ package de.jClipCorn.gui.frames.applyPatchFrame;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -33,6 +34,8 @@ public class ApplyPatchFrame extends JCCFrame
 		postInit();
 
 		setLocationRelativeTo(owner);
+
+		updateUI();
 	}
 
 	public ApplyPatchFrame(Component owner, CCMovieList ml, FSPath f)
@@ -45,6 +48,8 @@ public class ApplyPatchFrame extends JCCFrame
 		edPathPatchfile.setPath(f);
 
 		setLocationRelativeTo(owner);
+
+		updateUI();
 	}
 
 	private void postInit()
@@ -62,7 +67,11 @@ public class ApplyPatchFrame extends JCCFrame
 	{
 		btnChoose.setEnabled(activeThread == null);
 		btnLoad.setEnabled(activeThread == null);
+
 		btnApply.setEnabled(activeThread == null && _actions != null && _state != null);
+		cbCreateBackup.setEnabled(activeThread == null && _actions != null && _state != null);
+		cbPorcelain.setEnabled(activeThread == null && _actions != null && _state != null);
+
 		btnCancel.setEnabled(activeThread != null);
 	}
 
@@ -138,6 +147,8 @@ public class ApplyPatchFrame extends JCCFrame
 				edPathPatchfile.getPath().getParent().append("patch_data"),
 				cbPorcelain.isSelected());
 
+		var makeBackup = cbCreateBackup.isSelected();
+
 		activeThread = new Thread(() ->
 		{
 			try
@@ -158,6 +169,13 @@ public class ApplyPatchFrame extends JCCFrame
 				}
 				if (!opt.DestinationTrashSeries.exists() && !opt.DestinationTrashSeries.mkdirsSafe()) {
 					throw new Exception("DestinationTrashSeries not found");
+				}
+
+				if (makeBackup)
+				{
+					cb.setMaxAndResetValueBoth(1, 1);
+					cb.setValueBoth(0, 0, "Creating Backup", "");
+					BackupManager.getInstanceDirect().createPatchBackupWithWait();
 				}
 
 				APFWorker.applyPatch(actlist, movielist, state, opt, cb, (dold, dnew) -> SwingUtils.invokeLater(() ->
@@ -211,7 +229,9 @@ public class ApplyPatchFrame extends JCCFrame
 		tableMain = new ActionListTable(this);
 		btnApply = new JButton();
 		btnCancel = new JButton();
+		panel1 = new JPanel();
 		cbPorcelain = new JCheckBox();
+		cbCreateBackup = new JCheckBox();
 		progressBar1 = new JProgressBar();
 		lblProgress1 = new JLabel();
 		progressBar2 = new JProgressBar();
@@ -247,6 +267,7 @@ public class ApplyPatchFrame extends JCCFrame
 
 		//---- chkbxSeriesAutoPath ----
 		chkbxSeriesAutoPath.setText(LocaleBundle.getString("ApplyPatchFrame.chkbxSeriesAutoPath")); //$NON-NLS-1$
+		chkbxSeriesAutoPath.setSelected(true);
 		contentPane.add(chkbxSeriesAutoPath, CC.xywh(6, 6, 3, 1));
 
 		//---- label4 ----
@@ -267,17 +288,31 @@ public class ApplyPatchFrame extends JCCFrame
 
 		//---- btnApply ----
 		btnApply.setText(LocaleBundle.getString("ApplyPatchFrame.btnApply")); //$NON-NLS-1$
+		btnApply.setFont(btnApply.getFont().deriveFont(btnApply.getFont().getStyle() | Font.BOLD));
 		btnApply.addActionListener(e -> applyPatch(e));
-		contentPane.add(btnApply, CC.xywh(2, 16, 3, 1));
+		contentPane.add(btnApply, CC.xywh(2, 16, 3, 1, CC.DEFAULT, CC.FILL));
 
 		//---- btnCancel ----
 		btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
 		btnCancel.addActionListener(e -> cancelThread(e));
-		contentPane.add(btnCancel, CC.xy(6, 16));
+		contentPane.add(btnCancel, CC.xy(6, 16, CC.DEFAULT, CC.FILL));
 
-		//---- cbPorcelain ----
-		cbPorcelain.setText(LocaleBundle.getString("BatchEditFrame.cbPorcelain")); //$NON-NLS-1$
-		contentPane.add(cbPorcelain, CC.xy(8, 16));
+		//======== panel1 ========
+		{
+			panel1.setLayout(new FormLayout(
+				"80dlu", //$NON-NLS-1$
+				"2*(default)")); //$NON-NLS-1$
+
+			//---- cbPorcelain ----
+			cbPorcelain.setText(LocaleBundle.getString("BatchEditFrame.cbPorcelain")); //$NON-NLS-1$
+			panel1.add(cbPorcelain, CC.xy(1, 1));
+
+			//---- cbCreateBackup ----
+			cbCreateBackup.setText(LocaleBundle.getString("ApplyPatchFrame.chkbxCreateBackup")); //$NON-NLS-1$
+			cbCreateBackup.setSelected(true);
+			panel1.add(cbCreateBackup, CC.xy(1, 2));
+		}
+		contentPane.add(panel1, CC.xy(8, 16));
 		contentPane.add(progressBar1, CC.xywh(2, 18, 5, 1));
 		contentPane.add(lblProgress1, CC.xy(8, 18));
 		contentPane.add(progressBar2, CC.xywh(2, 20, 5, 1));
@@ -304,7 +339,9 @@ public class ApplyPatchFrame extends JCCFrame
 	private ActionListTable tableMain;
 	private JButton btnApply;
 	private JButton btnCancel;
+	private JPanel panel1;
 	private JCheckBox cbPorcelain;
+	private JCheckBox cbCreateBackup;
 	private JProgressBar progressBar1;
 	private JLabel lblProgress1;
 	private JProgressBar progressBar2;

@@ -18,6 +18,7 @@ import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ClipboardUtilities;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.http.HTTPUtilities;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -38,7 +39,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	public final static int CTRL_HEIGHT = ImageUtilities.BASE_COVER_HEIGHT + 34;
 
 	@DesignCreate
-	private static EditCoverControl designCreate() { return new EditCoverControl(null, null); }
+	private static EditCoverControl designCreate() { return new EditCoverControl(ICCWindow.Dummy.frame(), null); }
 
 	private BufferedImage fullImage;
 
@@ -59,12 +60,10 @@ public class EditCoverControl extends AbstractEditCoverControl {
 
 	private List<ActionListener> _changeListener = new ArrayList<>();
 
-	public EditCoverControl(ICCWindow owner, ParseResultHandler handler) {
+	public EditCoverControl(@NotNull ICCWindow owner, ParseResultHandler handler) {
 		super();
 
-		if (owner == null) CCLog.addUndefinied("EditCoverControl :: owner == null"); //$NON-NLS-1$
-
-		this.coverFileChooser = (owner == null) ? new JFileChooser() : new JFileChooser(FilesystemUtils.getAbsoluteSelfDirectory(owner.ccprops()).toFile());
+		this.coverFileChooser = new JFileChooser(FilesystemUtils.getAbsoluteSelfDirectory(owner.ccprops()).toFile());
 		this.owner = handler;
 		this.ownerWindow = owner;
 

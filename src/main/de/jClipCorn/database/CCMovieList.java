@@ -103,7 +103,8 @@ public class CCMovieList implements ICCPropertySource {
 		return new CCMovieList(CCDatabase.createInMemory(ccprops), ccprops);
 	}
 	
-	public static CCMovieList createStub(CCProperties ccprops) {
+	public static CCMovieList createStub() {
+		var ccprops = CCProperties.createInMemory();
 		return new CCMovieList(CCDatabase.createStub(ccprops), ccprops);
 	}
 

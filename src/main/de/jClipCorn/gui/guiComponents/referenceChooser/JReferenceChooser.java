@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.guiComponents.referenceChooser;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
@@ -24,6 +25,9 @@ public class JReferenceChooser extends JPanel {
 	private final List<ActionListener> _changeListener = new ArrayList<>();
 
 	private final CCMovieList movielist;
+
+	@DesignCreate
+	private static JReferenceChooser designCreate() { return new JReferenceChooser(CCMovieList.createStub()); }
 
 	public JReferenceChooser(CCMovieList ml) {
 		super();

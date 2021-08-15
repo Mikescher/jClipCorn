@@ -1,10 +1,14 @@
 package de.jClipCorn.gui.frames.updateCodecFrame;
 
+import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +16,9 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 	private static final long serialVersionUID = 3308858204018846266L;
 	
 	private final UpdateCodecFrame owner;
+
+	@DesignCreate
+	private static UpdateCodecTable designCreate() { return new UpdateCodecTable(new UpdateCodecFrame(ICCWindow.Dummy.frame(), CCMovieList.createStub())); }
 
 	public UpdateCodecTable(UpdateCodecFrame owner) {
 		super(owner);

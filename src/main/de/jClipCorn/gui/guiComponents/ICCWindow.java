@@ -10,4 +10,10 @@ public interface ICCWindow extends ICCPropertySource {
 
 	CCMovieList getMovieList();
 	CCProperties ccprops();
+
+	class Dummy {
+		public static JCCFrame frame() {
+			return new JCCFrame(CCMovieList.createStub());
+		}
+	}
 }

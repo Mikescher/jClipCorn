@@ -38,10 +38,7 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 	private final CCMovieList movielist;
 
 	@DesignCreate
-	private static JMediaInfoControl designCreate()
-	{
-		return new JMediaInfoControl(null, () -> null);
-	}
+	private static JMediaInfoControl designCreate() { return new JMediaInfoControl(null, () -> null); }
 
 	public JMediaInfoControl(CCMovieList ml, Func0to1<FSPath> pathProvider) {
 		super();

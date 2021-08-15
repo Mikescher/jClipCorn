@@ -280,6 +280,9 @@ new FormModel {
 					} )
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser" ) {
 						name: "edSeriesReference"
+						auxiliary() {
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
+						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
 						"gridY": 9

@@ -1,26 +1,30 @@
 package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
+import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
+import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ShowMatchesTable extends JCCSimpleTable<ComparisonMatch> {
 	@DesignCreate
-	private static ShowMatchesTable designCreate() { return new ShowMatchesTable(null, true, true); }
+	private static ShowMatchesTable designCreate() { return new ShowMatchesTable(new CompareDatabaseFrame(ICCWindow.Dummy.frame(), CCMovieList.createStub()), true, true); }
 
 	private final CompareDatabaseFrame _owner;
 
 	private final boolean _hasLoc;
 	private final boolean _hasExt;
 
-	public ShowMatchesTable(CompareDatabaseFrame f, boolean hasLoc, boolean hasExt) {
+	public ShowMatchesTable(@NotNull CompareDatabaseFrame f, boolean hasLoc, boolean hasExt) {
 		super(f);
 
 		_hasLoc = hasLoc;

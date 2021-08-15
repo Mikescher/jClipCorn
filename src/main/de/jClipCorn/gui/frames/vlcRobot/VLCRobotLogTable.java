@@ -1,10 +1,12 @@
 package de.jClipCorn.gui.frames.vlcRobot;
 
 import com.jformdesigner.annotations.DesignCreate;
-import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryTable;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
+import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +16,9 @@ public class VLCRobotLogTable extends JCCSimpleTable<VLCRobotLogEntry> {
 	private final VLCRobotFrame owner;
 
 	@DesignCreate
-	private static WatchHistoryTable designCreate() { return new WatchHistoryTable(null); }
+	private static VLCRobotLogTable designCreate() { return new VLCRobotLogTable(new VLCRobotFrame(new JFrame(), CCMovieList.createStub())); }
 
-	public VLCRobotLogTable(VLCRobotFrame frame) {
+	public VLCRobotLogTable(@NotNull VLCRobotFrame frame) {
 		super(frame);
 		owner = frame;
 	}

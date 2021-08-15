@@ -1,12 +1,15 @@
 package de.jClipCorn.gui.frames.watchHistoryFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryElement;
+import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +20,9 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 	private final WatchHistoryFrame owner;
 
 	@DesignCreate
-	private static WatchHistoryTable designCreate() { return new WatchHistoryTable(null); }
+	private static WatchHistoryTable designCreate() { return new WatchHistoryTable(new WatchHistoryFrame(ICCWindow.Dummy.frame(), CCMovieList.createStub())); }
 
-	public WatchHistoryTable(WatchHistoryFrame owner) {
+	public WatchHistoryTable(@NotNull WatchHistoryFrame owner) {
 		super(owner);
 		this.owner = owner;
 	}

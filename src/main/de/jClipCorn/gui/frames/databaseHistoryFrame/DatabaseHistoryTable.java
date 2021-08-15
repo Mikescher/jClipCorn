@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.frames.databaseHistoryFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.history.CCCombinedHistoryEntry;
@@ -9,12 +10,14 @@ import de.jClipCorn.database.history.CCHistoryTable;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
+import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.stream.CCStreams;
 
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +28,7 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 	private final DatabaseHistoryFrame _parent;
 
 	@DesignCreate
-	private static DatabaseHistoryTable designCreate() { return new DatabaseHistoryTable(null); }
+	private static DatabaseHistoryTable designCreate() { return new DatabaseHistoryTable(new DatabaseHistoryFrame(ICCWindow.Dummy.frame(), CCMovieList.createStub())); }
 
 	public DatabaseHistoryTable(DatabaseHistoryFrame frame) {
 		super(frame);

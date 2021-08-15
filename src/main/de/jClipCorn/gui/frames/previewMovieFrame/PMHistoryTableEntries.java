@@ -16,7 +16,7 @@ public class PMHistoryTableEntries extends JCCSimpleTable<CCCombinedHistoryEntry
 	private final List<PMHSelectionListener> _handler = new ArrayList<>();
 
 	@DesignCreate
-	private static PMHistoryTableEntries designCreate() { return new PMHistoryTableEntries(null); }
+	private static PMHistoryTableEntries designCreate() { return new PMHistoryTableEntries(ICCWindow.Dummy.frame()); }
 
 	public PMHistoryTableEntries(ICCWindow f) {
 		super(f);

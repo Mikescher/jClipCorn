@@ -69,6 +69,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
 				name: "chkbxSeriesAutoPath"
 				"text": new FormMessage( null, "ApplyPatchFrame.chkbxSeriesAutoPath" )
+				"selected": true
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 6
 				"gridY": 6
@@ -126,11 +127,13 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "btnApply"
 				"text": new FormMessage( null, "ApplyPatchFrame.btnApply" )
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 0, false )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "applyPatch", true ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridY": 16
 				"gridX": 2
 				"gridWidth": 3
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "btnCancel"
@@ -139,10 +142,24 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 6
 				"gridY": 16
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
-			add( new FormComponent( "javax.swing.JCheckBox" ) {
-				name: "cbPorcelain"
-				"text": new FormMessage( null, "BatchEditFrame.cbPorcelain" )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "80dlu"
+				"$rowSpecs": "default, default"
+			} ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbPorcelain"
+					"text": new FormMessage( null, "BatchEditFrame.cbPorcelain" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbCreateBackup"
+					"text": new FormMessage( null, "ApplyPatchFrame.chkbxCreateBackup" )
+					"selected": true
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 2
+				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 8
 				"gridY": 16

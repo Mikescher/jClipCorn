@@ -15,7 +15,7 @@ public class QuickAddMoviesTable extends JCCSimpleTable<Tuple<FSPath, CCPath>> {
 	private static final long serialVersionUID = 3193111290324610278L;
 
 	@DesignCreate
-	private static QuickAddMoviesTable designCreate() { return new QuickAddMoviesTable(null); }
+	private static QuickAddMoviesTable designCreate() { return new QuickAddMoviesTable(ICCWindow.Dummy.frame()); }
 
 	public QuickAddMoviesTable(ICCWindow f) {
 		super(f);

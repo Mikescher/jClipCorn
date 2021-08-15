@@ -32,7 +32,7 @@ public class VLCRobotFrame extends JCCFrame {
 	private static VLCRobotFrame _instance = null;
 	private final VLCRobot _robot;
 
-	private VLCRobotFrame(Component owner, CCMovieList ml) {
+	VLCRobotFrame(Component owner, CCMovieList ml) {
 		super(ml);
 
 		var freq = ccprops().PROP_VLC_ROBOT_FREQUENCY.getValue();

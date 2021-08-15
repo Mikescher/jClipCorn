@@ -12,7 +12,7 @@ public class VLCPlaylistTable extends JCCSimpleTable<VLCPlaylistEntry> {
 	private static final long serialVersionUID = 630505973662401189L;
 
 	@DesignCreate
-	private static VLCPlaylistTable designCreate() { return new VLCPlaylistTable(null); }
+	private static VLCPlaylistTable designCreate() { return new VLCPlaylistTable(ICCWindow.Dummy.frame()); }
 
 	public VLCPlaylistTable(ICCWindow f) {
 		super(f);

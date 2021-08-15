@@ -9,67 +9,89 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 
-import java.awt.*;
+import java.awt.Component;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseError {	
-	private final DatabaseErrorType errortype;
-	private final Object el1;
-	private final Object el2;
+	public final DatabaseErrorType ErrorType;
+	public final Object Element1;
+	public final Object Element2;
 
-	private final Object additional;
+	public final Object Additional;
+
+	public final List<Tuple<String, String>> Metadata;
 
 	private final CCMovieList movielist;
 
-	public static DatabaseError createNone(CCMovieList ml, DatabaseErrorType error) {
-		return new DatabaseError(ml, error, null, null, null);
+	public static DatabaseError createNone(CCMovieList ml, DatabaseErrorType error, String... md) {
+		return new DatabaseError(ml, error, null, null, null, md);
 	}
 
-	public static DatabaseError createSingle(CCMovieList ml, DatabaseErrorType error, Object element) {
-		return new DatabaseError(ml, error, element, null, null);
+	public static DatabaseError createSingle(CCMovieList ml, DatabaseErrorType error, Object element, String... md) {
+		return new DatabaseError(ml, error, element, null, null, md);
 	}
 
-	public static DatabaseError createSingleAdditional(CCMovieList ml, DatabaseErrorType error, Object element, Object additional) {
-		return new DatabaseError(ml, error, element, null, additional);
+	public static DatabaseError createSingle(CCMovieList ml, DatabaseErrorType error, Object element, List<Tuple<String, String>> md) {
+		return new DatabaseError(ml, error, element, null, null, md);
 	}
 
-	public static DatabaseError createDouble(CCMovieList ml, DatabaseErrorType error, Object element1, Object element2) {
-		return new DatabaseError(ml, error, element1, element2, null);
+	public static DatabaseError createSingleAdditional(CCMovieList ml, DatabaseErrorType error, Object element, Object additional, String... md) {
+		return new DatabaseError(ml, error, element, null, additional, md);
+	}
+
+	public static DatabaseError createDouble(CCMovieList ml, DatabaseErrorType error, Object element1, Object element2, String... md) {
+		return new DatabaseError(ml, error, element1, element2, null, md);
 	}
 	
-	public static DatabaseError createDoubleAdditional(CCMovieList ml, DatabaseErrorType error, Object element1, Object element2, Object additional) {
-		return new DatabaseError(ml, error, element1, element2, additional);
+	public static DatabaseError createDoubleAdditional(CCMovieList ml, DatabaseErrorType error, Object element1, Object element2, Object additional, String... md) {
+		return new DatabaseError(ml, error, element1, element2, additional, md);
 	}
 
-	private DatabaseError(CCMovieList ml, DatabaseErrorType error, Object element1, Object element2, Object additional) {
-		this.errortype = error;
-		this.el1 = element1;
-		this.el2 = element2;
-		this.additional = additional;
-		this.movielist = ml;
+	private DatabaseError(CCMovieList ml, DatabaseErrorType error, Object element1, Object element2, Object additional, String... md) {
+		var mdlist = new ArrayList<Tuple<String, String>>();
+		for (int i = 0; i+1 < md.length; i+=2) mdlist.add(Tuple.Create(md[i], md[i+1]));
+
+		this.ErrorType  = error;
+		this.Element1   = element1;
+		this.Element2   = element2;
+		this.Additional = additional;
+		this.Metadata   = mdlist;
+		this.movielist  = ml;
+	}
+
+	private DatabaseError(CCMovieList ml, DatabaseErrorType error, Object element1, Object element2, Object additional, List<Tuple<String, String>> md) {
+		this.ErrorType  = error;
+		this.Element1   = element1;
+		this.Element2   = element2;
+		this.Additional = additional;
+		this.Metadata   = md;
+		this.movielist  = ml;
 	}
 	
 	public String getErrorString() {
-		if (additional == null) {
-			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Error.ERR_%02d", errortype.getType())); //$NON-NLS-1$
+		if (Additional == null) {
+			return LocaleBundle.getString(String.format("CheckDatabaseDialog.Error.ERR_%02d", ErrorType.getType())); //$NON-NLS-1$
 		} else {
-			return LocaleBundle.getFormattedString(String.format("CheckDatabaseDialog.Error.ERR_%02d", errortype.getType()), additional); //$NON-NLS-1$
+			return LocaleBundle.getFormattedString(String.format("CheckDatabaseDialog.Error.ERR_%02d", ErrorType.getType()), Additional); //$NON-NLS-1$
 		}
 	}
 	
 	public String getElement1Name() {
-		return convertToString(el1);
+		return convertToString(Element1);
 	}
 
 	public String getElement1RawName() {
-		return convertToRawString(el1);
+		return convertToRawString(Element1);
 	}
 	
 	public String getElement2Name() {
-		return convertToString(el2);
+		return convertToString(Element2);
 	}
 
 	public String getFullErrorString() {
@@ -79,7 +101,7 @@ public class DatabaseError {
 		
 		errstr.append(" "); //$NON-NLS-1$
 		
-		if (el2 != null) {
+		if (Element2 != null) {
 			errstr.append(getElement2Name());
 			
 			errstr.append(" "); //$NON-NLS-1$
@@ -134,72 +156,72 @@ public class DatabaseError {
 	}
 	
 	public void startEditing(Component owner) {
-		if (el1 instanceof CCMovie) {
-			EditMovieFrame emf = new EditMovieFrame(owner, (CCMovie) el1, null);
+		if (Element1 instanceof CCMovie) {
+			EditMovieFrame emf = new EditMovieFrame(owner, (CCMovie) Element1, null);
 			emf.setVisible(true);
-		} else if (el1 instanceof CCSeries) {
-			EditSeriesFrame esf = new EditSeriesFrame(owner, (CCSeries) el1, null);
+		} else if (Element1 instanceof CCSeries) {
+			EditSeriesFrame esf = new EditSeriesFrame(owner, (CCSeries) Element1, null);
 			esf.setVisible(true);
-		} else if (el1 instanceof CCSeason) {
-			EditSeriesFrame esf = new EditSeriesFrame(owner, (CCSeason) el1, null);
+		} else if (Element1 instanceof CCSeason) {
+			EditSeriesFrame esf = new EditSeriesFrame(owner, (CCSeason) Element1, null);
 			esf.setVisible(true);
-		} else if (el1 instanceof CCEpisode) {
-			EditSeriesFrame esf = new EditSeriesFrame(owner, (CCEpisode) el1, null);
+		} else if (Element1 instanceof CCEpisode) {
+			EditSeriesFrame esf = new EditSeriesFrame(owner, (CCEpisode) Element1, null);
 			esf.setVisible(true);
-		} else if (el1 instanceof File) {
-			FilesystemUtils.showInExplorer(FSPath.create((File) el1));
+		} else if (Element1 instanceof File) {
+			FilesystemUtils.showInExplorer(FSPath.create((File) Element1));
 		}
 
-		if (el2 != null)
+		if (Element2 != null)
 		{
-			if (el2 instanceof CCMovie) {
-				EditMovieFrame emf = new EditMovieFrame(owner, (CCMovie) el2, null);
+			if (Element2 instanceof CCMovie) {
+				EditMovieFrame emf = new EditMovieFrame(owner, (CCMovie) Element2, null);
 				emf.setVisible(true);
-			} else if (el2 instanceof CCSeries) {
-				EditSeriesFrame esf = new EditSeriesFrame(owner, (CCSeries) el2, null);
+			} else if (Element2 instanceof CCSeries) {
+				EditSeriesFrame esf = new EditSeriesFrame(owner, (CCSeries) Element2, null);
 				esf.setVisible(true);
-			} else if (el2 instanceof CCSeason) {
-				EditSeriesFrame esf = new EditSeriesFrame(owner, (CCSeason) el2, null);
+			} else if (Element2 instanceof CCSeason) {
+				EditSeriesFrame esf = new EditSeriesFrame(owner, (CCSeason) Element2, null);
 				esf.setVisible(true);
-			} else if (el2 instanceof CCEpisode) {
-				EditSeriesFrame esf = new EditSeriesFrame(owner, (CCEpisode) el2, null);
+			} else if (Element2 instanceof CCEpisode) {
+				EditSeriesFrame esf = new EditSeriesFrame(owner, (CCEpisode) Element2, null);
 				esf.setVisible(true);
-			} else if (el2 instanceof File) {
-				FilesystemUtils.showInExplorer(FSPath.create((File) el2));
+			} else if (Element2 instanceof File) {
+				FilesystemUtils.showInExplorer(FSPath.create((File) Element2));
 			}
 		}
 
 	}
 	
 	public Object getElement1() {
-		return el1;
+		return Element1;
 	}
 	
 	public Object getElement2() {
-		return el1;
+		return Element1;
 	}
 	
 	public boolean isSingleError() {
-		return el2 == null;
+		return Element2 == null;
 	}
 	
 	public boolean isTypeOf(DatabaseErrorType det) {
-		return det.getType() == errortype.getType();
+		return det.getType() == ErrorType.getType();
 	}
 	
 	public DatabaseErrorType getType() {
-		return errortype;
+		return ErrorType;
 	}
 	
 	public boolean isAutoFixable() {
-		return errortype.isAutoFixable();
+		return ErrorType.isAutoFixable();
 	}
 	
 	public boolean autoFix() {
-		return errortype.fixError(movielist, this);
+		return ErrorType.fixError(movielist, this);
 	}
 
 	public boolean elementsEquals(DatabaseError e) {
-		return el1 == e.getElement1() && el2 == e.getElement2();
+		return Element1 == e.getElement1() && Element2 == e.getElement2();
 	}
 }

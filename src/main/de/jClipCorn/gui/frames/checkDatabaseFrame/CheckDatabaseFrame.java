@@ -324,7 +324,9 @@ public class CheckDatabaseFrame extends JFrame {
 			cbValAdditional.isSelected(),
 			cbValAdditional.isSelected(),
 			cbValAdditional.isSelected(),
-			cbValAdditional.isSelected()
+			cbValAdditional.isSelected(),
+			CCProperties.getInstance().PROP_VALIDATE_CHECK_SERIES_STRUCTURE.getValue(),
+			CCProperties.getInstance().PROP_VALIDATE_DUP_IGNORE_IFO.getValue()
 		);
 
 		new Thread(() ->

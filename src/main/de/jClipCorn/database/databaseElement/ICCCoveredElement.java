@@ -12,6 +12,9 @@ public interface ICCCoveredElement {
 
 	EStringProp title();
 
+	int         getLocalID();
+	String      getQualifiedTitle();
+
 	int getCoverID();
 	CCCoverData getCoverInfo();
 

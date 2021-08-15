@@ -40,7 +40,9 @@ public class TestCCMovieList extends ClipCornBaseTest {
 				true,  // groups
 				true,  // online-refs
 				true,  // internal db
-				true); // Additional
+				true,  // Additional
+				true,  // Validate Series Structure
+				true); // Ignore IFO duplicates
 
 		List<DatabaseError> errs = new ArrayList<>();
 

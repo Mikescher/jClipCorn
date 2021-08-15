@@ -25,9 +25,11 @@ public interface ICCPlayableElement {
 	EDateTimeListProp       viewedHistory();
 	ELanguageListProp       language();
 
-	boolean isViewed();
+	int               getLocalID();
+	boolean           isViewed();
 	CCQualityCategory getMediaInfoCategory();
-	List<CCPath> getParts();
+	List<CCPath>      getParts();
+	String            getQualifiedTitle();
 
 	void play(Component swingOwner, boolean updateViewedAndHistory);
 	void play(Component swingOwner, boolean updateViewedAndHistory, NamedPathVar player);

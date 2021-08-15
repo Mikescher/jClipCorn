@@ -28,6 +28,8 @@ public abstract class AbstractDatabaseValidator {
 
 	protected final CCMovieList movielist;
 
+	protected DatabaseValidatorOptions Options = null;
+
 	protected AbstractDatabaseValidator(CCMovieList ml) {
 		movielist = ml;
 		init();
@@ -37,6 +39,8 @@ public abstract class AbstractDatabaseValidator {
 
 	public void validate(List<DatabaseError> e, DatabaseValidatorOptions opt, DoubleProgressCallbackListener pcl)
 	{
+		Options = opt;
+
 		List<ValidationMethod> vmMovies  = CCStreams.iterate(_methods).filter(m->m.Target==ValidationTarget.MOVIE).filter(m->m.Precondition.invoke(opt)).enumerate();
 		List<ValidationMethod> vmSeries  = CCStreams.iterate(_methods).filter(m->m.Target==ValidationTarget.SERIES).filter(m->m.Precondition.invoke(opt)).enumerate();
 		List<ValidationMethod> vmSeasons = CCStreams.iterate(_methods).filter(m->m.Target==ValidationTarget.SEASON).filter(m->m.Precondition.invoke(opt)).enumerate();

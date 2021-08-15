@@ -1,5 +1,6 @@
 package de.jClipCorn.features.databaseErrors;
 
+import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.util.filesystem.CCPath;
 import org.apache.commons.lang.StringUtils;
 
@@ -8,7 +9,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 
 public class DatabaseFileElement implements Comparable<DatabaseFileElement> {
 	private final CCPath path;
-	private final Object element;
+	private final ICCPlayableElement element;
 	
 	public DatabaseFileElement(CCPath path, CCMovie m) {
 		this.path = path;
@@ -33,7 +34,7 @@ public class DatabaseFileElement implements Comparable<DatabaseFileElement> {
 		return StringUtils.equalsIgnoreCase(getPath().toString(), dfe.getPath().toString());
 	}
 
-	public Object getElement() {
+	public ICCPlayableElement getElement() {
 		return element;
 	}
 }

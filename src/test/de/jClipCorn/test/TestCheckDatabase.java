@@ -43,7 +43,9 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 				true,  // groups
 				true,  // online-refs
 				true,  // internal db
-				true); // Additional
+				true,  // Additional
+				false, // Validate Series Structure
+				true); // Ignore IFO duplicates
 
 		var validator = new CCDatabaseValidator(ml);
 		validator.validate(errs, opt, DoubleProgressCallbackListener.EMPTY);

@@ -34,8 +34,8 @@ public class EMediaInfoPropPack {
 
 	public EMediaInfoPropPack(String namePrefix, PartialMediaInfo startValue, IPropertyParent parent)
 	{
-		CDate           = new EOptLongProp(    namePrefix + ".CDate",           startValue.CDate,     parent, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
-		MDate           = new EOptLongProp(    namePrefix + ".MDate",           startValue.MDate, parent, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
+		CDate           = new EOptLongProp(    namePrefix + ".CDate",           startValue.CDate,            parent, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
+		MDate           = new EOptLongProp(    namePrefix + ".MDate",           startValue.MDate,            parent, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
 		Checksum        = new EOptStringProp(  namePrefix + ".Checksum",        startValue.Checksum,         parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
 		Filesize        = new EOptFileSizeProp(namePrefix + ".Filesize",        startValue.Filesize,         parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
 		Duration        = new EOptDoubleProp(  namePrefix + ".Duration",        startValue.Duration,         parent, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);

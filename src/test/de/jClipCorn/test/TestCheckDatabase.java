@@ -95,7 +95,7 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 				udp.remove(0);
 			}
 
-			assertArrayEquals(m.getTitle(), new Object[0], udp.toArray());
+			assertEmptyUDP(m.getTitle(), udp);
 		}
 
 		for (CCMovie m : ml.iteratorMovies())
@@ -113,7 +113,7 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 				udp.remove(0);
 			}
 
-			assertArrayEquals(m.getTitle(), new Object[0], udp.toArray());
+			assertEmptyUDP(m.getTitle(), udp);
 		}
 	}
 
@@ -127,10 +127,10 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 			List<UserDataProblem> udp = new ArrayList<>();
 
 			UserDataProblem.testSeriesData(udp, ml, null, s);
-			assertArrayEquals(s.getTitle(), new Object[0], udp.toArray());
+			assertEmptyUDP(s.getTitle(), udp);
 
 			UserDataProblem.testSeriesData(udp, ml, s, s);
-			assertArrayEquals(s.getTitle(), new Object[0], udp.toArray());
+			assertEmptyUDP(s.getTitle(), udp);
 		}
 	}
 
@@ -144,10 +144,10 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 			List<UserDataProblem> udp = new ArrayList<>();
 
 			UserDataProblem.testSeasonData(udp, ml, null, s);
-			assertArrayEquals(s.getTitle(), new Object[0], udp.toArray());
+			assertEmptyUDP(s.getTitle(), udp);
 
 			UserDataProblem.testSeasonData(udp, ml, s, s);
-			assertArrayEquals(s.getTitle(), new Object[0], udp.toArray());
+			assertEmptyUDP(s.getTitle(), udp);
 		}
 	}
 
@@ -179,7 +179,7 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 				udp.remove(0);
 			}
 
-			assertArrayEquals(e.getTitle(), new Object[0], udp.toArray());
+			assertEmptyUDP(e.getTitle(), udp);
 		}
 	}
 }

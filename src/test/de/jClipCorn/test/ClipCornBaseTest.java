@@ -6,6 +6,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.features.databaseErrors.DatabaseError;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.ExportHelper;
+import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.Str;
@@ -68,8 +69,8 @@ public class ClipCornBaseTest {
 	}
 
 	protected CCMovieList createEmptyDB() {
-		createInMemoryProperties();
-		CCMovieList ml = CCMovieList.createInMemory(CCProperties.createInMemory());
+		var ccprops = createInMemoryProperties();
+		CCMovieList ml = CCMovieList.createInMemory(ccprops);
 		ml.connectForTests(false);
 
 		return ml;
@@ -82,9 +83,9 @@ public class ClipCornBaseTest {
 	protected CCMovieList createExampleDB() throws IOException { return createExampleDB(false); }
 
 	protected CCMovieList createExampleDB(boolean reloadFromMemory) throws IOException {
-		createInMemoryProperties();
+		var ccprops = createInMemoryProperties();
 
-		CCMovieList ml1 = CCMovieList.createInMemory(CCProperties.createInMemory());
+		CCMovieList ml1 = CCMovieList.createInMemory(ccprops);
 		ml1.connectForTests(false);
 
 		var filep = SimpleFileUtils.getSystemTempFile("jxmlbkp");
@@ -104,8 +105,8 @@ public class ClipCornBaseTest {
 			{
 				if (p.mediaInfo().getPartial().Checksum.isPresent()) continue;
 				var mi = p.mediaInfo().getPartial();
-				mi = mi.WithChecksum(Opt.of("[01-" + StringUtils.leftPad(Long.toHexString(mi.Filesize.orElse(CCFileSize.ZERO).getBytes()).toUpperCase(), 10, '0') + "-00:00:00:00:00:00:00:00]"));
-				p.mediaInfo().set(mi.toMediaInfo());
+				var cs = Opt.of("[01-" + StringUtils.leftPad(Long.toHexString(mi.Filesize.orElse(CCFileSize.ZERO).getBytes()).toUpperCase(), 10, '0') + "-00:00:00:00:00:00:00:00]");
+				p.mediaInfo().Checksum.set(cs);
 			}
 		}
 		CCLog.reenableChangeEvents();
@@ -115,7 +116,7 @@ public class ClipCornBaseTest {
 			// With reload the data is loaded again from the (in-mem) database,
 			// so ml2 is acting like the data was there all along and not just recently imported
 
-			var ml2 = CCMovieList.createRawForUnitTests(ml1.getDatabaseForUnitTests(), ml1.ccprops());
+			var ml2 = CCMovieList.createRawForUnitTests(ml1.getDatabaseForUnitTests(), ccprops);
 			ml2.connectForTests(true);
 			return ml2;
 		}
@@ -181,6 +182,14 @@ public class ClipCornBaseTest {
 		}
 
 		assertArrayEquals(new Object[0], errs.toArray());
+	}
+
+	protected void assertEmptyUDP(String msg, List<UserDataProblem> udp) {
+		if (!udp.isEmpty()) {
+			for (var e : udp) System.err.println("(udp-error) ["+msg+"]: " + e.getText());
+		}
+
+		assertArrayEquals(msg, new Object[0], udp.toArray());
 	}
 
 	protected void assertArchiveEquals(FSPath p1, FSPath p2) throws IOException {

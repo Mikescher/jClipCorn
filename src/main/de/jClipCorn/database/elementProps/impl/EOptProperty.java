@@ -42,6 +42,11 @@ public abstract class EOptProperty<TTypeInner> extends EProperty<Opt<TTypeInner>
 		return a.isEqual(b, this::valueInnerEquals);
 	}
 
+	@Override
+	public String toString() {
+		return "() -> " + get().mapOrElse(Object::toString, "{empty}");
+	}
+
 	// -------------
 
 	protected abstract String serializeInnerToString(TTypeInner v);

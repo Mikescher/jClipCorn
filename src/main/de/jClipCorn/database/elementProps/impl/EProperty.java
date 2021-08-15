@@ -65,10 +65,10 @@ public abstract class EProperty<TType> implements IEProperty {
 
 		if (setDirty && !valueEquals(old, v)) _dirty = true;
 
+		if (callListener) for (var l: _listener) l.invoke(this, old, v);
+
 		if (bustCache) parent.getCache().bust();
 		if (updateDB)  parent.updateDB();
-
-		if (callListener) for (var l: _listener) l.invoke(this, old, v);
 	}
 
 	/**

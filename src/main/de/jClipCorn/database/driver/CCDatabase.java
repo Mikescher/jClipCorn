@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.*;
 
 import static de.jClipCorn.database.driver.DatabaseStructure.*;
-import static de.jClipCorn.database.driver.Statements.*;
 
 public class CCDatabase {
 
@@ -41,6 +40,7 @@ public class CCDatabase {
 	private final GenericDatabase db;
 	public  final DatabaseMigration upgrader;
 	private final ICoverCache coverCache;
+	private final Statements stmts;
 	private final CCDatabaseHistory _history;
 
 	private final boolean _readonly;
@@ -77,6 +77,8 @@ public class CCDatabase {
 		_history = new CCDatabaseHistory(this);
 		
 		upgrader = new DatabaseMigration(db, databaseDirectory, databaseName, readonly);
+
+		stmts = new Statements();
 	}
 
 	private static CCDatabaseDriver autoDetermineDriver(FSPath dbDir, String dbName) {
@@ -143,8 +145,8 @@ public class CCDatabase {
 			db.establishDBConnection(databaseDirectory, databaseName);
 			
 			upgrader.tryUpgrade();
-			
-			Statements.intialize(this);
+
+			stmts.initialize(this);
 
 			coverCache.init();
 
@@ -167,7 +169,12 @@ public class CCDatabase {
 	private boolean driverCreate() {
 		boolean res = db.createNewDatabase(databaseDirectory, databaseName);
 		if (res) {
-			Statements.intialize(this);
+			try {
+				stmts.initialize(this);
+			} catch (SQLException | SQLWrapperException e) {
+				db.setLastError(e);
+				return false;
+			}
 
 			coverCache.init();
 
@@ -187,7 +194,7 @@ public class CCDatabase {
 	public void disconnect(boolean cleanshutdown) {
 		try {
 			if (db.isConnected()) {
-				shutdownStatements();
+				stmts.shutdown();
 				db.closeDBConnection(databaseDirectory, databaseName, cleanshutdown);
 				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBDisconnect", getDBPath()));
 			}
@@ -364,10 +371,10 @@ public class CCDatabase {
 	private int getNewID() {
 		try {
 			// increment
-			newDatabaseIDStatement1.execute();
+			stmts.newDatabaseIDStatement1.execute();
 
 			// read back
-			return newDatabaseIDStatement2.executeQueryInt(this);
+			return stmts.newDatabaseIDStatement2.executeQueryInt(this);
 		} catch (SQLException e) {
 			CCLog.addError(LocaleBundle.getString("LogMessage.NoNewDatabaseID"), e); //$NON-NLS-1$
 			return -1;
@@ -377,7 +384,7 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	private boolean addEmptyMovieRow(int id) {
 		try {
-			CCSQLStatement stmt = addEmptyMovieTabStatement;
+			CCSQLStatement stmt = stmts.addEmptyMovieTabStatement;
 			stmt.clearParameters();
 
 			for (var col : stmt.getPreparedFields()) {
@@ -406,7 +413,7 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	private boolean addEmptySeriesRow(int id) {
 		try {
-			CCSQLStatement stmt = addEmptySeriesTabStatement;
+			CCSQLStatement stmt = stmts.addEmptySeriesTabStatement;
 			stmt.clearParameters();
 
 			for (var col : stmt.getPreparedFields()) {
@@ -434,7 +441,7 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	private boolean addEmptySeasonsRow(int seasid, int serid) {
 		try {
-			CCSQLStatement stmt = addEmptySeasonTabStatement;
+			CCSQLStatement stmt = stmts.addEmptySeasonTabStatement;
 			stmt.clearParameters();
 
 			for (var col : stmt.getPreparedFields()) {
@@ -463,7 +470,7 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	private boolean addEmptyEpisodeRow(int eid, int sid) {
 		try {
-			CCSQLStatement stmt = addEmptyEpisodeTabStatement;
+			CCSQLStatement stmt = stmts.addEmptyEpisodeTabStatement;
 			stmt.clearParameters();
 
 			for (var col : stmt.getPreparedFields()) {
@@ -564,7 +571,7 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	public boolean updateMovieInDatabase(CCMovie mov) {
 		try {
-			CCSQLStatement stmt = updateMovieTabStatement;
+			CCSQLStatement stmt = stmts.updateMovieTabStatement;
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_MOV_LOCALID,       mov.getLocalID());
@@ -628,7 +635,7 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	public boolean updateSeriesInDatabase(CCSeries ser) {
 		try {
-			CCSQLStatement stmt = updateSeriesTabStatement;
+			CCSQLStatement stmt = stmts.updateSeriesTabStatement;
 			stmt.clearParameters();
 
 			stmt.setStr(DatabaseStructure.COL_SER_NAME,        ser.Title.get());
@@ -657,7 +664,7 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	public boolean updateSeasonInDatabase(CCSeason sea) {
 		try {
-			CCSQLStatement stmt = updateSeasonTabStatement;
+			CCSQLStatement stmt = stmts.updateSeasonTabStatement;
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID,  sea.getSeries().getLocalID());
@@ -682,7 +689,7 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	public boolean updateEpisodeInDatabase(CCEpisode ep) {
 		try {
-			CCSQLStatement stmt = updateEpisodeTabStatement;
+			CCSQLStatement stmt = stmts.updateEpisodeTabStatement;
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_EPIS_SEASONID,      ep.getSeason().getLocalID());
@@ -733,7 +740,7 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	public boolean updateMovieFromDatabase(CCMovie mov) {
 		try {
-			CCSQLStatement stmt = selectSingleMovieTabStatement;
+			CCSQLStatement stmt = stmts.selectSingleMovieTabStatement;
 			stmt.clearParameters();
 			stmt.setInt(DatabaseStructure.COL_MOV_LOCALID, mov.getLocalID());
 			CCSQLResultSet rs = stmt.executeQuery(this);
@@ -756,7 +763,7 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	public boolean updateSeriesFromDatabase(CCSeries ser) {
 		try {
-			CCSQLStatement stmt = selectSingleSeriesTabStatement;
+			CCSQLStatement stmt = stmts.selectSingleSeriesTabStatement;
 			stmt.clearParameters();
 			stmt.setInt(DatabaseStructure.COL_SER_LOCALID, ser.getLocalID());
 			CCSQLResultSet rs = stmt.executeQuery(this);
@@ -779,7 +786,7 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	public boolean updateSeasonFromDatabase(CCSeason sea) {
 		try {
-			CCSQLStatement stmt = selectSingleSeasonTabStatement;
+			CCSQLStatement stmt = stmts.selectSingleSeasonTabStatement;
 			stmt.clearParameters();
 			stmt.setInt(DatabaseStructure.COL_SEAS_LOCALID, sea.getLocalID());
 			CCSQLResultSet rs = stmt.executeQuery(this);
@@ -802,7 +809,7 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	public boolean updateEpisodeFromDatabase(CCEpisode epi) {
 		try {
-			CCSQLStatement stmt = selectSingleEpisodeTabStatement;
+			CCSQLStatement stmt = stmts.selectSingleEpisodeTabStatement;
 			stmt.clearParameters();
 			stmt.setInt(DatabaseStructure.COL_EPIS_LOCALID, epi.getLocalID());
 			CCSQLResultSet rs = stmt.executeQuery(this);
@@ -828,7 +835,7 @@ public class CCDatabase {
 			if (CCProperties.getInstance().PROP_LOADING_LIVEUPDATE.getValue())
 			{
 				{
-					CCSQLStatement stmt1 = selectAllMoviesTabStatement;
+					CCSQLStatement stmt1 = stmts.selectAllMoviesTabStatement;
 					stmt1.clearParameters();
 
 					CCSQLResultSet rs1 = stmt1.executeQuery(this);
@@ -838,7 +845,7 @@ public class CCDatabase {
 					rs1.close();
 				}
 				{
-					CCSQLStatement stmt2 = selectAllMoviesTabStatement;
+					CCSQLStatement stmt2 = stmts.selectAllMoviesTabStatement;
 					stmt2.clearParameters();
 
 					CCSQLResultSet rs2 = stmt2.executeQuery(this);
@@ -854,7 +861,7 @@ public class CCDatabase {
 
 				// MOVIES
 				{
-					CCSQLStatement stmt = selectAllMoviesTabStatement;
+					CCSQLStatement stmt = stmts.selectAllMoviesTabStatement;
 					stmt.clearParameters();
 
 					CCSQLResultSet rs = stmt.executeQuery(this);
@@ -871,7 +878,7 @@ public class CCDatabase {
 
 				// SERIES
 				{
-					CCSQLStatement stmt = selectAllSeriesTabStatement;
+					CCSQLStatement stmt = stmts.selectAllSeriesTabStatement;
 					stmt.clearParameters();
 
 					CCSQLResultSet rs = stmt.executeQuery(this);
@@ -891,7 +898,7 @@ public class CCDatabase {
 
 				// SEASONS
 				{
-					CCSQLStatement stmt = selectAllSeasonTabStatement;
+					CCSQLStatement stmt = stmts.selectAllSeasonTabStatement;
 					stmt.clearParameters();
 
 					CCSeries lastSeries = null;
@@ -914,7 +921,7 @@ public class CCDatabase {
 
 				// EPISODES
 				{
-					CCSQLStatement stmt = selectAllEpisodeTabStatement;
+					CCSQLStatement stmt = stmts.selectAllEpisodeTabStatement;
 					stmt.clearParameters();
 
 					CCSeason lastSeason = null;
@@ -948,7 +955,7 @@ public class CCDatabase {
 		{
 			// GROUPS
 
-			CCSQLStatement stmt = selectGroupsStatement;
+			CCSQLStatement stmt = stmts.selectGroupsStatement;
 			stmt.clearParameters();
 
 			CCSQLResultSet rs = stmt.executeQuery(this);
@@ -978,7 +985,7 @@ public class CCDatabase {
 		{
 			if (loadAll)
 			{
-				CCSQLStatement stmt = selectCoversFullStatement;
+				CCSQLStatement stmt = stmts.selectCoversFullStatement;
 				stmt.clearParameters();
 
 				CCSQLResultSet rs = stmt.executeQuery(this);
@@ -1000,7 +1007,7 @@ public class CCDatabase {
 			}
 			else
 			{
-				CCSQLStatement stmt = selectCoversFastStatement;
+				CCSQLStatement stmt = stmts.selectCoversFastStatement;
 				stmt.clearParameters();
 
 				CCSQLResultSet rs = stmt.executeQuery(this);
@@ -1026,7 +1033,7 @@ public class CCDatabase {
 
 	private void fillSeries(CCSeries ser) {
 		try {
-			CCSQLStatement stmt = selectSeasonTabStatement;
+			CCSQLStatement stmt = stmts.selectSeasonTabStatement;
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID, ser.getLocalID());
@@ -1051,7 +1058,7 @@ public class CCDatabase {
 
 	private void fillSeason(CCSeason se) {
 		try {
-			CCSQLStatement stmt = selectEpisodeTabStatement;
+			CCSQLStatement stmt = stmts.selectEpisodeTabStatement;
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_EPIS_SEASONID, se.getLocalID());
@@ -1078,9 +1085,13 @@ public class CCDatabase {
 		return databaseDirectory.append(databaseName);
 	}
 
+	public String getDBName() {
+		return databaseName;
+	}
+
 	public void removeFromMovies(int localID) {
 		try {
-			CCSQLStatement stmt = deleteMovieTabStatement;
+			CCSQLStatement stmt = stmts.deleteMovieTabStatement;
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_MOV_LOCALID, localID);
@@ -1093,7 +1104,7 @@ public class CCDatabase {
 
 	public void removeFromSeries(int localID) {
 		try {
-			CCSQLStatement stmt = deleteSeriesTabStatement;
+			CCSQLStatement stmt = stmts.deleteSeriesTabStatement;
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_SER_LOCALID, localID);
@@ -1106,7 +1117,7 @@ public class CCDatabase {
 	
 	public void removeFromSeasons(int seasonID) {
 		try {
-			CCSQLStatement stmt = deleteSeasonTabStatement;
+			CCSQLStatement stmt = stmts.deleteSeasonTabStatement;
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_SEAS_LOCALID, seasonID);
@@ -1119,7 +1130,7 @@ public class CCDatabase {
 	
 	public void removeFromEpisodes(int localID) {
 		try {
-			CCSQLStatement stmt = deleteEpisodeTabStatement;
+			CCSQLStatement stmt = stmts.deleteEpisodeTabStatement;
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_EPIS_LOCALID, localID);
@@ -1152,7 +1163,7 @@ public class CCDatabase {
 		try {
 			String value;
 			
-			CCSQLStatement stmt = readInfoKeyStatement;
+			CCSQLStatement stmt = stmts.readInfoKeyStatement;
 			stmt.clearParameters();
 			stmt.setStr(DatabaseStructure.COL_INFO_KEY, key.Key);
 			
@@ -1174,7 +1185,7 @@ public class CCDatabase {
 
 	public void writeInformationToDB(CCSQLKVKey key, String value) {
 		try {
-			CCSQLStatement stmt = writeInfoKeyStatement;
+			CCSQLStatement stmt = stmts.writeInfoKeyStatement;
 			stmt.clearParameters();
 
 			stmt.setStr(DatabaseStructure.COL_INFO_KEY, key.Key);
@@ -1188,7 +1199,7 @@ public class CCDatabase {
 	
 	public void removeGroup(String name) {
 		try {
-			CCSQLStatement stmt = removeGroupStatement;
+			CCSQLStatement stmt = stmts.removeGroupStatement;
 			stmt.clearParameters();
 
 			stmt.setStr(DatabaseStructure.COL_GRPS_NAME, name);
@@ -1201,7 +1212,7 @@ public class CCDatabase {
 
 	public void addGroup(String name, int order, Color color, boolean doSerialize, String parent, boolean visible) {
 		try {
-			CCSQLStatement stmt = insertGroupStatement;
+			CCSQLStatement stmt = stmts.insertGroupStatement;
 			stmt.clearParameters();
 
 			stmt.setStr(DatabaseStructure.COL_GRPS_NAME,      name);
@@ -1219,7 +1230,7 @@ public class CCDatabase {
 
 	public void updateGroup(String name, int order, Color color, boolean doSerialize, String parent, boolean visible) {
 		try {
-			CCSQLStatement stmt = updateGroupStatement;
+			CCSQLStatement stmt = stmts.updateGroupStatement;
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_GRPS_ORDER,     order);
@@ -1239,7 +1250,7 @@ public class CCDatabase {
 	public boolean insertCoverEntry(CCCoverData cce) {
 		try {
 			{
-				CCSQLStatement stmt = insertCoversStatement;
+				CCSQLStatement stmt = stmts.insertCoversStatement;
 				stmt.clearParameters();
 
 				stmt.setInt(DatabaseStructure.COL_CVRS_ID,          cce.ID);
@@ -1267,7 +1278,7 @@ public class CCDatabase {
 
 	public void deleteCoverEntry(CCCoverData cce) {
 		try {
-			CCSQLStatement stmt = removeCoversStatement;
+			CCSQLStatement stmt = stmts.removeCoversStatement;
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_CVRS_ID, cce.ID);
@@ -1280,14 +1291,10 @@ public class CCDatabase {
 
 	public void clearGroups() {
 		try {
-			Statements.removeAllGroupsStatement.execute();
+			stmts.removeAllGroupsStatement.execute();
 		} catch (SQLException e) {
 			CCLog.addError(e);
 		}
-	}
-
-	private void shutdownStatements() {
-		shutdown();
 	}
 
 	public Exception getLastError() {
@@ -1324,7 +1331,7 @@ public class CCDatabase {
 
 	public int getHistoryCount() {
 		try {
-			return countHistory.executeQueryInt(this);
+			return stmts.countHistory.executeQueryInt(this);
 		} catch (SQLException e) {
 			CCLog.addError(e);
 			return 0;
@@ -1354,25 +1361,25 @@ public class CCDatabase {
 			CCSQLResultSet rs;
 			if (idfilter != null) {
 				if (start != null) {
-					CCSQLStatement stmt = queryHistoryStatementFilteredLimited;
+					CCSQLStatement stmt = stmts.queryHistoryStatementFilteredLimited;
 					stmt.clearParameters();
 					stmt.setStr(COL_HISTORY_ID, idfilter);
 					stmt.setStr(COL_HISTORY_DATE, start.toUTC(TimeZone.getDefault()).toStringSQL());
 					rs = stmt.executeQuery(this);
 				} else {
-					CCSQLStatement stmt = queryHistoryStatementFiltered;
+					CCSQLStatement stmt = stmts.queryHistoryStatementFiltered;
 					stmt.clearParameters();
 					stmt.setStr(COL_HISTORY_ID, idfilter);
 					rs = stmt.executeQuery(this);
 				}
 			} else {
 				if (start != null) {
-					CCSQLStatement stmt = queryHistoryStatementLimited;
+					CCSQLStatement stmt = stmts.queryHistoryStatementLimited;
 					stmt.clearParameters();
 					stmt.setStr(COL_HISTORY_DATE, start.toUTC(TimeZone.getDefault()).toStringSQL());
 					rs = stmt.executeQuery(this);
 				} else {
-					CCSQLStatement stmt = queryHistoryStatement;
+					CCSQLStatement stmt = stmts.queryHistoryStatement;
 					stmt.clearParameters();
 					rs = stmt.executeQuery(this);
 				}

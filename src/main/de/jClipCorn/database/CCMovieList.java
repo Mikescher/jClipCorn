@@ -750,6 +750,10 @@ public class CCMovieList {
 	public FSPath getDatabaseDirectory() {
 		return database.getDBPath();
 	}
+
+	public String getDatabaseName() {
+		return database.getDBName();
+	}
 	
 	public List<FSPath> getAbsolutePathList(boolean includeSeries) {
 		List<FSPath> result = new ArrayList<>();

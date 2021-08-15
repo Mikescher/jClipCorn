@@ -9,7 +9,6 @@ import de.jClipCorn.util.sqlwrapper.SQLWrapperException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import static de.jClipCorn.database.driver.DatabaseStructure.*;
 
@@ -18,60 +17,64 @@ public class Statements {
 
 	//--------------------------------------------------------------------------------------------------
 
-	public static CCSQLStatement addEmptyMovieTabStatement;
-	public static CCSQLStatement addEmptySeriesTabStatement;
-	public static CCSQLStatement addEmptySeasonTabStatement;
-	public static CCSQLStatement addEmptyEpisodeTabStatement;
+	public CCSQLStatement addEmptyMovieTabStatement;
+	public CCSQLStatement addEmptySeriesTabStatement;
+	public CCSQLStatement addEmptySeasonTabStatement;
+	public CCSQLStatement addEmptyEpisodeTabStatement;
 
-	public static CCSQLStatement newDatabaseIDStatement1;
-	public static CCSQLStatement newDatabaseIDStatement2;
+	public CCSQLStatement newDatabaseIDStatement1;
+	public CCSQLStatement newDatabaseIDStatement2;
 
-	public static CCSQLStatement updateMovieTabStatement;
-	public static CCSQLStatement updateSeriesTabStatement;
-	public static CCSQLStatement updateSeasonTabStatement;
-	public static CCSQLStatement updateEpisodeTabStatement;
+	public CCSQLStatement updateMovieTabStatement;
+	public CCSQLStatement updateSeriesTabStatement;
+	public CCSQLStatement updateSeasonTabStatement;
+	public CCSQLStatement updateEpisodeTabStatement;
 
-	public static CCSQLStatement selectAllMoviesTabStatement;
-	public static CCSQLStatement selectAllSeriesTabStatement;
-	public static CCSQLStatement selectAllSeasonTabStatement;
-	public static CCSQLStatement selectAllEpisodeTabStatement;
+	public CCSQLStatement selectAllMoviesTabStatement;
+	public CCSQLStatement selectAllSeriesTabStatement;
+	public CCSQLStatement selectAllSeasonTabStatement;
+	public CCSQLStatement selectAllEpisodeTabStatement;
 
-	public static CCSQLStatement selectSeasonTabStatement;
-	public static CCSQLStatement selectEpisodeTabStatement;
+	public CCSQLStatement selectSeasonTabStatement;
+	public CCSQLStatement selectEpisodeTabStatement;
 
-	public static CCSQLStatement deleteMovieTabStatement;
-	public static CCSQLStatement deleteSeriesTabStatement;
-	public static CCSQLStatement deleteSeasonTabStatement;
-	public static CCSQLStatement deleteEpisodeTabStatement;
+	public CCSQLStatement deleteMovieTabStatement;
+	public CCSQLStatement deleteSeriesTabStatement;
+	public CCSQLStatement deleteSeasonTabStatement;
+	public CCSQLStatement deleteEpisodeTabStatement;
 
-	public static CCSQLStatement selectSingleMovieTabStatement;
-	public static CCSQLStatement selectSingleSeriesTabStatement;
-	public static CCSQLStatement selectSingleSeasonTabStatement;
-	public static CCSQLStatement selectSingleEpisodeTabStatement;
+	public CCSQLStatement selectSingleMovieTabStatement;
+	public CCSQLStatement selectSingleSeriesTabStatement;
+	public CCSQLStatement selectSingleSeasonTabStatement;
+	public CCSQLStatement selectSingleEpisodeTabStatement;
 
-	public static CCSQLStatement writeInfoKeyStatement;
-	public static CCSQLStatement readInfoKeyStatement;
+	public CCSQLStatement writeInfoKeyStatement;
+	public CCSQLStatement readInfoKeyStatement;
 
-	public static CCSQLStatement selectGroupsStatement;
-	public static CCSQLStatement insertGroupStatement;
-	public static CCSQLStatement removeGroupStatement;
-	public static CCSQLStatement updateGroupStatement;
-	public static CCSQLStatement removeAllGroupsStatement;
+	public CCSQLStatement selectGroupsStatement;
+	public CCSQLStatement insertGroupStatement;
+	public CCSQLStatement removeGroupStatement;
+	public CCSQLStatement updateGroupStatement;
+	public CCSQLStatement removeAllGroupsStatement;
 
-	public static CCSQLStatement selectCoversFullStatement;
-	public static CCSQLStatement selectCoversFastStatement;
-	public static CCSQLStatement insertCoversStatement;
-	public static CCSQLStatement removeCoversStatement;
+	public CCSQLStatement selectCoversFullStatement;
+	public CCSQLStatement selectCoversFastStatement;
+	public CCSQLStatement insertCoversStatement;
+	public CCSQLStatement removeCoversStatement;
 
-	public static CCSQLStatement countHistory;
-	public static CCSQLStatement queryHistoryStatement;
-	public static CCSQLStatement queryHistoryStatementFiltered;
-	public static CCSQLStatement queryHistoryStatementLimited;
-	public static CCSQLStatement queryHistoryStatementFilteredLimited;
+	public CCSQLStatement countHistory;
+	public CCSQLStatement queryHistoryStatement;
+	public CCSQLStatement queryHistoryStatementFiltered;
+	public CCSQLStatement queryHistoryStatementLimited;
+	public CCSQLStatement queryHistoryStatementFilteredLimited;
 
-	private static ArrayList<CCSQLStatement> statements = new ArrayList<>();
+	private ArrayList<CCSQLStatement> statements = new ArrayList<>();
 
-	public static void intialize(CCDatabase d) {
+	public Statements() {
+
+	}
+
+	public void initialize(CCDatabase d) throws SQLException, SQLWrapperException {
 		try {
 			statements = new ArrayList<>();
 
@@ -175,10 +178,11 @@ public class Statements {
 
 		} catch (SQLException | SQLWrapperException e) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.CouldNotCreatePreparedStatement"), e);
+			throw e;
 		}
 	}
 	
-	public static void shutdown() {
+	public void shutdown() {
 		try {
 			for (CCSQLStatement stmt : statements) stmt.tryClose();
 		} catch (Exception e) {

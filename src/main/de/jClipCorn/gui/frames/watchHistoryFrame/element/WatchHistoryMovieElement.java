@@ -41,7 +41,7 @@ public class WatchHistoryMovieElement extends WatchHistoryElement{
 	}
 
 	@Override
-	public CCDBLanguageList getLanguage() {
+	public CCDBLanguageSet getLanguage() {
 		return Movie.getLanguage();
 	}
 

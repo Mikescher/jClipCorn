@@ -1,16 +1,15 @@
 package de.jClipCorn.database.elementProps.impl;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.elementProps.IPropertyParent;
-import de.jClipCorn.util.exceptions.CCFormatException;
 
-public class ELanguageListProp extends EProperty<CCDBLanguageList> {
-	public ELanguageListProp(String name, CCDBLanguageList defValue, IPropertyParent p, EPropertyType t) {
+public class ELanguageSetProp extends EProperty<CCDBLanguageSet> {
+	public ELanguageSetProp(String name, CCDBLanguageSet defValue, IPropertyParent p, EPropertyType t) {
 		super(name, defValue, p, t);
 	}
 
 	public void set(long v) {
-		set(CCDBLanguageList.fromBitmask(v));
+		set(CCDBLanguageSet.fromBitmask(v));
 	}
 
 	@Override
@@ -25,7 +24,7 @@ public class ELanguageListProp extends EProperty<CCDBLanguageList> {
 
 	@Override
 	public void deserializeFromString(String v) {
-		set(CCDBLanguageList.parseFromString(v));
+		set(CCDBLanguageSet.parseFromString(v));
 	}
 
 	@Override
@@ -34,7 +33,7 @@ public class ELanguageListProp extends EProperty<CCDBLanguageList> {
 	}
 
 	@Override
-	public boolean valueEquals(CCDBLanguageList a, CCDBLanguageList b) {
+	public boolean valueEquals(CCDBLanguageSet a, CCDBLanguageSet b) {
 		if (a == null && b == null) return true;
 		if (a == null || b == null) return false;
 		return a.isEqual(b);

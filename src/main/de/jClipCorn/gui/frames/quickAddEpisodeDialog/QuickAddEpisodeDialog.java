@@ -6,7 +6,7 @@ import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
@@ -297,7 +297,7 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 		cbRename.setSelected(cbCopy.isSelected());
 		
 		CCEpisode last = season.getSeries().getLastAddedEpisode();
-		CCDBLanguageList lang = CCDBLanguageList.single(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
+		CCDBLanguageSet lang = CCDBLanguageSet.single(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		if (last != null) lang = last.getLanguage();
 		ctrlLang.setValue(lang);
 
@@ -310,7 +310,7 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 				SwingUtils.invokeLater(() ->
 				{
 					if (dat.AudioLanguages != null) {
-						CCDBLanguageList dbll = dat.AudioLanguages;
+						CCDBLanguageSet dbll = dat.AudioLanguages;
 
 						if (!dbll.isEmpty()) ctrlLang.setValue(dbll);
 					}
@@ -365,7 +365,7 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 		int episodenumber = (int)spnEpisode.getValue();
 		int length = (int)spnLength.getValue();
 		String title = edTitle.getText().trim();
-		CCDBLanguageList lang = ctrlLang.getValue();
+		CCDBLanguageSet lang = ctrlLang.getValue();
 
 		var imd = dst.getParent().append(src.getFilenameWithExt());
 
@@ -488,7 +488,7 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 				return;
 			}
 
-			CCDBLanguageList dbll = dat.AudioLanguages;
+			CCDBLanguageSet dbll = dat.AudioLanguages;
 
 			if (dbll.isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$

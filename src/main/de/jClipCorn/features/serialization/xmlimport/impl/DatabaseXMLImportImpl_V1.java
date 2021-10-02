@@ -60,8 +60,8 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 			e.execIfLongAttrExists("filesize", v -> o.fileSize().set(v));
 			e.execIfIntAttrExists("format", v -> o.format().set(v));
 			e.execIfIntAttrExists("length", v -> o.length().set(v));
-			e.execIfIntAttrExists("language", v -> o.Language.set(CCDBLanguageList.single(CCDBLanguage.getWrapper().findOrException(v)))); // backwards compatibility
-			e.execIfAttrExists("languages", v -> o.Language.set(CCDBLanguageList.parseFromString(v)));
+			e.execIfIntAttrExists("language", v -> o.Language.set(CCDBLanguageSet.single(CCDBLanguage.getWrapper().findOrException(v)))); // backwards compatibility
+			e.execIfAttrExists("languages", v -> o.Language.set(CCDBLanguageSet.parseFromString(v)));
 
 			for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
 				int fi = i;
@@ -149,7 +149,7 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 
 			if (s.ResetTags) o.Tags.set(CCTagList.EMPTY);
 
-			e.execIfAttrExists("languages", v -> o.Language.set(CCDBLanguageList.parseFromString(v)));
+			e.execIfAttrExists("languages", v -> o.Language.set(CCDBLanguageSet.parseFromString(v)));
 
 			if (!o.isViewed() && e.hasAttribute("viewed") && e.getAttributeBoolValueOrThrow("viewed")) o.addToViewedHistory(CCDateTime.getUnspecified());
 			if (s.ResetViewed) o.ViewedHistory.set(CCDateTimeList.createEmpty());

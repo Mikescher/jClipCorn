@@ -19,7 +19,7 @@ public class MovieDataPack implements IMovieData
 	private final CCFileSize filesize;
 	private final List<CCPath> parts;
 	private final CCDateTimeList viewedHistory;
-	private final CCDBLanguageList language;
+	private final CCDBLanguageSet language;
 	private final String title;
 	private final CCGenreList genres;
 	private final CCOnlineScore onlinescore;
@@ -32,7 +32,7 @@ public class MovieDataPack implements IMovieData
 
 	public MovieDataPack(CCMovieZyklus zyklus, PartialMediaInfo mediaInfo, int length, CCDate addDate,
 						 CCFileFormat format, int year, CCFileSize filesize, List<CCPath> parts,
-						 CCDateTimeList viewedHistory, CCDBLanguageList language, String title,
+						 CCDateTimeList viewedHistory, CCDBLanguageSet language, String title,
 						 CCGenreList genres, CCOnlineScore onlinescore, CCFSK fsk, CCUserScore score,
 						 CCOnlineReferenceList onlineReference, CCGroupList groups, CCTagList tags, BufferedImage cover)
 	{
@@ -77,7 +77,7 @@ public class MovieDataPack implements IMovieData
 
 	@Override public CCDateTimeList getViewedHistory() { return viewedHistory; }
 
-	@Override public CCDBLanguageList getLanguage() { return language; }
+	@Override public CCDBLanguageSet getLanguage() { return language; }
 
 	@Override public String getTitle() { return title; }
 

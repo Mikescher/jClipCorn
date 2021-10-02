@@ -19,5 +19,5 @@ public interface IMovieData extends IDatabaseElementData
 	CCFileSize getFilesize();
 	List<CCPath> getParts();
 	CCDateTimeList getViewedHistory();
-	CCDBLanguageList getLanguage();
+	CCDBLanguageSet getLanguage();
 }

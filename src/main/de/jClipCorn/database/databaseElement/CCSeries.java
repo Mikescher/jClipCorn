@@ -542,7 +542,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		});
 	}
 
-	public CCDBLanguageList getAllLanguages() {
+	public CCDBLanguageSet getAllLanguages() {
 		return _cache.get(SeriesCache.ALL_LANGUAGES, null, ser->
 		{
 			HashSet<CCDBLanguage> langs = new HashSet<>();
@@ -554,11 +554,11 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 				}
 			}
 
-			return CCDBLanguageList.createDirect(langs);
+			return CCDBLanguageSet.createDirect(langs);
 		});
 	}
 
-	public CCDBLanguageList getCommonLanguages() {
+	public CCDBLanguageSet getCommonLanguages() {
 		return _cache.get(SeriesCache.COMMON_LANGUAGES, null, ser->
 		{
 			HashSet<CCDBLanguage> langs = null;
@@ -568,32 +568,32 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 				{
 					if (langs == null) { langs = new HashSet<>(e.Language.get().getInternalData()); continue; }
 					langs.retainAll(e.Language.get().getInternalData());
-					if (langs.size()==0) return CCDBLanguageList.EMPTY;
+					if (langs.size()==0) return CCDBLanguageSet.EMPTY;
 				}
 			}
-			if (langs == null) return CCDBLanguageList.EMPTY;
-			return CCDBLanguageList.createDirect(langs);
+			if (langs == null) return CCDBLanguageSet.EMPTY;
+			return CCDBLanguageSet.createDirect(langs);
 		});
 	}
 
-	public CCDBLanguageList getSemiCommonOrAllLanguages() {
-		CCDBLanguageList com = getSemiCommonLanguages();
+	public CCDBLanguageSet getSemiCommonOrAllLanguages() {
+		CCDBLanguageSet com = getSemiCommonLanguages();
 		return com.isEmpty() ? getAllLanguages() : com;
 	}
 
-	public CCDBLanguageList getSemiCommonLanguages() {
+	public CCDBLanguageSet getSemiCommonLanguages() {
 		return _cache.get(SeriesCache.SEMI_COMMON_LANGUAGES, Tuple1.Create(getMovieList().ccprops().PROP_FOLDERLANG_IGNORE_PERC.getValue()), ser->
 		{
-			if (getEpisodeCount() == 0) return CCDBLanguageList.EMPTY;
+			if (getEpisodeCount() == 0) return CCDBLanguageSet.EMPTY;
 
 			var firstEpisode = getFirstEpisode();
 
 			HashSet<CCDBLanguage> allLanguages = new HashSet<>();
 
 			HashSet<CCDBLanguage> langsCommon = new HashSet<>(firstEpisode.Language.get().getInternalData());
-			CCDBLanguageList langsEqual  = firstEpisode.Language.get();
+			CCDBLanguageSet langsEqual  = firstEpisode.Language.get();
 
-			HashMap<CCDBLanguageList, Integer> langsLength = new HashMap<>();
+			HashMap<CCDBLanguageSet, Integer> langsLength = new HashMap<>();
 			int totalLength = 0;
 
 			for (CCSeason s : seasons)
@@ -620,9 +620,9 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 			if (maxPerc > 0) // if maxPerc is set we can use a Language set that satisifies at least (100-maxPerc)% of the total length
 			{
-				CCDBLanguageList percentageMatch_Lang  = null;
+				CCDBLanguageSet percentageMatch_Lang  = null;
 				double           percentageMatch_Score = Integer.MIN_VALUE;
-				for (var langset : CCDBLanguageList.create(allLanguages).allSubsets())
+				for (var langset : CCDBLanguageSet.create(allLanguages).allSubsets())
 				{
 					if (langset.isEmpty()) continue;
 
@@ -646,12 +646,12 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 				if (percentageMatch_Lang != null) return percentageMatch_Lang;
 			}
 
-			return CCDBLanguageList.createDirect(langsCommon);
+			return CCDBLanguageSet.createDirect(langsCommon);
 		});
 	}
 
 	@SuppressWarnings("nls")
-	public String getFolderNameForCreatedFolderStructure(CCDBLanguageList fallbackLanguage) {
+	public String getFolderNameForCreatedFolderStructure(CCDBLanguageSet fallbackLanguage) {
 		return _cache.get(SeriesCache.FOLDER_NAME_FOR_CREATED_FOLDER_STRUCTURE, Tuple1.Create(fallbackLanguage), ser->
 		{
 			StringBuilder seriesfoldername = new StringBuilder(Title.get());
@@ -660,7 +660,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 				if (group.DoSerialize) seriesfoldername.append(" [[").append(group.Name).append("]]");
 			}
 
-			CCDBLanguageList lang = getSemiCommonLanguages();
+			CCDBLanguageSet lang = getSemiCommonLanguages();
 			if (getEpisodeCount() == 0 && fallbackLanguage != null) lang = fallbackLanguage;
 			if (!lang.isExact(CCDBLanguage.GERMAN) && !lang.isEmpty()) {
 				seriesfoldername.append(String.format(" [%s]", lang.serializeToFilenameString()));

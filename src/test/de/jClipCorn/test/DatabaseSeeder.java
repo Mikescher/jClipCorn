@@ -102,7 +102,7 @@ public class DatabaseSeeder {
 				e.FileSize.set(new CCFileSize(1_166_926));
 				e.FSK.set(CCFSK.RATING_II);
 				e.ViewedHistory.set(CCDateTimeList.createEmpty());
-				e.Language.set(CCDBLanguageList.GERMAN);
+				e.Language.set(CCDBLanguageSet.GERMAN);
 				e.Year.set(1994);
 				e.Groups.set(CCGroupList.EMPTY);
 				e.AddDate.set(CCDate.create(23, 9, 2010));
@@ -139,7 +139,7 @@ public class DatabaseSeeder {
 				e.FileSize.set(new CCFileSize(1_545_782));
 				e.FSK.set(CCFSK.RATING_IV);
 				e.ViewedHistory.set(CCDateTimeList.create(CCDateTime.createFromSQL("2019-04-01"), CCDateTime.createFromSQL("2020-08-17 20:08:30"), CCDateTime.createFromSQL("2021-01-03 20:08:30")));
-				e.Language.set(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.ENGLISH));
+				e.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.ENGLISH));
 				e.Year.set(1988);
 				e.Groups.set(CCGroupList.create(CCGroup.create("BruceWillis")));
 				e.AddDate.set(CCDate.create(6, 8, 2015));
@@ -178,7 +178,7 @@ public class DatabaseSeeder {
 				e.FileSize.set(new CCFileSize(12_170_130+21_899_356));
 				e.FSK.set(CCFSK.RATING_IV);
 				e.ViewedHistory.set(CCDateTimeList.create(CCDateTime.getUnspecified(), CCDateTime.createFromSQL("2021-06-06 07:08:00")));
-				e.Language.set(CCDBLanguageList.create(CCDBLanguage.GERMAN));
+				e.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN));
 				e.Year.set(1990);
 				e.Groups.set(CCGroupList.create(CCGroup.create("BruceWillis")));
 				e.AddDate.set(CCDate.create(15, 1, 2017));
@@ -250,7 +250,7 @@ public class DatabaseSeeder {
 						epis.Part.set(CCPath.createFromFSPath(f, ml));
 						epis.AddDate.set(CCDate.create(14, 8, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.create(CCDateTime.getUnspecified(), CCDateTime.createFromSQL("2020-08-14 20:21:00")));
-						epis.Language.set(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE, CCDBLanguage.ENGLISH));
+						epis.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE, CCDBLanguage.ENGLISH));
 					}
 					epis.endUpdating();
 				}
@@ -273,7 +273,7 @@ public class DatabaseSeeder {
 						epis.Part.set(CCPath.createFromFSPath(f, ml));
 						epis.AddDate.set(CCDate.create(14, 8, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.create(CCDateTime.getUnspecified(), CCDateTime.createFromSQL("2020-08-14 20:52:00")));
-						epis.Language.set(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE, CCDBLanguage.ENGLISH));
+						epis.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE, CCDBLanguage.ENGLISH));
 					}
 					epis.endUpdating();
 				}
@@ -296,7 +296,7 @@ public class DatabaseSeeder {
 						epis.Part.set(CCPath.createFromFSPath(f, ml));
 						epis.AddDate.set(CCDate.create(14, 8, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.create(CCDateTime.getUnspecified(), CCDateTime.createFromSQL("2020-08-14 21:19:00")));
-						epis.Language.set(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE, CCDBLanguage.ENGLISH));
+						epis.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE, CCDBLanguage.ENGLISH));
 					}
 					epis.endUpdating();
 				}
@@ -331,7 +331,7 @@ public class DatabaseSeeder {
 						epis.Part.set(CCPath.createFromFSPath(f, ml));
 						epis.AddDate.set(CCDate.create(1, 9, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.createEmpty());
-						epis.Language.set(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE));
+						epis.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE));
 					}
 					epis.endUpdating();
 				}
@@ -354,7 +354,7 @@ public class DatabaseSeeder {
 						epis.Part.set(CCPath.createFromFSPath(f, ml));
 						epis.AddDate.set(CCDate.create(1, 9, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.createEmpty());
-						epis.Language.set(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE));
+						epis.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE));
 					}
 					epis.endUpdating();
 				}

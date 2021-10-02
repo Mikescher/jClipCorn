@@ -1,7 +1,7 @@
 package de.jClipCorn.gui.frames.previewSeriesFrame.serTable;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
@@ -90,7 +90,7 @@ public class SFixSerTable extends SFixTable {
 			case SerTableModel.COLUMN_VIEWED:     return null;
 			case SerTableModel.COLUMN_LASTVIEWED: return (((CCDateTimeList)value).any()) ? ((CCDateTimeList)value).getHTMLListFormatted(row) : null;
 			case SerTableModel.COLUMN_MEDIAINFO:  return ((CCQualityCategory)value).getTooltip();
-			case SerTableModel.COLUMN_LANGUAGE:   return ((CCDBLanguageList)value).toOutputString();
+			case SerTableModel.COLUMN_LANGUAGE:   return ((CCDBLanguageSet)value).toOutputString();
 			case SerTableModel.COLUMN_LENGTH:     return TimeIntervallFormatter.format(((int)value));
 			case SerTableModel.COLUMN_TAGS:       return ((CCTagList) value).getAsString();
 			case SerTableModel.COLUMN_ADDDATE:    return null;

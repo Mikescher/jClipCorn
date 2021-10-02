@@ -44,7 +44,7 @@ public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 	}
 
 	@Override
-	public CCDBLanguageList getLanguage() {
+	public CCDBLanguageSet getLanguage() {
 		return Episode.getLanguage();
 	}
 

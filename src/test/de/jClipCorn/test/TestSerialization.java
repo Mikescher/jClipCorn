@@ -38,7 +38,7 @@ public class TestSerialization extends ClipCornBaseTest {
 		assertEquals(CCFileFormat.AVI, mov.getFormat());
 		assertEquals("R.E.D. I - Älter. Härter. Besser.", mov.getCompleteTitle());
 		assertEquals(714502144, mov.getFilesize().getBytes());
-		assertEquals(CCDBLanguageList.GERMAN, mov.getLanguage());
+		assertEquals(CCDBLanguageSet.GERMAN, mov.getLanguage());
 		assertEquals(111, mov.getLength());
 		assertEquals(2010, mov.getYear());
 		assertEquals(CCUserScore.RATING_NO, mov.Score.get());
@@ -66,7 +66,7 @@ public class TestSerialization extends ClipCornBaseTest {
 		assertEquals(CCFileFormat.AVI, mov.getFormat());
 		assertEquals("R.E.D. I - Älter. Härter. Besser.", mov.getCompleteTitle());
 		assertEquals(714502144, mov.getFilesize().getBytes());
-		assertEquals(CCDBLanguageList.GERMAN, mov.getLanguage());
+		assertEquals(CCDBLanguageSet.GERMAN, mov.getLanguage());
 		assertEquals(111, mov.getLength());
 		assertEquals(2010, mov.getYear());
 		assertEquals(CCUserScore.RATING_NO, mov.Score.get());

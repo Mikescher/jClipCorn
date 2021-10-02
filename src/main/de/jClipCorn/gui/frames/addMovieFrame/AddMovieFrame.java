@@ -412,7 +412,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		spnSize.setValue(size.getBytes());
 	}
 
-	public void setMovieLanguage(CCDBLanguageList lang) {
+	public void setMovieLanguage(CCDBLanguageSet lang) {
 		cbxLanguage.setValue(lang);
 	}
 
@@ -634,8 +634,8 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				return;
 			}
 
-			CCDBLanguageList dbll = dat.get(0).AudioLanguages;
-			for (int i = 1; i < dat.size(); i++) dbll = CCDBLanguageList.intersection(dbll, dat.get(i).AudioLanguages);
+			CCDBLanguageSet dbll = dat.get(0).AudioLanguages;
+			for (int i = 1; i < dat.size(); i++) dbll = CCDBLanguageSet.intersection(dbll, dat.get(i).AudioLanguages);
 
 			if (dbll.isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
@@ -753,10 +753,10 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 
 				if (CCStreams.iterate(dat).any(d -> d.AudioLanguages == null)) return;
 
-				CCDBLanguageList dbll = dat.get(0).AudioLanguages;
-				for (int i = 1; i < dat.size(); i++) dbll = CCDBLanguageList.intersection(dbll, dat.get(i).AudioLanguages);
+				CCDBLanguageSet dbll = dat.get(0).AudioLanguages;
+				for (int i = 1; i < dat.size(); i++) dbll = CCDBLanguageSet.intersection(dbll, dat.get(i).AudioLanguages);
 
-				final CCDBLanguageList dbll2 = dbll;
+				final CCDBLanguageSet dbll2 = dbll;
 				if (!dbll.isEmpty() && !_isDirtyLanguage) SwingUtils.invokeLater(() -> setMovieLanguage(dbll2) );
 
 			} catch (Exception e) {

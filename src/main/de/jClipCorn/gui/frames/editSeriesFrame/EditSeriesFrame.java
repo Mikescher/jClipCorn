@@ -34,8 +34,6 @@ import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
@@ -1054,7 +1052,7 @@ public class EditSeriesFrame extends JCCFrame
 				return;
 			}
 
-			CCDBLanguageList dbll = dat.AudioLanguages;
+			CCDBLanguageSet dbll = dat.AudioLanguages;
 
 			if (dbll.isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$

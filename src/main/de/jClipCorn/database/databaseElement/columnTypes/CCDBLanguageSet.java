@@ -14,55 +14,55 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.*;
 
-public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
-	public static final CCDBLanguageList GERMAN = new CCDBLanguageList(CCDBLanguage.GERMAN);
-	public static final CCDBLanguageList ENGLISH = new CCDBLanguageList(CCDBLanguage.ENGLISH);
-	public static final CCDBLanguageList JAPANESE = new CCDBLanguageList(CCDBLanguage.JAPANESE);
-	public static final CCDBLanguageList EMPTY = new CCDBLanguageList();
+public class CCDBLanguageSet implements CCIterable<CCDBLanguage> {
+	public static final CCDBLanguageSet GERMAN   = new CCDBLanguageSet(CCDBLanguage.GERMAN);
+	public static final CCDBLanguageSet ENGLISH  = new CCDBLanguageSet(CCDBLanguage.ENGLISH);
+	public static final CCDBLanguageSet JAPANESE = new CCDBLanguageSet(CCDBLanguage.JAPANESE);
+	public static final CCDBLanguageSet EMPTY    = new CCDBLanguageSet();
 
 	private static final HashMap<String, ImageIcon> _fullIconCache = new HashMap<>();
 
 	private final Set<CCDBLanguage> _languages;
 
-	private CCDBLanguageList(CCDBLanguage... langs) {
+	private CCDBLanguageSet(CCDBLanguage... langs) {
 		_languages = new HashSet<>(Arrays.asList(langs));
 	}
 
-	private CCDBLanguageList(CCStream<CCDBLanguage> langs) {
+	private CCDBLanguageSet(CCStream<CCDBLanguage> langs) {
 		_languages = new HashSet<>(langs.enumerate());
 	}
 
-	private CCDBLanguageList(Set<CCDBLanguage> direct) {
+	private CCDBLanguageSet(Set<CCDBLanguage> direct) {
 		if (direct == null) throw new NullPointerException();
 		_languages = direct;
 	}
 
-	public static CCDBLanguageList parseFromString(String str) {
-		return new CCDBLanguageList(CCStreams.iterate(str.split(";")).map(CCDBLanguage::findByLongString)); //$NON-NLS-1$
+	public static CCDBLanguageSet parseFromString(String str) {
+		return new CCDBLanguageSet(CCStreams.iterate(str.split(";")).map(CCDBLanguage::findByLongString)); //$NON-NLS-1$
 	}
 
-	public static CCDBLanguageList fromBitmask(long v) {
+	public static CCDBLanguageSet fromBitmask(long v) {
 		HashSet<CCDBLanguage> lang = new HashSet<>();
 		for (CCDBLanguage lng : CCDBLanguage.values()) {
 			if ((v & lng.asBitMask()) == lng.asBitMask()) lang.add(lng);
 		}
-		return new CCDBLanguageList(lang);
+		return new CCDBLanguageSet(lang);
 	}
 
-	public static CCDBLanguageList createDirect(Set<CCDBLanguage> v) { // no copy !
-		return new CCDBLanguageList(v);
+	public static CCDBLanguageSet createDirect(Set<CCDBLanguage> v) { // no copy !
+		return new CCDBLanguageSet(v);
 	}
 
-	public static CCDBLanguageList single(CCDBLanguage lang) {
-		return new CCDBLanguageList(lang);
+	public static CCDBLanguageSet single(CCDBLanguage lang) {
+		return new CCDBLanguageSet(lang);
 	}
 
-	public static CCDBLanguageList create(CCDBLanguage... langs) {
-		return new CCDBLanguageList(langs);
+	public static CCDBLanguageSet create(CCDBLanguage... langs) {
+		return new CCDBLanguageSet(langs);
 	}
 
-	public static CCDBLanguageList create(Collection<CCDBLanguage> allLanguages) {
-		return new CCDBLanguageList(new HashSet<>(allLanguages));
+	public static CCDBLanguageSet create(Collection<CCDBLanguage> allLanguages) {
+		return new CCDBLanguageSet(new HashSet<>(allLanguages));
 	}
 
 	public long serializeToLong() {
@@ -118,7 +118,7 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 		return CCStreams.iterate(_languages).autosort().stringjoin(CCDBLanguage::getShortString, "+"); //$NON-NLS-1$
 	}
 
-	public static int compare(CCDBLanguageList o1, CCDBLanguageList o2) {
+	public static int compare(CCDBLanguageSet o1, CCDBLanguageSet o2) {
 		return Long.compare(o1.serializeToLong(), o2.serializeToLong());
 	}
 
@@ -126,18 +126,18 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		CCDBLanguageList that = (CCDBLanguageList) o;
+		CCDBLanguageSet that = (CCDBLanguageSet) o;
 
 		return Objects.equals(_languages, that._languages);
 	}
 
-	public boolean isEqual(CCDBLanguageList that) {
+	public boolean isEqual(CCDBLanguageSet that) {
 		if (_languages.size() != that._languages.size()) return false;
 
 		return _languages.containsAll(that._languages);
 	}
 
-	public static boolean equals(CCDBLanguageList a, CCDBLanguageList b) {
+	public static boolean equals(CCDBLanguageSet a, CCDBLanguageSet b) {
 		if (a != null) return a.isEqual(b);
 		return b == null;
 	}
@@ -214,25 +214,25 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 		return icn;
 	}
 
-	public CCDBLanguageList getRemove(CCDBLanguage lang) {
+	public CCDBLanguageSet getRemove(CCDBLanguage lang) {
 		HashSet<CCDBLanguage> v = new HashSet<>(_languages);
 		v.remove(lang);
-		return new CCDBLanguageList(v);
+		return new CCDBLanguageSet(v);
 	}
 
-	public boolean isSubsetOf(CCDBLanguageList other) {
+	public boolean isSubsetOf(CCDBLanguageSet other) {
 		for (CCDBLanguage lang : _languages) {
 			if (!other.contains(lang)) return false;
 		}
 		return true;
 	}
 
-	public List<CCDBLanguageList> allSubsets()
+	public List<CCDBLanguageSet> allSubsets()
 	{
-		if (isEmpty()) return Collections.singletonList(CCDBLanguageList.EMPTY);
+		if (isEmpty()) return Collections.singletonList(CCDBLanguageSet.EMPTY);
 		var count = Math.pow(2, _languages.size());
 
-		var result = new ArrayList<CCDBLanguageList>();
+		var result = new ArrayList<CCDBLanguageSet>();
 		for (int i=0; i<count; i++)
 		{
 			final int mask = i;
@@ -243,7 +243,7 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 					.map(p -> p.Value)
 					.toList();
 
-			result.add(CCDBLanguageList.create(iter));
+			result.add(CCDBLanguageSet.create(iter));
 		}
 		return result;
 	}
@@ -252,33 +252,33 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 		return _languages.size();
 	}
 
-	public static CCDBLanguageList randomValue(Random r)
+	public static CCDBLanguageSet randomValue(Random r)
 	{
 		HashSet<CCDBLanguage> v = new HashSet<>();
 		for (CCDBLanguage dbl : CCDBLanguage.values())
 		{
 		    if (r.nextBoolean()) v.add(dbl);
 		}
-		return new CCDBLanguageList(v);
+		return new CCDBLanguageSet(v);
 	}
 
-	public static CCDBLanguageList intersection(CCDBLanguageList a, CCDBLanguageList b)
+	public static CCDBLanguageSet intersection(CCDBLanguageSet a, CCDBLanguageSet b)
 	{
 		HashSet<CCDBLanguage> v = new HashSet<>(a._languages);
 		v.retainAll(b._languages);
-		return CCDBLanguageList.createDirect(v);
+		return CCDBLanguageSet.createDirect(v);
 	}
 
-	public static CCDBLanguageList union(CCDBLanguageList a, CCDBLanguageList b) {
+	public static CCDBLanguageSet union(CCDBLanguageSet a, CCDBLanguageSet b) {
 		HashSet<CCDBLanguage> v = new HashSet<>(a._languages);
 		v.addAll(b._languages);
-		return CCDBLanguageList.createDirect(v);
+		return CCDBLanguageSet.createDirect(v);
 	}
 
-	public static CCDBLanguageList union(CCStream<CCDBLanguageList> data) {
+	public static CCDBLanguageSet union(CCStream<CCDBLanguageSet> data) {
 		HashSet<CCDBLanguage> v = new HashSet<>();
-		for (CCDBLanguageList ls : data) v.addAll(ls._languages);
-		return CCDBLanguageList.createDirect(v);
+		for (CCDBLanguageSet ls : data) v.addAll(ls._languages);
+		return CCDBLanguageSet.createDirect(v);
 	}
 
 	@Override

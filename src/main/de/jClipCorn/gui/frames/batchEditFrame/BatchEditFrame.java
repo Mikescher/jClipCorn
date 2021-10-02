@@ -210,7 +210,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 				return;
 			}
 
-			CCDBLanguageList dbll = dat.AudioLanguages;
+			CCDBLanguageSet dbll = dat.AudioLanguages;
 
 			if (dbll.isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$

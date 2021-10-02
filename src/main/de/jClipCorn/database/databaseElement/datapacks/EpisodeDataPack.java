@@ -16,14 +16,14 @@ public class EpisodeDataPack implements IEpisodeData
 	private final CCDate addDate;
 	private final CCDateTimeList viewedHistory;
 	private final CCTagList tags;
-	private final CCDBLanguageList language;
+	private final CCDBLanguageSet language;
 	private final PartialMediaInfo mediaInfo;
 
 	public EpisodeDataPack(int episodeNumber, String title, int length,
 						   CCFileFormat format, CCFileSize filesize,
 						   CCPath part,
 						   CCDate addDate, CCDateTimeList viewedHistory,
-						   CCTagList tags, CCDBLanguageList language, PartialMediaInfo mediaInfo)
+						   CCTagList tags, CCDBLanguageSet language, PartialMediaInfo mediaInfo)
 	{
 		this.episodeNumber = episodeNumber;
 		this.title = title;
@@ -56,7 +56,7 @@ public class EpisodeDataPack implements IEpisodeData
 
 	@Override public CCTagList getTags() { return tags; }
 
-	@Override public CCDBLanguageList getLanguage() { return language; }
+	@Override public CCDBLanguageSet getLanguage() { return language; }
 
 	@Override public CCMediaInfo getMediaInfo() { return mediaInfo.toMediaInfo(); }
 

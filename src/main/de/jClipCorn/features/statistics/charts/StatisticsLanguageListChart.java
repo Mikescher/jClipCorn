@@ -2,7 +2,7 @@ package de.jClipCorn.features.statistics.charts;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.features.statistics.PieRotator;
 import de.jClipCorn.features.statistics.StatisticsChart;
 import de.jClipCorn.features.statistics.StatisticsHelper;
@@ -58,9 +58,9 @@ public class StatisticsLanguageListChart extends StatisticsChart {
 		
 		DefaultPieDataset dataset = new DefaultPieDataset();
 		
-		HashMap<CCDBLanguageList, Integer> values = StatisticsHelper.getCountForAllLanguageLists(it);
+		HashMap<CCDBLanguageSet, Integer> values = StatisticsHelper.getCountForAllLanguageLists(it);
 
-		for (Map.Entry<CCDBLanguageList, Integer> v : values.entrySet())
+		for (Map.Entry<CCDBLanguageSet, Integer> v : values.entrySet())
 		{
 			dataset.setValue(v.getKey().toOutputString() + " [" + v.getValue() + "]", v.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
 		}

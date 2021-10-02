@@ -3,7 +3,7 @@ package de.jClipCorn.features.table.filter.customFilter;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.AbstractCustomStructureElementFilter;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
@@ -12,7 +12,7 @@ import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializatio
 import de.jClipCorn.gui.localization.LocaleBundle;
 
 public class CustomExactLanguageFilter extends AbstractCustomStructureElementFilter {
-	private CCDBLanguageList languagelist = CCDBLanguageList.EMPTY;
+	private CCDBLanguageSet languagelist = CCDBLanguageSet.EMPTY;
 
 	public CustomExactLanguageFilter(CCMovieList ml) {
 		super(ml);
@@ -46,7 +46,7 @@ public class CustomExactLanguageFilter extends AbstractCustomStructureElementFil
 	@Override
 	@SuppressWarnings("nls")
 	protected void initSerialization(FilterSerializationConfig cfg) {
-		cfg.addLong("languagelist", (d) -> this.languagelist = CCDBLanguageList.fromBitmask(d),  () -> this.languagelist.serializeToLong());
+		cfg.addLong("languagelist", (d) -> this.languagelist = CCDBLanguageSet.fromBitmask(d),  () -> this.languagelist.serializeToLong());
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public class CustomExactLanguageFilter extends AbstractCustomStructureElementFil
 		return new CustomExactLanguageFilter(ml);
 	}
 
-	public static CustomExactLanguageFilter create(CCMovieList ml, CCDBLanguageList data) {
+	public static CustomExactLanguageFilter create(CCMovieList ml, CCDBLanguageSet data) {
 		CustomExactLanguageFilter f = new CustomExactLanguageFilter(ml);
 		f.languagelist = data;
 		return f;

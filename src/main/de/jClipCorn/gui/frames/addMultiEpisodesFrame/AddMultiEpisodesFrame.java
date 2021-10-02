@@ -4,7 +4,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
@@ -125,7 +125,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		File[] files = massVideoFileChooser.getSelectedFiles();
 
 		CCEpisode last = target.getSeries().getLastAddedEpisode();
-		CCDBLanguageList lang = CCDBLanguageList.single(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
+		CCDBLanguageSet lang = CCDBLanguageSet.single(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		if (last != null) lang = last.getLanguage();
 
 		List<NewEpisodeVM> data = new ArrayList<>();
@@ -168,7 +168,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		File[] files = massVideoFileChooser.getSelectedFiles();
 
 		CCEpisode last = target.getSeries().getLastAddedEpisode();
-		CCDBLanguageList lang = CCDBLanguageList.single(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
+		CCDBLanguageSet lang = CCDBLanguageSet.single(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		if (last != null) lang = last.getLanguage();
 
 		List<NewEpisodeVM> data = new ArrayList<>(lsData.getDataCopy());
@@ -215,7 +215,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 					List<NewEpisodeVM> data = lsData.getDataCopy();
 					for (int i = 0; i < data.size(); i++) {
 						data.get(i).Title = d.get(i);
-						data.get(i).updateTarget(target, CCDBLanguageList.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
+						data.get(i).updateTarget(target, CCDBLanguageSet.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
 						data.get(i).validate(target);
 					}
 					lsData.forceDataChangedRedraw();
@@ -420,12 +420,12 @@ public class AddMultiEpisodesFrame extends JCCFrame
 								_hasLanguage = true;
 								updateButtons();
 
-							}, CCDBLanguageList.EMPTY).setVisible(true);
+							}, CCDBLanguageSet.EMPTY).setVisible(true);
 							return;
 						}
 					}
 
-					for (int i = 0; i < data.size(); i++) data.get(i).updateTarget(target, CCDBLanguageList.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
+					for (int i = 0; i < data.size(); i++) data.get(i).updateTarget(target, CCDBLanguageSet.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
 					for (int i = 0; i < data.size(); i++) data.get(i).validate(target);
 
 					lsData.forceDataChangedRedraw();
@@ -519,7 +519,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		for (int i = 0; i < data.size(); i++) {
 			data.get(i).TargetRoot = FSPath.create(vc.getSelectedFile());
 			data.get(i).NoMove = false;
-			data.get(i).updateTarget(target, CCDBLanguageList.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
+			data.get(i).updateTarget(target, CCDBLanguageSet.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
 			data.get(i).validate(target);
 		}
 		lsData.forceDataChangedRedraw();
@@ -535,7 +535,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		for (int i = 0; i < data.size(); i++) {
 			data.get(i).TargetRoot = FSPath.Empty;
 			data.get(i).NoMove = true;
-			data.get(i).updateTarget(target, CCDBLanguageList.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
+			data.get(i).updateTarget(target, CCDBLanguageSet.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
 			data.get(i).validate(target);
 		}
 		lsData.forceDataChangedRedraw();
@@ -552,7 +552,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		for (int i = 0; i < data.size(); i++) {
 			data.get(i).TargetRoot = FSPath.Empty;
 			data.get(i).EpisodeNumber = i+num_offset;
-			data.get(i).updateTarget(target, CCDBLanguageList.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
+			data.get(i).updateTarget(target, CCDBLanguageSet.union(CCStreams.iterate(data).map(p -> p.Language)), _globalSeriesRoot);
 			data.get(i).validate(target);
 		}
 		lsData.forceDataChangedRedraw();

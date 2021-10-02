@@ -216,7 +216,7 @@ public class SFixClipTable extends SFixTable {
 			case ClipTableModel.COLUMN_MEDIAINFO:
 				return ((CCQualityCategory)value).getTooltip();
 			case ClipTableModel.COLUMN_LANGUAGE:
-				return ((CCDBLanguageList)value).toOutputString();
+				return ((CCDBLanguageSet)value).toOutputString();
 			case ClipTableModel.COLUMN_GENRE:
 				return null;
 			case ClipTableModel.COLUMN_PARTCOUNT:

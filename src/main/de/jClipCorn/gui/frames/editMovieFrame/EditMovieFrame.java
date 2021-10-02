@@ -33,7 +33,6 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.UpdateCallbackAdapter;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
@@ -235,7 +234,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		cbxFormat.setSelectedEnum(cmf);
 	}
 
-	public void setMovieLanguage(CCDBLanguageList lang) {
+	public void setMovieLanguage(CCDBLanguageSet lang) {
 		cbxLanguage.setValue(lang);
 	}
 
@@ -542,8 +541,8 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 				return;
 			}
 
-			CCDBLanguageList dbll = dat.get(0).AudioLanguages;
-			for (int i = 1; i < dat.size(); i++) dbll = CCDBLanguageList.intersection(dbll, dat.get(i).AudioLanguages);
+			CCDBLanguageSet dbll = dat.get(0).AudioLanguages;
+			for (int i = 1; i < dat.size(); i++) dbll = CCDBLanguageSet.intersection(dbll, dat.get(i).AudioLanguages);
 
 			if (dbll.isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$

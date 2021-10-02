@@ -6,7 +6,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -203,7 +203,7 @@ public class CCBXMLReader {
 		newEp.FileSize.set(owner.getChild("größe").getAttribute("dec").getLongValue() * 1024);
 		newEp.Part.set(CCPath.create(owner.getChildText("pathpart1")));
 		newEp.AddDate.set(CCDate.deserialize(owner.getChildText("adddate")));
-		newEp.Language.set(CCDBLanguageList.single(lang));
+		newEp.Language.set(CCDBLanguageSet.single(lang));
 		
 		final CCEpisode finep = newEp;
 		try {

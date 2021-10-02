@@ -1,7 +1,7 @@
 package de.jClipCorn.features.table.filter.filterConfig;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
 import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.lambda.Func1to0;
@@ -11,10 +11,10 @@ import java.util.Random;
 
 public class CustomFilterLanguageListConfig extends CustomFilterConfig {
 
-	private final Func0to1<CCDBLanguageList> valueGetter;
-	private final Func1to0<CCDBLanguageList> valueSetter;
+	private final Func0to1<CCDBLanguageSet> valueGetter;
+	private final Func1to0<CCDBLanguageSet> valueSetter;
 
-	public CustomFilterLanguageListConfig(CCMovieList ml, Func0to1<CCDBLanguageList> get, Func1to0<CCDBLanguageList> set) {
+	public CustomFilterLanguageListConfig(CCMovieList ml, Func0to1<CCDBLanguageSet> get, Func1to0<CCDBLanguageSet> set) {
 		super(ml);
 
 		valueGetter = get;
@@ -32,6 +32,6 @@ public class CustomFilterLanguageListConfig extends CustomFilterConfig {
 
 	@Override
 	public void setValueRandom(Random r) {
-		valueSetter.invoke(CCDBLanguageList.randomValue(r));
+		valueSetter.invoke(CCDBLanguageSet.randomValue(r));
 	}
 }

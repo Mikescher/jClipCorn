@@ -2,7 +2,7 @@ package de.jClipCorn.test;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
@@ -25,7 +25,7 @@ public class TestFilenameParser extends ClipCornBaseTest {
 			assertEquals(CCFileFormat.AVI, r.Format);
 			assertEquals(1, r.Groups.count());
 			assertEquals("MCU", r.Groups.get(0).Name);
-			assertEquals(CCDBLanguageList.GERMAN, r.Language);
+			assertEquals(CCDBLanguageSet.GERMAN, r.Language);
 			assertEquals("The First Avenger", r.Title);
 			assertEquals("Captain America", r.Zyklus.getTitle());
 			assertEquals(1, r.Zyklus.getNumber());
@@ -37,7 +37,7 @@ public class TestFilenameParser extends ClipCornBaseTest {
 
 			assertEquals(CCFileFormat.FLV, r.Format);
 			assertEquals(0, r.Groups.count());
-			assertEquals(CCDBLanguageList.JAPANESE, r.Language);
+			assertEquals(CCDBLanguageSet.JAPANESE, r.Language);
 			assertEquals("Inglourious Basterds", r.Title);
 			assertEquals(true, r.Zyklus.isEmpty());
 			assertEquals(-1, r.Zyklus.getNumber());
@@ -49,7 +49,7 @@ public class TestFilenameParser extends ClipCornBaseTest {
 
 			assertEquals(CCFileFormat.FLV, r.Format);
 			assertEquals(0, r.Groups.count());
-			assertEquals(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.FRENCH), r.Language);
+			assertEquals(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.FRENCH), r.Language);
 			assertEquals("Inglourious Basterds", r.Title);
 			assertEquals(true, r.Zyklus.isEmpty());
 			assertEquals(-1, r.Zyklus.getNumber());

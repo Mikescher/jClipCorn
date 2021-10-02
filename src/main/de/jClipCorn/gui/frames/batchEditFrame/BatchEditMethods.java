@@ -148,7 +148,7 @@ public class BatchEditMethods
 		ep.format = CCFileFormat.getMovieFormatOrDefault(ep.part.getExtension());
 	});
 
-	public static BatchEditMethod<CCDBLanguageList> LANGUAGE_SET = new BatchEditMethod<>((ep, param, opt) ->
+	public static BatchEditMethod<CCDBLanguageSet> LANGUAGE_SET = new BatchEditMethod<>((ep, param, opt) ->
 	{
 		if (param == null) return;
 		ep.language = param;
@@ -160,7 +160,7 @@ public class BatchEditMethods
 
 		if (dat.AudioLanguages == null) throw new MediaQueryException("No language in file"); //$NON-NLS-1$
 
-		CCDBLanguageList dbll = dat.AudioLanguages;
+		CCDBLanguageSet dbll = dat.AudioLanguages;
 
 		if (dbll.isEmpty()) throw new MediaQueryException("Language is empty"); //$NON-NLS-1$
 		ep.language = dbll;

@@ -27,7 +27,7 @@ public class NewEpisodeVM implements IEpisodeData, ICCPropertySource {
 	public String Problems = Str.Empty;
 
 	public String Title = Str.Empty;
-	public CCDBLanguageList Language = CCDBLanguageList.EMPTY;
+	public CCDBLanguageSet Language = CCDBLanguageSet.EMPTY;
 	public int Length = -1;
 	public int EpisodeNumber = -1;
 	public CCFileSize Filesize = CCFileSize.ZERO;
@@ -57,7 +57,7 @@ public class NewEpisodeVM implements IEpisodeData, ICCPropertySource {
 
 	@Override public CCTagList getTags() { return CCTagList.EMPTY; }
 
-	@Override public CCDBLanguageList getLanguage() { return Language; }
+	@Override public CCDBLanguageSet getLanguage() { return Language; }
 
 	@Override public CCMediaInfo getMediaInfo() { return MediaInfo; }
 
@@ -78,7 +78,7 @@ public class NewEpisodeVM implements IEpisodeData, ICCPropertySource {
 
 	@Override public CCPath getPart() { return TargetPath; }
 
-	public void updateTarget(CCSeason season, CCDBLanguageList commonLang, FSPath globalSeriesRoot)
+	public void updateTarget(CCSeason season, CCDBLanguageSet commonLang, FSPath globalSeriesRoot)
 	{
 		if (NoMove)
 		{

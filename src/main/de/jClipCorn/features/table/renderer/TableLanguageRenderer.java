@@ -1,7 +1,7 @@
 package de.jClipCorn.features.table.renderer;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 
 import javax.swing.*;
 
@@ -15,6 +15,6 @@ public class TableLanguageRenderer extends TableRenderer {
 	@Override
     public void setValue(Object value) {
 		setHorizontalAlignment(SwingConstants.CENTER);
-		setIcon(((CCDBLanguageList)value).getIcon());
+		setIcon(((CCDBLanguageSet)value).getIcon());
     }
 }

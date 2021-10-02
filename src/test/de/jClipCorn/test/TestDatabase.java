@@ -43,7 +43,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		movWrite.Genres.set(CCGenre.GENRE_002, 0);
 		movWrite.Genres.set(CCGenre.GENRE_004, 1);
 		movWrite.Genres.set(CCGenre.GENRE_006, 2);
-		movWrite.Language.set(CCDBLanguageList.ENGLISH);
+		movWrite.Language.set(CCDBLanguageSet.ENGLISH);
 		movWrite.Length.set(120);
 		movWrite.OnlineScore.set(CCOnlineScore.STARS_3_0);
 		movWrite.Year.set(2012);
@@ -68,7 +68,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals("Zyklus IV", movRead.getZyklus().getFormatted());
 		assertEquals("Zyklus IV - Title", movRead.getCompleteTitle());
 		assertEquals(1024, movRead.getFilesize().getBytes());
-		assertEquals(CCDBLanguageList.ENGLISH, movRead.getLanguage());
+		assertEquals(CCDBLanguageSet.ENGLISH, movRead.getLanguage());
 		assertEquals(120, movRead.getLength());
 		assertEquals(2012, movRead.getYear());
 		assertEquals(CCUserScore.RATING_III, movRead.Score.get());
@@ -148,7 +148,7 @@ public class TestDatabase extends ClipCornBaseTest {
 			epiWrite.Part.set("/media/example.mkv");
 			epiWrite.AddDate.set(CCDate.create(1, 1, 2000));
 			epiWrite.ViewedHistory.set(CCDateTimeList.create(CCDateTime.create(10, 1, 2000, 6, 0, 0), CCDateTime.create(12, 1, 2000, 12, 0, 0), CCDateTime.create(22, 1, 2000, 18, 0, 0)));
-			epiWrite.Language.set(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.RUSSIAN, CCDBLanguage.SPANISH));
+			epiWrite.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.RUSSIAN, CCDBLanguage.SPANISH));
 		}
 
 		assertEquals(1, ml.getElementCount());
@@ -193,7 +193,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals("/media/example.mkv", epiRead.getPart().toString());
 		assertEquals(CCDate.create(1, 1, 2000), epiRead.getAddDate());
 		assertEquals(CCDateTimeList.create(CCDateTime.create(10, 1, 2000, 6, 0, 0), CCDateTime.create(12, 1, 2000, 12, 0, 0), CCDateTime.create(22, 1, 2000, 18, 0, 0)), epiRead.ViewedHistory.get());
-		assertEquals(CCDBLanguageList.create(CCDBLanguage.GERMAN, CCDBLanguage.RUSSIAN, CCDBLanguage.SPANISH), epiRead.getLanguage());
+		assertEquals(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.RUSSIAN, CCDBLanguage.SPANISH), epiRead.getLanguage());
 		assertEquals(1555300800000L, epiRead.mediaInfo().get().getCDate());
 		assertEquals(1555309800000L, epiRead.mediaInfo().get().getMDate());
 		assertEquals(3570481288L, epiRead.mediaInfo().get().getFilesize().getBytes());

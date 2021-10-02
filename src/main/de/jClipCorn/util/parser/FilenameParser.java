@@ -22,7 +22,7 @@ public class FilenameParser {
 	public static FilenameParserResult parse(CCMovieList movielist, FSPath filepath) {
 		Map<Integer, FSPath> addFiles = new HashMap<>();
 		CCGroupList groups = CCGroupList.EMPTY;
-		CCDBLanguageList lang = CCDBLanguageList.single(movielist.ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
+		CCDBLanguageSet lang = CCDBLanguageSet.single(movielist.ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		CCMovieZyklus zyklus = null;
 		CCFileFormat format = null;
 		String title = "";
@@ -94,7 +94,7 @@ public class FilenameParser {
 			
 			if (dll.size()>0) {
 				moviename = moviename.substring(0, moviename.length() - (flang.length() + 1));
-				lang = CCDBLanguageList.createDirect(dll);
+				lang = CCDBLanguageSet.createDirect(dll);
 			}
 		}
 		

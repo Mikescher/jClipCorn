@@ -5,7 +5,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.lambda.Func1to0;
@@ -22,9 +22,9 @@ public class LanguageChooserDialog extends JDialog {
 
 	private HashSet<CCDBLanguage> _value;
 
-	private final Func1to0<CCDBLanguageList> _okListener;
+	private final Func1to0<CCDBLanguageSet> _okListener;
 
-	public LanguageChooserDialog(Component owner, Func1to0<CCDBLanguageList> onFinish, CCDBLanguageList value) {
+	public LanguageChooserDialog(Component owner, Func1to0<CCDBLanguageSet> onFinish, CCDBLanguageSet value) {
 		super();
 
 		_okListener = onFinish;
@@ -35,7 +35,7 @@ public class LanguageChooserDialog extends JDialog {
 		_value = new HashSet<>(value.ccstream().enumerate());
 	}
 
-	private void initGUI(CCDBLanguageList value) {
+	private void initGUI(CCDBLanguageSet value) {
 		setTitle(LocaleBundle.getString("LanguageChooserDialog.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setIconImage(Resources.IMG_FRAME_ICON.get());
@@ -98,7 +98,7 @@ public class LanguageChooserDialog extends JDialog {
 
 		JButton btnOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOk.setFont(new Font(btnOk.getFont().getFontName(), Font.BOLD, btnOk.getFont().getSize()));
-		btnOk.addActionListener(e -> { setVisible(false); dispose(); _okListener.invoke(CCDBLanguageList.createDirect(_value)); });
+		btnOk.addActionListener(e -> { setVisible(false); dispose(); _okListener.invoke(CCDBLanguageSet.createDirect(_value)); });
 		pnlBottom.add(btnOk);
 
 		JRootPane root = getRootPane();

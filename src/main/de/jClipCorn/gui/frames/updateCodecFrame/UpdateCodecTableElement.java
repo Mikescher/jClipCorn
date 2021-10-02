@@ -3,7 +3,7 @@ package de.jClipCorn.gui.frames.updateCodecFrame;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.util.CCMediaInfoField;
@@ -65,7 +65,7 @@ public class UpdateCodecTableElement {
 		if (!Processed) return false;
 		if (MQResult == null) return false;
 
-		if (!CCDBLanguageList.equals(Element.language().get(), getNewLanguage())) return true;
+		if (!CCDBLanguageSet.equals(Element.language().get(), getNewLanguage())) return true;
 		if (maxLenDiff != -1 && hasLenDiff(maxLenDiff)) return true;
 		if (!Element.mediaInfo().get().equals(getNewMediaInfo())) return true;
 
@@ -77,7 +77,7 @@ public class UpdateCodecTableElement {
 		if (!Processed) return null;
 		if (MQResult == null) return null;
 
-		if (!CCDBLanguageList.equals(Element.language().get(), getNewLanguage())) return "Language";
+		if (!CCDBLanguageSet.equals(Element.language().get(), getNewLanguage())) return "Language";
 		if (maxLenDiff != -1 && hasLenDiff(maxLenDiff)) return "Length";
 		if (!Element.mediaInfo().get().equals(getNewMediaInfo())) return "MediaInfo.[" + midiff(Element.mediaInfo().get(), getNewMediaInfo()) + "]";
 
@@ -100,7 +100,7 @@ public class UpdateCodecTableElement {
 		if (!Processed) return false;
 		if (MQResult == null) return false;
 
-		if (!CCDBLanguageList.equals(Element.language().get(), getNewLanguage())) return true;
+		if (!CCDBLanguageSet.equals(Element.language().get(), getNewLanguage())) return true;
 
 		return false;
 	}
@@ -130,21 +130,21 @@ public class UpdateCodecTableElement {
 		return "{{??}}"; //$NON-NLS-1$
 	}
 
-	public CCDBLanguageList getOldLanguage() {
+	public CCDBLanguageSet getOldLanguage() {
 		return Element.language().get();
 	}
 
-	public CCDBLanguageList getNewLanguage() {
-		if (MQResult == null) return CCDBLanguageList.EMPTY;
-		if (MQResult.size() == 0) return CCDBLanguageList.EMPTY;
+	public CCDBLanguageSet getNewLanguage() {
+		if (MQResult == null) return CCDBLanguageSet.EMPTY;
+		if (MQResult.size() == 0) return CCDBLanguageSet.EMPTY;
 
 		if (CCStreams.iterate(MQResult).all(r -> r.AudioLanguages == null)) {
 			if (getOldLanguage().isSingle()) return getOldLanguage();
-			return CCDBLanguageList.EMPTY;
+			return CCDBLanguageSet.EMPTY;
 		}
 
-		CCDBLanguageList dbll = MQResult.get(0).AudioLanguages;
-		for (int i = 1; i < MQResult.size(); i++) dbll = CCDBLanguageList.intersection(dbll, MQResult.get(i).AudioLanguages);
+		CCDBLanguageSet dbll = MQResult.get(0).AudioLanguages;
+		for (int i = 1; i < MQResult.size(); i++) dbll = CCDBLanguageSet.intersection(dbll, MQResult.get(i).AudioLanguages);
 		return dbll;
 	}
 

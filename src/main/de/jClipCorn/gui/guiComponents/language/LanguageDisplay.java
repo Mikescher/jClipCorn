@@ -1,7 +1,7 @@
 package de.jClipCorn.gui.guiComponents.language;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +9,7 @@ import java.awt.*;
 public class LanguageDisplay extends JPanel {
 	private static final long serialVersionUID = 2017286148720080714L;
 
-	private CCDBLanguageList value = CCDBLanguageList.EMPTY;
+	private CCDBLanguageSet value = CCDBLanguageSet.EMPTY;
 
 	public LanguageDisplay() {
 		super();
@@ -45,11 +45,11 @@ public class LanguageDisplay extends JPanel {
 		setToolTipText(value.toOutputString());
 	}
 
-	public CCDBLanguageList getValue() {
+	public CCDBLanguageSet getValue() {
 		return value;
 	}
 
-	public void setValue(CCDBLanguageList v) {
+	public void setValue(CCDBLanguageSet v) {
 		value = v;
 		update();
 	}

@@ -282,8 +282,8 @@ public class StatisticsHelper {
 		return result;
 	}
 
-	public static HashMap<CCDBLanguageList, Integer> getCountForAllLanguageLists(CCStream<ICCPlayableElement> it) {
-		HashMap<CCDBLanguageList, Integer> result = new HashMap<>();
+	public static HashMap<CCDBLanguageSet, Integer> getCountForAllLanguageLists(CCStream<ICCPlayableElement> it) {
+		HashMap<CCDBLanguageSet, Integer> result = new HashMap<>();
 
 		for (ICCPlayableElement m : it)
 		{

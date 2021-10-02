@@ -638,14 +638,14 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		return CCStreams.iterate(episodes);
 	}
 
-	public FSPath getPathForCreatedFolderstructure(FSPath parentfolder, String title, int episodeNumber, CCFileFormat format, CCDBLanguageList fallbackLanguage) {
+	public FSPath getPathForCreatedFolderstructure(FSPath parentfolder, String title, int episodeNumber, CCFileFormat format, CCDBLanguageSet fallbackLanguage) {
 		if (! parentfolder.isDirectory()) return null; // meehp
 
 		return parentfolder.append(getRelativeFileForCreatedFolderstructure(title, episodeNumber, format, fallbackLanguage));
 	}
 
 	@SuppressWarnings("nls")
-	public String getRelativeFileForCreatedFolderstructure(String title, int episodeNumber, CCFileFormat format, CCDBLanguageList fallbackLanguage) {
+	public String getRelativeFileForCreatedFolderstructure(String title, int episodeNumber, CCFileFormat format, CCDBLanguageSet fallbackLanguage) {
 		DecimalFormat decFormattter = new DecimalFormat("00");
 
 		String seriesfoldername = getSeries().getFolderNameForCreatedFolderStructure(fallbackLanguage);

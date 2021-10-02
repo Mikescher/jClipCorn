@@ -22,7 +22,7 @@ public class BatchEditEpisodeData implements IEpisodeData, ICCPropertySource
 	public CCPath           part;
 	public CCDate           addDate;
 	public CCDateTimeList   viewedHistory;
-	public CCDBLanguageList language;
+	public CCDBLanguageSet language;
 	public PartialMediaInfo mediaInfo;
 
 	public BatchEditEpisodeData(CCEpisode e) {
@@ -77,7 +77,7 @@ public class BatchEditEpisodeData implements IEpisodeData, ICCPropertySource
 	@Override public CCDate getAddDate() { return CCDate.getCurrentDate(); }
 	@Override public CCDateTimeList getViewedHistory() { return CCDateTimeList.createEmpty(); }
 	@Override public CCTagList getTags() { return CCTagList.EMPTY; }
-	@Override public CCDBLanguageList getLanguage() { return language; }
+	@Override public CCDBLanguageSet getLanguage() { return language; }
 	@Override public CCMediaInfo getMediaInfo() { return mediaInfo.toMediaInfo(); }
 	@Override public PartialMediaInfo getPartialMediaInfo() { return mediaInfo; }
 	@Override public int getEpisodeNumber() { return episodeNumber; }

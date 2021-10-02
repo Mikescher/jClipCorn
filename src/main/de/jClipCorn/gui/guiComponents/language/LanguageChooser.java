@@ -1,7 +1,7 @@
 package de.jClipCorn.gui.guiComponents.language;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.util.Str;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ import java.awt.event.MouseEvent;
 public class LanguageChooser extends JPanel {
 	private static final long serialVersionUID = 2017286148720080712L;
 	
-	private CCDBLanguageList value = CCDBLanguageList.EMPTY;
+	private CCDBLanguageSet value = CCDBLanguageSet.EMPTY;
 	private boolean readOnly = false;
 	private ActionListener action = null;
 
@@ -27,7 +27,7 @@ public class LanguageChooser extends JPanel {
 		update();
 	}
 
-	public LanguageChooser(CCDBLanguageList v) {
+	public LanguageChooser(CCDBLanguageSet v) {
 		super();
 		value = v;
 		init();
@@ -88,17 +88,17 @@ public class LanguageChooser extends JPanel {
 		if (value.isEmpty()) return;
 		if (value.isSingle())
 		{
-			setValue(CCDBLanguageList.single(value.ccstream().firstOrNull().nextLanguage()));
+			setValue(CCDBLanguageSet.single(value.ccstream().firstOrNull().nextLanguage()));
 			return;
 		}
 		setValue(value.getRemove(lang));
 	}
 
-	public CCDBLanguageList getValue() {
+	public CCDBLanguageSet getValue() {
 		return value;
 	}
 
-	public void setValue(CCDBLanguageList v) {
+	public void setValue(CCDBLanguageSet v) {
 		value = v;
 		update();
 		if (action != null) action.actionPerformed(new ActionEvent(this, 0, Str.Empty));

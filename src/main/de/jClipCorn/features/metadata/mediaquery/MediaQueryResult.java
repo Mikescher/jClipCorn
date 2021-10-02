@@ -1,7 +1,7 @@
 package de.jClipCorn.features.metadata.mediaquery;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
@@ -44,9 +44,9 @@ public class MediaQueryResult {
 	public final List<MediaQueryResultAudioTrack> AudioTracks;
 	public final List<MediaQueryResultSubtitleTrack> SubtitleTracks;
 
-	public final CCDBLanguageList AudioLanguages;   // NULL if only 1 Language without a specifier
+	public final CCDBLanguageSet AudioLanguages;   // NULL if only 1 Language without a specifier
 	
-	private MediaQueryResult(String raw, String hash, long cdate, long mdate, String format, String format_Version, long fileSize, double duration, int overallBitRate, double frameRate, MediaQueryResultVideoTrack video, List<MediaQueryResultVideoTrack> videoTracks, List<MediaQueryResultAudioTrack> audioTracks, List<MediaQueryResultSubtitleTrack> subtitleTracks, CCDBLanguageList language) {
+	private MediaQueryResult(String raw, String hash, long cdate, long mdate, String format, String format_Version, long fileSize, double duration, int overallBitRate, double frameRate, MediaQueryResultVideoTrack video, List<MediaQueryResultVideoTrack> videoTracks, List<MediaQueryResultAudioTrack> audioTracks, List<MediaQueryResultSubtitleTrack> subtitleTracks, CCDBLanguageSet language) {
 		Raw            = raw;
 		Checksum       = hash;
 		CDate          = cdate;
@@ -119,12 +119,12 @@ public class MediaQueryResult {
 
 		if (vtracks.size() == 1 && vtracks.get(0).Duration != -1) duration = vtracks.get(0).Duration;
 
-		CCDBLanguageList alng = getLang(atracks, doNotValidateLangs);
+		CCDBLanguageSet alng = getLang(atracks, doNotValidateLangs);
 		
 		return new MediaQueryResult(raw, hash, cdate, mdate, format, format_Version, fileSize, duration, overallBitRate, frameRate, vtracks.get(0), vtracks, atracks, stracks, alng);
 	}
 
-	private static CCDBLanguageList getLang(List<MediaQueryResultAudioTrack> tcks, boolean doNotValidateLangs) throws InnerMediaQueryException {
+	private static CCDBLanguageSet getLang(List<MediaQueryResultAudioTrack> tcks, boolean doNotValidateLangs) throws InnerMediaQueryException {
 
 		if (tcks.size() == 1 && tcks.get(0).Language == null) return null;
 
@@ -137,7 +137,7 @@ public class MediaQueryResult {
 
 		HashSet<CCDBLanguage> lng = new HashSet<>();
 		for (MediaQueryResultAudioTrack t : tcks) lng.add(t.getLanguage());
-		return CCDBLanguageList.createDirect(lng);
+		return CCDBLanguageSet.createDirect(lng);
 	}
 
 	@SuppressWarnings("nls")

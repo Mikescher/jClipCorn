@@ -5,7 +5,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.log.CCLog;
@@ -403,10 +403,10 @@ public class UpdateCodecFrame extends JCCFrame {
 			if (!elem.Processed) continue;
 			if (elem.MQResult == null) continue;
 
-			CCDBLanguageList v = elem.getNewLanguage();
+			CCDBLanguageSet v = elem.getNewLanguage();
 			if (v.isEmpty()) continue;
 
-			if (!CCDBLanguageList.equals(v, elem.Element.language().get())) {elem.Element.language().set(v); count++; }
+			if (!CCDBLanguageSet.equals(v, elem.Element.language().get())) {elem.Element.language().set(v); count++; }
 		}
 
 		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.CodecUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.CodecUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$

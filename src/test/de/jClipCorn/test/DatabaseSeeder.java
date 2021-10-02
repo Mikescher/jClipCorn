@@ -140,6 +140,7 @@ public class DatabaseSeeder {
 				e.FSK.set(CCFSK.RATING_IV);
 				e.ViewedHistory.set(CCDateTimeList.create(CCDateTime.createFromSQL("2019-04-01"), CCDateTime.createFromSQL("2020-08-17 20:08:30"), CCDateTime.createFromSQL("2021-01-03 20:08:30")));
 				e.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.ENGLISH));
+				e.Subtitles.set(CCDBLanguageList.create(CCDBLanguage.ENGLISH, CCDBLanguage.FRENCH));
 				e.Year.set(1988);
 				e.Groups.set(CCGroupList.create(CCGroup.create("BruceWillis")));
 				e.AddDate.set(CCDate.create(6, 8, 2015));

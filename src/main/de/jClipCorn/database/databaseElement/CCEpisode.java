@@ -55,6 +55,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
 	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp( "ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
 	public final ELanguageSetProp        Language      = new ELanguageSetProp(  "Language",      CCDBLanguageSet.EMPTY,        this, EPropertyType.OBJECTIVE_METADATA);
+	public final ELanguageListProp       Subtitles     = new ELanguageListProp( "Subtitles",     CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
 
 	private IEProperty[] _properties = null;
 
@@ -87,6 +88,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 					AddDate,
 					ViewedHistory,
 					Language,
+					Subtitles,
 				})
 				.append(MediaInfo.getProperties())
 				.toArray(new IEProperty[0]);
@@ -102,7 +104,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public ECCPathProp             part()          { return Part;          }
 	public EDateProp               addDate()       { return AddDate;       }
 	public EDateTimeListProp       viewedHistory() { return ViewedHistory; }
-	public ELanguageSetProp language()      { return Language;      }
+	public ELanguageSetProp        language()      { return Language;      }
 
 	public CCProperties ccprops() {
 		return getMovieList().ccprops();

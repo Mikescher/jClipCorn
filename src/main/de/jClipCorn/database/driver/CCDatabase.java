@@ -288,6 +288,7 @@ public class CCDatabase {
 		ep.AddDate.set(rs.getDate(DatabaseStructure.COL_EPIS_ADDDATE));
 		ep.Tags.set(rs.getShort(DatabaseStructure.COL_EPIS_TAGS));
 		ep.Language.set(rs.getLong(DatabaseStructure.COL_EPIS_LANGUAGE));
+		ep.Subtitles.set(rs.getString(DatabaseStructure.COL_EPIS_SUBTITLES));
 
 		ep.MediaInfo.CDate.set(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_CDATE)));
 		ep.MediaInfo.MDate.set(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_MDATE)));
@@ -333,6 +334,7 @@ public class CCDatabase {
 		mov.ViewedHistory.set(rs.getString(DatabaseStructure.COL_MOV_VIEWEDHISTORY));
 		mov.Zyklus.set(rs.getString(DatabaseStructure.COL_MOV_ZYKLUS), rs.getInt(DatabaseStructure.COL_MOV_ZYKLUSNUMBER));
 		mov.Language.set(rs.getLong(DatabaseStructure.COL_MOV_LANGUAGE));
+		mov.Subtitles.set(rs.getString(DatabaseStructure.COL_MOV_SUBTITLES));
 		mov.Genres.set(rs.getLong(DatabaseStructure.COL_MOV_GENRE));
 		mov.Length.set(rs.getInt(DatabaseStructure.COL_MOV_LENGTH));
 		mov.AddDate.set(rs.getDate(DatabaseStructure.COL_MOV_ADDDATE));
@@ -588,6 +590,7 @@ public class CCDatabase {
 			stmt.setStr(DatabaseStructure.COL_MOV_ZYKLUS,        mov.Zyklus.get().getTitle());
 			stmt.setInt(DatabaseStructure.COL_MOV_ZYKLUSNUMBER,  mov.Zyklus.get().getNumber());
 			stmt.setLng(DatabaseStructure.COL_MOV_LANGUAGE,      mov.Language.get().serializeToLong());
+			stmt.setStr(DatabaseStructure.COL_MOV_SUBTITLES,     mov.Subtitles.get().serializeToString());
 			stmt.setLng(DatabaseStructure.COL_MOV_GENRE,         mov.Genres.get().getAllGenres());
 			stmt.setInt(DatabaseStructure.COL_MOV_LENGTH,        mov.Length.get());
 			stmt.setStr(DatabaseStructure.COL_MOV_ADDDATE,       mov.AddDate.get().toStringSQL());
@@ -711,6 +714,7 @@ public class CCDatabase {
 			stmt.setSht(DatabaseStructure.COL_EPIS_TAGS,          ep.Tags.get().asShort());
 			stmt.setStr(DatabaseStructure.COL_EPIS_ADDDATE,       ep.AddDate.get().toStringSQL());
 			stmt.setLng(DatabaseStructure.COL_EPIS_LANGUAGE,      ep.Language.get().serializeToLong());
+			stmt.setStr(DatabaseStructure.COL_EPIS_SUBTITLES,     ep.Subtitles.get().serializeToString());
 
 			var mi = ep.MediaInfo.getPartial();
 

@@ -51,6 +51,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public final EFileSizeProp           FileSize      = new EFileSizeProp(     "FileSize",      CCFileSize.ZERO,              this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
 	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp( "ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
 	public final ELanguageSetProp        Language      = new ELanguageSetProp(  "Language",      CCDBLanguageSet.EMPTY,        this, EPropertyType.OBJECTIVE_METADATA);
+	public final ELanguageListProp       Subtitles     = new ELanguageListProp( "Subtitles",     CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
 
 	public CCMovie(CCMovieList ml, int id) {
 		super(ml, id);
@@ -71,6 +72,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 					FileSize,
 					ViewedHistory,
 					Language,
+					Subtitles,
 				})
 				.append(Parts.getProperties())
 				.append(MediaInfo.getProperties())
@@ -86,7 +88,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public EFileSizeProp           fileSize()      { return  FileSize;      }
 	public EPartArrayPropPack      parts()         { return  Parts;         }
 	public EDateTimeListProp       viewedHistory() { return  ViewedHistory; }
-	public ELanguageSetProp language()      { return  Language;      }
+	public ELanguageSetProp        language()      { return  Language;      }
 
 	@Override
 	public boolean updateDB() {

@@ -6,6 +6,8 @@ import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.enumextension.IEnumWrapper;
+import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
 
 import javax.swing.*;
 
@@ -127,6 +129,13 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 			if (LONGNAMES[i].equalsIgnoreCase(s)) return values()[i];
 		}
 		return null;
+	}
+
+	public static CCDBLanguage findByShortString(String s) throws CCFormatException {
+		for (int i = 0; i < SHORTNAMES.length; i++) {
+			if (SHORTNAMES[i].equalsIgnoreCase(s)) return values()[i];
+		}
+		throw new EnumValueNotFoundException(s, CCDBLanguage.class);
 	}
 
 	@Override

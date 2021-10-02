@@ -53,6 +53,7 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("format",       o.getFormat().asInt() + "");
 		e.setAttribute("length",       o.getLength()  + "");
 		e.setAttribute("languages",    o.getLanguage().serializeToString());
+		e.setAttribute("subtitles",    o.Subtitles.get().serializeToString());
 
 		for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
 			var p = o.Parts.get(i);
@@ -121,6 +122,7 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("part",          o.getPart().toString());
 		e.setAttribute("tags",          o.getTags().serialize());
 		e.setAttribute("languages",     o.getLanguage().serializeToString());
+		e.setAttribute("subtitles",     o.Subtitles.get().serializeToString());
 
 		CCMediaInfo minfo = o.mediaInfo().get();
 		if (minfo.isSet()) {

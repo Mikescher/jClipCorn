@@ -130,7 +130,6 @@ public class CoverPreviewFrame extends JCCDialog {
 	
 	private void initGUI(BufferedImage img, String title) {
 		setTitle(title + " (" + img.getWidth() + " x " + img.getHeight() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
 		//setSize(new Dimension(ImageUtilities.BASE_COVER_WIDTH * 3, ImageUtilities.BASE_COVER_HEIGHT	 * 3));
 
 		lblImg = new ScalablePane(img, true);

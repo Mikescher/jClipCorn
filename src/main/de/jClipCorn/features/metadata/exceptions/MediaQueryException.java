@@ -7,7 +7,15 @@ public class MediaQueryException extends MetadataQueryException {
 		super(text, stderr);
 	}
 
+	public MediaQueryException(String text, String stderr, Throwable cause) {
+		super(text, stderr, cause);
+	}
+
 	public MediaQueryException(String text) {
 		super(text);
+	}
+
+	public MediaQueryException(String text, Throwable cause) {
+		super(text, cause);
 	}
 }

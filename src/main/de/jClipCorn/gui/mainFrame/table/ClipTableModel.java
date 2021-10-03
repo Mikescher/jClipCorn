@@ -30,16 +30,17 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 	public final static int COLUMN_ZYKLUS      = 4;
 	public final static int COLUMN_MEDIAINFO   = 5;
 	public final static int COLUMN_LANGUAGE    = 6;
-	public final static int COLUMN_GENRE       = 7;
-	public final static int COLUMN_PARTCOUNT   = 8;
-	public final static int COLUMN_LENGTH      = 9;
-	public final static int COLUMN_DATE        = 10;
-	public final static int COLUMN_ONLINESCORE = 11;
-	public final static int COLUMN_TAGS        = 12;
-	public final static int COLUMN_FSK         = 13;
-	public final static int COLUMN_FORMAT      = 14;
-	public final static int COLUMN_YEAR        = 15;
-	public final static int COLUMN_SIZE        = 16;
+	public final static int COLUMN_SUBTITLES   = 7;
+	public final static int COLUMN_GENRE       = 8;
+	public final static int COLUMN_PARTCOUNT   = 9;
+	public final static int COLUMN_LENGTH      = 10;
+	public final static int COLUMN_DATE        = 11;
+	public final static int COLUMN_ONLINESCORE = 12;
+	public final static int COLUMN_TAGS        = 13;
+	public final static int COLUMN_FSK         = 14;
+	public final static int COLUMN_FORMAT      = 15;
+	public final static int COLUMN_YEAR        = 16;
+	public final static int COLUMN_SIZE        = 17;
 
 	private List<Integer> mapping = null;
 	private boolean lockShuffleMapping = false;
@@ -52,6 +53,7 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 			LocaleBundle.getString("ClipTableModel.Zyklus"),  	 //$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Quality"),  	 //$NON-NLS-1$
 			"",                                                  //$NON-NLS-1$
+			LocaleBundle.getString("ClipTableModel.Subtitle"), 	 //$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Genre"),  	 //$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Parts"), 	 //$NON-NLS-1$
 			LocaleBundle.getString("ClipTableModel.Length"),  	 //$NON-NLS-1$
@@ -136,6 +138,8 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 				return mov.getMediaInfoCategory();
 			case COLUMN_LANGUAGE: // Language
 				return mov.Language.get();
+			case COLUMN_SUBTITLES: // Subtitles
+				return mov.Subtitles.get();
 			case COLUMN_GENRE: // Genres
 				return mov.Genres.get();
 			case COLUMN_PARTCOUNT: // Partcount
@@ -176,6 +180,8 @@ public class ClipTableModel extends AbstractTableModel implements TableModelRowC
 				return ser.getMediaInfoCategory();
 			case COLUMN_LANGUAGE: // Language
 				return ser.getSemiCommonOrAllLanguages();
+			case COLUMN_SUBTITLES: // Subtitles
+				return ser.getAllSubtitles();
 			case COLUMN_GENRE: // Genres
 				return ser.Genres.get();
 			case COLUMN_PARTCOUNT: // Partcount

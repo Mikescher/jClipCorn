@@ -5,6 +5,7 @@ import de.jClipCorn.database.history.CCHistorySingleChange;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
+import de.jClipCorn.util.Str;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class PMHistoryTableChanges extends JCCSimpleTable<CCHistorySingleChange>
 				this,
 				"*,expandonly",
 				"DatabaseHistoryFrame.Table.ColumnOld",
-				e -> e.OldValue==null ? "<NULL>" : limit(e.OldValue),
+				e -> e.OldValue==null ? "<NULL>" : Str.limit(Str.firstLine(e.OldValue), 131),
 				null,
 				null,
 				true));
@@ -46,18 +47,12 @@ public class PMHistoryTableChanges extends JCCSimpleTable<CCHistorySingleChange>
 				this,
 				"*,expandonly",
 				"DatabaseHistoryFrame.Table.ColumnNew",
-				e -> e.NewValue==null ? "<NULL>" : limit(e.NewValue),
+				e -> e.NewValue==null ? "<NULL>" : Str.limit(Str.firstLine(e.NewValue), 131),
 				null,
 				null,
 				true));
 		
 		return r;
-	}
-
-	private String limit(String str) {
-		str = str.split("\\r?\\n")[0]; //$NON-NLS-1$
-		if (str.length() > 131) return str.substring(128)+"..."; //$NON-NLS-1$
-		return str;
 	}
 
 	@Override

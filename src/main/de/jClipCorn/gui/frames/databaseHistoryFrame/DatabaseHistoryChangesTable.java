@@ -49,7 +49,7 @@ public class DatabaseHistoryChangesTable extends JCCSimpleTable<CCHistorySingleC
 				this,
 				"*",
 				"DatabaseHistoryFrame.Table.ColumnOld",
-				e -> e.OldValue==null ? "<NULL>" : limit(e.OldValue),
+				e -> e.OldValue==null ? "<NULL>" : Str.limit(Str.firstLine(e.OldValue), 256),
 				null,
 				null,
 				true));
@@ -58,18 +58,12 @@ public class DatabaseHistoryChangesTable extends JCCSimpleTable<CCHistorySingleC
 				this,
 				"*",
 				"DatabaseHistoryFrame.Table.ColumnNew",
-				e -> e.NewValue==null ? "<NULL>" : limit(e.NewValue),
+				e -> e.NewValue==null ? "<NULL>" : Str.limit(Str.firstLine(e.NewValue), 256),
 				null,
 				null,
 				true));
 		
 		return r;
-	}
-
-	private String limit(String str) {
-		str = str.split("\\r?\\n")[0]; //$NON-NLS-1$
-		if (str.length() > 256) return str.substring(0, 256-3)+"..."; //$NON-NLS-1$
-		return str;
 	}
 
 	@Override

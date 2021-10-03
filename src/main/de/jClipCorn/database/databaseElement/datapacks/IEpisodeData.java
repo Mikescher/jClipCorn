@@ -17,6 +17,7 @@ public interface IEpisodeData
 	CCDateTimeList getViewedHistory();
 	CCTagList getTags();
 	CCDBLanguageSet getLanguage();
+	CCDBLanguageList getSubtitles();
 	CCMediaInfo getMediaInfo();
 	PartialMediaInfo getPartialMediaInfo();
 }

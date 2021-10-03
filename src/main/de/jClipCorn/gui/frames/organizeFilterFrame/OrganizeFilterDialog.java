@@ -11,7 +11,6 @@ import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.filterTree.CustomFilterList;
 import de.jClipCorn.gui.mainFrame.filterTree.CustomFilterObject;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.listener.FinishListener;
 
 import javax.swing.*;
@@ -55,7 +54,7 @@ public class OrganizeFilterDialog extends JCCDialog {
 	
 	private void initGUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+
 		setModal(true);
 		setTitle(LocaleBundle.getString("OrganizeFilterDialog.this.title")); //$NON-NLS-1$
 		getContentPane().setLayout(new FormLayout(new ColumnSpec[] {

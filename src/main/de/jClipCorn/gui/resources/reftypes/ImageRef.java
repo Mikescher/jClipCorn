@@ -10,4 +10,6 @@ public abstract class ImageRef extends ResourceRef {
 	}
 
 	public abstract BufferedImage get();
+
+	public BufferedImage getImage() { return get(); }
 }

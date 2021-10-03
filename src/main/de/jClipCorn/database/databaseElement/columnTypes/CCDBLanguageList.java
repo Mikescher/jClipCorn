@@ -1,8 +1,10 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.IntParseException;
 import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
@@ -41,19 +43,43 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 		return new CCDBLanguageList(langs);
 	}
 
+	public static CCDBLanguageList createDirect(List<CCDBLanguage> v) { // no copy !
+		return new CCDBLanguageList(v);
+	}
+
 	public static CCDBLanguageList parseFromString(String str) throws CCFormatException {
 		if (Str.Empty.equals(str)) return CCDBLanguageList.EMPTY;
 
 		var r = new ArrayList<CCDBLanguage>();
 		for (var v : str.split(";")) {
-			var l = CCDBLanguage.findByShortString(v);
-			r.add(l);
+			try	{
+				var l = CCDBLanguage.getWrapper().findOrException(Integer.parseInt(v));
+				r.add(l);
+			} catch (NumberFormatException e) {
+				throw new IntParseException(v);
+			}
 		}
 		return new CCDBLanguageList(r);
 	}
 
+	public static CCDBLanguageList parseFromLongString(String str) throws CCFormatException {
+		if (Str.Empty.equals(str)) return CCDBLanguageList.EMPTY;
+
+		var r = new ArrayList<CCDBLanguage>();
+		for (var v : str.split(";")) r.add(CCDBLanguage.findByLongString(v));
+		return new CCDBLanguageList(r);
+	}
+
+	public static int compare(CCDBLanguageList o1, CCDBLanguageList o2) {
+		return o1.serializeToString().compareTo(o2.serializeToString());
+	}
+
 	public String serializeToString() {
-		return ccstream().map(CCDBLanguage::getShortString).stringjoin(p->p, ";");
+		return ccstream().map(p -> String.valueOf(p.asInt())).stringjoin(p->p, ";");
+	}
+
+	public String serializeToLongString() {
+		return ccstream().map(CCDBLanguage::getLongString).stringjoin(p->p, ";");
 	}
 
 	public boolean isExact(CCDBLanguage lang) {
@@ -113,22 +139,20 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 	}
 
 	public ImageIcon getIcon() {
-		if (isEmpty()) return Resources.ICN_TABLE_LANGUAGE_NONE.get();
+		if (isEmpty()) return Resources.ICN_TRANSPARENT.get16x16();
 		if (isSingle()) return _languages.iterator().next().getIcon();
-
-		List<CCDBLanguage> langs = CCStreams.iterate(_languages).autosort().enumerate();
 
 		String key = serializeToString(); //$NON-NLS-1$
 
 		ImageIcon icn = _fullIconCache.get(key);
 		if (icn != null) return icn;
 
-		BufferedImage img = new BufferedImage(16 + (langs.size()-1) * (16+2), 16, BufferedImage.TYPE_4BYTE_ABGR);
+		BufferedImage img = new BufferedImage(16 + (_languages.size()-1) * (16+2), 16, BufferedImage.TYPE_4BYTE_ABGR);
 
 		Graphics g = img.getGraphics();
-		for (int i = 0; i < langs.size(); i++)
+		for (int i = 0; i < _languages.size(); i++)
 		{
-			g.drawImage(langs.get(i).getIconRef().getImage(), i * (16 + 2), 0, null);
+			g.drawImage(_languages.get(i).getIconRef().getImage(), i * (16 + 2), 0, null);
 		}
 
 		icn = new ImageIcon(img);
@@ -144,5 +168,28 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 	@Override
 	public String toString() {
 		return "{{" + CCStreams.iterate(_languages).stringjoin(CCDBLanguage::getShortString, "|") + "}}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
+
+	public CCDBLanguageList getAdd(CCDBLanguage v) {
+		return new CCDBLanguageList(ccstream().append(v).enumerate());
+	}
+
+	public CCDBLanguageList getRemove(int idx) {
+		return new CCDBLanguageList(ccstream().index().filter(p -> p.Index != idx).map(p -> p.Value).enumerate());
+	}
+
+	public String toOutputString() {
+		if (isEmpty()) return LocaleBundle.getString("CCMovieLanguageList.Empty"); //$NON-NLS-1$
+		return CCStreams.iterate(_languages).autosort().stringjoin(CCDBLanguage::asString, ", "); //$NON-NLS-1$
+	}
+
+	public String toOutputString(String emptyStr) {
+		if (isEmpty()) return emptyStr;
+		return CCStreams.iterate(_languages).autosort().stringjoin(CCDBLanguage::asString, ", "); //$NON-NLS-1$
+	}
+
+	public String toShortOutputString(String emptyStr) {
+		if (isEmpty()) return emptyStr;
+		return CCStreams.iterate(_languages).autosort().stringjoin(CCDBLanguage::getShortString, ","); //$NON-NLS-1$
 	}
 }

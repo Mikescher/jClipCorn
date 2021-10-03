@@ -3,9 +3,8 @@ package de.jClipCorn.gui.frames.aboutFrame;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.guiComponents.*;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 
 import javax.swing.*;
@@ -28,7 +27,6 @@ public class AboutFrame extends JCCFrame
 
 	private void postInit()
 	{
-		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setTitle(LocaleBundle.getString("UberDialog.this.title") + " v" + Main.VERSION); //$NON-NLS-1$ //$NON-NLS-2$
 
 		load();

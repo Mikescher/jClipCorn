@@ -650,6 +650,24 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		});
 	}
 
+	public CCDBLanguageList getAllSubtitles() {
+		return _cache.get(SeriesCache.ALL_SUBTITLES, null, ser->
+		{
+			List<CCDBLanguage> langs = new ArrayList<>();
+			for (CCSeason s : seasons)
+			{
+				for (CCEpisode e : s.getEpisodeList())
+				{
+					if (e.Subtitles.get().isEmpty()) continue;
+					if (langs.size() == 0) { langs.addAll(e.Subtitles.get().getInternalData()); }
+					for (var l : e.Subtitles.get().getInternalData()) if (!langs.contains(l)) langs.add(l);
+				}
+			}
+
+			return CCDBLanguageList.createDirect(langs);
+		});
+	}
+
 	@SuppressWarnings("nls")
 	public String getFolderNameForCreatedFolderStructure(CCDBLanguageSet fallbackLanguage) {
 		return _cache.get(SeriesCache.FOLDER_NAME_FOR_CREATED_FOLDER_STRUCTURE, Tuple1.Create(fallbackLanguage), ser->

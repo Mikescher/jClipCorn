@@ -23,13 +23,14 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 	private final static int COLUMNBORDER_WIDTH = 6; //Wert durch testen ermittelt ...
 
 	private enum TCACType { Auto, Fill, Fixed, Keep }
+	private enum TCALimitPriority { Min, Max }
 	private static class TCAConfig
 	{
 		public static final int PLACEHOLDER_AUTO = -99999;
-		public static TCAConfig KEEP = new TCAConfig(TCACType.Keep, 0, 0, -1, -1, false);
+		public static TCAConfig KEEP = new TCAConfig(TCACType.Keep, 0, 0, -1, -1, TCALimitPriority.Min, false);
 		public final TCACType Type; public final int Length; public final int Weight;
-		public final int Min; public final int Max; public final boolean OnlyExpand;
-		public TCAConfig(TCACType t, int l, int w, int mi, int ma, boolean oe) { Type = t; Length = l; Weight = w; Max=ma; Min=mi; OnlyExpand=oe; }
+		public final int Min; public final int Max; public final TCALimitPriority Prio;  public final boolean OnlyExpand;
+		public TCAConfig(TCACType t, int l, int w, int mi, int ma, TCALimitPriority p, boolean oe) { Type = t; Length = l; Weight = w; Max=ma; Min=mi; Prio=p; OnlyExpand=oe; }
 	}
 
 	private final JScrollPane owner;
@@ -142,6 +143,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 		_currentConfigStr = dat;
 	}
 
+	@SuppressWarnings("HardCodedStringLiteral")
 	private List<TCAConfig> parseConfig(String dat) {
 
 		List<TCAConfig> cfg = new ArrayList<>();
@@ -154,6 +156,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 
 			int min = -1;
 			int max = -1;
+			TCALimitPriority prio = TCALimitPriority.Min;
 			boolean expandOnly = false;
 
 			for (int i=1; i<components.length; i++)
@@ -174,6 +177,16 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 					else
 						min = Integer.parseInt(substr);
 				}
+				else if (components[i].startsWith("priority="))
+				{
+					String substr = components[i].substring("priority=".length());
+					if ("min".equals(substr))
+						prio = TCALimitPriority.Min;
+					else if ("max".equals(substr))
+						prio = TCALimitPriority.Max;
+					else
+						throw new Error("Invalid priority value: " + substr);
+				}
 				else if (components[i].startsWith("expandonly"))
 				{
 					expandOnly = true;
@@ -186,35 +199,35 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 
 			if ("auto".equals(components[0]))
 			{
-				cfg.add(new TCAConfig(TCACType.Auto, 0, 0, min, max, expandOnly));
+				cfg.add(new TCAConfig(TCACType.Auto, 0, 0, min, max, prio, expandOnly));
 			}
 			else if (RegExHelper.isMatch("^[0-9]+$", components[0]))
 			{
-				cfg.add(new TCAConfig(TCACType.Fixed, Integer.parseInt(d), 0, min, max, expandOnly));
+				cfg.add(new TCAConfig(TCACType.Fixed, Integer.parseInt(d), 0, min, max, prio, expandOnly));
 			}
 			else if ("fill".equals(components[0]))
 			{
-				cfg.add(new TCAConfig(TCACType.Fill, 0, 1, min, max, expandOnly));
+				cfg.add(new TCAConfig(TCACType.Fill, 0, 1, min, max, prio, expandOnly));
 			}
 			else if ("*".equals(components[0]))
 			{
-				cfg.add(new TCAConfig(TCACType.Fill, 0, 1, min, max, expandOnly));
+				cfg.add(new TCAConfig(TCACType.Fill, 0, 1, min, max, prio, expandOnly));
 			}
 			else if ("star".equals(components[0]))
 			{
-				cfg.add(new TCAConfig(TCACType.Fill, 0, 1, min, max, expandOnly));
+				cfg.add(new TCAConfig(TCACType.Fill, 0, 1, min, max, prio, expandOnly));
 			}
 			else if (RegExHelper.isMatch("^[0-9]+\\*$", components[0]))
 			{
-				cfg.add(new TCAConfig(TCACType.Fill, 0, Integer.parseInt(components[0].substring(0, components[0].length()-1)), min, max, expandOnly));
+				cfg.add(new TCAConfig(TCACType.Fill, 0, Integer.parseInt(components[0].substring(0, components[0].length()-1)), min, max, prio, expandOnly));
 			}
 			else if ("#".equals(components[0]))
 			{
-				cfg.add(new TCAConfig(TCACType.Keep, 0, 0, min, max, expandOnly));
+				cfg.add(new TCAConfig(TCACType.Keep, 0, 0, min, max, prio, expandOnly));
 			}
 			else if ("keep".equals(components[0]))
 			{
-				cfg.add(new TCAConfig(TCACType.Keep, 0, 0, min, max, expandOnly));
+				cfg.add(new TCAConfig(TCACType.Keep, 0, 0, min, max, prio, expandOnly));
 			}
 			else
 			{
@@ -267,10 +280,20 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			{
 				int w = tcols[i].getWidth();
 				if (w<0) w=0;
-				if (cfg.get(i).Max > 0)  w = Math.min(w, cfg.get(i).Max);
-				if (cfg.get(i).Min > 0)  w = Math.max(w, cfg.get(i).Min);
-				if (cfg.get(i).Max == TCAConfig.PLACEHOLDER_AUTO)  w = Math.min(w, auto[i]);
-				if (cfg.get(i).Min == TCAConfig.PLACEHOLDER_AUTO)  w = Math.max(w, auto[i]);
+				if (cfg.get(i).Prio == TCALimitPriority.Min)
+				{
+					if (cfg.get(i).Max > 0)  w = Math.min(w, cfg.get(i).Max);
+					if (cfg.get(i).Max == TCAConfig.PLACEHOLDER_AUTO)  w = Math.min(w, auto[i]);
+					if (cfg.get(i).Min > 0)  w = Math.max(w, cfg.get(i).Min);
+					if (cfg.get(i).Min == TCAConfig.PLACEHOLDER_AUTO)  w = Math.max(w, auto[i]);
+				}
+				else if (cfg.get(i).Prio == TCALimitPriority.Max)
+				{
+					if (cfg.get(i).Min > 0)  w = Math.max(w, cfg.get(i).Min);
+					if (cfg.get(i).Min == TCAConfig.PLACEHOLDER_AUTO)  w = Math.max(w, auto[i]);
+					if (cfg.get(i).Max > 0)  w = Math.min(w, cfg.get(i).Max);
+					if (cfg.get(i).Max == TCAConfig.PLACEHOLDER_AUTO)  w = Math.min(w, auto[i]);
+				}
 				//if (getNeedsSpacing(i)) w += spacing;
 				if (cfg.get(i).OnlyExpand) w = Math.max(w, tcols[i].getWidth());
 				w = Math.max(w, tcols[i].getMinWidth());
@@ -285,10 +308,20 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			{
 				int w = cfg.get(i).Length;
 				if (w<0) w=0;
-				if (cfg.get(i).Max > 0)  w = Math.min(w, cfg.get(i).Max);
-				if (cfg.get(i).Min > 0)  w = Math.max(w, cfg.get(i).Min);
-				if (cfg.get(i).Max == TCAConfig.PLACEHOLDER_AUTO)  w = Math.min(w, auto[i]);
-				if (cfg.get(i).Min == TCAConfig.PLACEHOLDER_AUTO)  w = Math.max(w, auto[i]);
+				if (cfg.get(i).Prio == TCALimitPriority.Min)
+				{
+					if (cfg.get(i).Max > 0)  w = Math.min(w, cfg.get(i).Max);
+					if (cfg.get(i).Max == TCAConfig.PLACEHOLDER_AUTO)  w = Math.min(w, auto[i]);
+					if (cfg.get(i).Min > 0)  w = Math.max(w, cfg.get(i).Min);
+					if (cfg.get(i).Min == TCAConfig.PLACEHOLDER_AUTO)  w = Math.max(w, auto[i]);
+				}
+				else if (cfg.get(i).Prio == TCALimitPriority.Max)
+				{
+					if (cfg.get(i).Min > 0)  w = Math.max(w, cfg.get(i).Min);
+					if (cfg.get(i).Min == TCAConfig.PLACEHOLDER_AUTO)  w = Math.max(w, auto[i]);
+					if (cfg.get(i).Max > 0)  w = Math.min(w, cfg.get(i).Max);
+					if (cfg.get(i).Max == TCAConfig.PLACEHOLDER_AUTO)  w = Math.min(w, auto[i]);
+				}
 				if (getNeedsSpacing(i)) w += spacing;
 				if (cfg.get(i).OnlyExpand) w = Math.max(w, tcols[i].getWidth());
 				w = Math.max(w, tcols[i].getMinWidth());
@@ -303,10 +336,20 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			{
 				int w = auto[i];
 				if (w<0) w=0;
-				if (cfg.get(i).Max > 0)  w = Math.min(w, cfg.get(i).Max);
-				if (cfg.get(i).Min > 0)  w = Math.max(w, cfg.get(i).Min);
-				if (cfg.get(i).Max == TCAConfig.PLACEHOLDER_AUTO)  w = Math.min(w, auto[i]);
-				if (cfg.get(i).Min == TCAConfig.PLACEHOLDER_AUTO)  w = Math.max(w, auto[i]);
+				if (cfg.get(i).Prio == TCALimitPriority.Min)
+				{
+					if (cfg.get(i).Max > 0)  w = Math.min(w, cfg.get(i).Max);
+					if (cfg.get(i).Max == TCAConfig.PLACEHOLDER_AUTO)  w = Math.min(w, auto[i]);
+					if (cfg.get(i).Min > 0)  w = Math.max(w, cfg.get(i).Min);
+					if (cfg.get(i).Min == TCAConfig.PLACEHOLDER_AUTO)  w = Math.max(w, auto[i]);
+				}
+				else if (cfg.get(i).Prio == TCALimitPriority.Max)
+				{
+					if (cfg.get(i).Min > 0)  w = Math.max(w, cfg.get(i).Min);
+					if (cfg.get(i).Min == TCAConfig.PLACEHOLDER_AUTO)  w = Math.max(w, auto[i]);
+					if (cfg.get(i).Max > 0)  w = Math.min(w, cfg.get(i).Max);
+					if (cfg.get(i).Max == TCAConfig.PLACEHOLDER_AUTO)  w = Math.min(w, auto[i]);
+				}
 				if (getNeedsSpacing(i)) w += spacing;
 				if (cfg.get(i).OnlyExpand) w = Math.max(w, tcols[i].getWidth());
 				w = Math.max(w, tcols[i].getMinWidth());
@@ -329,10 +372,20 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			{
 				int w = (remaining * cfg.get(i).Weight) / fillweight;
 				if (w<0) w=0;
-				if (cfg.get(i).Max > 0)  w = Math.min(w, cfg.get(i).Max);
-				if (cfg.get(i).Min > 0)  w = Math.max(w, cfg.get(i).Min);
-				if (cfg.get(i).Max == TCAConfig.PLACEHOLDER_AUTO)  w = Math.min(w, auto[i]);
-				if (cfg.get(i).Min == TCAConfig.PLACEHOLDER_AUTO)  w = Math.max(w, auto[i]);
+				if (cfg.get(i).Prio == TCALimitPriority.Min)
+				{
+					if (cfg.get(i).Max > 0)  w = Math.min(w, cfg.get(i).Max);
+					if (cfg.get(i).Max == TCAConfig.PLACEHOLDER_AUTO)  w = Math.min(w, auto[i]);
+					if (cfg.get(i).Min > 0)  w = Math.max(w, cfg.get(i).Min);
+					if (cfg.get(i).Min == TCAConfig.PLACEHOLDER_AUTO)  w = Math.max(w, auto[i]);
+				}
+				else if (cfg.get(i).Prio == TCALimitPriority.Max)
+				{
+					if (cfg.get(i).Min > 0)  w = Math.max(w, cfg.get(i).Min);
+					if (cfg.get(i).Min == TCAConfig.PLACEHOLDER_AUTO)  w = Math.max(w, auto[i]);
+					if (cfg.get(i).Max > 0)  w = Math.min(w, cfg.get(i).Max);
+					if (cfg.get(i).Max == TCAConfig.PLACEHOLDER_AUTO)  w = Math.min(w, auto[i]);
+				}
 				if (getNeedsSpacing(i)) w += spacing;
 				if (cfg.get(i).OnlyExpand) w = Math.max(w, tcols[i].getWidth());
 				w = Math.max(w, tcols[i].getMinWidth());

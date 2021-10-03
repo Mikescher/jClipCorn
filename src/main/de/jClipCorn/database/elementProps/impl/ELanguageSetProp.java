@@ -2,6 +2,7 @@ package de.jClipCorn.database.elementProps.impl;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.elementProps.IPropertyParent;
+import de.jClipCorn.util.exceptions.CCFormatException;
 
 public class ELanguageSetProp extends EProperty<CCDBLanguageSet> {
 	public ELanguageSetProp(String name, CCDBLanguageSet defValue, IPropertyParent p, EPropertyType t) {
@@ -23,7 +24,7 @@ public class ELanguageSetProp extends EProperty<CCDBLanguageSet> {
 	}
 
 	@Override
-	public void deserializeFromString(String v) {
+	public void deserializeFromString(String v) throws CCFormatException {
 		set(CCDBLanguageSet.parseFromString(v));
 	}
 

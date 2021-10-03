@@ -5,10 +5,11 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.features.serialization.ExportHelper;
-import de.jClipCorn.gui.guiComponents.*;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
+import de.jClipCorn.gui.guiComponents.JFSPathTextField;
+import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
@@ -54,8 +55,6 @@ public class ApplyPatchFrame extends JCCFrame
 
 	private void postInit()
 	{
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-
 		edPathDestMovies.setPath(movielist.getCommonMoviesPath().toFSPath(this));
 		edPathDestSeries.setPath(movielist.getCommonSeriesPath().toFSPath(this));
 

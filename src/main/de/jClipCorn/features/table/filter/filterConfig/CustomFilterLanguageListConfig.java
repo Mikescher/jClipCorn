@@ -2,7 +2,7 @@ package de.jClipCorn.features.table.filter.filterConfig;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
-import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
+import de.jClipCorn.gui.guiComponents.language.LanguageSetChooser;
 import de.jClipCorn.util.lambda.Func0to1;
 import de.jClipCorn.util.lambda.Func1to0;
 
@@ -23,7 +23,7 @@ public class CustomFilterLanguageListConfig extends CustomFilterConfig {
 	
 	@Override
 	public JComponent getComponent(Runnable onChange) {
-		LanguageChooser chsr = new LanguageChooser(valueGetter.invoke());
+		LanguageSetChooser chsr = new LanguageSetChooser(valueGetter.invoke());
 
 		chsr.addChangeListener(e -> { valueSetter.invoke(chsr.getValue()); onChange.run(); });
 		

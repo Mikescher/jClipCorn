@@ -52,7 +52,7 @@ public class SerTable extends JScrollPane implements ListSelectionListener, Mous
 	}
 	
 	public void autoResize() {
-		adjuster.adjustColumns("auto|*,min=auto|auto|auto|auto|auto|auto|auto|auto|auto|auto"); //$NON-NLS-1$
+		adjuster.adjustColumns("auto|*,min=auto|auto|auto|auto|auto|auto|auto|auto|auto|auto|auto"); //$NON-NLS-1$
 	}
 	
 	public void changeSeason(CCSeason s) {

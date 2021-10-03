@@ -24,7 +24,8 @@ public enum MainFrameColumn implements ContinoousEnum<MainFrameColumn> {
 	FORMAT(     13, "auto",       ClipTableModel.COLUMN_FORMAT),
 	YEAR(       14, "auto",       ClipTableModel.COLUMN_YEAR),
 	FILESIZE(   15, "auto",       ClipTableModel.COLUMN_SIZE),
-	LASTVIEWED( 16, "auto",       ClipTableModel.COLUMN_LASTVIEWED);
+	LASTVIEWED( 16, "auto",       ClipTableModel.COLUMN_LASTVIEWED),
+	SUBTITLES(  17, "auto",       ClipTableModel.COLUMN_SUBTITLES);
 
 	private final static String[] NAMES = {
 		LocaleBundle.getString("ClipTableModel.Score"),
@@ -44,13 +45,14 @@ public enum MainFrameColumn implements ContinoousEnum<MainFrameColumn> {
 		LocaleBundle.getString("ClipTableModel.Year"),
 		LocaleBundle.getString("ClipTableModel.Size"),
 		LocaleBundle.getString("ClipTableModel.LastViewed"),
+		LocaleBundle.getString("ClipTableModel.Subtitles"),
 	};
 
 	private final int id;
 	public  final int ColumnIndex;
 	public  final String AdjusterConfig;
 
-	private static final EnumWrapper<MainFrameColumn> wrapper = new EnumWrapper<>(TITLE);
+	private static final EnumWrapper<MainFrameColumn> wrapper = new EnumWrapper<>(TITLE, v -> v.ColumnIndex);
 
 	MainFrameColumn(int val, String adj, int idx) {
 		id = val;

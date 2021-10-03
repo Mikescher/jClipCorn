@@ -121,7 +121,7 @@ public class ParseOnlineDialog extends JCCDialog {
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("parseImDBFrame.this.title")); //$NON-NLS-1$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+
 		setModal(true);
 		setBounds(0, 0, 807, 538);
 		getContentPane().setLayout(null);

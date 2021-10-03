@@ -62,7 +62,7 @@ public class DatabaseXMLImportImpl_V7 implements IDatabaseXMLImporterImpl
 			e.execIfIntAttrExists("format", o.Format::set);
 			e.execIfIntAttrExists("length", o.Length::set);
 			e.execIfAttrExists("languages", v -> o.Language.set(CCDBLanguageSet.parseFromString(v)));
-			e.execIfAttrExists("subtitles", v -> o.Subtitles.set(CCDBLanguageList.parseFromString(v)));
+			e.execIfAttrExists("subtitles", v -> o.Subtitles.set(CCDBLanguageList.parseFromLongString(v)));
 
 			for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
 				int fi = i;
@@ -168,7 +168,7 @@ public class DatabaseXMLImportImpl_V7 implements IDatabaseXMLImporterImpl
 			if (s.ResetTags) o.Tags.set(CCTagList.EMPTY);
 
 			e.execIfAttrExists("languages", v -> o.Language.set(CCDBLanguageSet.parseFromString(v)));
-			e.execIfAttrExists("subtitles", v -> o.Subtitles.set(CCDBLanguageList.parseFromString(v)));
+			e.execIfAttrExists("subtitles", v -> o.Subtitles.set(CCDBLanguageList.parseFromLongString(v)));
 
 			if (s.ResetViewed) o.ViewedHistory.set(CCDateTimeList.createEmpty());
 

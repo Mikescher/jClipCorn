@@ -6,6 +6,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
 import de.jClipCorn.util.lambda.Func1to1;
+import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
@@ -105,6 +106,11 @@ public class EnumWrapper<T extends ContinoousEnum<T>> implements IEnumWrapper {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public List<T> allDisplayValuesSorted() {
 		return CCStreams.iterate(defValue.evalues()).filter(displayFilter).autosortByProperty(x -> (Comparable)displaySorter.invoke(x)).toList();
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public CCStream<T> sort(Collection<T> data) {
+		return CCStreams.iterate(data).autosortByProperty(x -> (Comparable)displaySorter.invoke(x));
 	}
 
 	public T randomValue(Random r) {

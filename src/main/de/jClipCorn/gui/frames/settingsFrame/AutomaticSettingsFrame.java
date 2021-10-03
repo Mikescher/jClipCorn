@@ -10,7 +10,6 @@ import de.jClipCorn.gui.frames.extendedSettingsFrame.ExtendedSettingsFrame;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.properties.property.CCProperty;
@@ -53,9 +52,7 @@ public abstract class AutomaticSettingsFrame extends JCCFrame {
 	
 	private void initGUI() {
 		List<Component> tabOrder = new ArrayList<>();
-		
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-		
+
 		if (LookAndFeelManager.isMetal())
 			setSize(new Dimension(825, 525));
 		else

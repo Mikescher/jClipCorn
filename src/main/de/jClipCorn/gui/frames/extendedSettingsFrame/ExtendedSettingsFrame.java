@@ -3,17 +3,16 @@ package de.jClipCorn.gui.frames.extendedSettingsFrame;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.gui.frames.extendedSettingsFrame.settingsTable.SettingsTableEditor;
 import de.jClipCorn.gui.frames.extendedSettingsFrame.settingsTable.SettingsTableModel;
-import de.jClipCorn.gui.guiComponents.*;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.gui.LookAndFeelManager;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -45,8 +44,6 @@ public class ExtendedSettingsFrame extends JCCFrame
 
 	private void postInit()
 	{
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-
 		if (! LookAndFeelManager.isExternal())
 		{
 			edKey.setBackground(Color.WHITE);

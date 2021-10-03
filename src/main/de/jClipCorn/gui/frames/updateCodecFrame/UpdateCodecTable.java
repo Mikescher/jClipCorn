@@ -8,7 +8,6 @@ import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,19 +28,19 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 	@SuppressWarnings("nls")
 	protected List<JCCSimpleColumnPrototype<UpdateCodecTableElement>> configureColumns() {
 		List<JCCSimpleColumnPrototype<UpdateCodecTableElement>> r = new ArrayList<>();
-		
+
 		r.add(new JCCSimpleColumnPrototype<>(
 				this,
 				"auto",
 				"",
 				null,
 				e -> e.getStatusIcon(),
-				e -> e.getStatusText(),
+				e -> Str.limit(Str.firstLine(Str.trim(e.getStatusText())), 128),
 				true));
-		
+
 		r.add(new JCCSimpleColumnPrototype<>(
 				this,
-				"*,min=auto",
+				"*,min=auto,max=600,priority=max",
 				"UpdateCodecFrame.Table.ColumnTitle",
 				e -> e.getFullDisplayTitle(),
 				null,
@@ -63,6 +62,24 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 				"UpdateCodecFrame.Table.ColumnLangNew",
 				e -> e.getNewLanguage().toShortOutputString(Str.Empty),
 				e -> e.getNewLanguage().isEmpty() ? Resources.ICN_TRANSPARENT.get16x16() : e.getNewLanguage().getIcon(),
+				null,
+				true));
+
+		r.add(new JCCSimpleColumnPrototype<>(
+				this,
+				"auto",
+				"UpdateCodecFrame.Table.ColumnSubsOld",
+				e -> Str.Empty,
+				e -> e.getOldSubtitles().getIcon(),
+				null,
+				true));
+
+		r.add(new JCCSimpleColumnPrototype<>(
+				this,
+				"auto",
+				"UpdateCodecFrame.Table.ColumnSubsNew",
+				e -> Str.Empty,
+				e -> e.getNewSubtitles().getIcon(),
 				null,
 				true));
 

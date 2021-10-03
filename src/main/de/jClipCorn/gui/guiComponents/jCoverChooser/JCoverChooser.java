@@ -1,9 +1,11 @@
 package de.jClipCorn.gui.guiComponents.jCoverChooser;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -44,13 +46,27 @@ public class JCoverChooser extends JComponent implements MouseListener {
 
 	private final CCMovieList movielist;
 	private final boolean asyncLoading;
+	private final boolean designmode;
+
+	@DesignCreate
+	private static JCoverChooser designCreate() { return new JCoverChooser(null, false, true); }
 
 	public JCoverChooser(CCMovieList ml) {
-		this(ml, false);
+		this(ml, false, false);
 	}
 
 	public JCoverChooser(CCMovieList ml, boolean forcenoAsync) {
+		this(ml, forcenoAsync, false);
+	}
+
+	public JCoverChooser(CCMovieList ml, boolean forcenoAsync, boolean designmode)
+	{
 		super();
+
+		this.designmode = designmode;
+
+		if (designmode) { asyncLoading = false; movielist = null; mode3d = false; update(false); return; }
+
 		asyncLoading = ml.ccprops().PROP_MAINFRAME_ASYNC_COVER_LOADING.getValue() && !forcenoAsync;
 		movielist = ml;
 		mode3d = ml.ccprops().PROP_PREVSERIES_3DCOVER.getValue();
@@ -286,13 +302,15 @@ public class JCoverChooser extends JComponent implements MouseListener {
 
 		int ecc = getExtraCoverCount();
 
+		var props = designmode ? CCProperties.createInMemory() : movielist.ccprops();
+
 		for (int i = -ecc; i <= ecc; i++) {
 			TransformRectangle tr;
 
 			if (mode3d) {
-				tr = new TransformRectangle3D(movielist.ccprops(), new Point(getCoverX(i), y1), new Point(getCoverX(i) + cw, y2));
+				tr = new TransformRectangle3D(props, new Point(getCoverX(i), y1), new Point(getCoverX(i) + cw, y2));
 			} else {
-				tr = new TransformRectangle2D(movielist.ccprops(), new Point(getCoverX(i), y1), new Point(getCoverX(i) + cw, y2));
+				tr = new TransformRectangle2D(props, new Point(getCoverX(i), y1), new Point(getCoverX(i) + cw, y2));
 			}
 				
 			

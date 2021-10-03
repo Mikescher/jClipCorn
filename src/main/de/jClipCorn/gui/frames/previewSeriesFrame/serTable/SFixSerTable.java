@@ -1,10 +1,7 @@
 package de.jClipCorn.gui.frames.previewSeriesFrame.serTable;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.table.renderer.*;
@@ -22,7 +19,8 @@ public class SFixSerTable extends SFixTable {
 	private TableViewedRenderer renderer_viewed;
 	private TableStringTitleRenderer renderer_title;
 	private TableMediaInfoCatRenderer renderer_mediainfo;
-	private TableLanguageRenderer renderer_language;
+	private TableLanguageSetRenderer renderer_language;
+	private TableLanguageListRenderer renderer_subtitles;
 	private TableLengthRenderer renderer_length;
 	private TableTagsRenderer renderer_tags;
 	private TableDateRenderer renderer_date;
@@ -49,7 +47,8 @@ public class SFixSerTable extends SFixTable {
 		renderer_viewed    = new TableViewedRenderer(movielist);
 		renderer_title     = new TableStringTitleRenderer(movielist);
 		renderer_mediainfo = new TableMediaInfoCatRenderer(movielist);
-		renderer_language  = new TableLanguageRenderer(movielist);
+		renderer_language  = new TableLanguageSetRenderer(movielist);
+		renderer_subtitles = new TableLanguageListRenderer(movielist);
 		renderer_length    = new TableLengthRenderer(movielist);
 		renderer_tags      = new TableTagsRenderer(movielist);
 		renderer_date      = new TableDateRenderer(movielist);
@@ -70,6 +69,7 @@ public class SFixSerTable extends SFixTable {
 			case SerTableModel.COLUMN_LASTVIEWED: return renderer_datelist;
 			case SerTableModel.COLUMN_MEDIAINFO:  return renderer_mediainfo;
 			case SerTableModel.COLUMN_LANGUAGE:   return renderer_language;
+			case SerTableModel.COLUMN_SUBTITLES:  return renderer_subtitles;
 			case SerTableModel.COLUMN_LENGTH:     return renderer_length;
 			case SerTableModel.COLUMN_TAGS:       return renderer_tags;
 			case SerTableModel.COLUMN_ADDDATE:    return renderer_date;
@@ -91,6 +91,7 @@ public class SFixSerTable extends SFixTable {
 			case SerTableModel.COLUMN_LASTVIEWED: return (((CCDateTimeList)value).any()) ? ((CCDateTimeList)value).getHTMLListFormatted(row) : null;
 			case SerTableModel.COLUMN_MEDIAINFO:  return ((CCQualityCategory)value).getTooltip();
 			case SerTableModel.COLUMN_LANGUAGE:   return ((CCDBLanguageSet)value).toOutputString();
+			case SerTableModel.COLUMN_SUBTITLES:  return ((CCDBLanguageList)value).toOutputString();
 			case SerTableModel.COLUMN_LENGTH:     return TimeIntervallFormatter.format(((int)value));
 			case SerTableModel.COLUMN_TAGS:       return ((CCTagList) value).getAsString();
 			case SerTableModel.COLUMN_ADDDATE:    return null;

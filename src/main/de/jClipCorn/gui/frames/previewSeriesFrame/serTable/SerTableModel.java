@@ -20,11 +20,12 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 	public final static int COLUMN_LASTVIEWED = 3;
 	public final static int COLUMN_MEDIAINFO = 4;
 	public final static int COLUMN_LANGUAGE = 5;
-	public final static int COLUMN_LENGTH = 6;
-	public final static int COLUMN_TAGS = 7;
-	public final static int COLUMN_ADDDATE = 8;
-	public final static int COLUMN_FORMAT = 9;
-	public final static int COLUMN_SIZE = 10;
+	public final static int COLUMN_SUBTITLES = 6;
+	public final static int COLUMN_LENGTH = 7;
+	public final static int COLUMN_TAGS = 8;
+	public final static int COLUMN_ADDDATE = 9;
+	public final static int COLUMN_FORMAT = 10;
+	public final static int COLUMN_SIZE = 11;
 	
 	private String[] COLUMN_NAMES = { 
 		LocaleBundle.getString("PreviewSeriesFrame.serTable.Episode"), //$NON-NLS-1$
@@ -33,6 +34,7 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 		"_ERROR_", //$NON-NLS-1$
 		LocaleBundle.getString("PreviewSeriesFrame.serTable.Quality"), //$NON-NLS-1$
 		"", //$NON-NLS-1$
+		LocaleBundle.getString("PreviewSeriesFrame.serTable.Subtitles"), //$NON-NLS-1$
 		LocaleBundle.getString("PreviewSeriesFrame.serTable.Length"), //$NON-NLS-1$
 		LocaleBundle.getString("PreviewSeriesFrame.serTable.Tags"), //$NON-NLS-1$
 		LocaleBundle.getString("PreviewSeriesFrame.serTable.Added"), //$NON-NLS-1$
@@ -93,17 +95,18 @@ public class SerTableModel extends AbstractTableModel implements TableModelRowCo
 		CCEpisode ep = season.getEpisodeByArrayIndex(row);
 
 		switch (col) {
-		case COLUMN_EPISODE:    return ep.getEpisodeNumber();
-		case COLUMN_NAME:       return ep.getTitle();
+		case COLUMN_EPISODE:    return ep.EpisodeNumber.get();
+		case COLUMN_NAME:       return ep.Title.get();
 		case COLUMN_VIEWED:     return ep.getExtendedViewedState();
 		case COLUMN_LASTVIEWED: return ep.ViewedHistory.get();
 		case COLUMN_MEDIAINFO:  return ep.getMediaInfoCategory();
-		case COLUMN_LANGUAGE:   return ep.getLanguage();
-		case COLUMN_LENGTH:     return ep.getLength();
-		case COLUMN_TAGS:       return ep.getTags();
-		case COLUMN_ADDDATE:    return ep.getAddDate();
-		case COLUMN_FORMAT:     return ep.getFormat();
-		case COLUMN_SIZE:       return ep.getFilesize();
+		case COLUMN_LANGUAGE:   return ep.Language.get();
+		case COLUMN_SUBTITLES:  return ep.Subtitles.get();
+		case COLUMN_LENGTH:     return ep.Length.get();
+		case COLUMN_TAGS:       return ep.Tags.get();
+		case COLUMN_ADDDATE:    return ep.AddDate.get();
+		case COLUMN_FORMAT:     return ep.Format.get();
+		case COLUMN_SIZE:       return ep.FileSize.get();
 		default:                return null;
 		}
 	}

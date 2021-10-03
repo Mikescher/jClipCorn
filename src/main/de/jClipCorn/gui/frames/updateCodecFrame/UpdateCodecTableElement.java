@@ -3,6 +3,7 @@ package de.jClipCorn.gui.frames.updateCodecFrame;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
@@ -62,14 +63,7 @@ public class UpdateCodecTableElement {
 	}
 
 	public boolean hasDiff(double maxLenDiff) {
-		if (!Processed) return false;
-		if (MQResult == null) return false;
-
-		if (!CCDBLanguageSet.equals(Element.language().get(), getNewLanguage())) return true;
-		if (maxLenDiff != -1 && hasLenDiff(maxLenDiff)) return true;
-		if (!Element.mediaInfo().get().equals(getNewMediaInfo())) return true;
-
-		return false;
+		return getDiff(maxLenDiff) != null;
 	}
 
 	@SuppressWarnings("nls")
@@ -78,6 +72,7 @@ public class UpdateCodecTableElement {
 		if (MQResult == null) return null;
 
 		if (!CCDBLanguageSet.equals(Element.language().get(), getNewLanguage())) return "Language";
+		if (!CCDBLanguageList.equals(Element.subtitles().get(), getNewSubtitles())) return "Subtitles";
 		if (maxLenDiff != -1 && hasLenDiff(maxLenDiff)) return "Length";
 		if (!Element.mediaInfo().get().equals(getNewMediaInfo())) return "MediaInfo.[" + midiff(Element.mediaInfo().get(), getNewMediaInfo()) + "]";
 
@@ -101,6 +96,15 @@ public class UpdateCodecTableElement {
 		if (MQResult == null) return false;
 
 		if (!CCDBLanguageSet.equals(Element.language().get(), getNewLanguage())) return true;
+
+		return false;
+	}
+
+	public boolean hasSubsDiff() {
+		if (!Processed) return false;
+		if (MQResult == null) return false;
+
+		if (!CCDBLanguageList.equals(Element.subtitles().get(), getNewSubtitles())) return true;
 
 		return false;
 	}
@@ -146,6 +150,22 @@ public class UpdateCodecTableElement {
 		CCDBLanguageSet dbll = MQResult.get(0).AudioLanguages;
 		for (int i = 1; i < MQResult.size(); i++) dbll = CCDBLanguageSet.intersection(dbll, MQResult.get(i).AudioLanguages);
 		return dbll;
+	}
+
+	public CCDBLanguageList getOldSubtitles() {
+		return Element.subtitles().get();
+	}
+
+	public CCDBLanguageList getNewSubtitles() {
+		if (MQResult == null) return CCDBLanguageList.EMPTY;
+		if (MQResult.size() == 0) return CCDBLanguageList.EMPTY;
+
+		for (var r : MQResult)
+		{
+			if (r.SubtitleLanguages != null) return r.SubtitleLanguages;
+		}
+
+		return getOldSubtitles();
 	}
 
 	public String getOldLengthStr() {

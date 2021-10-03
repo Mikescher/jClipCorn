@@ -24,6 +24,7 @@ public class SeriesCache extends CalculationCache<CCSeries>
 	public static final String ALL_LANGUAGES                            = "ALL_LANGUAGES";
 	public static final String COMMON_LANGUAGES                         = "COMMON_LANGUAGES";
 	public static final String SEMI_COMMON_LANGUAGES                    = "SEMI_COMMON_LANGUAGES";
+	public static final String ALL_SUBTITLES                            = "ALL_SUBTITLES";
 	public static final String FOLDER_NAME_FOR_CREATED_FOLDER_STRUCTURE = "FOLDER_NAME_FOR_CREATED_FOLDER_STRUCTURE";
 	public static final String AUTO_EPISODE_LENGTH                      = "AUTO_EPISODE_LENGTH";
 	public static final String COMMON_EPISODE_LENGTH                    = "COMMON_EPISODE_LENGTH";

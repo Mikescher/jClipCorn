@@ -23,7 +23,8 @@ public interface ICCPlayableElement {
 	EFileSizeProp           fileSize();
 	EDateProp               addDate();
 	EDateTimeListProp       viewedHistory();
-	ELanguageSetProp language();
+	ELanguageSetProp        language();
+	ELanguageListProp       subtitles();
 
 	int               getLocalID();
 	boolean           isViewed();

@@ -11,7 +11,6 @@ import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.stream.CCStreams;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +46,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 		
 		r.add(new JCCSimpleColumnPrototype<>(
 				this,
-				"*,min=auto",
+				"*,min=auto,max=600,priority=max",
 				"UpdateMetadataFrame.Table.ColumnTitle",
 				e -> e.Element.getFullDisplayTitle(),
 				null,

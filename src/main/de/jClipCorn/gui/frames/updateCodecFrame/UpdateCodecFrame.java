@@ -1,10 +1,9 @@
 package de.jClipCorn.gui.frames.updateCodecFrame;
 
-import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
@@ -15,7 +14,6 @@ import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -26,218 +24,184 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateCodecFrame extends JCCFrame {
-	private static final long serialVersionUID = -2163175118745491143L;
-
-	private enum FilterState { ALL, CHANGED, CHANGED_LANG, CHANGED_LEN, CHANGED_LEN_DYN, CHANGED_MEDIAINFO, ELEM_ERROR, ELEM_WARN }
-	
-	private FilterState selectedFilter;
-	
-	private UpdateCodecTable tableMain;
-	private JToggleButton btnShowFiltered;
-	private JToggleButton btnShowAll;
-	private JToggleButton btnShowFilteredDynLen;
-	private JToggleButton btnShowFilteredLang;
-	private JToggleButton btnShowFilteredLen;
-	private JToggleButton btnShowFilteredErr;
-	private JToggleButton btnShowFilteredWarn;
-	private JButton btnStartCollectingData;
-	private JProgressBar progressBar;
-	private JPanel panel;
+public class UpdateCodecFrame extends JCCFrame
+{
+	private FilterState selectedFilter = FilterState.ALL;
 
 	private Thread collThread = null;
 	private boolean cancelBackground;
-	private JButton btnUpdateSelectedLang;
-	private JButton btnUpdateSelectedLen;
-	private JTextArea textArea;
-	private JPanel panel_1;
-	private JButton button;
-	private JScrollPane scrollPane;
-	private JCheckBox cbAutoScroll;
-	private JSpinner spinnerDynLen;
-	private JPanel panel_2;
-	private JLabel lblApproxLength;
-	private JToggleButton btnShowFilteredMediaInfo;
-	private JButton btnUpdateSelectedMediaInfo;
-	
-	public UpdateCodecFrame(Component owner, CCMovieList mlist) {
-		super(mlist);
-		setSize(new Dimension(1200, 600));
 
-		initGUI();
+	private enum FilterState { ALL, CHANGED, CHANGED_LANG, CHANGED_SUBS, CHANGED_LEN, CHANGED_LEN_DYN, CHANGED_MEDIAINFO, ELEM_ERROR, ELEM_WARN }
+
+	public UpdateCodecFrame(Component owner, CCMovieList ml)
+	{
+		super(ml);
+
+		initComponents();
+		postInit();
+
 		setLocationRelativeTo(owner);
-		
+
 		initTable();
 	}
 
-	private void initGUI() {
-		setTitle(LocaleBundle.getString("UpdateCodecFrame.Title")); //$NON-NLS-1$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
-		
-		btnStartCollectingData = new JButton(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect1")); //$NON-NLS-1$
-		btnStartCollectingData.addActionListener(this::queryMetadata);
-		getContentPane().add(btnStartCollectingData, "2, 2"); //$NON-NLS-1$
-		
-		progressBar = new JProgressBar();
-		getContentPane().add(progressBar, "4, 2, default, fill"); //$NON-NLS-1$
-		
-		panel_1 = new JPanel();
-		getContentPane().add(panel_1, "5, 2, fill, fill"); //$NON-NLS-1$
-		panel_1.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		btnShowAll = new JToggleButton("All"); //$NON-NLS-1$
-		panel_1.add(btnShowAll, "1, 1"); //$NON-NLS-1$
-		btnShowAll.addActionListener(e -> setFiltered(FilterState.ALL, true, true));
-		btnShowAll.setSelected(true);
-		
-		btnShowFiltered = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter1")); //$NON-NLS-1$
-		panel_1.add(btnShowFiltered, "2, 1"); //$NON-NLS-1$
-		btnShowFiltered.addActionListener(e -> setFiltered(FilterState.CHANGED, true, true));
-		
-		btnShowFilteredLang = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter2")); //$NON-NLS-1$
-		panel_1.add(btnShowFilteredLang, "3, 1"); //$NON-NLS-1$
-		btnShowFilteredLang.addActionListener(e -> setFiltered(FilterState.CHANGED_LANG, true, true));
-		
-		btnShowFilteredLen = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter3")); //$NON-NLS-1$
-		panel_1.add(btnShowFilteredLen, "4, 1"); //$NON-NLS-1$
-		btnShowFilteredLen.addActionListener(e -> setFiltered(FilterState.CHANGED_LEN, true, true));
-		
-		btnShowFilteredDynLen = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter4")); //$NON-NLS-1$
-		panel_1.add(btnShowFilteredDynLen, "5, 1"); //$NON-NLS-1$
-		btnShowFilteredDynLen.addActionListener(e -> setFiltered(FilterState.CHANGED_LEN_DYN, true, true));
-		
-		btnShowFilteredMediaInfo = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter7")); //$NON-NLS-1$
-		panel_1.add(btnShowFilteredMediaInfo, "7, 1"); //$NON-NLS-1$
-		btnShowFilteredMediaInfo.addActionListener(e -> setFiltered(FilterState.CHANGED_MEDIAINFO, true, true));
+	private void postInit()
+	{
+		//
+	}
 
-		btnShowFilteredErr = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter5")); //$NON-NLS-1$
-		panel_1.add(btnShowFilteredErr, "8, 1"); //$NON-NLS-1$
-		btnShowFilteredErr.addActionListener(e -> setFiltered(FilterState.ELEM_ERROR, true, true));
+	private void showMediaInfo() {
+		String title = (tableMain.getSelectedElement()==null) ? Str.Empty : tableMain.getSelectedElement().getFullDisplayTitle();
+		GenericTextDialog.showText(UpdateCodecFrame.this, title, edMediaInfo.getText(), false);
+	}
 
-		btnShowFilteredWarn = new JToggleButton(LocaleBundle.getString("UpdateCodecFrame.Filter6")); //$NON-NLS-1$
-		panel_1.add(btnShowFilteredWarn, "9, 1"); //$NON-NLS-1$
-		btnShowFilteredWarn.addActionListener(e -> setFiltered(FilterState.ELEM_WARN, true, true));
-		
-		tableMain = new UpdateCodecTable(this);
-		getContentPane().add(tableMain, "2, 4, 4, 1, fill, fill"); //$NON-NLS-1$
+	private void updateSelectedLanguages() {
+		if (movielist.isReadonly()) return;
 
-		
-		panel = new JPanel();
-		getContentPane().add(panel, "2, 6, 4, 1, fill, fill"); //$NON-NLS-1$
-		panel.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.PREF_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.PREF_COLSPEC,},
-			new RowSpec[] {
-				RowSpec.decode("16dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("16dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("20dlu"),})); //$NON-NLS-1$
-		
-		btnUpdateSelectedLang = new JButton(LocaleBundle.getString("UpdateCodecFrame.Button1")); //$NON-NLS-1$
-		btnUpdateSelectedLang.setEnabled(false);
-		btnUpdateSelectedLang.addActionListener(e -> updateSelectedLanguages(true));
-		panel.add(btnUpdateSelectedLang, "1, 1, fill, fill"); //$NON-NLS-1$
-		
-		btnUpdateSelectedLen = new JButton(LocaleBundle.getString("UpdateCodecFrame.Button2")); //$NON-NLS-1$
-		btnUpdateSelectedLen.setEnabled(false);
-		btnUpdateSelectedLen.addActionListener(e -> updateSelectedLengths(true));
-		
-		btnUpdateSelectedMediaInfo = new JButton(LocaleBundle.getString("UpdateCodecFrame.Button3")); //$NON-NLS-1$
-		btnUpdateSelectedMediaInfo.setEnabled(false);
-		btnUpdateSelectedMediaInfo.addActionListener(e -> updateSelectedMediaInfos(true));
-		panel.add(btnUpdateSelectedMediaInfo, "1, 5"); //$NON-NLS-1$
-		
-		scrollPane = new JScrollPane();
-		panel.add(scrollPane, "2, 1, 1, 9, fill, fill"); //$NON-NLS-1$
-		
-		textArea = new JTextArea();
-		scrollPane.setViewportView(textArea);
-		textArea.setEditable(false);
-		panel.add(btnUpdateSelectedLen, "1, 3, fill, fill"); //$NON-NLS-1$
-		
-		button = new JButton("..."); //$NON-NLS-1$
-		button.addActionListener(e ->
-		{
-			String title = (tableMain.getSelectedElement()==null) ? Str.Empty : tableMain.getSelectedElement().getFullDisplayTitle();
-			GenericTextDialog.showText(UpdateCodecFrame.this, title, textArea.getText(), false);
-		});
-		
-		panel_2 = new JPanel();
-		panel.add(panel_2, "1, 7, fill, fill"); //$NON-NLS-1$
-		panel_2.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.PREF_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		lblApproxLength = new JLabel("Approx. Length (%):"); //$NON-NLS-1$
-		panel_2.add(lblApproxLength, "1, 1"); //$NON-NLS-1$
-		
-		spinnerDynLen = new JSpinner();
-		panel_2.add(spinnerDynLen, "3, 1"); //$NON-NLS-1$
-		spinnerDynLen.setModel(new SpinnerNumberModel(15.0, 0.0, 100.0, 1));
-		spinnerDynLen.addChangeListener(e -> { setFiltered(selectedFilter, true, true); });
-		
-		cbAutoScroll = new JCheckBox(LocaleBundle.getString("UpdateCodecFrame.CBScroll")); //$NON-NLS-1$
-		panel.add(cbAutoScroll, "1, 9, left, bottom"); //$NON-NLS-1$
-		panel.add(button, "3, 9, right, bottom"); //$NON-NLS-1$
+		List<UpdateCodecTableElement> data = tableMain.getSelectedDataCopy();
+
+		int count = 0;
+
+		for (UpdateCodecTableElement elem : data) {
+			if (!elem.Processed) continue;
+			if (elem.MQResult == null) continue;
+
+			CCDBLanguageSet v = elem.getNewLanguage();
+			if (v.isEmpty()) continue;
+
+			if (!CCDBLanguageSet.equals(v, elem.Element.language().get())) {elem.Element.language().set(v); count++; }
+		}
+
+		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.CodecUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.CodecUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
+
+		tableMain.forceDataChangedRedraw();
+	}
+
+	private void updateSelectedSubtitles() {
+		if (movielist.isReadonly()) return;
+
+		List<UpdateCodecTableElement> data = tableMain.getSelectedDataCopy();
+
+		int count = 0;
+
+		for (UpdateCodecTableElement elem : data) {
+			if (!elem.Processed) continue;
+			if (elem.MQResult == null) continue;
+
+			CCDBLanguageList v = elem.getNewSubtitles();
+
+			if (!CCDBLanguageList.equals(v, elem.Element.subtitles().get())) {elem.Element.subtitles().set(v); count++; }
+		}
+
+		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.CodecUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.CodecUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
+
+		tableMain.forceDataChangedRedraw();
+	}
+
+	private void updateSelectedLengths() {
+		if (movielist.isReadonly()) return;
+
+		List<UpdateCodecTableElement> data = tableMain.getSelectedDataCopy();
+
+		int count = 0;
+
+		for (UpdateCodecTableElement elem : data) {
+			if (!elem.Processed) continue;
+			if (elem.MQResult == null) continue;
+
+			int v = elem.getNewDuration();
+			if (v == -1) continue;
+
+			if (v != elem.Element.length().get()) { elem.Element.length().set(v); count++; }
+		}
+
+		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.CodecUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.CodecUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
+
+		tableMain.forceDataChangedRedraw();
+	}
+
+	private void updateSelectedMediaInfos() {
+		if (movielist.isReadonly()) return;
+
+		List<UpdateCodecTableElement> data = tableMain.getSelectedDataCopy();
+
+		int count = 0;
+
+		for (UpdateCodecTableElement elem : data) {
+			if (!elem.Processed) continue;
+			if (elem.MQResult == null) continue;
+
+			CCMediaInfo v = elem.getNewMediaInfo();
+			if (v.isUnset()) continue;
+
+			if (!elem.Element.mediaInfo().get().equals(v)) { elem.Element.mediaInfo().set(v); count++; }
+		}
+
+		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.CodecUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.CodecUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
+
+		tableMain.forceDataChangedRedraw();
+	}
+
+	private void setFilterAll() {
+		setFiltered(FilterState.ALL, true, true);
+	}
+
+	private void setFilterLang() {
+		setFiltered(FilterState.CHANGED, true, true);
+	}
+
+	private void setFilterChanged() {
+		setFiltered(FilterState.CHANGED_LANG, true, true);
+	}
+
+	private void setFilterSubs() {
+		setFiltered(FilterState.CHANGED_SUBS, true, true);
+	}
+
+	private void setFilterLen() {
+		setFiltered(FilterState.CHANGED_LEN, true, true);
+	}
+
+	private void setFilterDynLen() {
+		setFiltered(FilterState.CHANGED_LEN_DYN, true, true);
+	}
+
+	private void setFilterMediaInfo() {
+		setFiltered(FilterState.CHANGED_MEDIAINFO, true, true);
+	}
+
+	private void setFilterError() {
+		setFiltered(FilterState.ELEM_ERROR, true, true);
+	}
+
+	private void setFilterWarn() {
+		setFiltered(FilterState.ELEM_WARN, true, true);
+	}
+
+	private void onDynLengthChanged() {
+		setFiltered(selectedFilter, true, true);
 	}
 
 	public void setSelection(UpdateCodecTableElement element)
 	{
 		if (element == null) {
-			textArea.setText(Str.Empty);
+			edMediaInfo.setText(Str.Empty);
 		} else {
-			if (!element.Processed) textArea.setText(Str.Empty);
-			else if (element.MQError != null) textArea.setText(element.MQError.trim());
-			else if (element.MQResultString != null) textArea.setText(element.MQResultString.trim());
-			else textArea.setText("Error ???"); //$NON-NLS-1$
+			if (!element.Processed) edMediaInfo.setText(Str.Empty);
+			else if (element.MQError != null) edMediaInfo.setText(element.MQError.trim());
+			else if (element.MQResultString != null) edMediaInfo.setText(element.MQResultString.trim());
+			else edMediaInfo.setText("Error ???"); //$NON-NLS-1$
 		}
 		SwingUtils.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(0));
 	}
 
 	private void setFiltered(FilterState state, boolean triggerUpdate, boolean force) {
 		boolean changed = (selectedFilter != state);
-		
+
 		selectedFilter = state;
 
 		btnShowAll.setSelected(state == FilterState.ALL);
@@ -245,40 +209,44 @@ public class UpdateCodecFrame extends JCCFrame {
 		btnShowFilteredDynLen.setSelected(state == FilterState.CHANGED_LEN_DYN);
 		btnShowFilteredErr.setSelected(state == FilterState.ELEM_ERROR);
 		btnShowFilteredLang.setSelected(state == FilterState.CHANGED_LANG);
+		btnShowFilteredSubs.setSelected(state == FilterState.CHANGED_SUBS);
 		btnShowFilteredLen.setSelected(state == FilterState.CHANGED_LEN);
 		btnShowFilteredWarn.setSelected(state == FilterState.ELEM_WARN);
 		btnShowFilteredMediaInfo.setSelected(state == FilterState.CHANGED_MEDIAINFO);
 
 		if (triggerUpdate && (changed || force)) {
 			switch (state) {
-			case ALL:
-				tableMain.resetFilter();
-				break;
-			case CHANGED:
-				tableMain.setFilter(e -> e.Processed && e.hasDiff(((double)spinnerDynLen.getValue())/100.0));
-				break;
-			case CHANGED_LANG:
-				tableMain.setFilter(e -> e.Processed && e.hasLangDiff());
-				break;
-			case CHANGED_LEN:
-				tableMain.setFilter(e -> e.Processed && e.hasLenDiff(0.0));
-				break;
-			case CHANGED_MEDIAINFO:
-				tableMain.setFilter(e -> e.Processed && e.hasMediaInfoDiff());
-				break;
-			case CHANGED_LEN_DYN:
-				tableMain.setFilter(e -> e.Processed && e.hasLenDiff(((double)spinnerDynLen.getValue())/100.0));
-				break;
-			case ELEM_ERROR:
-				tableMain.setFilter(e -> e.Processed && e.MQError != null);
-				break;
-			case ELEM_WARN:
-				tableMain.setFilter(e -> e.Processed && e.hasDiff(-1) && e.getOldLanguage().ccstream().any(ol -> !e.getNewLanguage().contains(ol)) );
-				break;
+				case ALL:
+					tableMain.resetFilter();
+					break;
+				case CHANGED:
+					tableMain.setFilter(e -> e.Processed && e.hasDiff(((double)spinnerDynLen.getValue())/100.0));
+					break;
+				case CHANGED_LANG:
+					tableMain.setFilter(e -> e.Processed && e.hasLangDiff());
+					break;
+				case CHANGED_SUBS:
+					tableMain.setFilter(e -> e.Processed && e.hasSubsDiff());
+					break;
+				case CHANGED_LEN:
+					tableMain.setFilter(e -> e.Processed && e.hasLenDiff(0.0));
+					break;
+				case CHANGED_MEDIAINFO:
+					tableMain.setFilter(e -> e.Processed && e.hasMediaInfoDiff());
+					break;
+				case CHANGED_LEN_DYN:
+					tableMain.setFilter(e -> e.Processed && e.hasLenDiff(((double)spinnerDynLen.getValue())/100.0));
+					break;
+				case ELEM_ERROR:
+					tableMain.setFilter(e -> e.Processed && e.MQError != null);
+					break;
+				case ELEM_WARN:
+					tableMain.setFilter(e -> e.Processed && e.hasDiff(-1) && e.getOldLanguage().ccstream().any(ol -> !e.getNewLanguage().contains(ol)) );
+					break;
 			}
 		}
 	}
-	
+
 	private void initTable() {
 		tableMain.setData(movielist
 				.iteratorPlayables()
@@ -289,8 +257,8 @@ public class UpdateCodecFrame extends JCCFrame {
 
 		tableMain.autoResize();
 	}
-	
-	private void queryMetadata(ActionEvent e) {
+
+	private void queryMetadata() {
 		if (collThread != null && collThread.isAlive()) {
 			cancelBackground = true;
 		} else {
@@ -305,15 +273,16 @@ public class UpdateCodecFrame extends JCCFrame {
 			collThread.start();
 		}
 	}
-	
+
 	private void run() {
 		try {
-			List<UpdateCodecTableElement> data = tableMain.getDataCopy();
+			java.util.List<UpdateCodecTableElement> data = tableMain.getDataCopy();
 
 			SwingUtils.invokeAndWaitSafe(() ->
 			{
 				btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect2"));  //$NON-NLS-1$
 				btnUpdateSelectedLang.setEnabled(false);
+				btnUpdateSelectedSubs.setEnabled(false);
 				btnUpdateSelectedLen.setEnabled(false);
 				btnUpdateSelectedMediaInfo.setEnabled(false);
 			});
@@ -328,7 +297,7 @@ public class UpdateCodecFrame extends JCCFrame {
 
 				try {
 
-					List<CCPath> parts = elem.Element.getParts();
+					java.util.List<CCPath> parts = elem.Element.getParts();
 
 					if (parts.size() == 0) throw new MediaQueryException("Element has no associated files"); //$NON-NLS-1$
 
@@ -381,10 +350,11 @@ public class UpdateCodecFrame extends JCCFrame {
 			CCLog.addUndefinied(collThread, e);
 		} finally {
 			ThreadUtils.setProgressbarAndWait(progressBar, 0, 0, 1);
-			SwingUtils.invokeAndWaitSafe(() -> 
-			{ 
+			SwingUtils.invokeAndWaitSafe(() ->
+			{
 				btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect3"));  //$NON-NLS-1$
 				btnUpdateSelectedLang.setEnabled(!movielist.isReadonly());
+				btnUpdateSelectedSubs.setEnabled(!movielist.isReadonly());
 				btnUpdateSelectedLen.setEnabled(!movielist.isReadonly());
 				btnUpdateSelectedMediaInfo.setEnabled(!movielist.isReadonly());
 			});
@@ -392,69 +362,190 @@ public class UpdateCodecFrame extends JCCFrame {
 		}
 	}
 
-	private void updateSelectedLanguages(boolean onlySelected) {
-		if (movielist.isReadonly()) return;
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		panel2 = new JPanel();
+		btnStartCollectingData = new JButton();
+		progressBar = new JProgressBar();
+		btnShowAll = new JToggleButton();
+		btnShowFilteredLen = new JToggleButton();
+		btnShowFilteredDynLen = new JToggleButton();
+		btnShowFilteredErr = new JToggleButton();
+		btnShowFiltered = new JToggleButton();
+		btnShowFilteredLang = new JToggleButton();
+		btnShowFilteredWarn = new JToggleButton();
+		btnShowFilteredSubs = new JToggleButton();
+		btnShowFilteredMediaInfo = new JToggleButton();
+		tableMain = new UpdateCodecTable(this);
+		panel1 = new JPanel();
+		btnUpdateSelectedLang = new JButton();
+		scrollPane = new JScrollPane();
+		edMediaInfo = new JTextArea();
+		btnUpdateSelectedSubs = new JButton();
+		btnUpdateSelectedLen = new JButton();
+		btnUpdateSelectedMediaInfo = new JButton();
+		label1 = new JLabel();
+		spinnerDynLen = new JSpinner();
+		cbAutoScroll = new JCheckBox();
+		button6 = new JButton();
 
-		List<UpdateCodecTableElement> data = onlySelected ? tableMain.getSelectedDataCopy() : tableMain.getDataCopy();
+		//======== this ========
+		setTitle(LocaleBundle.getString("UpdateCodecFrame.Title")); //$NON-NLS-1$
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setMinimumSize(new Dimension(750, 450));
+		var contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$ugap, default:grow, $ugap", //$NON-NLS-1$
+			"$ugap, default, $lgap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
 
-		int count = 0;
+		//======== panel2 ========
+		{
+			panel2.setLayout(new FormLayout(
+				"default, $ugap, default:grow, 2*($ugap, default), default, $ugap, default", //$NON-NLS-1$
+				"3*(default, $lgap), default")); //$NON-NLS-1$
 
-		for (UpdateCodecTableElement elem : data) {
-			if (!elem.Processed) continue;
-			if (elem.MQResult == null) continue;
+			//---- btnStartCollectingData ----
+			btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect1")); //$NON-NLS-1$
+			btnStartCollectingData.addActionListener(e -> queryMetadata());
+			panel2.add(btnStartCollectingData, CC.xy(1, 1));
+			panel2.add(progressBar, CC.xy(3, 1, CC.FILL, CC.FILL));
 
-			CCDBLanguageSet v = elem.getNewLanguage();
-			if (v.isEmpty()) continue;
+			//---- btnShowAll ----
+			btnShowAll.setText(LocaleBundle.getString("UpdateMetadataFrame.SwitchFilter1")); //$NON-NLS-1$
+			btnShowAll.setSelected(true);
+			btnShowAll.addActionListener(e -> setFilterAll());
+			panel2.add(btnShowAll, CC.xy(5, 1));
 
-			if (!CCDBLanguageSet.equals(v, elem.Element.language().get())) {elem.Element.language().set(v); count++; }
+			//---- btnShowFilteredLen ----
+			btnShowFilteredLen.setText(LocaleBundle.getString("UpdateCodecFrame.Filter3")); //$NON-NLS-1$
+			btnShowFilteredLen.addActionListener(e -> setFilterLen());
+			panel2.add(btnShowFilteredLen, CC.xy(7, 1));
+
+			//---- btnShowFilteredDynLen ----
+			btnShowFilteredDynLen.setText(LocaleBundle.getString("UpdateCodecFrame.Filter4")); //$NON-NLS-1$
+			btnShowFilteredDynLen.addActionListener(e -> setFilterDynLen());
+			panel2.add(btnShowFilteredDynLen, CC.xy(8, 1));
+
+			//---- btnShowFilteredErr ----
+			btnShowFilteredErr.setText(LocaleBundle.getString("UpdateCodecFrame.Filter5")); //$NON-NLS-1$
+			btnShowFilteredErr.addActionListener(e -> setFilterError());
+			panel2.add(btnShowFilteredErr, CC.xy(10, 1));
+
+			//---- btnShowFiltered ----
+			btnShowFiltered.setText(LocaleBundle.getString("UpdateCodecFrame.Filter1")); //$NON-NLS-1$
+			btnShowFiltered.addActionListener(e -> setFilterChanged());
+			panel2.add(btnShowFiltered, CC.xy(5, 3));
+
+			//---- btnShowFilteredLang ----
+			btnShowFilteredLang.setText(LocaleBundle.getString("UpdateCodecFrame.Filter2")); //$NON-NLS-1$
+			btnShowFilteredLang.addActionListener(e -> setFilterLang());
+			panel2.add(btnShowFilteredLang, CC.xy(7, 3));
+
+			//---- btnShowFilteredWarn ----
+			btnShowFilteredWarn.setText(LocaleBundle.getString("UpdateCodecFrame.Filter6")); //$NON-NLS-1$
+			btnShowFilteredWarn.addActionListener(e -> setFilterWarn());
+			panel2.add(btnShowFilteredWarn, CC.xy(10, 3));
+
+			//---- btnShowFilteredSubs ----
+			btnShowFilteredSubs.setText(LocaleBundle.getString("UpdateCodecFrame.Filter8")); //$NON-NLS-1$
+			btnShowFilteredSubs.addActionListener(e -> setFilterSubs());
+			panel2.add(btnShowFilteredSubs, CC.xy(7, 5));
+
+			//---- btnShowFilteredMediaInfo ----
+			btnShowFilteredMediaInfo.setText(LocaleBundle.getString("UpdateCodecFrame.Filter7")); //$NON-NLS-1$
+			btnShowFilteredMediaInfo.addActionListener(e -> setFilterMediaInfo());
+			panel2.add(btnShowFilteredMediaInfo, CC.xy(7, 7));
 		}
+		contentPane.add(panel2, CC.xy(2, 2));
+		contentPane.add(tableMain, CC.xy(2, 4, CC.FILL, CC.FILL));
 
-		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.CodecUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.CodecUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
+		//======== panel1 ========
+		{
+			panel1.setLayout(new FormLayout(
+				"default, $lcgap, [100dlu,default], $lcgap, default:grow, $lcgap, default", //$NON-NLS-1$
+				"5*(default, $lgap), default")); //$NON-NLS-1$
 
-		tableMain.forceDataChangedRedraw();
+			//---- btnUpdateSelectedLang ----
+			btnUpdateSelectedLang.setText(LocaleBundle.getString("UpdateCodecFrame.Button1")); //$NON-NLS-1$
+			btnUpdateSelectedLang.setEnabled(false);
+			btnUpdateSelectedLang.addActionListener(e -> updateSelectedLanguages());
+			panel1.add(btnUpdateSelectedLang, CC.xywh(1, 1, 3, 1));
+
+			//======== scrollPane ========
+			{
+
+				//---- edMediaInfo ----
+				edMediaInfo.setEditable(false);
+				scrollPane.setViewportView(edMediaInfo);
+			}
+			panel1.add(scrollPane, CC.xywh(5, 1, 1, 11));
+
+			//---- btnUpdateSelectedSubs ----
+			btnUpdateSelectedSubs.setText(LocaleBundle.getString("UpdateCodecFrame.btnUpdateSelectedSubs.text")); //$NON-NLS-1$
+			btnUpdateSelectedSubs.setEnabled(false);
+			btnUpdateSelectedSubs.addActionListener(e -> updateSelectedSubtitles());
+			panel1.add(btnUpdateSelectedSubs, CC.xywh(1, 3, 3, 1));
+
+			//---- btnUpdateSelectedLen ----
+			btnUpdateSelectedLen.setText(LocaleBundle.getString("UpdateCodecFrame.Button2")); //$NON-NLS-1$
+			btnUpdateSelectedLen.setEnabled(false);
+			btnUpdateSelectedLen.addActionListener(e -> updateSelectedLengths());
+			panel1.add(btnUpdateSelectedLen, CC.xywh(1, 5, 3, 1));
+
+			//---- btnUpdateSelectedMediaInfo ----
+			btnUpdateSelectedMediaInfo.setText(LocaleBundle.getString("UpdateCodecFrame.Button3")); //$NON-NLS-1$
+			btnUpdateSelectedMediaInfo.setEnabled(false);
+			btnUpdateSelectedMediaInfo.addActionListener(e -> updateSelectedMediaInfos());
+			panel1.add(btnUpdateSelectedMediaInfo, CC.xywh(1, 7, 3, 1));
+
+			//---- label1 ----
+			label1.setText(LocaleBundle.getString("UpdateCodecFrame.Label1")); //$NON-NLS-1$
+			panel1.add(label1, CC.xy(1, 9));
+
+			//---- spinnerDynLen ----
+			spinnerDynLen.setModel(new SpinnerNumberModel(15.0, 0.0, 100.0, 1.0));
+			spinnerDynLen.addChangeListener(e -> onDynLengthChanged());
+			panel1.add(spinnerDynLen, CC.xy(3, 9));
+
+			//---- cbAutoScroll ----
+			cbAutoScroll.setText(LocaleBundle.getString("UpdateCodecFrame.CBScroll")); //$NON-NLS-1$
+			panel1.add(cbAutoScroll, CC.xywh(1, 11, 3, 1));
+
+			//---- button6 ----
+			button6.setText("..."); //$NON-NLS-1$
+			button6.addActionListener(e -> showMediaInfo());
+			panel1.add(button6, CC.xy(7, 11));
+		}
+		contentPane.add(panel1, CC.xy(2, 6));
+		setSize(1200, 650);
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
-	private void updateSelectedLengths(boolean onlySelected) {
-		if (movielist.isReadonly()) return;
-
-		List<UpdateCodecTableElement> data = onlySelected ? tableMain.getSelectedDataCopy() : tableMain.getDataCopy();
-
-		int count = 0;
-
-		for (UpdateCodecTableElement elem : data) {
-			if (!elem.Processed) continue;
-			if (elem.MQResult == null) continue;
-
-			int v = elem.getNewDuration();
-			if (v == -1) continue;
-
-			if (v != elem.Element.length().get()) { elem.Element.length().set(v); count++; }
-		}
-
-		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.CodecUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.CodecUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
-
-		tableMain.forceDataChangedRedraw();
-	}
-
-	private void updateSelectedMediaInfos(boolean onlySelected) {
-		if (movielist.isReadonly()) return;
-
-		List<UpdateCodecTableElement> data = onlySelected ? tableMain.getSelectedDataCopy() : tableMain.getDataCopy();
-
-		int count = 0;
-
-		for (UpdateCodecTableElement elem : data) {
-			if (!elem.Processed) continue;
-			if (elem.MQResult == null) continue;
-
-			CCMediaInfo v = elem.getNewMediaInfo();
-			if (v.isUnset()) continue;
-
-			if (!elem.Element.mediaInfo().get().equals(v)) { elem.Element.mediaInfo().set(v); count++; }
-		}
-
-		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.CodecUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.CodecUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
-
-		tableMain.forceDataChangedRedraw();
-	}
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JPanel panel2;
+	private JButton btnStartCollectingData;
+	private JProgressBar progressBar;
+	private JToggleButton btnShowAll;
+	private JToggleButton btnShowFilteredLen;
+	private JToggleButton btnShowFilteredDynLen;
+	private JToggleButton btnShowFilteredErr;
+	private JToggleButton btnShowFiltered;
+	private JToggleButton btnShowFilteredLang;
+	private JToggleButton btnShowFilteredWarn;
+	private JToggleButton btnShowFilteredSubs;
+	private JToggleButton btnShowFilteredMediaInfo;
+	private UpdateCodecTable tableMain;
+	private JPanel panel1;
+	private JButton btnUpdateSelectedLang;
+	private JScrollPane scrollPane;
+	private JTextArea edMediaInfo;
+	private JButton btnUpdateSelectedSubs;
+	private JButton btnUpdateSelectedLen;
+	private JButton btnUpdateSelectedMediaInfo;
+	private JLabel label1;
+	private JSpinner spinnerDynLen;
+	private JCheckBox cbAutoScroll;
+	private JButton button6;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

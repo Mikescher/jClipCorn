@@ -9,7 +9,6 @@ import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
 import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.guiComponents.VerticalScrollPaneSynchronizer;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -94,7 +93,7 @@ public class OmniParserFrame extends JCCDialog {
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("OmniParserFrame.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+
 		setResizable(true);
 		setBounds(100, 100, 891, 531);
 		

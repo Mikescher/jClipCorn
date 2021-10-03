@@ -13,7 +13,6 @@ import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang.StringUtils;
 
@@ -42,8 +41,6 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 
 	private void postInit()
 	{
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-
 		updateTabHeader();
 
 		lsErrors.setModel(new LogListModel(lsErrors, CCLogType.LOG_ELEM_ERROR, memoErrors));

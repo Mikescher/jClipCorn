@@ -1,15 +1,10 @@
 package de.jClipCorn.gui.frames.quickAddEpisodeDialog;
 
-import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.EpisodeDataPack;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
 import de.jClipCorn.features.log.CCLog;
@@ -21,13 +16,15 @@ import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
-import de.jClipCorn.gui.guiComponents.JCCDialog;
+import de.jClipCorn.gui.guiComponents.*;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.JCCPathTextField;
 import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
+import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button;
 import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
-import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
+import de.jClipCorn.gui.guiComponents.language.LanguageListChooser;
+import de.jClipCorn.gui.guiComponents.language.LanguageSetChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
@@ -43,7 +40,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
@@ -51,95 +47,42 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuickAddEpisodeDialog extends JCCDialog {
-	private static final long serialVersionUID = -184393538006518026L;
-
-	private final JPanel contentPanel = new JPanel();
-	private JReadableFSPathTextField edSource;
-	private JCCPathTextField edTarget;
-	private JTextField edTitle;
-	private JCheckBox cbCopy;
-	private JCheckBox cbRename;
-	private JSpinner spnEpisode;
-	private JSpinner spnLength;
-
+public class QuickAddEpisodeDialog extends JCCDialog
+{
 	private final CCSeason season;
 	private final FSPath source;
 
 	private final UpdateCallbackListener ucListener;
 
 	private boolean suppressEdTargetEvents = false;
-	private JProgressBar progressBar;
 
-	private QuickAddEpisodeDialog(Component owner, UpdateCallbackListener listener, CCSeason s, FSPath f) {
+	private volatile int progressValueCache;
+	public QuickAddEpisodeDialog(Component owner, UpdateCallbackListener listener, CCSeason s, FSPath f)
+	{
 		super(s.getMovieList());
 		ucListener = listener;
 		season = s;
 		source = f;
 
-		initGUI();
+		initComponents();
+		postInit();
+		initData();
 
 		setLocationRelativeTo(owner);
-		
-		initData();
 	}
 
-	private void initGUI() {
-		setTitle(LocaleBundle.getString("QuickAddEpisodeDialog.title")); //$NON-NLS-1$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-		setBounds(100, 100, 550, 365);
-		setMinimumSize(new Dimension(300, 300));
+	public static void show(PreviewSeriesFrame owner, CCSeason s, FSPath f) {
+		QuickAddEpisodeDialog qaed = new QuickAddEpisodeDialog(owner, owner, s, f);
+		qaed.setVisible(true);
+	}
 
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("max(30dlu;default)"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("22px"), //$NON-NLS-1$
-				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
+	public static void show(Component owner, UpdateCallbackListener lst, CCSeason s, FSPath f) {
+		QuickAddEpisodeDialog qaed = new QuickAddEpisodeDialog(owner, lst, s, f);
+		qaed.setVisible(true);
+	}
 
-		JLabel lblSource = new JLabel(LocaleBundle.getString("QuickAddEpisodeDialog.lblSource")); //$NON-NLS-1$
-		lblSource.setHorizontalAlignment(SwingConstants.TRAILING);
-
-		contentPanel.add(lblSource, "1, 1, right, default"); //$NON-NLS-1$
-		edSource = new JReadableFSPathTextField();
-		contentPanel.add(edSource, "3, 1, 3, 1, fill, default"); //$NON-NLS-1$
-		edSource.setColumns(10);
-
-		JLabel lblTarget = new JLabel(LocaleBundle.getString("QuickAddEpisodeDialog.lblTarget")); //$NON-NLS-1$
-		lblTarget.setHorizontalAlignment(SwingConstants.TRAILING);
-		contentPanel.add(lblTarget, "1, 3, right, default"); //$NON-NLS-1$
-		edTarget = new JCCPathTextField();
-		contentPanel.add(edTarget, "3, 3, 3, 1, fill, default"); //$NON-NLS-1$
-		edTarget.setColumns(10);
+	private void postInit()
+	{
 		edTarget.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
@@ -157,41 +100,6 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 				if (cbRename.isSelected()) cbRename.setSelected(false);
 			}
 		});
-
-		cbCopy = new JCheckBox(LocaleBundle.getString("QuickAddEpisodeDialog.cbCopy")); //$NON-NLS-1$
-		contentPanel.add(cbCopy, "3, 5, 3, 1"); //$NON-NLS-1$
-		cbCopy.addActionListener((e) -> {edTarget.setEditable(cbCopy.isSelected()); cbRename.setEnabled(cbCopy.isSelected()); if (!cbCopy.isSelected()) cbRename.setSelected(false); });
-
-		cbRename = new JCheckBox(LocaleBundle.getString("QuickAddEpisodeDialog.cbRename")); //$NON-NLS-1$
-		contentPanel.add(cbRename, "3, 7, 3, 1"); //$NON-NLS-1$
-		JSeparator separator = new JSeparator();
-		contentPanel.add(separator, "1, 9, 5, 1"); //$NON-NLS-1$
-
-		JLabel lblEpisode = new JLabel(LocaleBundle.getString("QuickAddEpisodeDialog.lblEpisode")); //$NON-NLS-1$
-		lblEpisode.setHorizontalAlignment(SwingConstants.TRAILING);
-		contentPanel.add(lblEpisode, "1, 11"); //$NON-NLS-1$
-
-		spnEpisode = new JSpinner();
-		spnEpisode.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		spnEpisode.addChangeListener((e) -> { if (cbRename.isSelected()) edTarget.setPath(createTarget()); });
-		contentPanel.add(spnEpisode, "3, 11"); //$NON-NLS-1$
-		
-		JLabel lblQuality = new JLabel("MediaInfo"); //$NON-NLS-1$
-		contentPanel.add(lblQuality, "1, 13, right, default"); //$NON-NLS-1$
-		
-		edMediaInfo = new JMediaInfoControl(movielist, () -> edSource.getPath());
-		contentPanel.add(edMediaInfo, "3, 13, fill, default"); //$NON-NLS-1$
-		
-		pbar = new JProgressBar();
-		pbar.setIndeterminate(true);
-		contentPanel.add(pbar, "5, 13, 5, 1, fill, fill"); //$NON-NLS-1$
-
-		JLabel lblTitle = new JLabel(LocaleBundle.getString("QuickAddEpisodeDialog.lblTitle")); //$NON-NLS-1$
-		lblTitle.setHorizontalAlignment(SwingConstants.TRAILING);
-		contentPanel.add(lblTitle, "1, 15, right, default"); //$NON-NLS-1$
-		edTitle = new JTextField();
-		contentPanel.add(edTitle, "3, 15, fill, default"); //$NON-NLS-1$
-		edTitle.setColumns(10);
 		edTitle.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
@@ -212,74 +120,11 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 				suppressEdTargetEvents = false;
 			}
 		});
-		
-		JLabel lblNewLabel = new JLabel(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-		contentPanel.add(lblNewLabel, "1, 17"); //$NON-NLS-1$
-		
-		ctrlLang = new LanguageChooser();
-		contentPanel.add(ctrlLang, "3, 17, fill, fill"); //$NON-NLS-1$
-		
-		JButton btnMediaInfo1 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
-		btnMediaInfo1.setPreferredSize(new Dimension(22, 22));
-		btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
-		btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
-		contentPanel.add(btnMediaInfo1, "7, 17"); //$NON-NLS-1$
-		
-		JButton btnMediaInfoRaw = new JButton("..."); //$NON-NLS-1$
-		btnMediaInfoRaw.setPreferredSize(new Dimension(43, 22));
-		btnMediaInfoRaw.setToolTipText("MediaInfo"); //$NON-NLS-1$
-		btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
-		contentPanel.add(btnMediaInfoRaw, "9, 17"); //$NON-NLS-1$
-		
-		JLabel lblLength = new JLabel(LocaleBundle.getString("QuickAddEpisodeDialog.lblLength")); //$NON-NLS-1$
-		lblLength.setHorizontalAlignment(SwingConstants.TRAILING);
-		contentPanel.add(lblLength, "1, 19"); //$NON-NLS-1$
-		
-		spnLength = new JSpinner();
-		spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
-		contentPanel.add(spnLength, "3, 19"); //$NON-NLS-1$
-
-		JLabel lblMin = new JLabel("min."); //$NON-NLS-1$
-		contentPanel.add(lblMin, "5, 19"); //$NON-NLS-1$
-		
-		JButton btnMediaInfo2 = new JButton(Resources.ICN_MENUBAR_MEDIAINFO.get16x16());
-		btnMediaInfo2.setPreferredSize(new Dimension(22, 22));
-		btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
-		btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
-		contentPanel.add(btnMediaInfo2, "7, 19"); //$NON-NLS-1$
-
-		JPanel buttonPane = new JPanel();
-		getContentPane().add(buttonPane, BorderLayout.SOUTH);
-		buttonPane.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("51px"), //$NON-NLS-1$
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("96px"), //$NON-NLS-1$
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("26px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
-				
-				progressBar = new JProgressBar();
-				buttonPane.add(progressBar, "2, 2, fill, fill"); //$NON-NLS-1$
-				progressBar.setVisible(false);
-		
-				JButton okButton = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-				buttonPane.add(okButton, "4, 2, left, top"); //$NON-NLS-1$
-				getRootPane().setDefaultButton(okButton);
-				okButton.addActionListener((e) -> tryAdd(true));
-		
-				JButton cancelButton = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
-				buttonPane.add(cancelButton, "6, 2, left, top"); //$NON-NLS-1$
-		cancelButton.addActionListener((e) -> dispose());
 	}
 
 	private void initData() {
 		edSource.setPath(source);
-		
+
 		spnEpisode.setValue(season.getNextEpisodeNumber());
 		spnLength.setValue(season.getSeries().getAutoEpisodeLength(season));
 
@@ -295,13 +140,15 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 
 		cbCopy.setSelected(!edTarget.getPath().toFSPath(this).equalsOnFilesystem(edSource.getPath()));
 		cbRename.setSelected(cbCopy.isSelected());
-		
+
 		CCEpisode last = season.getSeries().getLastAddedEpisode();
 		CCDBLanguageSet lang = CCDBLanguageSet.single(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
 		if (last != null) lang = last.getLanguage();
 		ctrlLang.setValue(lang);
 
-		pbar.setVisible(true);
+		ctrlSubs.setValue(CCDBLanguageList.EMPTY);
+
+		pbarMediaInfo.setVisible(true);
 		new Thread(() ->  {
 
 			try {
@@ -315,27 +162,21 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 						if (!dbll.isEmpty()) ctrlLang.setValue(dbll);
 					}
 
+					if (dat.SubtitleLanguages != null) {
+						ctrlSubs.setValue(dat.SubtitleLanguages);
+					}
+
 					edMediaInfo.setValue(dat);
 				});
-				
+
 			} catch (IOException | MediaQueryException e) {
 				// ignore
 				CCLog.addWarning(e);
 			} finally {
-				SwingUtils.invokeLater(() -> pbar.setVisible(false));
+				SwingUtils.invokeLater(() -> pbarMediaInfo.setVisible(false));
 			}
-			
+
 		}, "QA_MINFO").start(); //$NON-NLS-1$
-	}
-
-	public static void show(PreviewSeriesFrame owner, CCSeason s, FSPath f) {
-		QuickAddEpisodeDialog qaed = new QuickAddEpisodeDialog(owner, owner, s, f);
-		qaed.setVisible(true);
-	}
-
-	public static void show(Component owner, UpdateCallbackListener lst, CCSeason s, FSPath f) {
-		QuickAddEpisodeDialog qaed = new QuickAddEpisodeDialog(owner, lst, s, f);
-		qaed.setVisible(true);
 	}
 
 	private CCPath createTarget() {
@@ -352,11 +193,6 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 		return CCPath.createFromFSPath(dst, this);
 	}
 
-	private volatile int progressValueCache;
-	private LanguageChooser ctrlLang;
-	private JMediaInfoControl edMediaInfo;
-	private JProgressBar pbar;
-
 	private void tryAdd(boolean check) {
 
 		var src = edSource.getPath();
@@ -366,6 +202,7 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 		int length = (int)spnLength.getValue();
 		String title = edTitle.getText().trim();
 		CCDBLanguageSet lang = ctrlLang.getValue();
+		CCDBLanguageList subs = ctrlSubs.getValue();
 
 		var imd = dst.getParent().append(src.getFilenameWithExt());
 
@@ -376,9 +213,9 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 		CCFileFormat format = CCFileFormat.getMovieFormatFromPath(src);
 		PartialMediaInfo minfo = edMediaInfo.getValue();
 
-		var epack = new EpisodeDataPack(episodenumber, title, length, format, filesize, CCPath.createFromFSPath(dst, this), adddate, history, tags, lang, minfo);
+		var epack = new EpisodeDataPack(episodenumber, title, length, format, filesize, CCPath.createFromFSPath(dst, this), adddate, history, tags, lang, subs, minfo);
 
-		List<UserDataProblem> problems = new ArrayList<>();
+		java.util.List<UserDataProblem> problems = new ArrayList<>();
 		boolean probvalue = !check || checkUserDataEpisode(problems, epack, src, dst);
 
 		// some problems are too fatal
@@ -393,7 +230,7 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 			return;
 		}
 
-		contentPanel.setEnabled(false);
+		rootpnl.setEnabled(false);
 		new Thread(() ->
 		{
 			try
@@ -436,6 +273,7 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 					newEp.Part.set(CCPath.createFromFSPath(imd, Opt.False, this));
 					newEp.Tags.set(tags);
 					newEp.Language.set(lang);
+					newEp.Subtitles.set(subs);
 					newEp.endUpdating();
 
 					newEp.beginUpdating();
@@ -453,7 +291,7 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 					DialogHelper.showDispatchError(this, LocaleBundle.getString("QuickAddEpisodeDialog.dialogs.error_caption"), LocaleBundle.getString("QuickAddEpisodeDialog.dialogs.error")); //$NON-NLS-1$ //$NON-NLS-2$
 				});
 			} finally {
-				SwingUtils.invokeLater(() -> contentPanel.setEnabled(true) );
+				SwingUtils.invokeLater(() -> rootpnl.setEnabled(true) );
 			}
 		}).start();
 	}
@@ -472,7 +310,7 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 
 		return ret.isEmpty();
 	}
-	
+
 	private void parseCodecMetadata_Lang() {
 		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
@@ -496,6 +334,29 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 			} else {
 				ctrlLang.setValue(dbll);
 			}
+
+		} catch (IOException | MediaQueryException e) {
+			CCLog.addWarning(e);
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	private void parseCodecMetadata_Subs() {
+		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			MediaQueryResult dat = new MediaQueryRunner(movielist).query(edSource.getPath(), false);
+
+			if (dat.SubtitleLanguages == null) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
+				return;
+			}
+
+			ctrlSubs.setValue(dat.SubtitleLanguages);
 
 		} catch (IOException | MediaQueryException e) {
 			CCLog.addWarning(e);
@@ -539,4 +400,210 @@ public class QuickAddEpisodeDialog extends JCCDialog {
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
+
+	private void onOkay() {
+		tryAdd(true);
+	}
+
+	private void onCancel() {
+		dispose();
+	}
+
+	private void copyFileChanged() {
+		edTarget.setEditable(cbCopy.isSelected());
+		cbRename.setEnabled(cbCopy.isSelected());
+		if (!cbCopy.isSelected()) cbRename.setSelected(false);
+	}
+
+	private void renameFileChanged() {
+		//
+	}
+
+	private void episodeChanged() {
+		if (cbRename.isSelected()) edTarget.setPath(createTarget());
+	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		rootpnl = new JPanel();
+		label1 = new JLabel();
+		edSource = new JReadableFSPathTextField();
+		label2 = new JLabel();
+		edTarget = new JCCPathTextField();
+		cbCopy = new JCheckBox();
+		cbRename = new JCheckBox();
+		label3 = new JLabel();
+		spnEpisode = new JSpinner();
+		label4 = new JLabel();
+		edMediaInfo = new JMediaInfoControl(movielist, () -> edSource.getPath());
+		pbarMediaInfo = new JProgressBar();
+		label5 = new JLabel();
+		edTitle = new JTextField();
+		label6 = new JLabel();
+		ctrlLang = new LanguageSetChooser();
+		cCIcon16Button3 = new CCIcon16Button();
+		button1 = new JButton();
+		label8 = new JLabel();
+		ctrlSubs = new LanguageListChooser();
+		cCIcon16Button2 = new CCIcon16Button();
+		label7 = new JLabel();
+		spnLength = new JSpinner();
+		label9 = new JLabel();
+		cCIcon16Button1 = new CCIcon16Button();
+		panel1 = new JPanel();
+		progressBar = new JProgressBar();
+		button2 = new JButton();
+		button3 = new JButton();
+
+		//======== this ========
+		setTitle(LocaleBundle.getString("QuickAddEpisodeDialog.title")); //$NON-NLS-1$
+		var contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"default:grow", //$NON-NLS-1$
+			"3dlu:grow")); //$NON-NLS-1$
+
+		//======== rootpnl ========
+		{
+			rootpnl.setLayout(new FormLayout(
+				"$ugap, default, $rgap, default:grow, $lcgap, default, $lcgap, 16dlu, $lcgap, default, $ugap", //$NON-NLS-1$
+				"$ugap, 10*(default, $lgap), default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
+
+			//---- label1 ----
+			label1.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblSource")); //$NON-NLS-1$
+			rootpnl.add(label1, CC.xy(2, 2, CC.RIGHT, CC.DEFAULT));
+			rootpnl.add(edSource, CC.xywh(4, 2, 3, 1));
+
+			//---- label2 ----
+			label2.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblTarget")); //$NON-NLS-1$
+			rootpnl.add(label2, CC.xy(2, 4, CC.RIGHT, CC.DEFAULT));
+			rootpnl.add(edTarget, CC.xywh(4, 4, 3, 1));
+
+			//---- cbCopy ----
+			cbCopy.setText(LocaleBundle.getString("QuickAddEpisodeDialog.cbCopy")); //$NON-NLS-1$
+			cbCopy.addActionListener(e -> copyFileChanged());
+			rootpnl.add(cbCopy, CC.xywh(4, 6, 3, 1));
+
+			//---- cbRename ----
+			cbRename.setText(LocaleBundle.getString("QuickAddEpisodeDialog.cbRename")); //$NON-NLS-1$
+			cbRename.addActionListener(e -> renameFileChanged());
+			rootpnl.add(cbRename, CC.xywh(4, 8, 3, 1));
+
+			//---- label3 ----
+			label3.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblEpisode")); //$NON-NLS-1$
+			rootpnl.add(label3, CC.xy(2, 10, CC.RIGHT, CC.DEFAULT));
+
+			//---- spnEpisode ----
+			spnEpisode.setModel(new SpinnerNumberModel(0, 0, null, 1));
+			spnEpisode.addChangeListener(e -> episodeChanged());
+			rootpnl.add(spnEpisode, CC.xy(4, 10));
+
+			//---- label4 ----
+			label4.setText(LocaleBundle.getString("AddMovieFrame.lblMediaInfo")); //$NON-NLS-1$
+			rootpnl.add(label4, CC.xy(2, 12, CC.RIGHT, CC.DEFAULT));
+			rootpnl.add(edMediaInfo, CC.xy(4, 12));
+			rootpnl.add(pbarMediaInfo, CC.xywh(6, 12, 5, 1, CC.FILL, CC.FILL));
+
+			//---- label5 ----
+			label5.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblTitle")); //$NON-NLS-1$
+			rootpnl.add(label5, CC.xy(2, 14, CC.RIGHT, CC.DEFAULT));
+			rootpnl.add(edTitle, CC.xy(4, 14));
+
+			//---- label6 ----
+			label6.setText(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
+			rootpnl.add(label6, CC.xy(2, 16, CC.RIGHT, CC.DEFAULT));
+			rootpnl.add(ctrlLang, CC.xy(4, 16));
+
+			//---- cCIcon16Button3 ----
+			cCIcon16Button3.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+			cCIcon16Button3.addActionListener(e -> parseCodecMetadata_Lang());
+			rootpnl.add(cCIcon16Button3, CC.xy(8, 16));
+
+			//---- button1 ----
+			button1.setText("..."); //$NON-NLS-1$
+			button1.addActionListener(e -> showCodecMetadata());
+			rootpnl.add(button1, CC.xy(10, 16));
+
+			//---- label8 ----
+			label8.setText(LocaleBundle.getString("AddMovieFrame.lblSubtitles")); //$NON-NLS-1$
+			rootpnl.add(label8, CC.xy(2, 18, CC.RIGHT, CC.DEFAULT));
+			rootpnl.add(ctrlSubs, CC.xy(4, 18));
+
+			//---- cCIcon16Button2 ----
+			cCIcon16Button2.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+			cCIcon16Button2.addActionListener(e -> parseCodecMetadata_Subs());
+			rootpnl.add(cCIcon16Button2, CC.xy(8, 18));
+
+			//---- label7 ----
+			label7.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblLength")); //$NON-NLS-1$
+			rootpnl.add(label7, CC.xy(2, 20, CC.RIGHT, CC.DEFAULT));
+
+			//---- spnLength ----
+			spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
+			rootpnl.add(spnLength, CC.xy(4, 20));
+
+			//---- label9 ----
+			label9.setText("min."); //$NON-NLS-1$
+			rootpnl.add(label9, CC.xy(6, 20));
+
+			//---- cCIcon16Button1 ----
+			cCIcon16Button1.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+			cCIcon16Button1.addActionListener(e -> parseCodecMetadata_Len());
+			rootpnl.add(cCIcon16Button1, CC.xy(8, 20));
+
+			//======== panel1 ========
+			{
+				panel1.setLayout(new FormLayout(
+					"default:grow, 2*($lcgap, default)", //$NON-NLS-1$
+					"default")); //$NON-NLS-1$
+				panel1.add(progressBar, CC.xy(1, 1, CC.FILL, CC.FILL));
+
+				//---- button2 ----
+				button2.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+				button2.addActionListener(e -> onOkay());
+				panel1.add(button2, CC.xy(3, 1));
+
+				//---- button3 ----
+				button3.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+				button3.addActionListener(e -> onCancel());
+				panel1.add(button3, CC.xy(5, 1));
+			}
+			rootpnl.add(panel1, CC.xywh(2, 24, 9, 1));
+		}
+		contentPane.add(rootpnl, CC.xy(1, 1, CC.FILL, CC.FILL));
+		setSize(550, 425);
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JPanel rootpnl;
+	private JLabel label1;
+	private JReadableFSPathTextField edSource;
+	private JLabel label2;
+	private JCCPathTextField edTarget;
+	private JCheckBox cbCopy;
+	private JCheckBox cbRename;
+	private JLabel label3;
+	private JSpinner spnEpisode;
+	private JLabel label4;
+	private JMediaInfoControl edMediaInfo;
+	private JProgressBar pbarMediaInfo;
+	private JLabel label5;
+	private JTextField edTitle;
+	private JLabel label6;
+	private LanguageSetChooser ctrlLang;
+	private CCIcon16Button cCIcon16Button3;
+	private JButton button1;
+	private JLabel label8;
+	private LanguageListChooser ctrlSubs;
+	private CCIcon16Button cCIcon16Button2;
+	private JLabel label7;
+	private JSpinner spnLength;
+	private JLabel label9;
+	private CCIcon16Button cCIcon16Button1;
+	private JPanel panel1;
+	private JProgressBar progressBar;
+	private JButton button2;
+	private JButton button3;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

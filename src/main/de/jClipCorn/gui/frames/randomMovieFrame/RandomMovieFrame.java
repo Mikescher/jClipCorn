@@ -6,7 +6,6 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.SwingUtils;
 
 import javax.swing.*;
@@ -37,7 +36,7 @@ public class RandomMovieFrame extends JCCFrame implements Runnable {
 
 	private void initGUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+
 		setTitle(LocaleBundle.getString("RandomMovieFrame.this.title")); //$NON-NLS-1$
 
 		chooser = new JCoverChooser(movielist, true);

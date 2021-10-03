@@ -166,6 +166,15 @@ public class BatchEditMethods
 		ep.language = dbll;
 	});
 
+	public static BatchEditMethod<Void> SUBTITLES_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		MediaQueryResult dat = new MediaQueryRunner(ep.getSource().getMovieList()).query(ep.part.toFSPath(ep.ccprops()), false);
+
+		if (dat.SubtitleLanguages == null) throw new MediaQueryException("No language in file"); //$NON-NLS-1$
+
+		ep.subtitles = dat.SubtitleLanguages;
+	});
+
 	public static BatchEditMethod<Void> LENGTH_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
 	{
 		MediaQueryResult dat = new MediaQueryRunner(ep.getSource().getMovieList()).query(ep.part.toFSPath(ep.ccprops()), true);
@@ -229,17 +238,17 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> TITLE_RESET = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.title = ep.getSource().getTitle();
+		ep.title = ep.getSource().Title.get();
 	});
 
 	public static BatchEditMethod<Void> EPISODEINDEX_RESET = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.episodeNumber = ep.getSource().getEpisodeNumber();
+		ep.episodeNumber = ep.getSource().EpisodeNumber.get();
 	});
 
 	public static BatchEditMethod<Void> FORMAT_RESET = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.format = ep.getSource().getFormat();
+		ep.format = ep.getSource().Format.get();
 	});
 
 	public static BatchEditMethod<Void> MEDIAINFO_RESET = new BatchEditMethod<>((ep, param, opt) ->
@@ -249,27 +258,32 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> LANGUAGE_RESET = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.language = ep.getSource().getLanguage();
+		ep.language = ep.getSource().Language.get();
+	});
+
+	public static BatchEditMethod<Void> SUBTITLES_RESET = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		ep.subtitles = ep.getSource().Subtitles.get();
 	});
 
 	public static BatchEditMethod<Void> LENGTH_RESET = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.length = ep.getSource().getLength();
+		ep.length = ep.getSource().Length.get();
 	});
 
 	public static BatchEditMethod<Void> FILESIZE_RESET = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.filesize = ep.getSource().getFilesize();
+		ep.filesize = ep.getSource().FileSize.get();
 	});
 
 	public static BatchEditMethod<Void> ADDDATE_RESET = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.addDate = ep.getSource().getAddDate();
+		ep.addDate = ep.getSource().AddDate.get();
 	});
 
 	public static BatchEditMethod<Void> PATH_RESET = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.part = ep.getSource().getPart();
+		ep.part = ep.getSource().Part.get();
 	});
 
 	public static BatchEditMethod<Void> VIEWED_RESET = new BatchEditMethod<>((ep, param, opt) ->
@@ -279,7 +293,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> TAGS_RESET = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.tags = ep.getSource().getTags();
+		ep.tags = ep.getSource().Tags.get();
 	});
 
 	public static BatchEditMethod<Tuple3<File[], Integer, Boolean>> PATH_FROM_DIALOG = new BatchEditMethod<>((ep, param, opt) ->

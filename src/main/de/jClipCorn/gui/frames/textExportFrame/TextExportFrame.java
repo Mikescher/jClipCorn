@@ -4,7 +4,6 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
@@ -44,7 +43,7 @@ public class TextExportFrame extends JCCFrame {
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("TextExportFrame.this.title")); //$NON-NLS-1$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);

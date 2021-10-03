@@ -10,7 +10,6 @@ import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
@@ -67,7 +66,7 @@ public class ScanFolderFrame extends JCCFrame implements Runnable, MouseListener
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("ScanFolderFrame.this.title")); //$NON-NLS-1$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		scrollPane = new JScrollPane();

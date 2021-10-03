@@ -26,10 +26,7 @@ import de.jClipCorn.util.stream.CCStreams;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FilterTree extends AbstractFilterTree {
 	private static final long serialVersionUID = 592519777667038909L;
@@ -83,7 +80,9 @@ public class FilterTree extends AbstractFilterTree {
 		initTags(addNode(null, Resources.ICN_SIDEBAR_TAGS, LocaleBundle.getString("FilterTree.Tags"), this::parentClicked)); //$NON-NLS-1$
 		
 		initLanguage(addNode(null, Resources.ICN_SIDEBAR_LANGUAGE, LocaleBundle.getString("FilterTree.Language"), this::parentClicked)); //$NON-NLS-1$
-		
+
+		initSubtitles(addNode(null, Resources.ICN_SIDEBAR_SUBTITLES, LocaleBundle.getString("FilterTree.Subtitles"), this::parentClicked)); //$NON-NLS-1$
+
 		initTyp(addNode(null, Resources.ICN_SIDEBAR_TYP, LocaleBundle.getString("FilterTree.Type"), this::parentClicked)); //$NON-NLS-1$
 		
 		initViewed(addNode(null, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed"), this::parentClicked)); //$NON-NLS-1$
@@ -187,10 +186,22 @@ public class FilterTree extends AbstractFilterTree {
 			addNodeF(parent, CCTagList.getOnIcon(i), CCTagList.getName(i), () -> CustomTagFilter.create(movielist, curr));
 		}
 	}
-	
+
 	private void initLanguage(DefaultMutableTreeNode parent) {
-		for (final CCDBLanguage language : CCDBLanguage.getWrapper().allDisplayValuesSorted()) {
+		var set = new HashSet<CCDBLanguage>();
+		for (var e : movielist.iteratorPlayables()) for (var l : e.language().get()) set.add(l);
+
+		for (final CCDBLanguage language : CCDBLanguage.getWrapper().sort(set)) {
 			addNodeF(parent, language.getIcon(), language.asString(), () -> CustomLanguageFilter.create(movielist, language));
+		}
+	}
+
+	private void initSubtitles(DefaultMutableTreeNode parent) {
+		var set = new HashSet<CCDBLanguage>();
+		for (var e : movielist.iteratorPlayables()) for (var l : e.subtitles().get()) set.add(l);
+
+		for (final CCDBLanguage language : CCDBLanguage.getWrapper().sort(set)) {
+			addNodeF(parent, language.getIcon(), language.asString(), () -> CustomSubtitleFilter.create(movielist, language));
 		}
 	}
 	

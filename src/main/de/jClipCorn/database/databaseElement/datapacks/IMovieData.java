@@ -20,4 +20,5 @@ public interface IMovieData extends IDatabaseElementData
 	List<CCPath> getParts();
 	CCDateTimeList getViewedHistory();
 	CCDBLanguageSet getLanguage();
+	CCDBLanguageList getSubtitles();
 }

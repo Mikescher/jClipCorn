@@ -5,10 +5,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.gui.guiComponents.*;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.jCheckBoxList.CheckBoxChangedActionListener;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -36,8 +35,6 @@ public class GroupManageFrame extends JCCFrame {
 	}
 
 	private void postInit() {
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-
 		edFilter.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::onFilter));
 		tabGroups.addListSelectionListener(e -> updateElementList());
 

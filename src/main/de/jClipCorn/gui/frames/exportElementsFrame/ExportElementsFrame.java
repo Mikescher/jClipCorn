@@ -39,7 +39,6 @@ public class ExportElementsFrame extends JCCFrame {
 
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("ExportElementsFrame.this.title")); //$NON-NLS-1$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setType(Type.UTILITY);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		contentPane = new JPanel();

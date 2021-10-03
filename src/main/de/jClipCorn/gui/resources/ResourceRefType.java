@@ -5,16 +5,27 @@ public enum ResourceRefType {
 
 	IMAGE_COMBINED,
 	IMAGE_RECOLORED,
+	IMAGE_DUALMASKED,
 
 	ICON_16,
 	ICON_32,
 	ICON_64,
 	ICON_OTHER,
 
-	ICON_OTHER_COMBINED;
+	ICON_OTHER_COMBINED,
+	ICON_OTHER_DUALMASKED;
 
 	public boolean isImage() {
-		return this == ResourceRefType.IMAGE || this == ResourceRefType.IMAGE_COMBINED || this == ResourceRefType.IMAGE_RECOLORED;
+		switch (this)
+		{
+			case IMAGE:
+			case IMAGE_COMBINED:
+			case IMAGE_RECOLORED:
+			case IMAGE_DUALMASKED:
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	public boolean isIcon() {
@@ -25,6 +36,7 @@ public enum ResourceRefType {
 			case ICON_64:
 			case ICON_OTHER:
 			case ICON_OTHER_COMBINED:
+			case ICON_OTHER_DUALMASKED:
 				return true;
 			default:
 				return false;

@@ -48,6 +48,12 @@ public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 				}
 			}
 
+			for (CCDBLanguage lang : ((CCMovie)e).getSubtitles()) {
+				if (lang.asString().equalsIgnoreCase(searchTerm)) {
+					return true;
+				}
+			}
+
 			CCMediaInfo minfo = ((CCMovie)e).mediaInfo().get();
 			if (minfo.isSet())
 			{
@@ -59,6 +65,11 @@ public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 
 		} else if (e.isSeries()) {
 			for (CCDBLanguage lang : ((CCSeries)e).getAllLanguages()) {
+				if (lang.asString().equalsIgnoreCase(searchTerm)) {
+					return true;
+				}
+			}
+			for (CCDBLanguage lang : ((CCSeries)e).getAllSubtitles()) {
 				if (lang.asString().equalsIgnoreCase(searchTerm)) {
 					return true;
 				}

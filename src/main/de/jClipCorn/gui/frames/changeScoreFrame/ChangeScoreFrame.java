@@ -8,7 +8,6 @@ import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,7 +55,7 @@ public class ChangeScoreFrame extends JCCFrame {
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("ChangedScoreFrame.this.title")); //$NON-NLS-1$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+
 		setSize(new Dimension(430, 428));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -57,15 +57,15 @@ public class MediaQueryRunner implements MetadataSource {
 		}
 		catch (InnerMediaQueryException e)
 		{
-			throw new MediaQueryException(e.getMessage(), mqxml);
+			throw new MediaQueryException(e.getMessage(), mqxml, e);
 		}
 		catch (CCXMLException e)
 		{
-			throw new MediaQueryException(e.Message, ExceptionUtils.getStackTrace(e) + "\n\n\n--------------\n\n\n" + e.XMLContent);
+			throw new MediaQueryException(e.Message, ExceptionUtils.getStackTrace(e) + "\n\n\n--------------\n\n\n" + e.XMLContent, e);
 		}
 		catch (Exception e)
 		{
-			throw new MediaQueryException("Could not parse Output XML", ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e) + "\n\n\n--------------\n\n\n" + mqxml);
+			throw new MediaQueryException("Could not parse Output XML", ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e) + "\n\n\n--------------\n\n\n" + mqxml, e);
 		}
 	}
 

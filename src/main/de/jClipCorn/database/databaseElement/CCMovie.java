@@ -79,16 +79,17 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 				.toArray(new IEProperty[0]);
 	}
 
-	public EZyklusPropPack         zyklus()        { return  Zyklus;        }
-	public EMediaInfoPropPack      mediaInfo()     { return  MediaInfo;     }
-	public EIntProp                length()        { return  Length;        }
-	public EDateProp               addDate()       { return  AddDate;       }
-	public EEnumProp<CCFileFormat> format()        { return  Format;        }
-	public EIntProp                year()          { return  Year;          }
-	public EFileSizeProp           fileSize()      { return  FileSize;      }
-	public EPartArrayPropPack      parts()         { return  Parts;         }
-	public EDateTimeListProp       viewedHistory() { return  ViewedHistory; }
-	public ELanguageSetProp        language()      { return  Language;      }
+	public EZyklusPropPack         zyklus()        { return Zyklus;        }
+	public EMediaInfoPropPack      mediaInfo()     { return MediaInfo;     }
+	public EIntProp                length()        { return Length;        }
+	public EDateProp               addDate()       { return AddDate;       }
+	public EEnumProp<CCFileFormat> format()        { return Format;        }
+	public EIntProp                year()          { return Year;          }
+	public EFileSizeProp           fileSize()      { return FileSize;      }
+	public EPartArrayPropPack      parts()         { return Parts;         }
+	public EDateTimeListProp       viewedHistory() { return ViewedHistory; }
+	public ELanguageSetProp        language()      { return Language;      }
+	public ELanguageListProp       subtitles()     { return Subtitles;     }
 
 	@Override
 	public boolean updateDB() {
@@ -178,6 +179,11 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	@Override
 	public CCDBLanguageSet getLanguage() {
 		return Language.get();
+	}
+
+	@Override
+	public CCDBLanguageList getSubtitles() {
+		return Subtitles.get();
 	}
 
 	public void setViewedHistoryFromUI(CCDateTimeList value) {

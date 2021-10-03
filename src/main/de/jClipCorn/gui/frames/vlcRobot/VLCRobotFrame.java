@@ -49,8 +49,6 @@ public class VLCRobotFrame extends JCCFrame {
 	}
 
 	private void postInit() {
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-
 		lsData.autoResize();
 
 		cbxKeepPosition.setEnabled(ApplicationHelper.isWindows());

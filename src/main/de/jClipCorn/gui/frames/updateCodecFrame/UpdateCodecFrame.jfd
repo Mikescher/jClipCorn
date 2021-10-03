@@ -1,0 +1,213 @@
+JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.12" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "UpdateCodecFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, default:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default:grow, linegap, default, unrelgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": new FormMessage( null, "UpdateCodecFrame.Title" )
+			"defaultCloseOperation": 2
+			"minimumSize": new java.awt.Dimension( 750, 450 )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default, unrelgap, default:grow, unrelgap, default, unrelgap, default, default, unrelgap, default"
+				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default"
+			} ) {
+				name: "panel2"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnStartCollectingData"
+					"text": new FormMessage( null, "UpdateMetadataFrame.BtnCollect1" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "queryMetadata", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JProgressBar" ) {
+					name: "progressBar"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JToggleButton" ) {
+					name: "btnShowAll"
+					"text": new FormMessage( null, "UpdateMetadataFrame.SwitchFilter1" )
+					"selected": true
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "setFilterAll", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JToggleButton" ) {
+					name: "btnShowFilteredLen"
+					"text": new FormMessage( null, "UpdateCodecFrame.Filter3" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "setFilterLen", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+				} )
+				add( new FormComponent( "javax.swing.JToggleButton" ) {
+					name: "btnShowFilteredDynLen"
+					"text": new FormMessage( null, "UpdateCodecFrame.Filter4" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "setFilterDynLen", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 8
+				} )
+				add( new FormComponent( "javax.swing.JToggleButton" ) {
+					name: "btnShowFilteredErr"
+					"text": new FormMessage( null, "UpdateCodecFrame.Filter5" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "setFilterError", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 10
+				} )
+				add( new FormComponent( "javax.swing.JToggleButton" ) {
+					name: "btnShowFiltered"
+					"text": new FormMessage( null, "UpdateCodecFrame.Filter1" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "setFilterChanged", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JToggleButton" ) {
+					name: "btnShowFilteredLang"
+					"text": new FormMessage( null, "UpdateCodecFrame.Filter2" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "setFilterLang", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JToggleButton" ) {
+					name: "btnShowFilteredWarn"
+					"text": new FormMessage( null, "UpdateCodecFrame.Filter6" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "setFilterWarn", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 10
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JToggleButton" ) {
+					name: "btnShowFilteredSubs"
+					"text": new FormMessage( null, "UpdateCodecFrame.Filter8" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "setFilterSubs", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JToggleButton" ) {
+					name: "btnShowFilteredMediaInfo"
+					"text": new FormMessage( null, "UpdateCodecFrame.Filter7" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "setFilterMediaInfo", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 7
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+			} )
+			add( new FormContainer( "de.jClipCorn.gui.frames.updateCodecFrame.UpdateCodecTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "tableMain"
+				auxiliary() {
+					"JavaCodeGenerator.customCreateCode": "new ${field_type}(this);"
+				}
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default, labelcompgap, max(default;100dlu), labelcompgap, default:grow, labelcompgap, default"
+				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default"
+			} ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnUpdateSelectedLang"
+					"text": new FormMessage( null, "UpdateCodecFrame.Button1" )
+					"enabled": false
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateSelectedLanguages", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridWidth": 3
+				} )
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "scrollPane"
+					add( new FormComponent( "javax.swing.JTextArea" ) {
+						name: "edMediaInfo"
+						"editable": false
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridHeight": 11
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnUpdateSelectedSubs"
+					"text": new FormMessage( null, "UpdateCodecFrame.btnUpdateSelectedSubs.text" )
+					"enabled": false
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateSelectedSubtitles", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridWidth": 3
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnUpdateSelectedLen"
+					"text": new FormMessage( null, "UpdateCodecFrame.Button2" )
+					"enabled": false
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateSelectedLengths", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 5
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnUpdateSelectedMediaInfo"
+					"text": new FormMessage( null, "UpdateCodecFrame.Button3" )
+					"enabled": false
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateSelectedMediaInfos", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 7
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label1"
+					"text": new FormMessage( null, "UpdateCodecFrame.Label1" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 9
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "spinnerDynLen"
+					"model": new javax.swing.SpinnerNumberModel( 15.0, 0.0, 100.0, 1.0 )
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "onDynLengthChanged", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 9
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbAutoScroll"
+					"text": new FormMessage( null, "UpdateCodecFrame.CBScroll" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 11
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "button6"
+					"text": "..."
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMediaInfo", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 11
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 6
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 1200, 650 )
+		} )
+	}
+}

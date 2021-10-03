@@ -77,7 +77,7 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 
 	private void postInit() {
 		setTitle(createTitle());
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+
 		setJMenuBar(new MainFrameMenuBar());
 
 		btnSearch.setIcon(Resources.ICN_FRAMES_SEARCH.get16x16());

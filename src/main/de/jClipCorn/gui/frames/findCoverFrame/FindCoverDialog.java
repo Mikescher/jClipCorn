@@ -59,8 +59,7 @@ public class FindCoverDialog extends JCCDialog {
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle(LocaleBundle.getString("FindCoverDialog.this.title")); //$NON-NLS-1$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-		
+
 		pnlTop = new JPanel();
 		getContentPane().add(pnlTop, BorderLayout.NORTH);
 		pnlTop.setLayout(new BorderLayout(0, 0));

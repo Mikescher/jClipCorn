@@ -16,20 +16,21 @@ import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
-import de.jClipCorn.gui.guiComponents.JMediaInfoButton;
 import de.jClipCorn.gui.guiComponents.JReadableCCPathTextField;
 import de.jClipCorn.gui.guiComponents.TagPanel;
 import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
+import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button;
+import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Label;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 import de.jClipCorn.gui.guiComponents.jYearSpinner.JYearSpinner;
-import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
+import de.jClipCorn.gui.guiComponents.language.LanguageListChooser;
+import de.jClipCorn.gui.guiComponents.language.LanguageSetChooser;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.UpdateCallbackAdapter;
 import de.jClipCorn.util.datetime.CCDate;
@@ -81,13 +82,13 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 
 	private void postInit()
 	{
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-
 		setDefaultValues();
 		initFileChooser();
 		initFields();
 
 		setTitle(LocaleBundle.getFormattedString("EditMovieFrame.this.title", movie.getCompleteTitle())); //$NON-NLS-1$
+
+		lblMISubWarning.setVisible(false);
 
 		DirtyUtil.initDirtyListenerRecursive(this::setDirty, this);
 	}
@@ -151,17 +152,18 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		edPart4.setPath(movie.Parts.get(4));
 		edPart5.setPath(movie.Parts.get(5));
 
-		edTitle.setText(movie.getTitle());
-		edZyklus.setText(movie.getZyklus().getTitle());
-		spnZyklus.setValue(movie.getZyklus().getNumber());
-		cbxLanguage.setValue(movie.getLanguage());
-		spnLength.setValue(movie.getLength());
-		spnAddDate.setValue(movie.getAddDate());
-		spnOnlineScore.setValue(movie.getOnlinescore().asInt());
-		cbxFSK.setSelectedEnum(movie.getFSK());
-		cbxFormat.setSelectedEnum(movie.getFormat());
-		spnYear.setValue(movie.getYear());
-		spnSize.setValue(movie.getFilesize().getBytes());
+		edTitle.setText(movie.Title.get());
+		edZyklus.setText(movie.Zyklus.get().getTitle());
+		spnZyklus.setValue(movie.Zyklus.get().getNumber());
+		cbxLanguage.setValue(movie.Language.get());
+		cbxSubtitles.setValue(movie.Subtitles.get());
+		spnLength.setValue(movie.Length.get());
+		spnAddDate.setValue(movie.AddDate.get());
+		spnOnlineScore.setValue(movie.OnlineScore.get().asInt());
+		cbxFSK.setSelectedEnum(movie.FSK.get());
+		cbxFormat.setSelectedEnum(movie.Format.get());
+		spnYear.setValue(movie.Year.get());
+		spnSize.setValue(movie.FileSize.get().getBytes());
 
 		cbxGenre0.setSelectedEnum(movie.Genres.get().getGenre(0));
 		cbxGenre1.setSelectedEnum(movie.Genres.get().getGenre(1));
@@ -173,15 +175,15 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		cbxGenre7.setSelectedEnum(movie.Genres.get().getGenre(7));
 
 		cbxScore.setSelectedEnum(movie.Score.get());
-		tagPnl.setValue(movie.getTags());
+		tagPnl.setValue(movie.Tags.get());
 
 		edCvrControl.setCover(movie.getCover());
 
 		edViewedHistory.setValue(movie.ViewedHistory.get());
-		edReference.setValue(movie.getOnlineReference());
-		edGroups.setValue(movie.getGroups());
+		edReference.setValue(movie.OnlineReference.get());
+		edGroups.setValue(movie.Groups.get());
 
-		ctrlMediaInfo.setValue(movie.mediaInfo().getPartial());
+		ctrlMediaInfo.setValue(movie.MediaInfo.getPartial());
 
 		updateByteDisp();
 		testPaths();
@@ -236,6 +238,10 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 
 	public void setMovieLanguage(CCDBLanguageSet lang) {
 		cbxLanguage.setValue(lang);
+	}
+
+	public void setSubtitleLanguage(CCDBLanguageList lang) {
+		cbxSubtitles.setValue(lang);
 	}
 
 	public void setFilepath(int p, FSPath at) {
@@ -387,6 +393,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		movie.Zyklus.setNumber((int) spnZyklus.getValue());
 
 		movie.Language.set(cbxLanguage.getValue());
+		movie.Subtitles.set(cbxSubtitles.getValue());
 
 		movie.Length.set((int) spnLength.getValue());
 
@@ -445,6 +452,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 			Arrays.asList(edPart0.getPath(), edPart1.getPath(), edPart2.getPath(), edPart3.getPath(), edPart4.getPath(), edPart5.getPath()),
 			CCDateTimeList.createEmpty(),
 			cbxLanguage.getValue(),
+			cbxSubtitles.getValue(),
 			edTitle.getText(),
 			CCGenreList.create(cbxGenre0.getSelectedEnum(), cbxGenre1.getSelectedEnum(), cbxGenre2.getSelectedEnum(), cbxGenre3.getSelectedEnum(), cbxGenre4.getSelectedEnum(), cbxGenre5.getSelectedEnum(), cbxGenre6.getSelectedEnum(), cbxGenre7.getSelectedEnum()),
 			CCOnlineScore.getWrapper().findOrNull((int) spnOnlineScore.getValue()),
@@ -618,6 +626,48 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		}
 	}
 
+	private void calculateMediaInfoAndSetSubs() {
+		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
+		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
+			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			List<MediaQueryResult> dat = new ArrayList<>();
+
+			var mq = new MediaQueryRunner(movielist);
+
+			if (!edPart0.getPath().isEmpty()) dat.add(mq.query(edPart0.getPath().toFSPath(this), false));
+			if (!edPart1.getPath().isEmpty()) dat.add(mq.query(edPart1.getPath().toFSPath(this), false));
+			if (!edPart2.getPath().isEmpty()) dat.add(mq.query(edPart2.getPath().toFSPath(this), false));
+			if (!edPart3.getPath().isEmpty()) dat.add(mq.query(edPart3.getPath().toFSPath(this), false));
+			if (!edPart4.getPath().isEmpty()) dat.add(mq.query(edPart4.getPath().toFSPath(this), false));
+			if (!edPart5.getPath().isEmpty()) dat.add(mq.query(edPart5.getPath().toFSPath(this), false));
+
+			if (dat.isEmpty()) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
+				return;
+			}
+
+			if (CCStreams.iterate(dat).any(d -> d.SubtitleLanguages == null)) {
+				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
+				return;
+			}
+
+			CCDBLanguageList dbll = dat.get(0).SubtitleLanguages;
+			for (int i = 1; i < dat.size(); i++) if (!dat.get(i).SubtitleLanguages.isEqual(dbll)) throw new MediaQueryException("Files [1] and [" + (i+1)+"] have different subtitles");
+
+			lblMISubWarning.setVisible(false);
+			setSubtitleLanguage(dbll);
+
+		} catch (IOException | MediaQueryException e) {
+			CCLog.addWarning(e);
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+			lblMISubWarning.setVisible(true);
+		}
+	}
+
 	private void setDirty() {
 		if (!_initFinished) return;
 		setTitle(LocaleBundle.getFormattedString("EditMovieFrame.this.title", movie.getCompleteTitle()) + "*"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -733,15 +783,19 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		label19 = new JLabel();
 		spnLength = new JSpinner();
 		label29 = new JLabel();
-		btnMediaInfoLen = new JMediaInfoButton();
+		btnMediaInfoLen = new CCIcon16Button();
 		lblLenAuto = new JLabel();
 		label20 = new JLabel();
-		cbxLanguage = new LanguageChooser();
-		btnMediaInfoLang = new JMediaInfoButton();
+		cbxLanguage = new LanguageSetChooser();
+		btnMediaInfoLang = new CCIcon16Button();
 		btnQueryMediaInfo = new JButton();
+		label33 = new JLabel();
+		cbxSubtitles = new LanguageListChooser();
+		btnMediaInfoSubs = new CCIcon16Button();
+		lblMISubWarning = new CCIcon16Label();
 		label21 = new JLabel();
 		ctrlMediaInfo = new JMediaInfoControl(movielist, () -> edPart0.getPath().toFSPath(this));
-		btnMediaInfoMain = new JMediaInfoButton();
+		btnMediaInfoMain = new CCIcon16Button();
 		label22 = new JLabel();
 		spnAddDate = new JCCDateSpinner(CCDate.getMinimumDate(), CCDate.getMinimumDate(), null);
 		btnToday = new JButton();
@@ -911,7 +965,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 			{
 				pnlData.setLayout(new FormLayout(
 					"default, $lcgap, 0dlu:grow, $lcgap, [40dlu,default], $lcgap, 16dlu, $lcgap, 25dlu, $lcgap, [30dlu,default]", //$NON-NLS-1$
-					"15*(default, $lgap), [65dlu,default]:grow")); //$NON-NLS-1$
+					"16*(default, $lgap), [65dlu,default]:grow")); //$NON-NLS-1$
 
 				//---- label15 ----
 				label15.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
@@ -950,7 +1004,8 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 				pnlData.add(label29, CC.xy(5, 9));
 
 				//---- btnMediaInfoLen ----
-				btnMediaInfoLen.setText("text"); //$NON-NLS-1$
+				btnMediaInfoLen.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+				btnMediaInfoLen.setToolTipText("MediaInfo"); //$NON-NLS-1$
 				btnMediaInfoLen.addActionListener(e -> calculateMediaInfoAndSetLength());
 				pnlData.add(btnMediaInfoLen, CC.xy(7, 9));
 				pnlData.add(lblLenAuto, CC.xywh(9, 9, 3, 1, CC.FILL, CC.FILL));
@@ -961,6 +1016,8 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 				pnlData.add(cbxLanguage, CC.xywh(3, 11, 3, 1));
 
 				//---- btnMediaInfoLang ----
+				btnMediaInfoLang.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+				btnMediaInfoLang.setToolTipText("MediaInfo"); //$NON-NLS-1$
 				btnMediaInfoLang.addActionListener(e -> calculateMediaInfoAndSetLanguage());
 				pnlData.add(btnMediaInfoLang, CC.xy(7, 11));
 
@@ -969,83 +1026,100 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 				btnQueryMediaInfo.addActionListener(e -> calculateAndShowMediaInfo());
 				pnlData.add(btnQueryMediaInfo, CC.xy(9, 11));
 
+				//---- label33 ----
+				label33.setText(LocaleBundle.getString("AddMovieFrame.lblSubtitles")); //$NON-NLS-1$
+				pnlData.add(label33, CC.xy(1, 13));
+				pnlData.add(cbxSubtitles, CC.xywh(3, 13, 3, 1));
+
+				//---- btnMediaInfoSubs ----
+				btnMediaInfoSubs.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+				btnMediaInfoSubs.setToolTipText("MediaInfo"); //$NON-NLS-1$
+				btnMediaInfoSubs.addActionListener(e -> calculateMediaInfoAndSetSubs());
+				pnlData.add(btnMediaInfoSubs, CC.xy(7, 13));
+
+				//---- lblMISubWarning ----
+				lblMISubWarning.setIconRef(CCIcon16Label.IconRefLink.ICN_WARNING_TRIANGLE);
+				pnlData.add(lblMISubWarning, CC.xy(9, 13, CC.LEFT, CC.FILL));
+
 				//---- label21 ----
 				label21.setText(LocaleBundle.getString("AddMovieFrame.lblMediaInfo")); //$NON-NLS-1$
-				pnlData.add(label21, CC.xy(1, 13));
-				pnlData.add(ctrlMediaInfo, CC.xywh(3, 13, 3, 1, CC.DEFAULT, CC.FILL));
+				pnlData.add(label21, CC.xy(1, 15));
+				pnlData.add(ctrlMediaInfo, CC.xywh(3, 15, 3, 1, CC.DEFAULT, CC.FILL));
 
 				//---- btnMediaInfoMain ----
+				btnMediaInfoMain.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+				btnMediaInfoMain.setToolTipText("MediaInfo"); //$NON-NLS-1$
 				btnMediaInfoMain.addActionListener(e -> calculateAndSetMediaInfo());
-				pnlData.add(btnMediaInfoMain, CC.xy(7, 13));
+				pnlData.add(btnMediaInfoMain, CC.xy(7, 15));
 
 				//---- label22 ----
 				label22.setText(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
-				pnlData.add(label22, CC.xy(1, 15));
-				pnlData.add(spnAddDate, CC.xywh(3, 15, 3, 1));
+				pnlData.add(label22, CC.xy(1, 17));
+				pnlData.add(spnAddDate, CC.xywh(3, 17, 3, 1));
 
 				//---- btnToday ----
 				btnToday.setText(LocaleBundle.getString("AddEpisodeFrame.btnToday.text")); //$NON-NLS-1$
 				btnToday.addActionListener(e -> onSetToday());
-				pnlData.add(btnToday, CC.xywh(7, 15, 3, 1));
+				pnlData.add(btnToday, CC.xywh(7, 17, 3, 1));
 
 				//---- label23 ----
 				label23.setText(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
-				pnlData.add(label23, CC.xy(1, 17));
+				pnlData.add(label23, CC.xy(1, 19));
 
 				//---- spnOnlineScore ----
 				spnOnlineScore.setModel(new SpinnerNumberModel(0, 0, 10, 1));
-				pnlData.add(spnOnlineScore, CC.xywh(3, 17, 3, 1));
+				pnlData.add(spnOnlineScore, CC.xywh(3, 19, 3, 1));
 
 				//---- label30 ----
 				label30.setText("/ 10"); //$NON-NLS-1$
-				pnlData.add(label30, CC.xy(7, 17));
+				pnlData.add(label30, CC.xy(7, 19));
 
 				//---- label24 ----
 				label24.setText(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
-				pnlData.add(label24, CC.xy(1, 19));
-				pnlData.add(cbxFSK, CC.xywh(3, 19, 3, 1));
+				pnlData.add(label24, CC.xy(1, 21));
+				pnlData.add(cbxFSK, CC.xywh(3, 21, 3, 1));
 
 				//---- label25 ----
 				label25.setText(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
-				pnlData.add(label25, CC.xy(1, 21));
-				pnlData.add(cbxFormat, CC.xywh(3, 21, 3, 1));
+				pnlData.add(label25, CC.xy(1, 23));
+				pnlData.add(cbxFormat, CC.xywh(3, 23, 3, 1));
 
 				//---- label26 ----
 				label26.setText(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
-				pnlData.add(label26, CC.xy(1, 23));
-				pnlData.add(spnYear, CC.xywh(3, 23, 3, 1));
+				pnlData.add(label26, CC.xy(1, 25));
+				pnlData.add(spnYear, CC.xywh(3, 25, 3, 1));
 
 				//---- label27 ----
 				label27.setText(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
-				pnlData.add(label27, CC.xy(1, 25));
+				pnlData.add(label27, CC.xy(1, 27));
 
 				//---- spnSize ----
 				spnSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
 				spnSize.addChangeListener(e -> updateByteDisp());
-				pnlData.add(spnSize, CC.xywh(3, 25, 3, 1));
+				pnlData.add(spnSize, CC.xywh(3, 27, 3, 1));
 
 				//---- btnRecalculateSize ----
 				btnRecalculateSize.addActionListener(e -> updateFilesize());
-				pnlData.add(btnRecalculateSize, CC.xy(7, 25, CC.FILL, CC.FILL));
+				pnlData.add(btnRecalculateSize, CC.xy(7, 27, CC.FILL, CC.FILL));
 
 				//---- lblFileSizeDisp ----
 				lblFileSizeDisp.setText("Byte = 0"); //$NON-NLS-1$
-				pnlData.add(lblFileSizeDisp, CC.xywh(9, 25, 3, 1));
+				pnlData.add(lblFileSizeDisp, CC.xywh(9, 27, 3, 1));
 
 				//---- label28 ----
 				label28.setText(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
-				pnlData.add(label28, CC.xy(1, 27));
-				pnlData.add(cbxScore, CC.xywh(3, 27, 3, 1));
+				pnlData.add(label28, CC.xy(1, 29));
+				pnlData.add(cbxScore, CC.xywh(3, 29, 3, 1));
 
 				//---- label31 ----
 				label31.setText(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
-				pnlData.add(label31, CC.xy(1, 29));
-				pnlData.add(tagPnl, CC.xywh(3, 29, 3, 1));
+				pnlData.add(label31, CC.xy(1, 31));
+				pnlData.add(tagPnl, CC.xywh(3, 31, 3, 1));
 
 				//---- label32 ----
 				label32.setText(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
-				pnlData.add(label32, CC.xy(1, 31, CC.DEFAULT, CC.TOP));
-				pnlData.add(edViewedHistory, CC.xywh(3, 31, 3, 1, CC.DEFAULT, CC.FILL));
+				pnlData.add(label32, CC.xy(1, 33, CC.DEFAULT, CC.TOP));
+				pnlData.add(edViewedHistory, CC.xywh(3, 33, 3, 1, CC.DEFAULT, CC.FILL));
 			}
 			pnlLeft.add(pnlData, CC.xy(1, 3, CC.FILL, CC.FILL));
 		}
@@ -1129,7 +1203,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 			pnlBottom.add(btnCancel);
 		}
 		contentPane.add(pnlBottom, CC.xywh(2, 4, 3, 1));
-		setSize(750, 825);
+		setSize(750, 875);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -1174,15 +1248,19 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	private JLabel label19;
 	private JSpinner spnLength;
 	private JLabel label29;
-	private JMediaInfoButton btnMediaInfoLen;
+	private CCIcon16Button btnMediaInfoLen;
 	private JLabel lblLenAuto;
 	private JLabel label20;
-	private LanguageChooser cbxLanguage;
-	private JMediaInfoButton btnMediaInfoLang;
+	private LanguageSetChooser cbxLanguage;
+	private CCIcon16Button btnMediaInfoLang;
 	private JButton btnQueryMediaInfo;
+	private JLabel label33;
+	private LanguageListChooser cbxSubtitles;
+	private CCIcon16Button btnMediaInfoSubs;
+	private CCIcon16Label lblMISubWarning;
 	private JLabel label21;
 	private JMediaInfoControl ctrlMediaInfo;
-	private JMediaInfoButton btnMediaInfoMain;
+	private CCIcon16Button btnMediaInfoMain;
 	private JLabel label22;
 	private JCCDateSpinner spnAddDate;
 	private JButton btnToday;

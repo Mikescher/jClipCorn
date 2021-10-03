@@ -11,7 +11,6 @@ import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -63,7 +62,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 
 	private void postInit()
 	{
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+		//
 	}
 
 	private void updateUI()

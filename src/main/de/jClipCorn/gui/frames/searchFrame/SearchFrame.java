@@ -9,9 +9,9 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
-import de.jClipCorn.gui.guiComponents.*;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
+import de.jClipCorn.gui.guiComponents.LambdaListCellRenderer;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.lambda.Func1to1;
 import org.apache.commons.lang3.StringUtils;
@@ -41,7 +41,6 @@ public class SearchFrame extends JCCFrame
 	@SuppressWarnings("nls")
 	private void postInit()
 	{
-		setIconImage(Resources.IMG_FRAME_ICON.get());
 		lsMain.setModel(listModel = new DefaultListModel<>());
 		lsMain.setCellRenderer(new LambdaListCellRenderer<ICCDatabaseStructureElement>(v ->
 		{
@@ -164,6 +163,14 @@ public class SearchFrame extends JCCFrame
 			if (movFound) continue;
 
 			for (CCDBLanguage lang : mov.getLanguage())
+			{
+				if (lang.asString().equalsIgnoreCase(searchString)) { result.add(mov); movFound = true; break; }
+
+				if (lang.getLongString().equalsIgnoreCase(searchString)) { result.add(mov); movFound = true; break; }
+			}
+			if (movFound) continue;
+
+			for (CCDBLanguage lang : mov.getSubtitles())
 			{
 				if (lang.asString().equalsIgnoreCase(searchString)) { result.add(mov); movFound = true; break; }
 

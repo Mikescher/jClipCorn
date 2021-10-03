@@ -1,7 +1,6 @@
 package de.jClipCorn.properties.property;
 
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.guiComponents.StringDisplayConverter;
 import de.jClipCorn.gui.guiComponents.jCheckBoxList.JCheckBoxList;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
@@ -61,14 +60,7 @@ public class CCEnumSetProperty<T extends ContinoousEnum<T>> extends CCProperty<S
 
 	@Override
 	public Component getComponent() {
-		JCheckBoxList<T> cbl = new JCheckBoxList<>(new StringDisplayConverter<T>() {
-			@Override
-			public String toDisplayString(T value) {
-				return source.asString(value);
-			}
-		}, source.allValues());
-				
-		return cbl;
+		return new JCheckBoxList<>(source::asString, source.allDisplayValuesSorted());
 	}
 
 	@SuppressWarnings("unchecked")

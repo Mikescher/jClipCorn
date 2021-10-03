@@ -6,7 +6,6 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCMovieZyklus;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -41,7 +40,7 @@ public class ShowIncompleteFilmSeriesFrame extends JCCDialog {
 
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("ShowIncompleteFilmSeriesFrame.this.title")); //$NON-NLS-1$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		contentPane = new JPanel();

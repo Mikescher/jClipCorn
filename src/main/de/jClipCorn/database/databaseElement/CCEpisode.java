@@ -105,6 +105,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public EDateProp               addDate()       { return AddDate;       }
 	public EDateTimeListProp       viewedHistory() { return ViewedHistory; }
 	public ELanguageSetProp        language()      { return Language;      }
+	public ELanguageListProp       subtitles()     { return Subtitles;     }
 
 	public CCProperties ccprops() {
 		return getMovieList().ccprops();
@@ -118,6 +119,11 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	@Override
 	public CCDBLanguageSet getLanguage() {
 		return Language.get();
+	}
+
+	@Override
+	public CCDBLanguageList getSubtitles() {
+		return Subtitles.get();
 	}
 
 	@Override

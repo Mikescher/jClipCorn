@@ -38,6 +38,10 @@ public final class Str {
 		return str == null || str.length() == 0;
 	}
 
+	public static String trim(String str) {
+		return str == null ? null : str.trim();
+	}
+
 	public static boolean equals(String a, String b) {
 		if (a == null) return (b == null);
 		return a.equals(b);

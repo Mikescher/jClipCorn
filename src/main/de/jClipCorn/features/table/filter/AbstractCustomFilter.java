@@ -58,6 +58,7 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_QUALITYCAT       = 36;
 	public final static int CUSTOMFILTERID_MI_SET           = 36;
 	public final static int CUSTOMFILTERID_MI_VALUE         = 37;
+	public final static int CUSTOMFILTERID_SUBTITLE         = 38;
 		
 	public abstract String getName();
 	public abstract String getPrecreateName();
@@ -174,6 +175,7 @@ public abstract class AbstractCustomFilter {
 			new CustomFSKFilter(ml),
 			new CustomGenreFilter(ml),
 			new CustomLanguageFilter(ml),
+			new CustomSubtitleFilter(ml),
 			new CustomExactLanguageFilter(ml),
 			new CustomOnlinescoreFilter(ml),
 			new CustomQualityCategoryTypeFilter(ml),

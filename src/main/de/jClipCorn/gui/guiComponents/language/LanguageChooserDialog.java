@@ -5,7 +5,6 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.lambda.Func1to0;
@@ -15,27 +14,22 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class LanguageChooserDialog extends JDialog {
 	private static final long serialVersionUID = 672690138720968482L;
 
-	private HashSet<CCDBLanguage> _value;
+	private final Func1to0<CCDBLanguage> _okListener;
 
-	private final Func1to0<CCDBLanguageSet> _okListener;
-
-	public LanguageChooserDialog(Component owner, Func1to0<CCDBLanguageSet> onFinish, CCDBLanguageSet value) {
+	public LanguageChooserDialog(Component owner, Func1to0<CCDBLanguage> onFinish) {
 		super();
 
 		_okListener = onFinish;
 
-		initGUI(value);
+		initGUI();
 		setLocationRelativeTo(owner);
-
-		_value = new HashSet<>(value.ccstream().enumerate());
 	}
 
-	private void initGUI(CCDBLanguageSet value) {
+	private void initGUI() {
 		setTitle(LocaleBundle.getString("LanguageChooserDialog.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setIconImage(Resources.IMG_FRAME_ICON.get());
@@ -54,9 +48,11 @@ public class LanguageChooserDialog extends JDialog {
 		ArrayList<RowSpec> rspec = new ArrayList<>();
 		ColumnSpec[] cspec = new ColumnSpec[]
 		{
-			ColumnSpec.decode("default"), FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default"), //$NON-NLS-1$ //$NON-NLS-2$
-			ColumnSpec.decode("max(15dlu;default):grow"),                                              //$NON-NLS-1$
-			ColumnSpec.decode("default"), FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default"), //$NON-NLS-1$ //$NON-NLS-2$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"), //$NON-NLS-1$ //$NON-NLS-2$
+				FormSpecs.UNRELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),
+				FormSpecs.RELATED_GAP_COLSPEC,
 		};
 		for (int i = 0; i < rowcount; i++) {
 			rspec.add(FormSpecs.DEFAULT_ROWSPEC);
@@ -72,17 +68,15 @@ public class LanguageChooserDialog extends JDialog {
 		for (CCDBLanguage itlang : CCDBLanguage.values())
 		{
 			final CCDBLanguage lang = itlang;
-			final JCheckBox cb = new JCheckBox(lang.asString());
-			//cb.setIcon(lang.getIcon());
+			final JButton cb = new JButton(lang.asString());
+			cb.setIcon(lang.getIcon());
+			cb.setHorizontalAlignment(SwingConstants.LEFT);
 
-			pnlContent.add(cb, (3 + (i/rowcount)*4)+", "+(1 + i%rowcount)+", fill, fill"); //$NON-NLS-1$ //$NON-NLS-2$
-			cb.setSelected(value.contains(lang));
+			pnlContent.add(cb, (2 + (i/rowcount)*2)+", "+(1 + i%rowcount)+", fill, fill"); //$NON-NLS-1$ //$NON-NLS-2$
 			cb.addActionListener(evt -> {
-				if (cb.isSelected()) _value.add(lang);
-				else _value.remove(lang);
+				_okListener.invoke(lang);
+				dispose();
 			});
-
-			pnlContent.add(new JLabel(lang.getIcon()), (1 + (i/rowcount)*4)+", "+(1 + i%rowcount)+", fill, fill"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			i++;
 		}
@@ -95,11 +89,6 @@ public class LanguageChooserDialog extends JDialog {
 		JButton btnCancel = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
 		btnCancel.addActionListener(e -> { setVisible(false); dispose(); });
 		pnlBottom.add(btnCancel);
-
-		JButton btnOk = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnOk.setFont(new Font(btnOk.getFont().getFontName(), Font.BOLD, btnOk.getFont().getSize()));
-		btnOk.addActionListener(e -> { setVisible(false); dispose(); _okListener.invoke(CCDBLanguageSet.createDirect(_value)); });
-		pnlBottom.add(btnOk);
 
 		JRootPane root = getRootPane();
 		root.registerKeyboardAction(e -> { setVisible(false); dispose(); }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);

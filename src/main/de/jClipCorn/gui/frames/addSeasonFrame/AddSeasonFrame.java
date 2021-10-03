@@ -10,11 +10,10 @@ import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
-import de.jClipCorn.gui.guiComponents.*;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.jYearSpinner.JYearSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 
 import javax.swing.*;
@@ -44,7 +43,7 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 
 	private void postInit()
 	{
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+		//
 	}
 
 	@Override

@@ -45,7 +45,7 @@ public class ChangeViewedFrame extends JCCFrame {
 	
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("ChangedViewedFrame.this.title")); //$NON-NLS-1$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+
 		setSize(new Dimension(382, 445));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

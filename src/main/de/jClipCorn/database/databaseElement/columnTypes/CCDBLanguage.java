@@ -8,111 +8,74 @@ import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.enumextension.IEnumWrapper;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
+import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 
+@SuppressWarnings("HardCodedStringLiteral")
 public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
-	GERMAN(0),
-	ENGLISH(1),
-	MUTED(2),
-	FRENCH(3),
-	JAPANESE(4),
-	ITALIAN(5),
-	SPANISH(6),
-	PORTUGUESE(7),
-	DANISH(8),
-	FINNISH(9),
-	SWEDISH(10),
-	NORWEGIAN(11),
-	DUTCH(12),
-	CZECH(13),
-	POLISH(14),
-	TURKISH(15),
-	HUNGARIAN(16),
-	BULGARIAN(17),
-	RUSSIAN(18),
-	CHINESE(19),
-	KOREAN(20);
+
+	GERMAN    ( 0, "GER", "German",     "CCMovieLanguage.German",     Resources.ICN_TABLE_LANGUAGE_00),
+	ENGLISH   ( 1, "ENG", "English",    "CCMovieLanguage.English",    Resources.ICN_TABLE_LANGUAGE_01),
+	MUTED     ( 2, "MUT", "Muted",      "CCMovieLanguage.Muted",      Resources.ICN_TABLE_LANGUAGE_02),
+	FRENCH    ( 3, "FR",  "French",     "CCMovieLanguage.French",     Resources.ICN_TABLE_LANGUAGE_03),
+	JAPANESE  ( 4, "JAP", "Japanese",   "CCMovieLanguage.Japanese",   Resources.ICN_TABLE_LANGUAGE_04),
+	ITALIAN   ( 5, "IT",  "Italian",    "CCMovieLanguage.Italian",    Resources.ICN_TABLE_LANGUAGE_05),
+	SPANISH   ( 6, "SPA", "Spanish",    "CCMovieLanguage.Spanish",    Resources.ICN_TABLE_LANGUAGE_06),
+	PORTUGUESE( 7, "POR", "Portuguese", "CCMovieLanguage.Portuguese", Resources.ICN_TABLE_LANGUAGE_07),
+	DANISH    ( 8, "DAN", "Danish",     "CCMovieLanguage.Danish",     Resources.ICN_TABLE_LANGUAGE_08),
+	FINNISH   ( 9, "FIN", "Finnish",    "CCMovieLanguage.Finnish",    Resources.ICN_TABLE_LANGUAGE_09),
+	SWEDISH   (10, "SWE", "Swedisch",   "CCMovieLanguage.Swedisch",   Resources.ICN_TABLE_LANGUAGE_10),
+	NORWEGIAN (11, "NOR", "Norwegian",  "CCMovieLanguage.Norwegian",  Resources.ICN_TABLE_LANGUAGE_11),
+	DUTCH     (12, "NL",  "Dutch",      "CCMovieLanguage.Dutch",      Resources.ICN_TABLE_LANGUAGE_12),
+	CZECH     (13, "CS",  "Czech",      "CCMovieLanguage.Czech",      Resources.ICN_TABLE_LANGUAGE_13),
+	POLISH    (14, "POL", "Polish",     "CCMovieLanguage.Polish",     Resources.ICN_TABLE_LANGUAGE_14),
+	TURKISH   (15, "TR",  "Turkish",    "CCMovieLanguage.Turkish",    Resources.ICN_TABLE_LANGUAGE_15),
+	HUNGARIAN (16, "HU",  "Hungarian",  "CCMovieLanguage.Hungarian",  Resources.ICN_TABLE_LANGUAGE_16),
+	BULGARIAN (17, "BUL", "Bulgarian",  "CCMovieLanguage.Bulgarian",  Resources.ICN_TABLE_LANGUAGE_17),
+	RUSSIAN   (18, "RUS", "Russian",    "CCMovieLanguage.Russian",    Resources.ICN_TABLE_LANGUAGE_18),
+	CHINESE   (19, "CHI", "Chinese",    "CCMovieLanguage.Chinese",    Resources.ICN_TABLE_LANGUAGE_19),
+	KOREAN    (20, "KOR", "Korean",     "CCMovieLanguage.Korean",     Resources.ICN_TABLE_LANGUAGE_20),
+	MALAY     (21, "MAY", "Malay",      "CCMovieLanguage.Malay",      Resources.ICN_TABLE_LANGUAGE_21),
+	FILIPINO  (22, "FIL", "Filipino",   "CCMovieLanguage.Filipino",   Resources.ICN_TABLE_LANGUAGE_22),
+	INDONESIAN(23, "IND", "Indonesian", "CCMovieLanguage.Indonesian", Resources.ICN_TABLE_LANGUAGE_23),
+	ROMANIAN  (24, "RUM", "Romanian",   "CCMovieLanguage.Romanian",   Resources.ICN_TABLE_LANGUAGE_24),
+	GREEK     (25, "GRE", "Greek",      "CCMovieLanguage.Greek",      Resources.ICN_TABLE_LANGUAGE_25),
+	HEBREW    (26, "HEB", "Hebrew",     "CCMovieLanguage.Hebrew",     Resources.ICN_TABLE_LANGUAGE_26),
+	ARABIC    (27, "ARA", "Arabic",     "CCMovieLanguage.Arabic",     Resources.ICN_TABLE_LANGUAGE_27),
+	HINDI     (28, "HIN", "Hindi",      "CCMovieLanguage.Hindi",      Resources.ICN_TABLE_LANGUAGE_28),
+	TAMIL     (29, "TAM", "Tamil",      "CCMovieLanguage.Tamil",      Resources.ICN_TABLE_LANGUAGE_29),
+	TELUGU    (30, "TEL", "Telugu",     "CCMovieLanguage.Telugu",     Resources.ICN_TABLE_LANGUAGE_30),
+	THAI      (31, "THA", "Thai",       "CCMovieLanguage.Thai",       Resources.ICN_TABLE_LANGUAGE_31),
+	CROATIAN  (32, "HRV", "Croatian",   "CCMovieLanguage.Croatian",   Resources.ICN_TABLE_LANGUAGE_32),
+	MALAYALAM (33, "MAL", "Malayalam",  "CCMovieLanguage.Malayalam",  Resources.ICN_TABLE_LANGUAGE_33),
+	VIETNAMESE(34, "VIE", "Vietnamese", "CCMovieLanguage.Vietnamese", Resources.ICN_TABLE_LANGUAGE_34),
+	ICELANDIC (35, "ICE", "Icelandic",  "CCMovieLanguage.Icelandic",  Resources.ICN_TABLE_LANGUAGE_35),
+	ROMANY    (36, "ROM", "Romany",     "CCMovieLanguage.Romany",     Resources.ICN_TABLE_LANGUAGE_36),
+	GA        (37, "GAA", "Ga",         "CCMovieLanguage.Ga",         Resources.ICN_TABLE_LANGUAGE_37),
+	LITHUANIAN(38, "LIT", "Lithuanian", "CCMovieLanguage.Lithuanian", Resources.ICN_TABLE_LANGUAGE_38),
+	LATVIAN   (39, "LAV", "Latvian",    "CCMovieLanguage.Latvian",    Resources.ICN_TABLE_LANGUAGE_39),
+	SLOVAK    (40, "SLO", "Slovak",     "CCMovieLanguage.Slovak",     Resources.ICN_TABLE_LANGUAGE_40),
+	SLOVENIAN (41, "SLV", "Slovenian",  "CCMovieLanguage.Slovenian",  Resources.ICN_TABLE_LANGUAGE_41),
+	ESTONIAN  (42, "EST", "Estonian",   "CCMovieLanguage.Estonian",   Resources.ICN_TABLE_LANGUAGE_42);
 
 
 	private static final EnumWrapper<CCDBLanguage> wrapper = new EnumWrapper<>(GERMAN);
 
-	private final static String[] NAMES = {
-			LocaleBundle.getString("CCMovieLanguage.German"),     //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.English"),    //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Muted"),      //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.French"),     //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Japanese"),   //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Italian"),    //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Spanish"),    //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Portuguese"), //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Danish"),     //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Finnish"),    //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Swedisch"),   //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Norwegian"),  //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Dutch"),      //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Czech"),      //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Polish"),     //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Turkish"),    //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Hungarian"),  //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Bulgarian"),  //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Russian"),    //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Chinese"),    //$NON-NLS-1$
-			LocaleBundle.getString("CCMovieLanguage.Korean"),     //$NON-NLS-1$
-	};
-
-	private final static String[] SHORTNAMES = {
-			"GER",   //$NON-NLS-1$
-			"ENG",   //$NON-NLS-1$
-			"MUT",   //$NON-NLS-1$
-			"FR",    //$NON-NLS-1$
-			"JAP",   //$NON-NLS-1$
-			"IT",    //$NON-NLS-1$
-			"SPA",   //$NON-NLS-1$
-			"POR",   //$NON-NLS-1$
-			"DAN",   //$NON-NLS-1$
-			"FIN",   //$NON-NLS-1$
-			"SWE",   //$NON-NLS-1$
-			"NOR",   //$NON-NLS-1$
-			"NL",    //$NON-NLS-1$
-			"CS",    //$NON-NLS-1$
-			"POL",   //$NON-NLS-1$
-			"TR",    //$NON-NLS-1$
-			"HU",    //$NON-NLS-1$
-			"BUL",   //$NON-NLS-1$
-			"RUS",   //$NON-NLS-1$
-			"CHI",   //$NON-NLS-1$
-			"KOR",   //$NON-NLS-1$
-	};
-
-	private final static String[] LONGNAMES = {
-			"German",     //$NON-NLS-1$
-			"English",    //$NON-NLS-1$
-			"Muted",      //$NON-NLS-1$
-			"French",     //$NON-NLS-1$
-			"Japanese",   //$NON-NLS-1$
-			"Italian",    //$NON-NLS-1$
-			"Spanish",    //$NON-NLS-1$
-			"Portuguese", //$NON-NLS-1$
-			"Danish",     //$NON-NLS-1$
-			"Finnish",    //$NON-NLS-1$
-			"Swedisch",   //$NON-NLS-1$
-			"Norwegian",  //$NON-NLS-1$
-			"Dutch",      //$NON-NLS-1$
-			"Czech",      //$NON-NLS-1$
-			"Polish",     //$NON-NLS-1$
-			"Turkish",    //$NON-NLS-1$
-			"Hungarian",  //$NON-NLS-1$
-			"Bulgarian",  //$NON-NLS-1$
-			"Russian",    //$NON-NLS-1$
-			"Chinese",    //$NON-NLS-1$
-			"Korean",     //$NON-NLS-1$
-	};
-
 	private final int id;
 
-	CCDBLanguage(int val) {
+	private final String shortName;
+	private final String longName;
+	private final String localName;
+
+	private final IconRef icnref;
+
+	CCDBLanguage(int val, String shrt, String lng, String lcl, IconRef ref) {
 		id = val;
+		shortName = shrt;
+		longName  = lng;
+		localName = LocaleBundle.getString(lcl);
+		icnref    = ref;
 	}
 	
 	public static EnumWrapper<CCDBLanguage> getWrapper() {
@@ -124,17 +87,13 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 		return getWrapper();
 	}
 
-	public static CCDBLanguage findByLongString(String s) {
-		for (int i = 0; i < LONGNAMES.length; i++) {
-			if (LONGNAMES[i].equalsIgnoreCase(s)) return values()[i];
-		}
-		return null;
+	public static CCDBLanguage findByLongString(String s) throws CCFormatException {
+		for (var v : values()) if (v.longName.equalsIgnoreCase(s)) return v;
+		throw new EnumValueNotFoundException(s, CCDBLanguage.class);
 	}
 
 	public static CCDBLanguage findByShortString(String s) throws CCFormatException {
-		for (int i = 0; i < SHORTNAMES.length; i++) {
-			if (SHORTNAMES[i].equalsIgnoreCase(s)) return values()[i];
-		}
+		for (var v : values()) if (v.shortName.equalsIgnoreCase(s)) return v;
 		throw new EnumValueNotFoundException(s, CCDBLanguage.class);
 	}
 
@@ -145,12 +104,12 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	
 	@Override
 	public String asString() {
-		return NAMES[asInt()];
+		return localName;
 	}
 	
 	@Override
 	public String[] getList() {
-		return NAMES;
+		return CCStreams.iterate(wrapper.allValues()).map(p -> p.localName).toArray(new String[0]);
 	}
 
 	public static int compare(CCDBLanguage o1, CCDBLanguage o2) {
@@ -158,7 +117,7 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	}
 
 	public IconRef getIconRef() {
-		return Resources.ICN_TABLE_LANGUAGE[this.asInt()];
+		return icnref;
 	}
 
 	public ImageIcon getIcon() {
@@ -166,11 +125,11 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	}
 
 	public String getShortString() {
-		return SHORTNAMES[asInt()];
+		return shortName;
 	}
 
 	public String getLongString() {
-		return LONGNAMES[asInt()];
+		return longName;
 	}
 
 	@Override
@@ -183,6 +142,6 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	}
 
 	public CCDBLanguage nextLanguage() {
-		return wrapper.findOrFatalError((id+1)%NAMES.length);
+		return wrapper.findOrFatalError((id+1)%values().length);
 	}
 }

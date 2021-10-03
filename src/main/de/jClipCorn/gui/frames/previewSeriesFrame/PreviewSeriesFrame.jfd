@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.11" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.12" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -34,9 +34,10 @@ new FormModel {
 						"gridX": 1
 						"gridY": 1
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JVLCRobotButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnVLCRobot"
 						"text": new FormMessage( null, "PreviewSeriesFrame.btnPlayRobot.caption" )
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_VLCROBOT
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "autoPlay", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 1
@@ -69,8 +70,9 @@ new FormModel {
 						"gridY": 1
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JSearchButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnSearch"
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_FRAMES_SEARCH
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "startSearch", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
@@ -107,7 +109,7 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "default, labelcompgap, 0dlu:grow"
-				"$rowSpecs": "default, linegap, default, unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, pref, linegap, pref, linegap, default:grow, linegap, pref"
+				"$rowSpecs": "default, linegap, default, unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, pref, linegap, pref, linegap, default:grow, linegap, pref"
 			} ) {
 				name: "pnlInfo"
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel" ) {
@@ -119,7 +121,7 @@ new FormModel {
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridWidth": 3
 				} )
-				add( new FormComponent( "de.jClipCorn.gui.guiComponents.OnlineScoreDisplay" ) {
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.OnlineScoreDisplay" ) {
 					name: "lblOnlineScore"
 					"horizontalAlignment": 0
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
@@ -214,11 +216,29 @@ new FormModel {
 					"gridY": 13
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
 				} )
-				add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageDisplay" ) {
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageSetDisplay" ) {
 					name: "ctrlLang"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
 					"gridY": 13
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label10"
+					"text": new FormMessage( null, "PreviewSeriesFrame.lblSubs" )
+					"verticalAlignment": 1
+					"verticalTextPosition": 1
+					"font": #SwingDerivedFont0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 15
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageListDisplay" ) {
+					name: "ctrlSubs"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 15
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
@@ -229,7 +249,7 @@ new FormModel {
 					"verticalTextPosition": 1
 					"font": #SwingDerivedFont0
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridY": 15
+					"gridY": 17
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
@@ -239,7 +259,7 @@ new FormModel {
 					"font": #SwingDerivedFont0
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
-					"gridY": 15
+					"gridY": 17
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "label9"
@@ -248,14 +268,14 @@ new FormModel {
 					"verticalTextPosition": 1
 					"font": #SwingDerivedFont0
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridY": 17
+					"gridY": 19
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.TagDisplay" ) {
 					name: "ctrlTags"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
-					"gridY": 17
+					"gridY": 19
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
@@ -266,7 +286,7 @@ new FormModel {
 					"verticalTextPosition": 1
 					"font": #SwingDerivedFont0
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridY": 19
+					"gridY": 21
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.MultiLineTextLabel" ) {
@@ -274,7 +294,7 @@ new FormModel {
 					"labelFont": new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, true )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
-					"gridY": 19
+					"gridY": 21
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
@@ -286,7 +306,7 @@ new FormModel {
 					"font": #SwingDerivedFont0
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 1
-					"gridY": 21
+					"gridY": 23
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.MultiLineTextLabel" ) {
@@ -294,17 +314,17 @@ new FormModel {
 					"labelFont": new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, true )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
-					"gridY": 21
+					"gridY": 23
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
-				add( new FormComponent( "de.jClipCorn.gui.guiComponents.OnlineRefButton" ) {
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.OnlineRefButton" ) {
 					name: "btnOnline"
 					auxiliary() {
 						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
 					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridY": 25
+					"gridY": 27
 					"gridWidth": 3
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
 				} )

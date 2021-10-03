@@ -3,7 +3,9 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
@@ -37,8 +39,12 @@ public class CCDBLanguageSet implements CCIterable<CCDBLanguage> {
 		_languages = direct;
 	}
 
-	public static CCDBLanguageSet parseFromString(String str) {
-		return new CCDBLanguageSet(CCStreams.iterate(str.split(";")).map(CCDBLanguage::findByLongString)); //$NON-NLS-1$
+	public static CCDBLanguageSet parseFromString(String str) throws CCFormatException {
+		if (Str.Empty.equals(str)) return CCDBLanguageSet.EMPTY;
+
+		var r = new HashSet<CCDBLanguage>();
+		for (var v : str.split(";")) r.add(CCDBLanguage.findByLongString(v));
+		return new CCDBLanguageSet(r);
 	}
 
 	public static CCDBLanguageSet fromBitmask(long v) {

@@ -3,7 +3,6 @@ package de.jClipCorn.gui.frames.allRatingsFrame;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -35,7 +34,6 @@ public class AllRatingsDialog extends JCCDialog {
 		setResizable(false);
 		setModal(true);
 		setTitle(LocaleBundle.getString("AllRatingsFrame.this.title")); //$NON-NLS-1$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setLocationRelativeTo(owner);

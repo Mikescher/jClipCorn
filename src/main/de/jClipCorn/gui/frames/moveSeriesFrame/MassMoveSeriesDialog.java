@@ -9,7 +9,6 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
 import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.helper.DialogHelper;
 
@@ -52,7 +51,7 @@ public class MassMoveSeriesDialog extends JCCDialog {
 	
 	private void initGUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+
 		setModal(true);
 		setTitle(LocaleBundle.getString("MassMoveSeriesFrame.this.title")); //$NON-NLS-1$
 		getContentPane().setLayout(new BorderLayout(0, 0));

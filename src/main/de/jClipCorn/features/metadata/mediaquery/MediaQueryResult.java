@@ -1,9 +1,6 @@
 package de.jClipCorn.features.metadata.mediaquery;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.InnerMediaQueryException;
 import de.jClipCorn.util.Str;
@@ -45,23 +42,33 @@ public class MediaQueryResult {
 	public final List<MediaQueryResultSubtitleTrack> SubtitleTracks;
 
 	public final CCDBLanguageSet AudioLanguages;   // NULL if only 1 Language without a specifier
-	
-	private MediaQueryResult(String raw, String hash, long cdate, long mdate, String format, String format_Version, long fileSize, double duration, int overallBitRate, double frameRate, MediaQueryResultVideoTrack video, List<MediaQueryResultVideoTrack> videoTracks, List<MediaQueryResultAudioTrack> audioTracks, List<MediaQueryResultSubtitleTrack> subtitleTracks, CCDBLanguageSet language) {
-		Raw            = raw;
-		Checksum       = hash;
-		CDate          = cdate;
-		MDate          = mdate;
-		Format         = format;
-		Format_Version = format_Version;
-		FileSize       = fileSize;
-		Duration       = duration;
-		OverallBitRate = overallBitRate;
-		FrameRate      = frameRate;
-		Video          = video;
-		VideoTracks    = Collections.unmodifiableList(videoTracks);
-		AudioTracks    = Collections.unmodifiableList(audioTracks);
-		SubtitleTracks = Collections.unmodifiableList(subtitleTracks);
-		AudioLanguages = language;
+	public final CCDBLanguageList SubtitleLanguages;
+
+	private MediaQueryResult(String raw,
+							 String hash, long cdate, long mdate, String format, String format_Version, long fileSize,
+							 double duration, int overallBitRate, double frameRate,
+							 MediaQueryResultVideoTrack video, List<MediaQueryResultVideoTrack> videoTracks,
+							 List<MediaQueryResultAudioTrack> audioTracks,
+							 List<MediaQueryResultSubtitleTrack> subtitleTracks,
+							 CCDBLanguageSet language, CCDBLanguageList subtitles) {
+
+		Raw               = raw;
+		Checksum          = hash;
+		CDate             = cdate;
+		MDate             = mdate;
+		Format            = format;
+		Format_Version    = format_Version;
+		FileSize          = fileSize;
+		Duration          = duration;
+		OverallBitRate    = overallBitRate;
+		FrameRate         = frameRate;
+		Video             = video;
+		VideoTracks       = Collections.unmodifiableList(videoTracks);
+		AudioTracks       = Collections.unmodifiableList(audioTracks);
+		SubtitleTracks    = Collections.unmodifiableList(subtitleTracks);
+		AudioLanguages    = language;
+		SubtitleLanguages = subtitles;
+
 	}
 
 	@SuppressWarnings("nls")
@@ -119,12 +126,19 @@ public class MediaQueryResult {
 
 		if (vtracks.size() == 1 && vtracks.get(0).Duration != -1) duration = vtracks.get(0).Duration;
 
-		CCDBLanguageSet alng = getLang(atracks, doNotValidateLangs);
-		
-		return new MediaQueryResult(raw, hash, cdate, mdate, format, format_Version, fileSize, duration, overallBitRate, frameRate, vtracks.get(0), vtracks, atracks, stracks, alng);
+		CCDBLanguageSet alng = getAudioLang(atracks, doNotValidateLangs);
+		CCDBLanguageList slng = getSubLang(stracks);
+
+		return new MediaQueryResult(
+				raw, hash,
+				cdate, mdate,
+				format, format_Version, fileSize, duration, overallBitRate, frameRate,
+				vtracks.get(0), vtracks,
+				atracks, stracks,
+				alng, slng);
 	}
 
-	private static CCDBLanguageSet getLang(List<MediaQueryResultAudioTrack> tcks, boolean doNotValidateLangs) throws InnerMediaQueryException {
+	private static CCDBLanguageSet getAudioLang(List<MediaQueryResultAudioTrack> tcks, boolean doNotValidateLangs) throws InnerMediaQueryException {
 
 		if (tcks.size() == 1 && tcks.get(0).Language == null) return null;
 
@@ -136,8 +150,15 @@ public class MediaQueryResult {
 		}
 
 		HashSet<CCDBLanguage> lng = new HashSet<>();
-		for (MediaQueryResultAudioTrack t : tcks) lng.add(t.getLanguage());
+		for (var t : tcks) lng.add(t.getLanguage());
 		return CCDBLanguageSet.createDirect(lng);
+	}
+
+	private static CCDBLanguageList getSubLang(List<MediaQueryResultSubtitleTrack> tcks) throws InnerMediaQueryException {
+
+		List<CCDBLanguage> lng = new ArrayList<>();
+		for (var t : tcks) if (t.Language != null) lng.add(t.getLanguage());
+		return CCDBLanguageList.createDirect(lng);
 	}
 
 	@SuppressWarnings("nls")
@@ -148,12 +169,12 @@ public class MediaQueryResult {
 	}
 
 	@SuppressWarnings("nls")
-	public static CCDBLanguage getLanguage(String langval) throws InnerMediaQueryException {
-		if (langval == null) throw new InnerMediaQueryException("Audio language not set (null)"); //$NON-NLS-1$
+	public static CCDBLanguage getLanguage(String _langval) throws InnerMediaQueryException {
+		if (_langval == null) throw new InnerMediaQueryException("Audio language not set (null)"); //$NON-NLS-1$
 
 		// https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 
-		langval = langval.trim();
+		var langval = _langval.trim();
 
 		Matcher m1 = REX_LANGUAGE_REPEAT.matcher(langval);
 		if (m1.matches()) langval = m1.group(1).trim();
@@ -293,15 +314,113 @@ public class MediaQueryResult {
 		if (langval.equalsIgnoreCase("kor"))                       return CCDBLanguage.KOREAN;
 		if (langval.equalsIgnoreCase("korean"))                    return CCDBLanguage.KOREAN;
 
-		throw new InnerMediaQueryException("Unknown audio language '" + langval + "'");
+		if (langval.equalsIgnoreCase("ms"))                        return CCDBLanguage.MALAY;
+		if (langval.equalsIgnoreCase("may"))                       return CCDBLanguage.MALAY;
+		if (langval.equalsIgnoreCase("msa"))                       return CCDBLanguage.MALAY;
+		if (langval.equalsIgnoreCase("malay"))                     return CCDBLanguage.MALAY;
+
+		if (langval.equalsIgnoreCase("fil"))                       return CCDBLanguage.FILIPINO;
+		if (langval.equalsIgnoreCase("filipino"))                  return CCDBLanguage.FILIPINO;
+		if (langval.equalsIgnoreCase("pilipino"))                  return CCDBLanguage.FILIPINO;
+
+		if (langval.equalsIgnoreCase("id"))                        return CCDBLanguage.INDONESIAN;
+		if (langval.equalsIgnoreCase("ind"))                       return CCDBLanguage.INDONESIAN;
+		if (langval.equalsIgnoreCase("indonesian"))                return CCDBLanguage.INDONESIAN;
+
+		if (langval.equalsIgnoreCase("ro"))                        return CCDBLanguage.ROMANIAN;
+		if (langval.equalsIgnoreCase("rum"))                       return CCDBLanguage.ROMANIAN;
+		if (langval.equalsIgnoreCase("ron"))                       return CCDBLanguage.ROMANIAN;
+		if (langval.equalsIgnoreCase("romanian"))                  return CCDBLanguage.ROMANIAN;
+		if (langval.equalsIgnoreCase("moldavian"))                 return CCDBLanguage.ROMANIAN;
+		if (langval.equalsIgnoreCase("moldovan"))                  return CCDBLanguage.ROMANIAN;
+
+		if (langval.equalsIgnoreCase("el"))                        return CCDBLanguage.GREEK;
+		if (langval.equalsIgnoreCase("gre"))                       return CCDBLanguage.GREEK;
+		if (langval.equalsIgnoreCase("ell"))                       return CCDBLanguage.GREEK;
+		if (langval.equalsIgnoreCase("greek"))                     return CCDBLanguage.GREEK;
+
+		if (langval.equalsIgnoreCase("he"))                        return CCDBLanguage.HEBREW;
+		if (langval.equalsIgnoreCase("heb"))                       return CCDBLanguage.HEBREW;
+		if (langval.equalsIgnoreCase("hebrew"))                    return CCDBLanguage.HEBREW;
+
+		if (langval.equalsIgnoreCase("ar"))                        return CCDBLanguage.ARABIC;
+		if (langval.equalsIgnoreCase("ara"))                       return CCDBLanguage.ARABIC;
+		if (langval.equalsIgnoreCase("arabic"))                    return CCDBLanguage.ARABIC;
+
+		if (langval.equalsIgnoreCase("hi"))                        return CCDBLanguage.HINDI;
+		if (langval.equalsIgnoreCase("hin"))                       return CCDBLanguage.HINDI;
+		if (langval.equalsIgnoreCase("hindi"))                     return CCDBLanguage.HINDI;
+
+		if (langval.equalsIgnoreCase("ta"))                        return CCDBLanguage.TAMIL;
+		if (langval.equalsIgnoreCase("tam"))                       return CCDBLanguage.TAMIL;
+		if (langval.equalsIgnoreCase("tamil"))                     return CCDBLanguage.TAMIL;
+
+		if (langval.equalsIgnoreCase("te"))                        return CCDBLanguage.TELUGU;
+		if (langval.equalsIgnoreCase("tel"))                       return CCDBLanguage.TELUGU;
+		if (langval.equalsIgnoreCase("telugu"))                    return CCDBLanguage.TELUGU;
+
+		if (langval.equalsIgnoreCase("th"))                        return CCDBLanguage.THAI;
+		if (langval.equalsIgnoreCase("tha"))                       return CCDBLanguage.THAI;
+		if (langval.equalsIgnoreCase("thai"))                      return CCDBLanguage.THAI;
+
+		if (langval.equalsIgnoreCase("hr"))                        return CCDBLanguage.CROATIAN;
+		if (langval.equalsIgnoreCase("hrv"))                       return CCDBLanguage.CROATIAN;
+		if (langval.equalsIgnoreCase("croatian"))                  return CCDBLanguage.CROATIAN;
+
+		if (langval.equalsIgnoreCase("ml"))                        return CCDBLanguage.MALAYALAM;
+		if (langval.equalsIgnoreCase("mal"))                       return CCDBLanguage.MALAYALAM;
+		if (langval.equalsIgnoreCase("malayalam"))                 return CCDBLanguage.MALAYALAM;
+
+		if (langval.equalsIgnoreCase("nb"))                        return CCDBLanguage.NORWEGIAN;
+		if (langval.equalsIgnoreCase("nob"))                       return CCDBLanguage.NORWEGIAN;
+		if (langval.equalsIgnoreCase("bokmål"))                    return CCDBLanguage.NORWEGIAN;
+		if (langval.equalsIgnoreCase("bokmal"))                    return CCDBLanguage.NORWEGIAN;
+		if (langval.equalsIgnoreCase("norwegian"))                 return CCDBLanguage.NORWEGIAN;
+
+		if (langval.equalsIgnoreCase("vi"))                        return CCDBLanguage.VIETNAMESE;
+		if (langval.equalsIgnoreCase("vie"))                       return CCDBLanguage.VIETNAMESE;
+		if (langval.equalsIgnoreCase("vietnamese"))                return CCDBLanguage.VIETNAMESE;
+
+		if (langval.equalsIgnoreCase("is"))                        return CCDBLanguage.ICELANDIC;
+		if (langval.equalsIgnoreCase("ice"))                       return CCDBLanguage.ICELANDIC;
+		if (langval.equalsIgnoreCase("isl"))                       return CCDBLanguage.ICELANDIC;
+		if (langval.equalsIgnoreCase("icelandic"))                 return CCDBLanguage.ICELANDIC;
+
+		if (langval.equalsIgnoreCase("rom"))                       return CCDBLanguage.ROMANY;
+		if (langval.equalsIgnoreCase("romany"))                    return CCDBLanguage.ROMANY;
+
+		if (langval.equalsIgnoreCase("gaa"))                       return CCDBLanguage.GA;
+		if (langval.equalsIgnoreCase("ga"))                        return CCDBLanguage.GA;
+
+		if (langval.equalsIgnoreCase("lt"))                        return CCDBLanguage.LITHUANIAN;
+		if (langval.equalsIgnoreCase("lit"))                       return CCDBLanguage.LITHUANIAN;
+		if (langval.equalsIgnoreCase("iithuanian"))                return CCDBLanguage.LITHUANIAN;
+
+		if (langval.equalsIgnoreCase("lv"))                        return CCDBLanguage.LATVIAN;
+		if (langval.equalsIgnoreCase("lav"))                       return CCDBLanguage.LATVIAN;
+		if (langval.equalsIgnoreCase("latvian"))                   return CCDBLanguage.LATVIAN;
+
+		if (langval.equalsIgnoreCase("sk"))                        return CCDBLanguage.SLOVAK;
+		if (langval.equalsIgnoreCase("slo"))                       return CCDBLanguage.SLOVAK;
+		if (langval.equalsIgnoreCase("slk"))                       return CCDBLanguage.SLOVAK;
+		if (langval.equalsIgnoreCase("slovak"))                    return CCDBLanguage.SLOVAK;
+
+		if (langval.equalsIgnoreCase("sl"))                        return CCDBLanguage.SLOVENIAN;
+		if (langval.equalsIgnoreCase("slv"))                       return CCDBLanguage.SLOVENIAN;
+
+		if (langval.equalsIgnoreCase("et"))                        return CCDBLanguage.ESTONIAN;
+		if (langval.equalsIgnoreCase("est"))                       return CCDBLanguage.ESTONIAN;
+		if (langval.equalsIgnoreCase("estonian"))                  return CCDBLanguage.ESTONIAN;
+
+		throw new InnerMediaQueryException("Unknown audio language '" + langval + "' ('" + _langval + "')");
 	}
 
 	public static boolean isNullLanguage(String langval) {
-		if (Str.isNullOrWhitespace(langval)) return true;
-		if (langval.equalsIgnoreCase("Undefined")) return true; //$NON-NLS-1$
+		if (Str.isNullOrWhitespace(langval))          return true;
+		if (langval.equalsIgnoreCase("Undefined"))    return true; //$NON-NLS-1$
 		if (langval.equalsIgnoreCase("Keine Angabe")) return true; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("unk")) return true; //$NON-NLS-1$
-		if (langval.equalsIgnoreCase("Unknown")) return true; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("unk"))          return true; //$NON-NLS-1$
+		if (langval.equalsIgnoreCase("Unknown"))      return true; //$NON-NLS-1$
 
 		return false;
 	}

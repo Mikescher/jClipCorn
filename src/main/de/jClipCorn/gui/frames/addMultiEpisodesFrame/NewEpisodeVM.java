@@ -28,6 +28,7 @@ public class NewEpisodeVM implements IEpisodeData, ICCPropertySource {
 
 	public String Title = Str.Empty;
 	public CCDBLanguageSet Language = CCDBLanguageSet.EMPTY;
+	public CCDBLanguageList Subtitles = CCDBLanguageList.EMPTY;
 	public int Length = -1;
 	public int EpisodeNumber = -1;
 	public CCFileSize Filesize = CCFileSize.ZERO;
@@ -58,6 +59,8 @@ public class NewEpisodeVM implements IEpisodeData, ICCPropertySource {
 	@Override public CCTagList getTags() { return CCTagList.EMPTY; }
 
 	@Override public CCDBLanguageSet getLanguage() { return Language; }
+
+	@Override public CCDBLanguageList getSubtitles() { return Subtitles; }
 
 	@Override public CCMediaInfo getMediaInfo() { return MediaInfo; }
 

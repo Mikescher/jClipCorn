@@ -22,40 +22,43 @@ public class BatchEditEpisodeData implements IEpisodeData, ICCPropertySource
 	public CCPath           part;
 	public CCDate           addDate;
 	public CCDateTimeList   viewedHistory;
-	public CCDBLanguageSet language;
+	public CCDBLanguageSet  language;
+	public CCDBLanguageList subtitles;
 	public PartialMediaInfo mediaInfo;
 
 	public BatchEditEpisodeData(CCEpisode e) {
 		_source = e;
 
-		episodeNumber = e.getEpisodeNumber();
-		title         = e.getTitle();
-		length        = e.getLength();
-		tags          = e.getTags();
-		format        = e.getFormat();
-		filesize      = e.getFilesize();
-		part          = e.getPart();
-		addDate       = e.getAddDate();
+		episodeNumber = e.EpisodeNumber.get();
+		title         = e.Title.get();
+		length        = e.Length.get();
+		tags          = e.Tags.get();
+		format        = e.Format.get();
+		filesize      = e.FileSize.get();
+		part          = e.Part.get();
+		addDate       = e.AddDate.get();
 		viewedHistory = e.ViewedHistory.get();
-		language      = e.getLanguage();
-		mediaInfo     = e.mediaInfo().getPartial();
+		language      = e.Language.get();
+		subtitles     = e.Subtitles.get();
+		mediaInfo     = e.MediaInfo.getPartial();
 	}
 
 	public CCEpisode getSource() {
 		return _source;
 	}
 
-	public boolean isDirty_EpisodeNumber() { return !(_source.getEpisodeNumber() == episodeNumber); }
-	public boolean isDirty_Title()         { return !_source.getTitle().equals(title); }
-	public boolean isDirty_Length()        { return !(_source.getLength() == length); }
-	public boolean isDirty_Tags()          { return !_source.getTags().isEqual(tags); }
-	public boolean isDirty_Format()        { return !(_source.getFormat() == format); }
-	public boolean isDirty_Filesize()      { return !(_source.getFilesize().getBytes() == filesize.getBytes()); }
-	public boolean isDirty_Part()          { return !_source.getPart().equals(part); }
-	public boolean isDirty_AddDate()       { return !_source.getAddDate().isEqual(addDate); }
+	public boolean isDirty_EpisodeNumber() { return !(_source.EpisodeNumber.get() == episodeNumber); }
+	public boolean isDirty_Title()         { return !_source.Title.get().equals(title); }
+	public boolean isDirty_Length()        { return !(_source.Length.get() == length); }
+	public boolean isDirty_Tags()          { return !_source.Tags.get().isEqual(tags); }
+	public boolean isDirty_Format()        { return !(_source.Format.get() == format); }
+	public boolean isDirty_Filesize()      { return !(_source.FileSize.get().getBytes() == filesize.getBytes()); }
+	public boolean isDirty_Part()          { return !_source.Part.get().equals(part); }
+	public boolean isDirty_AddDate()       { return !_source.AddDate.get().isEqual(addDate); }
 	public boolean isDirty_ViewedHistory() { return !_source.ViewedHistory.get().isEqual(viewedHistory); }
-	public boolean isDirty_Language()      { return !_source.getLanguage().isEqual(language); }
-	public boolean isDirty_MediaInfo()     { return !_source.mediaInfo().getPartial().isEqual(mediaInfo); }
+	public boolean isDirty_Language()      { return !_source.Language.get().isEqual(language); }
+	public boolean isDirty_Subtitles()     { return !_source.Subtitles.get().isEqual(subtitles); }
+	public boolean isDirty_MediaInfo()     { return !_source.MediaInfo.getPartial().isEqual(mediaInfo); }
 
 	public boolean isDirty()
 	{
@@ -69,6 +72,7 @@ public class BatchEditEpisodeData implements IEpisodeData, ICCPropertySource
 		if (isDirty_AddDate()) return true;
 		if (isDirty_ViewedHistory()) return true;
 		if (isDirty_Language()) return true;
+		if (isDirty_Subtitles()) return true;
 		if (isDirty_MediaInfo()) return true;
 
 		return false;
@@ -78,6 +82,7 @@ public class BatchEditEpisodeData implements IEpisodeData, ICCPropertySource
 	@Override public CCDateTimeList getViewedHistory() { return CCDateTimeList.createEmpty(); }
 	@Override public CCTagList getTags() { return CCTagList.EMPTY; }
 	@Override public CCDBLanguageSet getLanguage() { return language; }
+	@Override public CCDBLanguageList getSubtitles() { return subtitles; }
 	@Override public CCMediaInfo getMediaInfo() { return mediaInfo.toMediaInfo(); }
 	@Override public PartialMediaInfo getPartialMediaInfo() { return mediaInfo; }
 	@Override public int getEpisodeNumber() { return episodeNumber; }
@@ -102,6 +107,7 @@ public class BatchEditEpisodeData implements IEpisodeData, ICCPropertySource
 			if (isDirty_AddDate())       _source.AddDate.set(addDate);
 			if (isDirty_ViewedHistory()) _source.ViewedHistory.set(viewedHistory);
 			if (isDirty_Language())      _source.Language.set(language);
+			if (isDirty_Subtitles())     _source.Subtitles.set(subtitles);
 			if (isDirty_MediaInfo())     _source.MediaInfo.set(mediaInfo);
 		}
 		_source.endUpdating();

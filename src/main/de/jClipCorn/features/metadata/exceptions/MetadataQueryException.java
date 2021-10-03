@@ -21,4 +21,9 @@ public class MetadataQueryException extends Exception {
 		super(text, cause);
 		MessageLong = Str.Empty;
 	}
+
+	public MetadataQueryException(String text, String stderr, Throwable cause) {
+		super(text, cause);
+		MessageLong = stderr;
+	}
 }

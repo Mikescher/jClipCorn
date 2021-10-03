@@ -13,7 +13,6 @@ import de.jClipCorn.features.statistics.StatisticsGroup;
 import de.jClipCorn.features.statistics.StatisticsHelper;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.TimeKeeper;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
@@ -89,7 +88,7 @@ public class StatisticsFrame extends JCCFrame {
 	
 	private void initGUI() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+
 		setTitle(LocaleBundle.getString("StatisticsFrame.this.title")); //$NON-NLS-1$
 		getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("175dlu"), //$NON-NLS-1$

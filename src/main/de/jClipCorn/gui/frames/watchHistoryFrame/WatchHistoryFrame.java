@@ -64,8 +64,6 @@ public class WatchHistoryFrame extends JCCFrame {
 
 	private void postInit()
 	{
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-
 		listHistory.setCellRenderer(new WatchHistoryListCellRenderer());
 
 		treeTimespanRoot = new SimpleTreeNode();

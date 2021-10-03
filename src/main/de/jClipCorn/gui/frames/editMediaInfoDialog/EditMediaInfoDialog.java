@@ -208,7 +208,6 @@ public class EditMediaInfoDialog extends JCCDialog {
 		setMinimumSize(new Dimension(750, 350));
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setResizable(true);
-		setIconImage(Resources.IMG_FRAME_ICON.get());
 		
 		getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
 				FormSpecs.RELATED_GAP_COLSPEC,

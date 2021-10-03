@@ -32,7 +32,8 @@ public class SFixClipTable extends SFixTable {
 	private ClipTableTitleRenderer renderer_title;
 	private TableZyklusRenderer renderer_zyklus;
 	private TableMediaInfoCatRenderer renderer_mediainfo;
-	private TableLanguageRenderer renderer_language;
+	private TableLanguageSetRenderer renderer_language;
+	private TableLanguageListRenderer renderer_subtitles;
 	private TableGenreRenderer renderer_genre;
 	private TablePartRenderer renderer_parts;
 	private TableLengthRenderer renderer_length;
@@ -50,7 +51,8 @@ public class SFixClipTable extends SFixTable {
 	private TableViewedComparator sorter_viewed;
 	private TableZyklusComparator sorter_zyklus;
 	private TableMediaInfoCatComparator sorter_mediainfo;
-	private TableLanguageComparator sorter_language;
+	private TableLanguageSetComparator sorter_language;
+	private TableLanguageListComparator sorter_subtitles;
 	private TableGenreComparator sorter_genre;
 	private TablePartComparator sorter_parts;
 	private TableLengthComparator sorter_length;
@@ -87,7 +89,8 @@ public class SFixClipTable extends SFixTable {
 		renderer_title       = new ClipTableTitleRenderer(movielist);
 		renderer_zyklus      = new TableZyklusRenderer(movielist);
 		renderer_mediainfo   = new TableMediaInfoCatRenderer(movielist);
-		renderer_language    = new TableLanguageRenderer(movielist);
+		renderer_language    = new TableLanguageSetRenderer(movielist);
+		renderer_subtitles   = new TableLanguageListRenderer(movielist);
 		renderer_genre       = new TableGenreRenderer(movielist);
 		renderer_parts       = new TablePartRenderer(movielist);
 		renderer_length      = new TableLengthRenderer(movielist);
@@ -107,7 +110,8 @@ public class SFixClipTable extends SFixTable {
 		sorter_viewed      = new TableViewedComparator();
 		sorter_zyklus      = new TableZyklusComparator();
 		sorter_mediainfo   = new TableMediaInfoCatComparator();
-		sorter_language    = new TableLanguageComparator();
+		sorter_language    = new TableLanguageSetComparator();
+		sorter_subtitles   = new TableLanguageListComparator();
 		sorter_genre       = new TableGenreComparator();
 		sorter_parts       = new TablePartComparator();
 		sorter_length      = new TableLengthComparator();
@@ -131,6 +135,7 @@ public class SFixClipTable extends SFixTable {
 		sorter.setComparator(ClipTableModel.COLUMN_ZYKLUS,      sorter_zyklus);
 		sorter.setComparator(ClipTableModel.COLUMN_MEDIAINFO,   sorter_mediainfo);
 		sorter.setComparator(ClipTableModel.COLUMN_LANGUAGE,    sorter_language);
+		sorter.setComparator(ClipTableModel.COLUMN_SUBTITLES,   sorter_subtitles);
 		sorter.setComparator(ClipTableModel.COLUMN_GENRE,       sorter_genre);
 		sorter.setComparator(ClipTableModel.COLUMN_PARTCOUNT,   sorter_parts);
 		sorter.setComparator(ClipTableModel.COLUMN_LENGTH,      sorter_length);
@@ -161,6 +166,8 @@ public class SFixClipTable extends SFixTable {
 			return renderer_mediainfo;
 		case ClipTableModel.COLUMN_LANGUAGE:
 			return renderer_language;
+		case ClipTableModel.COLUMN_SUBTITLES:
+			return renderer_subtitles;
 		case ClipTableModel.COLUMN_GENRE:
 			return renderer_genre;
 		case ClipTableModel.COLUMN_PARTCOUNT:
@@ -217,6 +224,8 @@ public class SFixClipTable extends SFixTable {
 				return ((CCQualityCategory)value).getTooltip();
 			case ClipTableModel.COLUMN_LANGUAGE:
 				return ((CCDBLanguageSet)value).toOutputString();
+			case ClipTableModel.COLUMN_SUBTITLES:
+				return ((CCDBLanguageList)value).toOutputString();
 			case ClipTableModel.COLUMN_GENRE:
 				return null;
 			case ClipTableModel.COLUMN_PARTCOUNT:

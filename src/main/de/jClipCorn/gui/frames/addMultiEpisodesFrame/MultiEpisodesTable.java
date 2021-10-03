@@ -87,6 +87,14 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 		r.add(new JCCSimpleColumnPrototype<>(
 				this,
 				"auto",
+				"MultiEpisodesTable.Subtitles",
+				null,
+				e -> e.Subtitles.getIcon(),
+				e -> e.Subtitles.toOutputString()));
+
+		r.add(new JCCSimpleColumnPrototype<>(
+				this,
+				"auto",
 				"MultiEpisodesTable.Quality",
 				e -> e.MediaInfo.getCategory(_src.getGenres()).getLongText(),
 				e -> e.MediaInfo.getCategory(_src.getGenres()).getIcon(),

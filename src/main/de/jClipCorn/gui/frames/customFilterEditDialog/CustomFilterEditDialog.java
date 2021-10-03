@@ -9,10 +9,9 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.customFilter.operators.CustomOperator;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
-import de.jClipCorn.gui.guiComponents.*;
+import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.filterTree.CustomFilterObject;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -50,8 +49,6 @@ public class CustomFilterEditDialog extends JCCDialog {
 
 	private void postInit()
 	{
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-
 		root = new CustomFilterEditTreeNode(filterObject.getFilter());
 		treeMain.setModel(new DefaultTreeModel(root));
 		treeMain.setCellRenderer(new CustomFilterEditTreeRenderer());

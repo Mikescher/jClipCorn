@@ -5,7 +5,6 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.DefaultReadOnlyTableModel;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.parser.watchdata.WatchDataChangeSet;
 import de.jClipCorn.util.parser.watchdata.WatchDataParser;
@@ -64,7 +63,7 @@ public class ParseWatchDataFrame extends JCCFrame {
 		setMinimumSize(new Dimension(600, 500));
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+
 		setTitle(LocaleBundle.getString("ParseWatchDataFrame.this.title")); //$NON-NLS-1$
 		
 		getContentPane().setLayout(new BorderLayout(0, 0));

@@ -31,8 +31,7 @@ public class FilenameRuleFrame extends JCCFrame {
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("FilenameRulesFrame.btnTitle.text")); //$NON-NLS-1$
 		setSize(new Dimension(750, 500));
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-		
+
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		scrollPane = new JScrollPane();

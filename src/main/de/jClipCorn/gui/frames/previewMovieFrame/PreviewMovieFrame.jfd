@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.11" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.12" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -38,17 +38,18 @@ new FormModel {
 					"gridX": 3
 					"gridY": 1
 				} )
-				add( new FormComponent( "de.jClipCorn.gui.guiComponents.JPlayButton" ) {
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon32Button" ) {
 					name: "btnPlay"
+					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon32Button$IconRefLink ICN_MENUBAR_PLAY
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "playMovie", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 5
 					"gridY": 1
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
-				add( new FormComponent( "de.jClipCorn.gui.guiComponents.JPlayButton" ) {
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon32Button" ) {
 					name: "btnPlayNoHistory"
-					"mode": enum de.jClipCorn.gui.guiComponents.JPlayButton$Mode PLAY_HIDDEN
+					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon32Button$IconRefLink ICN_MENUBAR_HIDDENPLAY
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "playMovieNoHistory", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 7
@@ -87,7 +88,7 @@ new FormModel {
 				"tabPlacement": 3
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "labelcompgap, default, labelcompgap, default, labelcompgap, default:grow, labelcompgap, 80dlu, labelcompgap"
-					"$rowSpecs": "linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default:grow"
+					"$rowSpecs": "linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default:grow"
 				} ) {
 					name: "pnlTabMain"
 					add( new FormComponent( "javax.swing.JLabel" ) {
@@ -104,8 +105,11 @@ new FormModel {
 						"gridX": 6
 						"gridY": 2
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.OnlineRefButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.OnlineRefButton" ) {
 						name: "btnOnlineRef"
+						auxiliary() {
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
+						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 8
 						"gridY": 2
@@ -155,7 +159,7 @@ new FormModel {
 						"gridX": 2
 						"gridY": 8
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.OnlineScoreDisplay" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.OnlineScoreDisplay" ) {
 						name: "lblOnlineScore"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
@@ -168,7 +172,7 @@ new FormModel {
 						"gridX": 2
 						"gridY": 10
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageDisplay" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageSetDisplay" ) {
 						name: "lblLanguage"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
@@ -176,45 +180,59 @@ new FormModel {
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label7"
+						"text": new FormMessage( null, "PreviewMovieFrame.lblSubs" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 12
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageListDisplay" ) {
+						name: "lblSubtitles"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 12
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label6"
 						"text": new FormMessage( null, "AddMovieFrame.lblLength.text" )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 12
+						"gridY": 14
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "lblLength"
 						"text": "<dynamic>"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
-						"gridY": 12
+						"gridY": 14
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label19"
 						"text": new FormMessage( null, "AddMovieFrame.lblEinfgDatum.text" )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 14
+						"gridY": 16
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "lblAdded"
 						"text": "<dynamic>"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
-						"gridY": 14
+						"gridY": 16
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label8"
 						"text": new FormMessage( null, "AddMovieFrame.lblFsk.text" )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 16
+						"gridY": 18
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "lblFSKIcon"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
-						"gridY": 16
+						"gridY": 18
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
@@ -223,20 +241,20 @@ new FormModel {
 						"text": "<dynamic>"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
-						"gridY": 16
+						"gridY": 18
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label9"
 						"text": new FormMessage( null, "AddMovieFrame.lblFormat.text" )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 18
+						"gridY": 20
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "lblFormatIcon"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
-						"gridY": 18
+						"gridY": 20
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
@@ -245,48 +263,48 @@ new FormModel {
 						"text": "<dynamic>"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
-						"gridY": 18
+						"gridY": 20
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label10"
 						"text": new FormMessage( null, "AddMovieFrame.lblYear.text" )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 20
+						"gridY": 22
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "lblYear"
 						"text": "<dynamic>"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
-						"gridY": 20
+						"gridY": 22
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label11"
 						"text": new FormMessage( null, "AddMovieFrame.lblGre.text" )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 22
+						"gridY": 24
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "lblSize"
 						"text": "<dynamic>"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
-						"gridY": 22
+						"gridY": 24
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label12"
 						"text": new FormMessage( null, "PreviewMovieFrame.btnScore.text" )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 24
+						"gridY": 26
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "lblUserScoreIcon"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
-						"gridY": 24
+						"gridY": 26
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
@@ -295,20 +313,20 @@ new FormModel {
 						"text": "<dynamic>"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
-						"gridY": 24
+						"gridY": 26
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label13"
 						"text": new FormMessage( null, "EditSeriesFrame.lblTags.text" )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 26
+						"gridY": 28
 					} )
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.TagDisplay" ) {
 						name: "lblTags"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
-						"gridY": 26
+						"gridY": 28
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
@@ -381,7 +399,7 @@ new FormModel {
 						} )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 28
+						"gridY": 30
 						"gridWidth": 7
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
@@ -637,17 +655,17 @@ new FormModel {
 						"gridY": 2
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JMediaInfoButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnMediaInfo0"
-						"text": "text"
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_MEDIAINFO
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onShowMediaInfo0", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
 						"gridY": 2
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JOpenFolderButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnOpenDir0"
-						"text": "text"
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_FOLDER
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOpenDir0", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
@@ -660,17 +678,17 @@ new FormModel {
 						"gridY": 4
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JMediaInfoButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnMediaInfo1"
-						"text": "text"
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_MEDIAINFO
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onShowMediaInfo1", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
 						"gridY": 4
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JOpenFolderButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnOpenDir1"
-						"text": "text"
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_FOLDER
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOpenDir1", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
@@ -683,17 +701,17 @@ new FormModel {
 						"gridY": 6
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JMediaInfoButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnMediaInfo2"
-						"text": "text"
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_MEDIAINFO
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onShowMediaInfo2", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
 						"gridY": 6
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JOpenFolderButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnOpenDir2"
-						"text": "text"
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_FOLDER
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOpenDir2", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
@@ -706,17 +724,17 @@ new FormModel {
 						"gridY": 8
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JMediaInfoButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnMediaInfo3"
-						"text": "text"
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_MEDIAINFO
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onShowMediaInfo3", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
 						"gridY": 8
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JOpenFolderButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnOpenDir3"
-						"text": "text"
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_FOLDER
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOpenDir3", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
@@ -729,17 +747,17 @@ new FormModel {
 						"gridY": 10
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JMediaInfoButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnMediaInfo4"
-						"text": "text"
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_MEDIAINFO
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onShowMediaInfo4", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
 						"gridY": 10
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JOpenFolderButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnOpenDir4"
-						"text": "text"
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_FOLDER
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOpenDir4", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
@@ -752,17 +770,17 @@ new FormModel {
 						"gridY": 12
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JMediaInfoButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnMediaInfo5"
-						"text": "text"
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_MEDIAINFO
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onShowMediaInfo5", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
 						"gridY": 12
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JOpenFolderButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnOpenDir5"
-						"text": "text"
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_FOLDER
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOpenDir5", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6

@@ -20,9 +20,13 @@ import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
 import de.jClipCorn.gui.frames.vlcRobot.VLCRobotFrame;
 import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.displaySearchResultsDialog.DisplaySearchResultsDialog;
+import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button;
+import de.jClipCorn.gui.guiComponents.iconComponents.OnlineRefButton;
+import de.jClipCorn.gui.guiComponents.iconComponents.OnlineScoreDisplay;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupListener;
-import de.jClipCorn.gui.guiComponents.language.LanguageDisplay;
+import de.jClipCorn.gui.guiComponents.language.LanguageListDisplay;
+import de.jClipCorn.gui.guiComponents.language.LanguageSetDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
@@ -104,8 +108,6 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 
 	private void postInit()
 	{
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-
 		_activeFrames.add(Tuple.Create(series, this));
 
 		setJMenuBar(new PreviewSeriesMenuBar(this, this.series, () -> onUpdate(null)));
@@ -224,12 +226,12 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		if (series == null) return;
 
 		if (Main.DEBUG) {
-			setTitle("<LID:" + series.getLocalID() + "> " + series.getTitle() + " (" + series.getCoverID() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			setTitle("<LID:" + series.LocalID.get() + "> " + series.Title.get() + " (" + series.CoverID.get() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else {
-			setTitle(series.getTitle());
+			setTitle(series.Title.get());
 		}
 
-		lblTitle.setText(series.getTitle());
+		lblTitle.setText(series.Title.get());
 
 		int ccidx = cvrChooser.getSelectedIndex();
 
@@ -238,7 +240,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 
 		cvrChooser.setCurrSelected(ccidx);
 
-		lblOnlineScore.setOnlineScore(series.getOnlinescore());
+		lblOnlineScore.setOnlineScore(series.OnlineScore.get());
 
 		lblLength.setText(TimeIntervallFormatter.formatPointed(series.getLength()));
 		lblLength.setToolTipText(series.getMediaInfoLength().map(TimeIntervallFormatter::formatSeconds).orElse(null));
@@ -253,19 +255,20 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		lblScore.setIcon(series.Score.get().getIcon());
 
 		ctrlLang.setValue(series.getAllLanguages());
+		ctrlSubs.setValue(series.getAllSubtitles());
 
-		ctrlTags.setValue(series.getTags());
+		ctrlTags.setValue(series.Tags.get());
 
 		lblFSK.setText(Str.Empty);
-		lblFSK.setIcon(series.getFSK().getIcon());
+		lblFSK.setIcon(series.FSK.get().getIcon());
 
 		lblCover.setModeCover(series);
 
-		btnOnline.setValue(series.getOnlineReference());
+		btnOnline.setValue(series.OnlineReference.get());
 
-		lblGroups.setText(series.getGroups().iterate().stringjoin(p->p.Name, "\n"));
+		lblGroups.setText(series.Groups.get().iterate().stringjoin(p->p.Name, "\n"));
 
-		lblGenres.setText(series.getGenres().iterate().stringjoin(CCGenre::asString, "\n"));
+		lblGenres.setText(series.Genres.get().iterate().stringjoin(CCGenre::asString, "\n"));
 	}
 
 	private void autoPlay() {
@@ -412,11 +415,11 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		pnlTop = new JPanel();
 		pnlTopLeft = new JPanel();
 		btnPlayNext = new JButton();
-		btnVLCRobot = new JVLCRobotButton();
+		btnVLCRobot = new CCIcon16Button();
 		lblTitle = new JLabel();
 		pnlSearch = new JPanel();
 		edSearch = new JTextField();
-		btnSearch = new JSearchButton();
+		btnSearch = new CCIcon16Button();
 		cvrChooser = new JCoverChooser(movielist);
 		pnlInfo = new JPanel();
 		lblCover = new DatabaseElementPreviewLabel(movielist);
@@ -430,7 +433,9 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		label4 = new JLabel();
 		lblScore = new JLabel();
 		label7 = new JLabel();
-		ctrlLang = new LanguageDisplay();
+		ctrlLang = new LanguageSetDisplay();
+		label10 = new JLabel();
+		ctrlSubs = new LanguageListDisplay();
 		label5 = new JLabel();
 		lblFSK = new JLabel();
 		label9 = new JLabel();
@@ -478,6 +483,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 
 				//---- btnVLCRobot ----
 				btnVLCRobot.setText(LocaleBundle.getString("PreviewSeriesFrame.btnPlayRobot.caption")); //$NON-NLS-1$
+				btnVLCRobot.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_VLCROBOT);
 				btnVLCRobot.addActionListener(e -> autoPlay());
 				pnlTopLeft.add(btnVLCRobot, CC.xy(1, 3));
 			}
@@ -501,6 +507,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 				pnlSearch.add(edSearch, CC.xy(1, 1, CC.DEFAULT, CC.FILL));
 
 				//---- btnSearch ----
+				btnSearch.setIconRef(CCIcon16Button.IconRefLink.ICN_FRAMES_SEARCH);
 				btnSearch.addActionListener(e -> startSearch());
 				pnlSearch.add(btnSearch, CC.xy(3, 1, CC.DEFAULT, CC.FILL));
 			}
@@ -519,7 +526,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		{
 			pnlInfo.setLayout(new FormLayout(
 				"default, $lcgap, 0dlu:grow", //$NON-NLS-1$
-				"default, $lgap, default, $ugap, 7*(default, $lgap), 2*(pref, $lgap), default:grow, $lgap, pref")); //$NON-NLS-1$
+				"default, $lgap, default, $ugap, 8*(default, $lgap), 2*(pref, $lgap), default:grow, $lgap, pref")); //$NON-NLS-1$
 
 			//---- lblCover ----
 			lblCover.setNoOverlay(true);
@@ -586,49 +593,57 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			pnlInfo.add(label7, CC.xy(1, 13, CC.DEFAULT, CC.TOP));
 			pnlInfo.add(ctrlLang, CC.xy(3, 13, CC.FILL, CC.FILL));
 
+			//---- label10 ----
+			label10.setText(LocaleBundle.getString("PreviewSeriesFrame.lblSubs")); //$NON-NLS-1$
+			label10.setVerticalAlignment(SwingConstants.TOP);
+			label10.setVerticalTextPosition(SwingConstants.TOP);
+			label10.setFont(label10.getFont().deriveFont(12f));
+			pnlInfo.add(label10, CC.xy(1, 15, CC.DEFAULT, CC.TOP));
+			pnlInfo.add(ctrlSubs, CC.xy(3, 15, CC.FILL, CC.FILL));
+
 			//---- label5 ----
 			label5.setText(LocaleBundle.getString("PreviewSeriesFrame.lblFSK.text")); //$NON-NLS-1$
 			label5.setVerticalAlignment(SwingConstants.TOP);
 			label5.setVerticalTextPosition(SwingConstants.TOP);
 			label5.setFont(label5.getFont().deriveFont(12f));
-			pnlInfo.add(label5, CC.xy(1, 15, CC.DEFAULT, CC.TOP));
+			pnlInfo.add(label5, CC.xy(1, 17, CC.DEFAULT, CC.TOP));
 
 			//---- lblFSK ----
 			lblFSK.setText("<dynamic>"); //$NON-NLS-1$
 			lblFSK.setHorizontalTextPosition(SwingConstants.LEADING);
 			lblFSK.setFont(lblFSK.getFont().deriveFont(12f));
-			pnlInfo.add(lblFSK, CC.xy(3, 15));
+			pnlInfo.add(lblFSK, CC.xy(3, 17));
 
 			//---- label9 ----
 			label9.setText(LocaleBundle.getString("PreviewSeriesFrame.lblTags.text")); //$NON-NLS-1$
 			label9.setVerticalAlignment(SwingConstants.TOP);
 			label9.setVerticalTextPosition(SwingConstants.TOP);
 			label9.setFont(label9.getFont().deriveFont(12f));
-			pnlInfo.add(label9, CC.xy(1, 17, CC.DEFAULT, CC.TOP));
-			pnlInfo.add(ctrlTags, CC.xy(3, 17, CC.FILL, CC.FILL));
+			pnlInfo.add(label9, CC.xy(1, 19, CC.DEFAULT, CC.TOP));
+			pnlInfo.add(ctrlTags, CC.xy(3, 19, CC.FILL, CC.FILL));
 
 			//---- label6 ----
 			label6.setText(LocaleBundle.getString("PreviewSeriesFrame.lblGroups")); //$NON-NLS-1$
 			label6.setVerticalAlignment(SwingConstants.TOP);
 			label6.setVerticalTextPosition(SwingConstants.TOP);
 			label6.setFont(label6.getFont().deriveFont(12f));
-			pnlInfo.add(label6, CC.xy(1, 19, CC.DEFAULT, CC.TOP));
+			pnlInfo.add(label6, CC.xy(1, 21, CC.DEFAULT, CC.TOP));
 
 			//---- lblGroups ----
 			lblGroups.setLabelFont(lblGroups.getLabelFont().deriveFont(12f));
-			pnlInfo.add(lblGroups, CC.xy(3, 19, CC.FILL, CC.FILL));
+			pnlInfo.add(lblGroups, CC.xy(3, 21, CC.FILL, CC.FILL));
 
 			//---- label8 ----
 			label8.setText(LocaleBundle.getString("PreviewSeriesFrame.lblGenres.text")); //$NON-NLS-1$
 			label8.setVerticalAlignment(SwingConstants.TOP);
 			label8.setVerticalTextPosition(SwingConstants.TOP);
 			label8.setFont(label8.getFont().deriveFont(12f));
-			pnlInfo.add(label8, CC.xy(1, 21, CC.DEFAULT, CC.TOP));
+			pnlInfo.add(label8, CC.xy(1, 23, CC.DEFAULT, CC.TOP));
 
 			//---- lblGenres ----
 			lblGenres.setLabelFont(lblGenres.getLabelFont().deriveFont(12f));
-			pnlInfo.add(lblGenres, CC.xy(3, 21, CC.FILL, CC.FILL));
-			pnlInfo.add(btnOnline, CC.xywh(1, 25, 3, 1, CC.RIGHT, CC.DEFAULT));
+			pnlInfo.add(lblGenres, CC.xy(3, 23, CC.FILL, CC.FILL));
+			pnlInfo.add(btnOnline, CC.xywh(1, 27, 3, 1, CC.RIGHT, CC.DEFAULT));
 		}
 		contentPane.add(pnlInfo, CC.xy(2, 4, CC.FILL, CC.FILL));
 
@@ -656,11 +671,11 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 	private JPanel pnlTop;
 	private JPanel pnlTopLeft;
 	private JButton btnPlayNext;
-	private JVLCRobotButton btnVLCRobot;
+	private CCIcon16Button btnVLCRobot;
 	private JLabel lblTitle;
 	private JPanel pnlSearch;
 	private JTextField edSearch;
-	private JSearchButton btnSearch;
+	private CCIcon16Button btnSearch;
 	private JCoverChooser cvrChooser;
 	private JPanel pnlInfo;
 	private DatabaseElementPreviewLabel lblCover;
@@ -674,7 +689,9 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 	private JLabel label4;
 	private JLabel lblScore;
 	private JLabel label7;
-	private LanguageDisplay ctrlLang;
+	private LanguageSetDisplay ctrlLang;
+	private JLabel label10;
+	private LanguageListDisplay ctrlSubs;
 	private JLabel label5;
 	private JLabel lblFSK;
 	private JLabel label9;

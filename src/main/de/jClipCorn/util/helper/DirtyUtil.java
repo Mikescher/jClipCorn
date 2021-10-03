@@ -5,7 +5,8 @@ import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
-import de.jClipCorn.gui.guiComponents.language.LanguageChooser;
+import de.jClipCorn.gui.guiComponents.language.LanguageListChooser;
+import de.jClipCorn.gui.guiComponents.language.LanguageSetChooser;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.util.adapter.ActionLambdaAdapter;
 import de.jClipCorn.util.adapter.ChangeLambdaAdapter;
@@ -63,7 +64,8 @@ public class DirtyUtil
 	{
 		if (c instanceof JTextField) ((JTextField)c).getDocument().addDocumentListener(new DocumentLambdaAdapter(lstr));
 		else if (c instanceof JReferenceChooser) ((JReferenceChooser)c).addChangeListener(new ActionLambdaAdapter(lstr));
-		else if (c instanceof LanguageChooser) ((LanguageChooser)c).addChangeListener(new ActionLambdaAdapter(lstr));
+		else if (c instanceof LanguageSetChooser) ((LanguageSetChooser)c).addChangeListener(new ActionLambdaAdapter(lstr));
+		else if (c instanceof LanguageListChooser) ((LanguageListChooser)c).addChangeListener(new ActionLambdaAdapter(lstr));
 		else if (c instanceof JSpinner) ((JSpinner)c).addChangeListener(new ChangeLambdaAdapter(lstr));
 		else if (c instanceof JComboBox<?>) ((JComboBox<?>)c).addItemListener(new ItemChangeLambdaAdapter(lstr, ItemEvent.SELECTED));
 		else if (c instanceof TagPanel) ((TagPanel)c).addChangeListener(new ActionLambdaAdapter(lstr));

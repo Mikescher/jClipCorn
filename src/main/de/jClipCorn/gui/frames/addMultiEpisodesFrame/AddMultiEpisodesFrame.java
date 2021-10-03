@@ -12,10 +12,9 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.gui.frames.omniParserFrame.OmniParserFrame;
-import de.jClipCorn.gui.guiComponents.*;
-import de.jClipCorn.gui.guiComponents.language.LanguageChooserDialog;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
+import de.jClipCorn.gui.guiComponents.language.LanguageSetChooserDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
@@ -65,8 +64,6 @@ public class AddMultiEpisodesFrame extends JCCFrame
 
 	private void postInit()
 	{
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-
 		var cPathStart = target.getSeries().getCommonPathStart(true);
 		massVideoFileChooser = new JFileChooser(cPathStart.toFSPath(this).toFile());
 		massVideoFileChooser.setMultiSelectionEnabled(true);
@@ -398,10 +395,17 @@ public class AddMultiEpisodesFrame extends JCCFrame
 						}
 					}
 
-					if (data.get(i).MediaQueryResult == null || data.get(i).MediaQueryResult.AudioLanguages == null || data.get(i).MediaQueryResult.AudioLanguages.isEmpty()) {
+					if (data.get(i).MediaQueryResult == null ||
+						data.get(i).MediaQueryResult.AudioLanguages == null ||
+						data.get(i).MediaQueryResult.AudioLanguages.isEmpty() ||
+						data.get(i).MediaQueryResult.SubtitleLanguages.isEmpty())
+					{
 						errors.add(i);
-					} else {
+					}
+					else
+					{
 						data.get(i).Language = data.get(i).MediaQueryResult.AudioLanguages;
+						data.get(i).Subtitles = data.get(i).MediaQueryResult.SubtitleLanguages;
 					}
 				}
 
@@ -412,7 +416,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 					if (!errors.isEmpty()) {
 
 						if (DialogHelper.showLocaleFormattedYesNo(AddMultiEpisodesFrame.this, "Dialogs.SameLangErr", errorsList)) { //$NON-NLS-1$
-							new LanguageChooserDialog(this, v ->
+							new LanguageSetChooserDialog(this, v ->
 							{
 								for (int i = 0; i < data.size(); i++) data.get(i).Language = v;
 								for (int i = 0; i < data.size(); i++) data.get(i).validate(target);
@@ -685,6 +689,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 							newEp.Part.set(final_realImmediatePath);
 							newEp.Tags.set(CCTagList.EMPTY);
 							newEp.Language.set(vm.Language);
+							newEp.Subtitles.set(vm.Subtitles);
 							newEp.endUpdating();
 
 							newEp.beginUpdating();

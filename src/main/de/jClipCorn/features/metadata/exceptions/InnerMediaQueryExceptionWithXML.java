@@ -6,7 +6,7 @@ public class InnerMediaQueryExceptionWithXML extends InnerMediaQueryException {
 	public final String XML;
 
 	public InnerMediaQueryExceptionWithXML(InnerMediaQueryException inner, String xml) {
-		super(inner.MessageLong, inner);
+		super(inner.getMessage() + "\n" + inner.MessageLong, inner);
 		XML = xml;
 	}
 }

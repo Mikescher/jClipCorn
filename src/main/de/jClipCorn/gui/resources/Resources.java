@@ -3,7 +3,6 @@ package de.jClipCorn.gui.resources;
 import de.jClipCorn.Globals;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.resources.reftypes.*;
-import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
@@ -252,6 +251,9 @@ public class Resources {
 	public final static IconRef ICN_TABLE_FSK_3 			= register16x16Icon("/icons/table/fsk/fsk_3.png");
 	public final static IconRef ICN_TABLE_FSK_4 			= register16x16Icon("/icons/table/fsk/fsk_4.png");
 
+	public final static IconRef ICN_TABLE_LANG_MASK_TR 		= register16x16Icon("/icons/table/language/mask_tl.png");
+	public final static IconRef ICN_TABLE_LANG_MASK_BL 		= register16x16Icon("/icons/table/language/mask_br.png");
+
 	public final static IconRef ICN_TABLE_LANGUAGE_00 		= register16x16Icon("/icons/table/language/language_00.png");
 	public final static IconRef ICN_TABLE_LANGUAGE_01 		= register16x16Icon("/icons/table/language/language_01.png");
 	public final static IconRef ICN_TABLE_LANGUAGE_02 		= register16x16Icon("/icons/table/language/language_02.png");
@@ -273,20 +275,45 @@ public class Resources {
 	public final static IconRef ICN_TABLE_LANGUAGE_18 		= register16x16Icon("/icons/table/language/language_18.png");
 	public final static IconRef ICN_TABLE_LANGUAGE_19 		= register16x16Icon("/icons/table/language/language_19.png");
 	public final static IconRef ICN_TABLE_LANGUAGE_20 		= register16x16Icon("/icons/table/language/language_20.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_21 		= register16x16Icon("/icons/table/language/language_21.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_22 		= register16x16Icon("/icons/table/language/language_22.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_23 		= register16x16Icon("/icons/table/language/language_23.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_24 		= register16x16Icon("/icons/table/language/language_24.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_25 		= register16x16Icon("/icons/table/language/language_25.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_26 		= register16x16Icon("/icons/table/language/language_26.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_27 		= register16x16Icon("/icons/table/language/language_27.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_28 		= register16x16Icon("/icons/table/language/language_28.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_29 		= register16x16Icon("/icons/table/language/language_29.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_30 		= register16x16Icon("/icons/table/language/language_30.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_31 		= register16x16Icon("/icons/table/language/language_31.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_32 		= register16x16Icon("/icons/table/language/language_32.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_33 		= register16x16Icon("/icons/table/language/language_33.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_34 		= register16x16Icon("/icons/table/language/language_34.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_35 		= register16x16Icon("/icons/table/language/language_35.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_36 		= register16x16Icon("/icons/table/language/language_36.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_37 		= register16x16Icon("/icons/table/language/language_37.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_38 		= register16x16Icon("/icons/table/language/language_38.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_39 		= register16x16Icon("/icons/table/language/language_39.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_40 		= register16x16Icon("/icons/table/language/language_40.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_41 		= register16x16Icon("/icons/table/language/language_41.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_42 		= register16x16Icon("/icons/table/language/language_42.png");
 
 	public final static IconRef[] ICN_TABLE_LANGUAGE = new IconRef[]
 	{
-		ICN_TABLE_LANGUAGE_00, ICN_TABLE_LANGUAGE_01, ICN_TABLE_LANGUAGE_02, ICN_TABLE_LANGUAGE_03,
-		ICN_TABLE_LANGUAGE_04, ICN_TABLE_LANGUAGE_05, ICN_TABLE_LANGUAGE_06, ICN_TABLE_LANGUAGE_07,
-		ICN_TABLE_LANGUAGE_08, ICN_TABLE_LANGUAGE_09, ICN_TABLE_LANGUAGE_10, ICN_TABLE_LANGUAGE_11,
-		ICN_TABLE_LANGUAGE_12, ICN_TABLE_LANGUAGE_13, ICN_TABLE_LANGUAGE_14, ICN_TABLE_LANGUAGE_15,
-		ICN_TABLE_LANGUAGE_16, ICN_TABLE_LANGUAGE_17, ICN_TABLE_LANGUAGE_18, ICN_TABLE_LANGUAGE_19,
-		ICN_TABLE_LANGUAGE_20,
+		ICN_TABLE_LANGUAGE_00, ICN_TABLE_LANGUAGE_01, ICN_TABLE_LANGUAGE_02, ICN_TABLE_LANGUAGE_03, ICN_TABLE_LANGUAGE_04,
+		ICN_TABLE_LANGUAGE_05, ICN_TABLE_LANGUAGE_06, ICN_TABLE_LANGUAGE_07, ICN_TABLE_LANGUAGE_08, ICN_TABLE_LANGUAGE_09,
+		ICN_TABLE_LANGUAGE_10, ICN_TABLE_LANGUAGE_11, ICN_TABLE_LANGUAGE_12, ICN_TABLE_LANGUAGE_13, ICN_TABLE_LANGUAGE_14,
+		ICN_TABLE_LANGUAGE_15, ICN_TABLE_LANGUAGE_16, ICN_TABLE_LANGUAGE_17, ICN_TABLE_LANGUAGE_18, ICN_TABLE_LANGUAGE_19,
+		ICN_TABLE_LANGUAGE_20, ICN_TABLE_LANGUAGE_21, ICN_TABLE_LANGUAGE_22, ICN_TABLE_LANGUAGE_23, ICN_TABLE_LANGUAGE_24,
+		ICN_TABLE_LANGUAGE_25, ICN_TABLE_LANGUAGE_26, ICN_TABLE_LANGUAGE_27, ICN_TABLE_LANGUAGE_28, ICN_TABLE_LANGUAGE_29,
+		ICN_TABLE_LANGUAGE_30, ICN_TABLE_LANGUAGE_31, ICN_TABLE_LANGUAGE_32, ICN_TABLE_LANGUAGE_33, ICN_TABLE_LANGUAGE_34,
+		ICN_TABLE_LANGUAGE_35, ICN_TABLE_LANGUAGE_36, ICN_TABLE_LANGUAGE_37, ICN_TABLE_LANGUAGE_38, ICN_TABLE_LANGUAGE_39,
+		ICN_TABLE_LANGUAGE_40, ICN_TABLE_LANGUAGE_41, ICN_TABLE_LANGUAGE_42,
 	};
 
 	public static HashMap<Tuple<Integer, Integer>, IconRef> ICN_TABLE_LANGUAGE_COMBINED = createCombinedlanguageIcons(ICN_TABLE_LANGUAGE);
-	public static IconRef ICN_TABLE_LANGUAGE_SPECIAL_00_01_04 = registerCombined16x16Icon("/icons/table/language/language_special_00_01_04.png");
-	public static IconRef ICN_TABLE_LANGUAGE_SPECIAL_00_01_06 = registerCombined16x16Icon("/icons/table/language/language_special_00_01_06.png");
+	public static IconRef ICN_TABLE_LANGUAGE_SPECIAL_00_01_04 = register16x16Icon("/icons/table/language/language_special_00_01_04.png");
+	public static IconRef ICN_TABLE_LANGUAGE_SPECIAL_00_01_06 = register16x16Icon("/icons/table/language/language_special_00_01_06.png");
 
 	public final static IconRef ICN_TABLE_LANGUAGE_NONE		= register16x16Icon("/icons/table/language/language_none.png");
 	public final static IconRef ICN_TABLE_LANGUAGE_MORE		= register16x16Icon("/icons/table/language/language_more.png");
@@ -366,6 +393,7 @@ public class Resources {
 	public final static IconRef ICN_SIDEBAR_QUALITY 		= register16x16Icon("/icons/sidebar/server_components.png");
 	public final static IconRef ICN_SIDEBAR_TAGS 			= register16x16Icon("/icons/sidebar/tags_cloud.png");
 	public final static IconRef ICN_SIDEBAR_LANGUAGE		= register16x16Icon("/icons/sidebar/flag_red.png");
+	public final static IconRef ICN_SIDEBAR_SUBTITLES		= register16x16Icon("/icons/sidebar/text_allcaps.png");
 	public final static IconRef ICN_SIDEBAR_TYP	 			= register16x16Icon("/icons/sidebar/color_swatch.png");
 	public final static IconRef ICN_SIDEBAR_VIEWED 			= register16x16Icon("/icons/sidebar/viewed.png");
 	public final static IconRef ICN_SIDEBAR_UNVIEWED		= register16x16Icon("/icons/sidebar/unviewed.png");
@@ -508,12 +536,20 @@ public class Resources {
 		return register(new CombinedImageRef(s, true));
 	}
 
-	private static CombinedIconRef registerCombined16x16Icon(String... s) {
-		return register(new CombinedIconRef(registerCombinedImage(CCStreams.iterate(s).map(Resources::get16x16Filename).toArray(new String[0])), true));
+	private static DualMaskedImageRef registerDualMaskedImage_nopreload(ResourceRef m1, ResourceRef m2, ResourceRef i1, ResourceRef i2) {
+		return register(new DualMaskedImageRef(m1, m2, i1, i2, false));
 	}
 
-	private static CombinedIconRef registerCombined16x16Icon_nopreload(String... s) {
-		return register(new CombinedIconRef(registerCombinedImage_nopreload(CCStreams.iterate(s).map(Resources::get16x16Filename).toArray(new String[0])), false));
+	private static DualMaskedImageRef registerDualMaskedImage(ResourceRef m1, ResourceRef m2, ResourceRef i1, ResourceRef i2) {
+		return register(new DualMaskedImageRef(m1, m2, i1, i2, true));
+	}
+
+	private static DualMaskedIconRef registerDualMaskedIcon(IconRef m1, IconRef m2, IconRef i1, IconRef i2) {
+		return register(new DualMaskedIconRef(registerDualMaskedImage(m1, m2, i1, i2), true));
+	}
+
+	private static DualMaskedIconRef registerDualMaskedIcon_nopreload(IconRef m1, IconRef m2, IconRef i1, IconRef i2) {
+		return register(new DualMaskedIconRef(registerDualMaskedImage_nopreload(m1, m2, i1, i2), false));
 	}
 
 	private static CombinedIconRef registerCombinedIcon(String... s) {
@@ -595,19 +631,22 @@ public class Resources {
 				if (i1 == 3 && i2 ==  4) swap = true;
 				if (           i2 == 19) swap = true;
 
-				String icn_1 = Str.format("/icons/table/language/language_{0,number,00}_A.png", i1);
-				String icn_2 = Str.format("/icons/table/language/language_{0,number,00}_B.png", i2);
+				var mask_1 = ICN_TABLE_LANG_MASK_TR;
+				var mask_2 = ICN_TABLE_LANG_MASK_BL;
+
+				var icn_1 = icns[i1];
+				var icn_2 = icns[i2];
 
 				if (swap) {
-					icn_1 = Str.format("/icons/table/language/language_{0,number,00}_A.png", i2);
-					icn_2 = Str.format("/icons/table/language/language_{0,number,00}_B.png", i1);
+					icn_1 = icns[i2];
+					icn_2 = icns[i1];
 				}
 
 				IconRef ref;
-				if (i1<5 || i2<5)
-					ref = registerCombined16x16Icon(icn_1, icn_2); // first 5x5 languages get preloaded
+				if (i1<5 && i2<5)
+					ref = registerDualMaskedIcon(mask_1, mask_2, icn_1, icn_2); // first 5x5 languages get preloaded
 				else
-					ref = registerCombined16x16Icon_nopreload(icn_1, icn_2);
+					ref = registerDualMaskedIcon_nopreload(mask_1, mask_2, icn_1, icn_2);
 
 				result.put(Tuple.Create(i1, i2), ref);
 				result.put(Tuple.Create(i2, i1), ref);

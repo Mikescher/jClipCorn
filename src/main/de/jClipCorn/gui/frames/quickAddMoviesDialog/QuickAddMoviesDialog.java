@@ -1,9 +1,7 @@
 package de.jClipCorn.gui.frames.quickAddMoviesDialog;
 
-import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.features.log.CCLog;
@@ -11,7 +9,6 @@ import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.guiComponents.JFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -20,7 +17,6 @@ import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
@@ -29,57 +25,37 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuickAddMoviesDialog extends JCCDialog {
-	private static final long serialVersionUID = 5295134501386181860L;
-
-	private final JPanel contentPanel = new JPanel();
-
+public class QuickAddMoviesDialog extends JCCDialog
+{
 	private final FSPath[] inputFiles;
-	private JFSPathTextField edRoot;
-	private QuickAddMoviesTable lstData;
-	private JProgressBar progressBar1;
-	private JProgressBar progressBar2;
 
-	public QuickAddMoviesDialog(JFrame owner, CCMovieList mlist, FSPath[] files) {
-		super(mlist);
+	private volatile int progressValueCache;
+
+	public QuickAddMoviesDialog(JFrame owner, CCMovieList ml, FSPath[] files)
+	{
+		super(ml);
 
 		inputFiles = files;
-		
-		initGUI();
+
+		initComponents();
+		postInit();
 
 		setLocationRelativeTo(owner);
-		
-		edRoot.setPath(mlist.getCommonMoviesPath().toFSPath(this));
+	}
+
+	private void postInit()
+	{
+		edRoot.setPath(movielist.getCommonMoviesPath().toFSPath(this));
 		if (edRoot.getPath().isEmpty()) {
-			CCMovie m = mlist.iteratorMovies().lastOrNull();
+			CCMovie m = movielist.iteratorMovies().lastOrNull();
 			if (m != null) {
 				edRoot.setPath(m.Parts.get(0).toFSPath(this).getParent());
 			}
 		}
-		lstData.setData(CCStreams.iterate(files).map(this::getPaths).enumerate());
+		lstData.setData(CCStreams.iterate(inputFiles).map(this::getPaths).enumerate());
 
 		lstData.autoResize();
-	}
-	
-	private void initGUI() {
-		setTitle(LocaleBundle.getString("QuickAddMoviesDialog.title")); //$NON-NLS-1$
-		setIconImage(Resources.IMG_FRAME_ICON.get());
-		setBounds(100, 100, 500, 300);
-		setMinimumSize(new Dimension(300, 300));
-		setModal(true);
 
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"),})); //$NON-NLS-1$
-		
-		edRoot = new JFSPathTextField();
-		contentPanel.add(edRoot, "1, 1, fill, default"); //$NON-NLS-1$
 		edRoot.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void removeUpdate(DocumentEvent e) {
@@ -94,55 +70,18 @@ public class QuickAddMoviesDialog extends JCCDialog {
 				lstData.setData(CCStreams.iterate(inputFiles).map(QuickAddMoviesDialog.this::getPaths).enumerate());
 			}
 		});
-		edRoot.setColumns(10);
-		
-		lstData = new QuickAddMoviesTable(this);
-		contentPanel.add(lstData, "1, 3, fill, fill"); //$NON-NLS-1$
 
-		JPanel buttonPane = new JPanel();
-		getContentPane().add(buttonPane, BorderLayout.SOUTH);
-		buttonPane.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("51px"), //$NON-NLS-1$
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("96px"), //$NON-NLS-1$
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("13px"), //$NON-NLS-1$
-				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("13px"), //$NON-NLS-1$
-				FormSpecs.LINE_GAP_ROWSPEC,}));
-						
-		progressBar1 = new JProgressBar();
-		buttonPane.add(progressBar1, "2, 2, fill, fill"); //$NON-NLS-1$
 		progressBar1.setVisible(false);
-
-		JButton okButton = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		okButton.addActionListener((e) -> onOK());
-		buttonPane.add(okButton, "4, 2, 1, 3, fill, fill"); //$NON-NLS-1$
-		getRootPane().setDefaultButton(okButton);
-
-		JButton cancelButton = new JButton(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
-		cancelButton.addActionListener((e) -> dispose());
-		buttonPane.add(cancelButton, "6, 2, 1, 3, fill, fill"); //$NON-NLS-1$
-
-		progressBar2 = new JProgressBar();
-		buttonPane.add(progressBar2, "2, 4, fill, fill"); //$NON-NLS-1$
 		progressBar2.setVisible(false);
 	}
 
 	private Tuple<FSPath, CCPath> getPaths(FSPath f0) {
 		var f1 = CCPath.createFromFSPath(edRoot.getPath().append(f0.getFilenameWithExt()), this);
-		
+
 		return Tuple.Create(f0, f1);
 	}
 
-	private volatile int progressValueCache;
-	
-	private void onOK()
+	private void onOkay()
 	{
 		for (var file : inputFiles) {
 			var p = getPaths(file);
@@ -157,7 +96,7 @@ public class QuickAddMoviesDialog extends JCCDialog {
 			if (!dst.isValidPath()) return;
 		}
 
-		contentPanel.setEnabled(false);
+		rootpnl.setEnabled(false);
 		new Thread(() ->
 		{
 			try
@@ -231,8 +170,68 @@ public class QuickAddMoviesDialog extends JCCDialog {
 				});
 
 			} finally {
-				SwingUtils.invokeLater(() -> contentPanel.setEnabled(true) );
+				SwingUtils.invokeLater(() -> rootpnl.setEnabled(true) );
 			}
 		}).start();
 	}
+
+	private void onCancel() {
+		dispose();
+	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		rootpnl = new JPanel();
+		edRoot = new JFSPathTextField();
+		lstData = new QuickAddMoviesTable(this);
+		progressBar1 = new JProgressBar();
+		button1 = new JButton();
+		button2 = new JButton();
+		progressBar2 = new JProgressBar();
+
+		//======== this ========
+		setTitle(LocaleBundle.getString("QuickAddMoviesDialog.title")); //$NON-NLS-1$
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setModal(true);
+		setMinimumSize(new Dimension(300, 300));
+		var contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"default:grow", //$NON-NLS-1$
+			"default:grow")); //$NON-NLS-1$
+
+		//======== rootpnl ========
+		{
+			rootpnl.setLayout(new FormLayout(
+				"$ugap, default:grow, 2*($lcgap, default), $ugap", //$NON-NLS-1$
+				"$ugap, default, $lgap, 3dlu:grow, $ugap, default, $lgap, default, $ugap")); //$NON-NLS-1$
+			rootpnl.add(edRoot, CC.xywh(2, 2, 5, 1));
+			rootpnl.add(lstData, CC.xywh(2, 4, 5, 1, CC.FILL, CC.FILL));
+			rootpnl.add(progressBar1, CC.xy(2, 6));
+
+			//---- button1 ----
+			button1.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+			button1.addActionListener(e -> onOkay());
+			rootpnl.add(button1, CC.xywh(4, 6, 1, 3));
+
+			//---- button2 ----
+			button2.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+			button2.addActionListener(e -> onCancel());
+			rootpnl.add(button2, CC.xywh(6, 6, 1, 3));
+			rootpnl.add(progressBar2, CC.xy(2, 8));
+		}
+		contentPane.add(rootpnl, CC.xy(1, 1, CC.FILL, CC.FILL));
+		setSize(500, 300);
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JPanel rootpnl;
+	private JFSPathTextField edRoot;
+	private QuickAddMoviesTable lstData;
+	private JProgressBar progressBar1;
+	private JButton button1;
+	private JButton button2;
+	private JProgressBar progressBar2;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

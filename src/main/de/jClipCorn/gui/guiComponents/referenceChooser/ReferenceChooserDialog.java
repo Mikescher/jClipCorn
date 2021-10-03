@@ -43,7 +43,7 @@ public class ReferenceChooserDialog extends JCCDialog {
 	private void initGUI() {
 		setTitle(LocaleBundle.getString("ReferenceChooserDialog.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setIconImage(Resources.IMG_FRAME_ICON.get());
+
 		setType(Type.UTILITY);
 		setMinimumSize(new Dimension(250, 200));
 		setModal(true);

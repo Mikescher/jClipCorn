@@ -250,7 +250,7 @@ public class CCMediaInfo {
 
 		if (cdate != that.cdate) return false;
 		if (mdate != that.mdate) return false;
-		if (filesize != that.filesize) return false;
+		if (!CCFileSize.isEqual(filesize, that.filesize)) return false;
 		if (!Objects.equals(checksum, that.checksum)) return false;
 
 		if (Double.compare(that.duration, duration) != 0) return false;

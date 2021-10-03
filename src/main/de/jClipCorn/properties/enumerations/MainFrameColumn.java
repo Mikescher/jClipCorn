@@ -1,31 +1,34 @@
 package de.jClipCorn.properties.enumerations;
 
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.gui.guiComponents.jCCPrimaryTable.JCCPrimaryColumnPrototype;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.mainFrame.table.ClipTableModel;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.enumextension.IEnumWrapper;
 
+import java.util.List;
+
 @SuppressWarnings("nls")
 public enum MainFrameColumn implements ContinoousEnum<MainFrameColumn> {
-	USERSCORE(   0, "auto",       ClipTableModel.COLUMN_SCORE),
-	TITLE(       1, "*,min=auto", ClipTableModel.COLUMN_TITLE),
-	VIEWED(      2, "auto",       ClipTableModel.COLUMN_VIEWED),
-	ZYKLUS(      3, "auto",       ClipTableModel.COLUMN_ZYKLUS),
-	QUALITY(     4, "auto",       ClipTableModel.COLUMN_MEDIAINFO),
-	LANGUAGE(    5, "auto",       ClipTableModel.COLUMN_LANGUAGE),
-	GENRES(      6, "auto",       ClipTableModel.COLUMN_GENRE),
-	PARTS(       7, "auto",       ClipTableModel.COLUMN_PARTCOUNT),
-	LENGTH(      8, "auto",       ClipTableModel.COLUMN_LENGTH),
-	ADDDATE(     9, "auto",       ClipTableModel.COLUMN_DATE),
-	ONLINESCORE(10, "auto",       ClipTableModel.COLUMN_ONLINESCORE),
-	TAGS(       11, "auto",       ClipTableModel.COLUMN_TAGS),
-	FSK(        12, "auto",       ClipTableModel.COLUMN_FSK),
-	FORMAT(     13, "auto",       ClipTableModel.COLUMN_FORMAT),
-	YEAR(       14, "auto",       ClipTableModel.COLUMN_YEAR),
-	FILESIZE(   15, "auto",       ClipTableModel.COLUMN_SIZE),
-	LASTVIEWED( 16, "auto",       ClipTableModel.COLUMN_LASTVIEWED),
-	SUBTITLES(  17, "auto",       ClipTableModel.COLUMN_SUBTITLES);
+	USERSCORE(    0, 100 ),
+	TITLE(        1, 101 ),
+	VIEWED(       2, 102 ),
+	ZYKLUS(       3, 104 ),
+	QUALITY(      4, 105 ),
+	LANGUAGE(     5, 106 ),
+	GENRES(       6, 108 ),
+	PARTS(        7, 109 ),
+	LENGTH(       8, 110 ),
+	ADDDATE(      9, 111 ),
+	ONLINESCORE( 10, 112 ),
+	TAGS(        11, 113 ),
+	FSK(         12, 114 ),
+	FORMAT(      13, 115 ),
+	YEAR(        14, 116 ),
+	FILESIZE(    15, 117 ),
+	LASTVIEWED(  16, 103 ),
+	SUBTITLES(   17, 107 );
 
 	private final static String[] NAMES = {
 		LocaleBundle.getString("ClipTableModel.Score"),
@@ -49,15 +52,13 @@ public enum MainFrameColumn implements ContinoousEnum<MainFrameColumn> {
 	};
 
 	private final int id;
-	public  final int ColumnIndex;
-	public  final String AdjusterConfig;
+	private final int order;
 
-	private static final EnumWrapper<MainFrameColumn> wrapper = new EnumWrapper<>(TITLE, v -> v.ColumnIndex);
+	private static final EnumWrapper<MainFrameColumn> wrapper = new EnumWrapper<>(TITLE, v -> v.order);
 
-	MainFrameColumn(int val, String adj, int idx) {
-		id = val;
-		ColumnIndex = idx;
-		AdjusterConfig = adj;
+	MainFrameColumn(int val, int order) {
+		this.id = val;
+		this.order = order;
 	}
 	
 	public static EnumWrapper<MainFrameColumn> getWrapper() {
@@ -91,5 +92,12 @@ public enum MainFrameColumn implements ContinoousEnum<MainFrameColumn> {
 	@Override
 	public MainFrameColumn[] evalues() {
 		return MainFrameColumn.values();
+	}
+
+	public int getColumnModelIndex(List<JCCPrimaryColumnPrototype<CCDatabaseElement, MainFrameColumn>> config) {
+		for (int i = 0; i < config.size(); i++) {
+			if (config.get(i).Identifier == this) return i;
+		}
+		return -1;
 	}
 }

@@ -29,7 +29,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 		for (CCDatabaseElement ccd_el : elements)
 		{
 			if (ccd_el.isMovie()) {
-				CCMovie mov = (CCMovie) ccd_el;
+				CCMovie mov = ccd_el.asMovie();
 
 				if (last != null && (mov.getZyklus().isEmpty() || !last.get(0).getZyklus().getTitle().equals(mov.getZyklus().getTitle()))) {
 					// ###### flush ######
@@ -66,7 +66,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 					return null;
 				}
 			} else if (ccd_el.isSeries()) {
-				CCSeries ser = (CCSeries) ccd_el;
+				CCSeries ser = ccd_el.asSeries();
 
 				if (last != null)
 					last = flushZyklusList(builder, last);

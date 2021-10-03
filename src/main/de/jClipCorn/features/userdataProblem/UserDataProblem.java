@@ -260,14 +260,14 @@ public class UserDataProblem {
 		
 		for (CCDatabaseElement idel : ml.iteratorElements()) {
 			if (idel.isMovie()) {
-				if (isPathIncluded((CCMovie)idel, p0, p1, p2, p3, p4, p5)) {
+				if (isPathIncluded(idel.asMovie(), p0, p1, p2, p3, p4, p5)) {
 					if (movieSource == null || movieSource.getLocalID() != idel.getLocalID()) {
 						ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
 					}
 					break;
 				}
 			} else if (idel.isSeries()) {
-				CCSeries ss = (CCSeries) idel;
+				CCSeries ss = idel.asSeries();
 				for (int i = 0; i < ss.getSeasonCount(); i++) {
 					CCSeason seas = ss.getSeasonByArrayIndex(i);
 					for (int j = 0; j < seas.getEpisodeCount(); j++) {
@@ -481,12 +481,12 @@ public class UserDataProblem {
 		if (owner != null) {
 			for (CCDatabaseElement idel : owner.getMovieList().iteratorElements()) {
 				if (idel.isMovie()) {
-					if (isPathIncluded((CCMovie) idel, newdata.getPart())) {
+					if (isPathIncluded(idel.asMovie(), newdata.getPart())) {
 						ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
 						break;
 					}
 				} else if (idel.isSeries()) {
-					CCSeries ss = (CCSeries) idel;
+					CCSeries ss = idel.asSeries();
 					for (int i = 0; i < ss.getSeasonCount(); i++) {
 						CCSeason seas = ss.getSeasonByArrayIndex(i);
 						for (int j = 0; j < seas.getEpisodeCount(); j++) {

@@ -30,7 +30,7 @@ public class DatabaseXMLExporter extends DatabaseTextExporter {
 			CCDatabaseElement ccd_el = elements.get(i);
 
 			if (ccd_el.isMovie()) {				
-				CCMovie mov = (CCMovie) ccd_el;
+				CCMovie mov = ccd_el.asMovie();
 
 				Element jdom_elem = new Element("movie");
 				root.addContent(jdom_elem);
@@ -49,7 +49,7 @@ public class DatabaseXMLExporter extends DatabaseTextExporter {
 				if (addViewed) jdom_elem.setAttribute(new Attribute("viewed", mov.isViewed() ? "true" : "false"));
 				
 			} else if (ccd_el.isSeries()) {
-				CCSeries ser = (CCSeries) ccd_el;
+				CCSeries ser = ccd_el.asSeries();
 				
 				Element jdom_elem_ser = new Element("series");
 				root.addContent(jdom_elem_ser);

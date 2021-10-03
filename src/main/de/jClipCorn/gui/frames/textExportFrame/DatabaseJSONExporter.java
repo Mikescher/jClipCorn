@@ -34,7 +34,7 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 			builder.append(System.lineSeparator());
 
 			if (ccd_el.isMovie()) {				
-				CCMovie mov = (CCMovie) ccd_el;
+				CCMovie mov = ccd_el.asMovie();
 				
 				List<String> attributes = new ArrayList<>();
 				
@@ -53,7 +53,7 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 				builder.append(StringUtils.join(attributes, "," + System.lineSeparator()));
 				builder.append(System.lineSeparator());
 			} else if (ccd_el.isSeries()) {
-				CCSeries ser = (CCSeries) ccd_el;
+				CCSeries ser = ccd_el.asSeries();
 				
 				builder.append("\t\t");
 				builder.append("\"titel\": \"").append(simpleEscape(ser.getTitle())).append("\",");

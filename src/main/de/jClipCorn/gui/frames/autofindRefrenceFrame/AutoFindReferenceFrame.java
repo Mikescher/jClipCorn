@@ -3,7 +3,6 @@ package de.jClipCorn.gui.frames.autofindRefrenceFrame;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
@@ -267,9 +266,9 @@ public class AutoFindReferenceFrame extends JCCFrame {
 		AutoFindRefElement value = listResults.getSelectedValue();
 		
 		if (value.local.isMovie()) {
-			new EditMovieFrame(this, (CCMovie) value.local, null).setVisible(true);
+			new EditMovieFrame(this, value.local.asMovie(), null).setVisible(true);
 		} else {
-			new EditSeriesFrame(this, (CCSeries) value.local, null).setVisible(true);
+			new EditSeriesFrame(this, value.local.asSeries(), null).setVisible(true);
 		}
 	}
 
@@ -312,7 +311,7 @@ public class AutoFindReferenceFrame extends JCCFrame {
 		if (value.tmdbMeta != null) edTitleTmdb.setText(value.tmdbMeta.Title);
 
 		if (value.local.isMovie()){
-			edYearLocal.setText(Integer.toString(((CCMovie)value.local).getYear()));
+			edYearLocal.setText(Integer.toString((value.local.asMovie()).getYear()));
 			if (value.tmdbMeta != null) edYearTmdb.setText(Integer.toString(value.tmdbMeta.Year));
 		} else {
 			edYearLocal.setText(""); //$NON-NLS-1$

@@ -436,6 +436,7 @@ public class CCProperties implements ICCPropertySource {
 
 		set.remove(MainFrameColumn.GENRES);
 		set.remove(MainFrameColumn.LASTVIEWED);
+		set.remove(MainFrameColumn.SUBTITLES);
 
 		return set;
 	}

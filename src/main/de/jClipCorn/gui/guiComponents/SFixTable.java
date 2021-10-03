@@ -146,9 +146,10 @@ public abstract class SFixTable extends JTable {
 		if (c instanceof JComponent) {
 			Object value = getValueAt(row, column);
 			int realColumn = convertColumnIndexToModel(column); // So you can move the positions of the Columns ...
+			int realRow    = convertRowIndexToModel(row); // So you can move the positions of the Columns ...
 			JComponent jc = (JComponent) c;
 
-			String tip = getTooltip(realColumn, row, value);
+			String tip = getTooltip(realColumn, realRow, value);
 
 			if (tip != null && tip.trim().isEmpty()) tip = null;
 			
@@ -178,5 +179,5 @@ public abstract class SFixTable extends JTable {
 		return c;
 	}
 
-	protected abstract String getTooltip(int column, int row, Object value);
+	protected abstract String getTooltip(int modelcolumn, int modelrow, Object value);
 }

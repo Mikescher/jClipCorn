@@ -5,8 +5,6 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.features.actionTree.ActionSource;
@@ -214,9 +212,9 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 
 	public void onClipTableSecondaryExecute(CCDatabaseElement element, MouseEvent e) {
 		if (element.isMovie()) {
-			(new ClipMoviePopup(this, (CCMovie)element)).show(e.getComponent(), e.getX(), e.getY());
+			(new ClipMoviePopup(this, element.asMovie())).show(e.getComponent(), e.getX(), e.getY());
 		} else if (element.isSeries()) {
-			(new ClipSeriesPopup(this, (CCSeries)element)).show(e.getComponent(), e.getX(), e.getY());
+			(new ClipSeriesPopup(this, element.asSeries())).show(e.getComponent(), e.getX(), e.getY());
 		}
 	}
 
@@ -225,11 +223,11 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 	}
 
 	public CCDatabaseElement getSelectedElement() {
-		return clipTable.getSelectedDatabaseElement();
+		return clipTable.getSelectedElement();
 	}
 
 	public IActionSourceObject getSelectedActionSource() {
-		return clipTable.getSelectedDatabaseElement();
+		return clipTable.getSelectedElement();
 	}
 
 	public ClipStatusBar getStatusBar() {

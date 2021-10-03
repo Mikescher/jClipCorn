@@ -270,7 +270,7 @@ public class CCMovieList implements ICCPropertySource {
 				if (dbe.isMovie()) {
 					c++;
 				} else {
-					c += ((CCSeries) dbe).getEpisodeCount();
+					c += dbe.asSeries().getEpisodeCount();
 				}
 			}
 			return c;
@@ -286,8 +286,8 @@ public class CCMovieList implements ICCPropertySource {
 					c++;
 				} else {
 					c++;
-					c += ((CCSeries) dbe).getSeasonCount();
-					c += ((CCSeries) dbe).getEpisodeCount();
+					c += dbe.asSeries().getSeasonCount();
+					c += dbe.asSeries().getEpisodeCount();
 				}
 			}
 			return c;
@@ -300,11 +300,11 @@ public class CCMovieList implements ICCPropertySource {
 			int v = 0;
 			for (CCDatabaseElement m : list) {
 				if (m.isMovie()) {
-					if (((CCMovie) m).isViewed()) {
+					if (m.asMovie().isViewed()) {
 						v++;
 					}
 				} else if (ccprops().PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT.getValue()) {
-					if (((CCSeries) m).isViewed()) {
+					if (m.asSeries().isViewed()) {
 						v++;
 					}
 				}
@@ -325,7 +325,7 @@ public class CCMovieList implements ICCPropertySource {
 	public CCMovie findDatabaseMovie(int id) {
 		CCDatabaseElement e = findDatabaseElement(id);
 		
-		if (e instanceof CCMovie) return (CCMovie)e;
+		if (e.isMovie()) return e.asMovie();
 		
 		return null;
 	}
@@ -333,7 +333,7 @@ public class CCMovieList implements ICCPropertySource {
 	public CCSeries findDatabaseSeries(int id) {
 		CCDatabaseElement e = findDatabaseElement(id);
 		
-		if (e instanceof CCSeries) return (CCSeries)e;
+		if (e instanceof CCSeries) return e.asSeries();
 		
 		return null;
 	}
@@ -615,8 +615,8 @@ public class CCMovieList implements ICCPropertySource {
 		{
 			int v = 0;
 			for (CCDatabaseElement m : list) {
-				if (includeMovies && m.isMovie())  v += ((CCMovie) m).Length.get();
-				if (includeSeries && m.isSeries()) v += ((CCSeries) m).getLength();
+				if (includeMovies && m.isMovie())  v += m.asMovie().Length.get();
+				if (includeSeries && m.isSeries()) v += m.asSeries().getLength();
 			}
 			return v;
 		});
@@ -627,8 +627,8 @@ public class CCMovieList implements ICCPropertySource {
 		{
 			long bytes = 0;
 			for (CCDatabaseElement m : list) {
-				if (includeMovies && m.isMovie())  bytes += ((CCMovie) m).FileSize.get().getBytes();
-				if (includeSeries && m.isSeries()) bytes += ((CCSeries) m).getFilesize().getBytes();
+				if (includeMovies && m.isMovie())  bytes += m.asMovie().FileSize.get().getBytes();
+				if (includeSeries && m.isSeries()) bytes += m.asSeries().getFilesize().getBytes();
 			}
 			return new CCFileSize(bytes);
 		});
@@ -650,9 +650,9 @@ public class CCMovieList implements ICCPropertySource {
 
 		if (this.contains(el)) {
 			if (el.isMovie()) {
-				removeMovie((CCMovie) el);
+				removeMovie(el.asMovie());
 			} else {
-				removeSeries((CCSeries) el);
+				removeSeries(el.asSeries());
 			}
 
 			_cache.bust();
@@ -780,9 +780,9 @@ public class CCMovieList implements ICCPropertySource {
 		
 		for (CCDatabaseElement el : list) {
 			if (el.isMovie()) {
-				for (var p: ((CCMovie) el).getParts()) result.add(p.toFSPath(this));
+				for (var p: el.asMovie().getParts()) result.add(p.toFSPath(this));
 			} else if (includeSeries){
-				for (var e: ((CCSeries) el).getEpisodeList()) if (!e.Part.get().isEmpty()) result.add(e.Part.get().toFSPath(this));
+				for (var e: el.asSeries().getEpisodeList()) if (!e.Part.get().isEmpty()) result.add(e.Part.get().toFSPath(this));
 			}
 		}
 		

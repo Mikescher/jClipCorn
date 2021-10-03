@@ -37,8 +37,10 @@ public class FilterTree extends AbstractFilterTree {
 	private final CCMovieList movielist;
 
 	@DesignCreate
-	private static FilterTree designCreate() { return new FilterTree(null); }
-	
+	private static FilterTree designCreate() { return new FilterTree(); }
+
+	private FilterTree() { super(null); this.customFilterList = null; this.movielist = null; }
+
 	public FilterTree(CCMovieList list) {
 		super(list);
 		this.customFilterList = new CustomFilterList(list);

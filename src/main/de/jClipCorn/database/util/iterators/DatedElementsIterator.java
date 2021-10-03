@@ -1,13 +1,13 @@
 package de.jClipCorn.database.util.iterators;
 
-import java.util.List;
-
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCDatedElement;
 import de.jClipCorn.util.stream.CCSimpleStream;
 import de.jClipCorn.util.stream.CCStream;
+
+import java.util.List;
 
 public class DatedElementsIterator extends CCSimpleStream<ICCDatedElement> {
 	private int pos = -1;
@@ -36,7 +36,7 @@ public class DatedElementsIterator extends CCSimpleStream<ICCDatedElement> {
 			if (it.get(pos) instanceof CCMovie) {
 				return (ICCDatedElement) it.get(pos);
 			} else {
-				currSeries = (CCSeries) it.get(pos);
+				currSeries = it.get(pos).asSeries();
 				posSeason = -1;
 			}
 		}

@@ -25,7 +25,7 @@ public class StructureElementsIterator extends CCSimpleStream<ICCDatabaseStructu
 
 			if (it.get(posCurr_list) instanceof CCMovie) { posCurr_season = -1; posCurr_episode = -1; posCurr_list++; return it.get(posCurr_list-1); }
 
-			CCSeries ser = (CCSeries) it.get(posCurr_list);
+			CCSeries ser = it.get(posCurr_list).asSeries();
 
 			if (posCurr_season == -1) { posCurr_season++; return ser; }
 

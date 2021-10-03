@@ -224,6 +224,14 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		return getType().equals(CCDBElementTyp.SERIES);
 	}
 
+	public CCMovie asMovie() {
+		return (CCMovie) this;
+	}
+
+	public CCSeries asSeries() {
+		return (CCSeries) this;
+	}
+
 	public int getMovieListPosition() {
 		return movielist.getSortByDatabaseElement(this);
 	}

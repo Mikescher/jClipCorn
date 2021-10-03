@@ -1,13 +1,12 @@
 package de.jClipCorn.gui.frames.textExportFrame;
 
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCMovie;
 
 public abstract class DatabaseTextExporter {
 	protected CCMovieList movielist;
@@ -72,16 +71,16 @@ public abstract class DatabaseTextExporter {
 					String to2;
 					
 					if (o1.isMovie())
-						to1 = ((CCMovie)o1).getOrderableTitle();
+						to1 = o1.asMovie().getOrderableTitle();
 					else if (o1.isSeries())
-						to1 = o1.getTitle();
+						to1 = o1.asSeries().getTitle();
 					else
 						to1 = null;
 					
 					if (o2.isMovie())
-						to2 = ((CCMovie)o2).getOrderableTitle();
+						to2 = o2.asMovie().getOrderableTitle();
 					else if (o2.isSeries())
-						to2 = o2.getTitle();
+						to2 = o2.asSeries().getTitle();
 					else
 						to2 = null;
 					

@@ -1,12 +1,13 @@
 package de.jClipCorn.features.table.filter;
 
-import javax.swing.RowFilter;
-
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.gui.mainFrame.table.ClipTableModel;
+import de.jClipCorn.gui.guiComponents.jCCPrimaryTable.JCCPrimaryTableModel;
+import de.jClipCorn.properties.enumerations.MainFrameColumn;
 
-public class TableCustomFilter extends RowFilter<ClipTableModel, Object> {
-	private AbstractCustomFilter filter;
+import javax.swing.*;
+
+public class TableCustomFilter extends RowFilter<JCCPrimaryTableModel<CCDatabaseElement, MainFrameColumn>, Object> {
+	private final AbstractCustomFilter filter;
 	
 	public TableCustomFilter(AbstractCustomFilter filter) {
 		super();
@@ -18,8 +19,8 @@ public class TableCustomFilter extends RowFilter<ClipTableModel, Object> {
 	}
 
 	@Override
-	public boolean include(Entry<? extends ClipTableModel, ?> e) {
-		CCDatabaseElement elem = (CCDatabaseElement)e.getValue(ClipTableModel.COLUMN_TITLE);
+	public boolean include(Entry<? extends JCCPrimaryTableModel<CCDatabaseElement, MainFrameColumn>, ?> e) {
+		CCDatabaseElement elem = (CCDatabaseElement)e.getValue(0);
 		
 		return filter.includes(elem);
 	}

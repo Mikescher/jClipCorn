@@ -34,8 +34,8 @@ public class DatabaseXMLExporter {
 
 	public static Element export(CCDatabaseElement e, ExportOptions s) {
 
-		if (e.isMovie()) return export((CCMovie)e, s);
-		if (e.isSeries()) return export((CCSeries) e, s);
+		if (e.isMovie()) return export(e.asMovie(), s);
+		if (e.isSeries()) return export(e.asSeries(), s);
 
 		CCLog.addUndefinied("Element is neither MOVIE nor SERIES");
 		return null;

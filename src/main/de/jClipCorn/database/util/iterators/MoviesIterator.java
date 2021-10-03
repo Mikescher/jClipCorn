@@ -1,11 +1,11 @@
 package de.jClipCorn.database.util.iterators;
 
-import java.util.List;
-
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.util.stream.CCSimpleStream;
 import de.jClipCorn.util.stream.CCStream;
+
+import java.util.List;
 
 public class MoviesIterator extends CCSimpleStream<CCMovie> {
 	private int pos = -1;
@@ -19,7 +19,7 @@ public class MoviesIterator extends CCSimpleStream<CCMovie> {
 	public CCMovie nextOrNothing(boolean first) {
 		while (pos + 1 < it.size()) {
 			pos++;
-			if (it.get(pos) instanceof CCMovie) return (CCMovie) it.get(pos);
+			if (it.get(pos).isMovie()) return it.get(pos).asMovie();
 		}
 		return finishStream();
 	}

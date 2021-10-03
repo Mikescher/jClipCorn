@@ -1,14 +1,10 @@
 package de.jClipCorn.database.util.iterators;
 
-import java.util.List;
-
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeason;
-import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.util.stream.CCSimpleStream;
 import de.jClipCorn.util.stream.CCStream;
+
+import java.util.List;
 
 public class EpisodesIterator extends CCSimpleStream<CCEpisode> {
 	private int posCurr_list = 0;
@@ -26,7 +22,7 @@ public class EpisodesIterator extends CCSimpleStream<CCEpisode> {
 		while(posCurr_list < it.size()) {
 			if (it.get(posCurr_list) instanceof CCMovie) { posCurr_list++; posCurr_season = 0; posCurr_episode = -1; continue; }
 			
-			CCSeries t = (CCSeries) it.get(posCurr_list);
+			CCSeries t = it.get(posCurr_list).asSeries();
 			if (posCurr_season >= t.getSeasonCount()) { posCurr_list++; posCurr_season = 0; posCurr_episode = -1; continue; }
 			
 			CCSeason s = t.getSeasonByArrayIndex(posCurr_season);

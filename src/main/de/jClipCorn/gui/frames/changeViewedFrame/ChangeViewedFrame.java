@@ -110,7 +110,7 @@ public class ChangeViewedFrame extends JCCFrame {
 	private void actionNextMovie(boolean viewed) {
 		if (! running) return;
 		
-		CCMovie mov = (CCMovie) movielist.getDatabaseElementBySort(position);
+		CCMovie mov = movielist.getDatabaseElementBySort(position).asMovie();
 		if (viewed && !mov.isViewed()) mov.ViewedHistory.add(CCDateTime.getUnspecified());
 		if (!viewed) mov.ViewedHistory.set(CCDateTimeList.createEmpty());
 		
@@ -123,7 +123,7 @@ public class ChangeViewedFrame extends JCCFrame {
 		if (position < movielist.getElementCount()) {
 			CCDatabaseElement del = movielist.getDatabaseElementBySort(position);
 			if (del.isMovie()) {
-				CCMovie mov = (CCMovie) del;
+				CCMovie mov = del.asMovie();
 				
 				if (cbOnlyUnviewed.isSelected()) {
 					if (mov.isViewed()) {

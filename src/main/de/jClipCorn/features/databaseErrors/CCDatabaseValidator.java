@@ -1240,8 +1240,8 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			cvrList.add(new DatabaseCoverElement(el.getCoverID(), el));
 
 			if (el.isSeries()) {
-				for (int j = 0; j < ((CCSeries)el).getSeasonCount(); j++) {
-					cvrList.add(new DatabaseCoverElement(((CCSeries)el).getSeasonByArrayIndex(j).getCoverID(), ((CCSeries)el).getSeasonByArrayIndex(j)));
+				for (int j = 0; j < el.asSeries().getSeasonCount(); j++) {
+					cvrList.add(new DatabaseCoverElement(el.asSeries().getSeasonByArrayIndex(j).getCoverID(), el.asSeries().getSeasonByArrayIndex(j)));
 				}
 			}
 		}
@@ -1428,8 +1428,8 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			cvrList.add(new DatabaseCoverElement(el.getCoverID(), el));
 
 			if (el.isSeries()) {
-				for (int j = 0; j < ((CCSeries)el).getSeasonCount(); j++) {
-					cvrList.add(new DatabaseCoverElement(((CCSeries)el).getSeasonByArrayIndex(j).getCoverID(), ((CCSeries)el).getSeasonByArrayIndex(j)));
+				for (int j = 0; j < el.asSeries().getSeasonCount(); j++) {
+					cvrList.add(new DatabaseCoverElement(el.asSeries().getSeasonByArrayIndex(j).getCoverID(), el.asSeries().getSeasonByArrayIndex(j)));
 				}
 			}
 		}
@@ -1510,15 +1510,15 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 
 		for (CCDatabaseElement el : movielist.iteratorElements()) {
 			if (el.isMovie()) {
-				for (int i = 0; i < ((CCMovie)el).getPartcount(); i++) {
-					if (Options.IgnoreDuplicateIfos && CCFileFormat.getMovieFormat(((CCMovie)el).Parts.get(i).getExtension()) == CCFileFormat.IFO) {
+				for (int i = 0; i < el.asMovie().getPartcount(); i++) {
+					if (Options.IgnoreDuplicateIfos && CCFileFormat.getMovieFormat(el.asMovie().Parts.get(i).getExtension()) == CCFileFormat.IFO) {
 						continue;
 					}
 
-					flList.add(new DatabaseFileElement(((CCMovie)el).Parts.get(i), ((CCMovie)el)));
+					flList.add(new DatabaseFileElement(el.asMovie().Parts.get(i), el.asMovie()));
 				}
 			} else if (el.isSeries()) {
-				CCSeries s = ((CCSeries)el);
+				CCSeries s = el.asSeries();
 				for (int i = 0; i < s.getSeasonCount(); i++) {
 					CCSeason se = s.getSeasonByArrayIndex(i);
 					for (int j = 0; j < se.getEpisodeCount(); j++) {

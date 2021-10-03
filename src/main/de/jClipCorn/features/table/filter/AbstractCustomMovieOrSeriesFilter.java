@@ -14,9 +14,9 @@ public abstract class AbstractCustomMovieOrSeriesFilter extends AbstractCustomDa
 	@Override
 	public boolean includes(CCDatabaseElement e) {
 		if (e.isMovie()) 
-			return includes((CCMovie)e); 
+			return includes(e.asMovie());
 		else 
-			return includes((CCSeries)e); 
+			return includes(e.asSeries());
 	}
 
 	public abstract boolean includes(CCMovie m);

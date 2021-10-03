@@ -182,14 +182,14 @@ public abstract class AbstractDatabaseValidator implements ICCPropertySource {
 		for (CCDatabaseElement el : movielist.getRawList()) {
 
 			if (el.isMovie()) {
-				CCMovie mov = (CCMovie) el;
+				CCMovie mov = el.asMovie();
 				pcl.stepSub(mov.getFullDisplayTitle());
 
 				for (ValidationMethod vm : vmMovies) vm.Method.invoke(mov, movielist, e);
 			}
 			else // is Series
 			{
-				CCSeries series = (CCSeries) el;
+				CCSeries series = el.asSeries();
 				pcl.stepSub(series.getFullDisplayTitle());
 
 				for (ValidationMethod vm : vmSeries) vm.Method.invoke(series, movielist, e);

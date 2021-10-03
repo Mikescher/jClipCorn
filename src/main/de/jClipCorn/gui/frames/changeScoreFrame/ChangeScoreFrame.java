@@ -176,7 +176,7 @@ public class ChangeScoreFrame extends JCCFrame {
 			return;
 		}
 		
-		CCMovie mov = (CCMovie) movielist.getDatabaseElementBySort(position);
+		CCMovie mov = movielist.getDatabaseElementBySort(position).asMovie();
 		mov.Score.set(score);
 		
 		nextMovie();
@@ -188,7 +188,7 @@ public class ChangeScoreFrame extends JCCFrame {
 		if (position < movielist.getElementCount()) {
 			CCDatabaseElement del = movielist.getDatabaseElementBySort(position);
 			if (del.isMovie()) {
-				CCMovie mov = (CCMovie) del;
+				CCMovie mov = del.asMovie();
 				
 				if (cbSkipRated.isSelected()) {
 					if (mov.Score.get() != CCUserScore.RATING_NO) {

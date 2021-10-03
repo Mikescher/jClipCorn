@@ -1,8 +1,6 @@
 package de.jClipCorn.gui.frames.updateMetadataFrame;
 
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
@@ -23,7 +21,7 @@ public class UpdateMetadataTableElement {
 	}
 
 	public void preview(JFrame owner) {
-		if (Element instanceof CCMovie)  PreviewMovieFrame.show(owner,  (CCMovie)  Element, true);
-		if (Element instanceof CCSeries) PreviewSeriesFrame.show(owner, (CCSeries) Element, true);
+		if (Element.isMovie())  PreviewMovieFrame.show(owner,  Element.asMovie(),  true);
+		if (Element.isSeries()) PreviewSeriesFrame.show(owner, Element.asSeries(), true);
 	}
 }

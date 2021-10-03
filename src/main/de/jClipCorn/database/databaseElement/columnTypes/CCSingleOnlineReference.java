@@ -2,8 +2,6 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.util.CCOnlineRefTypeHelper;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.Metadataparser;
@@ -203,9 +201,9 @@ public class CCSingleOnlineReference {
 	public void openInBrowser(CCDatabaseElement src, CCProperties ccprops) {
 		if (isUnset()) {
 			if (src.isMovie()) {
-				HTTPUtilities.searchInBrowser(((CCMovie)src).getCompleteTitle());
+				HTTPUtilities.searchInBrowser(src.asMovie().getCompleteTitle());
 			} else if (src.isSeries()) {
-				HTTPUtilities.searchInBrowser(((CCSeries)src).Title.get());
+				HTTPUtilities.searchInBrowser(src.asSeries().Title.get());
 			}
 		} else {
 			HTTPUtilities.openInBrowser(getURL(ccprops));

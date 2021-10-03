@@ -2,7 +2,7 @@ package de.jClipCorn.features.metadata.mediaquery;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.features.metadata.exceptions.InnerMediaQueryException;
-
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
 
@@ -42,6 +42,6 @@ public class MediaQueryResultAudioTrack {
 	}
 
 	public CCDBLanguage getLanguage() throws InnerMediaQueryException {
-		return MediaQueryResult.getLanguage(Language);
+		return MediaQueryResult.getLanguage(Language, Str.Empty);
 	}
 }

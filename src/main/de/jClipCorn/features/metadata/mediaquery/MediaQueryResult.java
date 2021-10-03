@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 public class MediaQueryResult {
 
 	private static final Pattern REX_LANGUAGE_REPEAT = Pattern.compile("^\\s*(\\w+)(\\s*/\\s*\\1)+\\s*$"); //$NON-NLS-1$
+	private static final Pattern REX_LANGUAGE_STR1   = Pattern.compile("^([^\\s]+)\\s*\\([^\\s]+\\)$"); //$NON-NLS-1$
 
 	public final String Raw;
 	
@@ -127,7 +128,7 @@ public class MediaQueryResult {
 		if (vtracks.size() == 1 && vtracks.get(0).Duration != -1) duration = vtracks.get(0).Duration;
 
 		CCDBLanguageSet alng = getAudioLang(atracks, doNotValidateLangs);
-		CCDBLanguageList slng = getSubLang(stracks);
+		CCDBLanguageList slng = getSubLang(stracks, doNotValidateLangs);
 
 		return new MediaQueryResult(
 				raw, hash,
@@ -154,11 +155,23 @@ public class MediaQueryResult {
 		return CCDBLanguageSet.createDirect(lng);
 	}
 
-	private static CCDBLanguageList getSubLang(List<MediaQueryResultSubtitleTrack> tcks) throws InnerMediaQueryException {
-
-		List<CCDBLanguage> lng = new ArrayList<>();
-		for (var t : tcks) if (t.Language != null) lng.add(t.getLanguage());
-		return CCDBLanguageList.createDirect(lng);
+	private static CCDBLanguageList getSubLang(List<MediaQueryResultSubtitleTrack> tcks, boolean doNotValidateLangs) throws InnerMediaQueryException
+	{
+		try
+		{
+			List<CCDBLanguage> lng = new ArrayList<>();
+			for (var t : tcks)
+			{
+				var l = doNotValidateLangs ? t.getLanguageOrNull() : t.getLanguage();
+				if (l != null) lng.add(l);
+			}
+			return CCDBLanguageList.createDirect(lng);
+		}
+		catch (InnerMediaQueryException e)
+		{
+			String info = CCStreams.iterate(tcks).stringjoin(t -> (t.Language==null ? "NULL": t.Language)+"|"+(t.Title==null ? "NULL": t.Title), ", "); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new InnerMediaQueryException("No subtitle language set in tracks ("+info+")", e); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 
 	@SuppressWarnings("nls")
@@ -169,12 +182,20 @@ public class MediaQueryResult {
 	}
 
 	@SuppressWarnings("nls")
-	public static CCDBLanguage getLanguage(String _langval) throws InnerMediaQueryException {
-		if (_langval == null) throw new InnerMediaQueryException("Audio language not set (null)"); //$NON-NLS-1$
+	public static CCDBLanguage getLanguage(String _langval, String _title) throws InnerMediaQueryException {
 
 		// https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+		// https://www.loc.gov/standards/iso639-2/php/code_list.php
 
-		var langval = _langval.trim();
+		var langval = _langval == null ? Str.Empty : _langval.trim();
+
+		if (Str.isNullOrWhitespace(langval) && !Str.isNullOrWhitespace(_title))
+		{
+			langval = _title;
+
+			Matcher m0 = REX_LANGUAGE_STR1.matcher(langval);
+			if (m0.matches()) langval = m0.group(1).trim();
+		}
 
 		Matcher m1 = REX_LANGUAGE_REPEAT.matcher(langval);
 		if (m1.matches()) langval = m1.group(1).trim();
@@ -412,7 +433,7 @@ public class MediaQueryResult {
 		if (langval.equalsIgnoreCase("est"))                       return CCDBLanguage.ESTONIAN;
 		if (langval.equalsIgnoreCase("estonian"))                  return CCDBLanguage.ESTONIAN;
 
-		throw new InnerMediaQueryException("Unknown audio language '" + langval + "' ('" + _langval + "')");
+		throw new InnerMediaQueryException("Unknown audio language '" + langval + "' ('" + _langval + "') + ('" + _title + "')");
 	}
 
 	public static boolean isNullLanguage(String langval) {

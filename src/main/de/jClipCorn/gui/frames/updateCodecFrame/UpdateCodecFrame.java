@@ -305,12 +305,12 @@ public class UpdateCodecFrame extends JCCFrame
 					List<MediaQueryResult> dat = new ArrayList<>();
 
 					for (int pi = 0; pi < parts.size(); pi++) {
-						dat.add(new MediaQueryRunner(movielist).query(parts.get(pi).toFSPath(this), false));
+						var r = new MediaQueryRunner(movielist).query(parts.get(pi).toFSPath(this), false);
 
-						if (cancelBackground) return;
+						dat.add(r);
 
 						if (pi > 0) raw.append("\n\n--------------------------------------\n\n"); //$NON-NLS-1$
-						raw.append(new MediaQueryRunner(movielist).queryRaw(parts.get(pi).toFSPath(this)));
+						raw.append(r.Raw);
 
 						if (cancelBackground) return;
 					}

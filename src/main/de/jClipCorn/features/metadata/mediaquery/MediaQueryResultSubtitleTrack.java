@@ -14,7 +14,7 @@ public class MediaQueryResultSubtitleTrack {
 	private MediaQueryResultSubtitleTrack(String format, String title, String codecID, String language, boolean aDefault) {
 		Format   = format;
 		Title    = title;
-		Language = MediaQueryResult.isNullLanguage(language) ? null : language;
+		Language = language;
 		CodecID  = codecID;
 		Default  = aDefault;
 	}
@@ -37,6 +37,14 @@ public class MediaQueryResultSubtitleTrack {
 	}
 
 	public CCDBLanguage getLanguage() throws InnerMediaQueryException {
-		return MediaQueryResult.getLanguage(Language);
+		return MediaQueryResult.getLanguage(Language, Title);
+	}
+
+	public CCDBLanguage getLanguageOrNull() throws InnerMediaQueryException {
+		try {
+			return MediaQueryResult.getLanguage(Language, Title);
+		} catch (InnerMediaQueryException e) {
+			return null;
+		}
 	}
 }

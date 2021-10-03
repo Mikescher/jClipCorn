@@ -206,10 +206,13 @@ public class UpdateCodecTableElement {
 
 	public void check() throws MediaQueryException {
 		if (CCStreams.iterate(MQResult).any(r -> r.AudioLanguages == null) && !CCStreams.iterate(MQResult).all(r -> r.AudioLanguages == null)) {
-			throw new MediaQueryException("Some parts have no language specified"); //$NON-NLS-1$
+			throw new MediaQueryException("Some parts have no audio-language specified"); //$NON-NLS-1$
 		}
 		if (CCStreams.iterate(MQResult).any(r -> r.AudioLanguages == null) && !getOldLanguage().isSingle()) {
-			throw new MediaQueryException("Some parts have no language specified"); //$NON-NLS-1$
+			throw new MediaQueryException("Some parts have no audio-language specified"); //$NON-NLS-1$
+		}
+		if (CCStreams.iterate(MQResult).any(r -> r.SubtitleLanguages == null)) {
+			throw new MediaQueryException("Some parts have no subtitle-language specified"); //$NON-NLS-1$
 		}
 	}
 

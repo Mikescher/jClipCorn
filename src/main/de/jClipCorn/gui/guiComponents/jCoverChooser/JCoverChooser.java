@@ -49,7 +49,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	private final boolean designmode;
 
 	@DesignCreate
-	private static JCoverChooser designCreate() { return new JCoverChooser(null, false, true); }
+	private static JCoverChooser designCreate() { return new JCoverChooser(CCMovieList.createStub(), false, true); }
 
 	public JCoverChooser(CCMovieList ml) {
 		this(ml, false, false);

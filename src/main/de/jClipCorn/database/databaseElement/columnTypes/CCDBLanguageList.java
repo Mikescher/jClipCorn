@@ -71,7 +71,9 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 	}
 
 	public static int compare(CCDBLanguageList o1, CCDBLanguageList o2) {
-		return o1.serializeToString().compareTo(o2.serializeToString());
+		var s1 = o1.ccstream().map(p -> String.valueOf(p.asInt())).autosort().stringjoin(p->p, ";");
+		var s2 = o2.ccstream().map(p -> String.valueOf(p.asInt())).autosort().stringjoin(p->p, ";");
+		return s1.compareTo(s2);
 	}
 
 	public String serializeToString() {

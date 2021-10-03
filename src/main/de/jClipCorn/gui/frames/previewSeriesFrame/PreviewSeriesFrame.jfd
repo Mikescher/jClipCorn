@@ -352,7 +352,7 @@ new FormModel {
 				add( new FormContainer( "de.jClipCorn.gui.frames.previewSeriesFrame.serTable.SerTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 					name: "tabSeason"
 					auxiliary() {
-						"JavaCodeGenerator.customCreateCode": "new ${field_type}(this);"
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist, this);"
 					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridY": 4

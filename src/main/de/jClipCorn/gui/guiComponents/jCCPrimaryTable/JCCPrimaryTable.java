@@ -6,6 +6,7 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.TableColumnAdjuster;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.stream.CCStreams;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class JCCPrimaryTable<TData, TEnum> extends JScrollPane
@@ -160,8 +162,36 @@ public abstract class JCCPrimaryTable<TData, TEnum> extends JScrollPane
 		return null;
 	}
 
+	protected int compareCoalesce(int... values) {
+		for (var v : values) if (v != 0) return v;
+		return 0;
+	}
+
+	protected void noop() {}
+
 	public int getRowCount() {
 		return model.getRowCount();
+	}
+
+	protected String getDefaultAdjusterConfig() {
+		String[] cfg = new String[config.size()];
+		Arrays.fill(cfg, "auto"); //$NON-NLS-1$
+
+		for (var idx=0; idx < config.size(); idx++) {
+			cfg[idx] = config.get(idx).AdjusterConfig;
+		}
+
+		return CCStreams.iterate(cfg).stringjoin(e->e, "|"); //$NON-NLS-1$
+	}
+
+	public void setSelectedRow(int visualrow) {
+		if (visualrow < 0) return;
+
+		table.getSelectionModel().setSelectionInterval(visualrow, visualrow);
+	}
+
+	public int getSelectedRow() {
+		return table.getSelectedRow();
 	}
 
 	protected abstract List<JCCPrimaryColumnPrototype<TData, TEnum>> configureColumns();
@@ -174,4 +204,7 @@ public abstract class JCCPrimaryTable<TData, TEnum> extends JScrollPane
 	public abstract TData getElementFromDatastoreByIndex(int dsrow);
 
 	public abstract Opt<Color> getRowColor(int visualrow, int modelrow, TData element);
+
+	public abstract Opt<Integer> getUnitScrollIncrement();
+	public abstract Opt<Integer> getBlockScrollIncrement();
 }

@@ -347,7 +347,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 	}
 
 	public CCEpisode getSelectedEpisode() {
-		return tabSeason.getSelectedEpisode();
+		return tabSeason.getSelectedElement();
 	}
 
 	public void onEpisodeDblClick(CCEpisode ep) {
@@ -361,7 +361,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		final CCSeason s = tabSeason.getSeason();
 		if (s == null) return null;
 
-		return tabSeason.getSelectedEpisode();
+		return tabSeason.getSelectedElement();
 	}
 
 	@Override
@@ -447,7 +447,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		btnOnline = new OnlineRefButton(movielist);
 		pnlMain = new JPanel();
 		lblSeason = new JLabel();
-		tabSeason = new SerTable(this);
+		tabSeason = new SerTable(movielist, this);
 
 		//======== this ========
 		setTitle("<dynamic>"); //$NON-NLS-1$

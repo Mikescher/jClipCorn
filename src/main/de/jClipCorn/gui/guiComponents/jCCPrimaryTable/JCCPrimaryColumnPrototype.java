@@ -19,6 +19,7 @@ public class JCCPrimaryColumnPrototype<TData, TEnum> {
 	public final Func2to0<TableRenderer, TData> Renderer;
 	public final Func1to1<TableRenderer, Boolean> RendererNeedsExtraSpace;
 	public final Func2to1<TData, TData, Integer> Comparator;
+	public final boolean IsSortable;
 	public final Func2to1<TData, Integer, String> Tooltip;
 	public final Func1to1<TData, Boolean> IsClickable;
 	public final Func1to0<TData> Click;
@@ -31,6 +32,7 @@ public class JCCPrimaryColumnPrototype<TData, TEnum> {
 			Func2to0<TableRenderer, TData> renderer,
 			Func1to1<TableRenderer, Boolean> rendererNeedsExtraSpace,
 			Func2to1<TData, TData, Integer> comparator,
+			boolean isSortable,
 			Func2to1<TData, Integer, String> tooltip,
 			Func1to1<TData, Boolean> clickable,
 			Func1to0<TData> click
@@ -43,6 +45,7 @@ public class JCCPrimaryColumnPrototype<TData, TEnum> {
 		this.Renderer                = renderer;
 		this.RendererNeedsExtraSpace = rendererNeedsExtraSpace;
 		this.Comparator              = comparator;
+		this.IsSortable              = isSortable;
 		this.Tooltip                 = tooltip;
 		this.IsClickable             = clickable;
 		this.Click                   = click;

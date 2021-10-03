@@ -32,7 +32,9 @@ public class JCCPrimarySFixTable<TData, TEnum> extends SFixTable {
 	}
 
 	private void init() {
-		for (var col=0; col<owner.config.size(); col++) {
+		for (var col=0; col<owner.config.size(); col++)
+		{
+			sorter.setSortable(col, owner.config.get(col).IsSortable);
 			sorter.setComparator(col, owner.config.get(col).createComparator());
 		}
 	}
@@ -46,12 +48,12 @@ public class JCCPrimarySFixTable<TData, TEnum> extends SFixTable {
 
 	@Override
 	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-		return movielist.ccprops().PROP_MAINFRAME_SCROLLSPEED.getValue();//TODO
+		return owner.getUnitScrollIncrement().orElse(super.getScrollableUnitIncrement(visibleRect, orientation, direction));
 	}
 
 	@Override
 	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
-		return super.getScrollableBlockIncrement(visibleRect, orientation, direction);//TODO
+		return owner.getBlockScrollIncrement().orElse(super.getScrollableBlockIncrement(visibleRect, orientation, direction));
 	}
 
 	@Override

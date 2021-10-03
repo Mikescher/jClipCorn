@@ -1,161 +1,317 @@
 package de.jClipCorn.gui.frames.previewSeriesFrame.serTable;
 
 import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.features.actionTree.menus.impl.ClipEpisodePopup;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
-import de.jClipCorn.util.TableColumnAdjuster;
+import de.jClipCorn.gui.guiComponents.jCCPrimaryTable.JCCPrimaryColumnPrototype;
+import de.jClipCorn.gui.guiComponents.jCCPrimaryTable.JCCPrimaryTable;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.table.ClipTable;
+import de.jClipCorn.properties.enumerations.SeriesFrameColumn;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SerTable extends JScrollPane implements ListSelectionListener, MouseListener {
-	private static final long serialVersionUID = 6640341234698681428L;
-	
-	private final SFixSerTable table;
-	private final TableColumnAdjuster adjuster;
-	private final SerTableModel model;
+public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
+
 	private final PreviewSeriesFrame owner;
 
-	private CCSeason season;
+	private CCSeason season = null;
 
 	@DesignCreate
-	private static SerTable designCreate() { return new SerTable(null); }
+	private static ClipTable designCreate() { return new ClipTable(CCMovieList.createStub(), null); }
 
-	public SerTable(PreviewSeriesFrame owner) {
-		super();
+	public SerTable(CCMovieList ml, PreviewSeriesFrame owner) {
+		super(ml);
 		this.owner = owner;
-
-		model = new SerTableModel(null, owner==null ? null : owner.getMovieList().ccprops());
-		
-		table = new SFixSerTable(owner==null ? null : owner.getMovieList(), model);
-		configureTable();
-		
-		setViewportView(table);
-		
-		adjuster = new TableColumnAdjuster(this, table);
-
 		autoResize();
 	}
 
-	private void configureTable() {
-		table.setFillsViewportHeight(true);
-		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		table.setRowHeight(18);
-		
-		table.getSelectionModel().addListSelectionListener(this);
-		table.addMouseListener(this);
-	}
-	
-	public void autoResize() {
-		adjuster.adjustColumns("auto|*,min=auto|auto|auto|auto|auto|auto|auto|auto|auto|auto|auto"); //$NON-NLS-1$
-	}
-	
-	public void changeSeason(CCSeason s) {
-		this.season = s;
-		
-		getVerticalScrollBar().setValue(0);
-		
-		model.changeSeason(s);
-		
-		model.fireTableDataChanged();
-		
-		autoResize();
-	}
-	
-	public int getSelectedRow() {
-		int selrow = table.getSelectedRow();
-		if (selrow >= 0) {
-			return table.convertRowIndexToModel(table.getSelectedRow());
-		}
-		return -1;
-	}
-	
-	public void setSelectedRow(int row) {
-		if (row < 0) return;
-		
-		row = table.convertRowIndexToView(row);
-		
-		table.getSelectionModel().setSelectionInterval(row, row);
-	}
-	
-	public CCEpisode getSelectedEpisode() {
-		int selrow = getSelectedRow();
-		if (selrow >= 0) {
-			return season.getEpisodeByArrayIndex(selrow);
-		}
-		return null;
-	}
-
-	public CCSeason getSeason() {
-		return season;
-	}
-
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
-			owner.onEpisodeDblClick(getSelectedEpisode());
-		}
-	}
+	@SuppressWarnings("HardCodedStringLiteral")
+	protected List<JCCPrimaryColumnPrototype<CCEpisode, SeriesFrameColumn>> configureColumns() {
+		var ccr = new ArrayList<JCCPrimaryColumnPrototype<CCEpisode, SeriesFrameColumn>>();
 
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// Do Nothing
-	}
+		ccr.add(new JCCPrimaryColumnPrototype<>
+		(
+			SeriesFrameColumn.EPISODE,
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Episode"),
+			"auto",
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Episode"),
+			(r,v) -> r.setText(v.EpisodeNumber.get().toString()),
+			(r) -> true,
+			(v1,v2) -> Integer.compare(v1.EpisodeNumber.get(), v2.EpisodeNumber.get()),
+			false,
+			(v,row) -> null,
+			(v) -> false,
+			(v) -> noop()
+		));
 
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// Do Nothing
-	}
+		ccr.add(new JCCPrimaryColumnPrototype<>
+		(
+			SeriesFrameColumn.TITLE,
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Name"),
+			"*,min=auto",
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Name"),
+			(r,v) -> r.setText(v.Title.get()),
+			(r) -> true,
+			(v1,v2) -> v1.Title.get().compareToIgnoreCase(v2.Title.get()),
+			false,
+			(v,row) -> null,
+			(v) -> false,
+			(v) -> noop()
+		));
 
-	@Override
-	public void valueChanged(ListSelectionEvent arg0) {
-		// Do Nothing
-	}
+		ccr.add(new JCCPrimaryColumnPrototype<>
+		(
+			SeriesFrameColumn.VIEWED,
+			Str.Empty,
+			"auto",
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Viewed"),
+			(r,v) -> r.setIcon(v.getExtendedViewedState().getIconTable(movielist)),
+			(r) -> false,
+			(v1,v2) -> compareCoalesce(v1.getExtendedViewedState().getType().compareTo(v2.getExtendedViewedState().getType()), Integer.compare(v2.getExtendedViewedState().getViewCount(), v1.getExtendedViewedState().getViewCount())),
+			false,
+			(v,row) -> null,
+			(v) -> false,
+			(v) -> noop()
+		));
 
-	public void select(CCEpisode e) {
-		if (e == null) {
-			changeSeason(null);
-			table.getSelectionModel().clearSelection();
-		} else {
-			changeSeason(e.getSeason());
-			table.getSelectionModel().setSelectionInterval(e.getEpisodeIndexInSeason(), e.getEpisodeIndexInSeason());
-			table.scrollRectToVisible(table.getCellRect(table.getSelectedRow(), table.getSelectedColumn(), false));
-		}
-	}
-	
-	@Override
-	public void mousePressed(MouseEvent e) {
-		onMouseAction(e);
-	}
-	
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		onMouseAction(e);
-	}
-
-	private void onMouseAction(MouseEvent e) {
-		if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3) {
-			int row = table.rowAtPoint(e.getPoint());
-			if (row >= 0 && row < table.getRowCount()) {
-				table.setRowSelectionInterval(row, row);
-			} else {
-				table.clearSelection();
-			}
-
-			int rowindex = table.getSelectedRow();
-			if (rowindex >= 0) {
-				if (e.isPopupTrigger()) {
-					if (getSelectedEpisode() != null) {
-						new ClipEpisodePopup(owner, getSelectedEpisode()).show(e.getComponent(), e.getX(), e.getY());
-					}
+		ccr.add(new JCCPrimaryColumnPrototype<>
+		(
+			SeriesFrameColumn.LASTVIEWED,
+			getLastViewedHeader(),
+			"auto",
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.LastViewed"),
+			(r,v) ->
+			{
+				var d = v.ViewedHistory.get();
+				if (d.isEmptyOrOnlyUnspecified()) { r.setText(" - "); return; }
+				switch (ccprops().PROP_SERIES_DISPLAYED_DATE.getValue())
+				{
+					case AVERAGE:      r.setText(d.getAverageDateOrInvalid().toStringUINormal()); break;
+					case FIRST_VIEWED: r.setText(d.getFirstDateOrInvalid().toStringUINormal());   break;
+					case LAST_VIEWED:  r.setText(d.getLastDateOrInvalid().toStringUINormal());    break;
+					default:           r.setText("??_ERR_??");                                    break;
 				}
-			}
+			},
+			(r) -> true,
+			(v1,v2) ->
+			{
+				var o1 = CCDate.getUnspecified();
+				switch (ccprops().PROP_SERIES_DISPLAYED_DATE.getValue())
+				{
+					case AVERAGE:      o1 = v1.ViewedHistory.get().getAverageDateOrInvalid(); break;
+					case FIRST_VIEWED: o1 = v1.ViewedHistory.get().getFirstDateOrInvalid();   break;
+					case LAST_VIEWED:  o1 = v1.ViewedHistory.get().getLastDateOrInvalid();    break;
+				}
+				var o2 = CCDate.getUnspecified();
+				switch (ccprops().PROP_SERIES_DISPLAYED_DATE.getValue())
+				{
+					case AVERAGE:      o2 = v2.ViewedHistory.get().getAverageDateOrInvalid(); break;
+					case FIRST_VIEWED: o2 = v2.ViewedHistory.get().getFirstDateOrInvalid();   break;
+					case LAST_VIEWED:  o2 = v2.ViewedHistory.get().getLastDateOrInvalid();    break;
+				}
+				return CCDate.compare(o1, o2);
+			},
+			false,
+			(v,row) -> v.getExtendedViewedState().getHistory().any() ? v.getExtendedViewedState().getHistory().getHTMLListFormatted(row) : null,
+			(v) -> false,
+			(v) -> noop()
+		));
+
+		ccr.add(new JCCPrimaryColumnPrototype<>
+		(
+			SeriesFrameColumn.QUALITY,
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Quality"),
+			"auto",
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Quality"),
+			(r,v) -> { var cat = v.getMediaInfoCategory(); r.setText(cat.getShortText()); r.setIcon(cat.getIcon()); },
+			(r) -> true,
+			(v1,v2) -> CCQualityCategory.compare(v1.getMediaInfoCategory(), v2.getMediaInfoCategory()),
+			false,
+			(v,row) -> v.getMediaInfoCategory().getTooltip(),
+			(v) -> false,
+			(v) -> noop()
+		));
+
+		ccr.add(new JCCPrimaryColumnPrototype<>
+		(
+			SeriesFrameColumn.LANGUAGE,
+			Str.Empty,
+			"auto",
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Language"),
+			(r,v) -> { r.setHorizontalAlignment(SwingConstants.CENTER); r.setIcon(v.Language.get().getIcon()); },
+			(r) -> true,
+			(v1,v2) -> CCDBLanguageSet.compare(v1.Language.get(), v2.Language.get()),
+			false,
+			(v,row) -> v.Language.get().toOutputString(),
+			(v) -> false,
+			(v) -> noop()
+		));
+
+		ccr.add(new JCCPrimaryColumnPrototype<>
+		(
+			SeriesFrameColumn.SUBTITLES,
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Subtitles"),
+			"auto",
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Subtitles"),
+			(r,v) -> { r.setHorizontalAlignment(SwingConstants.LEFT); r.setIcon(v.Subtitles.get().getIcon()); },
+			(r) -> true,
+			(v1,v2) -> CCDBLanguageList.compare(v1.Subtitles.get(), v2.Subtitles.get()),
+			false,
+			(v,row) -> v.Subtitles.get().toOutputString(),
+			(v) -> false,
+			(v) -> noop()
+		));
+
+		ccr.add(new JCCPrimaryColumnPrototype<>
+		(
+			SeriesFrameColumn.LENGTH,
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Length"),
+			"auto",
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Length"),
+			(r,v) -> r.setText(TimeIntervallFormatter.formatShort(v.Length.get())),
+			(r) -> true,
+			(v1,v2) -> Integer.compare(v1.Length.get(), v2.Length.get()),
+			false,
+			(v,row) -> TimeIntervallFormatter.format(v.Length.get()),
+			(v) -> false,
+			(v) -> noop()
+		));
+
+		ccr.add(new JCCPrimaryColumnPrototype<>
+		(
+			SeriesFrameColumn.TAGS,
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Tags"),
+			"auto",
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Tags"),
+			(r,v) -> r.setIcon(v.Tags.get().getIcon()),
+			(r) -> false,
+			(v1,v2) -> CCTagList.compare(v1.Tags.get(), v2.Tags.get()),
+			false,
+			(v,row) -> v.Tags.get().getAsString(),
+			(v) -> false,
+			(v) -> noop()
+		));
+
+		ccr.add(new JCCPrimaryColumnPrototype<>
+		(
+			SeriesFrameColumn.ADDDATE,
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Added"),
+			"auto",
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Added"),
+			(r,v) -> r.setText(v.AddDate.get().isMinimum() ? " - " :  v.AddDate.get().toStringUINormal()),
+			(r) -> true,
+			(v1,v2) ->
+			{
+				var d1 = v1.AddDate.get();
+				var d2 = v2.AddDate.get();
+
+				if (d1.isMinimum()) d1 = CCDate.getMaximumDate();
+				if (d2.isMinimum()) d2 = CCDate.getMaximumDate();
+
+				return CCDate.compare(d1, d2);
+			},
+			false,
+			(v,row) -> null,
+			(v) -> false,
+			(v) -> noop()
+		));
+
+		ccr.add(new JCCPrimaryColumnPrototype<>
+		(
+			SeriesFrameColumn.FORMAT,
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Format"),
+			"auto",
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Format"),
+			(r,v) -> { r.setText(v.Format.get().asString()); r.setIcon(v.Format.get().getIcon()); },
+			(r) -> true,
+			(v1,v2) -> CCFileFormat.compare(v1.Format.get(), v2.Format.get()),
+			false,
+			(v,row) -> null,
+			(v) -> false,
+			(v) -> noop()
+		));
+
+		ccr.add(new JCCPrimaryColumnPrototype<>
+		(
+			SeriesFrameColumn.FILESIZE,
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Size"),
+			"auto",
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.Size"),
+			(r,v) -> r.setText(v.FileSize.get().getFormatted()),
+			(r) -> true,
+			(v1,v2) -> CCFileSize.compare(v1.FileSize.get(), v2.FileSize.get()),
+			false,
+			(v,row) -> FileSizeFormatter.formatBytes(v.FileSize.get()),
+			(v) -> false,
+			(v) -> noop()
+		));
+
+		return ccr;
+	}
+
+	private void autoResize() {
+		adjuster.adjustColumns(getDefaultAdjusterConfig());
+	}
+
+	@Override
+	protected void onElementSelected(CCEpisode elem) {
+		// .
+	}
+
+	@Override
+	protected void onElementClicked(CCEpisode elem, int clickCount, int button) {
+		if (clickCount == 2 && button == MouseEvent.BUTTON1) {
+			owner.onEpisodeDblClick(elem);
 		}
+	}
+
+	@Override
+	protected void onElementPopupTrigger(CCEpisode elem, MouseEvent e) {
+		new ClipEpisodePopup(owner, elem).show(e.getComponent(), e.getX(), e.getY());
+	}
+
+	@Override
+	public int getElementCountInDatastore() {
+		if (season == null) return 0;
+		return season.getEpisodeCount();
+	}
+
+	@Override
+	public CCEpisode getElementFromDatastoreByIndex(int dsrow) {
+		if (season == null) return null;
+		return season.getEpisodeByArrayIndex(dsrow);
+	}
+
+	@Override
+	public Opt<Color> getRowColor(int visualrow, int modelrow, CCEpisode element) {
+		return Opt.empty();
+	}
+
+	@Override
+	public Opt<Integer> getUnitScrollIncrement() {
+		return Opt.empty();
+	}
+
+	@Override
+	public Opt<Integer> getBlockScrollIncrement() {
+		return Opt.empty();
 	}
 
 	@Override
@@ -168,5 +324,44 @@ public class SerTable extends JScrollPane implements ListSelectionListener, Mous
 	@Override
 	public boolean isFocusOwner() {
 		return table.isFocusOwner();
+	}
+
+	private String getLastViewedHeader() {
+		switch (ccprops().PROP_SERIES_DISPLAYED_DATE.getValue()) {
+			case LAST_VIEWED:
+				return LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_1"); //$NON-NLS-1$
+			case FIRST_VIEWED:
+				return LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_2"); //$NON-NLS-1$
+			case AVERAGE:
+				return LocaleBundle.getString("PreviewSeriesFrame.serTable.ViewedHistory_3"); //$NON-NLS-1$
+			default:
+				CCLog.addUndefinied("SerTableModel :: ccprops == null"); //$NON-NLS-1$
+				return "__ERROR__";
+		}
+	}
+
+	public void changeSeason(CCSeason s) {
+		this.season = s;
+
+		getVerticalScrollBar().setValue(0);
+
+		model.fireTableDataChanged();
+
+		autoResize();
+	}
+
+	public CCSeason getSeason() {
+		return season;
+	}
+
+	public void select(CCEpisode e) {
+		if (e == null) {
+			changeSeason(null);
+			table.getSelectionModel().clearSelection();
+		} else {
+			changeSeason(e.getSeason());
+			table.getSelectionModel().setSelectionInterval(e.getEpisodeIndexInSeason(), e.getEpisodeIndexInSeason());
+			table.scrollRectToVisible(table.getCellRect(table.getSelectedRow(), table.getSelectedColumn(), false));
+		}
 	}
 }

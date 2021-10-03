@@ -87,6 +87,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			(r,v) -> r.setIcon(v.Score.get().getIcon()),
 			(r) -> false,
 			(v1,v2) -> CCUserScore.compare(v1.Score.get(), v2.Score.get()),
+			true,
 			(v,row) -> v.Score.get() == CCUserScore.RATING_NO ? null : v.Score.get().asString(),
 			(v) -> ccprops().PROP_MAINFRAME_CLICKABLESCORE.getValue() && v.Score.get() != CCUserScore.RATING_NO,
 			(v) -> setRowFilter(CustomUserScoreFilter.create(owner.getMovielist(), v.Score.get()), RowFilterSource.TABLE_CLICKED)
@@ -101,6 +102,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			(r,v) -> { r.setText(v.getTitle()); r.setIcon(v.isSeries() ? Resources.ICN_TABLE_SERIES.get() : null); },
 			(r) -> true,
 			(v1,v2) -> movielist.ccprops().PROP_USE_INTELLISORT.getValue() ? compareTitleIntelligent(v1, v2) : v1.getTitle().compareToIgnoreCase(v2.getTitle()),
+			true,
 			(v,row) -> null,
 			(v) -> false,
 			(v) -> noop()
@@ -115,6 +117,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			(r,v) -> r.setIcon(v.getExtendedViewedState().getIconTable(r.getMovieList())),
 			(r) -> false,
 			(v1,v2) -> compareCoalesce(v1.getExtendedViewedState().getType().compareTo(v2.getExtendedViewedState().getType()), Integer.compare(v2.getExtendedViewedState().getViewCount(), v1.getExtendedViewedState().getViewCount())),
+			true,
 			(v,row) -> v.getExtendedViewedState().getHistory().any() ? v.getExtendedViewedState().getHistory().getHTMLListFormatted(row) : null,
 			(v) -> false,
 			(v) -> noop()
@@ -143,6 +146,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 				if (!o2.isPresent()) return -1;
 				return -1 * CCDateTime.compare(o1.get(), o2.get());
 			},
+			true,
 			(v,row) -> null,
 			(v) -> false,
 			(v) -> noop()
@@ -175,6 +179,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 				var o2 = v1.isMovie() ? v2.asMovie().Zyklus.get() : new CCMovieZyklus();
 				return CCMovieZyklus.compare(o1, o2);
 			},
+			true,
 			(v,row) -> v.isMovie() && v.asMovie().Zyklus.get().isSet() && v.asMovie().Zyklus.get().hasNumber() ? v.asMovie().Zyklus.get().getDecimalFormatted() : null,
 			(v) -> ccprops().PROP_MAINFRAME_CLICKABLEZYKLUS.getValue() && v.isMovie() && v.asMovie().Zyklus.get().isSet(),
 			(v) -> { if (v.isMovie()) setRowFilter(CustomZyklusFilter.create(owner.getMovielist(), v.asMovie().Zyklus.get()), RowFilterSource.TABLE_CLICKED); }
@@ -186,9 +191,10 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			LocaleBundle.getString("ClipTableModel.Quality"),
 			"auto",
 			LocaleBundle.getString("ClipTableModel.Quality"),
-			(r,v) -> { var cat = v.getMediaInfoCategory(); r.setText(cat.getShortText()); r.setIcon(cat.getIcon()); r.setToolTipText(cat.getTooltip()); /*TODO*/ },
+			(r,v) -> { var cat = v.getMediaInfoCategory(); r.setText(cat.getShortText()); r.setIcon(cat.getIcon()); },
 			(r) -> true,
 			(v1,v2) -> CCQualityCategory.compare(v1.getMediaInfoCategory(), v2.getMediaInfoCategory()),
+			true,
 			(v,row) -> v.getMediaInfoCategory().getTooltip(),
 			(v) -> false,
 			(v) -> noop()
@@ -208,6 +214,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 				var o2 = (v2.isMovie() ? v2.asMovie().Language.get() : v2.asSeries().getSemiCommonOrAllLanguages());
 				return CCDBLanguageSet.compare(o1, o2);
 			},
+			true,
 			(v,row) -> (v.isMovie() ? v.asMovie().Language.get() : v.asSeries().getSemiCommonOrAllLanguages()).toOutputString(),
 			(v) -> false,
 			(v) -> noop()
@@ -227,6 +234,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 				var o2 = (v2.isMovie() ? v2.asMovie().Subtitles.get() : v2.asSeries().getAllSubtitles());
 				return CCDBLanguageList.compare(o1, o2);
 			},
+			true,
 			(v,row) -> (v.isMovie() ? v.asMovie().Subtitles.get() : v.asSeries().getAllSubtitles()).toOutputString(),
 			(v) -> false,
 			(v) -> noop()
@@ -241,6 +249,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			(r,v) -> r.setText(r.ccprops().PROP_MAINFRAME_SORT_GENRES.getValue() ? v.Genres.get().asSortedString() : v.Genres.get().asString()),
 			(r) -> true,
 			(v1,v2) -> CCGenreList.compare(v1.Genres.get(), v2.Genres.get()),
+			true,
 			(v,row) -> null,
 			(v) -> false,
 			(v) -> noop()
@@ -260,6 +269,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 				var o2 = (v2.isMovie() ? v2.asMovie().getPartcount() : v2.asSeries().getEpisodeCount());
 				return Integer.compare(o1, o2);
 			},
+			true,
 			(v,row) -> null,
 			(v) -> false,
 			(v) -> noop()
@@ -279,6 +289,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 				var o2 = (v2.isMovie() ? v2.asMovie().Length.get() : v2.asSeries().getLength());
 				return Integer.compare(o1, o2);
 			},
+			true,
 			(v,row) -> TimeIntervallFormatter.format((v.isMovie() ? v.asMovie().Length.get() : v.asSeries().getLength())),
 			(v) -> false,
 			(v) -> noop()
@@ -302,6 +313,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 
 				return CCDate.compare(d1, d2);
 			},
+			true,
 			(v,row) -> null,
 			(v) -> false,
 			(v) -> noop()
@@ -316,6 +328,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			(r,v) -> r.setIcon(v.OnlineScore.get().getIcon()),
 			(r) -> false,
 			(v1,v2) -> CCOnlineScore.compare(v1.OnlineScore.get(), v2.OnlineScore.get()),
+			true,
 			(v,row) -> LocaleBundle.getString("CCMovieScore.Score") + ": " + v.OnlineScore.get().asInt(),
 			(v) -> false,
 			(v) -> noop()
@@ -330,6 +343,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			(r,v) -> r.setIcon(v.Tags.get().getIcon()),
 			(r) -> false,
 			(v1,v2) -> CCTagList.compare(v1.Tags.get(), v2.Tags.get()),
+			true,
 			(v,row) -> v.Tags.get().getAsString(),
 			(v) -> false,
 			(v) -> noop()
@@ -344,6 +358,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			(r,v) -> { r.setText(v.FSK.get().asString()); r.setIcon(v.FSK.get().getIcon()); },
 			(r) -> true,
 			(v1,v2) -> CCFSK.compare(v1.FSK.get(), v2.FSK.get()),
+			true,
 			(v,row) -> null,
 			(v) -> false,
 			(v) -> noop()
@@ -358,6 +373,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			(r,v) -> { r.setText(v.getFormat().asString()); r.setIcon(v.getFormat().getIcon()); },
 			(r) -> true,
 			(v1,v2) -> CCFileFormat.compare(v1.getFormat(), v2.getFormat()),
+			true,
 			(v,row) -> null,
 			(v) -> false,
 			(v) -> noop()
@@ -377,6 +393,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 				var o2 = v2.isMovie() ? new YearRange(v2.asMovie().Year.get()) : v2.asSeries().getYearRange();
 				return YearRange.compare(o1, o2);
 			},
+			true,
 			(v,row) -> null,
 			(v) -> false,
 			(v) -> noop()
@@ -391,6 +408,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			(r,v) -> r.setText(v.getFilesize().getFormatted()),
 			(r) -> true,
 			(v1,v2) -> CCFileSize.compare(v1.getFilesize(), v2.getFilesize()),
+			true,
 			(v,row) -> FileSizeFormatter.formatBytes(v.getFilesize()),
 			(v) -> false,
 			(v) -> noop()
@@ -490,6 +508,16 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 		}
 	}
 
+	@Override
+	public Opt<Integer> getUnitScrollIncrement() {
+		return Opt.of(movielist.ccprops().PROP_MAINFRAME_SCROLLSPEED.getValue());
+	}
+
+	@Override
+	public Opt<Integer> getBlockScrollIncrement() {
+		return Opt.empty();
+	}
+
 	@SuppressWarnings("unchecked")
 	public void setRowFilter(AbstractCustomFilter filterimpl, RowFilterSource source) { // Source kann null sein
 		if (model.hasVolatileRowIndexMapping()) model.clearRowIndexMapping();
@@ -528,7 +556,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 	}
 
 	public void configureColumnVisibility(Set<MainFrameColumn> data, boolean initial) {
-		String[] cfg = new String[MainFrameColumn.values().length];
+		String[] cfg = new String[config.size()];
 		Arrays.fill(cfg, "auto"); //$NON-NLS-1$
 
 		for (var idx=0; idx < config.size(); idx++) {
@@ -592,13 +620,6 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 	public TableCustomFilter getRowFilter() {
 		return currentFilter;
 	}
-
-	private Integer compareCoalesce(int... values) {
-		for (var v : values) if (v != 0) return v;
-		return 0;
-	}
-
-	private void noop() {}
 
 	private int compareTitleIntelligent(CCDatabaseElement v1, CCDatabaseElement v2) {
 		String titleA = v1.getTitle();

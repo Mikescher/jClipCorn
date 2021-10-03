@@ -102,7 +102,7 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 	public boolean isEqual(CCDBLanguageList that) {
 		if (_languages.size() != that._languages.size()) return false;
 
-		for (int i = 0; i < _languages.size(); i++) if (_languages.get(i).equals(that._languages.get(i))) return false;
+		for (int i = 0; i < _languages.size(); i++) if (!_languages.get(i).equals(that._languages.get(i))) return false;
 
 		return true;
 	}

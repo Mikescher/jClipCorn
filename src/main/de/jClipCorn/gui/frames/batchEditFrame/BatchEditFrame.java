@@ -651,25 +651,35 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 		edSidePart_05 = new JTextField();
 		button24 = new JButton();
 		button24.addActionListener(e -> BatchEditMethods.PATH_SEARCH_AND_DELETE.run(this, edSidePart_05.getText()));
+		pnlProperties = new JPanel();
+		spnSideLength = new JSpinner();
+		button31 = new JButton();
+		button31.addActionListener(e -> BatchEditMethods.LENGTH_SET.run(this, (int) spnSideLength.getValue()));
+		cbxSideFormat = new CCEnumComboBox<>(CCFileFormat.getWrapper());
+		button32 = new JButton();
+		button32.addActionListener(e -> BatchEditMethods.FORMAT_SET.run(this, cbxSideFormat.getSelectedEnum()));
+		ctrlSideLanguage = new LanguageSetChooser();
+		button58 = new JButton();
+		button58.addActionListener(e -> BatchEditMethods.LANGUAGE_SET.run(this, ctrlSideLanguage.getValue()));
+		ctrlSideSubtitles = new LanguageListChooser();
+		button59 = new JButton();
+		button59.addActionListener(e -> BatchEditMethods.SUBTITLE_SET.run(this, ctrlSideSubtitles.getValue()));
+		ctrlSideTags = new TagPanel();
+		button61 = new JButton();
+		button61.addActionListener(e -> BatchEditMethods.TAGS_SET.run(this, ctrlSideTags.getValue()));
+		spnSideAddDate = new JCCDateSpinner(CCDate.getMinimumDate(), CCDate.getMinimumDate(), null);
+		button60 = new JButton();
+		button60.addActionListener(e -> BatchEditMethods.ADDDATE_SET.run(this, spnSideAddDate.getValue()));
 		pnlMiscEdit = new JPanel();
 		spnSide_05 = new JSpinner();
 		button25 = new JButton();
 		button25.addActionListener(arg0 -> BatchEditMethods.EPISODEINDEX_ADD.run(this, (int) spnSide_05.getValue()));
-		ctrlMultiLang = new LanguageSetChooser();
-		button26 = new JButton();
-		button26.addActionListener(arg0 -> BatchEditMethods.LANGUAGE_SET.run(this, ctrlMultiLang.getValue()));
 		button28 = new JButton();
 		button28.addActionListener(e -> BatchEditMethods.VIEWED_CLEAR.run(this, null));
 		button29 = new JButton();
 		button29.addActionListener(e -> BatchEditMethods.VIEWED_ADD.run(this, CCDateTime.getCurrentDateTime()));
 		button30 = new JButton();
 		button30.addActionListener(e -> BatchEditMethods.VIEWED_ADD.run(this, CCDateTime.getUnspecified()));
-		button31 = new JButton();
-		button31.addActionListener(e -> BatchEditMethods.LENGTH_SET.run(this, (int) spnSideLength.getValue()));
-		spnSideLength = new JSpinner();
-		button32 = new JButton();
-		button32.addActionListener(e -> BatchEditMethods.FORMAT_SET.run(this, cbxSideFormat.getSelectedEnum()));
-		cbxSideFormat = new CCEnumComboBox<>(CCFileFormat.getWrapper());
 		ctrlSideHistoryVal = new JCCDateTimeSpinner();
 		button33 = new JButton();
 		button33.addActionListener(e -> BatchEditMethods.VIEWED_ADD.run(this, ctrlSideHistoryVal.getValue()));
@@ -683,9 +693,18 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 		cbxSideTag1 = new CCEnumComboBox<>(CCSingleTag.getWrapper());
 		button54 = new JButton();
 		button54.addActionListener(e -> BatchEditMethods.TAG_ADD.run(this, cbxSideTag1.getSelectedEnum()));
-		cbxSideTag2 = new CCEnumComboBox<>(CCSingleTag.getWrapper());
 		button55 = new JButton();
-		button55.addActionListener(e -> BatchEditMethods.TAG_REM.run(this, cbxSideTag2.getSelectedEnum()));
+		button55.addActionListener(e -> BatchEditMethods.TAG_REM.run(this, cbxSideTag1.getSelectedEnum()));
+		cbxSideModLang = new CCEnumComboBox<>(CCDBLanguage.getWrapper());
+		button26 = new JButton();
+		button26.addActionListener(e -> BatchEditMethods.LANGUAGE_ADD.run(this, cbxSideModLang.getSelectedEnum()));
+		button63 = new JButton();
+		button63.addActionListener(e -> BatchEditMethods.LANGUAGE_REM.run(this, cbxSideModLang.getSelectedEnum()));
+		cbxSideModSub = new CCEnumComboBox<>(CCDBLanguage.getWrapper());
+		button62 = new JButton();
+		button62.addActionListener(e -> BatchEditMethods.SUBTITLE_REM.run(this, cbxSideModSub.getSelectedEnum()));
+		button64 = new JButton();
+		button64.addActionListener(e -> BatchEditMethods.SUBTITLE_ADD.run(this, cbxSideModSub.getSelectedEnum()));
 		pnlMetadata = new JPanel();
 		button27 = new JButton();
 		button27.addActionListener(e -> BatchEditMethods.FILESIZE_FROM_FILE.run(this, null));
@@ -736,7 +755,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, 225px, $ugap, 0dlu:grow, $ugap, 500px, $ugap", //$NON-NLS-1$
+			"$ugap, 225px, $ugap, 0dlu:grow, $ugap, 550px, $ugap", //$NON-NLS-1$
 			"$pgap, pref, $ugap, default:grow, 2*($lgap, default), $lgap")); //$NON-NLS-1$
 
 		//---- lblSeason ----
@@ -966,7 +985,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			{
 				pnlTitleEdit.setLayout(new FormLayout(
 					"$lcgap, 0dlu:grow, 4*($lcgap, 0dlu:grow(0.5)), $lcgap", //$NON-NLS-1$
-					"2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, 3*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default, $lgap, default:grow")); //$NON-NLS-1$
+					"2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, 3*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default")); //$NON-NLS-1$
 
 				//---- button5 ----
 				button5.setText(LocaleBundle.getString("AddEpisodeFrame.btnDeleteFirst.text")); //$NON-NLS-1$
@@ -1033,7 +1052,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			{
 				pnlPartEdit.setLayout(new FormLayout(
 					"$lcgap, 0dlu:grow, 4*($lcgap, 0dlu:grow(0.5)), $lcgap", //$NON-NLS-1$
-					"$lgap, default, $lgap, 7dlu, 4*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, 6*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default, $lgap, default:grow")); //$NON-NLS-1$
+					"$lgap, default, $lgap, 7dlu, 4*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, 6*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default")); //$NON-NLS-1$
 
 				//---- button10 ----
 				button10.setText(LocaleBundle.getString("BatchEditFrame.ConverToCC")); //$NON-NLS-1$
@@ -1120,71 +1139,111 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			}
 			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabPath"), pnlPartEdit); //$NON-NLS-1$
 
+			//======== pnlProperties ========
+			{
+				pnlProperties.setLayout(new FormLayout(
+					"$lcgap, 200dlu, $lcgap, default:grow, $lcgap", //$NON-NLS-1$
+					"2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default")); //$NON-NLS-1$
+				pnlProperties.add(spnSideLength, CC.xy(2, 2));
+
+				//---- button31 ----
+				button31.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetEpLength.text")); //$NON-NLS-1$
+				pnlProperties.add(button31, CC.xy(4, 2));
+				pnlProperties.add(cbxSideFormat, CC.xy(2, 4));
+
+				//---- button32 ----
+				button32.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetEpFormat.text")); //$NON-NLS-1$
+				pnlProperties.add(button32, CC.xy(4, 4));
+				pnlProperties.add(ctrlSideLanguage, CC.xy(2, 8));
+
+				//---- button58 ----
+				button58.setText(LocaleBundle.getString("BatchEditFrame.btnSetLanguage")); //$NON-NLS-1$
+				pnlProperties.add(button58, CC.xy(4, 8));
+				pnlProperties.add(ctrlSideSubtitles, CC.xy(2, 10));
+
+				//---- button59 ----
+				button59.setText(LocaleBundle.getString("BatchEditFrame.btnSetSubtitles")); //$NON-NLS-1$
+				pnlProperties.add(button59, CC.xy(4, 10));
+				pnlProperties.add(ctrlSideTags, CC.xy(2, 14));
+
+				//---- button61 ----
+				button61.setText(LocaleBundle.getString("BatchEditFrame.btnSetTags")); //$NON-NLS-1$
+				pnlProperties.add(button61, CC.xy(4, 14));
+				pnlProperties.add(spnSideAddDate, CC.xy(2, 18, CC.DEFAULT, CC.FILL));
+
+				//---- button60 ----
+				button60.setText(LocaleBundle.getString("BatchEditFrame.btnSetAddDate")); //$NON-NLS-1$
+				pnlProperties.add(button60, CC.xy(4, 18));
+			}
+			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabProps"), pnlProperties); //$NON-NLS-1$
+
 			//======== pnlMiscEdit ========
 			{
 				pnlMiscEdit.setLayout(new FormLayout(
 					"$rgap, 0dlu:grow, 4*($lcgap, 0dlu:grow(0.5)), $lcgap", //$NON-NLS-1$
-					"2*($lgap, default), $lgap, 7dlu, 3*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 0dlu:grow")); //$NON-NLS-1$
+					"$lgap, default, $lgap, 7dlu, 3*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, 2*($lgap, default)")); //$NON-NLS-1$
 				pnlMiscEdit.add(spnSide_05, CC.xy(2, 2));
 
 				//---- button25 ----
 				button25.setText(LocaleBundle.getString("AddEpisodeFrame.btnIncEpisodeNumbers.text")); //$NON-NLS-1$
 				pnlMiscEdit.add(button25, CC.xywh(4, 2, 7, 1));
-				pnlMiscEdit.add(ctrlMultiLang, CC.xywh(2, 4, 5, 1));
-
-				//---- button26 ----
-				button26.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetLang.text")); //$NON-NLS-1$
-				pnlMiscEdit.add(button26, CC.xywh(8, 4, 3, 1));
 
 				//---- button28 ----
 				button28.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetUnviewed.text")); //$NON-NLS-1$
-				pnlMiscEdit.add(button28, CC.xywh(2, 8, 9, 1));
+				pnlMiscEdit.add(button28, CC.xywh(2, 6, 9, 1));
 
 				//---- button29 ----
 				button29.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetViewedNow.text")); //$NON-NLS-1$
-				pnlMiscEdit.add(button29, CC.xywh(2, 10, 9, 1));
+				pnlMiscEdit.add(button29, CC.xywh(2, 8, 9, 1));
 
 				//---- button30 ----
 				button30.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetViewedUndef.text")); //$NON-NLS-1$
-				pnlMiscEdit.add(button30, CC.xywh(2, 12, 9, 1));
-
-				//---- button31 ----
-				button31.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetEpLength.text")); //$NON-NLS-1$
-				pnlMiscEdit.add(button31, CC.xywh(2, 16, 5, 1));
-				pnlMiscEdit.add(spnSideLength, CC.xywh(8, 16, 3, 1));
-
-				//---- button32 ----
-				button32.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetEpFormat.text")); //$NON-NLS-1$
-				pnlMiscEdit.add(button32, CC.xywh(2, 18, 5, 1));
-				pnlMiscEdit.add(cbxSideFormat, CC.xywh(8, 18, 3, 1));
-				pnlMiscEdit.add(ctrlSideHistoryVal, CC.xywh(2, 22, 3, 1));
+				pnlMiscEdit.add(button30, CC.xywh(2, 10, 9, 1));
+				pnlMiscEdit.add(ctrlSideHistoryVal, CC.xywh(2, 14, 3, 1));
 
 				//---- button33 ----
 				button33.setText(LocaleBundle.getString("AddEpisodeFrame.btnAddToHistory.text")); //$NON-NLS-1$
-				pnlMiscEdit.add(button33, CC.xywh(6, 22, 5, 1));
+				pnlMiscEdit.add(button33, CC.xywh(6, 14, 5, 1));
 
 				//---- button34 ----
 				button34.setText(LocaleBundle.getString("AddEpisodeFrame.btnClearHistory.text")); //$NON-NLS-1$
-				pnlMiscEdit.add(button34, CC.xywh(6, 24, 5, 1));
+				pnlMiscEdit.add(button34, CC.xywh(6, 16, 5, 1));
 
 				//---- button36 ----
 				button36.setText(LocaleBundle.getString("BatchEditFrame.ReadPathFromDialogFull")); //$NON-NLS-1$
-				pnlMiscEdit.add(button36, CC.xywh(2, 28, 7, 1));
+				pnlMiscEdit.add(button36, CC.xywh(2, 20, 7, 1));
 
 				//---- button37 ----
 				button37.setText(LocaleBundle.getString("BatchEditFrame.ReadPathFromDialogPartial")); //$NON-NLS-1$
-				pnlMiscEdit.add(button37, CC.xywh(2, 30, 7, 1));
-				pnlMiscEdit.add(spnPathOpenOffset, CC.xy(10, 30));
-				pnlMiscEdit.add(cbxSideTag1, CC.xywh(2, 34, 3, 1));
+				pnlMiscEdit.add(button37, CC.xywh(2, 22, 7, 1));
+				pnlMiscEdit.add(spnPathOpenOffset, CC.xy(10, 22));
+				pnlMiscEdit.add(cbxSideTag1, CC.xy(2, 26));
 
 				//---- button54 ----
 				button54.setText(LocaleBundle.getString("BatchEditFrame.AddTag")); //$NON-NLS-1$
-				pnlMiscEdit.add(button54, CC.xywh(6, 34, 5, 1));
-				pnlMiscEdit.add(cbxSideTag2, CC.xywh(2, 36, 3, 1));
+				pnlMiscEdit.add(button54, CC.xywh(4, 26, 3, 1));
 
 				//---- button55 ----
 				button55.setText(LocaleBundle.getString("BatchEditFrame.DelTag")); //$NON-NLS-1$
-				pnlMiscEdit.add(button55, CC.xywh(6, 36, 5, 1));
+				pnlMiscEdit.add(button55, CC.xywh(8, 26, 3, 1));
+				pnlMiscEdit.add(cbxSideModLang, CC.xy(2, 30));
+
+				//---- button26 ----
+				button26.setText(LocaleBundle.getString("BatchEditFrame.btnLangAdd")); //$NON-NLS-1$
+				pnlMiscEdit.add(button26, CC.xywh(4, 30, 3, 1));
+
+				//---- button63 ----
+				button63.setText(LocaleBundle.getString("BatchEditFrame.btnLangRem")); //$NON-NLS-1$
+				pnlMiscEdit.add(button63, CC.xywh(8, 30, 3, 1));
+				pnlMiscEdit.add(cbxSideModSub, CC.xy(2, 32));
+
+				//---- button62 ----
+				button62.setText(LocaleBundle.getString("BatchEditFrame.SubAdd")); //$NON-NLS-1$
+				pnlMiscEdit.add(button62, CC.xywh(4, 32, 3, 1));
+
+				//---- button64 ----
+				button64.setText(LocaleBundle.getString("BatchEditFrame.SubRem")); //$NON-NLS-1$
+				pnlMiscEdit.add(button64, CC.xywh(8, 32, 3, 1));
 			}
 			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabMisc"), pnlMiscEdit); //$NON-NLS-1$
 
@@ -1232,7 +1291,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			{
 				pnlReset.setLayout(new FormLayout(
 					"$rgap, 0dlu:grow, $rgap", //$NON-NLS-1$
-					"8*($lgap, default), $lgap, 7dlu, 4*($lgap, default), $lgap, default:grow")); //$NON-NLS-1$
+					"8*($lgap, default), $lgap, 7dlu, 4*($lgap, default)")); //$NON-NLS-1$
 
 				//---- button43 ----
 				button43.setText(LocaleBundle.getString("BatchEditFrame.ResetTitle")); //$NON-NLS-1$
@@ -1295,7 +1354,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 		btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOK.addActionListener(e -> onOKClicked());
 		contentPane.add(btnOK, CC.xy(4, 8, CC.CENTER, CC.FILL));
-		setSize(1200, 750);
+		setSize(1250, 750);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -1406,18 +1465,25 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 	private JSpinner spnSidePart_04;
 	private JTextField edSidePart_05;
 	private JButton button24;
+	private JPanel pnlProperties;
+	private JSpinner spnSideLength;
+	private JButton button31;
+	private CCEnumComboBox<CCFileFormat> cbxSideFormat;
+	private JButton button32;
+	private LanguageSetChooser ctrlSideLanguage;
+	private JButton button58;
+	private LanguageListChooser ctrlSideSubtitles;
+	private JButton button59;
+	private TagPanel ctrlSideTags;
+	private JButton button61;
+	private JCCDateSpinner spnSideAddDate;
+	private JButton button60;
 	private JPanel pnlMiscEdit;
 	private JSpinner spnSide_05;
 	private JButton button25;
-	private LanguageSetChooser ctrlMultiLang;
-	private JButton button26;
 	private JButton button28;
 	private JButton button29;
 	private JButton button30;
-	private JButton button31;
-	private JSpinner spnSideLength;
-	private JButton button32;
-	private CCEnumComboBox<CCFileFormat> cbxSideFormat;
 	private JCCDateTimeSpinner ctrlSideHistoryVal;
 	private JButton button33;
 	private JButton button34;
@@ -1426,8 +1492,13 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 	private JSpinner spnPathOpenOffset;
 	private CCEnumComboBox<CCSingleTag> cbxSideTag1;
 	private JButton button54;
-	private CCEnumComboBox<CCSingleTag> cbxSideTag2;
 	private JButton button55;
+	private CCEnumComboBox<CCDBLanguage> cbxSideModLang;
+	private JButton button26;
+	private JButton button63;
+	private CCEnumComboBox<CCDBLanguage> cbxSideModSub;
+	private JButton button62;
+	private JButton button64;
 	private JPanel pnlMetadata;
 	private JButton button27;
 	private JButton button35;

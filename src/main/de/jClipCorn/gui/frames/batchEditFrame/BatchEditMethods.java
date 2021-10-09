@@ -9,6 +9,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -152,6 +153,24 @@ public class BatchEditMethods
 	{
 		if (param == null) return;
 		ep.language = param;
+	});
+
+	public static BatchEditMethod<CCDBLanguageList> SUBTITLE_SET = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		if (param == null) return;
+		ep.subtitles = param;
+	});
+
+	public static BatchEditMethod<CCTagList> TAGS_SET = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		if (param == null) return;
+		ep.tags = param;
+	});
+
+	public static BatchEditMethod<CCDate> ADDDATE_SET = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		if (param == null) return;
+		ep.addDate = param;
 	});
 
 	public static BatchEditMethod<Void> LANGUAGE_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
@@ -325,5 +344,29 @@ public class BatchEditMethods
 	{
 		if (param == null) return;
 		ep.tags = ep.tags.getSetTag(param, false);
+	});
+
+	public static BatchEditMethod<CCDBLanguage> LANGUAGE_ADD = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		if (param == null) return;
+		ep.language = ep.language.getAdd(param);
+	});
+
+	public static BatchEditMethod<CCDBLanguage> LANGUAGE_REM = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		if (param == null) return;
+		ep.language = ep.language.getRemove(param);
+	});
+
+	public static BatchEditMethod<CCDBLanguage> SUBTITLE_ADD = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		if (param == null) return;
+		ep.subtitles = ep.subtitles.getAdd(param);
+	});
+
+	public static BatchEditMethod<CCDBLanguage> SUBTITLE_REM = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		if (param == null) return;
+		ep.subtitles = ep.subtitles.getRemoveLast(param);
 	});
 }

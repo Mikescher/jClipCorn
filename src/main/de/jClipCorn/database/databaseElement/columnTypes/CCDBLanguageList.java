@@ -180,6 +180,15 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 		return new CCDBLanguageList(ccstream().index().filter(p -> p.Index != idx).map(p -> p.Value).enumerate());
 	}
 
+	public CCDBLanguageList getRemoveLast(CCDBLanguage v) {
+		var idx = _languages.lastIndexOf(v);
+		if (idx < 0) return this;
+
+		var llnew = new ArrayList<>(_languages);
+		llnew.remove(idx);
+		return new CCDBLanguageList(llnew);
+	}
+
 	public String toOutputString() {
 		if (isEmpty()) return LocaleBundle.getString("CCMovieLanguageList.Empty"); //$NON-NLS-1$
 		return CCStreams.iterate(_languages).autosort().stringjoin(CCDBLanguage::asString, ", "); //$NON-NLS-1$

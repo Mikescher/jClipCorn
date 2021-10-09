@@ -226,6 +226,12 @@ public class CCDBLanguageSet implements CCIterable<CCDBLanguage> {
 		return new CCDBLanguageSet(v);
 	}
 
+	public CCDBLanguageSet getAdd(CCDBLanguage lang) {
+		HashSet<CCDBLanguage> v = new HashSet<>(_languages);
+		v.add(lang);
+		return new CCDBLanguageSet(v);
+	}
+
 	public boolean isSubsetOf(CCDBLanguageSet other) {
 		for (CCDBLanguage lang : _languages) {
 			if (!other.contains(lang)) return false;

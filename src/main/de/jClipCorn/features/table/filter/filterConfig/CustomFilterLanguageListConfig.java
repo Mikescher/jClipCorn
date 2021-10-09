@@ -25,7 +25,7 @@ public class CustomFilterLanguageListConfig extends CustomFilterConfig {
 	public JComponent getComponent(Runnable onChange) {
 		LanguageSetChooser chsr = new LanguageSetChooser(valueGetter.invoke());
 
-		chsr.addChangeListener(e -> { valueSetter.invoke(chsr.getValue()); onChange.run(); });
+		chsr.addLanguageChangedListener(e -> { valueSetter.invoke(chsr.getValue()); onChange.run(); });
 		
 		return chsr;
 	}

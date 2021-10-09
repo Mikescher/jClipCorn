@@ -3,16 +3,14 @@ package de.jClipCorn.gui.guiComponents.groupListEditor;
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
+import de.jClipCorn.gui.LookAndFeelManager;
+import de.jClipCorn.gui.guiComponents.tags.TagsChangedListener;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.gui.LookAndFeelManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GroupListEditor extends JPanel
 {
@@ -24,8 +22,6 @@ public class GroupListEditor extends JPanel
 	
 	private JTextField edEditor;
 	private JButton btnDropDown;
-
-	private final List<ActionListener> _changeListener = new ArrayList<>();
 
 	@DesignCreate
 	private static GroupListEditor designCreate()
@@ -76,8 +72,11 @@ public class GroupListEditor extends JPanel
 		super.setEnabled(b);
 	}
 
-	public void addChangeListener(ActionListener a) {
-		_changeListener.add(a);
+	public void addGroupListChangedListener(final GroupListChangedListener l) {
+		listenerList.add(GroupListChangedListener.class, l);
+	}
+	public void removeGroupListChangedListener(final GroupListChangedListener l) {
+		listenerList.add(GroupListChangedListener.class, l);
 	}
 
 	@Override
@@ -102,7 +101,7 @@ public class GroupListEditor extends JPanel
 		
 		updateEditor();
 
-		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(this, -1, Str.Empty));
+		for (var ac : listenerList.getListeners(TagsChangedListener.class)) ac.tagsChanged(new ActionEvent(this, -1, Str.Empty));
 	}
 	
 	public CCGroupList getValue() {

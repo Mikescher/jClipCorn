@@ -8,6 +8,7 @@ import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.gui.frames.editMediaInfoDialog.EditMediaInfoDialog;
 import de.jClipCorn.gui.frames.editMediaInfoDialog.MediaInfoResultHandler;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.language.LanguageChangedListener;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
@@ -17,9 +18,6 @@ import de.jClipCorn.util.lambda.Func0to1;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 {
@@ -31,8 +29,6 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 
 	private PartialMediaInfo value = null;
 	private MediaQueryResult queryResult = null;
-
-	private final List<ActionListener> _changeListener = new ArrayList<>();
 
 	private final Func0to1<FSPath> _pathProvider;
 	private final CCMovieList movielist;
@@ -77,8 +73,11 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 		add(image, BorderLayout.WEST);
 	}
 
-	public void addChangeListener(ActionListener a) {
-		_changeListener.add(a);
+	public void addMediaInfoChangedListener(final MediaInfoChangedListener l) {
+		listenerList.add(MediaInfoChangedListener.class, l);
+	}
+	public void removeMediaInfoChangedListener(final MediaInfoChangedListener l) {
+		listenerList.add(MediaInfoChangedListener.class, l);
 	}
 
 	@Override
@@ -92,7 +91,7 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 	}
 
 	public void setValue(PartialMediaInfo ref) {
-		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(ref==null ? CCMediaInfo.EMPTY : ref, -1, Str.Empty));
+		for (var l: listenerList.getListeners(LanguageChangedListener.class)) l.languageChanged(new ActionEvent(ref==null ? CCMediaInfo.EMPTY : ref, -1, Str.Empty));
 
 		value = ref;
 		queryResult = null;
@@ -103,7 +102,7 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 	public void setValue(MediaQueryResult r) {
 		PartialMediaInfo cc = r.toPartial();
 
-		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(cc, -1, Str.Empty));
+		for (var l: listenerList.getListeners(LanguageChangedListener.class)) l.languageChanged(new ActionEvent(cc, -1, Str.Empty));
 
 		value = cc;
 		queryResult = r;

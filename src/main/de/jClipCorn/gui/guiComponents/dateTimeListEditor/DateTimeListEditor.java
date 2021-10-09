@@ -20,7 +20,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -50,8 +49,6 @@ public class DateTimeListEditor extends JPanel {
 	
 	private final List<JPanel> listPanels = new ArrayList<>();
 	private final List<CCDateTime> data;
-
-	private final List<ActionListener> _changeListener = new ArrayList<>();
 
 	public DateTimeListEditor() {
 		initGUI();
@@ -175,12 +172,15 @@ public class DateTimeListEditor extends JPanel {
 		pnlContent.setLayout(new BoxLayout(pnlContent, BoxLayout.Y_AXIS));
 	}
 
-	public void addChangeListener(ActionListener a) {
-		_changeListener.add(a);
+	public void addValueChangedListener(final DateTimeChangedListener l) {
+		listenerList.add(DateTimeChangedListener.class, l);
+	}
+	public void removeValueChangedListener(final DateTimeChangedListener l) {
+		listenerList.add(DateTimeChangedListener.class, l);
 	}
 
 	private void triggerOnChanged() {
-		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(this, -1, Str.Empty));
+		for (var ac: listenerList.getListeners(DateTimeChangedListener.class)) ac.dateTimeChanged(new ActionEvent(this, -1, Str.Empty));
 	}
 
 	private void resortList() {

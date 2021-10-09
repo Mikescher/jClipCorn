@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.guiComponents;
+package de.jClipCorn.gui.guiComponents.tags;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.util.Str;
@@ -6,19 +6,14 @@ import de.jClipCorn.util.Str;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TagPanel extends JPanel {
 	private static final long serialVersionUID = -6093081428307402687L;
 
 	private CCTagList value = CCTagList.EMPTY;
 	private boolean readOnly = false;
-
-	private List<ActionListener> _changeListener = new ArrayList<>();
 
 	public TagPanel() {
 		super();
@@ -32,8 +27,11 @@ public class TagPanel extends JPanel {
 		setBorder(UIManager.getBorder("TextField.border")); //$NON-NLS-1$
 	}
 
-	public void addChangeListener(ActionListener a) {
-		_changeListener.add(a);
+	public void addTagsChangedListener(final TagsChangedListener l) {
+		listenerList.add(TagsChangedListener.class, l);
+	}
+	public void removeTagsChangedListener(final TagsChangedListener l) {
+		listenerList.add(TagsChangedListener.class, l);
 	}
 
 	private void update() {
@@ -86,7 +84,7 @@ public class TagPanel extends JPanel {
 		if (!readOnly) {
 			value = value.getSwitchTag(c);
 			update();
-			for (ActionListener a : _changeListener) a.actionPerformed(new ActionEvent(value, -1, Str.Empty));
+			for (var a : listenerList.getListeners(TagsChangedListener.class)) a.tagsChanged(new ActionEvent(value, -1, Str.Empty));
 		}
 	}
 
@@ -97,7 +95,7 @@ public class TagPanel extends JPanel {
 	public void setValue(CCTagList v) {
 		value = v;
 		update();
-		for (ActionListener a : _changeListener) a.actionPerformed(new ActionEvent(value, -1, Str.Empty));
+		for (var a : listenerList.getListeners(TagsChangedListener.class)) a.tagsChanged(new ActionEvent(value, -1, Str.Empty));
 	}
 
 	public void setReadOnly(boolean ro) {

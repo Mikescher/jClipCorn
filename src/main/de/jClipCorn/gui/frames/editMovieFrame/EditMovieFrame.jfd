@@ -568,7 +568,7 @@ new FormModel {
 						"gridX": 1
 						"gridY": 31
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.TagPanel" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.tags.TagPanel" ) {
 						name: "tagPnl"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3

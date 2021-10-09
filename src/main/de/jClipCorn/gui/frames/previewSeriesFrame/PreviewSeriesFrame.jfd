@@ -271,7 +271,7 @@ new FormModel {
 					"gridY": 19
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
 				} )
-				add( new FormComponent( "de.jClipCorn.gui.guiComponents.TagDisplay" ) {
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.tags.TagDisplay" ) {
 					name: "ctrlTags"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3

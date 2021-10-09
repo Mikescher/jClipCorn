@@ -293,7 +293,6 @@ new FormModel {
 					} )
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnMediaInfoLen"
-						"text": "text"
 						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_MEDIAINFO
 						"toolTipText": "MediaInfo"
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "calculateMediaInfoAndSetLength", false ) )
@@ -319,7 +318,7 @@ new FormModel {
 					} )
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageSetChooser" ) {
 						name: "cbxLanguage"
-						addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "onLanguageChanged", true ) )
+						addEvent( new FormEvent( "de.jClipCorn.gui.guiComponents.language.LanguageChangedListener", "languageChanged", "onLanguageChanged", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
 						"gridY": 11
@@ -350,7 +349,7 @@ new FormModel {
 					} )
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageListChooser" ) {
 						name: "cbxSubtitles"
-						addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "subtitleChanged", false ) )
+						addEvent( new FormEvent( "de.jClipCorn.gui.guiComponents.language.LanguageChangedListener", "languageChanged", "subtitleChanged", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
 						"gridY": 13
@@ -386,7 +385,7 @@ new FormModel {
 						auxiliary() {
 							"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist, () -> edPart0.getPath().toFSPath(this));"
 						}
-						addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "onMediaInfoChanged", false ) )
+						addEvent( new FormEvent( "de.jClipCorn.gui.guiComponents.jMediaInfoControl.MediaInfoChangedListener", "mediaInfoChanged", "onMediaInfoChanged", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
 						"gridY": 15

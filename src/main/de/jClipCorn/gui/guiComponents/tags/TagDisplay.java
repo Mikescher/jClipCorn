@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.guiComponents;
+package de.jClipCorn.gui.guiComponents.tags;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleTag;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;

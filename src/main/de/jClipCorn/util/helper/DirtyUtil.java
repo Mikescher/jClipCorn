@@ -1,6 +1,6 @@
 package de.jClipCorn.util.helper;
 
-import de.jClipCorn.gui.guiComponents.TagPanel;
+import de.jClipCorn.gui.guiComponents.tags.TagPanel;
 import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
@@ -8,7 +8,6 @@ import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 import de.jClipCorn.gui.guiComponents.language.LanguageListChooser;
 import de.jClipCorn.gui.guiComponents.language.LanguageSetChooser;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
-import de.jClipCorn.util.adapter.ActionLambdaAdapter;
 import de.jClipCorn.util.adapter.ChangeLambdaAdapter;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.adapter.ItemChangeLambdaAdapter;
@@ -63,16 +62,16 @@ public class DirtyUtil
 	private static void addDirtyListener(Func0to0 lstr, Component c)
 	{
 		if (c instanceof JTextField) ((JTextField)c).getDocument().addDocumentListener(new DocumentLambdaAdapter(lstr));
-		else if (c instanceof JReferenceChooser) ((JReferenceChooser)c).addChangeListener(new ActionLambdaAdapter(lstr));
-		else if (c instanceof LanguageSetChooser) ((LanguageSetChooser)c).addChangeListener(new ActionLambdaAdapter(lstr));
-		else if (c instanceof LanguageListChooser) ((LanguageListChooser)c).addChangeListener(new ActionLambdaAdapter(lstr));
+		else if (c instanceof JReferenceChooser) ((JReferenceChooser)c).addReferenceChangedListener(e -> lstr.invoke());
+		else if (c instanceof LanguageSetChooser) ((LanguageSetChooser)c).addLanguageChangedListener(e -> lstr.invoke());
+		else if (c instanceof LanguageListChooser) ((LanguageListChooser)c).addLanguageChangedListener(e -> lstr.invoke());
 		else if (c instanceof JSpinner) ((JSpinner)c).addChangeListener(new ChangeLambdaAdapter(lstr));
 		else if (c instanceof JComboBox<?>) ((JComboBox<?>)c).addItemListener(new ItemChangeLambdaAdapter(lstr, ItemEvent.SELECTED));
-		else if (c instanceof TagPanel) ((TagPanel)c).addChangeListener(new ActionLambdaAdapter(lstr));
-		else if (c instanceof GroupListEditor) ((GroupListEditor)c).addChangeListener(new ActionLambdaAdapter(lstr));
-		else if (c instanceof EditCoverControl) ((EditCoverControl)c).addChangeListener(new ActionLambdaAdapter(lstr));
-		else if (c instanceof JMediaInfoControl) ((JMediaInfoControl)c).addChangeListener(new ActionLambdaAdapter(lstr));
-		else if (c instanceof DateTimeListEditor) ((DateTimeListEditor)c).addChangeListener(new ActionLambdaAdapter(lstr));
+		else if (c instanceof TagPanel) ((TagPanel)c).addTagsChangedListener(e -> lstr.invoke());
+		else if (c instanceof GroupListEditor) ((GroupListEditor)c).addGroupListChangedListener(e -> lstr.invoke());
+		else if (c instanceof EditCoverControl) ((EditCoverControl)c).addCoverChangedListener(e -> lstr.invoke());
+		else if (c instanceof JMediaInfoControl) ((JMediaInfoControl)c).addMediaInfoChangedListener(e -> lstr.invoke());
+		else if (c instanceof DateTimeListEditor) ((DateTimeListEditor)c).addValueChangedListener(e -> lstr.invoke());
 		else throw new IllegalArgumentException("Component " + c.getClass().getSimpleName() + " is not supported in initDirtyListener");
 	}
 }

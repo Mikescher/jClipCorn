@@ -19,6 +19,7 @@ import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.iconComponents.*;
 import de.jClipCorn.gui.guiComponents.language.*;
 import de.jClipCorn.gui.guiComponents.language.LanguageSetDisplay;
+import de.jClipCorn.gui.guiComponents.tags.TagDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;

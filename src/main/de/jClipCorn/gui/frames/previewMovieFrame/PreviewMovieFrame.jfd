@@ -322,7 +322,7 @@ new FormModel {
 						"gridX": 2
 						"gridY": 28
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.TagDisplay" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.tags.TagDisplay" ) {
 						name: "lblTags"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6

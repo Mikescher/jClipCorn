@@ -310,7 +310,7 @@ new FormModel {
 						"gridX": 1
 						"gridY": 13
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.TagPanel" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.tags.TagPanel" ) {
 						name: "edSeriesTags"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
@@ -776,7 +776,7 @@ new FormModel {
 					"gridX": 2
 					"gridY": 24
 				} )
-				add( new FormComponent( "de.jClipCorn.gui.guiComponents.TagPanel" ) {
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.tags.TagPanel" ) {
 					name: "edEpisodeTags"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 4

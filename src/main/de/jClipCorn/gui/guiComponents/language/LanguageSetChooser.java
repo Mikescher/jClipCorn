@@ -7,7 +7,6 @@ import de.jClipCorn.util.Str;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -16,7 +15,6 @@ public class LanguageSetChooser extends JPanel {
 	
 	private CCDBLanguageSet value = CCDBLanguageSet.EMPTY;
 	private boolean readOnly = false;
-	private ActionListener action = null;
 
 	private JPanel pnlIcons;
 	private JButton btnEdit;
@@ -101,7 +99,7 @@ public class LanguageSetChooser extends JPanel {
 	public void setValue(CCDBLanguageSet v) {
 		value = v;
 		update();
-		if (action != null) action.actionPerformed(new ActionEvent(this, 0, Str.Empty));
+		for (var l: listenerList.getListeners(LanguageChangedListener.class)) l.languageChanged(new ActionEvent(this, 0, Str.Empty));
 	}
 
 	public void setReadOnly(boolean ro) {
@@ -109,7 +107,10 @@ public class LanguageSetChooser extends JPanel {
 		btnEdit.setEnabled(!ro);
 	}
 
-	public void addChangeListener(ActionListener a) {
-		action = a;
+	public void addLanguageChangedListener(final LanguageChangedListener l) {
+		listenerList.add(LanguageChangedListener.class, l);
+	}
+	public void removeLanguageChangedListener(final LanguageChangedListener l) {
+		listenerList.add(LanguageChangedListener.class, l);
 	}
 }

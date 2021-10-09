@@ -48,7 +48,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -890,7 +889,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		onBtnClearClicked(5);
 	}
 
-	private void onLanguageChanged(PropertyChangeEvent e) {
+	private void onLanguageChanged() {
 		_isDirtyLanguage = true;
 	}
 
@@ -1156,7 +1155,6 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				pnlData.add(label29, CC.xy(5, 9));
 
 				//---- btnMediaInfoLen ----
-				btnMediaInfoLen.setText("text"); //$NON-NLS-1$
 				btnMediaInfoLen.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
 				btnMediaInfoLen.setToolTipText("MediaInfo"); //$NON-NLS-1$
 				btnMediaInfoLen.addActionListener(e -> calculateMediaInfoAndSetLength());
@@ -1168,7 +1166,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				pnlData.add(label20, CC.xy(1, 11));
 
 				//---- cbxLanguage ----
-				cbxLanguage.addPropertyChangeListener(e -> onLanguageChanged(e));
+				cbxLanguage.addLanguageChangedListener(e -> onLanguageChanged());
 				pnlData.add(cbxLanguage, CC.xywh(3, 11, 3, 1));
 
 				//---- btnMediaInfoLang ----
@@ -1187,7 +1185,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				pnlData.add(label31, CC.xy(1, 13));
 
 				//---- cbxSubtitles ----
-				cbxSubtitles.addPropertyChangeListener(e -> subtitleChanged());
+				cbxSubtitles.addLanguageChangedListener(e -> subtitleChanged());
 				pnlData.add(cbxSubtitles, CC.xywh(3, 13, 3, 1));
 
 				//---- btnMediaInfoSubs ----
@@ -1205,7 +1203,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				pnlData.add(label21, CC.xy(1, 15));
 
 				//---- ctrlMediaInfo ----
-				ctrlMediaInfo.addPropertyChangeListener(e -> onMediaInfoChanged());
+				ctrlMediaInfo.addMediaInfoChangedListener(e -> onMediaInfoChanged());
 				pnlData.add(ctrlMediaInfo, CC.xywh(3, 15, 3, 1, CC.DEFAULT, CC.FILL));
 
 				//---- btnMediaInfoMain ----

@@ -4,13 +4,13 @@ import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.gui.guiComponents.language.LanguageChangedListener;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +21,6 @@ public class JReferenceChooser extends JPanel {
 	private JSingleReferenceChooser mainChooser;
 
 	private List<CCSingleOnlineReference> _additional = new ArrayList<>();
-
-	private final List<ActionListener> _changeListener = new ArrayList<>();
 
 	private final CCMovieList movielist;
 
@@ -57,8 +55,11 @@ public class JReferenceChooser extends JPanel {
 		add(mainChooser, BorderLayout.CENTER);
 	}
 
-	public void addChangeListener(ActionListener a) {
-		_changeListener.add(a);
+	public void addReferenceChangedListener(final ReferenceChangedListener l) {
+		listenerList.add(ReferenceChangedListener.class, l);
+	}
+	public void removeReferenceChangedListener(final ReferenceChangedListener l) {
+		listenerList.add(ReferenceChangedListener.class, l);
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class JReferenceChooser extends JPanel {
 		_additional = new ArrayList<>(ref.Additional);
 		updateUIControls();
 
-		for (ActionListener a : _changeListener) a.actionPerformed(new ActionEvent(ref, -1, Str.Empty));
+		for (var l: listenerList.getListeners(LanguageChangedListener.class)) l.languageChanged(new ActionEvent(this, -1, Str.Empty));
 	}
 	
 	@Override
@@ -95,7 +96,7 @@ public class JReferenceChooser extends JPanel {
 		mainChooser.setValue(a);
 		updateUIControls();
 
-		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(a, -1, Str.Empty));
+		for (var l: listenerList.getListeners(LanguageChangedListener.class)) l.languageChanged(new ActionEvent(this, -1, Str.Empty));
 	}
 	
 	public void setAdditional(List<CCSingleOnlineReference> a) {
@@ -106,6 +107,6 @@ public class JReferenceChooser extends JPanel {
 				.enumerate();
 		updateUIControls();
 
-		for (ActionListener ac : _changeListener) ac.actionPerformed(new ActionEvent(a, -1, Str.Empty));
+		for (var l: listenerList.getListeners(LanguageChangedListener.class)) l.languageChanged(new ActionEvent(this, -1, Str.Empty));
 	}
 }

@@ -24,7 +24,7 @@ import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.JReadableCCPathTextField;
-import de.jClipCorn.gui.guiComponents.TagPanel;
+import de.jClipCorn.gui.guiComponents.tags.TagPanel;
 import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;

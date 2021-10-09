@@ -10,6 +10,7 @@ import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.guiComponents.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
+import de.jClipCorn.gui.guiComponents.tags.TagsChangedListener;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
@@ -24,13 +25,10 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EditCoverControl extends AbstractEditCoverControl {
 	private static final long serialVersionUID = -4086336311809789696L;
@@ -57,8 +55,6 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	private JMenuItem mntmOpen;
 	private JMenuItem mntmPasteurl;
 	private JMenuItem mntmPasteImg;
-
-	private List<ActionListener> _changeListener = new ArrayList<>();
 
 	public EditCoverControl(@NotNull ICCWindow owner, ParseResultHandler handler) {
 		super();
@@ -140,8 +136,11 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		setPreferredSize(new Dimension(CTRL_WIDTH, CTRL_HEIGHT));
 	}
 
-	public void addChangeListener(ActionListener a) {
-		_changeListener.add(a);
+	public void addCoverChangedListener(final CoverChangedListener l) {
+		listenerList.add(CoverChangedListener.class, l);
+	}
+	public void removeCoverChangedListener(final CoverChangedListener l) {
+		listenerList.add(CoverChangedListener.class, l);
 	}
 
 	@Override
@@ -270,7 +269,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 
 		btnCrop.setEnabled(isCoverSet() && isEnabled());
 
-		for (ActionListener a : _changeListener) a.actionPerformed(new ActionEvent(nci, -1, Str.Empty));
+		for (var a : listenerList.getListeners(TagsChangedListener.class)) a.tagsChanged(new ActionEvent(nci, -1, Str.Empty));
 	}
 
 	@Override

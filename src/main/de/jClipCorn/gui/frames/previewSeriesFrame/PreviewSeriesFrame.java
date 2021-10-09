@@ -27,6 +27,7 @@ import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooser;
 import de.jClipCorn.gui.guiComponents.jCoverChooser.JCoverChooserPopupListener;
 import de.jClipCorn.gui.guiComponents.language.LanguageListDisplay;
 import de.jClipCorn.gui.guiComponents.language.LanguageSetDisplay;
+import de.jClipCorn.gui.guiComponents.tags.TagDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;

@@ -305,7 +305,7 @@ new FormModel {
 					"gridX": 3
 					"gridY": 22
 				} )
-				add( new FormComponent( "de.jClipCorn.gui.guiComponents.TagPanel" ) {
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.tags.TagPanel" ) {
 					name: "ctrlTags"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 5
@@ -975,7 +975,7 @@ new FormModel {
 						"gridX": 4
 						"gridY": 10
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.TagPanel" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.tags.TagPanel" ) {
 						name: "ctrlSideTags"
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2

@@ -1,10 +1,7 @@
 package de.jClipCorn.features.online.metadata.imdb;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.cover.imdb.AgeRatingParser;
@@ -117,11 +114,12 @@ public class IMDBParserGerman extends IMDBParserCommon {
 	}
 	
 	@Override
-	protected Integer getRating(String html) {
+	protected CCOnlineScore getRating(String html) {
 		String y = RegExHelper.find(REGEX_RATING, html.trim()).trim();
-		
+
 		try {
-			return (int) Math.round(Double.parseDouble(y.replace(',', '.')));
+			var n = (short) Math.round(Double.parseDouble(y.replace(',', '.'))*10);
+			return CCOnlineScore.create(n, (short)100);
 		} catch (NumberFormatException e) {
 			return null;
 		}

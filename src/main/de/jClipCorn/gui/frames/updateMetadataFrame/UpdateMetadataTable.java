@@ -2,10 +2,7 @@ package de.jClipCorn.gui.frames.updateMetadataFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
@@ -86,7 +83,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				"UpdateMetadataFrame.Table.ColumnLocalScore",
 				null,
 				e -> e.Element.getOnlinescore().getIcon(),
-				e -> e.Element.getOnlinescore().asInt() + "/10",
+				e -> e.Element.getOnlinescore().getDisplayString(),
 				true));
 		
 		r.add(new JCCSimpleColumnPrototype<>(
@@ -94,8 +91,8 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 				"auto",
 				"UpdateMetadataFrame.Table.ColumnOnlineScore",
 				null,
-				e -> (e.OnlineMeta != null && e.OnlineMeta.getOnlineScore() != null) ? (e.OnlineMeta.getOnlineScore().getIcon()) : (null),
-				e -> (e.OnlineMeta != null && e.OnlineMeta.getOnlineScore() != null) ? (e.OnlineMeta.getOnlineScore().asInt() + "/10") : (null),
+				e -> (e.OnlineMeta != null && e.OnlineMeta.OnlineScore != null) ? (e.OnlineMeta.OnlineScore.getIcon()) : (null),
+				e -> (e.OnlineMeta != null && e.OnlineMeta.OnlineScore != null) ? (e.OnlineMeta.OnlineScore.getDisplayString()) : (null),
 				true));
 
 		r.add(new JCCSimpleColumnPrototype<>(
@@ -140,14 +137,17 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 	@SuppressWarnings("nls")
 	private String getScoreChange(UpdateMetadataTableElement e) {
 		if (e.OnlineMeta == null) return "";
-		if (e.OnlineMeta.getOnlineScore() == null) return "ERR";
+		if (e.OnlineMeta.OnlineScore == null) return "ERR";
 		
-		int o = e.OnlineMeta.getOnlineScore().asInt();
-		int l = e.Element.getOnlinescore().asInt();
+		var o = e.OnlineMeta.OnlineScore.getRatio();
+		var l = e.Element.getOnlinescore().getRatio();
 		
-		if (o > l) return "+" + ((o-l)/2f);
-		if (o < l) return "-" + ((l-o)/2f);
-		
+		if (o > l) return "[+] " + e.Element.getOnlinescore().getDisplayString() + " -> " + e.OnlineMeta.OnlineScore.getDisplayString();
+		if (o < l) return "[-] " + e.Element.getOnlinescore().getDisplayString() + " -> " + e.OnlineMeta.OnlineScore.getDisplayString();
+
+		if (!CCOnlineScore.isEqual(e.OnlineMeta.OnlineScore, e.Element.getOnlinescore()))
+			return "[=] " + e.Element.getOnlinescore().getDisplayString() + " -> " + e.OnlineMeta.OnlineScore.getDisplayString();
+
 		return "-";
 	}
 

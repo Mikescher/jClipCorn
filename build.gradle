@@ -202,7 +202,7 @@ dependencies {
 	implementation 'commons-logging:commons-logging:1.2'
 	implementation 'commons-beanutils:commons-beanutils:1.9.4'
 
-	implementation 'org.xerial:sqlite-jdbc:3.36.0.1'
+	implementation 'org.xerial:sqlite-jdbc:3.36.0.2'
 
 	implementation 'org.jdom:jdom2:2.0.6'
 	implementation 'org.json:json:20210307'

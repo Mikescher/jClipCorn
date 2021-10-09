@@ -329,7 +329,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			(r) -> false,
 			(v1,v2) -> CCOnlineScore.compare(v1.OnlineScore.get(), v2.OnlineScore.get()),
 			true,
-			(v,row) -> LocaleBundle.getString("CCMovieScore.Score") + ": " + v.OnlineScore.get().asInt(),
+			(v,row) -> LocaleBundle.getString("CCMovieScore.Score") + ": " + v.OnlineScore.get().getDisplayString(),
 			(v) -> false,
 			(v) -> noop()
 		));
@@ -502,7 +502,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			case STRIPED:
 				return (visualrow%2==0) ? Opt.of(owner.getBackground()) : Opt.of(LookAndFeelManager.isDark() ? COLOR_BACKGROUNDDARKGRAY : COLOR_BACKGROUNDGRAY);
 			case SCORE:
-				return Opt.of(COLOR_ONLINESCORE[element.OnlineScore.get().asInt()]);
+				return Opt.of(COLOR_ONLINESCORE[element.OnlineScore.get().getStars().asInt()]);
 			default:
 				return Opt.of(Color.MAGENTA);
 		}

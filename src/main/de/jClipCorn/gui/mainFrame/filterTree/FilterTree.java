@@ -171,7 +171,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initOnlineScore(DefaultMutableTreeNode parent) {
-		for (final CCOnlineScore oscore : CCOnlineScore.getWrapper().allDisplayValuesSorted()) {
+		for (final CCOnlineStars oscore : CCOnlineStars.getWrapper().allDisplayValuesSorted()) {
 			addNodeF(parent, oscore.getIcon(), oscore.asInt()/2.0+"", () -> CustomOnlinescoreFilter.create(movielist, oscore)); //$NON-NLS-1$
 		}
 	}

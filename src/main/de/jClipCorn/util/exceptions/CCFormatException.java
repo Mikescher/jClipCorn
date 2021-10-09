@@ -6,4 +6,8 @@ public abstract class CCFormatException extends Exception {
 	public CCFormatException(String msg) {
 		super(msg);
 	}
+
+	public CCFormatException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
 }

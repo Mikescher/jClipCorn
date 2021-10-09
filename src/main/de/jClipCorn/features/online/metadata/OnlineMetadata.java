@@ -15,7 +15,7 @@ public class OnlineMetadata {
 	
 	public String Title = null;
 	public Integer Year = null;
-	public Integer OnlineScore = null;
+	public CCOnlineScore OnlineScore = null;
 	public Integer Length = null;
 	public CCGenreList Genres = null;
 	public String CoverURL = null;
@@ -39,11 +39,6 @@ public class OnlineMetadata {
 		if (this.Cover == null) {this.Cover = base.Cover; this.CoverURL = base.CoverURL; }
 		if (this.FSK == null) {this.FSK = base.FSK; this.FSKList = base.FSKList;}		
 		if (this.AltRef == null || this.AltRef.isUnset()) this.AltRef = base.AltRef;
-	}
-	
-	public CCOnlineScore getOnlineScore() {
-		if (OnlineScore==null) return null;
-		return CCOnlineScore.getWrapper().findOrNull(OnlineScore);
 	}
 
 	public CCOnlineReferenceList getFullReference() {

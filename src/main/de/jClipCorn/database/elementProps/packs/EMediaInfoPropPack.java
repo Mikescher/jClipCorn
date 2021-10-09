@@ -7,7 +7,7 @@ import de.jClipCorn.database.elementProps.impl.*;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.util.datatypes.Opt;
 
-public class EMediaInfoPropPack {
+public class EMediaInfoPropPack extends EPropertyPack {
 
 	public final EOptLongProp     CDate;
 	public final EOptLongProp     MDate;

@@ -17,7 +17,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.table.filter.customFilter.CustomSearchFilter;
 import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
-import de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel;
+import de.jClipCorn.gui.guiComponents.cover.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.guiComponents.FileDrop;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;

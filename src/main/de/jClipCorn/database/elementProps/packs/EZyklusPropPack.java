@@ -7,7 +7,7 @@ import de.jClipCorn.database.elementProps.impl.EIntProp;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
 import de.jClipCorn.database.elementProps.impl.EStringProp;
 
-public class EZyklusPropPack {
+public class EZyklusPropPack extends EPropertyPack {
 	public final EStringProp Title;
 	public final EIntProp    Number;
 

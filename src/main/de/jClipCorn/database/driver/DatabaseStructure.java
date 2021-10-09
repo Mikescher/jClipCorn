@@ -8,74 +8,76 @@ public class DatabaseStructure
 	private static final boolean NULLABLE = false;
 	private static final boolean NON_NULLABLE = true;
 
-	public final static CCSQLColDef COL_TEMP_KEY             = new CCSQLColDef("IKEY",                  CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_TEMP_VALUE           = new CCSQLColDef("IVALUE",                CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_TEMP_KEY              = new CCSQLColDef("IKEY",                  CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_TEMP_VALUE            = new CCSQLColDef("IVALUE",                CCSQLType.VARCHAR,     NON_NULLABLE);
 
-	public final static CCSQLColDef COL_INFO_KEY             = new CCSQLColDef("IKEY",                  CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_INFO_VALUE           = new CCSQLColDef("IVALUE",                CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_INFO_KEY              = new CCSQLColDef("IKEY",                  CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_INFO_VALUE            = new CCSQLColDef("IVALUE",                CCSQLType.VARCHAR,     NON_NULLABLE);
 
-	public final static CCSQLColDef COL_HISTORY_TABLE        = new CCSQLColDef("TABLE",                CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_HISTORY_ID           = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_HISTORY_DATE         = new CCSQLColDef("DATE",                 CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_HISTORY_ACTION       = new CCSQLColDef("ACTION",               CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_HISTORY_FIELD        = new CCSQLColDef("FIELD",                CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_HISTORY_OLD          = new CCSQLColDef("OLD",                  CCSQLType.VARCHAR,     NULLABLE);
-	public final static CCSQLColDef COL_HISTORY_NEW          = new CCSQLColDef("NEW",                  CCSQLType.VARCHAR,     NULLABLE);
+	public final static CCSQLColDef COL_HISTORY_TABLE         = new CCSQLColDef("TABLE",                CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_HISTORY_ID            = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_HISTORY_DATE          = new CCSQLColDef("DATE",                 CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_HISTORY_ACTION        = new CCSQLColDef("ACTION",               CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_HISTORY_FIELD         = new CCSQLColDef("FIELD",                CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_HISTORY_OLD           = new CCSQLColDef("OLD",                  CCSQLType.VARCHAR,     NULLABLE);
+	public final static CCSQLColDef COL_HISTORY_NEW           = new CCSQLColDef("NEW",                  CCSQLType.VARCHAR,     NULLABLE);
 
-	public final static CCSQLColDef COL_MOV_LOCALID          = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_VIEWEDHISTORY    = new CCSQLColDef("VIEWED_HISTORY",       CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_ZYKLUS           = new CCSQLColDef("ZYKLUS",               CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_ZYKLUSNUMBER     = new CCSQLColDef("ZYKLUSNUMBER",         CCSQLType.INTEGER,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_LANGUAGE         = new CCSQLColDef("LANGUAGE",             CCSQLType.BIGINT,      NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_SUBTITLES        = new CCSQLColDef("SUBTITLES",            CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_GENRE            = new CCSQLColDef("GENRE",                CCSQLType.BIGINT,      NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_LENGTH           = new CCSQLColDef("LENGTH",               CCSQLType.INTEGER,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_ADDDATE          = new CCSQLColDef("ADDDATE",              CCSQLType.DATE,        NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_ONLINESCORE      = new CCSQLColDef("ONLINESCORE",          CCSQLType.TINYINT,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_FSK              = new CCSQLColDef("FSK",                  CCSQLType.TINYINT,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_FORMAT           = new CCSQLColDef("FORMAT",               CCSQLType.TINYINT,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_MOVIEYEAR        = new CCSQLColDef("MOVIEYEAR",            CCSQLType.SMALLINT,    NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_ONLINEREF        = new CCSQLColDef("ONLINEREF",            CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_GROUPS           = new CCSQLColDef("GROUPS",               CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_FILESIZE         = new CCSQLColDef("FILESIZE",             CCSQLType.BIGINT,      NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_TAGS             = new CCSQLColDef("TAGS",                 CCSQLType.SMALLINT,    NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_PART_1           = new CCSQLColDef("PART1",                CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_PART_2           = new CCSQLColDef("PART2",                CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_PART_3           = new CCSQLColDef("PART3",                CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_PART_4           = new CCSQLColDef("PART4",                CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_PART_5           = new CCSQLColDef("PART5",                CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_PART_6           = new CCSQLColDef("PART6",                CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_SCORE            = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_COVERID          = new CCSQLColDef("COVERID",              CCSQLType.INTEGER,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_FILESIZE      = new CCSQLColDef("MEDIAINFO.FILESIZE",   CCSQLType.BIGINT,      NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_CDATE         = new CCSQLColDef("MEDIAINFO.CDATE",      CCSQLType.BIGINT,      NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_MDATE         = new CCSQLColDef("MEDIAINFO.MDATE",      CCSQLType.BIGINT,      NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_AFORMAT       = new CCSQLColDef("MEDIAINFO.AFORMAT",    CCSQLType.VARCHAR,     NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_VFORMAT       = new CCSQLColDef("MEDIAINFO.VFORMAT",    CCSQLType.VARCHAR,     NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_WIDTH         = new CCSQLColDef("MEDIAINFO.WIDTH",      CCSQLType.SMALLINT,    NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_HEIGHT        = new CCSQLColDef("MEDIAINFO.HEIGHT",     CCSQLType.SMALLINT,    NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_FRAMERATE     = new CCSQLColDef("MEDIAINFO.FRAMERATE",  CCSQLType.REAL,        NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_DURATION      = new CCSQLColDef("MEDIAINFO.DURATION",   CCSQLType.REAL,        NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_BITDEPTH      = new CCSQLColDef("MEDIAINFO.BITDEPTH",   CCSQLType.TINYINT,     NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_BITRATE       = new CCSQLColDef("MEDIAINFO.BITRATE",    CCSQLType.INTEGER,     NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_FRAMECOUNT    = new CCSQLColDef("MEDIAINFO.FRAMECOUNT", CCSQLType.INTEGER,     NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_ACHANNELS     = new CCSQLColDef("MEDIAINFO.ACHANNELS",  CCSQLType.SMALLINT,    NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_VCODEC        = new CCSQLColDef("MEDIAINFO.VCODEC",     CCSQLType.VARCHAR,     NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_ACODEC        = new CCSQLColDef("MEDIAINFO.ACODEC",     CCSQLType.VARCHAR,     NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_SAMPLERATE    = new CCSQLColDef("MEDIAINFO.SAMPLERATE", CCSQLType.INTEGER,     NULLABLE);
-	public final static CCSQLColDef COL_MOV_MI_CHECKSUM      = new CCSQLColDef("MEDIAINFO.CHECKSUM",   CCSQLType.VARCHAR,     NULLABLE);
+	public final static CCSQLColDef COL_MOV_LOCALID           = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_NAME              = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_VIEWEDHISTORY     = new CCSQLColDef("VIEWED_HISTORY",       CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_ZYKLUS            = new CCSQLColDef("ZYKLUS",               CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_ZYKLUSNUMBER      = new CCSQLColDef("ZYKLUSNUMBER",         CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_LANGUAGE          = new CCSQLColDef("LANGUAGE",             CCSQLType.BIGINT,      NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_SUBTITLES         = new CCSQLColDef("SUBTITLES",            CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_GENRE             = new CCSQLColDef("GENRE",                CCSQLType.BIGINT,      NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_LENGTH            = new CCSQLColDef("LENGTH",               CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_ADDDATE           = new CCSQLColDef("ADDDATE",              CCSQLType.DATE,        NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_ONLINESCORE_NUM   = new CCSQLColDef("ONLINESCORE_NUM",      CCSQLType.SMALLINT,    NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_ONLINESCORE_DENOM = new CCSQLColDef("ONLINESCORE_DENOM",    CCSQLType.SMALLINT,    NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_FSK               = new CCSQLColDef("FSK",                  CCSQLType.TINYINT,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_FORMAT            = new CCSQLColDef("FORMAT",               CCSQLType.TINYINT,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_MOVIEYEAR         = new CCSQLColDef("MOVIEYEAR",            CCSQLType.SMALLINT,    NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_ONLINEREF         = new CCSQLColDef("ONLINEREF",            CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_GROUPS            = new CCSQLColDef("GROUPS",               CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_FILESIZE          = new CCSQLColDef("FILESIZE",             CCSQLType.BIGINT,      NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_TAGS              = new CCSQLColDef("TAGS",                 CCSQLType.SMALLINT,    NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_PART_1            = new CCSQLColDef("PART1",                CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_PART_2            = new CCSQLColDef("PART2",                CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_PART_3            = new CCSQLColDef("PART3",                CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_PART_4            = new CCSQLColDef("PART4",                CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_PART_5            = new CCSQLColDef("PART5",                CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_PART_6            = new CCSQLColDef("PART6",                CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_SCORE             = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_COVERID           = new CCSQLColDef("COVERID",              CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_FILESIZE       = new CCSQLColDef("MEDIAINFO.FILESIZE",   CCSQLType.BIGINT,      NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_CDATE          = new CCSQLColDef("MEDIAINFO.CDATE",      CCSQLType.BIGINT,      NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_MDATE          = new CCSQLColDef("MEDIAINFO.MDATE",      CCSQLType.BIGINT,      NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_AFORMAT        = new CCSQLColDef("MEDIAINFO.AFORMAT",    CCSQLType.VARCHAR,     NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_VFORMAT        = new CCSQLColDef("MEDIAINFO.VFORMAT",    CCSQLType.VARCHAR,     NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_WIDTH          = new CCSQLColDef("MEDIAINFO.WIDTH",      CCSQLType.SMALLINT,    NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_HEIGHT         = new CCSQLColDef("MEDIAINFO.HEIGHT",     CCSQLType.SMALLINT,    NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_FRAMERATE      = new CCSQLColDef("MEDIAINFO.FRAMERATE",  CCSQLType.REAL,        NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_DURATION       = new CCSQLColDef("MEDIAINFO.DURATION",   CCSQLType.REAL,        NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_BITDEPTH       = new CCSQLColDef("MEDIAINFO.BITDEPTH",   CCSQLType.TINYINT,     NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_BITRATE        = new CCSQLColDef("MEDIAINFO.BITRATE",    CCSQLType.INTEGER,     NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_FRAMECOUNT     = new CCSQLColDef("MEDIAINFO.FRAMECOUNT", CCSQLType.INTEGER,     NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_ACHANNELS      = new CCSQLColDef("MEDIAINFO.ACHANNELS",  CCSQLType.SMALLINT,    NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_VCODEC         = new CCSQLColDef("MEDIAINFO.VCODEC",     CCSQLType.VARCHAR,     NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_ACODEC         = new CCSQLColDef("MEDIAINFO.ACODEC",     CCSQLType.VARCHAR,     NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_SAMPLERATE     = new CCSQLColDef("MEDIAINFO.SAMPLERATE", CCSQLType.INTEGER,     NULLABLE);
+	public final static CCSQLColDef COL_MOV_MI_CHECKSUM       = new CCSQLColDef("MEDIAINFO.CHECKSUM",   CCSQLType.VARCHAR,     NULLABLE);
 
-	public final static CCSQLColDef COL_SER_LOCALID          = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SER_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SER_GENRE            = new CCSQLColDef("GENRE",                CCSQLType.BIGINT,      NON_NULLABLE);
-	public final static CCSQLColDef COL_SER_ONLINESCORE      = new CCSQLColDef("ONLINESCORE",          CCSQLType.TINYINT,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SER_FSK              = new CCSQLColDef("FSK",                  CCSQLType.TINYINT,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SER_ONLINEREF        = new CCSQLColDef("ONLINEREF",            CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SER_GROUPS           = new CCSQLColDef("GROUPS",               CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SER_SCORE            = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SER_COVERID          = new CCSQLColDef("COVERID",              CCSQLType.INTEGER,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SER_TAGS             = new CCSQLColDef("TAGS",                 CCSQLType.SMALLINT,    NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_LOCALID           = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_NAME              = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_GENRE             = new CCSQLColDef("GENRE",                CCSQLType.BIGINT,      NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_ONLINESCORE_NUM   = new CCSQLColDef("ONLINESCORE_NUM",      CCSQLType.TINYINT,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_ONLINESCORE_DENOM = new CCSQLColDef("ONLINESCORE_DENOM",    CCSQLType.TINYINT,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_FSK               = new CCSQLColDef("FSK",                  CCSQLType.TINYINT,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_ONLINEREF         = new CCSQLColDef("ONLINEREF",            CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_GROUPS            = new CCSQLColDef("GROUPS",               CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_SCORE             = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_COVERID           = new CCSQLColDef("COVERID",              CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_TAGS              = new CCSQLColDef("TAGS",                 CCSQLType.SMALLINT,    NON_NULLABLE);
 
 	public final static CCSQLColDef COL_SEAS_LOCALID          = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_SERIESID         = new CCSQLColDef("SERIESID",             CCSQLType.INTEGER,     NON_NULLABLE);
@@ -139,7 +141,7 @@ public class DatabaseStructure
 			new CCSQLColDef[]
 			{
 				COL_MOV_NAME, COL_MOV_VIEWEDHISTORY, COL_MOV_ZYKLUS, COL_MOV_ZYKLUSNUMBER, COL_MOV_LANGUAGE, COL_MOV_SUBTITLES,
-				COL_MOV_GENRE, COL_MOV_LENGTH, COL_MOV_ADDDATE, COL_MOV_ONLINESCORE, COL_MOV_FSK, COL_MOV_FORMAT,
+				COL_MOV_GENRE, COL_MOV_LENGTH, COL_MOV_ADDDATE, COL_MOV_ONLINESCORE_NUM, COL_MOV_ONLINESCORE_DENOM, COL_MOV_FSK, COL_MOV_FORMAT,
 				COL_MOV_MOVIEYEAR, COL_MOV_ONLINEREF, COL_MOV_GROUPS, COL_MOV_FILESIZE, COL_MOV_TAGS,
 				COL_MOV_PART_1, COL_MOV_PART_2, COL_MOV_PART_3, COL_MOV_PART_4, COL_MOV_PART_5, COL_MOV_PART_6,
 				COL_MOV_SCORE, COL_MOV_COVERID,
@@ -157,7 +159,7 @@ public class DatabaseStructure
 			COL_SER_LOCALID,
 			new CCSQLColDef[]
 			{
-				COL_SER_NAME, COL_SER_GENRE, COL_SER_ONLINESCORE, COL_SER_FSK, COL_SER_ONLINEREF,
+				COL_SER_NAME, COL_SER_GENRE, COL_SER_ONLINESCORE_NUM, COL_SER_ONLINESCORE_DENOM, COL_SER_FSK, COL_SER_ONLINEREF,
 				COL_SER_GROUPS, COL_SER_SCORE, COL_SER_COVERID, COL_SER_TAGS
 			},
 			new CCSQLFKey[]

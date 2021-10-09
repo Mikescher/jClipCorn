@@ -3,6 +3,7 @@ package de.jClipCorn.features.online.metadata.mal;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.cover.imdb.AgeRatingParser;
@@ -79,7 +80,10 @@ public class MALParser extends Metadataparser {
 		
 		result.Title = getContentBySelector(soup, SOUP_TITLE);
 		result.CoverURL = getAttrBySelector(soup, SOUP_COVER, "src"); //$NON-NLS-1$
-		result.OnlineScore = getRoundedIntBySelector(soup, SOUP_SCORE);
+
+		var os = getFloatBySelector(soup, SOUP_SCORE);
+
+		result.OnlineScore = (os == null) ? null : CCOnlineScore.create((short)Math.round(os * 100), (short)1000);
 
 		for (Element elem : soup.select(SOUP_BORDER)) {
 			Matcher matcher = REGEX_BORDER.matcher(elem.text());
@@ -141,11 +145,11 @@ public class MALParser extends Metadataparser {
 		return (e == null) ? "" : e.attr(attr); //$NON-NLS-1$
 	}
 	
-	protected Integer getRoundedIntBySelector(Document soup, String cssQuery) {
+	protected Double getFloatBySelector(Document soup, String cssQuery) {
 		String y = getContentBySelector(soup, cssQuery);
 		
 		try {
-			return (int) Math.round(Double.parseDouble(y.replace(',', '.')));
+			return Double.parseDouble(y.replace(',', '.'));
 		} catch (NumberFormatException e) {
 			return null;
 		}

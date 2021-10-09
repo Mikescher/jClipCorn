@@ -6,7 +6,7 @@ import de.jClipCorn.database.elementProps.impl.ECCPathProp;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
 import de.jClipCorn.util.filesystem.CCPath;
 
-public class EPartArrayPropPack {
+public class EPartArrayPropPack extends EPropertyPack {
 	public final static int PARTCOUNT_MAX = 6; // 0 .. 5
 
 	public final ECCPathProp Part0;

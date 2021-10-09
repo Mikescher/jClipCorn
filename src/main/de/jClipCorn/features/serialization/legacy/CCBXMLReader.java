@@ -8,6 +8,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
@@ -113,7 +114,7 @@ public class CCBXMLReader {
 		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
 		newMov.Length.set(Integer.parseInt(e.getChildText("länge")));
 		newMov.AddDate.set(CCDate.deserialize(e.getChildText("adddate")));
-		newMov.OnlineScore.set(Integer.parseInt(e.getChildText("imdbscore")));
+		newMov.OnlineScore.set(CCOnlineScore.create(Short.parseShort(e.getChildText("imdbscore")), (short)10));
 		newMov.FSK.set(e.getChild("usk").getAttribute("dec").getIntValue());
 		newMov.Format.set(e.getChild("format").getAttribute("dec").getIntValue());
 		newMov.Year.set(Integer.parseInt(e.getChildText("jahr")));
@@ -145,7 +146,7 @@ public class CCBXMLReader {
 		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre04").getAttribute("dec").getIntValue()), 4);
 		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre05").getAttribute("dec").getIntValue()), 5);
 		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
-		newSer.OnlineScore.set(Integer.parseInt(e.getChild("info").getChildText("imdbscore")));
+		newSer.OnlineScore.set(CCOnlineScore.create(Short.parseShort(e.getChild("info").getChildText("imdbscore")), (short)10));
 		newSer.FSK.set(e.getChild("info").getChild("usk").getAttribute("dec").getIntValue());
 		//String cvrval = e.getChild("info").getChildText("cover");
 		//newSer.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");

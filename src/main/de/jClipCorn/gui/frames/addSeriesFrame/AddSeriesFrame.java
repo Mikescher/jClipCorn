@@ -17,6 +17,7 @@ import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
+import de.jClipCorn.gui.guiComponents.onlinescore.*;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
@@ -96,7 +97,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 
 		newS.Title.set(edTitle.getText());
 
-		newS.OnlineScore.set((int) spnOnlinescore.getValue());
+		newS.OnlineScore.set(spnOnlinescore.getValue());
 
 		newS.FSK.set(cbxFSK.getSelectedEnum().asFSK());
 
@@ -131,7 +132,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		(
 			edTitle.getText(),
 			CCGenreList.create(cbxGenre0.getSelectedEnum(), cbxGenre1.getSelectedEnum(), cbxGenre2.getSelectedEnum(), cbxGenre3.getSelectedEnum(), cbxGenre4.getSelectedEnum(), cbxGenre5.getSelectedEnum(), cbxGenre6.getSelectedEnum(), cbxGenre7.getSelectedEnum()),
-			CCOnlineScore.getWrapper().findOrNull((int) spnOnlinescore.getValue()),
+			spnOnlinescore.getValue(),
 			cbxFSK.getSelectedEnum().asFSKOrNull(),
 			CCUserScore.RATING_NO,
 			edReference.getValue(),
@@ -240,7 +241,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 
 	@Override
 	public void setScore(CCOnlineScore s) {
-		spnOnlinescore.setValue(s.asInt());
+		spnOnlinescore.setValue(s);
 	}
 
 	private void initComponents() {
@@ -250,8 +251,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		label13 = new JLabel();
 		edReference = new JReferenceChooser(movielist);
 		label2 = new JLabel();
-		spnOnlinescore = new JSpinner();
-		label12 = new JLabel();
+		spnOnlinescore = new OnlineScoreControl();
 		label14 = new JLabel();
 		edGroups = new GroupListEditor(movielist);
 		label3 = new JLabel();
@@ -284,7 +284,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		setMinimumSize(null);
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$rgap, default, $ugap, default:grow, $lcgap, pref, 13dlu, 2*(default, $lcgap), default:grow, $lcgap", //$NON-NLS-1$
+			"$rgap, default, $ugap, default:grow, $lcgap, 13dlu, 2*(default, $lcgap), default:grow, $lcgap", //$NON-NLS-1$
 			"2*($rgap, default), $lgap, default, 30dlu, $ugap, 8*(default, $lgap), pref, $lgap, pref:grow, default, $lgap")); //$NON-NLS-1$
 
 		//---- label1 ----
@@ -294,25 +294,18 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 
 		//---- label13 ----
 		label13.setText(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
-		contentPane.add(label13, CC.xy(8, 2));
-		contentPane.add(edReference, CC.xywh(10, 2, 3, 1, CC.DEFAULT, CC.CENTER));
+		contentPane.add(label13, CC.xy(7, 2));
+		contentPane.add(edReference, CC.xywh(9, 2, 3, 1, CC.DEFAULT, CC.CENTER));
 
 		//---- label2 ----
 		label2.setText(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
 		contentPane.add(label2, CC.xy(2, 4));
-
-		//---- spnOnlinescore ----
-		spnOnlinescore.setModel(new SpinnerNumberModel(0, 0, 10, 1));
 		contentPane.add(spnOnlinescore, CC.xy(4, 4));
-
-		//---- label12 ----
-		label12.setText(" / 10"); //$NON-NLS-1$
-		contentPane.add(label12, CC.xy(6, 4));
 
 		//---- label14 ----
 		label14.setText(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
-		contentPane.add(label14, CC.xy(8, 4));
-		contentPane.add(edGroups, CC.xywh(10, 4, 3, 1, CC.DEFAULT, CC.CENTER));
+		contentPane.add(label14, CC.xy(7, 4));
+		contentPane.add(edGroups, CC.xywh(9, 4, 3, 1, CC.DEFAULT, CC.CENTER));
 
 		//---- label3 ----
 		label3.setText(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
@@ -328,8 +321,8 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		button3.setText(LocaleBundle.getString("AddSeriesFrame.btnParse.text")); //$NON-NLS-1$
 		button3.setFont(button3.getFont().deriveFont(button3.getFont().getStyle() | Font.BOLD, button3.getFont().getSize() + 3f));
 		button3.addActionListener(e -> onParseOnline(e));
-		contentPane.add(button3, CC.xywh(10, 7, 3, 1, CC.DEFAULT, CC.FILL));
-		contentPane.add(edCvrControl, CC.xywh(12, 9, 1, 19, CC.RIGHT, CC.TOP));
+		contentPane.add(button3, CC.xywh(9, 7, 3, 1, CC.DEFAULT, CC.FILL));
+		contentPane.add(edCvrControl, CC.xywh(11, 9, 1, 19, CC.RIGHT, CC.TOP));
 
 		//---- label5 ----
 		label5.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
@@ -380,7 +373,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 			button2.addActionListener(e -> onCancel(e));
 			panel1.add(button2);
 		}
-		contentPane.add(panel1, CC.xywh(2, 28, 11, 1));
+		contentPane.add(panel1, CC.xywh(2, 28, 10, 1));
 		pack();
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -391,8 +384,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 	private JLabel label13;
 	private JReferenceChooser edReference;
 	private JLabel label2;
-	private JSpinner spnOnlinescore;
-	private JLabel label12;
+	private OnlineScoreControl spnOnlinescore;
 	private JLabel label14;
 	private GroupListEditor edGroups;
 	private JLabel label3;

@@ -432,20 +432,12 @@ new FormModel {
 						"gridX": 1
 						"gridY": 19
 					} )
-					add( new FormComponent( "javax.swing.JSpinner" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.onlinescore.OnlineScoreControl" ) {
 						name: "spnOnlineScore"
-						"model": new javax.swing.SpinnerNumberModel( 0, 0, 10, 1 )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
 						"gridY": 19
 						"gridWidth": 3
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label30"
-						"text": "/ 10"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 7
-						"gridY": 19
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label24"
@@ -504,26 +496,12 @@ new FormModel {
 						"gridX": 1
 						"gridY": 27
 					} )
-					add( new FormComponent( "javax.swing.JSpinner" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.filesize.CCFileSizeSpinner" ) {
 						name: "spnSize"
-						"model": new javax.swing.SpinnerNumberModel {
-							minimum: 0l
-							stepSize: 1l
-							value: 0l
-						}
-						addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "updateByteDisp", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
 						"gridY": 27
 						"gridWidth": 3
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "lblFileSizeDisp"
-						"text": "Byte = 0"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 7
-						"gridY": 27
-						"gridWidth": 5
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label28"

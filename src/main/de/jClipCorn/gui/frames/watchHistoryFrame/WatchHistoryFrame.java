@@ -11,7 +11,7 @@ import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryElement;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryEpisodeElement;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryMovieElement;
-import de.jClipCorn.gui.guiComponents.CoverLabelFullsize;
+import de.jClipCorn.gui.guiComponents.cover.CoverLabelFullsize;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.jSimpleTree.JSimpleTree;

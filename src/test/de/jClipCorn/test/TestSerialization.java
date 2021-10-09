@@ -45,7 +45,7 @@ public class TestSerialization extends ClipCornBaseTest {
 		assertEquals(CCFSK.RATING_III, mov.getFSK());
 		assertEquals(CCOnlineRefType.THEMOVIEDB, mov.getOnlineReference().Main.type);
 		assertEquals("movie/39514", mov.getOnlineReference().Main.id);
-		assertEquals(CCOnlineScore.STARS_3_5, mov.getOnlinescore());
+		assertEquals(CCOnlineScore.create((short)7, (short)10), mov.getOnlinescore());
 		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.parts().get(0).toString());
 		assertEquals(CCPath.create("<?self>R.E.D. I - Älter. Härter. Besser..avi"), mov.parts().get(0));
 	}
@@ -73,7 +73,7 @@ public class TestSerialization extends ClipCornBaseTest {
 		assertEquals(CCFSK.RATING_III, mov.getFSK());
 		assertEquals(CCOnlineRefType.THEMOVIEDB, mov.getOnlineReference().Main.type);
 		assertEquals("movie/39514", mov.getOnlineReference().Main.id);
-		assertEquals(CCOnlineScore.STARS_3_5, mov.getOnlinescore());
+		assertEquals(CCOnlineScore.create((short)7, (short)10), mov.getOnlinescore());
 		assertEquals("<?self>R.E.D. I - Älter. Härter. Besser..avi", mov.parts().get(0).toString());
 		assertEquals(CCPath.create("<?self>R.E.D. I - Älter. Härter. Besser..avi"), mov.parts().get(0));
 	}

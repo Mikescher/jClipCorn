@@ -16,6 +16,7 @@ import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.*;
+import de.jClipCorn.gui.guiComponents.cover.CoverLabelFullsize;
 import de.jClipCorn.gui.guiComponents.iconComponents.*;
 import de.jClipCorn.gui.guiComponents.language.*;
 import de.jClipCorn.gui.guiComponents.language.LanguageSetDisplay;

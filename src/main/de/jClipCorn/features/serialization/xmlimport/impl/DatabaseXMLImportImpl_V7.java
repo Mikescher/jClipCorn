@@ -23,7 +23,7 @@ public class DatabaseXMLImportImpl_V7 implements IDatabaseXMLImporterImpl
 	{
 		e.execIfAttrExists("title", o.Title::set);
 		e.execIfAttrExists("genres", v -> o.Genres.set(CCGenreList.deserialize(v)));
-		e.execIfIntAttrExists("onlinescore", o.OnlineScore::set);
+		e.execIfIntAttrExists("onlinescore", v -> o.OnlineScore.set((short)(int)v, (short)10));
 		e.execIfIntAttrExists("fsk", o.FSK::set);
 		e.execIfIntAttrExists("score", o.Score::set);
 		e.execIfAttrExists("tags", v -> o.Tags.set(CCTagList.deserialize(v)));

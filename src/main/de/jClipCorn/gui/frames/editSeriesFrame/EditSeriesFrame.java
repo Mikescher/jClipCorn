@@ -24,10 +24,10 @@ import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
 import de.jClipCorn.gui.guiComponents.HFixListCellRenderer;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.JReadableCCPathTextField;
-import de.jClipCorn.gui.guiComponents.tags.TagPanel;
 import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
+import de.jClipCorn.gui.guiComponents.filesize.CCFileSizeSpinner;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
@@ -35,13 +35,14 @@ import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 import de.jClipCorn.gui.guiComponents.jYearSpinner.JYearSpinner;
 import de.jClipCorn.gui.guiComponents.language.LanguageListChooser;
 import de.jClipCorn.gui.guiComponents.language.LanguageSetChooser;
+import de.jClipCorn.gui.guiComponents.onlinescore.OnlineScoreControl;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
+import de.jClipCorn.gui.guiComponents.tags.TagPanel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
-import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.DirtyUtil;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
@@ -387,7 +388,7 @@ public class EditSeriesFrame extends JCCFrame
 
 			@Override
 			public void setScore(CCOnlineScore s) {
-				spnSeriesOnlineScore.setValue(s.asInt());
+				spnSeriesOnlineScore.setValue(s);
 			}
 
 			@Override
@@ -469,7 +470,7 @@ public class EditSeriesFrame extends JCCFrame
 			edSeriesCvrControl.setCover(series.getCover());
 
 			edSeriesTitle.setText(series.getTitle());
-			spnSeriesOnlineScore.setValue(series.getOnlinescore().asInt());
+			spnSeriesOnlineScore.setValue(series.getOnlinescore());
 			cbxSeriesFSK.setSelectedEnum(series.getFSK());
 			cbxSeriesScore.setSelectedEnum(series.Score.get());
 
@@ -604,7 +605,7 @@ public class EditSeriesFrame extends JCCFrame
 			spnEpisodeEpisode.setValue(episode.EpisodeNumber.get());
 			cbxEpisodeFormat.setSelectedEnum(episode.Format.get());
 			spnEpisodeLength.setValue(episode.Length.get());
-			spnEpisodeSize.setValue(episode.FileSize.get().getBytes());
+			spnEpisodeSize.setValue(episode.FileSize.get());
 			spnEpisodeAdded.setValue(episode.AddDate.get());
 			ctrlEpisodeHistory.setValue(episode.ViewedHistory.get());
 			edEpisodePart.setPath(episode.Part.get());
@@ -613,7 +614,6 @@ public class EditSeriesFrame extends JCCFrame
 			ctrlEpisodeSubtitles.setValue(episode.Subtitles.get());
 			ctrlEpisodeMediaInfo.setValue(episode.MediaInfo.getPartial());
 
-			updateEpisodesFilesizeDisplay();
 			testEpisodePart();
 		}
 		_ignoreEpisodeDirty = false;
@@ -626,10 +626,6 @@ public class EditSeriesFrame extends JCCFrame
 		videoFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("AddMovieFrame.videoFileChooser.filterDescription", CCFileFormat::isValidMovieFormat)); //$NON-NLS-1$
 
 		videoFileChooser.setDialogTitle(LocaleBundle.getString("AddMovieFrame.videoFileChooser.title")); //$NON-NLS-1$
-	}
-
-	private void updateEpisodesFilesizeDisplay() {
-		lblEpisodeFilesizePreview.setText("= " + FileSizeFormatter.format((long) spnEpisodeSize.getValue()));
 	}
 
 	private void setSeriesCover(BufferedImage nci) {
@@ -689,7 +685,7 @@ public class EditSeriesFrame extends JCCFrame
 
 		series.setCover(edSeriesCvrControl.getResizedImageForStorage());
 		series.Title.set(edSeriesTitle.getText());
-		series.OnlineScore.set((int) spnSeriesOnlineScore.getValue());
+		series.OnlineScore.set(spnSeriesOnlineScore.getValue());
 		series.FSK.set(cbxSeriesFSK.getSelectedEnum());
 		series.Score.set(cbxSeriesScore.getSelectedEnum());
 
@@ -722,7 +718,7 @@ public class EditSeriesFrame extends JCCFrame
 		(
 			edSeriesTitle.getText(),
 			CCGenreList.create(cbxSeriesGenre_0.getSelectedEnum(), cbxSeriesGenre_1.getSelectedEnum(), cbxSeriesGenre_2.getSelectedEnum(), cbxSeriesGenre_3.getSelectedEnum(), cbxSeriesGenre_4.getSelectedEnum(), cbxSeriesGenre_5.getSelectedEnum(), cbxSeriesGenre_6.getSelectedEnum(), cbxSeriesGenre_7.getSelectedEnum()),
-			CCOnlineScore.getWrapper().findOrNull((int) spnSeriesOnlineScore.getValue()),
+			spnSeriesOnlineScore.getValue(),
 			cbxSeriesFSK.getSelectedEnum(),
 			cbxSeriesScore.getSelectedEnum(),
 			edSeriesReference.getValue(),
@@ -907,7 +903,7 @@ public class EditSeriesFrame extends JCCFrame
 	}
 
 	private void recalcEpisodeFilesize() {
-		spnEpisodeSize.setValue(edEpisodePart.getPath().toFSPath(this).filesize().getBytes());
+		spnEpisodeSize.setValue(edEpisodePart.getPath().toFSPath(this).filesize());
 	}
 
 	private void recalcEpisodeFormat() {
@@ -966,7 +962,7 @@ public class EditSeriesFrame extends JCCFrame
 		episode.Format.set(cbxEpisodeFormat.getSelectedEnum());
 		episode.MediaInfo.set(ctrlEpisodeMediaInfo.getValue());
 		episode.Length.set((int) spnEpisodeLength.getValue());
-		episode.FileSize.set((long) spnEpisodeSize.getValue());
+		episode.FileSize.set(spnEpisodeSize.getValue());
 		episode.AddDate.set(spnEpisodeAdded.getValue());
 		episode.ViewedHistory.set(ctrlEpisodeHistory.getValue());
 		episode.Part.set(edEpisodePart.getPath());
@@ -996,7 +992,7 @@ public class EditSeriesFrame extends JCCFrame
 			edEpisodeTitle.getText(),
 			(int) spnEpisodeLength.getValue(),
 			cbxEpisodeFormat.getSelectedEnum(),
-			new CCFileSize((long) spnEpisodeSize.getValue()),
+			spnEpisodeSize.getValue(),
 			edEpisodePart.getPath(),
 			spnEpisodeAdded.getValue(),
 			ctrlEpisodeHistory.getValue(),
@@ -1225,9 +1221,7 @@ public class EditSeriesFrame extends JCCFrame
 		edSeriesTitle = new JTextField();
 		btnParseOnline = new JButton();
 		label10 = new JLabel();
-		panel7 = new JPanel();
-		spnSeriesOnlineScore = new JSpinner();
-		label16 = new JLabel();
+		spnSeriesOnlineScore = new OnlineScoreControl();
 		label11 = new JLabel();
 		cbxSeriesFSK = new CCEnumComboBox<CCFSK>(CCFSK.getWrapper());
 		label12 = new JLabel();
@@ -1286,8 +1280,7 @@ public class EditSeriesFrame extends JCCFrame
 		label26 = new JLabel();
 		btnEpisodeMediaInfoLength = new CCIcon16Button();
 		label25 = new JLabel();
-		spnEpisodeSize = new JSpinner();
-		lblEpisodeFilesizePreview = new JLabel();
+		spnEpisodeSize = new CCFileSizeSpinner();
 		button14 = new JButton();
 		label28 = new JLabel();
 		spnEpisodeAdded = new JCCDateSpinner();
@@ -1404,22 +1397,7 @@ public class EditSeriesFrame extends JCCFrame
 				//---- label10 ----
 				label10.setText(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
 				panel5.add(label10, CC.xy(1, 3));
-
-				//======== panel7 ========
-				{
-					panel7.setLayout(new FormLayout(
-						"default:grow, $lcgap, default", //$NON-NLS-1$
-						"default")); //$NON-NLS-1$
-
-					//---- spnSeriesOnlineScore ----
-					spnSeriesOnlineScore.setModel(new SpinnerNumberModel(0, 0, 10, 1));
-					panel7.add(spnSeriesOnlineScore, CC.xy(1, 1));
-
-					//---- label16 ----
-					label16.setText(" / 10"); //$NON-NLS-1$
-					panel7.add(label16, CC.xy(3, 1, CC.DEFAULT, CC.CENTER));
-				}
-				panel5.add(panel7, CC.xy(3, 3));
+				panel5.add(spnSeriesOnlineScore, CC.xy(3, 3));
 
 				//---- label11 ----
 				label11.setText(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
@@ -1578,7 +1556,7 @@ public class EditSeriesFrame extends JCCFrame
 			pnlEditEpisode.setBorder(LineBorder.createBlackLineBorder());
 			pnlEditEpisode.setLayout(new FormLayout(
 				"$lcgap, default, $lcgap, 0dlu:grow, $lcgap, default, $lcgap, 14dlu, $lcgap, default, $lcgap", //$NON-NLS-1$
-				"3*($lgap, pref), 4*($lgap, 14dlu), 2*($lgap, pref), 2*($lgap, 14dlu), 2*($lgap, pref), $lgap, pref:grow, $lgap, pref, $lgap")); //$NON-NLS-1$
+				"3*($lgap, pref), 4*($lgap, 14dlu), $lgap, pref, 2*($lgap, 14dlu), 2*($lgap, pref), $lgap, pref:grow, $lgap, pref, $lgap")); //$NON-NLS-1$
 
 			//---- label19 ----
 			label19.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
@@ -1657,50 +1635,41 @@ public class EditSeriesFrame extends JCCFrame
 			//---- label25 ----
 			label25.setText(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
 			pnlEditEpisode.add(label25, CC.xy(2, 16));
-
-			//---- spnEpisodeSize ----
-			spnEpisodeSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
-			spnEpisodeSize.addChangeListener(e -> updateEpisodesFilesizeDisplay());
 			pnlEditEpisode.add(spnEpisodeSize, CC.xy(4, 16));
 
-			//---- lblEpisodeFilesizePreview ----
-			lblEpisodeFilesizePreview.setText("= ..."); //$NON-NLS-1$
-			pnlEditEpisode.add(lblEpisodeFilesizePreview, CC.xywh(6, 16, 5, 1, CC.FILL, CC.FILL));
-
 			//---- button14 ----
-			button14.setText(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text")); //$NON-NLS-1$
 			button14.addActionListener(e -> recalcEpisodeFilesize());
-			pnlEditEpisode.add(button14, CC.xy(4, 18));
+			pnlEditEpisode.add(button14, CC.xy(8, 16, CC.FILL, CC.FILL));
 
 			//---- label28 ----
 			label28.setText(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
-			pnlEditEpisode.add(label28, CC.xy(2, 20));
-			pnlEditEpisode.add(spnEpisodeAdded, CC.xy(4, 20));
+			pnlEditEpisode.add(label28, CC.xy(2, 18));
+			pnlEditEpisode.add(spnEpisodeAdded, CC.xy(4, 18));
 
 			//---- button15 ----
 			button15.setText(LocaleBundle.getString("AddEpisodeFrame.btnToday.text")); //$NON-NLS-1$
 			button15.addActionListener(e -> onSetEpisodeAddedToToday());
-			pnlEditEpisode.add(button15, CC.xywh(6, 20, 5, 1));
+			pnlEditEpisode.add(button15, CC.xywh(6, 18, 5, 1));
 
 			//---- label29 ----
 			label29.setText(LocaleBundle.getString("AddEpisodeFrame.lblPart.text")); //$NON-NLS-1$
-			pnlEditEpisode.add(label29, CC.xy(2, 22));
-			pnlEditEpisode.add(edEpisodePart, CC.xywh(4, 22, 5, 1));
+			pnlEditEpisode.add(label29, CC.xy(2, 20));
+			pnlEditEpisode.add(edEpisodePart, CC.xywh(4, 20, 5, 1));
 
 			//---- button16 ----
 			button16.setText("..."); //$NON-NLS-1$
 			button16.addActionListener(e -> openEpisodePart());
-			pnlEditEpisode.add(button16, CC.xy(10, 22));
+			pnlEditEpisode.add(button16, CC.xy(10, 20));
 
 			//---- label30 ----
 			label30.setText(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
-			pnlEditEpisode.add(label30, CC.xy(2, 24));
-			pnlEditEpisode.add(edEpisodeTags, CC.xywh(4, 24, 7, 1));
+			pnlEditEpisode.add(label30, CC.xy(2, 22));
+			pnlEditEpisode.add(edEpisodeTags, CC.xywh(4, 22, 7, 1));
 
 			//---- label31 ----
 			label31.setText(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
-			pnlEditEpisode.add(label31, CC.xy(2, 26));
-			pnlEditEpisode.add(ctrlEpisodeHistory, CC.xywh(4, 26, 7, 4));
+			pnlEditEpisode.add(label31, CC.xy(2, 24));
+			pnlEditEpisode.add(ctrlEpisodeHistory, CC.xywh(4, 24, 7, 4));
 
 			//======== panel10 ========
 			{
@@ -1711,7 +1680,7 @@ public class EditSeriesFrame extends JCCFrame
 				button17.addActionListener(e -> onEpisodeOkay());
 				panel10.add(button17);
 			}
-			pnlEditEpisode.add(panel10, CC.xywh(2, 30, 9, 1));
+			pnlEditEpisode.add(panel10, CC.xywh(2, 28, 9, 1));
 		}
 		contentPane.add(pnlEditEpisode, CC.xy(6, 2, CC.FILL, CC.FILL));
 		setSize(1200, 775);
@@ -1745,9 +1714,7 @@ public class EditSeriesFrame extends JCCFrame
 	private JTextField edSeriesTitle;
 	private JButton btnParseOnline;
 	private JLabel label10;
-	private JPanel panel7;
-	private JSpinner spnSeriesOnlineScore;
-	private JLabel label16;
+	private OnlineScoreControl spnSeriesOnlineScore;
 	private JLabel label11;
 	private CCEnumComboBox<CCFSK> cbxSeriesFSK;
 	private JLabel label12;
@@ -1806,8 +1773,7 @@ public class EditSeriesFrame extends JCCFrame
 	private JLabel label26;
 	private CCIcon16Button btnEpisodeMediaInfoLength;
 	private JLabel label25;
-	private JSpinner spnEpisodeSize;
-	private JLabel lblEpisodeFilesizePreview;
+	private CCFileSizeSpinner spnEpisodeSize;
 	private JButton button14;
 	private JLabel label28;
 	private JCCDateSpinner spnEpisodeAdded;

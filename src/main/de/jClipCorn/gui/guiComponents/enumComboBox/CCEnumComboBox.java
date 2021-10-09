@@ -7,6 +7,7 @@ import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 
 import javax.swing.*;
+import java.awt.*;
 import java.text.Normalizer;
 
 public class CCEnumComboBox<T extends ContinoousEnum<T>> extends JComboBox<T> {
@@ -16,6 +17,11 @@ public class CCEnumComboBox<T extends ContinoousEnum<T>> extends JComboBox<T> {
 
 	private String currentKCSelection = "";
 	private long timestampLastKCSelection = 0;
+
+	private boolean isReadableWhenDisabled = false;
+
+	private Color _backupDisabledTextColor = null;
+	private Color _backupBackground = null;
 
 	@DesignCreate
 	@SuppressWarnings("rawtypes")
@@ -66,6 +72,39 @@ public class CCEnumComboBox<T extends ContinoousEnum<T>> extends JComboBox<T> {
 	@Deprecated
 	public void setEditable(boolean aFlag) {
 		super.setEditable(aFlag);
+	}
+
+	public void setEnabled(boolean eFlag) {
+		super.setEnabled(eFlag);
+		updateReadableColors();
+	}
+
+	public void setReadableWhenDisabled(boolean v) {
+		isReadableWhenDisabled = v;
+		updateReadableColors();
+	}
+
+	public boolean isReadableWhenDisabled() {
+		return isReadableWhenDisabled;
+	}
+
+	private void updateReadableColors() {
+		if (!isEnabled() && isReadableWhenDisabled()) {
+			ComboBoxEditor cbxEditor = getEditor();
+			JTextField etf = (JTextField)cbxEditor.getEditorComponent();
+
+			_backupDisabledTextColor = etf.getDisabledTextColor();
+			_backupBackground = etf.getBackground();
+
+			etf.setDisabledTextColor(UIManager.getColor("ComboBox.foreground")); //$NON-NLS-1$
+			etf.setBackground(UIManager.getColor("ComboBox.background")); //$NON-NLS-1$
+		} else {
+			ComboBoxEditor cbxEditor = getEditor();
+			JTextField etf = (JTextField)cbxEditor.getEditorComponent();
+
+			if (_backupDisabledTextColor != null && _backupDisabledTextColor != etf.getDisabledTextColor()) etf.setDisabledTextColor(_backupDisabledTextColor);
+			if (_backupBackground != null && _backupBackground != etf.getBackground()) etf.setBackground(_backupBackground);
+		}
 	}
 
 	@Override

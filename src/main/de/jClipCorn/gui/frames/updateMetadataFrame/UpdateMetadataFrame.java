@@ -10,7 +10,6 @@ import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
@@ -68,18 +67,18 @@ public class UpdateMetadataFrame extends JCCFrame
 	private boolean FilterHandlerChanged(UpdateMetadataTableElement d) {
 		if (d == null) return false;
 
-		if (!d.Processed) return true;
+		if (!d.Processed) return false;
 
 		CCDatabaseElement el = d.Element;
 		OnlineMetadata md = d.OnlineMeta;
 
 		if (el == null || md == null) return false;
 
-		CCOnlineScore os1 = el.getOnlinescore();
-		Integer os2 = md.OnlineScore;
+		var os1 = el.getOnlinescore();
+		var os2 = md.OnlineScore;
 
 		if (os1 != null && os2 != null) {
-			if (os1.asInt() != os2.intValue()) return true;
+			if (!CCOnlineScore.isEqual(os1, os2)) return true;
 		}
 
 		if (tableMain.DeleteLocalGenres) {
@@ -148,18 +147,19 @@ public class UpdateMetadataFrame extends JCCFrame
 				Metadataparser mp = ref.getMetadataParser(movielist);
 				if (mp == null) continue;
 
+				OnlineMetadata md = null;
 				try {
-					OnlineMetadata md = mp.getMetadata(ref, false);
-					if (md != null) {
-						elem.OnlineMeta = md;
-						SwingUtils.invokeAndWaitSafe(() -> tableMain.changeData(elem, elem));
-					}
+					md = mp.getMetadata(ref, false);
 
 				} catch (Exception e) {
 					CCLog.addDebug(e.toString());
 				}
-
+				if (md != null) {
+					elem.OnlineMeta = md;
+				}
 				elem.Processed = true;
+				SwingUtils.invokeAndWaitSafe(() -> tableMain.changeData(elem, elem));
+
 
 				if (cancelBackground) return;
 			}
@@ -230,12 +230,8 @@ public class UpdateMetadataFrame extends JCCFrame
 
 		for (UpdateMetadataTableElement elem : data) {
 			if (elem.OnlineMeta != null && elem.OnlineMeta.OnlineScore != null) {
-				if (elem.Element.getOnlinescore().asInt() != elem.OnlineMeta.OnlineScore) {
-					try {
-						elem.Element.onlineScore().set(CCOnlineScore.getWrapper().findOrException(elem.OnlineMeta.OnlineScore));
-					} catch (EnumFormatException e1) {
-						CCLog.addError(e1);
-					}
+				if (!CCOnlineScore.isEqual(elem.Element.getOnlinescore(), elem.OnlineMeta.OnlineScore)) {
+					elem.Element.onlineScore().set(elem.OnlineMeta.OnlineScore);
 					count++;
 				}
 			}

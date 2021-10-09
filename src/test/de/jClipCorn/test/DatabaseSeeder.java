@@ -94,7 +94,7 @@ public class DatabaseSeeder {
 				e.Title.set("Die Verurteilten");
 				e.OnlineReference.set(CCOnlineReferenceList.create(CCSingleOnlineReference.createTMDB("movie/278"), CCSingleOnlineReference.createIMDB("tt0111161")));
 				e.Zyklus.set(CCMovieZyklus.EMPTY);
-				e.OnlineScore.set(CCOnlineScore.STARS_4_5);
+				e.OnlineScore.set(CCOnlineScore.create((short)9, (short)10));
 				e.Score.set(CCUserScore.RATING_V);
 				e.MediaInfo.set(mi(ml, "000", f));
 				e.Length.set(25);
@@ -131,7 +131,7 @@ public class DatabaseSeeder {
 				e.Title.set("Stirb Langsam");
 				e.OnlineReference.set(CCOnlineReferenceList.create(CCSingleOnlineReference.createTMDB("movie/562"), CCSingleOnlineReference.createIMDB("tt0095016")));
 				e.Zyklus.set(new CCMovieZyklus("Stirb Langsam", 1));
-				e.OnlineScore.set(CCOnlineScore.STARS_4_0);
+				e.OnlineScore.set(CCOnlineScore.create((short)8, (short)10));
 				e.Score.set(CCUserScore.RATING_NO);
 				e.MediaInfo.set(mi(ml, "001", f));
 				e.Length.set(42);
@@ -171,7 +171,7 @@ public class DatabaseSeeder {
 				e.Title.set("Die Hard 2");
 				e.OnlineReference.set(CCOnlineReferenceList.create(CCSingleOnlineReference.createTMDB("movie/1573"), Arrays.asList(CCSingleOnlineReference.createIMDB("tt0099423"), CCSingleOnlineReference.createAmazon("B00FYI7D6C"))));
 				e.Zyklus.set(new CCMovieZyklus("Stirb Langsam", 2));
-				e.OnlineScore.set(CCOnlineScore.STARS_3_5);
+				e.OnlineScore.set(CCOnlineScore.create((short)7, (short)10));
 				e.Score.set(CCUserScore.RATING_NO);
 				e.MediaInfo.set(mi(ml, "002", f1));
 				e.Length.set(58+125);
@@ -205,7 +205,7 @@ public class DatabaseSeeder {
 				ser.Title.set("Neon Genesis Evangelion");
 				ser.Groups.set(CCGroupList.create(CCGroup.create("Studio Gainax")));
 				ser.Genres.set(CCGenreList.create(CCGenre.GENRE_022, CCGenre.GENRE_019, CCGenre.GENRE_009, CCGenre.GENRE_008, CCGenre.GENRE_040, CCGenre.GENRE_054));
-				ser.OnlineScore.set(CCOnlineScore.STARS_4_0);
+				ser.OnlineScore.set(CCOnlineScore.create((short)8, (short)10));
 				ser.FSK.set(CCFSK.RATING_III);
 				ser.Score.set(CCUserScore.RATING_IV);
 				ser.OnlineReference.set(

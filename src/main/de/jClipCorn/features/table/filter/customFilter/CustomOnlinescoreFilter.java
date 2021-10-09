@@ -3,18 +3,19 @@ package de.jClipCorn.features.table.filter.customFilter;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
-import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineStars;
 import de.jClipCorn.features.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterIntAreaConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
-import de.jClipCorn.util.datatypes.DecimalSearchType;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.CCIntArea;
+import de.jClipCorn.util.datatypes.DecimalSearchType;
 
 public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter {
-	private CCOnlineScore low = CCOnlineScore.STARS_0_0;
-	private CCOnlineScore high = CCOnlineScore.STARS_0_0;
+	private CCOnlineStars low = CCOnlineStars.STARS_0_0;
+	private CCOnlineStars high = CCOnlineStars.STARS_0_0;
 	private DecimalSearchType searchType = DecimalSearchType.EXACT;
 
 	public CustomOnlinescoreFilter(CCMovieList ml) {
@@ -27,13 +28,13 @@ public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter
 		
 		switch (searchType) {
 		case LESSER:
-			return osco.asInt() < high.asInt();
+			return osco.getStars().asInt() < high.asInt();
 		case GREATER:
-			return low.asInt() < osco.asInt();
+			return low.asInt() < osco.getStars().asInt();
 		case IN_RANGE:
-			return low.asInt() < osco.asInt() && osco.asInt() < high.asInt();
+			return low.asInt() < osco.getStars().asInt() && osco.getStars().asInt() < high.asInt();
 		case EXACT:
-			return low == osco;
+			return low == osco.getStars();
 		default:
 			return false;
 		}
@@ -72,8 +73,8 @@ public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter
 	@Override
 	@SuppressWarnings("nls")
 	protected void initSerialization(FilterSerializationConfig cfg) {
-		cfg.addCCEnum("low", CCOnlineScore.getWrapper(), (d) -> this.low = d,  () -> this.low);
-		cfg.addCCEnum("high", CCOnlineScore.getWrapper(), (d) -> this.high = d,  () -> this.high);
+		cfg.addCCEnum("low", CCOnlineStars.getWrapper(), (d) -> this.low = d,  () -> this.low);
+		cfg.addCCEnum("high", CCOnlineStars.getWrapper(), (d) -> this.high = d,  () -> this.high);
 		cfg.addCCEnum("searchtype", DecimalSearchType.getWrapper(), (d) -> this.searchType = d,  () -> this.searchType);
 	}
 
@@ -82,7 +83,7 @@ public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter
 		return new CustomOnlinescoreFilter(ml);
 	}
 
-	public static CustomOnlinescoreFilter create(CCMovieList ml, CCOnlineScore data) {
+	public static CustomOnlinescoreFilter create(CCMovieList ml, CCOnlineStars data) {
 		CustomOnlinescoreFilter f = new CustomOnlinescoreFilter(ml);
 		f.searchType = DecimalSearchType.EXACT;
 		f.low = data;
@@ -94,10 +95,10 @@ public class CustomOnlinescoreFilter extends AbstractCustomDatabaseElementFilter
 	}
 
 	private void setAsIntArea(CCIntArea a) {
-		low = CCOnlineScore.getWrapper().findOrNull(a.low);
-		if (low==null)low=CCOnlineScore.STARS_0_0;
-		high = CCOnlineScore.getWrapper().findOrNull(a.high);
-		if (high==null)high=CCOnlineScore.STARS_5_0;
+		low = CCOnlineStars.getWrapper().findOrNull(a.low);
+		if (low==null)low=CCOnlineStars.STARS_0_0;
+		high = CCOnlineStars.getWrapper().findOrNull(a.high);
+		if (high==null)high=CCOnlineStars.STARS_5_0;
 		searchType = a.type;
 	}
 	

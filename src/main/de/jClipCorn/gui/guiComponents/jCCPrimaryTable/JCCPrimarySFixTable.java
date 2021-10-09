@@ -84,7 +84,7 @@ public class JCCPrimarySFixTable<TData, TEnum> extends SFixTable {
 	}
 
 	public void setSortKey(RowSorter.SortKey skey) {
-		sorter.setSortKeys(List.of(skey));
+		if (skey == null) sorter.setSortKeys(null); else sorter.setSortKeys(List.of(skey));
 		sorter.sort();
 	}
 }

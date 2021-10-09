@@ -1,10 +1,7 @@
 package de.jClipCorn.features.online.metadata.tmdb;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.cover.imdb.AgeRatingParser;
@@ -211,8 +208,8 @@ public class TMDBParser extends Metadataparser {
 			result.CoverURL = hasString(root, "poster_path") ? (URL_IMAGE_BASE + root.getString("poster_path")) : null;
 			if (result.CoverURL != null && downloadCover) result.Cover = HTTPUtilities.getImage(movielist, result.CoverURL);
 			
-			result.OnlineScore = (int) Math.round(root.optDouble("vote_average", 0));
-			if (result.OnlineScore == 0) result.OnlineScore = null;
+			var osc = (short) Math.round(root.optDouble("vote_average", 0) * 10);
+			if (osc == 0) result.OnlineScore = null; else result.OnlineScore = CCOnlineScore.create(osc, (short)100);
 			
 			if (root.has("genres")) {
 

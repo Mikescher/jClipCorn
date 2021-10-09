@@ -49,14 +49,14 @@ public class TestEProperties extends ClipCornBaseTest {
 
 		m1.beginUpdating();
 		{
-			m1.OnlineScore.set(CCOnlineScore.STARS_0_5);
+			m1.OnlineScore.set(CCOnlineScore.create((short)1, (short)10));
 			assertTrue(m1.isDirty());
 			assertTrue(m1.OnlineScore.isDirty());
 		}
 		m1.endUpdating();
 
 		assertEquals(2, CCLog.getChangeCount());
-		assertArrayEquals(new String[]{"OnlineScore"}, CCStreams.iterate(CCLog.getChangeElements()).lastOrNull().Properties);
+		assertArrayEquals(new String[]{"OnlineScore.Numerator"}, CCStreams.iterate(CCLog.getChangeElements()).lastOrNull().Properties);
 
 		m1.beginUpdating();
 		{

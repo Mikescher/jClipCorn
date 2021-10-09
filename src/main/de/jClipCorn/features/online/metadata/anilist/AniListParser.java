@@ -3,6 +3,7 @@ package de.jClipCorn.features.online.metadata.anilist;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.OnlineSearchType;
@@ -105,7 +106,7 @@ public class AniListParser extends Metadataparser {
 
 		om.Title       = getTitle(med);
 		om.CoverURL    = med.getJSONObject("coverImage").getString("extraLarge");
-		if (!med.isNull("averageScore")) om.OnlineScore = (int)Math.round(med.getInt("averageScore")/10.0);
+		if (!med.isNull("averageScore")) om.OnlineScore = CCOnlineScore.create((short)med.getInt("averageScore"), (short)100);
 		om.Length      = med.getInt("duration");
 		om.Year        = med.getJSONObject("startDate").getInt("year");
 		om.Genres      = new CCGenreList(CCStreams.iterate(med.getJSONArray("genres")).<String>cast().map(CCGenre::parseFromAniList).flatten(CCStreams::iterate).unique().enumerate());

@@ -22,7 +22,7 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 	{
 		e.execIfAttrExists("title", o.Title::set);
 		e.execIfLongAttrExists("genres", o.Genres::set);
-		e.execIfIntAttrExists("onlinescore", o.OnlineScore::set);
+		e.execIfIntAttrExists("onlinescore", v -> o.OnlineScore.set((short)(int)v, (short)10));
 		e.execIfIntAttrExists("fsk", o.FSK::set);
 		e.execIfIntAttrExists("score", o.Score::set);
 		e.execIfShortAttrExists("tags", o.Tags::set);

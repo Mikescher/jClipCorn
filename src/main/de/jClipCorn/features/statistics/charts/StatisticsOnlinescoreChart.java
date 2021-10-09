@@ -1,6 +1,13 @@
 package de.jClipCorn.features.statistics.charts;
 
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineStars;
 import de.jClipCorn.features.statistics.StatisticsChart;
+import de.jClipCorn.features.statistics.StatisticsHelper;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.stream.CCStream;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.ItemLabelAnchor;
@@ -12,14 +19,6 @@ import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.chart.ui.TextAnchor;
 import org.jfree.data.category.DefaultCategoryDataset;
-
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
-import de.jClipCorn.features.statistics.StatisticsHelper;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsOnlinescoreChart extends StatisticsChart {
 	public StatisticsOnlinescoreChart(CCMovieList ml, StatisticsTypeFilter _source) {
@@ -70,7 +69,7 @@ public class StatisticsOnlinescoreChart extends StatisticsChart {
 		
 		int[] values = StatisticsHelper.getCountForAllOnlinescores(it);
 		
-		for (CCOnlineScore oscore : CCOnlineScore.values()) {
+		for (var oscore : CCOnlineStars.values()) {
 			dataset.addValue(values[oscore.asInt()], "Series0", "" + oscore.asInt()/2.0); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		

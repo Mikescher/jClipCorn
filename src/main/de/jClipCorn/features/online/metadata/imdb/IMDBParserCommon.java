@@ -3,6 +3,7 @@ package de.jClipCorn.features.online.metadata.imdb;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.OnlineSearchType;
@@ -66,7 +67,7 @@ public abstract class IMDBParserCommon extends Metadataparser {
 		String html = HTTPUtilities.getHTML(movielist, url, true, true);
 
 		OnlineMetadata result = new OnlineMetadata(ref);
-		
+
 		result.Title = getTitle(html);
 		result.Year = getYear(html);
 		result.OnlineScore = getRating(html);
@@ -102,7 +103,7 @@ public abstract class IMDBParserCommon extends Metadataparser {
 	
 	protected abstract String getTitle(String html);
 	protected abstract Integer getYear(String html);
-	protected abstract Integer getRating(String html);
+	protected abstract CCOnlineScore getRating(String html);
 	protected abstract Integer getLength(String html);
 	protected abstract Map<String, Integer> getFSKList(String html, String url);
 	protected abstract CCGenreList getGenres(String html);

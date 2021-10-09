@@ -20,6 +20,7 @@ import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.JReadableCCPathTextField;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
+import de.jClipCorn.gui.guiComponents.filesize.CCFileSizeSpinner;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button;
 import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Label;
@@ -28,6 +29,7 @@ import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 import de.jClipCorn.gui.guiComponents.jYearSpinner.JYearSpinner;
 import de.jClipCorn.gui.guiComponents.language.LanguageListChooser;
 import de.jClipCorn.gui.guiComponents.language.LanguageSetChooser;
+import de.jClipCorn.gui.guiComponents.onlinescore.OnlineScoreControl;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
@@ -36,7 +38,6 @@ import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
-import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.parser.FilenameParser;
@@ -185,13 +186,13 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 
 		newM.AddDate.set(spnAddDate.getValue());
 
-		newM.OnlineScore.set((int) spnOnlineScore.getValue());
+		newM.OnlineScore.set(spnOnlineScore.getValue());
 
 		newM.FSK.set(cbxFSK.getSelectedEnum().asFSK());
 		newM.Format.set(cbxFormat.getSelectedEnum());
 
 		newM.Year.set(spnYear.getValue());
-		newM.FileSize.set((long) spnSize.getValue());
+		newM.FileSize.set(spnSize.getValue());
 
 		newM.Genres.set(cbxGenre0.getSelectedEnum(), 0);
 		newM.Genres.set(cbxGenre1.getSelectedEnum(), 1);
@@ -236,8 +237,6 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		spnZyklus.setValue(-1);
 
 		edReference.setValue(CCOnlineReferenceList.EMPTY);
-
-		updateByteDisp();
 	}
 
 	private void setEnabledAll(boolean e) {
@@ -411,7 +410,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 
 	@Override
 	public void setFilesize(CCFileSize size) {
-		spnSize.setValue(size.getBytes());
+		spnSize.setValue(size);
 	}
 
 	public void setMovieLanguage(CCDBLanguageSet lang) {
@@ -457,16 +456,12 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 
 	@Override
 	public void setScore(CCOnlineScore s) {
-		spnOnlineScore.setValue(s.asInt());
+		spnOnlineScore.setValue(s);
 	}
 
 	@Override
 	public void onFinishInserting() {
 		//
-	}
-
-	private void updateByteDisp() {
-		lblFileSizeDisp.setText("Byte = " + FileSizeFormatter.format((long) spnSize.getValue())); //$NON-NLS-1$
 	}
 
 	private String getMovieTitle() {
@@ -534,14 +529,14 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				spnAddDate.getValue(),
 				cbxFormat.getSelectedEnum(),
 				spnYear.getValue(),
-				new CCFileSize((long) spnSize.getValue()),
+				spnSize.getValue(),
 				Arrays.asList(edPart0.getPath(), edPart1.getPath(), edPart2.getPath(), edPart3.getPath(), edPart4.getPath(), edPart5.getPath()),
 				CCDateTimeList.createEmpty(),
 				cbxLanguage.getValue(),
 				cbxSubtitles.getValue(),
 				edTitle.getText(),
 				CCGenreList.create(cbxGenre0.getSelectedEnum(), cbxGenre1.getSelectedEnum(), cbxGenre2.getSelectedEnum(), cbxGenre3.getSelectedEnum(), cbxGenre4.getSelectedEnum(), cbxGenre5.getSelectedEnum(), cbxGenre6.getSelectedEnum(), cbxGenre7.getSelectedEnum()),
-				CCOnlineScore.getWrapper().findOrNull((int) spnOnlineScore.getValue()),
+				spnOnlineScore.getValue(),
 				cbxFSK.getSelectedEnum().asFSKOrNull(),
 				cbxScore.getSelectedEnum(),
 				edReference.getValue(),
@@ -968,8 +963,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		label22 = new JLabel();
 		spnAddDate = new JCCDateSpinner(CCDate.getMinimumDate(), CCDate.getMinimumDate(), null);
 		label23 = new JLabel();
-		spnOnlineScore = new JSpinner();
-		label30 = new JLabel();
+		spnOnlineScore = new OnlineScoreControl();
 		label24 = new JLabel();
 		cbxFSK = new CCEnumComboBox<CCOptionalFSK>(CCOptionalFSK.getWrapper());
 		label25 = new JLabel();
@@ -977,8 +971,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		label26 = new JLabel();
 		spnYear = new JYearSpinner();
 		label27 = new JLabel();
-		spnSize = new JSpinner();
-		lblFileSizeDisp = new JLabel();
+		spnSize = new CCFileSizeSpinner();
 		label28 = new JLabel();
 		cbxScore = new CCEnumComboBox<CCUserScore>(CCUserScore.getWrapper());
 		pnlRight = new JPanel();
@@ -1224,14 +1217,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				//---- label23 ----
 				label23.setText(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
 				pnlData.add(label23, CC.xy(1, 19));
-
-				//---- spnOnlineScore ----
-				spnOnlineScore.setModel(new SpinnerNumberModel(0, 0, 10, 1));
 				pnlData.add(spnOnlineScore, CC.xywh(3, 19, 3, 1));
-
-				//---- label30 ----
-				label30.setText("/ 10"); //$NON-NLS-1$
-				pnlData.add(label30, CC.xy(7, 19));
 
 				//---- label24 ----
 				label24.setText(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
@@ -1251,15 +1237,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				//---- label27 ----
 				label27.setText(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
 				pnlData.add(label27, CC.xy(1, 27));
-
-				//---- spnSize ----
-				spnSize.setModel(new SpinnerNumberModel(0L, 0L, null, 1L));
-				spnSize.addChangeListener(e -> updateByteDisp());
 				pnlData.add(spnSize, CC.xywh(3, 27, 3, 1));
-
-				//---- lblFileSizeDisp ----
-				lblFileSizeDisp.setText("Byte = 0"); //$NON-NLS-1$
-				pnlData.add(lblFileSizeDisp, CC.xywh(7, 27, 5, 1));
 
 				//---- label28 ----
 				label28.setText(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
@@ -1409,8 +1387,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 	private JLabel label22;
 	private JCCDateSpinner spnAddDate;
 	private JLabel label23;
-	private JSpinner spnOnlineScore;
-	private JLabel label30;
+	private OnlineScoreControl spnOnlineScore;
 	private JLabel label24;
 	private CCEnumComboBox<CCOptionalFSK> cbxFSK;
 	private JLabel label25;
@@ -1418,8 +1395,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 	private JLabel label26;
 	private JYearSpinner spnYear;
 	private JLabel label27;
-	private JSpinner spnSize;
-	private JLabel lblFileSizeDisp;
+	private CCFileSizeSpinner spnSize;
 	private JLabel label28;
 	private CCEnumComboBox<CCUserScore> cbxScore;
 	private JPanel pnlRight;

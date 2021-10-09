@@ -1,5 +1,7 @@
 package de.jClipCorn.util.helper;
 
+import de.jClipCorn.gui.guiComponents.filesize.CCFileSizeSpinner;
+import de.jClipCorn.gui.guiComponents.onlinescore.OnlineScoreControl;
 import de.jClipCorn.gui.guiComponents.tags.TagPanel;
 import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
@@ -72,6 +74,8 @@ public class DirtyUtil
 		else if (c instanceof EditCoverControl) ((EditCoverControl)c).addCoverChangedListener(e -> lstr.invoke());
 		else if (c instanceof JMediaInfoControl) ((JMediaInfoControl)c).addMediaInfoChangedListener(e -> lstr.invoke());
 		else if (c instanceof DateTimeListEditor) ((DateTimeListEditor)c).addValueChangedListener(e -> lstr.invoke());
+		else if (c instanceof OnlineScoreControl) ((OnlineScoreControl)c).addOnlineScoreChangedListener(e -> lstr.invoke());
+		else if (c instanceof CCFileSizeSpinner) ((CCFileSizeSpinner)c).addFileSizeChangedListener(e -> lstr.invoke());
 		else throw new IllegalArgumentException("Component " + c.getClass().getSimpleName() + " is not supported in initDirtyListener");
 	}
 }

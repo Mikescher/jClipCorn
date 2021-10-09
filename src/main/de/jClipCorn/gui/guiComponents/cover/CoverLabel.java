@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.guiComponents;
+package de.jClipCorn.gui.guiComponents.cover;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;

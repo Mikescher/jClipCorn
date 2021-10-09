@@ -1,107 +1,108 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
-import javax.swing.ImageIcon;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.OnlineScoreFormatException;
+import org.jetbrains.annotations.NotNull;
 
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.enumextension.ContinoousEnum;
-import de.jClipCorn.util.enumextension.EnumWrapper;
-import de.jClipCorn.util.enumextension.IEnumWrapper;
+import javax.swing.*;
 
-public enum CCOnlineScore implements ContinoousEnum<CCOnlineScore> {
-	STARS_0_0(0),
-	STARS_0_5(1),
-	STARS_1_0(2),
-	STARS_1_5(3),
-	STARS_2_0(4),
-	STARS_2_5(5),
-	STARS_3_0(6),
-	STARS_3_5(7),
-	STARS_4_0(8),
-	STARS_4_5(9),
-	STARS_5_0(10);
+public class CCOnlineScore implements Comparable<CCOnlineScore> {
+	public static final CCOnlineScore ZERO_OF_TEN = create((short)0, (short)10);
+	public static final CCOnlineScore EMPTY = create((short)0, (short)0);
 
-	private final static String[] NAMES = {
-		LocaleBundle.getString("CCMovieOnlineScore.00"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieOnlineScore.05"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieOnlineScore.10"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieOnlineScore.15"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieOnlineScore.20"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieOnlineScore.25"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieOnlineScore.30"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieOnlineScore.35"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieOnlineScore.40"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieOnlineScore.45"), //$NON-NLS-1$
-		LocaleBundle.getString("CCMovieOnlineScore.50")  //$NON-NLS-1$
-	};
-	
-	private int id;
-	
-	private static final EnumWrapper<CCOnlineScore> wrapper = new EnumWrapper<>(STARS_0_0);
+	public final short Numerator;
+	public final short Denominator;
 
-	CCOnlineScore(int val) {
-		id = val;
-	}
-	
-	public static EnumWrapper<CCOnlineScore> getWrapper() {
-		return wrapper;
-	}
-
-	@Override
-	public IEnumWrapper wrapper() {
-		return getWrapper();
-	}
-	
-	@Override
-	public int asInt() {
-		return id;
+	private CCOnlineScore(short n, short d) {
+		Numerator = n;
+		Denominator = d;
 	}
 
 	public static int compare(CCOnlineScore o1, CCOnlineScore o2) {
-		return Integer.compare(o1.asInt(), o2.asInt());
+		var r = Float.compare(o1.getRatio(), o2.getRatio());
+		if (r != 0) return r;
+		r = Short.compare(o1.Denominator, o2.Denominator);
+		if (r != 0) return r;
+		r = Short.compare(o1.Numerator, o2.Numerator);
+		return r;
 	}
-	
-	public ImageIcon getIcon() {
-		switch (this) {
-		case STARS_0_0:
-			return Resources.ICN_TABLE_ONLINESCORE_0.get();
-		case STARS_0_5:
-			return Resources.ICN_TABLE_ONLINESCORE_1.get();
-		case STARS_1_0:
-			return Resources.ICN_TABLE_ONLINESCORE_2.get();
-		case STARS_1_5:
-			return Resources.ICN_TABLE_ONLINESCORE_3.get();
-		case STARS_2_0:
-			return Resources.ICN_TABLE_ONLINESCORE_4.get();
-		case STARS_2_5:
-			return Resources.ICN_TABLE_ONLINESCORE_5.get();
-		case STARS_3_0:
-			return Resources.ICN_TABLE_ONLINESCORE_6.get();
-		case STARS_3_5:
-			return Resources.ICN_TABLE_ONLINESCORE_7.get();
-		case STARS_4_0:
-			return Resources.ICN_TABLE_ONLINESCORE_8.get();
-		case STARS_4_5:
-			return Resources.ICN_TABLE_ONLINESCORE_9.get();
-		case STARS_5_0:
-			return Resources.ICN_TABLE_ONLINESCORE_10.get();
-		default:
-			return null;
+
+	public static CCOnlineScore create(short n, short d) {
+		return new CCOnlineScore(n, d);
+	}
+
+	public String toSerializationString() {
+		return Numerator+"/"+Denominator;
+	}
+
+	public static CCOnlineScore deserialize(String v) throws CCFormatException {
+		if (Str.isNullOrEmpty(v)) return ZERO_OF_TEN;
+		var arr = v.split("/");
+		if (arr.length != 2) throw new OnlineScoreFormatException(v);
+		try	{
+			var n = Short.parseShort(arr[0]);
+			var d = Short.parseShort(arr[1]);
+			return create(n, d);
+		} catch (NumberFormatException e) {
+			throw new OnlineScoreFormatException(v, e);
 		}
 	}
 
-	@Override
-	public String asString() {
-		return NAMES[asInt()];
+	public ImageIcon getIcon() {
+		return getStars().getIcon();
+	}
+
+	public CCOnlineStars getStars() {
+		var v = Math.round(getRatio()*10);
+		if (v >= 10) v = 10;
+		if (v <= 0)  v = 0;
+		return CCOnlineStars.getWrapper().findOrFatalError(v);
+	}
+
+	public float getRatio() {
+		if (Denominator == 0) return 0f;
+		if (Numerator <= 0) return 0f;
+		if (Numerator >= Denominator) return 1f;
+		return (Numerator * 1f) / Denominator;
+	}
+
+	public boolean isValid() {
+		if (Denominator <= 0) return false;
+		if (Numerator > Denominator) return false;
+		if (Numerator < 0) return false;
+		return true;
+	}
+
+	public String getDisplayString() {
+		return Numerator + " / " + Denominator;
+	}
+
+	public boolean isEmpty() {
+		return Numerator == 0 && Denominator == 0;
 	}
 
 	@Override
-	public String[] getList() {
-		return NAMES;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		return isEqual(this, (CCOnlineScore) o);
+	}
+
+	public static boolean isEqual(CCOnlineScore a, CCOnlineScore b)
+	{
+		if (a == b) return true;
+		if (a == null || b == null) return false;
+		return (a.Numerator == b.Numerator) && (a.Denominator == b.Denominator);
 	}
 
 	@Override
-	public CCOnlineScore[] evalues() {
-		return CCOnlineScore.values();
+	public int compareTo(@NotNull CCOnlineScore o) {
+		return compare(this, o);
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * Numerator + (int) Denominator;
 	}
 }

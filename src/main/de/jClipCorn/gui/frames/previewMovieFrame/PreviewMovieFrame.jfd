@@ -68,7 +68,7 @@ new FormModel {
 				"$rowSpecs": "default, linegap, default"
 			} ) {
 				name: "pnlLeft"
-				add( new FormComponent( "de.jClipCorn.gui.guiComponents.CoverLabelFullsize" ) {
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.cover.CoverLabelFullsize" ) {
 					name: "lblCover"
 					auxiliary() {
 						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"

@@ -80,7 +80,7 @@ public class StatisticsHelper {
 		int c = 0;
 
 		for (CCDatabaseElement el : ml.iteratorElements()) {
-			c += el.getOnlinescore().asInt();
+			c += el.getOnlinescore().getRatio()*10;
 		}
 
 		return ((int) ((c / (ml.getElementCount() * 1d)) * 5)) / 10d;
@@ -191,14 +191,14 @@ public class StatisticsHelper {
 	}
 	
 	public static int[] getCountForAllOnlinescores(CCStream<CCDatabaseElement> it) {
-		int[] result = new int[CCOnlineScore.values().length];
+		int[] result = new int[CCOnlineStars.values().length];
 		
-		for (int i = 0; i < CCOnlineScore.values().length; i++) {
+		for (int i = 0; i < CCOnlineStars.values().length; i++) {
 			result[i] = 0;
 		}
 		
 		for (CCDatabaseElement m : it) {
-			result[m.getOnlinescore().asInt()]++;
+			result[m.getOnlinescore().getStars().asInt()]++;
 		}
 		
 		return result;

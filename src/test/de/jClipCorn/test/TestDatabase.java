@@ -45,7 +45,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		movWrite.Genres.set(CCGenre.GENRE_006, 2);
 		movWrite.Language.set(CCDBLanguageSet.ENGLISH);
 		movWrite.Length.set(120);
-		movWrite.OnlineScore.set(CCOnlineScore.STARS_3_0);
+		movWrite.OnlineScore.set(CCOnlineScore.create((short)6, (short)10));
 		movWrite.Year.set(2012);
 		movWrite.Score.set(CCUserScore.RATING_III);
 		movWrite.OnlineReference.set("tmdb:movie/207703");
@@ -74,7 +74,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(CCUserScore.RATING_III, movRead.Score.get());
 		assertEquals(CCFSK.RATING_III, movRead.getFSK());
 		assertEquals(CCOnlineRefType.THEMOVIEDB, movRead.getOnlineReference().Main.type);
-		assertEquals(CCOnlineScore.STARS_3_0, movRead.getOnlinescore());
+		assertEquals(CCOnlineScore.create((short)6, (short)10), movRead.getOnlinescore());
 		assertEquals("C:\\test.mov", movRead.Parts.get(0).toString());
 
 		assertEquals(1565454159, movRead.mediaInfo().get().getCDate());
@@ -110,7 +110,7 @@ public class TestDatabase extends ClipCornBaseTest {
 			serWrite.Tags.set(CCTagList.create(CCSingleTag.TAG_WATCH_LATER, CCSingleTag.TAG_BAD_QUALITY));
 			serWrite.OnlineReference.set(CCOnlineReferenceList.create(CCSingleOnlineReference.createIMDB("1234"), CCSingleOnlineReference.createMyAnimeList(999)));
 			serWrite.FSK.set(CCFSK.RATING_I);
-			serWrite.OnlineScore.set(CCOnlineScore.STARS_2_0);
+			serWrite.OnlineScore.set(CCOnlineScore.create((short)4, (short)10));
 		}
 
 		CCSeason seaWrite = serWrite.createNewEmptySeason();
@@ -174,7 +174,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(CCTagList.create(CCSingleTag.TAG_WATCH_LATER, CCSingleTag.TAG_BAD_QUALITY), serRead.getTags());
 		assertEquals(CCOnlineReferenceList.create(CCSingleOnlineReference.createIMDB("1234"), CCSingleOnlineReference.createMyAnimeList(999)), serRead.getOnlineReference());
 		assertEquals(CCFSK.RATING_I, serRead.getFSK());
-		assertEquals(CCOnlineScore.STARS_2_0, serRead.getOnlinescore());
+		assertEquals(CCOnlineScore.create((short)4, (short)10), serRead.getOnlinescore());
 
 		CCSeason seaRead = serRead.iteratorSeasons().firstOrNull();
 

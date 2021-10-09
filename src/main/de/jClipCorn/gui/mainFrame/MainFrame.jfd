@@ -71,7 +71,7 @@ new FormModel {
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
-				add( new FormComponent( "de.jClipCorn.gui.guiComponents.DatabaseElementPreviewLabel" ) {
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.cover.DatabaseElementPreviewLabel" ) {
 					name: "coverImage"
 					auxiliary() {
 						"JavaCodeGenerator.customCreateCode": "new DatabaseElementPreviewLabel(movielist, false);"

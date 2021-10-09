@@ -319,7 +319,7 @@ public class CCDatabase {
 	private void updateSeriesFromResultSet(CCSQLResultSet rs, CCSeries ser) throws SQLException, CCFormatException, SQLWrapperException {
 		ser.Title.set(rs.getString(DatabaseStructure.COL_SER_NAME));
 		ser.Genres.set(rs.getLong(DatabaseStructure.COL_SER_GENRE));
-		ser.OnlineScore.set(rs.getInt(DatabaseStructure.COL_SER_ONLINESCORE));
+		ser.OnlineScore.set(rs.getShort(DatabaseStructure.COL_SER_ONLINESCORE_NUM), rs.getShort(DatabaseStructure.COL_SER_ONLINESCORE_DENOM));
 		ser.FSK.set(rs.getInt(DatabaseStructure.COL_SER_FSK));
 		ser.Score.set(rs.getInt(DatabaseStructure.COL_SER_SCORE));
 		ser.OnlineReference.set(rs.getString(DatabaseStructure.COL_SER_ONLINEREF));
@@ -338,7 +338,7 @@ public class CCDatabase {
 		mov.Genres.set(rs.getLong(DatabaseStructure.COL_MOV_GENRE));
 		mov.Length.set(rs.getInt(DatabaseStructure.COL_MOV_LENGTH));
 		mov.AddDate.set(rs.getDate(DatabaseStructure.COL_MOV_ADDDATE));
-		mov.OnlineScore.set(rs.getInt(DatabaseStructure.COL_MOV_ONLINESCORE));
+		mov.OnlineScore.set(rs.getShort(DatabaseStructure.COL_MOV_ONLINESCORE_NUM), rs.getShort(DatabaseStructure.COL_MOV_ONLINESCORE_DENOM));
 		mov.FSK.set(rs.getInt(DatabaseStructure.COL_MOV_FSK));
 		mov.Format.set(rs.getInt(DatabaseStructure.COL_MOV_FORMAT));
 		mov.Year.set(rs.getInt(DatabaseStructure.COL_MOV_MOVIEYEAR));
@@ -585,32 +585,33 @@ public class CCDatabase {
 
 			stmt.setInt(DatabaseStructure.COL_MOV_LOCALID,       mov.getLocalID());
 
-			stmt.setStr(DatabaseStructure.COL_MOV_NAME,          mov.Title.get());
-			stmt.setStr(DatabaseStructure.COL_MOV_VIEWEDHISTORY, mov.ViewedHistory.get().toSerializationString());
-			stmt.setStr(DatabaseStructure.COL_MOV_ZYKLUS,        mov.Zyklus.get().getTitle());
-			stmt.setInt(DatabaseStructure.COL_MOV_ZYKLUSNUMBER,  mov.Zyklus.get().getNumber());
-			stmt.setLng(DatabaseStructure.COL_MOV_LANGUAGE,      mov.Language.get().serializeToLong());
-			stmt.setStr(DatabaseStructure.COL_MOV_SUBTITLES,     mov.Subtitles.get().serializeToString());
-			stmt.setLng(DatabaseStructure.COL_MOV_GENRE,         mov.Genres.get().getAllGenres());
-			stmt.setInt(DatabaseStructure.COL_MOV_LENGTH,        mov.Length.get());
-			stmt.setStr(DatabaseStructure.COL_MOV_ADDDATE,       mov.AddDate.get().toStringSQL());
-			stmt.setInt(DatabaseStructure.COL_MOV_ONLINESCORE,   mov.OnlineScore.get().asInt());
-			stmt.setInt(DatabaseStructure.COL_MOV_FSK,           mov.FSK.get().asInt());
-			stmt.setInt(DatabaseStructure.COL_MOV_FORMAT,        mov.Format.get().asInt());
-			stmt.setInt(DatabaseStructure.COL_MOV_MOVIEYEAR,     mov.Year.get());
-			stmt.setStr(DatabaseStructure.COL_MOV_ONLINEREF,     mov.OnlineReference.get().toSerializationString());
-			stmt.setLng(DatabaseStructure.COL_MOV_FILESIZE,      mov.FileSize.get().getBytes());
-			stmt.setSht(DatabaseStructure.COL_MOV_TAGS,          mov.Tags.get().asShort());
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_1,        mov.Parts.get(0).toString());
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_2,        mov.Parts.get(1).toString());
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_3,        mov.Parts.get(2).toString());
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_4,        mov.Parts.get(3).toString());
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_5,        mov.Parts.get(4).toString());
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_6,        mov.Parts.get(5).toString());
-			stmt.setInt(DatabaseStructure.COL_MOV_SCORE,         mov.Score.get().asInt());
+			stmt.setStr(DatabaseStructure.COL_MOV_NAME,              mov.Title.get());
+			stmt.setStr(DatabaseStructure.COL_MOV_VIEWEDHISTORY,     mov.ViewedHistory.get().toSerializationString());
+			stmt.setStr(DatabaseStructure.COL_MOV_ZYKLUS,            mov.Zyklus.get().getTitle());
+			stmt.setInt(DatabaseStructure.COL_MOV_ZYKLUSNUMBER,      mov.Zyklus.get().getNumber());
+			stmt.setLng(DatabaseStructure.COL_MOV_LANGUAGE,          mov.Language.get().serializeToLong());
+			stmt.setStr(DatabaseStructure.COL_MOV_SUBTITLES,         mov.Subtitles.get().serializeToString());
+			stmt.setLng(DatabaseStructure.COL_MOV_GENRE,             mov.Genres.get().getAllGenres());
+			stmt.setInt(DatabaseStructure.COL_MOV_LENGTH,            mov.Length.get());
+			stmt.setStr(DatabaseStructure.COL_MOV_ADDDATE,           mov.AddDate.get().toStringSQL());
+			stmt.setSht(DatabaseStructure.COL_MOV_ONLINESCORE_NUM,   mov.OnlineScore.Numerator.get());
+			stmt.setSht(DatabaseStructure.COL_MOV_ONLINESCORE_DENOM, mov.OnlineScore.Denominator.get());
+			stmt.setInt(DatabaseStructure.COL_MOV_FSK,               mov.FSK.get().asInt());
+			stmt.setInt(DatabaseStructure.COL_MOV_FORMAT,            mov.Format.get().asInt());
+			stmt.setInt(DatabaseStructure.COL_MOV_MOVIEYEAR,         mov.Year.get());
+			stmt.setStr(DatabaseStructure.COL_MOV_ONLINEREF,         mov.OnlineReference.get().toSerializationString());
+			stmt.setLng(DatabaseStructure.COL_MOV_FILESIZE,          mov.FileSize.get().getBytes());
+			stmt.setSht(DatabaseStructure.COL_MOV_TAGS,              mov.Tags.get().asShort());
+			stmt.setStr(DatabaseStructure.COL_MOV_PART_1,            mov.Parts.get(0).toString());
+			stmt.setStr(DatabaseStructure.COL_MOV_PART_2,            mov.Parts.get(1).toString());
+			stmt.setStr(DatabaseStructure.COL_MOV_PART_3,            mov.Parts.get(2).toString());
+			stmt.setStr(DatabaseStructure.COL_MOV_PART_4,            mov.Parts.get(3).toString());
+			stmt.setStr(DatabaseStructure.COL_MOV_PART_5,            mov.Parts.get(4).toString());
+			stmt.setStr(DatabaseStructure.COL_MOV_PART_6,            mov.Parts.get(5).toString());
+			stmt.setInt(DatabaseStructure.COL_MOV_SCORE,             mov.Score.get().asInt());
 
-			stmt.setStr(DatabaseStructure.COL_MOV_GROUPS,        mov.getGroups().toSerializationString());
-			stmt.setInt(DatabaseStructure.COL_MOV_COVERID,       mov.getCoverID());
+			stmt.setStr(DatabaseStructure.COL_MOV_GROUPS,            mov.getGroups().toSerializationString());
+			stmt.setInt(DatabaseStructure.COL_MOV_COVERID,           mov.getCoverID());
 
 			var mi = mov.MediaInfo.getPartial();
 
@@ -648,18 +649,19 @@ public class CCDatabase {
 			CCSQLStatement stmt = stmts.updateSeriesTabStatement;
 			stmt.clearParameters();
 
-			stmt.setStr(DatabaseStructure.COL_SER_NAME,        ser.Title.get());
-			stmt.setLng(DatabaseStructure.COL_SER_GENRE,       ser.Genres.get().getAllGenres());
-			stmt.setInt(DatabaseStructure.COL_SER_ONLINESCORE, ser.OnlineScore.get().asInt());
-			stmt.setInt(DatabaseStructure.COL_SER_FSK,         ser.FSK.get().asInt());
-			stmt.setStr(DatabaseStructure.COL_SER_ONLINEREF,   ser.OnlineReference.get().toSerializationString());
-			stmt.setInt(DatabaseStructure.COL_SER_SCORE,       ser.Score.get().asInt());
-			stmt.setSht(DatabaseStructure.COL_SER_TAGS,        ser.Tags.get().asShort());
+			stmt.setStr(DatabaseStructure.COL_SER_NAME,              ser.Title.get());
+			stmt.setLng(DatabaseStructure.COL_SER_GENRE,             ser.Genres.get().getAllGenres());
+			stmt.setInt(DatabaseStructure.COL_SER_ONLINESCORE_NUM,   ser.OnlineScore.Numerator.get());
+			stmt.setInt(DatabaseStructure.COL_SER_ONLINESCORE_DENOM, ser.OnlineScore.Denominator.get());
+			stmt.setInt(DatabaseStructure.COL_SER_FSK,               ser.FSK.get().asInt());
+			stmt.setStr(DatabaseStructure.COL_SER_ONLINEREF,         ser.OnlineReference.get().toSerializationString());
+			stmt.setInt(DatabaseStructure.COL_SER_SCORE,             ser.Score.get().asInt());
+			stmt.setSht(DatabaseStructure.COL_SER_TAGS,              ser.Tags.get().asShort());
 
-			stmt.setInt(DatabaseStructure.COL_SER_COVERID,     ser.getCoverID());
-			stmt.setStr(DatabaseStructure.COL_SER_GROUPS,      ser.getGroups().toSerializationString());
+			stmt.setInt(DatabaseStructure.COL_SER_COVERID,           ser.getCoverID());
+			stmt.setStr(DatabaseStructure.COL_SER_GROUPS,            ser.getGroups().toSerializationString());
 
-			stmt.setInt(DatabaseStructure.COL_SER_LOCALID,     ser.getLocalID());
+			stmt.setInt(DatabaseStructure.COL_SER_LOCALID,           ser.getLocalID());
 
 			stmt.executeUpdate();
 			ser.resetDirty();

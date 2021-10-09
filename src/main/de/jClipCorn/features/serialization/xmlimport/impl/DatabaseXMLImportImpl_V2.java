@@ -22,7 +22,7 @@ public class DatabaseXMLImportImpl_V2 implements IDatabaseXMLImporterImpl
 	{
 		e.execIfAttrExists("title", v -> o.title().set(v));
 		e.execIfAttrExists("genres", v -> o.Genres.set(CCGenreList.deserialize(v)));
-		e.execIfIntAttrExists("onlinescore", v -> o.onlineScore().set(v));
+		e.execIfIntAttrExists("onlinescore", v -> o.OnlineScore.set((short)(int)v, (short)10));
 		e.execIfIntAttrExists("fsk", v -> o.fsk().set(v));
 		e.execIfIntAttrExists("score", v -> o.score().set(v));
 		e.execIfAttrExists("tags", v -> o.Tags.set(CCTagList.deserialize(v)));

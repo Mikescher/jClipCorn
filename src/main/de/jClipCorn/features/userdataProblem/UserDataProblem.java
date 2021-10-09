@@ -150,7 +150,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (newdata.getOnlinescore() == null || newdata.getOnlinescore().asInt() <= 0 || newdata.getOnlinescore().asInt() > 10) {
+		if (newdata.getOnlinescore() == null || !newdata.getOnlinescore().isValid()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_ONLINESCORE));
 		}
 		
@@ -328,7 +328,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (newdata.getOnlinescore() == null || newdata.getOnlinescore().asInt() <= 0 || newdata.getOnlinescore().asInt() > 10) {
+		if (newdata.getOnlinescore() == null || !newdata.getOnlinescore().isValid()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_ONLINESCORE));
 		}
 		

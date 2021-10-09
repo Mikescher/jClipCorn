@@ -31,7 +31,7 @@ public class DatabaseXMLExporterImpl {
 
 		e.setAttribute("title",        o.getTitle());
 		e.setAttribute("genres",       o.getGenres().serialize());
-		e.setAttribute("onlinescore",  String.valueOf(o.getOnlinescore().asInt()));
+		e.setAttribute("onlinescore",  String.valueOf(o.getOnlinescore().toSerializationString()));
 		e.setAttribute("fsk",          String.valueOf(o.getFSK().asInt()));
 		e.setAttribute("score",        String.valueOf(o.Score.get().asInt()));
 		e.setAttribute("groups",       o.getGroups().toSerializationString());

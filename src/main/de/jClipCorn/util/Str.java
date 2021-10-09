@@ -4,9 +4,12 @@ import de.jClipCorn.util.datatypes.Opt;
 import org.apache.commons.codec.binary.Base64;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("nls")
 public final class Str {
@@ -130,5 +133,38 @@ public final class Str {
 
 	public static String repeat(@NotNull String str, int count) {
 		return str.repeat(count);
+	}
+
+	public static List<String> tryFixEncodingErrors(String str) {
+
+		var r = new ArrayList<String>();
+
+		{
+			var bytes = str.getBytes(StandardCharsets.US_ASCII);
+			var fix = new String(bytes, Str.UTF8);
+			if (!Str.equals(fix, str)) r.add(fix);
+		}
+
+		{
+			var bytes = str.getBytes(StandardCharsets.ISO_8859_1);
+			var fix = new String(bytes, Str.UTF8);
+			if (!Str.equals(fix, str)) r.add(fix);
+		}
+
+		{
+			var bytes = str.getBytes(StandardCharsets.UTF_16);
+			var fix = new String(bytes, Str.UTF8);
+			if (!Str.equals(fix, str)) r.add(fix);
+		}
+
+		try
+		{
+			var bytes = str.getBytes("latin1");
+			var fix = new String(bytes, Str.UTF8);
+			if (!Str.equals(fix, str)) r.add(fix);
+		}
+		catch (UnsupportedEncodingException e) { /* */ }
+
+		return r;
 	}
 }

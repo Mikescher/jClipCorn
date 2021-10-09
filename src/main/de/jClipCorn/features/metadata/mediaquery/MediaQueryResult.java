@@ -20,7 +20,8 @@ import java.util.regex.Pattern;
 public class MediaQueryResult {
 
 	private static final Pattern REX_LANGUAGE_REPEAT = Pattern.compile("^\\s*(\\w+)(\\s*/\\s*\\1)+\\s*$"); //$NON-NLS-1$
-	private static final Pattern REX_LANGUAGE_STR1   = Pattern.compile("^([^\\s]+)\\s*\\([^\\s]+\\)$"); //$NON-NLS-1$
+	private static final Pattern REX_LANGUAGE_STR1   = Pattern.compile("^([^\\s]+)\\s*\\(?<r>[^\\s]+\\)$"); //$NON-NLS-1$
+	private static final Pattern REX_LANGUAGE_STR2   = Pattern.compile("^(?<r>[^\\s]+)\\s*\\([^\\s]+\\)$"); //$NON-NLS-1$
 
 	public final String Raw;
 	
@@ -169,8 +170,8 @@ public class MediaQueryResult {
 		}
 		catch (InnerMediaQueryException e)
 		{
-			String info = CCStreams.iterate(tcks).stringjoin(t -> (t.Language==null ? "NULL": t.Language)+"|"+(t.Title==null ? "NULL": t.Title), ", "); //$NON-NLS-1$ //$NON-NLS-2$
-			throw new InnerMediaQueryException("No subtitle language set in tracks ("+info+")", e); //$NON-NLS-1$ //$NON-NLS-2$
+			String info = CCStreams.iterate(tcks).stringjoin(t -> "["+(t.Language==null ? "NULL": t.Language)+"|"+(t.Title==null ? "NULL": t.Title)+"] --> " + Opt.ofNullable(t.getLanguageOrNull()).mapOrElse(CCDBLanguage::getLongString, "/NULL/"), "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new InnerMediaQueryException("No subtitle language set in tracks\n\n"+info, e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -184,18 +185,50 @@ public class MediaQueryResult {
 	@SuppressWarnings("nls")
 	public static CCDBLanguage getLanguage(String _langval, String _title) throws InnerMediaQueryException {
 
+		if (!Str.isNullOrWhitespace(_langval))
+		{
+			var r = getLanguageOrNullFromStr(_langval);
+			if (r != null) return r;
+		}
+
+		if (!Str.isNullOrWhitespace(_title))
+		{
+			Matcher m0 = REX_LANGUAGE_STR1.matcher(_title);
+			if (m0.matches()) { var r = getLanguageOrNullFromStr(m0.group("r").trim()); if (r != null) return r; }
+
+			Matcher m1 = REX_LANGUAGE_STR2.matcher(_title);
+			if (m1.matches()) { var r = getLanguageOrNullFromStr(m1.group("r").trim()); if (r != null) return r; }
+
+			{ var r = getLanguageOrNullFromStr(_title); if (r != null) return r; }
+		}
+
+		throw new InnerMediaQueryException("Unknown audio language: ['" + _langval + "' | '" + _title + "']");
+	}
+
+	private static CCDBLanguage getLanguageOrNullFromStr(String langval)
+	{
+		var r1 = getLanguageOrNullFromIdent(langval);
+		if (r1 != null) return r1;
+
+		var langvalFix = Str.tryFixEncodingErrors(langval);
+		for (var lv2 : langvalFix)
+		{
+			var r2 = getLanguageOrNullFromIdent(lv2);
+			if (r2 != null) return r2;
+		}
+
+		return null;
+	}
+
+	@SuppressWarnings("nls")
+	private static CCDBLanguage getLanguageOrNullFromIdent(String langval)
+	{
 		// https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 		// https://www.loc.gov/standards/iso639-2/php/code_list.php
 
-		var langval = _langval == null ? Str.Empty : _langval.trim();
+		if (Str.isNullOrWhitespace(langval)) return null;
 
-		if (Str.isNullOrWhitespace(langval) && !Str.isNullOrWhitespace(_title))
-		{
-			langval = _title;
-
-			Matcher m0 = REX_LANGUAGE_STR1.matcher(langval);
-			if (m0.matches()) langval = m0.group(1).trim();
-		}
+		langval = langval.trim();
 
 		Matcher m1 = REX_LANGUAGE_REPEAT.matcher(langval);
 		if (m1.matches()) langval = m1.group(1).trim();
@@ -433,7 +466,7 @@ public class MediaQueryResult {
 		if (langval.equalsIgnoreCase("est"))                       return CCDBLanguage.ESTONIAN;
 		if (langval.equalsIgnoreCase("estonian"))                  return CCDBLanguage.ESTONIAN;
 
-		throw new InnerMediaQueryException("Unknown audio language '" + langval + "' ('" + _langval + "') + ('" + _title + "')");
+		return null;
 	}
 
 	public static boolean isNullLanguage(String langval) {

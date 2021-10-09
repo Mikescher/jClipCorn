@@ -702,9 +702,9 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 		button63.addActionListener(e -> BatchEditMethods.LANGUAGE_REM.run(this, cbxSideModLang.getSelectedEnum()));
 		cbxSideModSub = new CCEnumComboBox<>(CCDBLanguage.getWrapper());
 		button62 = new JButton();
-		button62.addActionListener(e -> BatchEditMethods.SUBTITLE_REM.run(this, cbxSideModSub.getSelectedEnum()));
+		button62.addActionListener(e -> BatchEditMethods.SUBTITLE_ADD.run(this, cbxSideModSub.getSelectedEnum()));
 		button64 = new JButton();
-		button64.addActionListener(e -> BatchEditMethods.SUBTITLE_ADD.run(this, cbxSideModSub.getSelectedEnum()));
+		button64.addActionListener(e -> BatchEditMethods.SUBTITLE_REM.run(this, cbxSideModSub.getSelectedEnum()));
 		pnlMetadata = new JPanel();
 		button27 = new JButton();
 		button27.addActionListener(e -> BatchEditMethods.FILESIZE_FROM_FILE.run(this, null));

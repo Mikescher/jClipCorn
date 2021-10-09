@@ -1204,7 +1204,7 @@ new FormModel {
 						name: "button62"
 						"text": new FormMessage( null, "BatchEditFrame.SubAdd" )
 						auxiliary() {
-							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.SUBTITLE_REM.run(this, cbxSideModSub.getSelectedEnum()));"
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.SUBTITLE_ADD.run(this, cbxSideModSub.getSelectedEnum()));"
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
@@ -1215,7 +1215,7 @@ new FormModel {
 						name: "button64"
 						"text": new FormMessage( null, "BatchEditFrame.SubRem" )
 						auxiliary() {
-							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.SUBTITLE_ADD.run(this, cbxSideModSub.getSelectedEnum()));"
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.SUBTITLE_REM.run(this, cbxSideModSub.getSelectedEnum()));"
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 8

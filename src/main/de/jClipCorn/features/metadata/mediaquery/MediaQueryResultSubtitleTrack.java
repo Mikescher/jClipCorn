@@ -40,7 +40,7 @@ public class MediaQueryResultSubtitleTrack {
 		return MediaQueryResult.getLanguage(Language, Title);
 	}
 
-	public CCDBLanguage getLanguageOrNull() throws InnerMediaQueryException {
+	public CCDBLanguage getLanguageOrNull() {
 		try {
 			return MediaQueryResult.getLanguage(Language, Title);
 		} catch (InnerMediaQueryException e) {

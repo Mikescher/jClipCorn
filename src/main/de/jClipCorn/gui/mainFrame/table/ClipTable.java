@@ -176,7 +176,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			(v1,v2) ->
 			{
 				var o1 = v1.isMovie() ? v1.asMovie().Zyklus.get() : new CCMovieZyklus();
-				var o2 = v1.isMovie() ? v2.asMovie().Zyklus.get() : new CCMovieZyklus();
+				var o2 = v2.isMovie() ? v2.asMovie().Zyklus.get() : new CCMovieZyklus();
 				return CCMovieZyklus.compare(o1, o2);
 			},
 			true,

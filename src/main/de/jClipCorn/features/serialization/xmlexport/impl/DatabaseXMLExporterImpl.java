@@ -34,6 +34,7 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("onlinescore",  String.valueOf(o.getOnlinescore().toSerializationString()));
 		e.setAttribute("fsk",          String.valueOf(o.getFSK().asInt()));
 		e.setAttribute("score",        String.valueOf(o.Score.get().asInt()));
+		e.setAttribute("comment",      o.ScoreComment.get());
 		e.setAttribute("groups",       o.getGroups().toSerializationString());
 		e.setAttribute("onlinreref",   o.getOnlineReference().toSerializationString());
 		e.setAttribute("tags",         o.getTags().serialize());
@@ -98,8 +99,10 @@ public class DatabaseXMLExporterImpl {
 	public static void exportSeason(Element e, CCSeason o, ExportOptions s) {
 		if (s.ExportLocalID) e.setAttribute("seasonid", o.getLocalID() + "");
 
-		e.setAttribute("title", o.getTitle());
-		e.setAttribute("year", o.getYear() + "");
+		e.setAttribute("title",   o.getTitle());
+		e.setAttribute("year",    o.getYear() + "");
+		e.setAttribute("score",   String.valueOf(o.Score.get().asInt()));
+		e.setAttribute("comment", o.ScoreComment.get());
 
 		if (! s.CoverData) e.setAttribute("covername", o.getCoverInfo().Filename);
 		if (! s.CoverData) e.setAttribute("coverid", o.getCoverInfo().ID + "");
@@ -123,6 +126,8 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("tags",          o.getTags().serialize());
 		e.setAttribute("languages",     o.getLanguage().serializeToString());
 		e.setAttribute("subtitles",     o.Subtitles.get().serializeToLongString());
+		e.setAttribute("score",         String.valueOf(o.Score.get().asInt()));
+		e.setAttribute("comment",       o.ScoreComment.get());
 
 		CCMediaInfo minfo = o.mediaInfo().get();
 		if (minfo.isSet()) {

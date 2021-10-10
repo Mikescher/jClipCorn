@@ -56,6 +56,8 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp( "ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
 	public final ELanguageSetProp        Language      = new ELanguageSetProp(  "Language",      CCDBLanguageSet.EMPTY,        this, EPropertyType.OBJECTIVE_METADATA);
 	public final ELanguageListProp       Subtitles     = new ELanguageListProp( "Subtitles",     CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
+	public final EEnumProp<CCUserScore>  Score         = new EEnumProp<>(       "Score",         CCUserScore.RATING_NO,        this, EPropertyType.USER_METADATA);
+	public final EStringProp             ScoreComment  = new EStringProp(       "ScoreComment",  Str.Empty,                    this, EPropertyType.USER_METADATA);
 
 	private IEProperty[] _properties = null;
 
@@ -89,6 +91,8 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 					ViewedHistory,
 					Language,
 					Subtitles,
+					Score,
+					ScoreComment,
 				})
 				.append(MediaInfo.getProperties())
 				.toArray(new IEProperty[0]);

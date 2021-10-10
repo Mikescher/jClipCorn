@@ -31,6 +31,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public final EOnlineScorePropPack      OnlineScore     = new EOnlineScorePropPack("OnlineScore",     CCOnlineScore.ZERO_OF_TEN,   this, EPropertyType.OBJECTIVE_METADATA);
 	public final EEnumProp<CCFSK>          FSK             = new EEnumProp<>(         "FSK",             CCFSK.RATING_0,              this, EPropertyType.OBJECTIVE_METADATA);
 	public final EEnumProp<CCUserScore>    Score           = new EEnumProp<>(         "Score",           CCUserScore.RATING_NO,       this, EPropertyType.USER_METADATA);
+	public final EStringProp               ScoreComment    = new EStringProp(         "ScoreComment",    Str.Empty,                   this, EPropertyType.USER_METADATA);
 	public final EOnlineRefListProp        OnlineReference = new EOnlineRefListProp(  "OnlineReference", CCOnlineReferenceList.EMPTY, this, EPropertyType.OBJECTIVE_METADATA);
 	public final ETagListProp              Tags            = new ETagListProp(        "Tags",            CCTagList.EMPTY,             this, EPropertyType.USER_METADATA);
 
@@ -68,6 +69,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 					Genres,
 					FSK,
 					Score,
+					ScoreComment,
 					OnlineReference,
 					Tags,
 				})

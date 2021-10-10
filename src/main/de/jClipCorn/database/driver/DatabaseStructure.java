@@ -48,6 +48,7 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_MOV_PART_5            = new CCSQLColDef("PART5",                CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_PART_6            = new CCSQLColDef("PART6",                CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_SCORE             = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_SCORECOMMENT      = new CCSQLColDef("SCORECOMMENT",         CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_COVERID           = new CCSQLColDef("COVERID",              CCSQLType.INTEGER,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_MI_FILESIZE       = new CCSQLColDef("MEDIAINFO.FILESIZE",   CCSQLType.BIGINT,      NULLABLE);
 	public final static CCSQLColDef COL_MOV_MI_CDATE          = new CCSQLColDef("MEDIAINFO.CDATE",      CCSQLType.BIGINT,      NULLABLE);
@@ -76,6 +77,7 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_SER_ONLINEREF         = new CCSQLColDef("ONLINEREF",            CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_GROUPS            = new CCSQLColDef("GROUPS",               CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_SCORE             = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_SCORECOMMENT      = new CCSQLColDef("SCORECOMMENT",         CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_COVERID           = new CCSQLColDef("COVERID",              CCSQLType.INTEGER,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_TAGS              = new CCSQLColDef("TAGS",                 CCSQLType.SMALLINT,    NON_NULLABLE);
 
@@ -84,6 +86,8 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_SEAS_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_YEAR             = new CCSQLColDef("SEASONYEAR",           CCSQLType.SMALLINT,    NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_COVERID          = new CCSQLColDef("COVERID",              CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SEAS_SCORE            = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SEAS_SCORECOMMENT     = new CCSQLColDef("SCORECOMMENT",         CCSQLType.VARCHAR,     NON_NULLABLE);
 
 	public final static CCSQLColDef COL_EPIS_LOCALID          = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
 	public final static CCSQLColDef COL_EPIS_SEASONID         = new CCSQLColDef("SEASONID",             CCSQLType.INTEGER,     NON_NULLABLE);
@@ -98,6 +102,8 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_EPIS_ADDDATE          = new CCSQLColDef("ADDDATE",              CCSQLType.DATE,        NON_NULLABLE);
 	public final static CCSQLColDef COL_EPIS_LANGUAGE         = new CCSQLColDef("LANGUAGE",             CCSQLType.BIGINT,      NON_NULLABLE);
 	public final static CCSQLColDef COL_EPIS_SUBTITLES        = new CCSQLColDef("SUBTITLES",            CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_EPIS_SCORE            = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
+	public final static CCSQLColDef COL_EPIS_SCORECOMMENT     = new CCSQLColDef("SCORECOMMENT",         CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_EPIS_MI_FILESIZE      = new CCSQLColDef("MEDIAINFO.FILESIZE",   CCSQLType.BIGINT,      NULLABLE);
 	public final static CCSQLColDef COL_EPIS_MI_CDATE         = new CCSQLColDef("MEDIAINFO.CDATE",      CCSQLType.BIGINT,      NULLABLE);
 	public final static CCSQLColDef COL_EPIS_MI_MDATE         = new CCSQLColDef("MEDIAINFO.MDATE",      CCSQLType.BIGINT,      NULLABLE);
@@ -144,7 +150,7 @@ public class DatabaseStructure
 				COL_MOV_GENRE, COL_MOV_LENGTH, COL_MOV_ADDDATE, COL_MOV_ONLINESCORE_NUM, COL_MOV_ONLINESCORE_DENOM, COL_MOV_FSK, COL_MOV_FORMAT,
 				COL_MOV_MOVIEYEAR, COL_MOV_ONLINEREF, COL_MOV_GROUPS, COL_MOV_FILESIZE, COL_MOV_TAGS,
 				COL_MOV_PART_1, COL_MOV_PART_2, COL_MOV_PART_3, COL_MOV_PART_4, COL_MOV_PART_5, COL_MOV_PART_6,
-				COL_MOV_SCORE, COL_MOV_COVERID,
+				COL_MOV_SCORE, COL_MOV_SCORECOMMENT, COL_MOV_COVERID,
 				COL_MOV_MI_FILESIZE, COL_MOV_MI_CDATE, COL_MOV_MI_MDATE, COL_MOV_MI_AFORMAT, COL_MOV_MI_VFORMAT, COL_MOV_MI_WIDTH,
 				COL_MOV_MI_HEIGHT, COL_MOV_MI_FRAMERATE, COL_MOV_MI_DURATION, COL_MOV_MI_BITDEPTH, COL_MOV_MI_BITRATE,
 				COL_MOV_MI_FRAMECOUNT, COL_MOV_MI_ACHANNELS, COL_MOV_MI_VCODEC, COL_MOV_MI_ACODEC, COL_MOV_MI_SAMPLERATE, COL_MOV_MI_CHECKSUM
@@ -160,7 +166,7 @@ public class DatabaseStructure
 			new CCSQLColDef[]
 			{
 				COL_SER_NAME, COL_SER_GENRE, COL_SER_ONLINESCORE_NUM, COL_SER_ONLINESCORE_DENOM, COL_SER_FSK, COL_SER_ONLINEREF,
-				COL_SER_GROUPS, COL_SER_SCORE, COL_SER_COVERID, COL_SER_TAGS
+				COL_SER_GROUPS, COL_SER_SCORE, COL_SER_SCORECOMMENT, COL_SER_COVERID, COL_SER_TAGS
 			},
 			new CCSQLFKey[]
 			{
@@ -172,7 +178,8 @@ public class DatabaseStructure
 			COL_SEAS_LOCALID,
 			new CCSQLColDef[]
 			{
-				COL_SEAS_SERIESID, COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERID
+				COL_SEAS_SERIESID,
+				COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERID, COL_SEAS_SCORE, COL_SEAS_SCORECOMMENT
 			},
 			new CCSQLFKey[]
 			{
@@ -187,6 +194,7 @@ public class DatabaseStructure
 				COL_EPIS_SEASONID, COL_EPIS_EPISODE, COL_EPIS_NAME, COL_EPIS_VIEWEDHISTORY,
 				COL_EPIS_LENGTH, COL_EPIS_FORMAT, COL_EPIS_FILESIZE, COL_EPIS_PART_1, COL_EPIS_TAGS,
 				COL_EPIS_ADDDATE, COL_EPIS_LANGUAGE, COL_EPIS_SUBTITLES, COL_EPIS_MI_FILESIZE,
+				COL_EPIS_SCORE, COL_EPIS_SCORECOMMENT,
 				COL_EPIS_MI_CDATE, COL_EPIS_MI_MDATE, COL_EPIS_MI_AFORMAT, COL_EPIS_MI_VFORMAT, COL_EPIS_MI_WIDTH,
 				COL_EPIS_MI_HEIGHT, COL_EPIS_MI_FRAMERATE, COL_EPIS_MI_DURATION, COL_EPIS_MI_BITDEPTH, COL_EPIS_MI_BITRATE,
 				COL_EPIS_MI_FRAMECOUNT, COL_EPIS_MI_ACHANNELS, COL_EPIS_MI_VCODEC, COL_EPIS_MI_ACODEC, COL_EPIS_MI_SAMPLERATE, COL_EPIS_MI_CHECKSUM

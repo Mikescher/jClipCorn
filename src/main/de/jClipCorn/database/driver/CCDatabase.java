@@ -289,6 +289,8 @@ public class CCDatabase {
 		ep.Tags.set(rs.getShort(DatabaseStructure.COL_EPIS_TAGS));
 		ep.Language.set(rs.getLong(DatabaseStructure.COL_EPIS_LANGUAGE));
 		ep.Subtitles.set(rs.getString(DatabaseStructure.COL_EPIS_SUBTITLES));
+		ep.Score.set(rs.getInt(DatabaseStructure.COL_EPIS_SCORE));
+		ep.ScoreComment.set(rs.getString(DatabaseStructure.COL_EPIS_SCORECOMMENT));
 
 		ep.MediaInfo.CDate.set(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_CDATE)));
 		ep.MediaInfo.MDate.set(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_MDATE)));
@@ -312,6 +314,8 @@ public class CCDatabase {
 	private void updateSeasonFromResultSet(CCSQLResultSet rs, CCSeason seas) throws SQLException, SQLWrapperException {
 		seas.Title.set(rs.getString(DatabaseStructure.COL_SEAS_NAME));
 		seas.Year.set(rs.getInt(DatabaseStructure.COL_SEAS_YEAR));
+		seas.Score.set(rs.getInt(DatabaseStructure.COL_SEAS_SCORE));
+		seas.ScoreComment.set(rs.getString(DatabaseStructure.COL_SEAS_SCORECOMMENT));
 
 		seas.setCover(rs.getInt(DatabaseStructure.COL_SEAS_COVERID));
 	}
@@ -322,6 +326,7 @@ public class CCDatabase {
 		ser.OnlineScore.set(rs.getShort(DatabaseStructure.COL_SER_ONLINESCORE_NUM), rs.getShort(DatabaseStructure.COL_SER_ONLINESCORE_DENOM));
 		ser.FSK.set(rs.getInt(DatabaseStructure.COL_SER_FSK));
 		ser.Score.set(rs.getInt(DatabaseStructure.COL_SER_SCORE));
+		ser.ScoreComment.set(rs.getString(DatabaseStructure.COL_SER_SCORECOMMENT));
 		ser.OnlineReference.set(rs.getString(DatabaseStructure.COL_SER_ONLINEREF));
 		ser.Tags.set(rs.getShort(DatabaseStructure.COL_SER_TAGS));
 
@@ -354,6 +359,7 @@ public class CCDatabase {
 		mov.Parts.Part5.set(rs.getString(DatabaseStructure.COL_MOV_PART_6));
 
 		mov.Score.set(rs.getInt(DatabaseStructure.COL_MOV_SCORE));
+		mov.ScoreComment.set(rs.getString(DatabaseStructure.COL_MOV_SCORECOMMENT));
 
 		mov.MediaInfo.CDate.set(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_MOV_MI_CDATE)));
 		mov.MediaInfo.MDate.set(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_MOV_MI_MDATE)));
@@ -609,6 +615,7 @@ public class CCDatabase {
 			stmt.setStr(DatabaseStructure.COL_MOV_PART_5,            mov.Parts.get(4).toString());
 			stmt.setStr(DatabaseStructure.COL_MOV_PART_6,            mov.Parts.get(5).toString());
 			stmt.setInt(DatabaseStructure.COL_MOV_SCORE,             mov.Score.get().asInt());
+			stmt.setStr(DatabaseStructure.COL_MOV_SCORECOMMENT,      mov.ScoreComment.get());
 
 			stmt.setStr(DatabaseStructure.COL_MOV_GROUPS,            mov.getGroups().toSerializationString());
 			stmt.setInt(DatabaseStructure.COL_MOV_COVERID,           mov.getCoverID());
@@ -656,6 +663,7 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_SER_FSK,               ser.FSK.get().asInt());
 			stmt.setStr(DatabaseStructure.COL_SER_ONLINEREF,         ser.OnlineReference.get().toSerializationString());
 			stmt.setInt(DatabaseStructure.COL_SER_SCORE,             ser.Score.get().asInt());
+			stmt.setStr(DatabaseStructure.COL_SER_SCORECOMMENT,      ser.ScoreComment.get());
 			stmt.setSht(DatabaseStructure.COL_SER_TAGS,              ser.Tags.get().asShort());
 
 			stmt.setInt(DatabaseStructure.COL_SER_COVERID,           ser.getCoverID());
@@ -681,8 +689,10 @@ public class CCDatabase {
 
 			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID,  sea.getSeries().getLocalID());
 
-			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,      sea.Title.get());
-			stmt.setInt(DatabaseStructure.COL_SEAS_YEAR,      sea.Year.get());
+			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,         sea.Title.get());
+			stmt.setInt(DatabaseStructure.COL_SEAS_YEAR,         sea.Year.get());
+			stmt.setInt(DatabaseStructure.COL_SEAS_SCORE,        sea.Score.get().asInt());
+			stmt.setStr(DatabaseStructure.COL_SEAS_SCORECOMMENT, sea.ScoreComment.get());
 
 			stmt.setInt(DatabaseStructure.COL_SEAS_COVERID,   sea.getCoverID());
 
@@ -717,6 +727,8 @@ public class CCDatabase {
 			stmt.setStr(DatabaseStructure.COL_EPIS_ADDDATE,       ep.AddDate.get().toStringSQL());
 			stmt.setLng(DatabaseStructure.COL_EPIS_LANGUAGE,      ep.Language.get().serializeToLong());
 			stmt.setStr(DatabaseStructure.COL_EPIS_SUBTITLES,     ep.Subtitles.get().serializeToString());
+			stmt.setInt(DatabaseStructure.COL_EPIS_SCORE,         ep.Score.get().asInt());
+			stmt.setStr(DatabaseStructure.COL_EPIS_SCORECOMMENT,  ep.ScoreComment.get());
 
 			var mi = ep.MediaInfo.getPartial();
 

@@ -17,6 +17,8 @@ public class OnlineScoreControl extends JPanel {
 	private JSpinner spnNumerator;
 	private JSpinner spnDenominator;
 
+	private int _suppressChange = 0;
+
 	public OnlineScoreControl() {
 		super();
 		init();
@@ -60,6 +62,8 @@ public class OnlineScoreControl extends JPanel {
 	}
 
 	private void onChange(ChangeEvent changeEvent) {
+		if (_suppressChange > 0) return;
+
 		var n = (short)(int)spnNumerator.getValue();
 		var d = (short)(int)spnDenominator.getValue();
 		var newval = CCOnlineScore.create(n, d);
@@ -72,8 +76,13 @@ public class OnlineScoreControl extends JPanel {
 	}
 
 	private void update() {
-		spnNumerator.setValue((int)value.Numerator);
-		spnDenominator.setValue((int)value.Denominator);
+		try {
+			_suppressChange++;
+			spnNumerator.setValue((int)value.Numerator);
+			spnDenominator.setValue((int)value.Denominator);
+		} finally {
+			_suppressChange--;
+		}
 	}
 
 	public CCOnlineScore getValue() {

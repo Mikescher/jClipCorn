@@ -1,6 +1,7 @@
 package de.jClipCorn.util.filesystem;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.stream.CCStream;
@@ -48,7 +49,15 @@ public class FSPath implements IPath, Comparable<FSPath> {
 	}
 
 	public static FSPath create(@NotNull File f) {
-		return new FSPath(f.getAbsolutePath());
+		// getAbsolutePath() returns for long paths under windows mangled paths (eg  `PROGRA~1` )
+		// so we first try getCanonicalPath(), and only use getAbsolutePath() as a fallback
+		// In theory the exception should never happen
+		try {
+			return new FSPath(f.getCanonicalPath());
+		} catch (IOException e) {
+			CCLog.addError("Failed to canonicalize the path '"+f.getPath()+"'", e); //$NON-NLS-1$ //$NON-NLS-2$
+			return new FSPath(f.getAbsolutePath());
+		}
 	}
 
 	public static FSPath create(@NotNull Path path) {

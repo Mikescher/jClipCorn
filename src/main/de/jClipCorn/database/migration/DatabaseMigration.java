@@ -88,6 +88,8 @@ public class DatabaseMigration {
 			
 			if (version.equals(Main.DBVERSION)) return;
 
+			CCLog.addInformation("Migrate from " + version + " to " + Main.DBVERSION);
+
 			DialogHelper.showDispatchLocalInformation(MainFrame.getInstance() != null ? MainFrame.getInstance() : new JFrame(), "Dialogs.DatabaseMigration");
 			
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.DatabaseUpgradeStarted"));

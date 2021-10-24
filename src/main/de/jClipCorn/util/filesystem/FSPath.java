@@ -439,6 +439,11 @@ public class FSPath implements IPath, Comparable<FSPath> {
 	}
 
 	public String toAbsolutePathString() {
+		if (ApplicationHelper.isWindows() && _path.length() >= 260) {
+			// https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation
+			return "\\\\?\\" + _path;
+		}
+
 		return toFile().getAbsolutePath();
 	}
 

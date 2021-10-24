@@ -45,7 +45,7 @@ public class MP4BoxRunner implements MetadataSource {
 
 		BasicFileAttributes attr = filename.readFileAttr();
 
-		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(boxppath.toAbsolutePathString(), "-info", filename.toString()); //$NON-NLS-1$
+		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(boxppath.toAbsolutePathString(), "-info", filename.toAbsolutePathString()); //$NON-NLS-1$
 
 		if (proc.Item1 != 0) throw new MP4BoxQueryException("MP4Box returned " + proc.Item1, proc.Item2 + "\n\n\n\n" + proc.Item3); //$NON-NLS-1$ //$NON-NLS-2$
 

@@ -41,7 +41,7 @@ public class MediaQueryRunner implements MetadataSource {
 		var mqpath = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (! mqpath.exists()) throw new MediaQueryException("MediaQuery not found");
 
-		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath.toAbsolutePathString(), file.toString(), "--Output=XML");
+		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath.toAbsolutePathString(), file.toAbsolutePathString(), "--Output=XML");
 
 		if (proc.Item1 != 0) throw new MediaQueryException("MediaQuery returned " + proc.Item1, proc.Item2 + "\n\n\n\n" + proc.Item3);
 
@@ -96,7 +96,7 @@ public class MediaQueryRunner implements MetadataSource {
 		var mqpath = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
 		if (!mqpath.exists()) throw new MediaQueryException("MediaQuery not found");
 
-		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath.toAbsolutePathString(), filename.toString());
+		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(mqpath.toAbsolutePathString(), filename.toAbsolutePathString());
 
 		if (proc.Item1 != 0) throw new MediaQueryException("MediaQuery returned " + proc.Item1, proc.Item2 + "\n\n\n\n" + proc.Item3);
 

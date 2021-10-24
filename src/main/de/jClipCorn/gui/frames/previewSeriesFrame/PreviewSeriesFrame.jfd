@@ -17,7 +17,7 @@ new FormModel {
 			"$sizePolicy": 1
 			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosed", "onWindowClosed", false ) )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "110dlu, labelcompgap, default:grow, labelcompgap, max(pref;80dlu), labelcompgap, 110dlu"
+				"$columnSpecs": "110dlu, labelcompgap, 0dlu:grow, labelcompgap, max(pref;50dlu), labelcompgap, 110dlu"
 				"$rowSpecs": "default, pref"
 			} ) {
 				name: "pnlTop"
@@ -57,7 +57,7 @@ new FormModel {
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-					"$columnSpecs": "pref:grow, labelcompgap, default"
+					"$columnSpecs": "0dlu:grow, labelcompgap, default"
 					"$rowSpecs": "default"
 				} ) {
 					name: "pnlSearch"
@@ -335,7 +335,7 @@ new FormModel {
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "labelcompgap, default:grow, labelcompgap"
+				"$columnSpecs": "labelcompgap, 0dlu:grow, labelcompgap"
 				"$rowSpecs": "linegap, default, linegap, default:grow, linegap"
 			} ) {
 				name: "pnlMain"

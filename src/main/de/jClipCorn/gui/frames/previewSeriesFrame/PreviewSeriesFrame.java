@@ -334,7 +334,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		if (found.isEmpty()) {
 			DisplaySearchResultsDialog.disposeInstance();
 		} else {
-			DisplaySearchResultsDialog dsrd = new DisplaySearchResultsDialog(found, edSearch);
+			DisplaySearchResultsDialog dsrd = new DisplaySearchResultsDialog(found, pnlSearch);
 			dsrd.addListener(episode ->
 			{
 				cvrChooser.setCurrSelected(episode.getSeason().getSeasonNumber());
@@ -469,7 +469,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		//======== pnlTop ========
 		{
 			pnlTop.setLayout(new FormLayout(
-				"110dlu, $lcgap, default:grow, $lcgap, [80dlu,pref], $lcgap, 110dlu", //$NON-NLS-1$
+				"110dlu, $lcgap, 0dlu:grow, $lcgap, [50dlu,pref], $lcgap, 110dlu", //$NON-NLS-1$
 				"default, pref")); //$NON-NLS-1$
 
 			//======== pnlTopLeft ========
@@ -500,7 +500,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			//======== pnlSearch ========
 			{
 				pnlSearch.setLayout(new FormLayout(
-					"pref:grow, $lcgap, default", //$NON-NLS-1$
+					"0dlu:grow, $lcgap, default", //$NON-NLS-1$
 					"default")); //$NON-NLS-1$
 
 				//---- edSearch ----
@@ -653,7 +653,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		{
 			pnlMain.setBorder(LineBorder.createGrayLineBorder());
 			pnlMain.setLayout(new FormLayout(
-				"$lcgap, default:grow, $lcgap", //$NON-NLS-1$
+				"$lcgap, 0dlu:grow, $lcgap", //$NON-NLS-1$
 				"$lgap, default, $lgap, default:grow, $lgap")); //$NON-NLS-1$
 
 			//---- lblSeason ----

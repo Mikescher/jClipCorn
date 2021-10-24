@@ -158,7 +158,7 @@ public class ParseOnlineDialog extends JCCDialog
 		cbCover.setSelected((imgCover.getIcon() != null) && (imgCoverBI != null));
 		cbFSK.setSelected(cbxFSK.hasSelection());
 		cbLength.setSelected((int)spnLength.getValue() > 0);
-		cbScore.setSelected(ctrlScore.getValue().isEmpty());
+		cbScore.setSelected(!ctrlScore.getValue().isEmpty());
 		cbTitle.setSelected(edTitle.getText().equalsIgnoreCase(owner.getTitleForParser()));
 		cbYear.setSelected((int)spnYear.getValue() > 0);
 

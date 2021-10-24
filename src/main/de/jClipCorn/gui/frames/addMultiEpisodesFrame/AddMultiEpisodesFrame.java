@@ -120,6 +120,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		if (returnval != JFileChooser.APPROVE_OPTION) return;
 
 		File[] files = massVideoFileChooser.getSelectedFiles();
+		if (cbSortedAdd.isSelected()) files = CCStreams.iterate(files).autosortByProperty(p -> FSPath.create(p).getFilenameWithExt().toLowerCase()).toArray(new File[0]);
 
 		CCEpisode last = target.getSeries().getLastAddedEpisode();
 		CCDBLanguageSet lang = CCDBLanguageSet.single(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
@@ -163,6 +164,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		if (returnval != JFileChooser.APPROVE_OPTION) return;
 
 		File[] files = massVideoFileChooser.getSelectedFiles();
+		if (cbSortedAdd.isSelected()) files = CCStreams.iterate(files).autosortByProperty(p -> FSPath.create(p).getFilenameWithExt().toLowerCase()).toArray(new File[0]);
 
 		CCEpisode last = target.getSeries().getLastAddedEpisode();
 		CCDBLanguageSet lang = CCDBLanguageSet.single(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue());
@@ -743,6 +745,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		btnKeepDestination = new JButton();
 		btnOkayKeep = new JButton();
 		btnOkayCopy = new JButton();
+		cbSortedAdd = new JCheckBox();
 		btnGetMediainfo = new JButton();
 		cbxIgnoreProblems = new JCheckBox();
 		btnOkayRename = new JButton();
@@ -814,6 +817,10 @@ public class AddMultiEpisodesFrame extends JCCFrame
 			btnOkayCopy.addActionListener(e -> onOkayCopy());
 			panel1.add(btnOkayCopy, CC.xy(19, 3));
 
+			//---- cbSortedAdd ----
+			cbSortedAdd.setText(LocaleBundle.getString("AddMultiEpisodesFrame.cbSort")); //$NON-NLS-1$
+			panel1.add(cbSortedAdd, CC.xy(1, 5));
+
 			//---- btnGetMediainfo ----
 			btnGetMediainfo.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_33")); //$NON-NLS-1$
 			btnGetMediainfo.addActionListener(e -> onGetMediaInfo());
@@ -871,6 +878,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 	private JButton btnKeepDestination;
 	private JButton btnOkayKeep;
 	private JButton btnOkayCopy;
+	private JCheckBox cbSortedAdd;
 	private JButton btnGetMediainfo;
 	private JCheckBox cbxIgnoreProblems;
 	private JButton btnOkayRename;

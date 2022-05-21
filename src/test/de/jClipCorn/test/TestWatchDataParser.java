@@ -31,7 +31,7 @@ public class TestWatchDataParser extends ClipCornBaseTest {
 		
 		assertEquals(0, err.size());
 		
-		assertEquals(16, r.size());
+		assertEquals(17, r.size());
 		
 		for (WatchDataChangeSet wdcs : r) wdcs.execute();
 		
@@ -44,6 +44,7 @@ public class TestWatchDataParser extends ClipCornBaseTest {
 		assertEquals(true, ml.getSeries("Soul Eater").getSeasonByArrayIndex(0).getEpisodeByNumber(6).isViewed());
 		assertEquals(false, ml.getSeries("Soul Eater").getSeasonByArrayIndex(0).getEpisodeByNumber(7).isViewed());
 		assertEquals(true, ml.getSeries("Soul Eater").getSeasonByArrayIndex(1).getEpisodeByNumber(17).isViewed());
+		assertEquals(true, ml.getSeries("Soul Eater").getSeasonByArrayIndex(1).getEpisodeByNumber(18).isViewed());
 
 		assertEquals(true, ml.getMovie("Hypercube").isViewed());
 

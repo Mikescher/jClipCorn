@@ -21,38 +21,43 @@ public class WatchDataParser {
 	
 	//[^\[\]\{\}\n\r\t ][^\[\]\{\}\n\r]*
 	private final static String REGEX_MOVIE_HEADER = "[^\\[\\]\\{\\}\\n\\r\\t ][^\\[\\]\\{\\}\\n\\r]*"; //$NON-NLS-1$
-	
-	//([^\[\]\{\}\n\r\t ][^\[\]\{\}\n\r]*)([\t ]+\{\{(\+\+\+|\+\+|\+|0|\-|\-\-|\-\-\-)\}\})?([\t ]+([0-9\.]+|(\[[0-9\.: ]+\])))?
-	private final static String REGEX_MOVIE_HEADER_EXT1 = "([^\\[\\]\\{\\}\\n\\r\\t ][^\\[\\]\\{\\}\\n\\r]*)([\\t ]+\\{\\{(\\+\\+\\+|\\+\\+|\\+|0|\\-|\\-\\-|\\-\\-\\-)\\}\\})?([\\t ]+([0-9\\.]+|(\\[[0-9\\.: ]+\\])))?"; //$NON-NLS-1$
-	
-	//([0-9\.]+|(\[[0-9\.: ]+\])):[\t ]*([^\[\]\{\}\n\r\t ][^\[\]\{\}\n\r]*)([\t ]+\{\{(\+\+\+|\+\+|\+|0|\-|\-\-|\-\-\-)\}\})?
-	private final static String REGEX_MOVIE_HEADER_EXT2 = "([0-9\\.]+|(\\[[0-9\\.: ]+\\])):[\\t ]*([^\\[\\]\\{\\}\\n\\r\\t ][^\\[\\]\\{\\}\\n\\r]*)([\\t ]+\\{\\{(\\+\\+\\+|\\+\\+|\\+|0|\\-|\\-\\-|\\-\\-\\-)\\}\\})?"; //$NON-NLS-1$
 
-	// [\t ]+([0-9\.]+|(\[[0-9\.: ]+\]))\:[\t ]*((E?\-?[0-9]+(\-E?[0-9]+)?(\,[\t ]*E?\-?[0-9]+(\-E?[0-9]+)?)*))
-	private final static String REGEX_SERIES_CONTENT = "[\\t ]+([0-9\\.]+|(\\[[0-9\\.: ]+\\]))\\:[\\t ]*((E?\\-?[0-9]+(\\-E?[0-9]+)?(\\,[\\t ]*E?\\-?[0-9]+(\\-E?[0-9]+)?)*))"; //$NON-NLS-1$
-	
-	// [\t ]+(E?\-?[0-9]+)[\t ]*\:[\t ]*([0-9\.]+|(\[[0-9\.: ]+\]))
-	private final static String REGEX_SERIES_SINGLECONTENT = "[\\t ]+(E?\\-?[0-9]+)[\\t ]*\\:[\\t ]*([0-9\\.]+|(\\[[0-9\\.: ]+\\]))"; //$NON-NLS-1$
-	
+	//([^\[\]\{\}\n\r\t ][^\[\]\{\}\n\r]*)([\t ]+\{\{(\+\+\+|\+\+|\+|0|\-|\-\-|\-\-\-)\}\})?([\t ]+([0-9\.\-]+|(\[[0-9\.: \-]+\])))?
+	private final static String REGEX_MOVIE_HEADER_EXT11 = "([^\\[\\]\\{\\}\\n\\r\\t ][^\\[\\]\\{\\}\\n\\r]*)([\\t ]+\\{\\{(\\+\\+\\+|\\+\\+|\\+|0|\\-|\\-\\-|\\-\\-\\-)\\}\\})?([\\t ]+([0-9\\.\\-]+|(\\[[0-9\\.: \\-]+\\])))?"; //$NON-NLS-1$
+
+	//([^\[\]\{\}\n\r\t ][^\[\]\{\}\n\r]*)([\t ]+([0-9\.\-]+|(\[[0-9\.: \-]+\])))?([\t ]+\{\{(\+\+\+|\+\+|\+|0|\-|\-\-|\-\-\-)\}\})?
+	private final static String REGEX_MOVIE_HEADER_EXT12 = "([^\\[\\]\\{\\}\\n\\r\\t ][^\\[\\]\\{\\}\\n\\r]*)([\\t ]+([0-9\\.\\-]+|(\\[[0-9\\.: \\-]+\\])))?([\\t ]+\\{\\{(\\+\\+\\+|\\+\\+|\\+|0|\\-|\\-\\-|\\-\\-\\-)\\}\\})?"; //$NON-NLS-1$
+
+	//([0-9\.\-]+|(\[[0-9\.: \-]+\]))[\t ]*(?:\:[\t ]*|[\t ]+)([^\[\]\{\}\n\r\t ][^\[\]\{\}\n\r]*)([\t ]+\{\{(\+\+\+|\+\+|\+|0|\-|\-\-|\-\-\-)\}\})?
+	private final static String REGEX_MOVIE_HEADER_EXT2 = "([0-9\\.\\-]+|(\\[[0-9\\.: \\-]+\\]))[\\t ]*(?:\\:[\\t ]*|[\\t ]+)([^\\[\\]\\{\\}\\n\\r\\t ][^\\[\\]\\{\\}\\n\\r]*)([\\t ]+\\{\\{(\\+\\+\\+|\\+\\+|\\+|0|\\-|\\-\\-|\\-\\-\\-)\\}\\})?"; //$NON-NLS-1$
+
+	//[\t ]+([0-9\.\-]+|(\[[0-9\.: \-]+\]))[\t ]*(?:\:[\t ]*|[\t ]+)(((?:S?\-?[0-9]+)?(?:E?\-?[0-9]+))(\,[\t ]*((?:S?\-?[0-9]+)?(?:E?\-?[0-9]+)))*)
+	private final static String REGEX_SERIES_CONTENT_1 = "[\\t ]+([0-9\\.\\-]+|(\\[[0-9\\.: \\-]+\\]))[\\t ]*(?:\\:[\\t ]*|[\\t ]+)(((?:S?\\-?[0-9]+)?(?:E?\\-?[0-9]+))(\\,[\\t ]*((?:S?\\-?[0-9]+)?(?:E?\\-?[0-9]+)))*)"; //$NON-NLS-1$
+
+	//[\t ]+(((?:S?\-?[0-9]+)?(?:E?\-?[0-9]+)))[\t ]*(?:\:[\t ]*|[\t ]+)([0-9\.\-]+|(\[[0-9\.: \-]+\]))
+	private final static String REGEX_SERIES_CONTENT_2 = "[\\t ]+(((?:S?\\-?[0-9]+)?(?:E?\\-?[0-9]+)))[\\t ]*(?:\\:[\\t ]*|[\\t ]+)([0-9\\.\\-]+|(\\[[0-9\\.: \\-]+\\]))"; //$NON-NLS-1$
+
 	private final static String REGEX_CONTENT_SINGLE_1 = "E([0-9]+)"; //$NON-NLS-1$
 	private final static String REGEX_CONTENT_SINGLE_2 = "([0-9]+)"; //$NON-NLS-1$
 	private final static String REGEX_CONTENT_NEGATIVE_1 = "E\\-([0-9]+)"; //$NON-NLS-1$
 	private final static String REGEX_CONTENT_NEGATIVE_2 = "\\-([0-9]+)"; //$NON-NLS-1$
-	private final static String REGEX_CONTENT_RANGE_1 = "E([0-9]+)\\-E([0-9]+)"; //$NON-NLS-1$
-	private final static String REGEX_CONTENT_RANGE_2 = "E([0-9]+)\\-([0-9]+)"; //$NON-NLS-1$
-	
+
+	private final static String REGEX_CONTENT_ES_SINGLE_1 = "S([0-9]+)E([0-9]+)"; //$NON-NLS-1$
+	private final static String REGEX_CONTENT_ES_NEGATIVE_1 = "S([0-9]+)E\\-([0-9]+)"; //$NON-NLS-1$
+
 	private final static Pattern PATTERN_SERIES_HEADER = Pattern.compile(REGEX_SERIES_HEADER);
-	private final static Pattern PATTERN_SERIES_CONTENT = Pattern.compile(REGEX_SERIES_CONTENT);
-	private final static Pattern PATTERN_SERIES_SINGLECONTENT = Pattern.compile(REGEX_SERIES_SINGLECONTENT);
+	private final static Pattern PATTERN_SERIES_CONTENT_1 = Pattern.compile(REGEX_SERIES_CONTENT_1);
+	private final static Pattern PATTERN_SERIES_CONTENT_2 = Pattern.compile(REGEX_SERIES_CONTENT_2);
 	private final static Pattern PATTERN_MOVIE_HEADER = Pattern.compile(REGEX_MOVIE_HEADER);
-	private final static Pattern PATTERN_MOVIE_HEADER_EXT1 = Pattern.compile(REGEX_MOVIE_HEADER_EXT1);
+	private final static Pattern PATTERN_MOVIE_HEADER_EXT11 = Pattern.compile(REGEX_MOVIE_HEADER_EXT11);
+	private final static Pattern PATTERN_MOVIE_HEADER_EXT12 = Pattern.compile(REGEX_MOVIE_HEADER_EXT12);
 	private final static Pattern PATTERN_MOVIE_HEADER_EXT2 = Pattern.compile(REGEX_MOVIE_HEADER_EXT2);
 	private final static Pattern PATTERN_CONTENT_SINGLE_1 = Pattern.compile(REGEX_CONTENT_SINGLE_1);
 	private final static Pattern PATTERN_CONTENT_SINGLE_2 = Pattern.compile(REGEX_CONTENT_SINGLE_2);
 	private final static Pattern PATTERN_CONTENT_NEGATIVE_1 = Pattern.compile(REGEX_CONTENT_NEGATIVE_1);
 	private final static Pattern PATTERN_CONTENT_NEGATIVE_2 = Pattern.compile(REGEX_CONTENT_NEGATIVE_2);
-	private final static Pattern PATTERN_CONTENT_RANGE_1 = Pattern.compile(REGEX_CONTENT_RANGE_1);
-	private final static Pattern PATTERN_CONTENT_RANGE_2 = Pattern.compile(REGEX_CONTENT_RANGE_2);
+	private final static Pattern PATTERN_CONTENT_ES_SINGLE_1 = Pattern.compile(REGEX_CONTENT_ES_SINGLE_1);
+	private final static Pattern PATTERN_CONTENT_ES_NEGATIVE_1 = Pattern.compile(REGEX_CONTENT_ES_NEGATIVE_1);
 	
 	@SuppressWarnings("nls")
 	public static List<WatchDataChangeSet> parse(CCMovieList movielist, String content, List<String> errors) {
@@ -60,7 +65,7 @@ public class WatchDataParser {
 		
 		String[] lines = content.split("\\r?\\n");
 		
-		CCSeason currSeason = null;
+		Tuple<CCSeries, CCSeason> currSeason = null;
 		
 		for (int currLine = 0; currLine < lines.length; currLine++) {
 			String line = StringUtils.stripEnd(lines[currLine], null);
@@ -79,36 +84,45 @@ public class WatchDataParser {
 				String title = matcher.group(1).trim();
 				String seasonNumber = matcher.group(2).trim();
 				
-				CCSeason s = parseSeriesHeaderLine(movielist, currLine, line, title, seasonNumber, errors);
+				Tuple<CCSeries, CCSeason> s = parseSeriesHeaderLine(movielist, currLine, line, title, seasonNumber, errors);
 				
 				if (s == null) continue;
 				
 				currSeason = s;
-			} else if ((matcher = PATTERN_SERIES_CONTENT.matcher(line)).matches()) {
+			} else if ((matcher = PATTERN_SERIES_CONTENT_1.matcher(line)).matches()) {
 				String date = matcher.group(1).trim();
 				String episodeList = matcher.group(3).trim();
-				
+
 				List<EpisodeWatchDataChangedSet> result = parseSeriesContentLine(movielist, currLine, currSeason, line, date, episodeList, errors);
 				if (result != null) set.addAll(result);
-			} else if ((matcher = PATTERN_SERIES_SINGLECONTENT.matcher(line)).matches()) {
-				String date = matcher.group(2).trim();
+			} else if ((matcher = PATTERN_SERIES_CONTENT_2.matcher(line)).matches()) {
+				String date = matcher.group(3).trim();
 				String episodeList = matcher.group(1).trim();
-				
+
 				List<EpisodeWatchDataChangedSet> result = parseSeriesContentLine(movielist, currLine, currSeason, line, date, episodeList, errors);
 				if (result != null) set.addAll(result);
 			} else if ((matcher = PATTERN_MOVIE_HEADER.matcher(line)).matches()) {
 				String title = matcher.group().trim();
 				
-				Tuple<MovieWatchDataChangedSet, CCSeason> result = parseMovieHeader(movielist, currLine, line, title, errors);
+				Tuple<MovieWatchDataChangedSet, Tuple<CCSeries, CCSeason>> result = parseMovieHeader(movielist, currLine, line, title, errors);
 				if (result == null) continue;
 				
 				if (result.Item1 != null) set.add(result.Item1);
 				currSeason = result.Item2;
-			} else if ((matcher = PATTERN_MOVIE_HEADER_EXT1.matcher(line)).matches()) {
+			} else if ((matcher = PATTERN_MOVIE_HEADER_EXT11.matcher(line)).matches()) {
 				String title = matcher.group(1).trim();
 				String score = matcher.group(2);
 				String date = matcher.group(4);
-				
+
+				ExtendedMovieWatchDataChangedSet result = parseMovieExtHeader(movielist, currLine, line, title, score, date, errors);
+				if (result == null) continue;
+				set.add(result);
+				currSeason = null;
+			} else if ((matcher = PATTERN_MOVIE_HEADER_EXT12.matcher(line)).matches()) {
+				String title = matcher.group(1).trim();
+				String score = matcher.group(5);
+				String date = matcher.group(2);
+
 				ExtendedMovieWatchDataChangedSet result = parseMovieExtHeader(movielist, currLine, line, title, score, date, errors);
 				if (result == null) continue;
 				set.add(result);
@@ -131,7 +145,7 @@ public class WatchDataParser {
 	}
 
 	@SuppressWarnings("nls")
-	private static CCSeason parseSeriesHeaderLine(CCMovieList movielist, int currLine, String line, String title, String seasonNumber, List<String> errors) {
+	private static Tuple<CCSeries, CCSeason> parseSeriesHeaderLine(CCMovieList movielist, int currLine, String line, String title, String seasonNumber, List<String> errors) {
 		CCSeries s = null;
 		
 		for (CCSeries curr : movielist.iteratorSeries()) {
@@ -153,11 +167,11 @@ public class WatchDataParser {
 			return null;
 		}
 		
-		return s.getSeasonByArrayIndex(sn);
+		return Tuple.Create(s, s.getSeasonByArrayIndex(sn));
 	}
 	
 	@SuppressWarnings("nls")
-	private static List<EpisodeWatchDataChangedSet> parseSeriesContentLine(CCMovieList movielist, int currLine, CCSeason currSeason, String line, String date, String episodeList, List<String> errors) {
+	private static List<EpisodeWatchDataChangedSet> parseSeriesContentLine(CCMovieList movielist, int currLine, Tuple<CCSeries, CCSeason> currSeason, String line, String date, String episodeList, List<String> errors) {
 		if (date.startsWith("[") && date.endsWith("]")) date = date.substring(1, date.length()-1);
 		
 		if (currSeason == null) {
@@ -170,7 +184,11 @@ public class WatchDataParser {
 		if (d == null) d = CCDateTime.parseOrDefault(date, "d.M", null);
 		if (d == null) d = CCDateTime.parseOrDefault(date, "d.M.y H:m", null);
 		if (d == null) d = CCDateTime.parseOrDefault(date, "d.M.y H:m:s", null);
-		
+
+		if (d == null) d = CCDateTime.parseOrDefault(date, "y-M-d", null);
+		if (d == null) d = CCDateTime.parseOrDefault(date, "y-M-d H:m", null);
+		if (d == null) d = CCDateTime.parseOrDefault(date, "y-M-d H:m:s", null);
+
 		if (d == null || ! d.isValidDateTime()) {
 			errors.add(String.format("Line[%d] \"%s\" : Date \"%s\" is no valid Date", currLine, line.trim(), date));
 			return new ArrayList<>();
@@ -188,35 +206,42 @@ public class WatchDataParser {
 			
 			int range_min;
 			int range_max;
+			int explicit_season;
 			
 			try {
 				Matcher content_matcher;
 				if ((content_matcher = PATTERN_CONTENT_SINGLE_1.matcher(e)).matches()) {
 					range_viewed = true;
+					explicit_season = -1;
 					range_min = Integer.parseInt(content_matcher.group(1));
 					range_max = range_min;
 				} else if ((content_matcher = PATTERN_CONTENT_SINGLE_2.matcher(e)).matches()) {
 					range_viewed = true;
+					explicit_season = -1;
 					range_min = Integer.parseInt(content_matcher.group(1));
 					range_max = range_min;
 				} else if ((content_matcher = PATTERN_CONTENT_NEGATIVE_1.matcher(e)).matches()) {
 					range_viewed = false;
+					explicit_season = -1;
 					range_min = Integer.parseInt(content_matcher.group(1));
 					range_max = range_min;
 				} else if ((content_matcher = PATTERN_CONTENT_NEGATIVE_2.matcher(e)).matches()) {
 					range_viewed = false;
+					explicit_season = -1;
 					range_min = Integer.parseInt(content_matcher.group(1));
 					range_max = range_min;
-				} else if ((content_matcher = PATTERN_CONTENT_RANGE_1.matcher(e)).matches()) {
+				} else if ((content_matcher = PATTERN_CONTENT_ES_SINGLE_1.matcher(e)).matches()) {
 					range_viewed = true;
-					range_min = Integer.parseInt(content_matcher.group(1));
-					range_max = Integer.parseInt(content_matcher.group(2));
-				} else if ((content_matcher = PATTERN_CONTENT_RANGE_2.matcher(e)).matches()) {
-					range_viewed = true;
-					range_min = Integer.parseInt(content_matcher.group(1));
-					range_max = Integer.parseInt(content_matcher.group(2));
+					explicit_season = Integer.parseInt(content_matcher.group(1));
+					range_min = Integer.parseInt(content_matcher.group(2));
+					range_max = range_min;
+				} else if ((content_matcher = PATTERN_CONTENT_ES_NEGATIVE_1.matcher(e)).matches()) {
+					range_viewed = false;
+					explicit_season = Integer.parseInt(content_matcher.group(1));
+					range_min = Integer.parseInt(content_matcher.group(2));
+					range_max = range_min;
 				} else {
-					errors.add(String.format("Line[%d] \"%s\" : The Episode \"%s\" could not be parsed (NaN)", currLine, line.trim(), e));
+					errors.add(String.format("Line[%d] \"%s\" : The Episode \"%s\" could not be parsed (No RegEx)", currLine, line.trim(), e));
 					continue;
 				}
 			} catch (NumberFormatException ex2) {
@@ -225,7 +250,25 @@ public class WatchDataParser {
 			}
 			
 			for (int en = range_min; en <= range_max; en++) {
-				CCEpisode epis = currSeason.getEpisodeByNumber(en);
+
+				if (currSeason.Item2 == null && explicit_season <= 0) {
+					errors.add(String.format("Line[%d] \"%s\" : The Episode \"%s\" needs to have a season-index (or the series header needs one)", currLine, line.trim(), en));
+					continue;
+				}
+
+				CCSeason season;
+
+				if (explicit_season > 0) {
+					season = currSeason.Item1.getSeasonByArrayIndex(explicit_season - 1);
+					if (season == null) {
+						errors.add(String.format("Line[%d] \"%s\" : Series \"%s\" has no Season with number %d", currLine, line.trim(), currSeason.Item1.getSeries().Title.get(), (explicit_season-1)));
+						return null;
+					}
+				} else /* if (currSeason.Item2 != null) */ {
+					season = currSeason.Item2;
+				}
+
+				CCEpisode epis = season.getEpisodeByNumber(en);
 				
 				if (epis == null) {
 					errors.add(String.format("Line[%d] \"%s\" : The Episode \"%s\" could not be found in the current Season", currLine, line.trim(), en));
@@ -240,7 +283,7 @@ public class WatchDataParser {
 	}
 
 	@SuppressWarnings("nls")
-	private static Tuple<MovieWatchDataChangedSet, CCSeason> parseMovieHeader(CCMovieList movielist, int currLine, String line, String title, List<String> errors) {
+	private static Tuple<MovieWatchDataChangedSet, Tuple<CCSeries, CCSeason>> parseMovieHeader(CCMovieList movielist, int currLine, String line, String title, List<String> errors) {
 		CCSeries s = null;
 		CCMovie m = null;
 		
@@ -252,7 +295,7 @@ public class WatchDataParser {
 		}
 		
 		for (CCMovie curr : movielist.iteratorMovies()) {
-			if (curr.getTitle().equalsIgnoreCase(title) || curr.getCompleteTitle().equalsIgnoreCase(title)) {
+			if (curr.getTitle().equalsIgnoreCase(title) || curr.getCompleteTitle().equalsIgnoreCase(title) || curr.Zyklus.get().getFormatted().equalsIgnoreCase(title) || curr.Zyklus.get().getDecimalFormatted().equalsIgnoreCase(title)) {
 				
 				if (m != null) {
 					errors.add(String.format("Line[%d] \"%s\" : Movie \"%s\" has more then 1 results in database", currLine, line.trim(), title));
@@ -277,11 +320,10 @@ public class WatchDataParser {
 			return new Tuple<>(new MovieWatchDataChangedSet(m, true), null);
 		} else if (s != null) {
 			if (s.getSeasonCount() != 1) {
-				errors.add(String.format("Line[%d] \"%s\" : Series \"%s\" has too many or too less Seasons (%d)", currLine, line.trim(), title, s.getSeasonCount()));
-				return null;
+				return new Tuple<>(null, Tuple.Create(s, null));
 			}
 
-			return new Tuple<>(null, s.getSeasonByArrayIndex(0));
+			return new Tuple<>(null, Tuple.Create(s, s.getSeasonByArrayIndex(0)));
 		}
 
 		return null;
@@ -292,7 +334,7 @@ public class WatchDataParser {
 		CCMovie m = null;
 		
 		for (CCMovie curr : movielist.iteratorMovies()) {
-			if (curr.getTitle().equalsIgnoreCase(title) || curr.getCompleteTitle().equalsIgnoreCase(title)) {
+			if (curr.getTitle().equalsIgnoreCase(title) || curr.getCompleteTitle().equalsIgnoreCase(title) || curr.Zyklus.get().getFormatted().equalsIgnoreCase(title) || curr.Zyklus.get().getDecimalFormatted().equalsIgnoreCase(title)) {
 				
 				if (m != null) {
 					errors.add(String.format("Line[%d] \"%s\" : Movie \"%s\" has more then 1 results in database", currLine, line.trim(), title));
@@ -336,11 +378,15 @@ public class WatchDataParser {
 			if (date.startsWith("[") && date.endsWith("]")) date = date.substring(1, date.length()-1);
 			
 			rdate = CCDateTime.parseOrDefault(date, "d.M.y", null);
-			
+
 			if (rdate == null) rdate = CCDateTime.parseOrDefault(date, "d.M", null);
 			if (rdate == null) rdate = CCDateTime.parseOrDefault(date, "d.M.y H:m", null);
 			if (rdate == null) rdate = CCDateTime.parseOrDefault(date, "d.M.y H:m:s", null);
-			
+
+			if (rdate == null) rdate = CCDateTime.parseOrDefault(date, "y-M-d", null);
+			if (rdate == null) rdate = CCDateTime.parseOrDefault(date, "y-M-d H:m", null);
+			if (rdate == null) rdate = CCDateTime.parseOrDefault(date, "y-M-d H:m:s", null);
+
 			if (rdate == null || ! rdate.isValidDateTime()) {
 				errors.add(String.format("Line[%d] \"%s\" : Date \"%s\" is no valid Date", currLine, line.trim(), date));
 				return null;

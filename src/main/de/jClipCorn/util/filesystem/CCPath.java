@@ -326,7 +326,7 @@ public class CCPath implements IPath, Comparable<CCPath> {
 				if (lastidx > 0) return CCPath.create(common.substring(0, lastidx + 1));
 
 				var nextidx = pathlist.get(0)._path.indexOf(SEPERATOR, c);
-				if (nextidx > 0) return CCPath.create(common.substring(0, nextidx + 1));
+				if (nextidx > 0) return CCPath.create(common.substring(0, Math.min(nextidx + 1, common.length())));
 
 				return CCPath.Empty;
 			}

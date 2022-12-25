@@ -3,6 +3,7 @@ package de.jClipCorn.util.filesystem;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
@@ -179,32 +180,36 @@ public class FilesystemUtils {
 	}
 
 	public static void testWritePermissions(CCProperties ccprops) {
-		if (! canWriteInWorkingDir() && !ccprops.ARG_READONLY) {
+		var cwwd = canWriteInWorkingDir();
+		if (! cwwd.Item2 && !ccprops.ARG_READONLY) {
+			CCLog.addDebug("getRealSelfDirectory(): " + getRealSelfDirectory());
+			CCLog.addDebug("TESTFILE_NAME:          " + TESTFILE_NAME);
+			CCLog.addDebug("Exception:              " + cwwd.Item1);
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.NoWritePermissions"));
 		}
 	}
 
-	private static boolean canWriteInWorkingDir() {
+	private static Tuple<IOException, Boolean> canWriteInWorkingDir() {
 		File workingDir = getRealSelfDirectory().toFile();
-		if (!workingDir.canRead() || !workingDir.canWrite()) return false;
+		if (!workingDir.canRead() || !workingDir.canWrite()) return Tuple.Create(null, false);
 
 		File testFile = new File(getRealSelfDirectory() + TESTFILE_NAME);
 
 		if (testFile.exists()) testFile.delete();
 
-		if (testFile.exists()) return false;
+		if (testFile.exists()) return Tuple.Create(null, false);
 
 		try {
-			if (!testFile.createNewFile()) return false;
+			if (!testFile.createNewFile()) return Tuple.Create(null, false);
 		} catch (IOException e) {
-			return false; // Should hopefully not be called
+			return Tuple.Create(e, false); // Should hopefully not be called
 		}
 
-		if (!testFile.exists()) return false;
+		if (!testFile.exists()) return Tuple.Create(null, false);
 
-		if (!testFile.delete()) return false;
+		if (!testFile.delete()) return Tuple.Create(null, false);
 
-		return true;
+		return Tuple.Create(null, true);
 	}
 
 	public static FSPath getTempPath() {

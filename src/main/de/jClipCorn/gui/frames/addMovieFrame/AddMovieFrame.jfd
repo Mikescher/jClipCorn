@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.12" encoding: "UTF-8"
+JFDML JFormDesigner: "8.1.0.0.283" Java: "17.0.7" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -7,7 +7,7 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-			"$columnSpecs": "unrelgap, 0dlu:grow, 10dlu, 125dlu, unrelgap"
+			"$columnSpecs": "unrelgap, 0dlu:grow, 10dlu, 130dlu, unrelgap"
 			"$rowSpecs": "unrelgap, default:grow, linegap, default, unrelgap"
 		} ) {
 			name: "this"
@@ -732,7 +732,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 750, 750 )
+			"size": new java.awt.Dimension( 775, 810 )
 		} )
 	}
 }

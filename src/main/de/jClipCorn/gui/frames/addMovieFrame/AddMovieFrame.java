@@ -1003,7 +1003,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, 0dlu:grow, 10dlu, 125dlu, $ugap", //$NON-NLS-1$
+			"$ugap, 0dlu:grow, 10dlu, 130dlu, $ugap", //$NON-NLS-1$
 			"$ugap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
 
 		//======== pnlLeft ========
@@ -1326,7 +1326,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 			pnlBottom.add(btnCancel);
 		}
 		contentPane.add(pnlBottom, CC.xywh(2, 4, 3, 1));
-		setSize(750, 750);
+		setSize(775, 810);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}

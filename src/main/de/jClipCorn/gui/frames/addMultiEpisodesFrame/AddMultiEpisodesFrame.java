@@ -861,7 +861,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 			panel2.add(progressBar2, CC.xy(3, 1));
 		}
 		contentPane.add(panel2, CC.xy(2, 6));
-		setSize(1000, 500);
+		setSize(1600, 650);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}

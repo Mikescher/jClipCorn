@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.guiComponents.jCCTimeSpinner.JCCTimeSpinner;
 import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
@@ -45,8 +46,10 @@ public class DateTimeListEditor extends JPanel {
 	private JCheckBox cbTime;
 	private JPopupMenu splitPopup;
 
-	private Color defaultPanelBackground = COLOR_TRANSPARENT;
-	
+	private       Color defaultPanelBackground = COLOR_TRANSPARENT;
+	private final Color altPanelBackground = LookAndFeelManager.isDark() ? new Color(0x35, 0x35, 0x35) : Color.LIGHT_GRAY;      //$NON-NLS-1$
+	private final Color hlPanelBackground  = LookAndFeelManager.isDark() ? new Color(0x2b, 0x2b, 0x6e) : Color.CYAN;            //$NON-NLS-1$
+
 	private final List<JPanel> listPanels = new ArrayList<>();
 	private final List<CCDateTime> data;
 
@@ -351,7 +354,7 @@ public class DateTimeListEditor extends JPanel {
 			pnl.add(btn, BorderLayout.EAST);
 			
 			defaultPanelBackground = pnl.getBackground();
-			pnl.setBackground((idx++ % 2 == 0) ? defaultPanelBackground : Color.LIGHT_GRAY);
+			pnl.setBackground((idx++ % 2 == 0) ? defaultPanelBackground : altPanelBackground);
 
 			int pw = pnl.getPreferredSize().width;
 			int ph = pnl.getPreferredSize().height;
@@ -366,6 +369,8 @@ public class DateTimeListEditor extends JPanel {
 			listPanels.add(pnl);
 		}
 
+		pnlContent.setBackground(defaultPanelBackground);
+
 		pnlContent.revalidate();
 		pnlContent.repaint();
 		
@@ -378,9 +383,9 @@ public class DateTimeListEditor extends JPanel {
 		int idx2 = 0;
 		for (JPanel other : listPanels) {
 			if (other != pnl)
-				other.setBackground((idx2 % 2 == 0) ? defaultPanelBackground : Color.LIGHT_GRAY);
+				other.setBackground((idx2 % 2 == 0) ? defaultPanelBackground : altPanelBackground);
 			else
-				other.setBackground(Color.CYAN);
+				other.setBackground(hlPanelBackground);
 			
 			idx2++;
 		}

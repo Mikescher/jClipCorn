@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.12" encoding: "UTF-8"
+JFDML JFormDesigner: "8.1.0.0.283" Java: "17.0.7" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -7,14 +7,14 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-			"$columnSpecs": "unrelgap, 0dlu:grow, 10dlu, 125dlu, unrelgap"
+			"$columnSpecs": "unrelgap, 0dlu:grow, 10dlu, pref, unrelgap"
 			"$rowSpecs": "unrelgap, default:grow, linegap, default, unrelgap"
 		} ) {
 			name: "this"
 			"title": new FormMessage( null, "EditMovieFrame.this.title" )
 			"defaultCloseOperation": 2
 			"$sizePolicy": 1
-			"minimumSize": new java.awt.Dimension( 670, 835 )
+			"minimumSize": new java.awt.Dimension( 670, 900 )
 			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "onClosing", false ) )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "0dlu:grow"
@@ -205,7 +205,7 @@ new FormModel {
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "default, labelcompgap, 0dlu:grow, labelcompgap, max(default;40dlu), labelcompgap, 16dlu, labelcompgap, 25dlu, labelcompgap, max(default;30dlu)"
-					"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, max(default;65dlu):grow"
+					"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default:grow"
 				} ) {
 					name: "pnlData"
 					add( new FormComponent( "javax.swing.JLabel" ) {
@@ -553,22 +553,6 @@ new FormModel {
 						"gridY": 31
 						"gridWidth": 3
 					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label32"
-						"text": new FormMessage( null, "EditSeriesFrame.lblHistory.text" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 1
-						"gridY": 33
-						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor" ) {
-						name: "edViewedHistory"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 3
-						"gridY": 33
-						"gridWidth": 3
-						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
-					} )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 1
 					"gridY": 3
@@ -583,12 +567,12 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "default:grow"
-				"$rowSpecs": "default:grow, 10dlu, default:grow"
+				"$rowSpecs": "default:grow, 10dlu, pref"
 			} ) {
 				name: "pnlRight"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "default, labelcompgap, default:grow"
-					"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, max(default;50dlu)"
+					"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, pargap, max(default;50dlu), pargap, max(default;65dlu):grow"
 				} ) {
 					name: "pnlGenres"
 					add( new FormComponent( "javax.swing.JLabel" ) {
@@ -734,9 +718,23 @@ new FormModel {
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showOnlineParser", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridY": 17
-						"gridWidth": 3
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridX": 3
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label32"
+						"text": new FormMessage( null, "EditSeriesFrame.lblHistory.text" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 19
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor" ) {
+						name: "edViewedHistory"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 3
+						"gridY": 19
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 1
@@ -780,7 +778,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 750, 875 )
+			"size": new java.awt.Dimension( 900, 900 )
 		} )
 	}
 }

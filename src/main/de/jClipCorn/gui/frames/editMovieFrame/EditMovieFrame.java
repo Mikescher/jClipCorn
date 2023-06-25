@@ -808,8 +808,6 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		cbxScore = new CCEnumComboBox<CCUserScore>(CCUserScore.getWrapper());
 		label31 = new JLabel();
 		tagPnl = new TagPanel();
-		label32 = new JLabel();
-		edViewedHistory = new DateTimeListEditor();
 		pnlRight = new JPanel();
 		pnlGenres = new JPanel();
 		label7 = new JLabel();
@@ -829,6 +827,8 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		label14 = new JLabel();
 		cbxGenre7 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
 		btnParseIMDB = new JButton();
+		label32 = new JLabel();
+		edViewedHistory = new DateTimeListEditor();
 		edCvrControl = new EditCoverControl(this, this);
 		pnlBottom = new JPanel();
 		btnOK = new JButton();
@@ -837,7 +837,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		//======== this ========
 		setTitle(LocaleBundle.getString("EditMovieFrame.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setMinimumSize(new Dimension(670, 835));
+		setMinimumSize(new Dimension(670, 900));
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -846,7 +846,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		});
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, 0dlu:grow, 10dlu, 125dlu, $ugap", //$NON-NLS-1$
+			"$ugap, 0dlu:grow, 10dlu, pref, $ugap", //$NON-NLS-1$
 			"$ugap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
 
 		//======== pnlLeft ========
@@ -957,7 +957,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 			{
 				pnlData.setLayout(new FormLayout(
 					"default, $lcgap, 0dlu:grow, $lcgap, [40dlu,default], $lcgap, 16dlu, $lcgap, 25dlu, $lcgap, [30dlu,default]", //$NON-NLS-1$
-					"16*(default, $lgap), [65dlu,default]:grow")); //$NON-NLS-1$
+					"16*(default, $lgap), default:grow")); //$NON-NLS-1$
 
 				//---- label15 ----
 				label15.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
@@ -1092,11 +1092,6 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 				label31.setText(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
 				pnlData.add(label31, CC.xy(1, 31));
 				pnlData.add(tagPnl, CC.xywh(3, 31, 3, 1));
-
-				//---- label32 ----
-				label32.setText(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
-				pnlData.add(label32, CC.xy(1, 33, CC.DEFAULT, CC.TOP));
-				pnlData.add(edViewedHistory, CC.xywh(3, 33, 3, 1, CC.DEFAULT, CC.FILL));
 			}
 			pnlLeft.add(pnlData, CC.xy(1, 3, CC.FILL, CC.FILL));
 		}
@@ -1106,13 +1101,13 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		{
 			pnlRight.setLayout(new FormLayout(
 				"default:grow", //$NON-NLS-1$
-				"default:grow, 10dlu, default:grow")); //$NON-NLS-1$
+				"default:grow, 10dlu, pref")); //$NON-NLS-1$
 
 			//======== pnlGenres ========
 			{
 				pnlGenres.setLayout(new FormLayout(
 					"default, $lcgap, default:grow", //$NON-NLS-1$
-					"8*(default, $lgap), [50dlu,default]")); //$NON-NLS-1$
+					"7*(default, $lgap), default, $pgap, [50dlu,default], $pgap, [65dlu,default]:grow")); //$NON-NLS-1$
 
 				//---- label7 ----
 				label7.setText(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
@@ -1158,7 +1153,12 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 				btnParseIMDB.setText(LocaleBundle.getString("AddMovieFrame.btnParseIMDB.text")); //$NON-NLS-1$
 				btnParseIMDB.setFont(btnParseIMDB.getFont().deriveFont(btnParseIMDB.getFont().getStyle() | Font.BOLD, btnParseIMDB.getFont().getSize() + 4f));
 				btnParseIMDB.addActionListener(e -> showOnlineParser());
-				pnlGenres.add(btnParseIMDB, CC.xywh(1, 17, 3, 1, CC.FILL, CC.FILL));
+				pnlGenres.add(btnParseIMDB, CC.xy(3, 17, CC.FILL, CC.FILL));
+
+				//---- label32 ----
+				label32.setText(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
+				pnlGenres.add(label32, CC.xy(1, 19, CC.DEFAULT, CC.TOP));
+				pnlGenres.add(edViewedHistory, CC.xy(3, 19, CC.DEFAULT, CC.FILL));
 			}
 			pnlRight.add(pnlGenres, CC.xy(1, 1, CC.FILL, CC.FILL));
 			pnlRight.add(edCvrControl, CC.xy(1, 3, CC.RIGHT, CC.BOTTOM));
@@ -1180,7 +1180,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 			pnlBottom.add(btnCancel);
 		}
 		contentPane.add(pnlBottom, CC.xywh(2, 4, 3, 1));
-		setSize(750, 875);
+		setSize(900, 900);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -1256,8 +1256,6 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	private CCEnumComboBox<CCUserScore> cbxScore;
 	private JLabel label31;
 	private TagPanel tagPnl;
-	private JLabel label32;
-	private DateTimeListEditor edViewedHistory;
 	private JPanel pnlRight;
 	private JPanel pnlGenres;
 	private JLabel label7;
@@ -1277,6 +1275,8 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	private JLabel label14;
 	private CCEnumComboBox<CCGenre> cbxGenre7;
 	private JButton btnParseIMDB;
+	private JLabel label32;
+	private DateTimeListEditor edViewedHistory;
 	private EditCoverControl edCvrControl;
 	private JPanel pnlBottom;
 	private JButton btnOK;

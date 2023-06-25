@@ -23,12 +23,11 @@ public class YearSpinnerEditor extends JPanel implements ChangeListener, Propert
 	public YearSpinnerEditor(JYearSpinner owner) {
 		this.owner = owner;
 		tf = new JFormattedTextField();
-		tf.setBorder(new EmptyBorder(0, 0, 0, 0));
+		tf.setHorizontalAlignment(JTextField.RIGHT);
+		tf.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 6));
 
 		setLayout(new BorderLayout());
 		add(tf, BorderLayout.CENTER);
-		tf.setHorizontalAlignment(JTextField.RIGHT);
-		tf.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 6));
 
 		tf.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::onTextFieldChanged));
 

@@ -23,7 +23,8 @@ public class CCDateTimeEditor extends JPanel implements ChangeListener, Property
 	public CCDateTimeEditor(JCCDateTimeSpinner owner) {
 		this.owner = owner;
 		tf = new JFormattedTextField();
-		tf.setBorder(new EmptyBorder(0, 0, 0, 0));
+		tf.setHorizontalAlignment(JTextField.LEFT);
+		tf.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 6, 0, 6));
 		
 		setLayout(new BorderLayout());
 		add(tf, BorderLayout.CENTER);

@@ -20,7 +20,27 @@ public class AbstractClipCharSortSelector extends JToolBar {
 		if (search == null) {
 			owner.getClipTable().setRowFilter(null, RowFilterSource.CHARSELECTOR);
 		} else {
-			owner.getClipTable().setRowFilter(CustomCharFilter.create(owner.getMovielist(), search), RowFilterSource.CHARSELECTOR);
+
+			var oldFilter = owner.getClipTable().getRowFilter();
+
+			if (oldFilter == null) {
+
+				// simply set filter (no old filter)
+				owner.getClipTable().setRowFilter(CustomCharFilter.createSingle(owner.getMovielist(), search), RowFilterSource.CHARSELECTOR);
+
+			} else if (oldFilter.getFilter() instanceof CustomCharFilter) {
+
+				// append
+				var fltr = (CustomCharFilter)oldFilter.getFilter();
+				owner.getClipTable().setRowFilter(fltr.appendCharset(search), RowFilterSource.CHARSELECTOR);
+
+			} else {
+
+				//override existing filter
+				owner.getClipTable().setRowFilter(CustomCharFilter.createSingle(owner.getMovielist(), search), RowFilterSource.CHARSELECTOR);
+
+			}
+
 		}
 	}
 }

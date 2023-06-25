@@ -166,4 +166,12 @@ public class CachedResourceLoader {
 		mapIcons.put(ref.id, result);
 		return result;
 	}
+
+	public static int getIconCacheCount() {
+		return mapIcons.size();
+	}
+
+	public static int getImageCacheCount() {
+		return mapImages.size();
+	}
 }

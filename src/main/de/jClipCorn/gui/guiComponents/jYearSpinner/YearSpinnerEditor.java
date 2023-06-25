@@ -1,6 +1,8 @@
 package de.jClipCorn.gui.guiComponents.jYearSpinner;
 
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
+import de.jClipCorn.util.helper.SwingUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -26,6 +28,8 @@ public class YearSpinnerEditor extends JPanel implements ChangeListener, Propert
 		setLayout(new BorderLayout());
 		add(tf, BorderLayout.CENTER);
 
+		tf.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::onTextFieldChanged));
+
 		update();
 	}
 
@@ -34,7 +38,9 @@ public class YearSpinnerEditor extends JPanel implements ChangeListener, Propert
 	}
 
 	public void update() {
-		getTextField().setText(String.valueOf(owner.getModel().getValue()));
+		var txtCurrent = getTextField().getText();
+		var txtNew = String.valueOf(owner.getModel().getValue());
+		if (!Str.equals(txtCurrent, txtNew)) getTextField().setText(txtNew);
 	}
 
 	@Override
@@ -45,6 +51,10 @@ public class YearSpinnerEditor extends JPanel implements ChangeListener, Propert
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 		commitEdit();
+	}
+
+	private void onTextFieldChanged() {
+		SwingUtils.invokeLater(this::commitEdit);
 	}
 
 	public void commitEdit() {

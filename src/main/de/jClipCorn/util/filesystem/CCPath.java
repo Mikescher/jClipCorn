@@ -11,8 +11,11 @@ import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.RegExHelper;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CCPath implements IPath, Comparable<CCPath> {
 	public final static CCPath Empty = new CCPath(Str.Empty);
@@ -20,12 +23,21 @@ public class CCPath implements IPath, Comparable<CCPath> {
 	public static final String SEPERATOR = "/";
 	public static final char SEPERATOR_CHAR = '/';
 
-	private final static String REGEX_SELF        = "\\<\\?self\\>";                   // <?self>                 <\?self\>
-	private final static String REGEX_DRIVENAME   = "\\<\\?vLabel=\"[^\\\"]+?\"\\>";   // <?vLabel="...">         <\?vLabel="[^\"]+?"\>
-	private final static String REGEX_DRIVELETTER = "\\<\\?vLetter=\"[A-Z]\"\\>";      // <?vLetter="...">        <\?vLetter="[A-Z]"\>
-	private final static String REGEX_SELFDRIVE   = "\\<\\?self\\[dir\\]\\>";          // <?self[dir]>            <\?self\[dir\]\>
-	private final static String REGEX_NETDRIVE    = "\\<\\?vNetwork=\"[^\"]+?\"\\>";   // <?vNetwork="...">       <\?vNetwork="[^\"]+?"\>
-	private final static String REGEX_VARIABLE    = "\\<\\?[^\\\"]+\\]\\>";            // <?[...]>                <\?[^\"]+\]\>
+	private final static Pattern REGEX_SELF        = Pattern.compile("\\<\\?self\\>");                   // <?self>                 <\?self\>
+	private final static Pattern REGEX_DRIVENAME   = Pattern.compile("\\<\\?vLabel=\"[^\\\"]+?\"\\>");   // <?vLabel="...">         <\?vLabel="[^\"]+?"\>
+	private final static Pattern REGEX_DRIVELETTER = Pattern.compile("\\<\\?vLetter=\"[A-Z]\"\\>");      // <?vLetter="...">        <\?vLetter="[A-Z]"\>
+	private final static Pattern REGEX_SELFDRIVE   = Pattern.compile("\\<\\?self\\[dir\\]\\>");          // <?self[dir]>            <\?self\[dir\]\>
+	private final static Pattern REGEX_NETDRIVE    = Pattern.compile("\\<\\?vNetwork=\"[^\"]+?\"\\>");   // <?vNetwork="...">       <\?vNetwork="[^\"]+?"\>
+	private final static Pattern REGEX_VARIABLE    = Pattern.compile("\\<\\?[^\\\"]+\\]\\>");            // <?[...]>                <\?[^\"]+\]\>
+
+	private final static Pattern[] REGEX_ALL = {
+		REGEX_SELF,
+		REGEX_DRIVENAME,
+		REGEX_DRIVELETTER,
+		REGEX_SELFDRIVE,
+		REGEX_NETDRIVE,
+		REGEX_VARIABLE,
+	};
 
 	private final static String WILDCARD_SELF        = "<?self>";
 	private final static String WILDCARD_DRIVENAME   = "<?vLabel=\"%s\">";
@@ -98,6 +110,10 @@ public class CCPath implements IPath, Comparable<CCPath> {
 		if (mkVars) aPath = insertCCPathVariables(aPath, ccprops);
 
 		return CCPath.create(aPath);
+	}
+
+	public static CCPath createFromComponents(List<String> components) {
+		return Empty.append(components.toArray(new String[0]));
 	}
 
 	private static String insertCCPathVariables(String path, CCProperties ccprops) {
@@ -201,7 +217,7 @@ public class CCPath implements IPath, Comparable<CCPath> {
 			if (element.endsWith(SEPERATOR)) element = element.substring(0, element.length() - SEPERATOR.length());
 
 			if (!element.isEmpty()) {
-				buildr.append(SEPERATOR);
+				if (!isRawPathVar(buildr.toString()) && buildr.length() > 0) buildr.append(SEPERATOR);
 				buildr.append(element);
 			}
 		}
@@ -240,16 +256,46 @@ public class CCPath implements IPath, Comparable<CCPath> {
 	}
 
 	public CCPath getParent(int c) {
-		var p = _path;
-		if (p.endsWith(SEPERATOR)) p = p.substring(0, p.length() - SEPERATOR.length());
+
+		var components = this.getComponents();
 
 		for (int i = 0; i < c; i++) {
-			int idx = p.lastIndexOf(SEPERATOR_CHAR);
-			if (idx > 0) p = p.substring(0, idx);
+			if (components.size() > 0) {
+				components.remove(components.size()-1);
+			}
 		}
 
-		return CCPath.create(p);
+		return createFromComponents(components);
 	}
+
+	public List<String> getComponents() {
+
+		var prefixLen = -1;
+
+		regexFor: for (Pattern pattern : REGEX_ALL) {
+			Matcher matcher = pattern.matcher(this._path);
+			while (matcher.find()) {
+				if (matcher.start() == 0) {
+					prefixLen = matcher.end();
+					break regexFor;
+				}
+			}
+		}
+
+		var result = new ArrayList<String>(6);
+		
+		var pathStr = _path;
+		
+		if (prefixLen > 0) {
+			result.add(pathStr.substring(0, prefixLen));
+			pathStr = pathStr.substring(prefixLen);
+		}
+
+		result.addAll(Arrays.asList(pathStr.split(SEPERATOR)));
+
+		return result;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -292,43 +338,51 @@ public class CCPath implements IPath, Comparable<CCPath> {
 		return ApplicationHelper.isWindows() ? a.compareToIgnoreCase(b) : a.compareTo(b);
 	}
 
+	private static boolean isRawPathVar(String p) {
+		if (p.length() == 0 || p.charAt(0) != '<' || p.charAt(p.length()-1) != '>') return false;
+
+		for (Pattern pattern : REGEX_ALL) {
+			Matcher matcher = pattern.matcher(p);
+			while (matcher.find()) {
+				if (matcher.start() == 0 && matcher.end() == p.length()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public static CCPath getCommonPath(List<CCPath> pathlist) {
 		if (pathlist.isEmpty()) return Empty;
 
-		for (int c = 0;;c++)
+		List<List<String>> complist = new ArrayList<>(pathlist.size());
+		for (var p : pathlist) complist.add(p.getComponents());
+
+		complist.add(pathlist.get(0).getComponents().subList(0, complist.get(0).size()-1)); // ensure that we do not get the last path component (probably the filename)
+
+		for (int ic = 0;;ic++)
 		{
-			Character ckt = null;
+			String cktComp = null;
 
 			boolean equal = true;
-			for (CCPath ccPath : pathlist)
+			for (var ccCompPath : complist)
 			{
-				if (c >= ccPath._path.length()) { equal = false; break; }
+				if (ic >= ccCompPath.size()) { equal = false; break; }
 
-				if (ckt == null) {
-					ckt = ccPath._path.charAt(c);
+				if (cktComp == null) {
+					cktComp = ccCompPath.get(ic);
 				} else {
-					var a = ckt;
-					var b = ccPath._path.charAt(c);
-
 					if (ApplicationHelper.isWindows()) {
-						a = Character.toLowerCase(a);
-						b = Character.toLowerCase(b);
+						if (!cktComp.equalsIgnoreCase(ccCompPath.get(ic))) { equal = false; break; }
+					} else {
+						if (!cktComp.equals(ccCompPath.get(ic))) { equal = false; break; }
 					}
 
-					if (!a.equals(b)) { equal = false; break; }
 				}
 			}
 
 			if (! equal) {
-				String common = pathlist.get(0)._path.substring(0, c);
-
-				var lastidx = common.lastIndexOf(SEPERATOR);
-				if (lastidx > 0) return CCPath.create(common.substring(0, lastidx + 1));
-
-				var nextidx = pathlist.get(0)._path.indexOf(SEPERATOR, c);
-				if (nextidx > 0) return CCPath.create(common.substring(0, Math.min(nextidx + 1, common.length())));
-
-				return CCPath.Empty;
+				return createFromComponents(complist.get(0).subList(0, ic));
 			}
 		}
 	}

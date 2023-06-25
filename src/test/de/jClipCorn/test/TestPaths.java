@@ -8,6 +8,7 @@ import de.jClipCorn.util.helper.ApplicationHelper;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -273,5 +274,25 @@ public class TestPaths extends ClipCornBaseTest {
 		{
 			assertEquals("/tmpfs/jcc/mov/fname.ext", CCPath.createFromFSPath(FSPath.create("/tmpfs/jcc/mov/fname.ext"), Opt.False, ccprops).toString());
 		}
+	}
+
+	@Test
+	public void testCommonPathStart() {
+
+		var p1 = CCPath.create("<?[ser]>Gundam Build Divers [JAP]/01 - Gundam Build Divers/S01E02 - Chaotic Ogre.mkv");
+		var p2 = CCPath.create("<?[ser]>Gundam Build Divers [JAP]/01 - Gundam Build Divers/S01E10 - Coalition of Volunteers.mkv");
+		var p3 = CCPath.create("<?[ser]>Gundam Build Divers [JAP]/02 - Gundam Build Divers ReRise/S02E07 - Battered Crown.mkv");
+		var p4 = CCPath.create("<?[ser]>Gundam Build Divers [JAP]/03 - Gundam Build Divers ReRise 2nd Season/S03E08 - To Fly Once More.mkv");
+		var p5 = CCPath.create("<?[ser]>Mobile Suit Gundam Iron Blooded Orphans [JAP]/1 - Kidou Senshi Gundam Tekketsu no Orphans/S01E01 - Iron and Blood....mkv");
+		var p6 = CCPath.create("<?[mov]>Mobile Suit Gundam I - Cucuruz Doan's Island [JAP].mkv");
+
+		assertEquals("<?[ser]>Gundam Build Divers [JAP]/01 - Gundam Build Divers",  											CCPath.getCommonPath(List.of(p1)).toString());
+		assertEquals("<?[ser]>Mobile Suit Gundam Iron Blooded Orphans [JAP]/1 - Kidou Senshi Gundam Tekketsu no Orphans",    	CCPath.getCommonPath(List.of(p5)).toString());
+		assertEquals("<?[mov]>",           																						CCPath.getCommonPath(List.of(p6)).toString());
+		assertEquals("<?[ser]>Gundam Build Divers [JAP]/01 - Gundam Build Divers",  											CCPath.getCommonPath(List.of(p1, p2)).toString());
+		assertEquals("<?[ser]>Gundam Build Divers [JAP]",          																CCPath.getCommonPath(List.of(p1, p2, p3)).toString());
+		assertEquals("<?[ser]>",          																						CCPath.getCommonPath(List.of(p1, p2, p5)).toString());
+		assertEquals("",        		  																						CCPath.getCommonPath(List.of(p1, p6)).toString());
+		assertEquals("",        		  																						CCPath.getCommonPath(List.of(p1, p2, p3, p4, p5, p6)).toString());
 	}
 }

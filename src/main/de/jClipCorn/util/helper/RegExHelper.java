@@ -19,12 +19,36 @@ public class RegExHelper {
 		return false;
 	}
 
+	public static boolean startsWithRegEx(Pattern regEx, String input) {
+		Matcher matcher = regEx.matcher(input);
+
+		while (matcher.find()) {
+			if (matcher.start() == 0) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public static String find(String regEx, String input) {
+		return find(regEx, input, 0);
+	}
+
+	public static String find(Pattern regEx, String input) {
 		return find(regEx, input, 0);
 	}
 
 	public static String find(String regEx, String input, int group) {
 		Matcher matcher = Pattern.compile(regEx).matcher(input);
+		if (matcher.find()) {
+			return matcher.group(group);
+		}
+		return "";
+	}
+
+	public static String find(Pattern regEx, String input, int group) {
+		Matcher matcher = regEx.matcher(input);
 		if (matcher.find()) {
 			return matcher.group(group);
 		}
@@ -65,21 +89,31 @@ public class RegExHelper {
 		}
 	}
 
+	public static String replace(Pattern regEx, String input, String replace) {
+		Matcher matcher = regEx.matcher(input);
+
+		if (matcher.find()) {
+			return stringReplace(input, matcher.start(), matcher.end(), replace);
+		} else {
+			return input;
+		}
+	}
+
 	public static boolean isPatternMatch(Pattern p, String s) {
 		Matcher m = p.matcher(s);
-		
+
 		return m.matches();
 	}
-	
+
 	private static String stringReplace(String input, int start, int end, String replace) {
 		return "".concat(input.substring(0, start)).concat(replace).concat(input.substring(end));
 	}
 
 	public static String getGroup(Pattern regex, String content, String group) {
 		Matcher m = regex.matcher(content);
-		
+
 		if (!m.matches()) return null;
-		
+
 		return m.group(group);
 	}
 

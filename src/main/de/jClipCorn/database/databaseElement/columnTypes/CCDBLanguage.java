@@ -57,7 +57,11 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	LATVIAN   (39, "LAV", "Latvian",    "CCMovieLanguage.Latvian",    Resources.ICN_TABLE_LANGUAGE_39),
 	SLOVAK    (40, "SLO", "Slovak",     "CCMovieLanguage.Slovak",     Resources.ICN_TABLE_LANGUAGE_40),
 	SLOVENIAN (41, "SLV", "Slovenian",  "CCMovieLanguage.Slovenian",  Resources.ICN_TABLE_LANGUAGE_41),
-	ESTONIAN  (42, "EST", "Estonian",   "CCMovieLanguage.Estonian",   Resources.ICN_TABLE_LANGUAGE_42);
+	ESTONIAN  (42, "EST", "Estonian",   "CCMovieLanguage.Estonian",   Resources.ICN_TABLE_LANGUAGE_42),
+	WELSH     (43, "CYM", "Welsh",      "CCMovieLanguage.Welsh",      Resources.ICN_TABLE_LANGUAGE_43),
+	CATALAN   (44, "CAT", "Catalan",    "CCMovieLanguage.Catalan",    Resources.ICN_TABLE_LANGUAGE_44),
+	GALICIAN  (45, "GLG", "Galician",   "CCMovieLanguage.Galician",   Resources.ICN_TABLE_LANGUAGE_45),
+	UKRAINIAN (46, "UKR", "Ukrainian",  "CCMovieLanguage.Ukrainian",  Resources.ICN_TABLE_LANGUAGE_46);
 
 
 	private static final EnumWrapper<CCDBLanguage> wrapper = new EnumWrapper<>(GERMAN);

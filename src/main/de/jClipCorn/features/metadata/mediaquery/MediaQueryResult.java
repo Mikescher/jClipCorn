@@ -466,6 +466,22 @@ public class MediaQueryResult {
 		if (langval.equalsIgnoreCase("est"))                       return CCDBLanguage.ESTONIAN;
 		if (langval.equalsIgnoreCase("estonian"))                  return CCDBLanguage.ESTONIAN;
 
+		if (langval.equalsIgnoreCase("cy"))                        return CCDBLanguage.WELSH;
+		if (langval.equalsIgnoreCase("wel"))                       return CCDBLanguage.WELSH;
+		if (langval.equalsIgnoreCase("cym"))                       return CCDBLanguage.WELSH;
+		if (langval.equalsIgnoreCase("welsh"))                     return CCDBLanguage.WELSH;
+
+		if (langval.equalsIgnoreCase("ca"))                        return CCDBLanguage.CATALAN;
+		if (langval.equalsIgnoreCase("cat"))                       return CCDBLanguage.CATALAN;
+		if (langval.equalsIgnoreCase("catalan"))                   return CCDBLanguage.CATALAN;
+
+		if (langval.equalsIgnoreCase("gl"))                        return CCDBLanguage.GALICIAN;
+		if (langval.equalsIgnoreCase("glg"))                       return CCDBLanguage.GALICIAN;
+		if (langval.equalsIgnoreCase("galician"))                  return CCDBLanguage.GALICIAN;
+
+		if (langval.equalsIgnoreCase("ukr"))                       return CCDBLanguage.UKRAINIAN;
+		if (langval.equalsIgnoreCase("ukrainian"))                 return CCDBLanguage.UKRAINIAN;
+
 		return null;
 	}
 

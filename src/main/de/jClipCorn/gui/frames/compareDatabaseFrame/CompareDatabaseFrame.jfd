@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.11" encoding: "UTF-8"
+JFDML JFormDesigner: "8.1.0.0.283" Java: "17.0.7" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -8,7 +8,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "unrelgap, default, labelcompgap, 0dlu:grow, labelcompgap, default, labelcompgap, 70dlu, unrelgap"
-			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default, linegap, 80dlu, linegap, 20dlu, linegap, default:grow, linegap, 80dlu, linegap, default, linegap, default, linegap, default, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default, linegap, 80dlu, linegap, 20dlu, linegap, default:grow, linegap, 80dlu, linegap, default, linegap, default, linegap, max(default;12dlu), linegap, max(default;12dlu), unrelgap"
 		} ) {
 			name: "this"
 			"$sizePolicy": 1
@@ -198,45 +198,53 @@ new FormModel {
 				"gridWidth": 7
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
+				"alignment": 0
+				"vgap": 0
+			} ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbPorcelain"
+					"text": new FormMessage( null, "BatchEditFrame.cbPorcelain" )
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbNoVideoCopy"
+					"text": new FormMessage( null, "BatchEditFrame.cbNoVideoCopy" )
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbNoCoverCopy"
+					"text": new FormMessage( null, "BatchEditFrame.cbNoCoverCopy" )
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbNoRecalcMI"
+					"text": new FormMessage( null, "BatchEditFrame.cbNoRecalcMI" )
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 16
+				"gridWidth": 3
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "btnCreatePatch"
 				"text": new FormMessage( null, "BatchEditFrame.btnCreatePatch" )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "startCreatingPatch", true ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 16
-				"gridWidth": 3
+				"gridY": 18
+				"gridWidth": 5
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "btnCancel"
 				"text": new FormMessage( null, "UIGeneric.btnCancel.text" )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cancelThread", true ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 6
-				"gridY": 16
-			} )
-			add( new FormComponent( "javax.swing.JCheckBox" ) {
-				name: "cbPorcelain"
-				"text": new FormMessage( null, "BatchEditFrame.cbPorcelain" )
-			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 8
-				"gridY": 16
+				"gridY": 18
 			} )
 			add( new FormComponent( "javax.swing.JProgressBar" ) {
 				name: "progressBar1"
-			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 2
-				"gridY": 18
-				"gridWidth": 5
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "lblProgress1"
-			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 8
-				"gridY": 18
-			} )
-			add( new FormComponent( "javax.swing.JProgressBar" ) {
-				name: "progressBar2"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
 				"gridY": 20
@@ -244,14 +252,32 @@ new FormModel {
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "lblProgress2"
+				name: "lblProgress1"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 8
 				"gridY": 20
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormComponent( "javax.swing.JProgressBar" ) {
+				name: "progressBar2"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 22
+				"gridWidth": 5
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblProgress2"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 8
+				"gridY": 22
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 925, 725 )
+			"size": new java.awt.Dimension( 925, 885 )
 		} )
 	}
 }

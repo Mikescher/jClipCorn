@@ -64,7 +64,7 @@ public class TestCompareAndPatchDatabases extends ClipCornBaseTest {
 
 		var patchPath = createAutocleanedDir("dbpatch");
 
-		CDFWorkerPatch.createPatch(state, patchPath, DoubleProgressCallbackProgressBarHelper.EMPTY, false);
+		CDFWorkerPatch.createPatch(state, patchPath, DoubleProgressCallbackProgressBarHelper.EMPTY, false, false, false, false);
 
 		// =========================================================================================
 

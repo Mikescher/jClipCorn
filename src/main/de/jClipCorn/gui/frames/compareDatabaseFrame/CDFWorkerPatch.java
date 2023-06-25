@@ -22,18 +22,20 @@ import java.nio.file.Files;
 public class CDFWorkerPatch
 {
 	@SuppressWarnings("nls")
-	public static void createPatch(CompareState state, FSPath dir, DoubleProgressCallbackListener cb, boolean porcelain) throws Exception
+	public static void createPatch(CompareState state, FSPath dir, DoubleProgressCallbackListener cb, boolean porcelain, boolean noVideo, boolean noCover, boolean noRecalcMI) throws Exception
 	{
 		if (!dir.exists()) throw new Exception("Target directory not found");
 		if (!dir.isDirectory()) throw new Exception("Target directory not found");
 
 		var datadir = dir.append("patch_data");
-		if (!datadir.exists() && !datadir.mkdirsSafe()) throw new Exception("Target directory could not be created");
+		if (!(noVideo && noCover) && !datadir.exists() && !datadir.mkdirsSafe()) throw new Exception("Target directory could not be created");
 
 		if (dir.append("patch." + ExportHelper.EXTENSION_PATCHFILE).exists()) throw new Exception("Target directory not empty");
 
-		var subfiles = datadir.list().toList();
-		if (subfiles == null || subfiles.size() > 0) throw new Exception("Target directory not empty");
+		if (!(noVideo && noCover)) {
+			var subfiles = datadir.list().toList();
+			if (subfiles == null || subfiles.size() > 0) throw new Exception("Target directory not empty");
+		}
 
 		cb.setMaxAndResetValueBoth(5, 1);
 
@@ -47,16 +49,16 @@ public class CDFWorkerPatch
 		int ctr = 0;
 
 		cb.setValueBoth(1, 0, "Movies", "");
-		ctr = exportMovies(state, datadir, root, cb, porcelain, ctr);
+		ctr = exportMovies(state, datadir, root, cb, porcelain, noVideo, noCover, noRecalcMI, ctr);
 
 		cb.setValueBoth(2, 0, "Series", "");
-		ctr = exportSeries(state, datadir, root, cb, porcelain, ctr);
+		ctr = exportSeries(state, datadir, root, cb, porcelain, noVideo, noCover, noRecalcMI, ctr);
 
 		cb.setValueBoth(3, 0, "Seasons", "");
-		ctr = exportSeasons(state, datadir, root, cb, porcelain, ctr);
+		ctr = exportSeasons(state, datadir, root, cb, porcelain, noVideo, noCover, noRecalcMI, ctr);
 
 		cb.setValueBoth(4, 0, "Episodes", "");
-		ctr = exportEpisodes(state, datadir, root, cb, porcelain, ctr);
+		ctr = exportEpisodes(state, datadir, root, cb, porcelain, noVideo, noCover, noRecalcMI, ctr);
 
 
 		XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
@@ -66,7 +68,7 @@ public class CDFWorkerPatch
 	}
 
 	@SuppressWarnings("nls")
-	private static int exportMovies(CompareState state, FSPath datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, int ctr) throws IOException
+	private static int exportMovies(CompareState state, FSPath datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, boolean noVideo, boolean noCover, boolean noRecalcMI, int ctr) throws IOException
 	{
 		var elements = CCStreams.iterate(state.Movies).filter(ComparisonMatch::getNeedsAnything).toList();
 		cb.setSubMax(elements.size()+1);
@@ -100,6 +102,7 @@ public class CDFWorkerPatch
 					cmd1.addContent(inner);
 				}
 
+				if (!noCover)
 				{
 					var coverdata = e.MovieLocal.getCoverInfo();
 
@@ -122,6 +125,7 @@ public class CDFWorkerPatch
 					}
 				}
 
+				if (!noVideo)
 				{
 					for (int i = 0; i < e.MovieLocal.getPartcount(); i++)
 					{
@@ -144,26 +148,28 @@ public class CDFWorkerPatch
 							Files.copy(source.toPath(), target.toPath());
 						}
 					}
+				}
 
-					for (var prop: CCStreams.iterate(e.MovieLocal.getProperties()))
-					{
-						if (prop.getValueType() != EPropertyType.LOCAL_FILE_REF_OBJECTIVE) continue;
+				for (var prop: CCStreams.iterate(e.MovieLocal.getProperties()))
+				{
+					if (prop.getValueType() != EPropertyType.LOCAL_FILE_REF_OBJECTIVE) continue;
 
-						var cmd = new Element("set");
-						cmd.setAttribute("ctr", String.valueOf(innerctr++));
-						cmd.setAttribute("type", "MOVIE");
-						cmd.setAttribute("id", idvar);
-						cmd.setAttribute("prop", prop.getName());
-						cmd.setAttribute("value_new", prop.serializeToString());
-						xaction.addContent(cmd);
-					}
-					{
-						var cmd = new Element("calc_mediainfo_subjective");
-						cmd.setAttribute("ctr", String.valueOf(innerctr++));
-						cmd.setAttribute("type", "MOVIE");
-						cmd.setAttribute("id", idvar);
-						xaction.addContent(cmd);
-					}
+					var cmd = new Element("set");
+					cmd.setAttribute("ctr", String.valueOf(innerctr++));
+					cmd.setAttribute("type", "MOVIE");
+					cmd.setAttribute("id", idvar);
+					cmd.setAttribute("prop", prop.getName());
+					cmd.setAttribute("value_new", prop.serializeToString());
+					xaction.addContent(cmd);
+				}
+
+				if (!noRecalcMI)
+				{
+					var cmd = new Element("calc_mediainfo_subjective");
+					cmd.setAttribute("ctr", String.valueOf(innerctr++));
+					cmd.setAttribute("type", "MOVIE");
+					cmd.setAttribute("id", idvar);
+					xaction.addContent(cmd);
 				}
 
 			}
@@ -208,7 +214,7 @@ public class CDFWorkerPatch
 					}
 
 				}
-				if (e.getNeedsUpdateCover())
+				if (e.getNeedsUpdateCover() && !noCover)
 				{
 					var xaction = new Element("action");
 					xaction.setAttribute("ctr", String.valueOf(ctr));
@@ -239,7 +245,7 @@ public class CDFWorkerPatch
 						Files.copy(source.toPath(), target.toPath());
 					}
 				}
-				if (e.getNeedsUpdateFile())
+				if (e.getNeedsUpdateFile() && !noVideo)
 				{
 					var xaction = new Element("action");
 					xaction.setAttribute("ctr", String.valueOf(ctr));
@@ -294,6 +300,8 @@ public class CDFWorkerPatch
 						cmd.setAttribute("value_new", prop.Item1.serializeToString());
 						xaction.addContent(cmd);
 					}
+
+					if (!noRecalcMI)
 					{
 						var cmd = new Element("calc_mediainfo_subjective");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
@@ -309,7 +317,7 @@ public class CDFWorkerPatch
 	}
 
 	@SuppressWarnings("nls")
-	private static int exportSeries(CompareState state, FSPath datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, int ctr) throws IOException
+	private static int exportSeries(CompareState state, FSPath datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, boolean noVideo, boolean noCover, boolean noRecalcMI, int ctr) throws IOException
 	{
 		var elements = CCStreams.iterate(state.Series).filter(ComparisonMatch::getNeedsAnything).toList();
 		cb.setSubMax(elements.size()+1);
@@ -343,6 +351,7 @@ public class CDFWorkerPatch
 					cmd1.addContent(inner);
 				}
 
+				if (!noCover)
 				{
 					var coverdata = e.SeriesLocal.getCoverInfo();
 
@@ -422,7 +431,7 @@ public class CDFWorkerPatch
 					}
 
 				}
-				if (e.getNeedsUpdateCover())
+				if (e.getNeedsUpdateCover() && !noCover)
 				{
 					var xaction = new Element("action");
 					xaction.setAttribute("ctr", String.valueOf(ctr));
@@ -460,7 +469,7 @@ public class CDFWorkerPatch
 	}
 
 	@SuppressWarnings("nls")
-	private static int exportSeasons(CompareState state, FSPath datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, int ctr) throws IOException
+	private static int exportSeasons(CompareState state, FSPath datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, boolean noVideo, boolean noCover, boolean noRecalcMI, int ctr) throws IOException
 	{
 		var elements = CCStreams.iterate(state.AllSeasons).filter(ComparisonMatch::getNeedsAnything).toList();
 		cb.setSubMax(elements.size()+1);
@@ -497,6 +506,7 @@ public class CDFWorkerPatch
 					cmd1.addContent(inner);
 				}
 
+				if (!noCover)
 				{
 					var coverdata = e.SeasonLocal.getCoverInfo();
 
@@ -560,7 +570,7 @@ public class CDFWorkerPatch
 					}
 
 				}
-				if (e.getNeedsUpdateCover())
+				if (e.getNeedsUpdateCover() && !noCover)
 				{
 					var xaction = new Element("action");
 					xaction.setAttribute("ctr", String.valueOf(ctr));
@@ -598,7 +608,7 @@ public class CDFWorkerPatch
 	}
 
 	@SuppressWarnings("nls")
-	private static int exportEpisodes(CompareState state, FSPath datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, int ctr) throws IOException
+	private static int exportEpisodes(CompareState state, FSPath datadir, Element xml, DoubleProgressCallbackListener cb, boolean porcelain, boolean noVideo, boolean noCover, boolean noRecalcMI, int ctr) throws IOException
 	{
 		var elements = CCStreams.iterate(state.AllEpisodes).filter(ComparisonMatch::getNeedsAnything).toList();
 		cb.setSubMax(elements.size()+1);
@@ -635,6 +645,7 @@ public class CDFWorkerPatch
 					cmd1.addContent(inner);
 				}
 
+				if (!noVideo)
 				{
 					{
 						var source = e.EpisodeLocal.getPart().toFSPath(state.ccpropsLocal());
@@ -655,26 +666,28 @@ public class CDFWorkerPatch
 							Files.copy(source.toPath(), target.toPath());
 						}
 					}
+				}
 
-					for (var prop: CCStreams.iterate(e.EpisodeLocal.getProperties()))
-					{
-						if (prop.getValueType() != EPropertyType.LOCAL_FILE_REF_OBJECTIVE) continue;
+				for (var prop: CCStreams.iterate(e.EpisodeLocal.getProperties()))
+				{
+					if (prop.getValueType() != EPropertyType.LOCAL_FILE_REF_OBJECTIVE) continue;
 
-						var cmd = new Element("set");
-						cmd.setAttribute("ctr", String.valueOf(innerctr++));
-						cmd.setAttribute("type", "EPISODE");
-						cmd.setAttribute("id", idvar);
-						cmd.setAttribute("prop", prop.getName());
-						cmd.setAttribute("value_new", prop.serializeToString());
-						xaction.addContent(cmd);
-					}
-					{
-						var cmd = new Element("calc_mediainfo_subjective");
-						cmd.setAttribute("ctr", String.valueOf(innerctr++));
-						cmd.setAttribute("type", "EPISODE");
-						cmd.setAttribute("id", idvar);
-						xaction.addContent(cmd);
-					}
+					var cmd = new Element("set");
+					cmd.setAttribute("ctr", String.valueOf(innerctr++));
+					cmd.setAttribute("type", "EPISODE");
+					cmd.setAttribute("id", idvar);
+					cmd.setAttribute("prop", prop.getName());
+					cmd.setAttribute("value_new", prop.serializeToString());
+					xaction.addContent(cmd);
+				}
+
+				if (!noRecalcMI)
+				{
+					var cmd = new Element("calc_mediainfo_subjective");
+					cmd.setAttribute("ctr", String.valueOf(innerctr++));
+					cmd.setAttribute("type", "EPISODE");
+					cmd.setAttribute("id", idvar);
+					xaction.addContent(cmd);
 				}
 
 			}
@@ -719,7 +732,7 @@ public class CDFWorkerPatch
 					}
 
 				}
-				if (e.getNeedsUpdateFile())
+				if (e.getNeedsUpdateFile() && !noVideo)
 				{
 					var xaction = new Element("action");
 					xaction.setAttribute("ctr", String.valueOf(ctr));
@@ -772,6 +785,8 @@ public class CDFWorkerPatch
 						cmd.setAttribute("value_new", prop.Item1.serializeToString());
 						xaction.addContent(cmd);
 					}
+
+					if (!noRecalcMI)
 					{
 						var cmd = new Element("calc_mediainfo_subjective");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));

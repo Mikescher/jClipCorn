@@ -204,11 +204,15 @@ public class CompareDatabaseFrame extends JCCFrame
 
 		var porcelain = cbPorcelain.isSelected(); // no expensive file copies - for testing...
 
+		var noVideo = cbNoVideoCopy.isSelected();   // no video-file copies, only db updates
+		var noCover = cbNoCoverCopy.isSelected();   // no cover-file copies, only db updates
+		var noRecalcMI = cbNoRecalcMI.isSelected(); // do noot create <calc_mediainfo_subjective> objects (get MediaInfo CDate/MDate from files)
+
 		activeThread = new Thread(() ->
 		{
 			try
 			{
-				CDFWorkerPatch.createPatch(state, dir, cb, porcelain);
+				CDFWorkerPatch.createPatch(state, dir, cb, porcelain, noVideo, noCover, noRecalcMI);
 			}
 			catch (Throwable e)
 			{
@@ -263,9 +267,13 @@ public class CompareDatabaseFrame extends JCCFrame
 		tableUnchangedEntry = new ShowMatchesTable(this, true, true);
 		scrollPane2 = new JScrollPane();
 		edEntryDiff = new JTextArea();
+		panel1 = new JPanel();
+		cbPorcelain = new JCheckBox();
+		cbNoVideoCopy = new JCheckBox();
+		cbNoCoverCopy = new JCheckBox();
+		cbNoRecalcMI = new JCheckBox();
 		btnCreatePatch = new JButton();
 		btnCancel = new JButton();
-		cbPorcelain = new JCheckBox();
 		progressBar1 = new JProgressBar();
 		lblProgress1 = new JLabel();
 		progressBar2 = new JProgressBar();
@@ -278,7 +286,7 @@ public class CompareDatabaseFrame extends JCCFrame
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
 			"$ugap, default, $lcgap, 0dlu:grow, $lcgap, default, $lcgap, 70dlu, $ugap", //$NON-NLS-1$
-			"$ugap, 3*(default, $lgap), 80dlu, $lgap, 20dlu, $lgap, default:grow, $lgap, 80dlu, 3*($lgap, default), $ugap")); //$NON-NLS-1$
+			"$ugap, 3*(default, $lgap), 80dlu, $lgap, 20dlu, $lgap, default:grow, $lgap, 80dlu, 2*($lgap, default), 2*($lgap, [12dlu,default]), $ugap")); //$NON-NLS-1$
 		contentPane.add(edDatabasePath, CC.xywh(2, 2, 5, 1, CC.FILL, CC.FILL));
 
 		//---- btnOpenDatabase ----
@@ -378,24 +386,42 @@ public class CompareDatabaseFrame extends JCCFrame
 		}
 		contentPane.add(scrollPane2, CC.xywh(2, 14, 7, 1, CC.DEFAULT, CC.FILL));
 
+		//======== panel1 ========
+		{
+			panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+
+			//---- cbPorcelain ----
+			cbPorcelain.setText(LocaleBundle.getString("BatchEditFrame.cbPorcelain")); //$NON-NLS-1$
+			panel1.add(cbPorcelain);
+
+			//---- cbNoVideoCopy ----
+			cbNoVideoCopy.setText(LocaleBundle.getString("BatchEditFrame.cbNoVideoCopy")); //$NON-NLS-1$
+			panel1.add(cbNoVideoCopy);
+
+			//---- cbNoCoverCopy ----
+			cbNoCoverCopy.setText(LocaleBundle.getString("BatchEditFrame.cbNoCoverCopy")); //$NON-NLS-1$
+			panel1.add(cbNoCoverCopy);
+
+			//---- cbNoRecalcMI ----
+			cbNoRecalcMI.setText(LocaleBundle.getString("BatchEditFrame.cbNoRecalcMI")); //$NON-NLS-1$
+			panel1.add(cbNoRecalcMI);
+		}
+		contentPane.add(panel1, CC.xywh(2, 16, 3, 1, CC.FILL, CC.FILL));
+
 		//---- btnCreatePatch ----
 		btnCreatePatch.setText(LocaleBundle.getString("BatchEditFrame.btnCreatePatch")); //$NON-NLS-1$
 		btnCreatePatch.addActionListener(e -> startCreatingPatch(e));
-		contentPane.add(btnCreatePatch, CC.xywh(2, 16, 3, 1));
+		contentPane.add(btnCreatePatch, CC.xywh(2, 18, 5, 1));
 
 		//---- btnCancel ----
 		btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
 		btnCancel.addActionListener(e -> cancelThread(e));
-		contentPane.add(btnCancel, CC.xy(6, 16));
-
-		//---- cbPorcelain ----
-		cbPorcelain.setText(LocaleBundle.getString("BatchEditFrame.cbPorcelain")); //$NON-NLS-1$
-		contentPane.add(cbPorcelain, CC.xy(8, 16));
-		contentPane.add(progressBar1, CC.xywh(2, 18, 5, 1));
-		contentPane.add(lblProgress1, CC.xy(8, 18));
-		contentPane.add(progressBar2, CC.xywh(2, 20, 5, 1, CC.DEFAULT, CC.FILL));
-		contentPane.add(lblProgress2, CC.xy(8, 20));
-		setSize(925, 725);
+		contentPane.add(btnCancel, CC.xy(8, 18));
+		contentPane.add(progressBar1, CC.xywh(2, 20, 5, 1, CC.DEFAULT, CC.FILL));
+		contentPane.add(lblProgress1, CC.xy(8, 20, CC.FILL, CC.FILL));
+		contentPane.add(progressBar2, CC.xywh(2, 22, 5, 1, CC.DEFAULT, CC.FILL));
+		contentPane.add(lblProgress2, CC.xy(8, 22, CC.FILL, CC.FILL));
+		setSize(925, 885);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -427,9 +453,13 @@ public class CompareDatabaseFrame extends JCCFrame
 	private ShowMatchesTable tableUnchangedEntry;
 	private JScrollPane scrollPane2;
 	private JTextArea edEntryDiff;
+	private JPanel panel1;
+	private JCheckBox cbPorcelain;
+	private JCheckBox cbNoVideoCopy;
+	private JCheckBox cbNoCoverCopy;
+	private JCheckBox cbNoRecalcMI;
 	private JButton btnCreatePatch;
 	private JButton btnCancel;
-	private JCheckBox cbPorcelain;
 	private JProgressBar progressBar1;
 	private JLabel lblProgress1;
 	private JProgressBar progressBar2;

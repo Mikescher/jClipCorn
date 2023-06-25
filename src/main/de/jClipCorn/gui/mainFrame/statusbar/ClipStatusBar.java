@@ -224,7 +224,7 @@ public class ClipStatusBar extends AbstractClipStatusbar implements CCDBUpdateLi
 	}
 	
 	public void updateLables_Movies() {
-		lblMovies.setText(LocaleBundle.getFormattedString("ClipStatusBar.Elements", owner.getClipTable().getRowCount(), movielist.getElementCount())); //$NON-NLS-1$
+		lblMovies.setText(LocaleBundle.getFormattedString("ClipStatusBar.Elements", owner.getClipTable().getFilteredRowCount(), movielist.getElementCount())); //$NON-NLS-1$
 
 		StringBuilder tooltip = new StringBuilder();
 		tooltip.append("<html>"); //$NON-NLS-1$

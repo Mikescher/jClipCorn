@@ -173,6 +173,10 @@ public abstract class JCCPrimaryTable<TData, TEnum> extends JScrollPane
 		return model.getRowCount();
 	}
 
+	public int getFilteredRowCount() {
+		return table.getRowSorter().getViewRowCount();
+	}
+
 	protected String getDefaultAdjusterConfig() {
 		String[] cfg = new String[config.size()];
 		Arrays.fill(cfg, "auto"); //$NON-NLS-1$

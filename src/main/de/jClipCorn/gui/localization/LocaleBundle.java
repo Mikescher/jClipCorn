@@ -20,7 +20,11 @@ public class LocaleBundle {
 	private static Locale getLocale(int langID) {
 		return LOCALES[langID];
 	}
-	
+
+	public static Locale[] listLocales() {
+		return LOCALES;
+	}
+
 	private static Locale getDefaultLocale() {
 		return LOCALES[DEFAULT];
 	}
@@ -46,12 +50,25 @@ public class LocaleBundle {
 	public static String getString(String ident) {
 		try {
 			if (ident.startsWith("@")) return ident.substring(1);
-			
+
 			if (bundle == null) {
 				return ResourceBundle.getBundle(DEFAULT_BASENAME, getDefaultLocale()).getString(ident);
 			} else {
 				return bundle.getString(ident);
 			}
+		} catch (MissingResourceException e) {
+			if (ident.startsWith("CCLog.")) return Str.Empty; // prevent infinite log recursion if _no_ locales were found
+
+			CCLog.addError(e);
+			return Str.Empty;
+		}
+	}
+
+	@SuppressWarnings("nls")
+	public static String getStringInLocale(Locale loc, String ident) {
+		try {
+			if (ident.startsWith("@")) return ident.substring(1);
+			return ResourceBundle.getBundle(DEFAULT_BASENAME, loc).getString(ident);
 		} catch (MissingResourceException e) {
 			if (ident.startsWith("CCLog.")) return Str.Empty; // prevent infinite log recursion if _no_ locales were found
 

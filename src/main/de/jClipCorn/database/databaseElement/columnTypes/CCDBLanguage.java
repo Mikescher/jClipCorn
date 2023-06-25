@@ -72,15 +72,17 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	private final String shortName;
 	private final String longName;
 	private final String localName;
+	private final String localNameRef;
 
 	private final IconRef icnref;
 
 	CCDBLanguage(int val, String shrt, String lng, String lcl, IconRef ref) {
 		id = val;
-		shortName = shrt;
-		longName  = lng;
-		localName = LocaleBundle.getString(lcl);
-		icnref    = ref;
+		shortName    = shrt;
+		longName     = lng;
+		localName    = LocaleBundle.getString(lcl);
+		localNameRef = lcl;
+		icnref       = ref;
 	}
 	
 	public static EnumWrapper<CCDBLanguage> getWrapper() {
@@ -111,7 +113,11 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	public String asString() {
 		return localName;
 	}
-	
+
+	public String getLocalNameRef() {
+		return localNameRef;
+	}
+
 	@Override
 	public String[] getList() {
 		return CCStreams.iterate(wrapper.allValues()).map(p -> p.localName).toArray(new String[0]);

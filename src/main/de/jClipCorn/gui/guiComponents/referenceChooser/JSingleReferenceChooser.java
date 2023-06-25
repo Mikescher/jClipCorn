@@ -97,7 +97,7 @@ public class JSingleReferenceChooser extends JPanel {
 		edID.addActionListener(e -> updateUIControls());
 
 		panel = new JPanel();
-		panel.setBackground(Color.WHITE);
+		panel.setBackground(new Color(0, 0, 0, 0));
 		panel.setBorder(new EmptyBorder(2, 2, 2, 2));
 		add(panel, BorderLayout.WEST);
 		panel.setLayout(new BorderLayout(0, 0));

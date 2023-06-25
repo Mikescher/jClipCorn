@@ -3,6 +3,7 @@ package de.jClipCorn.gui.mainFrame.statusbar;
 import de.jClipCorn.gui.guiComponents.JTooltipLabel;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
 public class AbstractClipStatusbar extends JPanel {
 	private static final long serialVersionUID = -7508283304287773899L;
 	
-	private final static int SB_HEIGHT = 16;
+	private final static int SB_HEIGHT = 22;
 	
 	private List<ClipStatusbarColumn> columns = new ArrayList<>();
 
@@ -27,8 +28,13 @@ public class AbstractClipStatusbar extends JPanel {
 		GridBagLayout gbl = createGridbagLayout();
 		
 		setLayout(gbl);
-		
-		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+
+		var cborder = BorderFactory.createCompoundBorder(
+				new EtchedBorder(EtchedBorder.LOWERED, null, null),
+				new EmptyBorder(0, 6, 0, 6)
+		);
+
+		setBorder(cborder);
 		
 		setPreferredSize(new Dimension(-1, SB_HEIGHT));
 		

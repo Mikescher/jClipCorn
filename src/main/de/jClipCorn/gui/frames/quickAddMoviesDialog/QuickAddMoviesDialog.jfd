@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.12" encoding: "UTF-8"
+JFDML JFormDesigner: "8.1.0.0.283" Java: "17.0.7" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -18,7 +18,7 @@ new FormModel {
 			"minimumSize": new java.awt.Dimension( 300, 300 )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "unrelgap, default:grow, labelcompgap, default, labelcompgap, default, unrelgap"
-				"$rowSpecs": "unrelgap, default, linegap, 3dlu:grow, unrelgap, default, linegap, default, unrelgap"
+				"$rowSpecs": "unrelgap, default, linegap, 3dlu:grow, unrelgap, max(default;12dlu), linegap, max(default;12dlu), unrelgap"
 			} ) {
 				name: "rootpnl"
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.JFSPathTextField" ) {
@@ -45,6 +45,7 @@ new FormModel {
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
 					"gridY": 6
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "button1"
@@ -69,6 +70,7 @@ new FormModel {
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
 					"gridY": 8
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL

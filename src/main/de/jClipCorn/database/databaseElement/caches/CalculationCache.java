@@ -8,6 +8,7 @@ import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class CalculationCache<TOwner> implements ICalculationCache
 {
@@ -19,7 +20,7 @@ public abstract class CalculationCache<TOwner> implements ICalculationCache
 	public static int CacheInvalidations = 0;
 	public static int CacheSizeTotal     = 0;
 
-	private final HashMap<String, Object> map = new HashMap<>();
+	private final ConcurrentHashMap<String, Object> map = new ConcurrentHashMap<>();
 
 	public void bust()
 	{

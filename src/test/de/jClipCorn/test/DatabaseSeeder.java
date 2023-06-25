@@ -73,8 +73,8 @@ public class DatabaseSeeder {
 		var pathMov = dir.append("mov"); pathMov.mkdirsWithException();
 		var pathSer = dir.append("ser"); pathSer.mkdirsWithException();
 
-		prop.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", CCPath.createFromFSPath(pathMov, Opt.False, ml)));
-		prop.PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", CCPath.createFromFSPath(pathSer, Opt.False, ml)));
+		prop.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar(Str.Empty, "mov", CCPath.createFromFSPath(pathMov, Opt.False, ml)));
+		prop.PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar(Str.Empty, "ser", CCPath.createFromFSPath(pathSer, Opt.False, ml)));
 
 		//ml.addGroup(CCGroup.create("DCU Animated",        true,  Str.Empty,           false));
 		ml.addGroup(CCGroup.create("BruceWillis",         false, Str.Empty,           false));

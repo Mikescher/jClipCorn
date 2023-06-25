@@ -131,8 +131,8 @@ public class ClipCornBaseTest {
 
 		if (ApplicationHelper.isWindows())
 		{
-			props.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", CCPath.create("C:/tmpfs/jcc/mov/")));
-			props.PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", CCPath.create("C:/tmpfs/jcc/ser/")));
+			props.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar(Str.Empty, "mov", CCPath.create("C:/tmpfs/jcc/mov/")));
+			props.PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar(Str.Empty, "ser", CCPath.create("C:/tmpfs/jcc/ser/")));
 
 			props.getDriveMap().initForTests(
 				Tuple3.Create('C', "Local Disk",      ""),
@@ -145,8 +145,8 @@ public class ClipCornBaseTest {
 		}
 		else
 		{
-			props.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar("mov", CCPath.create("/tmpfs/jcc/mov/")));
-			props.PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar("ser", CCPath.create("/tmpfs/jcc/ser/")));
+			props.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar(Str.Empty, "mov", CCPath.create("/tmpfs/jcc/mov/")));
+			props.PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar(Str.Empty, "ser", CCPath.create("/tmpfs/jcc/ser/")));
 
 			props.getDriveMap().initForTests(
 					Tuple3.Create('C', "Local Disk",      ""),

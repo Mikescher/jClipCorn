@@ -584,22 +584,24 @@ public class CCProperties implements ICCPropertySource {
 	}
 
 	public List<PathSyntaxVar> getActivePathVariables() {
+		var hostname = ApplicationHelper.getHostname();
+
 		List<PathSyntaxVar> r = new ArrayList<>();
 
 		PathSyntaxVar v1 = PROP_PATHSYNTAX_VAR1.getValue();
-		if (!Str.isNullOrWhitespace(v1.Key)) r.add(v1);
+		if (!Str.isNullOrWhitespace(v1.Key) && (Str.isNullOrWhitespace(v1.Hostname) || v1.Hostname.equalsIgnoreCase(hostname))) r.add(v1);
 
 		PathSyntaxVar v2 = PROP_PATHSYNTAX_VAR2.getValue();
-		if (!Str.isNullOrWhitespace(v2.Key)) r.add(v2);
+		if (!Str.isNullOrWhitespace(v2.Key) && (Str.isNullOrWhitespace(v2.Hostname) || v2.Hostname.equalsIgnoreCase(hostname))) r.add(v2);
 
 		PathSyntaxVar v3 = PROP_PATHSYNTAX_VAR3.getValue();
-		if (!Str.isNullOrWhitespace(v3.Key)) r.add(v3);
+		if (!Str.isNullOrWhitespace(v3.Key) && (Str.isNullOrWhitespace(v3.Hostname) || v3.Hostname.equalsIgnoreCase(hostname))) r.add(v3);
 
 		PathSyntaxVar v4 = PROP_PATHSYNTAX_VAR4.getValue();
-		if (!Str.isNullOrWhitespace(v4.Key)) r.add(v4);
+		if (!Str.isNullOrWhitespace(v4.Key) && (Str.isNullOrWhitespace(v4.Hostname) || v4.Hostname.equalsIgnoreCase(hostname))) r.add(v4);
 
 		PathSyntaxVar v5 = PROP_PATHSYNTAX_VAR5.getValue();
-		if (!Str.isNullOrWhitespace(v5.Key)) r.add(v5);
+		if (!Str.isNullOrWhitespace(v5.Key) && (Str.isNullOrWhitespace(v5.Hostname) || v5.Hostname.equalsIgnoreCase(hostname))) r.add(v5);
 
 		return r;
 	}

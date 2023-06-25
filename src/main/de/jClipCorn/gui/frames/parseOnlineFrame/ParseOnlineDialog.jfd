@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.12" encoding: "UTF-8"
+JFDML JFormDesigner: "8.1.0.0.283" Java: "17.0.7" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -72,7 +72,7 @@ new FormModel {
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-					"$columnSpecs": "labelcompgap, default, labelcompgap, default, labelcompgap, 182px, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, 0dlu:grow, labelcompgap"
+					"$columnSpecs": "labelcompgap, default, labelcompgap, default, labelcompgap, 240px, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, 0dlu:grow, labelcompgap"
 					"$rowSpecs": "linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default:grow, linegap, default, linegap, default, linegap, default, linegap, pargap, linegap, default, linegap"
 				} ) {
 					name: "panel3"
@@ -133,8 +133,9 @@ new FormModel {
 						"gridX": 4
 						"gridY": 4
 					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableSpinner" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.jYearSpinner.JYearSpinner" ) {
 						name: "spnYear"
+						"enabled": false
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
 						"gridY": 4
@@ -453,7 +454,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 850, 525 )
+			"size": new java.awt.Dimension( 1100, 595 )
 		} )
 	}
 }

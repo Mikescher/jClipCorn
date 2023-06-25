@@ -15,6 +15,7 @@ import de.jClipCorn.gui.guiComponents.ReadableSpinner;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.cover.CoverLabelFullsize;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCReadableEnumComboBox;
+import de.jClipCorn.gui.guiComponents.jYearSpinner.*;
 import de.jClipCorn.gui.guiComponents.onlinescore.OnlineScoreControl;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JSingleReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -361,7 +362,7 @@ public class ParseOnlineDialog extends JCCDialog
 		cbxGenre0 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
 		cbYear = new JCheckBox();
 		label2 = new JLabel();
-		spnYear = new ReadableSpinner();
+		spnYear = new JYearSpinner();
 		cbGenre1 = new JCheckBox();
 		label8 = new JLabel();
 		cbxGenre1 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
@@ -458,7 +459,7 @@ public class ParseOnlineDialog extends JCCDialog
 			{
 				panel3.setBorder(new EtchedBorder());
 				panel3.setLayout(new FormLayout(
-					"2*($lcgap, default), $lcgap, 182px, 3*($lcgap, default), $lcgap, 0dlu:grow, $lcgap", //$NON-NLS-1$
+					"2*($lcgap, default), $lcgap, 240px, 3*($lcgap, default), $lcgap, 0dlu:grow, $lcgap", //$NON-NLS-1$
 					"8*($lgap, default), $lgap, default:grow, 3*($lgap, default), $lgap, $pgap, $lgap, default, $lgap")); //$NON-NLS-1$
 				panel3.add(cbTitle, CC.xy(2, 2));
 
@@ -480,6 +481,9 @@ public class ParseOnlineDialog extends JCCDialog
 				//---- label2 ----
 				label2.setText(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
 				panel3.add(label2, CC.xy(4, 4));
+
+				//---- spnYear ----
+				spnYear.setEnabled(false);
 				panel3.add(spnYear, CC.xy(6, 4));
 				panel3.add(cbGenre1, CC.xy(10, 4));
 
@@ -605,7 +609,7 @@ public class ParseOnlineDialog extends JCCDialog
 			panel2.add(pbarSearch, CC.xy(2, 4));
 		}
 		contentPane.add(panel2, CC.xy(2, 4, CC.FILL, CC.FILL));
-		setSize(850, 525);
+		setSize(1100, 595);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -627,7 +631,7 @@ public class ParseOnlineDialog extends JCCDialog
 	private CCReadableEnumComboBox<CCGenre> cbxGenre0;
 	private JCheckBox cbYear;
 	private JLabel label2;
-	private ReadableSpinner spnYear;
+	private JYearSpinner spnYear;
 	private JCheckBox cbGenre1;
 	private JLabel label8;
 	private CCReadableEnumComboBox<CCGenre> cbxGenre1;

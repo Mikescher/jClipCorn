@@ -66,8 +66,6 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 
 	private void onTimer(ActionEvent actionEvent)
 	{
-		if (tpnlMain.getSelectedIndex() != 5) return;
-
 		displErrorCount.setText(String.valueOf(CCLog.getCount(CCLogType.LOG_ELEM_ERROR)));
 		displWarningsCount.setText(String.valueOf(CCLog.getCount(CCLogType.LOG_ELEM_WARNING)));
 		displUndefiniedCount.setText(String.valueOf(CCLog.getCount(CCLogType.LOG_ELEM_UNDEFINED)));
@@ -251,8 +249,8 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 				{
 
 					//---- memoErrors ----
-					memoErrors.setForeground(new Color(0, 224, 0));
-					memoErrors.setBackground(new Color(32, 32, 32));
+					memoErrors.setForeground(new Color(0x00e000));
+					memoErrors.setBackground(new Color(0x202020));
 					memoErrors.setEditable(false);
 					scrollPane2.setViewportView(memoErrors);
 				}
@@ -284,8 +282,8 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 				{
 
 					//---- memoWarnings ----
-					memoWarnings.setForeground(new Color(0, 224, 0));
-					memoWarnings.setBackground(new Color(32, 32, 32));
+					memoWarnings.setForeground(new Color(0x00e000));
+					memoWarnings.setBackground(new Color(0x202020));
 					memoWarnings.setEditable(false);
 					scrollPane7.setViewportView(memoWarnings);
 				}
@@ -317,8 +315,8 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 				{
 
 					//---- memoInformations ----
-					memoInformations.setForeground(new Color(0, 224, 0));
-					memoInformations.setBackground(new Color(32, 32, 32));
+					memoInformations.setForeground(new Color(0x00e000));
+					memoInformations.setBackground(new Color(0x202020));
 					memoInformations.setEditable(false);
 					scrollPane8.setViewportView(memoInformations);
 				}
@@ -350,8 +348,8 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 				{
 
 					//---- memoUndefinied ----
-					memoUndefinied.setForeground(new Color(0, 224, 0));
-					memoUndefinied.setBackground(new Color(32, 32, 32));
+					memoUndefinied.setForeground(new Color(0x00e000));
+					memoUndefinied.setBackground(new Color(0x202020));
 					memoUndefinied.setEditable(false);
 					scrollPane9.setViewportView(memoUndefinied);
 				}
@@ -383,8 +381,8 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 				{
 
 					//---- memoSQL ----
-					memoSQL.setForeground(new Color(0, 224, 0));
-					memoSQL.setBackground(new Color(32, 32, 32));
+					memoSQL.setForeground(new Color(0x00e000));
+					memoSQL.setBackground(new Color(0x202020));
 					memoSQL.setEditable(false);
 					scrollPane10.setViewportView(memoSQL);
 				}

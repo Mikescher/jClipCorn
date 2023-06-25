@@ -39,7 +39,7 @@ public class CCPathVarProperty extends CCProperty<PathSyntaxVar> {
 				FormSpecs.UNRELATED_GAP_COLSPEC,   //
 				ColumnSpec.decode("default"),      // label
 				FormSpecs.UNRELATED_GAP_COLSPEC,   //
-				ColumnSpec.decode("80px"),         // Field0
+				ColumnSpec.decode("110px"),        // Field0
 				FormSpecs.UNRELATED_GAP_COLSPEC,   //
 				ColumnSpec.decode("default"),      // label
 				FormSpecs.UNRELATED_GAP_COLSPEC,   //

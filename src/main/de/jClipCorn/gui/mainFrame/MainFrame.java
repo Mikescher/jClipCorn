@@ -258,7 +258,7 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 					if (Main.DEBUG) {
 						CCLog.addDebug("Update found"); //$NON-NLS-1$
 					} else {
-						ShowUpdateFrame suf = new ShowUpdateFrame(MainFrame.this, src, true);
+						ShowUpdateFrame suf = new ShowUpdateFrame(MainFrame.this, movielist, src, true);
 						suf.setVisible(true);
 					}
 				}

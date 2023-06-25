@@ -722,7 +722,7 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 	private void onClickHelpCheckUpdates(CCTreeActionEvent e) {
 		new UpdateConnector(movielist, Main.TITLE, Main.VERSION, (src, available, version) -> SwingUtils.invokeLater(() ->
 		{
-			ShowUpdateFrame suf = new ShowUpdateFrame(MainFrame.getInstance(), src, available);
+			ShowUpdateFrame suf = new ShowUpdateFrame(MainFrame.getInstance(), movielist, src, available);
 			suf.setVisible(true);
 		}), false);
 	}

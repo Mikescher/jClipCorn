@@ -268,7 +268,7 @@ public class Main {
  - [X] SearchFrame
  - [ ] SettingsFrame
  - [ ] ShowIncompleteFilmSeriesFrame
- - [ ] ShowUpdateFrame
+ - [x] ShowUpdateFrame
  - [ ] StatisticsFrame
  - [ ] TextExportFrame
  - [X] UpdateCodecFrame

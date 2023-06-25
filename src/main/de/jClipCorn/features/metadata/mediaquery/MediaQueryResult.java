@@ -482,6 +482,11 @@ public class MediaQueryResult {
 		if (langval.equalsIgnoreCase("ukr"))                       return CCDBLanguage.UKRAINIAN;
 		if (langval.equalsIgnoreCase("ukrainian"))                 return CCDBLanguage.UKRAINIAN;
 
+		if (langval.equalsIgnoreCase("eu"))                        return CCDBLanguage.BASQUE;
+		if (langval.equalsIgnoreCase("baq"))                       return CCDBLanguage.BASQUE;
+		if (langval.equalsIgnoreCase("eus"))                       return CCDBLanguage.BASQUE;
+		if (langval.equalsIgnoreCase("basque"))                    return CCDBLanguage.BASQUE;
+
 		return null;
 	}
 

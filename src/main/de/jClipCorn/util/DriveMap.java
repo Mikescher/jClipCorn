@@ -213,10 +213,9 @@ public class DriveMap {
 			for (File root : File.listRoots()) {
 				if(isFileSystem(root)) {
 					String drive = getDriveName(root);
-					String net = WindowsJNAHelper.getDriveNetworkIdent(fstores, root, drive);
+					String net = ApplicationHelper.isWindows() ? WindowsJNAHelper.getDriveNetworkIdent(fstores, root, drive) : Str.Empty;
 					Character letter = root.getAbsolutePath().charAt(0);
 
-					if (!ApplicationHelper.isWindows()) net = Str.Empty;
 					if (Str.isNullOrWhitespace(net)) net = Str.Empty;
 					if (!net.startsWith("\\\\")) net = Str.Empty; //$NON-NLS-1$
 

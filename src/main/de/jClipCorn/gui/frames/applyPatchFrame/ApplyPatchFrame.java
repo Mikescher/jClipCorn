@@ -158,10 +158,10 @@ public class ApplyPatchFrame extends JCCFrame
 					throw new Exception("DestinationMovies does not exist");
 				}
 				if (!opt.DestinationSeries.exists()) {
-					throw new Exception("DestinationMovies does not exist");
+					throw new Exception("DestinationSeries does not exist");
 				}
 				if (!opt.DataDir.exists()) {
-					throw new Exception("DestinationMovies does not exist");
+					throw new Exception("DataDir (/patch_data) does not exist");
 				}
 				if (!opt.DestinationTrashMovies.exists() && !opt.DestinationTrashMovies.mkdirsSafe()) {
 					throw new Exception("DestinationTrashMovies not found");

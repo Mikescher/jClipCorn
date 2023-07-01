@@ -1088,9 +1088,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 							movielist,
 							DatabaseErrorType.ERROR_INVALID_SERIES_STRUCTURE, episode,
 							"Actual<CCPath>", episode.getPart().toString(),
-							"Should<CCPath>", episode.getRelativeFileForCreatedFolderstructure(),
+							"Should<CCPath> (relative)", episode.getRelativeFileForCreatedFolderstructure(),
 							"Actual<FSPath>", episode.getPart().toFSPath(this).toString(),
-							"Should<FSPath>", episode.getRelativeFileForCreatedFolderstructure()));
+							"Should<FSPath> (relative)", episode.getRelativeFileForCreatedFolderstructure()));
 
 			// Invalid path characters
 			addEpisodeValidation(

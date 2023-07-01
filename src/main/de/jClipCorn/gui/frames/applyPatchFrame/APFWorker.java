@@ -2,6 +2,9 @@ package de.jClipCorn.gui.frames.applyPatchFrame;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.*;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.log.CCLogInternal;
+import de.jClipCorn.features.log.CCLogType;
 import de.jClipCorn.features.serialization.xmlimport.DatabaseXMLImporter;
 import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
@@ -69,6 +72,7 @@ public class APFWorker
 			try {
 				executeAction(act, ml, state, opt, cb);
 			} catch (Exception e) {
+				CCLog.addError(e);
 				throw new Exception("Error in action " + act.Ctr + ": " + e.getMessage(), e);
 			}
 
@@ -467,17 +471,21 @@ public class APFWorker
 	{
 		var ielem = getElement(ml, cmd, state, opt);
 
+		var deleteFiles     = cmd.XML.getAttributeBoolValueOrDefault("deletefiles", true);
+
 		if (ielem instanceof CCMovie)
 		{
 			var elem = (CCMovie)ielem;
 
 			if (opt.Porcelain) return;
 
-			for (int i = 0; i < elem.getPartcount(); i++)
-			{
-				var src = elem.Parts.get(i).toFSPath(ml);
-				var dst = opt.DestinationTrashMovies.append("movie_" + elem.getLocalID() + "_" + i + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
-				Files.move(src.toPath(), dst.toPath());
+			if (deleteFiles) {
+				for (int i = 0; i < elem.getPartcount(); i++)
+				{
+					var src = elem.Parts.get(i).toFSPath(ml);
+					var dst = opt.DestinationTrashMovies.append("movie_" + elem.getLocalID() + "_" + i + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
+					Files.move(src.toPath(), dst.toPath());
+				}
 			}
 
 			SwingUtils.invokeAndWait(() -> { elem.delete(); });
@@ -504,9 +512,11 @@ public class APFWorker
 
 			if (opt.Porcelain) return;
 
-			var src = elem.getPart().toFSPath(ml);
-			var dst = opt.DestinationTrashSeries.append("episode_" + elem.getLocalID() + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
-			Files.move(src.toPath(), dst.toPath());
+			if (deleteFiles) {
+				var src = elem.getPart().toFSPath(ml);
+				var dst = opt.DestinationTrashSeries.append("episode_" + elem.getLocalID() + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
+				Files.move(src.toPath(), dst.toPath());
+			}
 
 			SwingUtils.invokeAndWait(() -> { elem.delete(); });
 		}

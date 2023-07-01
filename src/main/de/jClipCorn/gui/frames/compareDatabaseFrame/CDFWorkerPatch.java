@@ -186,6 +186,7 @@ public class CDFWorkerPatch
 				var cmd1 = new Element("delete");
 				cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 				cmd1.setAttribute("type", "MOVIE");
+				cmd1.setAttribute("deletefiles", noVideo ? "false" : "true");
 				cmd1.setAttribute("id", String.valueOf(e.MovieExtern.getLocalID()));
 				xaction.addContent(cmd1);
 			}
@@ -704,6 +705,7 @@ public class CDFWorkerPatch
 				var cmd1 = new Element("delete");
 				cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 				cmd1.setAttribute("type", "EPISODE");
+				cmd1.setAttribute("deletefiles", noVideo ? "false" : "true");
 				cmd1.setAttribute("id", String.valueOf(e.EpisodeExtern.getLocalID()));
 				xaction.addContent(cmd1);
 			}

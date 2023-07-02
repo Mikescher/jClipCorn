@@ -10,6 +10,7 @@ import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.database.migration.DatabaseMigration;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.Str;
@@ -22,6 +23,7 @@ import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.ApplicationHelper;
+import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.sqlwrapper.*;
 
 import java.awt.*;
@@ -645,7 +647,9 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.Title.get(), mov.getLocalID()), e);
+			var msg = LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.Title.get(), mov.getLocalID());
+			CCLog.addError(msg, e);
+			DialogHelper.showDispatchError(MainFrame.getInstance(), LocaleBundle.getString("Dialogs.GenericCaption.Error"), msg);
 			return false;
 		}
 	}
@@ -676,7 +680,9 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.Title.get(), ser.getLocalID()), e);
+			var msg = LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.Title.get(), ser.getLocalID());
+			CCLog.addError(msg, e);
+			DialogHelper.showDispatchError(MainFrame.getInstance(), LocaleBundle.getString("Dialogs.GenericCaption.Error"), msg);
 			return false;
 		}
 	}
@@ -703,7 +709,9 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", sea.Title.get(), sea.getLocalID()), e);
+			var msg = LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", sea.Title.get(), sea.getLocalID());
+			CCLog.addError(msg, e);
+			DialogHelper.showDispatchError(MainFrame.getInstance(), LocaleBundle.getString("Dialogs.GenericCaption.Error"), msg);
 			return false;
 		}
 	}
@@ -757,7 +765,9 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", ep.Title.get(), ep.getLocalID()), e);
+			var msg = LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", ep.Title.get(), ep.getLocalID());
+			CCLog.addError(msg, e);
+			DialogHelper.showDispatchError(MainFrame.getInstance(), LocaleBundle.getString("Dialogs.GenericCaption.Error"), msg);
 			return false;
 		}
 	}

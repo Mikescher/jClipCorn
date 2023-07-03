@@ -1,0 +1,89 @@
+JFDML JFormDesigner: "8.1.0.0.283" Java: "17.0.7" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "ScanFolderFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, default:grow, labelcompgap, min(default;20dlu):grow, labelcompgap, default:grow, labelcompgap, default:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default:grow, linegap, default, linegap, default, unrelgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": new FormMessage( null, "ScanFolderFrame.dlg.title" )
+			"defaultCloseOperation": 2
+			"minimumSize": new java.awt.Dimension( 400, 300 )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JList" ) {
+					name: "lsFiles"
+					"visibleRowCount": 24
+					auxiliary() {
+						"JavaCodeGenerator.typeParameters": "FSPath"
+					}
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "lsFilesMouseClicked", true ) )
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"gridWidth": 7
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnOpenFolder"
+				"text": new FormMessage( null, "ScanFolderFrame.btnChooseFolder.text" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "chooseFolder", true ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+			} )
+			add( new FormComponent( "javax.swing.JProgressBar" ) {
+				name: "progressBar"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 4
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnRemoveAdditionalParts"
+				"text": new FormMessage( null, "ScanFolderFrame.btnCleanUp.text" )
+				"enabled": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "removeAdditional", true ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 4
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnAddAll"
+				"text": new FormMessage( null, "ScanFolderFrame.btnAddAll.text" )
+				"enabled": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addAll", true ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 8
+				"gridY": 4
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbIncludeSeries"
+				"text": new FormMessage( null, "ScanFolderFrame.cbIncludeSeries.text" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 6
+				"gridWidth": 3
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbExcludeIfo"
+				"text": new FormMessage( null, "ScanFolderFrame.cbExcludeIfos.text" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 6
+				"gridWidth": 3
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 600, 500 )
+		} )
+	}
+}

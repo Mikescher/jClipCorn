@@ -264,7 +264,7 @@ public class Main {
  - [X] QuickAddEpisodeDialog
  - [X] QuickAddMoviesDialog
  - [ ] RandomMovieFrame
- - [ ] ScanFolderFrame
+ - [x] ScanFolderFrame
  - [X] SearchFrame
  - [ ] SettingsFrame
  - [ ] ShowIncompleteFilmSeriesFrame

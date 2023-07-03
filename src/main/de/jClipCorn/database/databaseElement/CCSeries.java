@@ -10,7 +10,9 @@ import de.jClipCorn.database.util.*;
 import de.jClipCorn.database.util.iterators.DirectEpisodesIterator;
 import de.jClipCorn.database.util.iterators.DirectSeasonsIterator;
 import de.jClipCorn.features.actionTree.CCActionElement;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
 import de.jClipCorn.util.datatypes.Opt;
@@ -529,16 +531,70 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	}
 
 	private int getFullViewCount() {
-		return _cache.getInt(SeriesCache.FULL_VIEW_COUNT, null, ser->
+		return _cache.getInt(SeriesCache.FULL_VIEW_COUNT,  Tuple1.Create(getMovieList().ccprops().PROP_SERIES_VIEWCOUNT_MODE.getValue()), ser->
 		{
-			int vc = Integer.MAX_VALUE;
-			for (CCSeason sea : seasons) {
-				for (CCEpisode e : sea.getEpisodeList()) {
-					vc = Math.min(e.ViewedHistory.get().count(), vc);
+			var vcmode = getMovieList().ccprops().PROP_SERIES_VIEWCOUNT_MODE.getValue();
+			switch (vcmode) {
+
+				case AGGREGATE_MIN:
+				{
+					int vc = Integer.MAX_VALUE;
+					for (CCSeason sea : seasons) {
+						for (CCEpisode e : sea.getEpisodeList()) {
+							vc = Math.min(e.ViewedHistory.get().count(), vc);
+						}
+					}
+					if (vc == Integer.MAX_VALUE) return 0;
+					return vc;
 				}
+
+				case AGGREGATE_MAX:
+				{
+					int vc = 0;
+					for (CCSeason sea : seasons) {
+						for (CCEpisode e : sea.getEpisodeList()) {
+							vc = Math.max(e.ViewedHistory.get().count(), vc);
+						}
+					}
+					return vc;
+				}
+
+				case AGGREGATE_AVG:
+				{
+					float sum = 0;
+					float cnt = 0;
+					for (CCSeason sea : seasons) {
+						for (CCEpisode e : sea.getEpisodeList()) {
+							cnt++;
+							sum += e.ViewedHistory.get().count();
+						}
+					}
+					if (cnt == 0) return 0;
+					return Math.round(sum / cnt);
+				}
+
+				case TIME_RATIO:
+				{
+					float watch = 0;
+					float total = 0;
+					for (CCSeason sea : seasons) {
+						for (CCEpisode e : sea.getEpisodeList()) {
+							total += e.Length.get();
+							watch += e.Length.get() * e.ViewedHistory.get().count();
+						}
+					}
+					if (total == 0) return 0;
+					return Math.round(watch / total);
+				}
+
+				default:
+				{
+					CCLog.addDefaultSwitchError(this, vcmode);
+					return 0;
+				}
+
 			}
-			if (vc == Integer.MAX_VALUE) return 0;
-			return vc;
+
 		});
 	}
 

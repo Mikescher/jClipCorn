@@ -209,6 +209,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCStringProperty                                 PROP_MAINFRAME_COLUMN_SIZE_CACHE;
 	public CCBoolProperty                                   PROP_MAINFRAME_FILTERTREE_RECOLLAPSE;
 	public CCFSPathProperty                                 PROP_DATABASE_DIR;
+	public CCEnumProperty<SeriesViewCountMode>              PROP_SERIES_VIEWCOUNT_MODE;
 
 	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public boolean ARG_READONLY = false;
@@ -325,6 +326,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_SEASON_INDEX_REGEXPRESSIONS        = new CCSeasonRegexListProperty(CAT_SERIES, this,   "PROP_SEASON_INDEX_REGEXPRESSIONS",         getDefSeasonRegex());
 		PROP_SERIES_NEXT_EPISODE_HEURISTIC      = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_NEXT_EPISODE_HEURISTIC",       NextEpisodeHeuristic.AUTOMATIC,     NextEpisodeHeuristic.getWrapper());
 		PROP_PREVIEWSERIES_SINGLETON            = new CCBoolProperty(CAT_SERIES,            this,   "PROP_PREVIEWSERIES_SINGLETON",             true);
+		PROP_SERIES_VIEWCOUNT_MODE              = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_VIEWCOUNT_MODE",               SeriesViewCountMode.AGGREGATE_MIN,  SeriesViewCountMode.getWrapper());
 
 		PROP_PLAY_VLC_PATH                      = new CCFSPathProperty(CAT_PLAY,            this,   "PROP_PLAY_VLC_PATH",                       FSPath.Empty,                       "vlc.exe",       CCPathPropertyMode.FILES);
 		PROP_PLAY_VLC_FULLSCREEN                = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_FULLSCREEN",                 false);

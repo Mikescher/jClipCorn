@@ -18,8 +18,8 @@ public enum NextEpisodeHeuristic implements ContinoousEnum<NextEpisodeHeuristic>
 		LocaleBundle.getString("NextEpisodeHeuristic.Opt2"),
 		LocaleBundle.getString("NextEpisodeHeuristic.Opt3"),
 	};
-	
-	private int id;
+
+	private final int id;
 
 	private static final EnumWrapper<NextEpisodeHeuristic> wrapper = new EnumWrapper<>(AUTOMATIC);
 

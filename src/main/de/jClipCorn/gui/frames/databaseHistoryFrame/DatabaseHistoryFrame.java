@@ -388,7 +388,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 		label6.setHorizontalAlignment(SwingConstants.TRAILING);
 		contentPane.add(label6, CC.xy(2, 20));
 		contentPane.add(tfNewValue, CC.xywh(4, 20, 9, 1));
-		setSize(600, 600);
+		setSize(715, 650);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}

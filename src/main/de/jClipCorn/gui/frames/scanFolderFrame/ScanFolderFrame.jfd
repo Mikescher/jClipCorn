@@ -7,14 +7,29 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-			"$columnSpecs": "unrelgap, default:grow, labelcompgap, min(default;20dlu):grow, labelcompgap, default:grow, labelcompgap, default:grow, unrelgap"
-			"$rowSpecs": "unrelgap, default:grow, linegap, default, linegap, default, unrelgap"
+			"$columnSpecs": "unrelgap, 0dlu:grow, labelcompgap, 60dlu, labelcompgap, 0dlu:grow, labelcompgap, 0dlu:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default:grow, linegap, default, linegap, default, unrelgap"
 		} ) {
 			name: "this"
 			"$sizePolicy": 1
 			"title": new FormMessage( null, "ScanFolderFrame.dlg.title" )
 			"defaultCloseOperation": 2
 			"minimumSize": new java.awt.Dimension( 400, 300 )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "edPath"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"gridWidth": 5
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton" ) {
+				name: "btnDialog"
+				"text": "..."
+				addEvent( new FormEvent( "de.jClipCorn.gui.guiComponents.jSplitButton.action.ButtonClickedActionListener", "actionPerformed", "openFolder", true ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 8
+				"gridY": 2
+			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane1"
 				add( new FormComponent( "javax.swing.JList" ) {
@@ -27,7 +42,7 @@ new FormModel {
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 2
+				"gridY": 4
 				"gridWidth": 7
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
@@ -35,16 +50,16 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "btnOpenFolder"
 				"text": new FormMessage( null, "ScanFolderFrame.btnChooseFolder.text" )
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "chooseFolder", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "scan", true ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 4
+				"gridY": 6
 			} )
 			add( new FormComponent( "javax.swing.JProgressBar" ) {
 				name: "progressBar"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 4
-				"gridY": 4
+				"gridY": 6
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -54,7 +69,7 @@ new FormModel {
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "removeAdditional", true ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 6
-				"gridY": 4
+				"gridY": 6
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "btnAddAll"
@@ -63,14 +78,14 @@ new FormModel {
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addAll", true ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 8
-				"gridY": 4
+				"gridY": 6
 			} )
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
 				name: "cbIncludeSeries"
 				"text": new FormMessage( null, "ScanFolderFrame.cbIncludeSeries.text" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 6
+				"gridY": 8
 				"gridWidth": 3
 			} )
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
@@ -78,7 +93,7 @@ new FormModel {
 				"text": new FormMessage( null, "ScanFolderFrame.cbExcludeIfos.text" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 6
-				"gridY": 6
+				"gridY": 8
 				"gridWidth": 3
 			} )
 		}, new FormLayoutConstraints( null ) {

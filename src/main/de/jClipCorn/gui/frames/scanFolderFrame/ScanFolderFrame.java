@@ -7,9 +7,11 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
+import de.jClipCorn.gui.guiComponents.jSplitButton.*;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -48,6 +50,9 @@ public class ScanFolderFrame extends JCCFrame
 		lsFiles.setModel(lsModel = new DefaultListModel<>());
 
 		initFileChooser();
+		edPath.setText(getMovieList().getCommonPathForMovieFileChooser().toAbsolutePathString());
+		
+		initFindButton();
 
 		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]
 		{
@@ -64,29 +69,72 @@ public class ScanFolderFrame extends JCCFrame
 		folderchooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY);
 	}
 
-	private void runThread(boolean includeSeries, boolean excludeIfos) {
+	@SuppressWarnings("nls")
+	private void initFindButton() {
+
+		var popupMenu = new JPopupMenu();
+		{
+			{
+				var p0 = FilesystemUtils.getAbsoluteSelfDirectory(ccprops());
+				if (!p0.isEmpty()) {
+					var menuitem = new JMenuItem("Self (" + p0.toAbsolutePathString() + ")");
+					menuitem.addActionListener(e -> edPath.setText(p0.toAbsolutePathString()));
+					popupMenu.add(menuitem);
+				}
+			}
+
+			popupMenu.addSeparator();
+
+			{
+				var p0 = getMovieList().getCommonMoviesPath();
+				if (!p0.isEmpty()) {
+					var menuitem = new JMenuItem("Movies (" + p0.toFSPath(ccprops()).toAbsolutePathString() + ")");
+					menuitem.addActionListener(e -> edPath.setText(p0.toFSPath(ccprops()).toAbsolutePathString()));
+					popupMenu.add(menuitem);
+				}
+			}
+
+			{
+				var p0 = getMovieList().getCommonSeriesPath();
+				if (!p0.isEmpty()) {
+					var menuitem = new JMenuItem("Series (" + p0.toFSPath(ccprops()).toAbsolutePathString() + ")");
+					menuitem.addActionListener(e -> edPath.setText(p0.toFSPath(ccprops()).toAbsolutePathString()));
+					popupMenu.add(menuitem);
+				}
+			}
+
+			popupMenu.addSeparator();
+			
+			for (var path : ccprops().getActivePathVariables()) {
+				var fspath = path.Value.toFSPath(ccprops());
+				var menuitem = new JMenuItem("Path<"+path.Key+"> (" + fspath.toAbsolutePathString() + ")");
+				menuitem.addActionListener(e -> edPath.setText(fspath.toAbsolutePathString()));
+				popupMenu.add(menuitem);
+			}
+		}
+
+		btnDialog.setPopupMenu(popupMenu);
+	} 
+	
+	private void runThread(FSPath dir, boolean includeSeries, boolean excludeIfos) {
 		SwingUtils.invokeLater(() -> {
 			btnOpenFolder.setEnabled(false);
+			btnDialog.setEnabled(false);
 			lsModel.clear();
 			progressBar.setIndeterminate(true);
 		});
 
-		var dir = FSPath.create(folderchooser.getSelectedFile());
+		// List of Files in Directory
+		var filelist = new ArrayList<FSPath>();
+		searchFiles(dir, filelist, excludeIfos);
 
-		if (dir.isDirectory()) {
-			// List of Files in Directory
-			var filelist = new ArrayList<FSPath>();
-			searchFiles(dir, filelist, excludeIfos);
+		// List of Files in in Database
+		var movielist = owner.getMovielist().getAbsolutePathList(includeSeries);
 
-			// List of Files in in Database
-			var movielist = owner.getMovielist().getAbsolutePathList(includeSeries);
+		filelist.removeAll(movielist);
 
-			filelist.removeAll(movielist);
-
-			for (var f : filelist) {
-				addToList(f);
-			}
-
+		for (var f : filelist) {
+			addToList(f);
 		}
 
 		SwingUtils.invokeLater(() ->
@@ -100,14 +148,20 @@ public class ScanFolderFrame extends JCCFrame
 		});
 	}
 
-	private void chooseFolder(ActionEvent e) {
-		if (folderchooser.showOpenDialog(ScanFolderFrame.this) == JFileChooser.APPROVE_OPTION) {
-			var includeSeries = cbIncludeSeries.isSelected();
-			var excludeIfos = cbExcludeIfo.isSelected();
+	private void scan(ActionEvent e) {
 
-			Thread run = new Thread(() -> this.runThread(includeSeries, excludeIfos), "THREAD_SCAN_FOLDER_FOR_MOVIES"); //$NON-NLS-1$
-			run.start();
+		var includeSeries = cbIncludeSeries.isSelected();
+		var excludeIfos = cbExcludeIfo.isSelected();
+
+		var dir = FSPath.create(edPath.getText());
+
+		if (!dir.isDirectory()) {
+			DialogHelper.showDispatchLocalInformation(this, "Dialogs.NotADirectory"); //$NON-NLS-1$
+			return;
 		}
+
+		Thread run = new Thread(() -> this.runThread(dir, includeSeries, excludeIfos), "THREAD_SCAN_FOLDER_FOR_MOVIES"); //$NON-NLS-1$
+		run.start();
 	}
 
 	private void searchFiles(FSPath dir, java.util.List<FSPath> filelist, boolean excludeIfos) {
@@ -173,8 +227,16 @@ public class ScanFolderFrame extends JCCFrame
 		}
 	}
 
+	private void openFolder(ActionEvent e) {
+		if (folderchooser.showOpenDialog(ScanFolderFrame.this) == JFileChooser.APPROVE_OPTION) {
+			edPath.setText(folderchooser.getSelectedFile().getAbsolutePath());
+		}
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		edPath = new JTextField();
+		btnDialog = new JSplitButton();
 		scrollPane1 = new JScrollPane();
 		lsFiles = new JList<>();
 		btnOpenFolder = new JButton();
@@ -190,8 +252,14 @@ public class ScanFolderFrame extends JCCFrame
 		setMinimumSize(new Dimension(400, 300));
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default:grow, $lcgap, [default,20dlu]:grow, 2*($lcgap, default:grow), $ugap", //$NON-NLS-1$
-			"$ugap, default:grow, 2*($lgap, default), $ugap")); //$NON-NLS-1$
+			"$ugap, 0dlu:grow, $lcgap, 60dlu, 2*($lcgap, 0dlu:grow), $ugap", //$NON-NLS-1$
+			"$ugap, default, $lgap, default:grow, 2*($lgap, default), $ugap")); //$NON-NLS-1$
+		contentPane.add(edPath, CC.xywh(2, 2, 5, 1));
+
+		//---- btnDialog ----
+		btnDialog.setText("..."); //$NON-NLS-1$
+		btnDialog.addButtonClickedActionListener(e -> openFolder(e));
+		contentPane.add(btnDialog, CC.xy(8, 2));
 
 		//======== scrollPane1 ========
 		{
@@ -206,39 +274,41 @@ public class ScanFolderFrame extends JCCFrame
 			});
 			scrollPane1.setViewportView(lsFiles);
 		}
-		contentPane.add(scrollPane1, CC.xywh(2, 2, 7, 1, CC.FILL, CC.FILL));
+		contentPane.add(scrollPane1, CC.xywh(2, 4, 7, 1, CC.FILL, CC.FILL));
 
 		//---- btnOpenFolder ----
 		btnOpenFolder.setText(LocaleBundle.getString("ScanFolderFrame.btnChooseFolder.text")); //$NON-NLS-1$
-		btnOpenFolder.addActionListener(e -> chooseFolder(e));
-		contentPane.add(btnOpenFolder, CC.xy(2, 4));
-		contentPane.add(progressBar, CC.xy(4, 4, CC.DEFAULT, CC.FILL));
+		btnOpenFolder.addActionListener(e -> scan(e));
+		contentPane.add(btnOpenFolder, CC.xy(2, 6));
+		contentPane.add(progressBar, CC.xy(4, 6, CC.DEFAULT, CC.FILL));
 
 		//---- btnRemoveAdditionalParts ----
 		btnRemoveAdditionalParts.setText(LocaleBundle.getString("ScanFolderFrame.btnCleanUp.text")); //$NON-NLS-1$
 		btnRemoveAdditionalParts.setEnabled(false);
 		btnRemoveAdditionalParts.addActionListener(e -> removeAdditional(e));
-		contentPane.add(btnRemoveAdditionalParts, CC.xy(6, 4));
+		contentPane.add(btnRemoveAdditionalParts, CC.xy(6, 6));
 
 		//---- btnAddAll ----
 		btnAddAll.setText(LocaleBundle.getString("ScanFolderFrame.btnAddAll.text")); //$NON-NLS-1$
 		btnAddAll.setEnabled(false);
 		btnAddAll.addActionListener(e -> addAll(e));
-		contentPane.add(btnAddAll, CC.xy(8, 4));
+		contentPane.add(btnAddAll, CC.xy(8, 6));
 
 		//---- cbIncludeSeries ----
 		cbIncludeSeries.setText(LocaleBundle.getString("ScanFolderFrame.cbIncludeSeries.text")); //$NON-NLS-1$
-		contentPane.add(cbIncludeSeries, CC.xywh(2, 6, 3, 1));
+		contentPane.add(cbIncludeSeries, CC.xywh(2, 8, 3, 1));
 
 		//---- cbExcludeIfo ----
 		cbExcludeIfo.setText(LocaleBundle.getString("ScanFolderFrame.cbExcludeIfos.text")); //$NON-NLS-1$
-		contentPane.add(cbExcludeIfo, CC.xywh(6, 6, 3, 1));
+		contentPane.add(cbExcludeIfo, CC.xywh(6, 8, 3, 1));
 		setSize(600, 500);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JTextField edPath;
+	private JSplitButton btnDialog;
 	private JScrollPane scrollPane1;
 	private JList<FSPath> lsFiles;
 	private JButton btnOpenFolder;

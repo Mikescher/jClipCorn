@@ -6,6 +6,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.features.serialization.ExportHelper;
+import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 
 import javax.swing.*;
@@ -16,13 +18,16 @@ import java.util.regex.PatternSyntaxException;
 
 import de.jClipCorn.gui.guiComponents.cover.*;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.RegExHelper;
+import de.jClipCorn.util.helper.SwingUtils;
 
-public class MoveSeriesDialog extends JCCFrame
+public class MoveSeriesDialog extends JCCDialog
 {
 	private final CCSeries series;
 
@@ -52,32 +57,57 @@ public class MoveSeriesDialog extends JCCFrame
 		cbxRegex.addActionListener((e) -> btnOK.setEnabled(false));
 	}
 
-	private void startTest(ActionEvent e) {
-		Vector<MassMoveEntry> data = new Vector<>();
+	private void startTest(ActionEvent e)
+	{
+		new Thread(() ->
+		{
+			try
+			{
+				SwingUtils.invokeLater(this::disableAll);
 
-		for (int seasi = 0; seasi < series.getSeasonCount(); seasi++) {
-			CCSeason season = series.getSeasonByArrayIndex(seasi);
-			for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
-				CCEpisode ep = season.getEpisodeByArrayIndex(epi);
+				int total = series.getEpisodeCount();
+				int curr  = 1;
+				SwingUtils.invokeLater(() -> this.progress.setMaximum(total));
 
-				var entry = new MassMoveEntry();
+				Vector<MassMoveEntry> data = new Vector<>();
 
-				entry.entry = ep;
+				for (int seasi = 0; seasi < series.getSeasonCount(); seasi++)
+				{
+					CCSeason season = series.getSeasonByArrayIndex(seasi);
+					for (int epi = 0; epi < season.getEpisodeCount(); epi++)
+					{
+						CCEpisode ep = season.getEpisodeByArrayIndex(epi);
 
-				entry.PathOld = ep.getPart();
+						var entry = new MassMoveEntry();
 
-				entry.PathNew = replacePath(edSearch.getText(), edReplace.getText(), cbxRegex.isSelected(), entry.PathOld);
+						entry.entry = ep;
 
-				entry.OldIsValid = entry.PathOld.toFSPath(this).exists();
-				entry.NewIsValid = entry.PathNew.toFSPath(this).exists();
+						entry.PathOld = ep.getPart();
 
-				data.add(entry);
+						entry.PathNew = replacePath(edSearch.getText(), edReplace.getText(), cbxRegex.isSelected(), entry.PathOld);
+
+						entry.OldIsValid = entry.PathOld.toFSPath(this).exists();
+						entry.NewIsValid = entry.PathNew.toFSPath(this).exists();
+
+						data.add(entry);
+
+						final int _v = curr++;
+						SwingUtils.invokeLater(() -> this.progress.setValue(_v));
+					}
+				}
+
+				SwingUtils.invokeLater(() ->
+				{
+					tabTest.setData(data);
+					this.btnOK.setEnabled(true);
+					this.progress.setValue(0);
+				});
 			}
-		}
-
-		tabTest.setData(data);
-
-		this.btnOK.setEnabled(true);
+			finally
+			{
+				SwingUtils.invokeLater(this::enableAll);
+			}
+		}, "THREAD_MASSMOVE_TEST").start(); //$NON-NLS-1$
 	}
 
 	private void startReplace(ActionEvent e) {
@@ -118,6 +148,22 @@ public class MoveSeriesDialog extends JCCFrame
 		}
 	}
 
+	private void enableAll() {
+		this.edSearch.setEnabled(true);
+		this.edReplace.setEnabled(true);
+		this.cbxRegex.setEnabled(true);
+		this.btnOK.setEnabled(true);
+		this.btnTest.setEnabled(true);
+	}
+
+	private void disableAll() {
+		this.edSearch.setEnabled(false);
+		this.edReplace.setEnabled(false);
+		this.cbxRegex.setEnabled(false);
+		this.btnOK.setEnabled(false);
+		this.btnTest.setEnabled(false);
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		lblCover = new CoverLabelFullsize(movielist);
@@ -130,11 +176,13 @@ public class MoveSeriesDialog extends JCCFrame
 		cbxRegex = new JCheckBox();
 		btnOK = new JButton();
 		btnTest = new JButton();
+		progress = new JProgressBar();
 		tabTest = new MassMoveTable(this, false, false);
 
 		//======== this ========
 		setTitle(LocaleBundle.getString("MoveSeriesFrame.this.title")); //$NON-NLS-1$
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setModal(true);
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
 			"$ugap, default, $lcgap, default:grow, $ugap", //$NON-NLS-1$
@@ -144,8 +192,8 @@ public class MoveSeriesDialog extends JCCFrame
 		//======== panel1 ========
 		{
 			panel1.setLayout(new FormLayout(
-				"2*(0dlu:grow, $lcgap), default", //$NON-NLS-1$
-				"default, $lgap, 8dlu, 5*($lgap, default), $lgap, 0dlu:grow, $lgap, default")); //$NON-NLS-1$
+				"0dlu:grow, $lcgap, 0dlu:grow", //$NON-NLS-1$
+				"6*(default, $lgap), 0dlu:grow, $lgap, default, $lgap, pref, $lgap")); //$NON-NLS-1$
 
 			//---- lblTitle ----
 			lblTitle.setText("<dynamic>"); //$NON-NLS-1$
@@ -155,28 +203,29 @@ public class MoveSeriesDialog extends JCCFrame
 
 			//---- label1 ----
 			label1.setText(LocaleBundle.getString("MoveSeriesFrame.lblReplace.text")); //$NON-NLS-1$
-			panel1.add(label1, CC.xy(1, 5));
-			panel1.add(edSearch, CC.xywh(1, 7, 3, 1));
+			panel1.add(label1, CC.xy(1, 3));
+			panel1.add(edSearch, CC.xywh(1, 5, 3, 1));
 
 			//---- label2 ----
 			label2.setText(LocaleBundle.getString("MoveSeriesFrame.lblWith.text")); //$NON-NLS-1$
-			panel1.add(label2, CC.xy(1, 9));
-			panel1.add(edReplace, CC.xywh(1, 11, 3, 1));
+			panel1.add(label2, CC.xy(1, 7));
+			panel1.add(edReplace, CC.xywh(1, 9, 3, 1));
 
 			//---- cbxRegex ----
 			cbxRegex.setText(LocaleBundle.getString("MoveSeriesFrame.cbxRegex")); //$NON-NLS-1$
-			panel1.add(cbxRegex, CC.xy(1, 13));
+			panel1.add(cbxRegex, CC.xy(1, 11));
 
 			//---- btnOK ----
 			btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 			btnOK.setEnabled(false);
 			btnOK.addActionListener(e -> startReplace(e));
-			panel1.add(btnOK, CC.xy(1, 17));
+			panel1.add(btnOK, CC.xy(1, 15));
 
 			//---- btnTest ----
 			btnTest.setText(LocaleBundle.getString("MoveSeriesFrame.btnTest.text")); //$NON-NLS-1$
 			btnTest.addActionListener(e -> startTest(e));
-			panel1.add(btnTest, CC.xy(3, 17));
+			panel1.add(btnTest, CC.xy(3, 15));
+			panel1.add(progress, CC.xywh(1, 17, 3, 1, CC.DEFAULT, CC.FILL));
 		}
 		contentPane.add(panel1, CC.xy(4, 2, CC.FILL, CC.FILL));
 		contentPane.add(tabTest, CC.xywh(2, 4, 3, 1, CC.FILL, CC.FILL));
@@ -196,6 +245,7 @@ public class MoveSeriesDialog extends JCCFrame
 	private JCheckBox cbxRegex;
 	private JButton btnOK;
 	private JButton btnTest;
+	private JProgressBar progress;
 	private MassMoveTable tabTest;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

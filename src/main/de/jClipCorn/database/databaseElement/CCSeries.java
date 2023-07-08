@@ -17,6 +17,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple1;
+import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.YearRange;
@@ -726,7 +727,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 	@SuppressWarnings("nls")
 	public String getFolderNameForCreatedFolderStructure(CCDBLanguageSet fallbackLanguage) {
-		return _cache.get(SeriesCache.FOLDER_NAME_FOR_CREATED_FOLDER_STRUCTURE, Tuple1.Create(fallbackLanguage), ser->
+		return _cache.get(SeriesCache.FOLDER_NAME_FOR_CREATED_FOLDER_STRUCTURE, Tuple3.Create(fallbackLanguage, ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue(), ccprops().PROP_SKIP_DEFAULT_LANG_IN_FILENAMES.getValue()), ser->
 		{
 			StringBuilder seriesfoldername = new StringBuilder(Title.get());
 
@@ -736,7 +737,9 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 			CCDBLanguageSet lang = getSemiCommonLanguages();
 			if (getEpisodeCount() == 0 && fallbackLanguage != null) lang = fallbackLanguage;
-			if (!lang.isExact(CCDBLanguage.GERMAN) && !lang.isEmpty()) {
+
+
+			if (!(lang.isExact(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue()) && ccprops().PROP_SKIP_DEFAULT_LANG_IN_FILENAMES.getValue())) {
 				seriesfoldername.append(String.format(" [%s]", lang.serializeToFilenameString()));
 			}
 

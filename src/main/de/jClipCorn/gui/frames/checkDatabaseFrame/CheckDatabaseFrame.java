@@ -406,6 +406,7 @@ public class CheckDatabaseFrame extends JCCFrame
 
 					//---- edMetadata ----
 					edMetadata.setEditable(false);
+					edMetadata.setFont(new Font("Noto Mono", Font.PLAIN, 13)); //$NON-NLS-1$
 					scrollPane3.setViewportView(edMetadata);
 				}
 				splitPane2.setBottomComponent(scrollPane3);
@@ -466,7 +467,7 @@ public class CheckDatabaseFrame extends JCCFrame
 			panel2.add(cbValAdditional, CC.xy(3, 7));
 		}
 		contentPane.add(panel2, CC.xywh(2, 10, 3, 1));
-		setSize(950, 600);
+		setSize(1200, 700);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}

@@ -212,6 +212,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_MAINFRAME_FILTERTREE_RECOLLAPSE;
 	public CCFSPathProperty                                 PROP_DATABASE_DIR;
 	public CCEnumProperty<SeriesViewCountMode>              PROP_SERIES_VIEWCOUNT_MODE;
+	public CCBoolProperty                                   PROP_SKIP_DEFAULT_LANG_IN_FILENAMES;
 
 	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public boolean ARG_READONLY = false;
@@ -370,6 +371,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_VALIDATE_FILESIZEDRIFT             = new CCRIntProperty(CAT_OTHERFRAMES,       this,   "PROP_VALIDATE_FILESIZEDRIFT",              0,                                  100);
 		PROP_VALIDATE_DUP_IGNORE_IFO            = new CCBoolProperty(CAT_OTHERFRAMES,       this,   "PROP_VALIDATE_DUP_IGNORE_IFO",             true);
 		PROP_STATISTICS_TIMELINEGRAVITY         = new CCPIntProperty(CAT_OTHERFRAMES,       this,   "PROP_STATISTICS_TIMELINEGRAVITY",          7);
+		PROP_SKIP_DEFAULT_LANG_IN_FILENAMES     = new CCBoolProperty(CAT_OTHERFRAMES,       this,   "PROP_SKIP_DEFAULT_LANG_IN_FILENAMES",      true);
 
 		PROP_BACKUP_LASTBACKUP                  = new CCDateProperty(NONVISIBLE,            this,   "PROP_BACKUP_LASTBACKUP",                   CCDate.getMinimumDate());
 		PROP_OTHER_DEBUGMODE                    = new CCBoolProperty(NONVISIBLE,            this,   "PROP_OTHER_DEBUGMODE",                     false);

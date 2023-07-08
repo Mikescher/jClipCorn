@@ -43,6 +43,12 @@ public class MassMoveTable extends JCCSimpleTable<MassMoveEntry> {
 					.withText(e -> Opt.cast(e.entry, CCEpisode.class).map(CCEpisode::getSeries).map(p -> p.Title.get()).orElse("???"))
 					.withBackground(e -> Color.WHITE)
 					.withForeground(e -> Color.BLACK);
+
+			r.add("MoveSeriesFrame.Table.HeaderEpisode")
+					.withSize("auto")
+					.withText(e -> Opt.cast(e.entry, CCEpisode.class).map(CCEpisode::getStringIdentifier).orElse("???"))
+					.withBackground(e -> Color.WHITE)
+					.withForeground(e -> Color.BLACK);
 		}
 
 		r.add("MoveSeriesFrame.Table.HeaderOld")

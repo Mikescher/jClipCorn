@@ -114,7 +114,11 @@ public class CCLog {
 	public static void addChangeListener (CCLogChangedListener lst) {
 		CCLogInternal.addChangeListener(lst);
 	}
-	
+
+	public static void removeChangeListener (CCLogChangedListener lst) {
+		CCLogInternal.removeChangeListener(lst);
+	}
+
 	public static void setChangedFlag() {
 		CCLogInternal.setChangedFlag();
 	}

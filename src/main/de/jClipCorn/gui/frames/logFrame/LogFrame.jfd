@@ -8,7 +8,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "relgap, default:grow, relgap"
-			"$rowSpecs": "relgap, default:grow, relgap"
+			"$rowSpecs": "relgap, 0dlu:grow, relgap"
 		} ) {
 			name: "this"
 			"$sizePolicy": 1
@@ -19,7 +19,7 @@ new FormModel {
 				name: "tpnlMain"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "relgap, 275dlu, labelcompgap, 0dlu:grow, relgap"
-					"$rowSpecs": "relgap, default:grow, linegap, default, relgap"
+					"$rowSpecs": "relgap, 0dlu:grow, linegap, default, relgap"
 				} ) {
 					name: "tabErrors"
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -266,201 +266,210 @@ new FormModel {
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "CCLog.Changes" )
 				} )
-				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-					"$columnSpecs": "unrelgap, default, labelcompgap, 100dlu, labelcompgap, default"
-					"$rowSpecs": "unrelgap, default, pargap, default, linegap, default, linegap, default, linegap, default, linegap, default, pargap, default, linegap, default, linegap, default, pargap, default, linegap, default, linegap, default, pargap, default, linegap, default, linegap, default"
-				} ) {
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 					name: "tabLiveDisplay"
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label8"
-						"text": new FormMessage( null, "LogFrame.Uptime" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 2
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
-						name: "displUptime"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 4
-						"gridY": 2
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label10"
-						"text": new FormMessage( null, "LogFrame.CacheSize" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 4
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
-						name: "displCacheTotalCount"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 4
-						"gridY": 4
-						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
-					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button6"
-						"text": "..."
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showCacheDistribution", false ) )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 6
-						"gridY": 4
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label11"
-						"text": new FormMessage( null, "LogFrame.lblPreInitCacheHits" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 6
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
-						name: "displPreInitCacheQueries"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridY": 6
-						"gridX": 4
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label1"
-						"text": new FormMessage( null, "LogFrame.CacheHits" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 8
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
-						name: "displCacheHits"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 4
-						"gridY": 8
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label2"
-						"text": new FormMessage( null, "LogFrame.CacheMisses" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 10
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
-						name: "displCacheMisses"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 4
-						"gridY": 10
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label9"
-						"text": new FormMessage( null, "LogFrame.CacheInvalidations" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 12
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
-						name: "displCacheInvalidations"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 4
-						"gridY": 12
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label12"
-						"text": new FormMessage( null, "LogFrame.CacheIcons" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 14
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
-						name: "displCacheIcons"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 4
-						"gridY": 14
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label14"
-						"text": new FormMessage( null, "LogFrame.CacheImages" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 16
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
-						name: "displCacheImages"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 4
-						"gridY": 16
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label13"
-						"text": new FormMessage( null, "LogFrame.CacheCovers" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 18
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
-						name: "displCacheCovers"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 4
-						"gridY": 18
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label3"
-						"text": new FormMessage( null, "CCLog.Warnings" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 20
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
-						name: "displWarningsCount"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 4
-						"gridY": 20
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label4"
-						"text": new FormMessage( null, "CCLog.Errors" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 22
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
-						name: "displErrorCount"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 4
-						"gridY": 22
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label5"
-						"text": new FormMessage( null, "CCLog.Undefinieds" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 24
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
-						name: "displUndefiniedCount"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 4
-						"gridY": 24
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label6"
-						"text": new FormMessage( null, "LogFrame.DBQueries" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 26
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
-						name: "displQueryCount"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 4
-						"gridY": 26
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label7"
-						"text": new FormMessage( null, "LogFrame.WebRequests" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 2
-						"gridY": 28
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
-						name: "displRequestCount"
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 4
-						"gridY": 28
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane11"
+						"horizontalScrollBarPolicy": 31
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+							"$columnSpecs": "unrelgap, default, labelcompgap, 100dlu, labelcompgap, default"
+							"$rowSpecs": "unrelgap, default, pargap, default, linegap, default, linegap, default, linegap, default, linegap, default, pargap, default, linegap, default, linegap, default, pargap, default, linegap, default, linegap, default, pargap, default, linegap, default, linegap, default"
+						} ) {
+							name: "pnLiveDisplay"
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label8"
+								"text": new FormMessage( null, "LogFrame.Uptime" )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 2
+								"gridY": 2
+							} )
+							add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+								name: "displUptime"
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 4
+								"gridY": 2
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label10"
+								"text": new FormMessage( null, "LogFrame.CacheSize" )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 2
+								"gridY": 4
+							} )
+							add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+								name: "displCacheTotalCount"
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 4
+								"gridY": 4
+								"vAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "button6"
+								"text": "..."
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showCacheDistribution", false ) )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 6
+								"gridY": 4
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label11"
+								"text": new FormMessage( null, "LogFrame.lblPreInitCacheHits" )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 2
+								"gridY": 6
+							} )
+							add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+								name: "displPreInitCacheQueries"
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridY": 6
+								"gridX": 4
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label1"
+								"text": new FormMessage( null, "LogFrame.CacheHits" )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 2
+								"gridY": 8
+							} )
+							add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+								name: "displCacheHits"
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 4
+								"gridY": 8
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label2"
+								"text": new FormMessage( null, "LogFrame.CacheMisses" )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 2
+								"gridY": 10
+							} )
+							add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+								name: "displCacheMisses"
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 4
+								"gridY": 10
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label9"
+								"text": new FormMessage( null, "LogFrame.CacheInvalidations" )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 2
+								"gridY": 12
+							} )
+							add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+								name: "displCacheInvalidations"
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 4
+								"gridY": 12
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label12"
+								"text": new FormMessage( null, "LogFrame.CacheIcons" )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 2
+								"gridY": 14
+							} )
+							add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+								name: "displCacheIcons"
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 4
+								"gridY": 14
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label14"
+								"text": new FormMessage( null, "LogFrame.CacheImages" )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 2
+								"gridY": 16
+							} )
+							add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+								name: "displCacheImages"
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 4
+								"gridY": 16
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label13"
+								"text": new FormMessage( null, "LogFrame.CacheCovers" )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 2
+								"gridY": 18
+							} )
+							add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+								name: "displCacheCovers"
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 4
+								"gridY": 18
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label3"
+								"text": new FormMessage( null, "CCLog.Warnings" )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 2
+								"gridY": 20
+							} )
+							add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+								name: "displWarningsCount"
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 4
+								"gridY": 20
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label4"
+								"text": new FormMessage( null, "CCLog.Errors" )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 2
+								"gridY": 22
+							} )
+							add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+								name: "displErrorCount"
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 4
+								"gridY": 22
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label5"
+								"text": new FormMessage( null, "CCLog.Undefinieds" )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 2
+								"gridY": 24
+							} )
+							add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+								name: "displUndefiniedCount"
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 4
+								"gridY": 24
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label6"
+								"text": new FormMessage( null, "LogFrame.DBQueries" )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 2
+								"gridY": 26
+							} )
+							add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+								name: "displQueryCount"
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 4
+								"gridY": 26
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label7"
+								"text": new FormMessage( null, "LogFrame.WebRequests" )
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 2
+								"gridY": 28
+							} )
+							add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+								name: "displRequestCount"
+							}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+								"gridX": 4
+								"gridY": 28
+							} )
+						} )
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "LogFrame.TabLiveDisplay" )

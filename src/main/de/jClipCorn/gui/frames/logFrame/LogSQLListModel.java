@@ -20,7 +20,6 @@ public class LogSQLListModel extends DefaultListModel<String> implements ListSel
 		this.list = lst;
 		
 		lst.addListSelectionListener(this);
-		CCLog.addChangeListener(this);
 	}
 	
 	@Override

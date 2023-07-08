@@ -9,9 +9,9 @@ import javax.swing.event.ListSelectionListener;
 public class LogListModel extends DefaultListModel<String> implements ListSelectionListener, CCLogChangedListener {
 	private static final long serialVersionUID = -3406456293654719505L;
 
-	private CCLogType type;
-	private JTextArea info;
-	private JList<String> list;
+	private final CCLogType type;
+	private final JTextArea info;
+	private final JList<String> list;
 	
 	public LogListModel(JList<String> lst, CCLogType type, JTextArea info) {
 		this.type = type;
@@ -19,7 +19,6 @@ public class LogListModel extends DefaultListModel<String> implements ListSelect
 		this.list = lst;
 		
 		lst.addListSelectionListener(this);
-		CCLog.addChangeListener(this);
 	}
 	
 	@Override

@@ -283,6 +283,10 @@ public class CCLogInternal {
 		listener.add(lst);
 	}
 
+	public static void removeChangeListener (CCLogChangedListener lst) {
+		listener.remove(lst);
+	}
+
 	public static void setChangedFlag() {
 		changed = true;
 

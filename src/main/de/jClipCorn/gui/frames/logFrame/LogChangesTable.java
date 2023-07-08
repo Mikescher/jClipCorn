@@ -37,22 +37,22 @@ public class LogChangesTable extends JCCSimpleTable<CCChangeLogElement> {
 		JCCSimpleColumnList<CCChangeLogElement> r = new JCCSimpleColumnList<>(this);
 
 		r.add("@Time")
-				.withSize("auto")
+				.withSize("auto,min=80")
 				.withText(p -> p.Time.toStringUINormal());
 		r.add("@Root.Type")
-				.withSize("auto")
+				.withSize("auto,min=80")
 				.withText(p -> p.RootType);
 		r.add("@Root.ID")
-				.withSize("auto")
+				.withSize("auto,min=80")
 				.withText(p -> String.valueOf(p.RootID));
 		r.add("@Element.Type")
-				.withSize("auto")
+				.withSize("auto,min=100")
 				.withText(p -> p.ActualType);
 		r.add("@Element.ID")
-				.withSize("auto")
+				.withSize("auto,min=90")
 				.withText(p -> String.valueOf(p.ActualID));
 		r.add("@Element")
-				.withSize("auto")
+				.withSize("auto,min=200")
 				.withText(p -> getElem(p.RootID).mapOrElse(ICCDatabaseStructureElement::getQualifiedTitle, Str.Empty));
 		r.add("@Properties")
 				.withSize("star,min=auto")

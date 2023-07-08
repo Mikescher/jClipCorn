@@ -3,6 +3,9 @@ package de.jClipCorn.gui.guiComponents.jCCSimpleTable;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.util.TableColumnAdjuster;
+import de.jClipCorn.util.datatypes.ITuple;
+import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.datatypes.Tuple0;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.stream.CCStreams;
 import org.jetbrains.annotations.NotNull;
@@ -31,20 +34,35 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements IJCCS
 	private TableColumnAdjuster adjuster;
 
 	protected final CCMovieList movielist;
+	protected final ITuple initOptions;
 
 	public JCCSimpleTable(@NotNull ICCWindow mlo) {
-		this(mlo.getMovieList());
+		this(mlo.getMovieList(), Tuple0.Inst);
+	}
+
+	public JCCSimpleTable(@NotNull ICCWindow mlo, ITuple opt) {
+		this(mlo.getMovieList(), opt);
 	}
 
 	public JCCSimpleTable(CCMovieList ml) {
+		this(ml, Tuple0.Inst);
+	}
+
+	public JCCSimpleTable(CCMovieList ml, ITuple opt) {
 		super();
 		movielist = ml;
+		initOptions = opt;
 
 		init(configureColumns());
 	}
 
 	public CCMovieList getMovielist() {
 		return movielist;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <T> T initOptions() {
+		return (T)initOptions;
 	}
 
 	protected void setColumnConfig(JCCSimpleColumnList<TData> cfg) {

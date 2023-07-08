@@ -83,6 +83,7 @@ public class RegExHelper {
 		Matcher matcher = Pattern.compile(regEx).matcher(input);
 
 		if (matcher.find()) {
+			// we use stringReplace, because we do not want back-references (aka $1) to be resolved
 			return stringReplace(input, matcher.start(), matcher.end(), replace);
 		} else {
 			return input;

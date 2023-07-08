@@ -11,6 +11,7 @@ import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Tuple;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -23,17 +24,9 @@ public class ShowMatchesTable extends JCCSimpleTable<ComparisonMatch> {
 
 	private final CompareDatabaseFrame _owner;
 
-	private final boolean _hasLoc;
-	private final boolean _hasExt;
-
 	public ShowMatchesTable(@NotNull CompareDatabaseFrame f, boolean hasLoc, boolean hasExt) {
-		super(f);
-
-		_hasLoc = hasLoc;
-		_hasExt = hasExt;
+		super(f, Tuple.Create(hasLoc, hasExt));
 		_owner  = f;
-
-		setColumnConfig(configureColumns()); // config columns again, because this time _hasLoc and _hasExt are actually set
 	}
 
 	@Override
@@ -45,6 +38,9 @@ public class ShowMatchesTable extends JCCSimpleTable<ComparisonMatch> {
 		 .withSize("auto")
 		 .withText(ComparisonMatch::getTypeStr)
 		 .sortable();
+
+		var _hasLoc = this.<Tuple<Boolean, Boolean>>initOptions().Item1;
+		var _hasExt = this.<Tuple<Boolean, Boolean>>initOptions().Item1;
 
 		if (_hasLoc) r.add("CompareDatabaseFrame.table.column_LocID")
 				      .withSize("auto")

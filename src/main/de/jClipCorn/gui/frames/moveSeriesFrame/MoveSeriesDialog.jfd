@@ -1,0 +1,112 @@
+JFDML JFormDesigner: "8.1.0.0.283" Java: "17.0.7" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "MoveSeriesFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, default, labelcompgap, default:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default:grow, unrelgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": new FormMessage( null, "MoveSeriesFrame.this.title" )
+			"defaultCloseOperation": 2
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.cover.CoverLabelFullsize" ) {
+				name: "lblCover"
+				auxiliary() {
+					"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
+				}
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "0dlu:grow, labelcompgap, 0dlu:grow, labelcompgap, default"
+				"$rowSpecs": "default, linegap, 8dlu, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 0dlu:grow, linegap, default"
+			} ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblTitle"
+					"text": "<dynamic>"
+					"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 3, false )
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label1"
+					"text": new FormMessage( null, "MoveSeriesFrame.lblReplace.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "edSearch"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 7
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label2"
+					"text": new FormMessage( null, "MoveSeriesFrame.lblWith.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 9
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "edReplace"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 11
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbxRegex"
+					"text": new FormMessage( null, "MoveSeriesFrame.cbxRegex" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 13
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnOK"
+					"text": new FormMessage( null, "UIGeneric.btnOK.text" )
+					"enabled": false
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "startReplace", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 17
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnTest"
+					"text": new FormMessage( null, "MoveSeriesFrame.btnTest.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "startTest", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 17
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 2
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "tabTest"
+				auxiliary() {
+					"JavaCodeGenerator.customCreateCode": "new ${field_type}(this, false, false);"
+				}
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+				"gridWidth": 3
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 705, 750 )
+		} )
+	}
+}

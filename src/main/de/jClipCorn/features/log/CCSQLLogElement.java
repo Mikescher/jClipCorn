@@ -1,20 +1,28 @@
 package de.jClipCorn.features.log;
 
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCTime;
 import de.jClipCorn.util.sqlwrapper.StatementType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class CCSQLLogElement {
-	private final String method;
-	private final StatementType statementType;
-	private final String source;
-	private final CCTime time;
+	public final String        method;
+	public final StatementType statementType;
+	public final String        source;
+	public final CCTime        time;
+	public final long          startMillis;
+	public final long          endMillis;
+	public final String        error;
 
-	public CCSQLLogElement(String mth, StatementType st, String sql) {
-		method = mth;
-		statementType = st;
-		source = sql;
+	public CCSQLLogElement(String mth, StatementType st, String sql, long startMillis, long endMillis, String error) {
+		this.method        = mth;
+		this.statementType = st;
+		this.source        = sql;
+
+		this.startMillis   = startMillis;
+		this.endMillis     = endMillis;
+		this.error         = error;
 
 		time = new CCTime();
 	}
@@ -32,6 +40,9 @@ public class CCSQLLogElement {
 				.append(statementType, that.statementType)
 				.append(source, that.source)
 				.append(time, that.time)
+				.append(startMillis, that.startMillis)
+				.append(endMillis, that.endMillis)
+				.append(error, that.error)
 				.isEquals();
 	}
 
@@ -42,14 +53,20 @@ public class CCSQLLogElement {
 				.append(statementType)
 				.append(source)
 				.append(time)
+				.append(startMillis)
+				.append(endMillis)
+				.append(error)
 				.toHashCode();
 	}
 
 	public String getFormatted() {
-		return "["+method+"]" + statementType; //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	public String getFullFormatted() {
-		return source;
+		if (error != null)
+		{
+			return "{ERR} ["+method+"] " + statementType; //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		else
+		{
+			return "{OK}  ["+method+"] " + statementType; //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 }

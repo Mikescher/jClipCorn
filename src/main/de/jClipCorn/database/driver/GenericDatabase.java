@@ -171,66 +171,109 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 	}
 
 	public boolean executeSQL(String sql) {
-		try {
+		var t0 = System.currentTimeMillis();
+
+		try
+		{
 			Statement s = connection.createStatement();
-			CCLog.addSQL("ExecuteSQL", StatementType.CUSTOM, sql);
 			s.execute(sql);
 			s.close();
+
+			CCLog.addSQL("ExecuteSQL", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), null);
+
 			return true;
-		} catch (SQLException e) {
+		}
+		catch (SQLException e)
+		{
 			lastError = e;
 			CCLog.addError(e);
+			CCLog.addSQL("ExecuteSQL", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), e.getMessage());
 			return false;
 		}
 	}
 
 	public void executeSQLThrow(String sql) throws SQLException {
-		Statement s = connection.createStatement();
-		CCLog.addSQL("ExecuteSQLThrow", StatementType.CUSTOM, sql);
-		s.execute(sql);
-		s.close();
+		var t0 = System.currentTimeMillis();
+
+		try
+		{
+			Statement s = connection.createStatement();
+			s.execute(sql);
+			s.close();
+
+			CCLog.addSQL("ExecuteSQLThrow", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), null);
+		}
+		catch (SQLException e)
+		{
+			CCLog.addSQL("ExecuteSQLThrow", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), e.getMessage());
+			throw e;
+		}
 	}
 
 	@Override
 	public List<Object[]> querySQL(String sql, int columnCount) throws SQLException {
-		Statement s = connection.createStatement();
-		CCLog.addSQL("QuerySQL", StatementType.CUSTOM, sql);
-		ResultSet rs = s.executeQuery(sql);
+		var t0 = System.currentTimeMillis();
 
-		List<Object[]> result = new ArrayList<>();
-		while (rs.next()) {
-			Object[] o = new Object[columnCount];
-			for (int i = 0; i < columnCount; i++) o[i] = rs.getObject(i+1);
-			result.add(o);
+		try
+		{
+			Statement s = connection.createStatement();
+			ResultSet rs = s.executeQuery(sql);
+
+			List<Object[]> result = new ArrayList<>();
+			while (rs.next()) {
+				Object[] o = new Object[columnCount];
+				for (int i = 0; i < columnCount; i++) o[i] = rs.getObject(i+1);
+				result.add(o);
+			}
+			rs.close();
+			s.close();
+
+			CCLog.addSQL("QuerySQL", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), null);
+
+			return result;
 		}
-		rs.close();
-		s.close();
-
-		return result;
+		catch (SQLException e)
+		{
+			CCLog.addSQL("QuerySQL", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), e.getMessage());
+			throw e;
+		}
 	}
 
 	@Override
 	public <T> List<T> querySQL(String sql, int columnCount, Func1to1<Object[], T> conv) throws SQLException {
-		Statement s = connection.createStatement();
-		CCLog.addSQL("QuerySQL", StatementType.CUSTOM, sql);
-		ResultSet rs = s.executeQuery(sql);
+		var t0 = System.currentTimeMillis();
 
-		List<T> result = new ArrayList<>();
-		while (rs.next()) {
-			Object[] o = new Object[columnCount];
-			for (int i = 0; i < columnCount; i++) o[i] = rs.getObject(i+1);
-			result.add(conv.invoke(o));
+		try
+		{
+			Statement s = connection.createStatement();
+			ResultSet rs = s.executeQuery(sql);
+
+			List<T> result = new ArrayList<>();
+			while (rs.next()) {
+				Object[] o = new Object[columnCount];
+				for (int i = 0; i < columnCount; i++) o[i] = rs.getObject(i+1);
+				result.add(conv.invoke(o));
+			}
+			rs.close();
+			s.close();
+
+			CCLog.addSQL("QuerySQL", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), null);
+
+			return result;
 		}
-		rs.close();
-		s.close();
-
-		return result;
+		catch (SQLException e)
+		{
+			CCLog.addSQL("QuerySQL", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), e.getMessage());
+			throw e;
+		}
 	}
 	
 	public Object querySingleSQL(String sql, int columnIndex) {
-		try {
+		var t0 = System.currentTimeMillis();
+
+		try
+		{
 			Statement s = connection.createStatement();
-			CCLog.addSQL("QuerySingleSQL", StatementType.CUSTOM, sql);
 			ResultSet rs = s.executeQuery(sql);
 			
 			Object ret = null;
@@ -239,27 +282,43 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 			}
 			rs.close();
 			s.close();
-			
+
+			CCLog.addSQL("QuerySingleSQL", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), null);
+
 			return ret;
-		} catch (SQLException e) {
+		}
+		catch (SQLException e)
+		{
+			CCLog.addSQL("QuerySingleSQL", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), e.getMessage());
 			return null;
 		}
 	}
 
 	@Override
 	public Object querySingleSQLThrow(String sql, int columnIndex) throws SQLException {
-		Statement s = connection.createStatement();
-		CCLog.addSQL("QuerySingleSQLThrow", StatementType.CUSTOM, sql);
-		ResultSet rs = s.executeQuery(sql);
-		
-		Object ret = null;
-		if (rs.next()) {
-			ret = rs.getObject(columnIndex + 1);
+		var t0 = System.currentTimeMillis();
+
+		try
+		{
+			Statement s = connection.createStatement();
+			ResultSet rs = s.executeQuery(sql);
+
+			Object ret = null;
+			if (rs.next()) {
+				ret = rs.getObject(columnIndex + 1);
+			}
+			rs.close();
+			s.close();
+
+			CCLog.addSQL("QuerySingleSQLThrow", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), null);
+
+			return ret;
 		}
-		rs.close();
-		s.close();
-		
-		return ret;
+		catch (SQLException e)
+		{
+			CCLog.addSQL("QuerySingleSQLThrow", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), e.getMessage());
+			throw e;
+		}
 	}
 
 	public int querySingleIntSQL(String sql, int columnIndex) {
@@ -281,19 +340,24 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 	}
 
 	public List<Object> getSingleRow(String table, int row, String orderColumn, boolean ascend) {
+		var t0 = System.currentTimeMillis();
+
 		List<Object> result = new ArrayList<>();
 		int actRow = -1;
 		String sql = "SELECT * FROM " + table + " ORDER BY " + orderColumn + ((ascend)?" ASC":" DESC");
 		
-		try {
+		try
+		{
 			Statement s = connection.createStatement();
-			CCLog.addSQL("GetSingleRow", StatementType.CUSTOM, sql);
 			ResultSet rs = s.executeQuery(sql);
 			
 			while(actRow < row) {
 				if (! rs.next()) {
 					rs.close();
 					s.close();
+
+					CCLog.addSQL("GetSingleRow", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), null);
+
 					return null;
 				}
 				actRow++;
@@ -305,9 +369,15 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 			}
 			rs.close();
 			s.close();
-			
+
+			CCLog.addSQL("GetSingleRow", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), null);
+
 			return result;
-		} catch (SQLException e) {
+		}
+		catch (SQLException e)
+		{
+
+			CCLog.addSQL("GetSingleRow", StatementType.CUSTOM, sql, t0, System.currentTimeMillis(), e.getMessage());
 			return null;
 		}
 	}

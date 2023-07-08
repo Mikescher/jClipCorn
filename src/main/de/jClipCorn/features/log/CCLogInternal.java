@@ -5,6 +5,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -108,8 +109,8 @@ public class CCLogInternal {
 		setChangedFlag();
 	}
 
-	public static void addSQL(String method, StatementType stype, String sql) {
-		CCSQLLogElement cle = new CCSQLLogElement(method, stype, sql);
+	public static void addSQL(String method, StatementType stype, String sql, long startMillis, long endMillis, String error) {
+		CCSQLLogElement cle = new CCSQLLogElement(method, stype, sql, startMillis, endMillis, error);
 
 		synchronized (_sqlLock) {
 			sqlLog.add(cle);
@@ -396,6 +397,12 @@ public class CCLogInternal {
 	public static List<CCChangeLogElement> getChangeLogElementsCopy() {
 		synchronized (_changeLock) {
 			return new ArrayList<>(changeLog);
+		}
+	}
+
+	public static List<CCSQLLogElement> getSQLLogElementsCopy() {
+		synchronized (_sqlLock) {
+			return new ArrayList<>(sqlLog);
 		}
 	}
 

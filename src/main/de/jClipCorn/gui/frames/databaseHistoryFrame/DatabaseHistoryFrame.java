@@ -38,7 +38,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 
 		setLocationRelativeTo(owner);
 
-		updateUI();
+		updateUI(true);
 	}
 
 	public DatabaseHistoryFrame(Component owner, CCMovieList mlist, String idfilter) {
@@ -49,7 +49,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 
 		setLocationRelativeTo(owner);
 
-		updateUI();
+		updateUI(true);
 
 		cbxIgnoreTrivial.setSelected(false);
 		cbxIgnoreIDChanges.setSelected(false);
@@ -65,7 +65,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 		//
 	}
 
-	private void updateUI()
+	private void updateUI(boolean updateCount)
 	{
 		CCDatabaseHistory h = movielist.getHistory();
 
@@ -75,16 +75,18 @@ public class DatabaseHistoryFrame extends JCCFrame
 		btnGetHistory.setEnabled(false);
 
 		edStatus.setText("..."); //$NON-NLS-1$
-		edTableSize.setText("..."); //$NON-NLS-1$
 		edTrigger.setText("..."); //$NON-NLS-1$
 		edTrigger.setBackground(Color.WHITE);
 		edTrigger.setForeground(Color.BLACK);
 
+		if (updateCount)
+		{
+			edTableSize.setText("..."); //$NON-NLS-1$
+		}
+
 		new Thread(() ->
 		{
-			var hcount  = h.getCount();
 			var hactive = h.isHistoryActive();
-
 			SwingUtils.invokeAndWaitSafe(() ->
 			{
 				if (hactive) {
@@ -116,8 +118,14 @@ public class DatabaseHistoryFrame extends JCCFrame
 				cbxIgnoreIDChanges.setEnabled(true);
 				cbxIgnoreTrivial.setEnabled(true);
 
-				edTableSize.setText(Integer.toString(_tcount = hcount));
 			});
+
+			if (updateCount) {
+
+				var hcount  = h.getCount();
+				SwingUtils.invokeAndWaitSafe(() -> edTableSize.setText(Integer.toString(_tcount = hcount)));
+
+			}
 		}).start();
 	}
 
@@ -167,7 +175,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 					tableEntries.setData(data);
 
 					tableEntries.autoResize();
-					updateUI();
+					updateUI(false);
 					if (!stayDisabled)
 					{
 						btnGetHistory.setEnabled(true);
@@ -197,7 +205,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 		try {
 			movielist.getHistory().enableTrigger();
 			tableEntries.clearData();
-			updateUI();
+			updateUI(false);
 		} catch (SQLException e) {
 			CCLog.addError(e);
 			DialogHelper.showLocalError(this, "Dialogs.GenericError"); //$NON-NLS-1$
@@ -208,7 +216,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 		try {
 			movielist.getHistory().disableTrigger();
 			tableEntries.clearData();
-			updateUI();
+			updateUI(false);
 		} catch (SQLException e) {
 			CCLog.addError(e);
 			DialogHelper.showLocalError(this, "Dialogs.GenericError"); //$NON-NLS-1$

@@ -3,6 +3,7 @@ package de.jClipCorn.features.log;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.sqlwrapper.StatementType;
 
 import java.util.List;
@@ -107,8 +108,8 @@ public class CCLog {
 		CCLogInternal.addDebug(msg);
 	}
 
-	public static void addSQL(String method, StatementType stype, String sql) {
-		CCLogInternal.addSQL(method, stype, sql);
+	public static void addSQL(String method, StatementType stype, String sql, long startMillis, long endMillis, String error) {
+		CCLogInternal.addSQL(method, stype, sql, startMillis, endMillis, error);
 	}
 
 	public static void addChangeListener (CCLogChangedListener lst) {
@@ -193,6 +194,10 @@ public class CCLog {
 
 	public static CCSQLLogElement getSQLElement(int idx) {
 		return CCLogInternal.getSQLElement(idx);
+	}
+
+	public static List<CCSQLLogElement> getSQLElements() {
+		return CCLogInternal.getSQLLogElementsCopy();
 	}
 
 	public static boolean isUnitTest() {

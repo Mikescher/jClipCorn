@@ -202,24 +202,97 @@ new FormModel {
 					"title": new FormMessage( null, "CCLog.Undefinieds" )
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-					"$columnSpecs": "relgap, 275dlu, labelcompgap, 0dlu:grow, relgap"
-					"$rowSpecs": "relgap, default:grow, linegap, default, relgap"
+					"$columnSpecs": "relgap, 275dlu, labelcompgap, pref, labelcompgap, 0dlu:grow, relgap"
+					"$rowSpecs": "relgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default:grow, linegap, default, relgap"
 				} ) {
 					name: "tabSQL"
-					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-						name: "scrollPane6"
-						add( new FormComponent( "javax.swing.JList" ) {
-							name: "lsSQL"
-							"selectionMode": 0
-							auxiliary() {
-								"JavaCodeGenerator.typeParameters": "String"
-							}
-						} )
+					add( new FormContainer( "de.jClipCorn.gui.frames.logFrame.LogSQLTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "lsSQL"
+						auxiliary() {
+							"JavaCodeGenerator.customCreateCode": "new ${field_type}(this, movielist);"
+						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 						"gridX": 2
 						"gridY": 2
+						"gridHeight": 15
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label15"
+						"text": new FormMessage( null, "LogFrame.lblQueryMethod" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 2
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+						name: "edQueryMethod"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 2
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label16"
+						"text": new FormMessage( null, "LogFrame.lblQueryType" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 4
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+						name: "edQueryType"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 4
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label17"
+						"text": new FormMessage( null, "LogFrame.lblQueryStart" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 6
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+						name: "edQueryStart"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 6
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label18"
+						"text": new FormMessage( null, "LogFrame.lblQueryEnd" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 8
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+						name: "edQueryEnd"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 8
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label20"
+						"text": new FormMessage( null, "LogFrame.lblQueryDuration" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 10
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+						name: "edQueryDuration"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 10
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label19"
+						"text": new FormMessage( null, "LogFrame.lblQuerySuccess" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
+						"gridY": 12
+					} )
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.ReadableTextField" ) {
+						name: "edQuerySuccess"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 12
 					} )
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "scrollPane10"
@@ -228,21 +301,25 @@ new FormModel {
 							"foreground": #Color0
 							"background": #Color1
 							"editable": false
+							"lineWrap": true
+							"wrapStyleWord": true
 						} )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridY": 2
+						"gridY": 14
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 						"gridX": 4
+						"gridWidth": 3
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button5"
 						"text": "..."
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreSQL", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridY": 4
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
+						"gridY": 16
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 						"gridX": 4
+						"gridWidth": 3
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "CCLog.SQL" )

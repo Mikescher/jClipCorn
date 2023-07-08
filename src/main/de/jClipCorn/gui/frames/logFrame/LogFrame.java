@@ -25,6 +25,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -53,22 +56,22 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 		var modWarn  = new LogListModel(lsWarnings, CCLogType.LOG_ELEM_WARNING, memoWarnings);
 		var modInfo  = new LogListModel(lsInformations, CCLogType.LOG_ELEM_INFORMATION, memoInformations);
 		var modUndef = new LogListModel(lsUndefinied, CCLogType.LOG_ELEM_UNDEFINED, memoUndefinied);
-		var modSQL   = new LogSQLListModel(lsSQL, memoSQL);
 
 		lsErrors.setModel(modError);
 		lsWarnings.setModel(modWarn);
 		lsInformations.setModel(modInfo);
 		lsUndefinied.setModel(modUndef);
-		lsSQL.setModel(modSQL);
 
 		extraListener.add(modError);
 		extraListener.add(modWarn);
 		extraListener.add(modInfo);
 		extraListener.add(modUndef);
-		extraListener.add(modSQL);
 
 		lsChanges.setData(CCLog.getChangeElements());
 		lsChanges.autoResize();
+
+		lsSQL.setData(CCLog.getSQLElements());
+		lsSQL.autoResize();
 
 		DatabaseElementPreviewLabel cl = MainFrame.getInstance().getCoverLabel();
 		if (cl.isErrorMode()) cl.setModeDefault();
@@ -80,6 +83,19 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 		liveDisplayTimer = new Timer(300, this::onTimer);
 		liveDisplayTimer.setInitialDelay(1000);
 		liveDisplayTimer.start();
+	}
+
+	public void selectSQLLog(CCSQLLogElement v) {
+		memoSQL.setText(v.source);
+		memoSQL.setCaretPosition(0); // Scroll dat bitch to top
+		edQueryMethod.setText(v.method);
+		edQueryType.setText(v.statementType.toString());
+		edQueryStart.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date.from(Instant.ofEpochMilli(v.startMillis))));
+		edQueryEnd.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date.from(Instant.ofEpochMilli(v.endMillis))));
+		edQueryDuration.setText( (v.endMillis - v.startMillis < 2000) ? Str.format("{0} milliseconds", v.endMillis - v.startMillis) : Str.format("{0} seconds", (v.endMillis - v.startMillis) / 1000.0) ); //$NON-NLS-1$ //$NON-NLS-2$
+		edQuerySuccess.setText(Str.coalesce(v.error));
+		edQuerySuccess.setBackground((v.error == null) ? Color.GREEN : Color.RED);
+		edQuerySuccess.setForeground(Color.BLACK);
 	}
 
 	private void onTimer(ActionEvent actionEvent)
@@ -114,6 +130,9 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 
 	@Override
 	public void onSQLChanged(CCSQLLogElement cle) {
+		lsSQL.addData(cle);
+		updateTabHeader();
+
 		for (var lstr : extraListener) lstr.onSQLChanged(cle);
 	}
 
@@ -208,8 +227,19 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 		memoUndefinied = new JTextArea();
 		button4 = new JButton();
 		tabSQL = new JPanel();
-		scrollPane6 = new JScrollPane();
-		lsSQL = new JList<>();
+		lsSQL = new LogSQLTable(this, movielist);
+		label15 = new JLabel();
+		edQueryMethod = new ReadableTextField();
+		label16 = new JLabel();
+		edQueryType = new ReadableTextField();
+		label17 = new JLabel();
+		edQueryStart = new ReadableTextField();
+		label18 = new JLabel();
+		edQueryEnd = new ReadableTextField();
+		label20 = new JLabel();
+		edQueryDuration = new ReadableTextField();
+		label19 = new JLabel();
+		edQuerySuccess = new ReadableTextField();
 		scrollPane10 = new JScrollPane();
 		memoSQL = new JTextArea();
 		button5 = new JButton();
@@ -400,17 +430,39 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 			//======== tabSQL ========
 			{
 				tabSQL.setLayout(new FormLayout(
-					"$rgap, 275dlu, $lcgap, 0dlu:grow, $rgap", //$NON-NLS-1$
-					"$rgap, default:grow, $lgap, default, $rgap")); //$NON-NLS-1$
+					"$rgap, 275dlu, $lcgap, pref, $lcgap, 0dlu:grow, $rgap", //$NON-NLS-1$
+					"$rgap, 6*(default, $lgap), default:grow, $lgap, default, $rgap")); //$NON-NLS-1$
+				tabSQL.add(lsSQL, CC.xywh(2, 2, 1, 15));
 
-				//======== scrollPane6 ========
-				{
+				//---- label15 ----
+				label15.setText(LocaleBundle.getString("LogFrame.lblQueryMethod")); //$NON-NLS-1$
+				tabSQL.add(label15, CC.xy(4, 2));
+				tabSQL.add(edQueryMethod, CC.xy(6, 2));
 
-					//---- lsSQL ----
-					lsSQL.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-					scrollPane6.setViewportView(lsSQL);
-				}
-				tabSQL.add(scrollPane6, CC.xy(2, 2, CC.FILL, CC.FILL));
+				//---- label16 ----
+				label16.setText(LocaleBundle.getString("LogFrame.lblQueryType")); //$NON-NLS-1$
+				tabSQL.add(label16, CC.xy(4, 4));
+				tabSQL.add(edQueryType, CC.xy(6, 4));
+
+				//---- label17 ----
+				label17.setText(LocaleBundle.getString("LogFrame.lblQueryStart")); //$NON-NLS-1$
+				tabSQL.add(label17, CC.xy(4, 6));
+				tabSQL.add(edQueryStart, CC.xy(6, 6));
+
+				//---- label18 ----
+				label18.setText(LocaleBundle.getString("LogFrame.lblQueryEnd")); //$NON-NLS-1$
+				tabSQL.add(label18, CC.xy(4, 8));
+				tabSQL.add(edQueryEnd, CC.xy(6, 8));
+
+				//---- label20 ----
+				label20.setText(LocaleBundle.getString("LogFrame.lblQueryDuration")); //$NON-NLS-1$
+				tabSQL.add(label20, CC.xy(4, 10));
+				tabSQL.add(edQueryDuration, CC.xy(6, 10));
+
+				//---- label19 ----
+				label19.setText(LocaleBundle.getString("LogFrame.lblQuerySuccess")); //$NON-NLS-1$
+				tabSQL.add(label19, CC.xy(4, 12));
+				tabSQL.add(edQuerySuccess, CC.xy(6, 12));
 
 				//======== scrollPane10 ========
 				{
@@ -419,14 +471,16 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 					memoSQL.setForeground(new Color(0x00e000));
 					memoSQL.setBackground(new Color(0x202020));
 					memoSQL.setEditable(false);
+					memoSQL.setLineWrap(true);
+					memoSQL.setWrapStyleWord(true);
 					scrollPane10.setViewportView(memoSQL);
 				}
-				tabSQL.add(scrollPane10, CC.xy(4, 2, CC.FILL, CC.FILL));
+				tabSQL.add(scrollPane10, CC.xywh(4, 14, 3, 1, CC.FILL, CC.FILL));
 
 				//---- button5 ----
 				button5.setText("..."); //$NON-NLS-1$
 				button5.addActionListener(e -> showMoreSQL());
-				tabSQL.add(button5, CC.xy(4, 4, CC.RIGHT, CC.DEFAULT));
+				tabSQL.add(button5, CC.xywh(4, 16, 3, 1, CC.FILL, CC.DEFAULT));
 			}
 			tpnlMain.addTab(LocaleBundle.getString("CCLog.SQL"), tabSQL); //$NON-NLS-1$
 
@@ -567,8 +621,19 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 	private JTextArea memoUndefinied;
 	private JButton button4;
 	private JPanel tabSQL;
-	private JScrollPane scrollPane6;
-	private JList<String> lsSQL;
+	private LogSQLTable lsSQL;
+	private JLabel label15;
+	private ReadableTextField edQueryMethod;
+	private JLabel label16;
+	private ReadableTextField edQueryType;
+	private JLabel label17;
+	private ReadableTextField edQueryStart;
+	private JLabel label18;
+	private ReadableTextField edQueryEnd;
+	private JLabel label20;
+	private ReadableTextField edQueryDuration;
+	private JLabel label19;
+	private ReadableTextField edQuerySuccess;
 	private JScrollPane scrollPane10;
 	private JTextArea memoSQL;
 	private JButton button5;

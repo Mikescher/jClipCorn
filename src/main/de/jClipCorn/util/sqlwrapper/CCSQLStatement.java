@@ -45,21 +45,51 @@ public class CCSQLStatement {
 	}
 
 	public int executeUpdate() throws SQLException {
-		CCLog.addSQL("ExecuteUpdate", StatementType, Source); //$NON-NLS-1$
+		var t0 = System.currentTimeMillis();
 
-		return Statement.executeUpdate();
+		try
+		{
+			var result = Statement.executeUpdate();
+			CCLog.addSQL("ExecuteUpdate", StatementType, Source, t0, System.currentTimeMillis(), null); //$NON-NLS-1$
+			return result;
+		}
+		catch (SQLException e)
+		{
+			CCLog.addSQL("ExecuteUpdate", StatementType, Source, t0, System.currentTimeMillis(), e.getMessage()); //$NON-NLS-1$
+			throw e;
+		}
 	}
 
 	public CCSQLResultSet executeQuery(CCDatabase db) throws SQLException {
-		CCLog.addSQL("ExecuteQuery", StatementType, Source); //$NON-NLS-1$
+		var t0 = System.currentTimeMillis();
 
-		return new CCSQLResultSet(db, Statement.executeQuery(), this);
+		try
+		{
+			var result = new CCSQLResultSet(db, Statement.executeQuery(), this);
+			CCLog.addSQL("ExecuteQuery", StatementType, Source, t0, System.currentTimeMillis(), null); //$NON-NLS-1$
+			return result;
+		}
+		catch (SQLException e)
+		{
+			CCLog.addSQL("ExecuteQuery", StatementType, Source, t0, System.currentTimeMillis(), e.getMessage()); //$NON-NLS-1$
+			throw e;
+		}
 	}
 
 	public boolean execute() throws SQLException {
-		CCLog.addSQL("Execute", StatementType, Source); //$NON-NLS-1$
+		var t0 = System.currentTimeMillis();
 
-		return Statement.execute();
+		try
+		{
+			var result = Statement.execute();
+			CCLog.addSQL("Execute", StatementType, Source, t0, System.currentTimeMillis(), null); //$NON-NLS-1$
+			return result;
+		}
+		catch (SQLException e)
+		{
+			CCLog.addSQL("Execute", StatementType, Source, t0, System.currentTimeMillis(), e.getMessage()); //$NON-NLS-1$
+			throw e;
+		}
 	}
 
 	public void setInt(CCSQLColDef col, int value) throws SQLException, SQLWrapperException {

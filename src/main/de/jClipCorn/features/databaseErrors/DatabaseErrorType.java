@@ -85,6 +85,8 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_INVALID_HASH                       = new DatabaseErrorType(78, null);
 	public final static DatabaseErrorType ERROR_IMPOSSIBLE_HASH                    = new DatabaseErrorType(79, null);
 	public final static DatabaseErrorType ERROR_DB_TOO_LARGE_COVERID               = new DatabaseErrorType(80, null);
+	public final static DatabaseErrorType ERROR_SUBTITLE_MUTED                     = new DatabaseErrorType(81, null);
+	public final static DatabaseErrorType ERROR_INVALID_ONLINESCORE                = new DatabaseErrorType(82, null);
 
 	private final int type;
 

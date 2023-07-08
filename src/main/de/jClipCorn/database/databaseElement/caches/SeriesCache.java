@@ -34,6 +34,7 @@ public class SeriesCache extends CalculationCache<CCSeries>
 	public static final String MEDIAINFO_LENGTH                         = "MEDIAINFO_LENGTH";
 	public static final String LAST_VIEWED                              = "LAST_VIEWED";
 	public static final String IS_EMPTY                                 = "IS_EMPTY";
+	public static final String MAX_EPISODE_NUMBER                       = "MAX_EPISODE_NUMBER";
 
 	private final CCSeries source;
 

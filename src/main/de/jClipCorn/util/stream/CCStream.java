@@ -1,6 +1,7 @@
 package de.jClipCorn.util.stream;
 
 import de.jClipCorn.util.datatypes.IndexEntry;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.lambda.Func2to1;
 import org.apache.commons.lang3.ObjectUtils;
@@ -212,6 +213,70 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 
 	public <TAttrType> TType autoMinValueOrDefault(Func1to1<TType, TAttrType> selector, TType defValue) {
 		return minValueOrDefault(selector, CCStream::autoCompare, defValue);
+	}
+
+	public Opt<TType> autoMax() {
+		return max(p -> p, CCStream::autoCompare);
+	}
+
+	public Opt<TType> autoMin() {
+		return min(p -> p, CCStream::autoCompare);
+	}
+
+	public <TAttrType> Opt<TAttrType> autoMax(Func1to1<TType, TAttrType> selector) {
+		return max(selector, CCStream::autoCompare);
+	}
+
+	public <TAttrType> Opt<TAttrType> autoMin(Func1to1<TType, TAttrType> selector) {
+		return min(selector, CCStream::autoCompare);
+	}
+
+	public Opt<TType> max(Comparator<? super TType> comp) {
+		return max(p -> p, comp);
+	}
+
+	public Opt<TType> min(Comparator<? super TType> comp) {
+		return min(p -> p, comp);
+	}
+
+	public <TAttrType> Opt<TAttrType> max(Func1to1<TType, TAttrType> selector, Comparator<? super TAttrType> comp) {
+		TAttrType current = null;
+		boolean first = true;
+
+		for (TType m : this) {
+			TAttrType mattr = selector.invoke(m);
+			if (first) {
+				current = mattr;
+			} else {
+				if (comp.compare(mattr, current) > 0) current = mattr;
+			}
+			first = false;
+		}
+
+		if (first)
+			return Opt.empty();
+		else
+			return Opt.of(current);
+	}
+
+	public <TAttrType> Opt<TAttrType> min(Func1to1<TType, TAttrType> selector, Comparator<? super TAttrType> comp) {
+		TAttrType current = null;
+		boolean first = true;
+
+		for (TType m : this) {
+			TAttrType mattr = selector.invoke(m);
+			if (first) {
+				current = mattr;
+			} else {
+				if (comp.compare(mattr, current) < 0) current = mattr;
+			}
+			first = false;
+		}
+
+		if (first)
+			return Opt.empty();
+		else
+			return Opt.of(current);
 	}
 
 	public double avgValueOrDefault(Func1to1<TType, Double> selector, double defValue) {

@@ -651,13 +651,18 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	@SuppressWarnings("nls")
 	public String getRelativeFileForCreatedFolderstructure(String title, int episodeNumber, CCFileFormat format, CCDBLanguageSet fallbackLanguage) {
-		DecimalFormat decFormattter = new DecimalFormat("00");
+
+		int decPlaces = getSeries().getMaxEpisodeNumber().orElse(1).toString().length();
+		decPlaces = Math.max(decPlaces, 2);
+
+		DecimalFormat decFormattterSeries = new DecimalFormat("00");
+		DecimalFormat decFormattterSeason = new DecimalFormat(Str.repeat("0", decPlaces));
 
 		String seriesfoldername = getSeries().getFolderNameForCreatedFolderStructure(fallbackLanguage);
 		String seasonfoldername = getFolderNameForCreatedFolderStructure();
 		int seasonIndex = getIndexForCreatedFolderStructure();
 
-		String filename = FilesystemUtils.fixStringToFilesystemname(String.format("S%sE%s - %s.%s", decFormattter.format(seasonIndex), decFormattter.format(episodeNumber), Str.limit(title, 128), format.asString()));
+		String filename = FilesystemUtils.fixStringToFilesystemname(String.format("S%sE%s - %s.%s", decFormattterSeries.format(seasonIndex), decFormattterSeason.format(episodeNumber), Str.limit(title, 128), format.asString()));
 
 		return FilesystemUtils.combineWithFSPathSeparator(seriesfoldername, seasonfoldername, filename);
 	}

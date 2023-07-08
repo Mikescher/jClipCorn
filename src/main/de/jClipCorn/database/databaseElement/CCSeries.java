@@ -1020,4 +1020,8 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 		return false;
 	}
+
+	public Opt<Integer> getMaxEpisodeNumber() {
+		return _cache.get(SeriesCache.MAX_EPISODE_NUMBER, null, ser-> iteratorEpisodes().map(p -> p.EpisodeNumber.get()).autoMax());
+	}
 }

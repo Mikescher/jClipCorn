@@ -38,11 +38,12 @@ public class CCProperties implements ICCPropertySource {
 	public final static CCPropertyCategory CAT_MOVIES	 		= new CCPropertyCategory(4,  "MOVIES");       //$NON-NLS-1$
 	public final static CCPropertyCategory CAT_SERIES 			= new CCPropertyCategory(5,  "SERIES");       //$NON-NLS-1$
 	public final static CCPropertyCategory CAT_PLAY 			= new CCPropertyCategory(6,  "PLAY");         //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_BACKUP 			= new CCPropertyCategory(7,  "BACKUP");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_STATUSBAR		= new CCPropertyCategory(8,  "STATUSBAR");    //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_PATHSYNTAX 		= new CCPropertyCategory(9,  "PATHSYNTAX");   //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_OTHERFRAMES 		= new CCPropertyCategory(10, "OTHERFRAMES");  //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_KEYSTROKES 		= new CCPropertyCategory(11, "KEYSTROKES");   //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_TOOLS 			= new CCPropertyCategory(7,  "TOOLS");        //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_BACKUP 			= new CCPropertyCategory(8,  "BACKUP");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_STATUSBAR		= new CCPropertyCategory(9,  "STATUSBAR");    //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_PATHSYNTAX 		= new CCPropertyCategory(10, "PATHSYNTAX");   //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_OTHERFRAMES 		= new CCPropertyCategory(11, "OTHERFRAMES");  //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_KEYSTROKES 		= new CCPropertyCategory(12, "KEYSTROKES");   //$NON-NLS-1$
 	
 	public final static CCPropertyCategory[] CATEGORIES = {
 		CAT_COMMON,
@@ -52,6 +53,7 @@ public class CCProperties implements ICCPropertySource {
 		CAT_MOVIES,
 		CAT_SERIES,
 		CAT_PLAY,
+		CAT_TOOLS,
 		CAT_BACKUP,
 		CAT_STATUSBAR,
 		CAT_PATHSYNTAX,
@@ -328,21 +330,22 @@ public class CCProperties implements ICCPropertySource {
 		PROP_PREVIEWSERIES_SINGLETON            = new CCBoolProperty(CAT_SERIES,            this,   "PROP_PREVIEWSERIES_SINGLETON",             true);
 		PROP_SERIES_VIEWCOUNT_MODE              = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_VIEWCOUNT_MODE",               SeriesViewCountMode.AGGREGATE_MIN,  SeriesViewCountMode.getWrapper());
 
-		PROP_PLAY_VLC_PATH                      = new CCFSPathProperty(CAT_PLAY,            this,   "PROP_PLAY_VLC_PATH",                       FSPath.Empty,                       "vlc.exe",       CCPathPropertyMode.FILES);
 		PROP_PLAY_VLC_FULLSCREEN                = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_FULLSCREEN",                 false);
 		PROP_PLAY_VLC_AUTOPLAY                  = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_AUTOPLAY",                   true);
 		PROP_PLAY_USESTANDARDONMISSINGVLC       = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_USESTANDARDONMISSINGVLC",        true);
 		PROP_PLAY_VLCSINGLEINSTANCEMODE         = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLCSINGLEINSTANCEMODE",          true);
-		PROP_PLAY_ALT_PROG_1                    = new CCNamedPathProperty(CAT_PLAY,         this,   "PROP_PLAY_ALT_PROG_1",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
-		PROP_PLAY_ALT_PROG_2                    = new CCNamedPathProperty(CAT_PLAY,         this,   "PROP_PLAY_ALT_PROG_2",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
-		PROP_PLAY_ALT_PROG_3                    = new CCNamedPathProperty(CAT_PLAY,         this,   "PROP_PLAY_ALT_PROG_3",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
-		PROP_PLAY_ALT_PROG_4                    = new CCNamedPathProperty(CAT_PLAY,         this,   "PROP_PLAY_ALT_PROG_4",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
-		PROP_PLAY_ALT_PROG_5                    = new CCNamedPathProperty(CAT_PLAY,         this,   "PROP_PLAY_ALT_PROG_5",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
 
-		PROP_PLAY_MEDIAINFO_PATH                = new CCFSPathProperty(CAT_PLAY,            this,   "PROP_PLAY_MEDIAINFO_PATH",                 FSPath.Empty,                       "mediainfo.exe", CCPathPropertyMode.FILES);
-		PROP_PLAY_FFMPEG_PATH                   = new CCFSPathProperty(CAT_PLAY,            this,   "PROP_PLAY_FFMPEG_PATH",                    FSPath.Empty,                       "ffmpeg.exe",    CCPathPropertyMode.FILES);
-		PROP_PLAY_FFPROBE_PATH                  = new CCFSPathProperty(CAT_PLAY,            this,   "PROP_PLAY_FFPROBE_PATH",                   FSPath.Empty,                       "ffprobe.exe",   CCPathPropertyMode.FILES);
-		PROP_PLAY_MP4BOX_PATH                   = new CCFSPathProperty(CAT_PLAY,            this,   "PROP_PLAY_MP4BOX_PATH",                    FSPath.Empty,                       "mp4box.exe",    CCPathPropertyMode.FILES);
+		PROP_PLAY_VLC_PATH                      = new CCFSPathProperty(CAT_TOOLS,           this,   "PROP_PLAY_VLC_PATH",                       FSPath.Empty,                       "vlc.exe",       CCPathPropertyMode.FILES);
+		PROP_PLAY_ALT_PROG_1                    = new CCNamedPathProperty(CAT_TOOLS,        this,   "PROP_PLAY_ALT_PROG_1",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
+		PROP_PLAY_ALT_PROG_2                    = new CCNamedPathProperty(CAT_TOOLS,        this,   "PROP_PLAY_ALT_PROG_2",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
+		PROP_PLAY_ALT_PROG_3                    = new CCNamedPathProperty(CAT_TOOLS,        this,   "PROP_PLAY_ALT_PROG_3",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
+		PROP_PLAY_ALT_PROG_4                    = new CCNamedPathProperty(CAT_TOOLS,        this,   "PROP_PLAY_ALT_PROG_4",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
+		PROP_PLAY_ALT_PROG_5                    = new CCNamedPathProperty(CAT_TOOLS,        this,   "PROP_PLAY_ALT_PROG_5",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
+
+		PROP_PLAY_MEDIAINFO_PATH                = new CCFSPathProperty(CAT_TOOLS,           this,   "PROP_PLAY_MEDIAINFO_PATH",                 FSPath.Empty,                       "mediainfo.exe", CCPathPropertyMode.FILES);
+		PROP_PLAY_FFMPEG_PATH                   = new CCFSPathProperty(CAT_TOOLS,           this,   "PROP_PLAY_FFMPEG_PATH",                    FSPath.Empty,                       "ffmpeg.exe",    CCPathPropertyMode.FILES);
+		PROP_PLAY_FFPROBE_PATH                  = new CCFSPathProperty(CAT_TOOLS,           this,   "PROP_PLAY_FFPROBE_PATH",                   FSPath.Empty,                       "ffprobe.exe",   CCPathPropertyMode.FILES);
+		PROP_PLAY_MP4BOX_PATH                   = new CCFSPathProperty(CAT_TOOLS,           this,   "PROP_PLAY_MP4BOX_PATH",                    FSPath.Empty,                       "mp4box.exe",    CCPathPropertyMode.FILES);
 
 		PROP_BACKUP_CREATEBACKUPS               = new CCBoolProperty(CAT_BACKUP,            this,   "PROP_BACKUP_CREATEBACKUPS",                false);
 		PROP_BACKUP_FOLDERNAME                  = new CCStringProperty(CAT_BACKUP,          this,   "PROP_BACKUP_FOLDERNAME",                   "jClipCorn_backup");

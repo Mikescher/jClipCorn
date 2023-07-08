@@ -53,10 +53,7 @@ public abstract class AutomaticSettingsFrame extends JCCFrame {
 	private void initGUI() {
 		List<Component> tabOrder = new ArrayList<>();
 
-		if (LookAndFeelManager.isMetal())
-			setSize(new Dimension(1150, 525));
-		else
-			setSize(new Dimension(1150, 475));
+		setSize(new Dimension(1150, 650));
 		
 		setMinimumSize(new Dimension(650, 400));
 		setTitle(LocaleBundle.getString("Settingsframe.this.title")); //$NON-NLS-1$

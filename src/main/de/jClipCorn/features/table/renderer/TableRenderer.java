@@ -35,7 +35,13 @@ public class TableRenderer extends SubstanceDefaultTableCellRenderer implements 
 			if (col.isPresent()) c.setBackground(col.get());
 		}
 
+		patchComponent(c, value);
+
 		return c;
+	}
+
+	protected void patchComponent(Component c, Object value) {
+		// nothing, override me
 	}
 
 	@Override

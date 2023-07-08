@@ -3,6 +3,7 @@ package de.jClipCorn.gui.frames.updateCodecFrame;
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
+import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.gui.resources.Resources;
@@ -26,98 +27,63 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 	
 	@Override
 	@SuppressWarnings("nls")
-	protected List<JCCSimpleColumnPrototype<UpdateCodecTableElement>> configureColumns() {
-		List<JCCSimpleColumnPrototype<UpdateCodecTableElement>> r = new ArrayList<>();
+	protected JCCSimpleColumnList<UpdateCodecTableElement> configureColumns() {
+		JCCSimpleColumnList<UpdateCodecTableElement> r = new JCCSimpleColumnList<>(this);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"",
-				null,
-				e -> e.getStatusIcon(),
-				e -> Str.limit(Str.firstLine(Str.trim(e.getStatusText())), 128),
-				true));
+		r.add("")
+		 .withSize("auto")
+		 .withIcon(UpdateCodecTableElement::getStatusIcon)
+		 .withTooltip(e -> Str.limit(Str.firstLine(Str.trim(e.getStatusText())), 128))
+		 .sortable();
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"*,min=auto,max=600,priority=max",
-				"UpdateCodecFrame.Table.ColumnTitle",
-				e -> e.getFullDisplayTitle(),
-				null,
-				null,
-				true));
+		r.add("UpdateCodecFrame.Table.ColumnTitle")
+		 .withSize("*,min=auto,max=600,priority=max")
+		 .withText(UpdateCodecTableElement::getFullDisplayTitle)
+		 .sortable();
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateCodecFrame.Table.ColumnLangOld",
-				e -> e.getOldLanguage().toShortOutputString(Str.Empty),
-				e -> e.getOldLanguage().getIcon(),
-				null,
-				true));
+		r.add("UpdateCodecFrame.Table.ColumnLangOld")
+		 .withSize("auto")
+		 .withText(e -> e.getOldLanguage().toShortOutputString(Str.Empty))
+		 .withIcon(e -> e.getOldLanguage().getIcon())
+		 .sortable();
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateCodecFrame.Table.ColumnLangNew",
-				e -> e.getNewLanguage().toShortOutputString(Str.Empty),
-				e -> e.getNewLanguage().isEmpty() ? Resources.ICN_TRANSPARENT.get16x16() : e.getNewLanguage().getIcon(),
-				null,
-				true));
+		r.add("UpdateCodecFrame.Table.ColumnLangNew")
+		 .withSize("auto")
+		 .withText(e -> e.getNewLanguage().toShortOutputString(Str.Empty))
+		 .withIcon(e -> e.getNewLanguage().isEmpty() ? Resources.ICN_TRANSPARENT.get16x16() : e.getNewLanguage().getIcon())
+		 .sortable();
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateCodecFrame.Table.ColumnSubsOld",
-				e -> Str.Empty,
-				e -> e.getOldSubtitles().getIcon(),
-				null,
-				true));
+		r.add("UpdateCodecFrame.Table.ColumnSubsOld")
+		 .withSize("auto")
+		 .withIcon(e -> e.getOldSubtitles().getIcon())
+		 .sortable();
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateCodecFrame.Table.ColumnSubsNew",
-				e -> Str.Empty,
-				e -> e.getNewSubtitles().getIcon(),
-				null,
-				true));
+		r.add("UpdateCodecFrame.Table.ColumnSubsNew")
+		 .withSize("auto")
+		 .withIcon(e -> e.getNewSubtitles().getIcon())
+		 .sortable();
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateCodecFrame.Table.ColumnLengthOld",
-				e -> e.getOldLengthStr(),
-				null,
-				null,
-				true));
+		r.add("UpdateCodecFrame.Table.ColumnLengthOld")
+		 .withSize("auto")
+		 .withText(UpdateCodecTableElement::getOldLengthStr)
+		 .sortable();
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateCodecFrame.Table.ColumnLengthNew",
-				e -> e.getNewLengthStr(),
-				null,
-				null,
-				true));
+		r.add("UpdateCodecFrame.Table.ColumnLengthNew")
+		 .withSize("auto")
+		 .withText(UpdateCodecTableElement::getNewLengthStr)
+		 .sortable();
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateCodecFrame.Table.ColumnQualityOld",
-				e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getLongText(),
-				e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getIcon(),
-				e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getTooltip(),
-				true));
+		r.add("UpdateCodecFrame.Table.ColumnQualityOld")
+		 .withSize("auto")
+		 .withText(e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getLongText())
+		 .withIcon(e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getIcon())
+		 .withTooltip(e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getTooltip());
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateCodecFrame.Table.ColumnQualityNew",
-				e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getLongText(),
-				e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getIcon(),
-				e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getTooltip(),
-				true));
+		r.add("UpdateCodecFrame.Table.ColumnQualityNew")
+		 .withSize("auto")
+		 .withText(e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getLongText())
+		 .withIcon(e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getIcon())
+		 .withTooltip(e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getTooltip());
 		
 		return r;
 	}

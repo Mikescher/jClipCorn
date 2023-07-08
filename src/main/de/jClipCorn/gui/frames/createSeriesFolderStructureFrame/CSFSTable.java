@@ -1,7 +1,9 @@
 package de.jClipCorn.gui.frames.createSeriesFolderStructureFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryElement;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
+import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
@@ -21,14 +23,29 @@ public class CSFSTable extends JCCSimpleTable<CSFSElement> {
 
 	@Override
 	@SuppressWarnings("nls")
-	protected List<JCCSimpleColumnPrototype<CSFSElement>> configureColumns() {
-		List<JCCSimpleColumnPrototype<CSFSElement>> r = new ArrayList<>();
+	protected JCCSimpleColumnList<CSFSElement> configureColumns() {
+		JCCSimpleColumnList<CSFSElement> r = new JCCSimpleColumnList<>(this);
 
-		r.add(new JCCSimpleColumnPrototype<>(this, "auto", Str.Empty, null, e -> CSFSElement.getIcon(e.State), null, true));
-		r.add(new JCCSimpleColumnPrototype<>(this, "star,min=auto", "CSFSTable.CCOld", e -> e.CCPathOld.toString(), null, null, true));
-		r.add(new JCCSimpleColumnPrototype<>(this, "star,min=auto", "CSFSTable.CCNew", e -> e.CCPathNew.toString(), null, null, true));
-		r.add(new JCCSimpleColumnPrototype<>(this, "star,min=auto", "CSFSTable.FSOld", e -> e.FSPathOld.toString(), null, null, true));
-		r.add(new JCCSimpleColumnPrototype<>(this, "star,min=auto", "CSFSTable.FSNew", e -> e.FSPathNew.toString(), null, null, true));
+		r.add(Str.Empty)
+				.withSize("auto")
+				.withIcon(e -> CSFSElement.getIcon(e.State))
+				.sortable();
+		r.add("CSFSTable.CCOld")
+				.withSize("star,min=auto")
+				.withText(e -> e.CCPathOld.toString())
+				.sortable();
+		r.add("CSFSTable.CCNew")
+				.withSize("star,min=auto")
+				.withText(e -> e.CCPathNew.toString())
+				.sortable();
+		r.add("CSFSTable.FSOld")
+				.withSize("star,min=auto")
+				.withText(e -> e.FSPathOld.toString())
+				.sortable();
+		r.add("CSFSTable.FSNew")
+				.withSize("star,min=auto")
+				.withText(e -> e.FSPathNew.toString())
+				.sortable();
 
 		return r;
 	}

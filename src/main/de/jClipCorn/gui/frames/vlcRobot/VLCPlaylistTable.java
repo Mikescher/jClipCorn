@@ -1,7 +1,9 @@
 package de.jClipCorn.gui.frames.vlcRobot;
 
 import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.gui.frames.updateMetadataFrame.UpdateMetadataTableElement;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
+import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 
@@ -20,32 +22,20 @@ public class VLCPlaylistTable extends JCCSimpleTable<VLCPlaylistEntry> {
 
 	@Override
 	@SuppressWarnings("nls")
-	protected List<JCCSimpleColumnPrototype<VLCPlaylistEntry>> configureColumns() {
-		List<JCCSimpleColumnPrototype<VLCPlaylistEntry>> r = new ArrayList<>();
+	protected JCCSimpleColumnList<VLCPlaylistEntry> configureColumns() {
+		JCCSimpleColumnList<VLCPlaylistEntry> r = new JCCSimpleColumnList<>(this);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"",
-				null,
-				VLCPlaylistEntry::getIcon,
-				null));
+		r.add("")
+		 .withSize("auto")
+		 .withIcon(VLCPlaylistEntry::getIcon);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"*,min=auto",
-				"VLCRobotFrame.table.col_title",
-				VLCPlaylistEntry::getText,
-				null,
-				null));
+		r.add("VLCRobotFrame.table.col_title")
+		 .withSize("*,min=auto")
+		 .withText(VLCPlaylistEntry::getText);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"VLCRobotFrame.table.col_len",
-				VLCPlaylistEntry::getLengthText,
-				null,
-				null));
+		r.add("VLCRobotFrame.table.col_len")
+		 .withSize("auto")
+		 .withText(VLCPlaylistEntry::getLengthText);
 
 		return r;
 	}

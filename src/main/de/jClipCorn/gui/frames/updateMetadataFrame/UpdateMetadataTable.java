@@ -3,7 +3,9 @@ package de.jClipCorn.gui.frames.updateMetadataFrame;
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.gui.frames.updateCodecFrame.UpdateCodecTableElement;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
+import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.stream.CCStreams;
@@ -29,107 +31,65 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 	
 	@Override
 	@SuppressWarnings("nls")
-	protected List<JCCSimpleColumnPrototype<UpdateMetadataTableElement>> configureColumns() {
-		List<JCCSimpleColumnPrototype<UpdateMetadataTableElement>> r = new ArrayList<>();
-		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"",
-				null,
-				e -> e.Element.getOnlineReference().Main.getIcon16x16(),
-				null,
-				true));
-		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"*,min=auto,max=600,priority=max",
-				"UpdateMetadataFrame.Table.ColumnTitle",
-				e -> e.Element.getFullDisplayTitle(),
-				null,
-				null,
-				true));
+	protected JCCSimpleColumnList<UpdateMetadataTableElement> configureColumns() {
+		JCCSimpleColumnList<UpdateMetadataTableElement> r = new JCCSimpleColumnList<>(this);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateMetadataFrame.Table.ColumnChangedScore",
-				this::getScoreChange,
-				null,
-				null,
-				true));
+		r.add("")
+		 .withSize("auto")
+		 .withIcon(e -> e.Element.getOnlineReference().Main.getIcon16x16())
+		 .sortable();
+		
+		r.add("UpdateMetadataFrame.Table.ColumnTitle")
+		 .withSize("*,min=auto,max=600,priority=max")
+		 .withText(e -> e.Element.getFullDisplayTitle())
+		 .sortable();
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateMetadataFrame.Table.ColumnChangedGenres",
-				this::getGenreChange,
-				null,
-				null,
-				true));
+		r.add("UpdateMetadataFrame.Table.ColumnChangedScore")
+		 .withSize("auto")
+		 .withText(this::getScoreChange)
+		 .sortable();
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateMetadataFrame.Table.ColumnChangedReferences",
-				this::getReferencesChange,
-				null,
-				null,
-				true));
-		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateMetadataFrame.Table.ColumnLocalScore",
-				null,
-				e -> e.Element.getOnlinescore().getIcon(),
-				e -> e.Element.getOnlinescore().getDisplayString(),
-				true));
-		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateMetadataFrame.Table.ColumnOnlineScore",
-				null,
-				e -> (e.OnlineMeta != null && e.OnlineMeta.OnlineScore != null) ? (e.OnlineMeta.OnlineScore.getIcon()) : (null),
-				e -> (e.OnlineMeta != null && e.OnlineMeta.OnlineScore != null) ? (e.OnlineMeta.OnlineScore.getDisplayString()) : (null),
-				true));
+		r.add("UpdateMetadataFrame.Table.ColumnChangedGenres")
+		 .withSize("auto")
+		 .withText(this::getGenreChange)
+		 .sortable();
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateMetadataFrame.Table.ColumnLocalGenres",
-				e -> e.Element.getGenres().asSortedString(),
-				null,
-				null,
-				true));
+		r.add("UpdateMetadataFrame.Table.ColumnChangedReferences")
+		 .withSize("auto")
+		 .withText(this::getReferencesChange)
+		 .sortable();
 		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateMetadataFrame.Table.ColumnOnlineGenres",
-				e -> (e.OnlineMeta != null && e.OnlineMeta.Genres != null) ? e.OnlineMeta.Genres.asSortedString() : (null),
-				null,
-				null,
-				true));
+		r.add("UpdateMetadataFrame.Table.ColumnLocalScore")
+		 .withSize("auto")
+		 .withIcon(e -> e.Element.getOnlinescore().getIcon())
+		 .withTooltip(e -> e.Element.getOnlinescore().getDisplayString())
+		 .sortable();
 		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateMetadataFrame.Table.ColumnLocalReferences",
-				e -> e.Element.getOnlineReference().toSourceConcatString(),
-				null,
-				null,
-				true));
+		r.add("UpdateMetadataFrame.Table.ColumnOnlineScore")
+		 .withSize("auto")
+		 .withIcon(e -> (e.OnlineMeta != null && e.OnlineMeta.OnlineScore != null) ? (e.OnlineMeta.OnlineScore.getIcon()) : (null))
+		 .withTooltip(e -> (e.OnlineMeta != null && e.OnlineMeta.OnlineScore != null) ? (e.OnlineMeta.OnlineScore.getDisplayString()) : (null))
+		 .sortable();
+
+		r.add("UpdateMetadataFrame.Table.ColumnLocalGenres")
+		 .withSize("auto")
+		 .withText(e -> e.Element.getGenres().asSortedString())
+		 .sortable();
 		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"UpdateMetadataFrame.Table.ColumnOnlineReferences",
-				e -> (e.OnlineMeta != null) ? e.OnlineMeta.getFullReference().toSourceConcatString() : (null),
-				null,
-				null,
-				true));
+		r.add("UpdateMetadataFrame.Table.ColumnOnlineGenres")
+		 .withSize("auto")
+		 .withText(e -> (e.OnlineMeta != null && e.OnlineMeta.Genres != null) ? e.OnlineMeta.Genres.asSortedString() : (null))
+		 .sortable();
+		
+		r.add("UpdateMetadataFrame.Table.ColumnLocalReferences")
+		 .withSize("auto")
+		 .withText(e -> e.Element.getOnlineReference().toSourceConcatString())
+		 .sortable();
+		
+		r.add("UpdateMetadataFrame.Table.ColumnOnlineReferences")
+		 .withSize("auto")
+		 .withText(e -> (e.OnlineMeta != null) ? e.OnlineMeta.getFullReference().toSourceConcatString() : (null))
+		 .sortable();
 		
 		return r;
 	}

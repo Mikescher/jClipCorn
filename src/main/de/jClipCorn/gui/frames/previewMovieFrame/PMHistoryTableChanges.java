@@ -2,7 +2,9 @@ package de.jClipCorn.gui.frames.previewMovieFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.history.CCHistorySingleChange;
+import de.jClipCorn.gui.frames.addMultiEpisodesFrame.NewEpisodeVM;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
+import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
@@ -22,35 +24,23 @@ public class PMHistoryTableChanges extends JCCSimpleTable<CCHistorySingleChange>
 
 	@Override
 	@SuppressWarnings("nls")
-	protected List<JCCSimpleColumnPrototype<CCHistorySingleChange>> configureColumns() {
-		List<JCCSimpleColumnPrototype<CCHistorySingleChange>> r = new ArrayList<>();
+	protected JCCSimpleColumnList<CCHistorySingleChange> configureColumns() {
+		JCCSimpleColumnList<CCHistorySingleChange> r = new JCCSimpleColumnList<>(this);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"DatabaseHistoryFrame.Table.ColumnField",
-				e -> e.Field,
-				null,
-				null,
-				true));
+		r.add("DatabaseHistoryFrame.Table.ColumnField")
+				.withSize("auto")
+				.withText(e -> e.Field)
+				.sortable();
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"*,expandonly",
-				"DatabaseHistoryFrame.Table.ColumnOld",
-				e -> e.OldValue==null ? "<NULL>" : Str.limit(Str.firstLine(e.OldValue), 131),
-				null,
-				null,
-				true));
+		r.add("DatabaseHistoryFrame.Table.ColumnOld")
+				.withSize("*,expandonly")
+				.withText(e -> e.OldValue==null ? "<NULL>" : Str.limit(Str.firstLine(e.OldValue), 131))
+				.sortable();
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"*,expandonly",
-				"DatabaseHistoryFrame.Table.ColumnNew",
-				e -> e.NewValue==null ? "<NULL>" : Str.limit(Str.firstLine(e.NewValue), 131),
-				null,
-				null,
-				true));
+		r.add("DatabaseHistoryFrame.Table.ColumnNew")
+				.withSize("*,expandonly")
+				.withText(e -> e.NewValue==null ? "<NULL>" : Str.limit(Str.firstLine(e.NewValue), 131))
+				.sortable();
 		
 		return r;
 	}

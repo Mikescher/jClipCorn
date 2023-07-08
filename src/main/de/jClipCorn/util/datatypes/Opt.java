@@ -39,6 +39,14 @@ public class Opt<T> {
 		return (value == null) ? empty() : new Opt<>(value);
 	}
 
+	public static <T> Opt<T> cast(Object value, Class<T> cls) {
+		if (cls.isInstance(value)) {
+			return Opt.of(cls.cast(value));
+		} else {
+			return Opt.empty();
+		}
+	}
+
 	public T get() {
 		if (!isSet) throw new NoSuchElementException("No value present"); //$NON-NLS-1$
 		return value;

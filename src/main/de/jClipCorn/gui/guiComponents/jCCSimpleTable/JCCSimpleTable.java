@@ -47,12 +47,12 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements IJCCS
 		return movielist;
 	}
 
-	protected void setColumnConfig(List<JCCSimpleColumnPrototype<TData>> cfg) {
+	protected void setColumnConfig(JCCSimpleColumnList<TData> cfg) {
 		init(cfg);
 	}
 
-	private void init(List<JCCSimpleColumnPrototype<TData>> cfg) {
-		columns = cfg;
+	private void init(JCCSimpleColumnList<TData> cfg) {
+		columns = cfg.get();
 
 		model = new JCCSimpleTableModel<>(columns);
 
@@ -238,7 +238,7 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements IJCCS
 		table.scrollRectToVisible(new Rectangle(table.getCellRect(idx, 0, true)));
 	}
 
-	protected abstract List<JCCSimpleColumnPrototype<TData>> configureColumns();
+	protected abstract JCCSimpleColumnList<TData> configureColumns();
 	protected abstract void OnDoubleClickElement(TData element);
 	protected abstract void OnSelectElement(TData element);
 	protected abstract boolean isMultiselect();

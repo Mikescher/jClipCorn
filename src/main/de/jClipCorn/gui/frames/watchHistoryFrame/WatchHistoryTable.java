@@ -2,8 +2,10 @@ package de.jClipCorn.gui.frames.watchHistoryFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.gui.frames.vlcRobot.VLCRobotLogEntry;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryElement;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
+import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
@@ -29,80 +31,57 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 	
 	@Override
 	@SuppressWarnings("nls")
-	protected List<JCCSimpleColumnPrototype<WatchHistoryElement>> configureColumns() {
-		List<JCCSimpleColumnPrototype<WatchHistoryElement>> r = new ArrayList<>();
+	protected JCCSimpleColumnList<WatchHistoryElement> configureColumns() {
+		JCCSimpleColumnList<WatchHistoryElement> r = new JCCSimpleColumnList<>(this);
 		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"star,min=auto,max=400,expandonly",
-				"ClipTableModel.Title",
-				WatchHistoryElement::getName,
-				WatchHistoryElement::getNameIcon,
-				null,
-				true));
+		r.add("ClipTableModel.Title")
+		 .withSize("star,min=auto,max=400,expandonly")
+		 .withText(WatchHistoryElement::getName)
+		 .withIcon(WatchHistoryElement::getNameIcon)
+		 .sortable();
 		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"WatchHistoryFrame.tableHeaders.Date",
-				e -> e.getTimestamp().toStringUIShort(),
-				null,
-				e -> e.getTimestamp().toStringUINormal(),
-				true));
+		r.add("WatchHistoryFrame.tableHeaders.Date")
+		 .withSize("auto")
+		 .withText(e -> e.getTimestamp().toStringUIShort())
+		 .withTooltip(e -> e.getTimestamp().toStringUINormal())
+		 .sortable();
 		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"ClipTableModel.Quality",
-				e -> e.getMediaInfoCategory().getShortText(),
-				e -> e.getMediaInfoCategory().getIcon(),
-				e -> e.getMediaInfoCategory().getTooltip(),
-				true));
+		r.add("ClipTableModel.Quality")
+		 .withSize("auto")
+		 .withText(e -> e.getMediaInfoCategory().getShortText())
+		 .withIcon(e -> e.getMediaInfoCategory().getIcon())
+		 .withTooltip(e -> e.getMediaInfoCategory().getTooltip())
+		 .sortable();
 		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				Str.Empty,
-				e -> Str.Empty,
-				e -> e.getLanguage().getIcon(),
-				e -> e.getLanguage().toOutputString(),
-				true));
+		r.add(Str.Empty)
+		 .withSize("auto")
+		 .withIcon(e -> e.getLanguage().getIcon())
+		 .withTooltip(e -> e.getLanguage().toOutputString())
+		 .sortable();
 		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"ClipTableModel.Length",
-				e -> TimeIntervallFormatter.formatShort(e.getLength()),
-				null,
-				e -> TimeIntervallFormatter.format(e.getLength()),
-				true));
+		r.add("ClipTableModel.Length")
+		 .withSize("auto")
+		 .withText(e -> TimeIntervallFormatter.formatShort(e.getLength()))
+		 .withTooltip(e -> TimeIntervallFormatter.format(e.getLength()))
+		 .sortable();
 		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"ClipTableModel.Tags",
-				null,
-				e -> e.getTags().getIcon(),
-				e -> e.getTags().getAsString(),
-				true));
+		r.add("ClipTableModel.Tags")
+		 .withSize("auto")
+		 .withIcon(e -> e.getTags().getIcon())
+		 .withTooltip(e -> e.getTags().getAsString())
+		 .sortable();
 		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"ClipTableModel.Format",
-				e -> e.getFormat().asString(),
-				e -> e.getFormat().getIcon(),
-				null,
-				true));
+		r.add("ClipTableModel.Format")
+		 .withSize("auto")
+		 .withText(e -> e.getFormat().asString())
+		 .withIcon(e -> e.getFormat().getIcon())
+		 .sortable();
 		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"ClipTableModel.Size",
-				e -> e.getSize().getFormatted(),
-				null,
-				e -> FileSizeFormatter.formatBytes(e.getSize()),
-				true));
+		r.add("ClipTableModel.Size")
+		 .withSize("auto")
+		 .withText(e -> e.getSize().getFormatted())
+		 .withTooltip(e -> FileSizeFormatter.formatBytes(e.getSize()))
+		 .sortable();
 		
 		return r;
 	}

@@ -266,7 +266,7 @@ public class Main {
  - [ ] RandomMovieFrame
  - [x] ScanFolderFrame
  - [X] SearchFrame
- - [ ] SettingsFrame
+ - [/] SettingsFrame
  - [ ] ShowIncompleteFilmSeriesFrame
  - [x] ShowUpdateFrame
  - [ ] StatisticsFrame

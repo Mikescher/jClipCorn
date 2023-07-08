@@ -2,7 +2,9 @@ package de.jClipCorn.gui.frames.applyPatchFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.log.CCChangeLogElement;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
+import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 
@@ -22,14 +24,28 @@ public class ActionListTable extends JCCSimpleTable<ActionVM> {
 
 	@Override
 	@SuppressWarnings("nls")
-	protected List<JCCSimpleColumnPrototype<ActionVM>> configureColumns() {
-		List<JCCSimpleColumnPrototype<ActionVM>> r = new ArrayList<>();
+	protected JCCSimpleColumnList<ActionVM> configureColumns() {
+		JCCSimpleColumnList<ActionVM> r = new JCCSimpleColumnList<>(this);
 
-		r.add(new JCCSimpleColumnPrototype<>(this, "auto",       "ApplyPatchFrame.table.column_State",       null,                                   ActionVM::getStateIcon, null, false));
-		r.add(new JCCSimpleColumnPrototype<>(this, "auto",       "ApplyPatchFrame.table.column_Ctr",         e -> String.valueOf(e.Ctr),             null,                   null, false));
-		r.add(new JCCSimpleColumnPrototype<>(this, "auto",       "ApplyPatchFrame.table.column_Type",        e -> e.Type,                            null,                   null, false));
-		r.add(new JCCSimpleColumnPrototype<>(this, "auto",       "ApplyPatchFrame.table.column_CmdCount",    e -> String.valueOf(e.Commands.size()), null,                   null, false));
-		r.add(new JCCSimpleColumnPrototype<>(this, "*,min=auto", "ApplyPatchFrame.table.column_Description", e -> e.Description,                     null,                   null, false));
+		r.add("ApplyPatchFrame.table.column_State")
+		 .withSize("auto")
+		 .withIcon(ActionVM::getStateIcon);
+
+		r.add("ApplyPatchFrame.table.column_Ctr")
+		 .withSize("auto")
+		 .withText(e -> String.valueOf(e.Ctr));
+
+		r.add("ApplyPatchFrame.table.column_Type")
+		 .withSize("auto")
+		 .withText(e -> e.Type);
+
+		r.add("ApplyPatchFrame.table.column_CmdCount")
+		 .withSize("auto")
+		 .withText(e -> String.valueOf(e.Commands.size()));
+
+		r.add("ApplyPatchFrame.table.column_Description")
+		 .withSize("*,min=auto")
+		 .withText(e -> e.Description);
 
 		return r;
 	}

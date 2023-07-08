@@ -3,9 +3,11 @@ package de.jClipCorn.gui.frames.logFrame;
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.*;
+import de.jClipCorn.database.history.CCCombinedHistoryEntry;
 import de.jClipCorn.features.log.CCChangeLogElement;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
+import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
@@ -31,16 +33,30 @@ public class LogChangesTable extends JCCSimpleTable<CCChangeLogElement> {
 
 	@Override
 	@SuppressWarnings("nls")
-	protected List<JCCSimpleColumnPrototype<CCChangeLogElement>> configureColumns() {
-		List<JCCSimpleColumnPrototype<CCChangeLogElement>> r = new ArrayList<>();
+	protected JCCSimpleColumnList<CCChangeLogElement> configureColumns() {
+		JCCSimpleColumnList<CCChangeLogElement> r = new JCCSimpleColumnList<>(this);
 
-		r.add(new JCCSimpleColumnPrototype<>(this, "auto",          "@Time",         p -> p.Time.toStringUINormal(),                                          null, null));
-		r.add(new JCCSimpleColumnPrototype<>(this, "auto",          "@Root.Type",    p -> p.RootType,                                                         null, null));
-		r.add(new JCCSimpleColumnPrototype<>(this, "auto",          "@Root.ID",      p -> String.valueOf(p.RootID),                                           null, null));
-		r.add(new JCCSimpleColumnPrototype<>(this, "auto",          "@Element.Type", p -> p.ActualType,                                                       null, null));
-		r.add(new JCCSimpleColumnPrototype<>(this, "auto",          "@Element.ID",   p -> String.valueOf(p.ActualID),                                         null, null));
-		r.add(new JCCSimpleColumnPrototype<>(this, "auto",          "@Element",      p -> getElem(p.RootID).mapOrElse(q -> q.getQualifiedTitle(), Str.Empty), null, null));
-		r.add(new JCCSimpleColumnPrototype<>(this, "star,min=auto", "@Properties",   p -> "["+CCStreams.iterate(p.Properties).stringjoin(q->q, ", ")+"]",     null, null));
+		r.add("@Time")
+				.withSize("auto")
+				.withText(p -> p.Time.toStringUINormal());
+		r.add("@Root.Type")
+				.withSize("auto")
+				.withText(p -> p.RootType);
+		r.add("@Root.ID")
+				.withSize("auto")
+				.withText(p -> String.valueOf(p.RootID));
+		r.add("@Element.Type")
+				.withSize("auto")
+				.withText(p -> p.ActualType);
+		r.add("@Element.ID")
+				.withSize("auto")
+				.withText(p -> String.valueOf(p.ActualID));
+		r.add("@Element")
+				.withSize("auto")
+				.withText(p -> getElem(p.RootID).mapOrElse(ICCDatabaseStructureElement::getQualifiedTitle, Str.Empty));
+		r.add("@Properties")
+				.withSize("star,min=auto")
+				.withText(p -> "["+CCStreams.iterate(p.Properties).stringjoin(q->q, ", ")+"]");
 
 		return r;
 	}

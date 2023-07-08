@@ -3,9 +3,11 @@ package de.jClipCorn.gui.frames.compareDatabaseFrame;
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.*;
+import de.jClipCorn.database.history.CCCombinedHistoryEntry;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
+import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
@@ -36,17 +38,38 @@ public class ShowMatchesTable extends JCCSimpleTable<ComparisonMatch> {
 
 	@Override
 	@SuppressWarnings("nls")
-	protected List<JCCSimpleColumnPrototype<ComparisonMatch>> configureColumns() {
-		List<JCCSimpleColumnPrototype<ComparisonMatch>> r = new ArrayList<>();
+	protected JCCSimpleColumnList<ComparisonMatch> configureColumns() {
+		JCCSimpleColumnList<ComparisonMatch> r = new JCCSimpleColumnList<>(this);
 
-		r.add(new JCCSimpleColumnPrototype<>(this, "auto", "CompareDatabaseFrame.table.column_Type", ComparisonMatch::getTypeStr, null, null, true));
+		r.add("CompareDatabaseFrame.table.column_Type")
+		 .withSize("auto")
+		 .withText(ComparisonMatch::getTypeStr)
+		 .sortable();
 
-		if (_hasLoc) r.add(new JCCSimpleColumnPrototype<>(this, "auto",         "CompareDatabaseFrame.table.column_LocID",    e -> String.valueOf(e.getLocID().mapOrElse(String::valueOf, Str.Empty)), null, null, true));
-		if (_hasExt) r.add(new JCCSimpleColumnPrototype<>(this, "auto",         "CompareDatabaseFrame.table.column_ExtID",    e -> String.valueOf(e.getExtID().mapOrElse(String::valueOf, Str.Empty)), null, null, true));
-		if (_hasLoc) r.add(new JCCSimpleColumnPrototype<>(this, "auto,max=400", "CompareDatabaseFrame.table.column_LocTitle", e -> e.getLocTitle().orElse(Str.Empty),                                  null, null, true));
-		if (_hasExt) r.add(new JCCSimpleColumnPrototype<>(this, "auto,max=400", "CompareDatabaseFrame.table.column_ExtTitle", e -> e.getExtTitle().orElse(Str.Empty),                                  null, null, true));
+		if (_hasLoc) r.add("CompareDatabaseFrame.table.column_LocID")
+				      .withSize("auto")
+				      .withText(e -> String.valueOf(e.getLocID().mapOrElse(String::valueOf, Str.Empty)))
+				      .sortable();
 
-		r.add(new JCCSimpleColumnPrototype<>(this, "auto", "CompareDatabaseFrame.table.column_Action", ComparisonMatch::getStrAction, null, null, true));
+		if (_hasExt) r.add("CompareDatabaseFrame.table.column_ExtID")
+				      .withSize("auto")
+				      .withText(e -> String.valueOf(e.getExtID().mapOrElse(String::valueOf, Str.Empty)))
+				      .sortable();
+
+		if (_hasLoc) r.add("CompareDatabaseFrame.table.column_LocTitle")
+				      .withSize("auto,max=400")
+				      .withText(e -> e.getLocTitle().orElse(Str.Empty))
+				      .sortable();
+
+		if (_hasExt) r.add("CompareDatabaseFrame.table.column_ExtTitle")
+				      .withSize("auto,max=400")
+				      .withText(e -> e.getExtTitle().orElse(Str.Empty))
+				      .sortable();
+
+		r.add("CompareDatabaseFrame.table.column_Action")
+		 .withSize("auto")
+		 .withText(ComparisonMatch::getStrAction)
+		 .sortable();
 
 		return r;
 	}

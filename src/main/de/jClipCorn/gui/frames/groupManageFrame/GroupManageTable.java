@@ -2,7 +2,9 @@ package de.jClipCorn.gui.frames.groupManageFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
+import de.jClipCorn.database.history.CCCombinedHistoryEntry;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
+import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -25,59 +27,37 @@ public class GroupManageTable extends JCCSimpleTable<Tuple<CCGroup, Integer>> {
 
 	@Override
 	@SuppressWarnings("nls")
-	protected List<JCCSimpleColumnPrototype<Tuple<CCGroup, Integer>>> configureColumns() {
-		List<JCCSimpleColumnPrototype<Tuple<CCGroup, Integer>>> r = new ArrayList<>();
+	protected JCCSimpleColumnList<Tuple<CCGroup, Integer>> configureColumns() {
+		JCCSimpleColumnList<Tuple<CCGroup, Integer>> r = new JCCSimpleColumnList<>(this);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"GroupManagerFrame.colColor",
-				this::renderColor,
-				e -> e.Item1.getHexColor()));
+		r.add("GroupManagerFrame.colColor")
+				.withSize("auto")
+				.withTooltip(e -> e.Item1.getHexColor())
+				.withRenderer(this::renderColor);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"2*,min=auto",
-				"GroupManagerFrame.colName",
-				e -> e.Item1.Name,
-				null,
-				null));
+		r.add("GroupManagerFrame.colName")
+				.withSize("auto")
+				.withText(e -> e.Item1.Name)
+				.withSize("2*,min=auto");
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"GroupManagerFrame.colSerialization",
-				e -> e.Item1.DoSerialize
+		r.add("GroupManagerFrame.colSerialization")
+				.withSize("auto")
+				.withText(e -> e.Item1.DoSerialize
 						? LocaleBundle.getString("ImportElementsFrame.common.bool_true")
-						: LocaleBundle.getString("ImportElementsFrame.common.bool_false"),
-				null,
-				null));
+						: LocaleBundle.getString("ImportElementsFrame.common.bool_false"));
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"GroupManagerFrame.colVisible",
-				e -> e.Item1.Visible
+		r.add("GroupManagerFrame.colVisible")
+				.withText(e -> e.Item1.Visible
 						? LocaleBundle.getString("ImportElementsFrame.common.bool_true")
-						: LocaleBundle.getString("ImportElementsFrame.common.bool_false"),
-				null,
-				null));
+						: LocaleBundle.getString("ImportElementsFrame.common.bool_false"));
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"1*,min=auto",
-				"GroupManagerFrame.colParent",
-				e -> e.Item1.Parent,
-				null,
-				null));
+		r.add("GroupManagerFrame.colParent")
+				.withSize("1*,min=auto")
+				.withText(e -> e.Item1.Parent);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"GroupManagerFrame.colCount",
-				e -> String.valueOf(e.Item2),
-				null,
-				null));
+		r.add("GroupManagerFrame.colCount")
+				.withSize("auto")
+				.withText(e -> String.valueOf(e.Item2));
 
 		return r;
 	}

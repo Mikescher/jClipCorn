@@ -1,6 +1,9 @@
 package de.jClipCorn.gui.guiComponents.jCCSimpleTable;
 
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.table.renderer.TableRenderer;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.lambda.Func2to1;
 
@@ -10,42 +13,87 @@ import java.awt.*;
 
 public class JCCSimpleColumnPrototype<TData> {
 
-	public final String AutoResizeConfig;
-	public final String Caption;
-	public final TableCellRenderer CellRenderer;
-	public final Func1to1<TData, String> GetTooltip;
-	public final boolean IsSortable;
+	private final CCMovieList movielist;
 
-	@SuppressWarnings("nls")
-	public JCCSimpleColumnPrototype(IJCCSimpleTable o, String autoResize, String _captionIdent, Func1to1<TData, String> _rendererText, Func1to1<TData, Icon> _rendererIcon, Func1to1<TData, String> _getTooltip) {
+	public String AutoResizeConfig;
+
+	public String Caption;
+
+	private boolean CustomCellRenderer = false;
+	public TableRenderer CellRenderer;
+
+	public Func1to1<TData, String> GetTooltip;
+
+	public boolean IsSortable;
+
+	public JCCSimpleColumnPrototype(IJCCSimpleTable o, String _captionIdent) {
 		super();
 
-		AutoResizeConfig = autoResize;
-		Caption = _captionIdent.isEmpty() ? "" : LocaleBundle.getString(_captionIdent);
-		CellRenderer = new JCCSimpleTableCellRenderer<>(o.getMovielist(), _rendererText, _rendererIcon);
-		GetTooltip = (_getTooltip == null) ? (e -> null) : (_getTooltip);
+		this.movielist = o.getMovielist();
+
+		AutoResizeConfig = "1";
+		Caption = _captionIdent.isEmpty() ? Str.Empty : LocaleBundle.getString(_captionIdent);
+		CellRenderer = new JCCSimpleTableCellRenderer<>(o.getMovielist());
+		CustomCellRenderer = false;
+		GetTooltip = (e -> null);
 		IsSortable = false;
 	}
 
-	@SuppressWarnings("nls")
-	public JCCSimpleColumnPrototype(IJCCSimpleTable o, String autoResize, String _captionIdent, Func2to1<TData, Component, Component> _renderer, Func1to1<TData, String> _getTooltip) {
-		super();
+	@SuppressWarnings("unchecked")
+	public JCCSimpleColumnPrototype<TData> withText(Func1to1<TData, String> v) {
+		if (this.CustomCellRenderer) throw new Error("cannot set text on an custom cell-renderer");
 
-		AutoResizeConfig = autoResize;
-		Caption = _captionIdent.isEmpty() ? "" : LocaleBundle.getString(_captionIdent);
-		CellRenderer = new JCCSimpleCustomTableCellRenderer<>(o.getMovielist(), _renderer);
-		GetTooltip = (_getTooltip == null) ? (e -> null) : (_getTooltip);
-		IsSortable = false;
+		((JCCSimpleTableCellRenderer<TData>)this.CellRenderer).setTextFunc(v);
+		return this;
 	}
 
-	@SuppressWarnings("nls")
-	public JCCSimpleColumnPrototype(IJCCSimpleTable o, String autoResize, String _captionIdent, Func1to1<TData, String> _rendererText, Func1to1<TData, Icon> _rendererIcon, Func1to1<TData, String> _getTooltip, boolean sortable) {
-		super();
+	public JCCSimpleColumnPrototype<TData> withRenderer(Func2to1<TData, Component, Component> v) {
+		this.CustomCellRenderer = true;
+		this.CellRenderer = new JCCSimpleCustomTableCellRenderer<>(movielist, v);
+		return this;
+	}
 
-		AutoResizeConfig = autoResize;
-		Caption = _captionIdent.isEmpty() ? "" : LocaleBundle.getString(_captionIdent);
-		CellRenderer = new JCCSimpleTableCellRenderer<>(o.getMovielist(), _rendererText, _rendererIcon);
-		GetTooltip = (_getTooltip == null) ? (e -> null) : (_getTooltip);
-		IsSortable = sortable;
+	public JCCSimpleColumnPrototype<TData> withSize(String v) {
+		this.AutoResizeConfig = v;
+		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public JCCSimpleColumnPrototype<TData> withIcon(Func1to1<TData, Icon> v) {
+		if (this.CustomCellRenderer) throw new Error("cannot set icon on an custom cell-renderer");
+
+		((JCCSimpleTableCellRenderer<TData>)this.CellRenderer).setIconRenderer(v);
+		return this;
+	}
+
+	public JCCSimpleColumnPrototype<TData> withTooltip(Func1to1<TData, String> v) {
+		this.GetTooltip = (v == null) ? (e -> null) : (v);
+		return this;
+	}
+
+	public JCCSimpleColumnPrototype<TData> sortable() {
+		this.IsSortable = true;
+		return this;
+	}
+
+	public JCCSimpleColumnPrototype<TData> unsortable() {
+		this.IsSortable = false;
+		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public JCCSimpleColumnPrototype<TData> withForeground(Func1to1<TData, Color> v) {
+		if (this.CustomCellRenderer) throw new Error("cannot set foreground on an custom cell-renderer");
+
+		((JCCSimpleTableCellRenderer<TData>)this.CellRenderer).setForegroundFunc(v);
+		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public JCCSimpleColumnPrototype<TData> withBackground(Func1to1<TData, Color> v) {
+		if (this.CustomCellRenderer) throw new Error("cannot set background on an custom cell-renderer");
+
+		((JCCSimpleTableCellRenderer<TData>)this.CellRenderer).setBackgroundFunc(v);
+		return this;
 	}
 }

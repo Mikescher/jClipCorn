@@ -2,6 +2,8 @@ package de.jClipCorn.gui.frames.addMultiEpisodesFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveEntry;
+import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.gui.resources.Resources;
@@ -25,80 +27,50 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 
 	@Override
 	@SuppressWarnings("nls")
-	protected List<JCCSimpleColumnPrototype<NewEpisodeVM>> configureColumns() {
-		List<JCCSimpleColumnPrototype<NewEpisodeVM>> r = new ArrayList<>();
+	protected JCCSimpleColumnList<NewEpisodeVM> configureColumns() {
+		JCCSimpleColumnList<NewEpisodeVM> r = new JCCSimpleColumnList<>(this);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				Str.Empty,
-				null,
-				e -> e.IsValid ? Resources.ICN_GENERIC_ORB_GREEN.get16x16() : Resources.ICN_GENERIC_ORB_RED.get16x16(),
-				e -> Str.isNullOrWhitespace(e.Problems) ? null : e.Problems));
+		r.add(Str.Empty)
+				.withSize("auto")
+				.withIcon(e -> e.IsValid ? Resources.ICN_GENERIC_ORB_GREEN.get16x16() : Resources.ICN_GENERIC_ORB_RED.get16x16())
+				.withTooltip(e -> Str.isNullOrWhitespace(e.Problems) ? null : e.Problems);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"MultiEpisodesTable.Source",
-				e -> e.SourcePath.getFilenameWithExt(),
-				null,
-				e -> e.SourcePath.toString()));
+		r.add("MultiEpisodesTable.Source")
+				.withSize("auto")
+				.withText(e -> e.SourcePath.getFilenameWithExt())
+				.withTooltip(e -> e.SourcePath.toString());
 		
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"MultiEpisodesTable.Target",
-				e -> e.TargetPath.toString(),
-				null,
-				null));
+		r.add("MultiEpisodesTable.Target")
+				.withSize("auto")
+				.withText(e -> e.TargetPath.toString());
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"MultiEpisodesTable.Episode",
-				e -> e.EpisodeNumber + "",
-				null,
-				null));
+		r.add("MultiEpisodesTable.Episode")
+				.withSize("auto")
+				.withText(e -> e.EpisodeNumber + Str.Empty);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"*,min=auto",
-				"MultiEpisodesTable.Title",
-				e -> e.Title,
-				null,
-				null));
+		r.add("MultiEpisodesTable.Title")
+				.withSize("*,min=auto")
+				.withText(e -> e.Title);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"MultiEpisodesTable.Length",
-				e -> e.Length + "",
-				null,
-				null));
+		r.add("MultiEpisodesTable.Length")
+				.withSize("auto")
+				.withText(e -> e.Length + Str.Empty);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"MultiEpisodesTable.Language",
-				null,
-				e -> e.Language.getFullIcon(),
-				e -> e.Language.toOutputString()));
+		r.add("MultiEpisodesTable.Language")
+				.withSize("auto")
+				.withIcon(e -> e.Language.getFullIcon())
+				.withTooltip(e -> e.Language.toOutputString());
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"MultiEpisodesTable.Subtitles",
-				null,
-				e -> e.Subtitles.getIcon(),
-				e -> e.Subtitles.toOutputString()));
+		r.add("MultiEpisodesTable.Subtitles")
+				.withSize("auto")
+				.withIcon(e -> e.Subtitles.getIcon())
+				.withTooltip(e -> e.Subtitles.toOutputString());
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"MultiEpisodesTable.Quality",
-				e -> e.MediaInfo.getCategory(_src.getGenres()).getLongText(),
-				e -> e.MediaInfo.getCategory(_src.getGenres()).getIcon(),
-				e -> e.MediaInfo.getCategory(_src.getGenres()).getTooltip()));
+		r.add("MultiEpisodesTable.Quality")
+				.withSize("auto")
+				.withText(e -> e.MediaInfo.getCategory(_src.getGenres()).getLongText())
+				.withIcon(e -> e.MediaInfo.getCategory(_src.getGenres()).getIcon())
+				.withTooltip(e -> e.MediaInfo.getCategory(_src.getGenres()).getTooltip());
 
 		return r;
 	}

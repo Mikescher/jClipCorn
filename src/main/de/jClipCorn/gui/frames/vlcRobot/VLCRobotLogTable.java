@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.vlcRobot;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import org.jetbrains.annotations.NotNull;
@@ -25,40 +26,24 @@ public class VLCRobotLogTable extends JCCSimpleTable<VLCRobotLogEntry> {
 
 	@Override
 	@SuppressWarnings("nls")
-	protected List<JCCSimpleColumnPrototype<VLCRobotLogEntry>> configureColumns() {
-		List<JCCSimpleColumnPrototype<VLCRobotLogEntry>> r = new ArrayList<>();
+	protected JCCSimpleColumnList<VLCRobotLogEntry> configureColumns() {
+		JCCSimpleColumnList<VLCRobotLogEntry> r = new JCCSimpleColumnList<>(this);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"@Index",
-				e -> String.valueOf(e.Index),
-				null,
-				null));
+		r.add("@Index")
+		 .withSize("auto")
+		 .withText(e -> String.valueOf(e.Index));
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"@Event",
-				VLCRobotLogEntry::getEventType,
-				null,
-				null));
+		r.add("@Event")
+		 .withSize("auto")
+		 .withText(VLCRobotLogEntry::getEventType);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"@Timestamp",
-				e -> e.Timestamp.toStringUINormal(),
-				null,
-				null));
+		r.add("@Timestamp")
+		 .withSize("auto")
+		 .withText(e -> e.Timestamp.toStringUINormal());
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"*",
-				"@Change",
-				VLCRobotLogEntry::format,
-				null,
-				null));
+		r.add("@Change")
+		 .withSize("*")
+		 .withText(VLCRobotLogEntry::format);
 
 		return r;
 	}

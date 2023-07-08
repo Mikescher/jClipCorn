@@ -2,7 +2,9 @@ package de.jClipCorn.gui.frames.previewMovieFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.history.CCCombinedHistoryEntry;
+import de.jClipCorn.database.history.CCHistorySingleChange;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
+import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
@@ -32,40 +34,25 @@ public class PMHistoryTableEntries extends JCCSimpleTable<CCCombinedHistoryEntry
 
 	@Override
 	@SuppressWarnings("nls")
-	protected List<JCCSimpleColumnPrototype<CCCombinedHistoryEntry>> configureColumns() {
-		List<JCCSimpleColumnPrototype<CCCombinedHistoryEntry>> r = new ArrayList<>();
+	protected JCCSimpleColumnList<CCCombinedHistoryEntry> configureColumns() {
+		JCCSimpleColumnList<CCCombinedHistoryEntry> r = new JCCSimpleColumnList<>(this);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				Str.Empty,
-				null,
-				e -> e.Table.getIcon(),
-				e -> Str.toProperCase(e.Table.Name)));
+		r.add(Str.Empty)
+				.withSize("auto")
+				.withIcon(e -> e.Table.getIcon())
+				.withTooltip(e -> Str.toProperCase(e.Table.Name));
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"DatabaseHistoryFrame.Table.ColumnAction",
-				e -> Str.toProperCase(e.Action.Name),
-				null,
-				null));
+		r.add("DatabaseHistoryFrame.Table.ColumnAction")
+				.withSize("auto")
+				.withText(e -> Str.toProperCase(e.Action.Name));
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"auto",
-				"DatabaseHistoryFrame.Table.ColumnTime",
-				CCCombinedHistoryEntry::formatTime,
-				null,
-				null));
+		r.add("DatabaseHistoryFrame.Table.ColumnTime")
+				.withSize("auto")
+				.withText(CCCombinedHistoryEntry::formatTime);
 
-		r.add(new JCCSimpleColumnPrototype<>(
-				this,
-				"*,min=auto",
-				"DatabaseHistoryFrame.Table.ColumnChangeCount",
-				e -> Integer.toString(e.Changes.size()),
-				null,
-				null));
+		r.add("DatabaseHistoryFrame.Table.ColumnChangeCount")
+				.withSize("*,min=auto")
+				.withText(e -> Integer.toString(e.Changes.size()));
 		
 		return r;
 	}

@@ -256,6 +256,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 						try {
 							data.get(i).MediaQueryResult = new MediaQueryRunner(movielist).query(data.get(i).SourcePath, true);
 						} catch (IOException | MediaQueryException e) {
+							CCLog.addError(e);
 							data.get(i).MediaQueryResult = null;
 						}
 					}

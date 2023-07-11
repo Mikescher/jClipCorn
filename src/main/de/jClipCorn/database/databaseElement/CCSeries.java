@@ -844,26 +844,26 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	}
 
 	public int getAutoEpisodeLength(CCSeason season) {
-		Integer i0 = season.getCommonEpisodeLength();
-		if (i0 != null) return i0;
+		var i0 = season.getCommonEpisodeLength();
+		if (i0.isPresent()) return i0.get();
 
-		Integer i1 = season.getConsensEpisodeLength();
-		if (i1 != null) return i1;
+		var i1 = season.getConsensEpisodeLength();
+		if (i1.isPresent()) return i1.get();
 
-		Integer i2 = season.getAverageEpisodeLength();
-		if (i2 != null) return i2;
+		var i2 = season.getAverageEpisodeLength();
+		if (i2.isPresent()) return i2.get();
 
 		for (CCSeason s : iteratorSeasons().reverse()) {
 			if (s.isSpecialSeason()) continue;
 
-			Integer i3 = season.getCommonEpisodeLength();
-			if (i3 != null) return i3;
+			var i3 = season.getCommonEpisodeLength();
+			if (i3.isPresent()) return i3.get();
 
-			Integer i4 = season.getConsensEpisodeLength();
-			if (i4 != null) return i4;
+			var i4 = season.getConsensEpisodeLength();
+			if (i4.isPresent()) return i4.get();
 
-			Integer i5 = season.getAverageEpisodeLength();
-			if (i5 != null) return i5;
+			var i5 = season.getAverageEpisodeLength();
+			if (i5.isPresent()) return i5.get();
 		}
 
 		return 0;
@@ -872,63 +872,63 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	public int getAutoEpisodeLength() {
 		return _cache.getInt(SeriesCache.AUTO_EPISODE_LENGTH, null, ser->
 		{
-			Integer i0 = getCommonEpisodeLength();
-			if (i0 != null) return i0;
+			var i0 = getCommonEpisodeLength();
+			if (i0.isPresent()) return i0.get();
 
-			Integer i1 = getConsensEpisodeLength();
-			if (i1 != null) return i1;
+			var i1 = getConsensEpisodeLength();
+			if (i1.isPresent()) return i1.get();
 
-			Integer i2 = getAverageEpisodeLength();
-			if (i2 != null) return i2;
+			var i2 = getAverageEpisodeLength();
+			if (i2.isPresent()) return i2.get();
 
 			return 0;
 		});
 	}
 
 	@Override
-	public Integer getCommonEpisodeLength() {
+	public Opt<Integer> getCommonEpisodeLength() {
 		return _cache.get(SeriesCache.COMMON_EPISODE_LENGTH, null, ser->
 		{
-			if (getEpisodeCount() == 0) return null;
+			if (getEpisodeCount() == 0) return Opt.empty();
 
 			int len = -1;
 			for (CCEpisode ep : iteratorEpisodes()) {
 
 				if (ep.Length.get() > 0)
 					if (len > 0 && ep.Length.get() != len) {
-						return null;
+						return Opt.empty();
 					} else {
 						len = ep.Length.get();
 					}
 			}
 
-			return len;
+			return Opt.of(len);
 		});
 	}
 
-	public Integer getAverageEpisodeLength() {
+	public Opt<Integer> getAverageEpisodeLength() {
 		return _cache.get(SeriesCache.AVERAGE_EPISODE_LENGTH, null, ser->
 		{
-			if (getEpisodeCount() == 0) return null;
+			if (getEpisodeCount() == 0) return Opt.empty();
 
-			return (int)Math.round((iteratorEpisodes().sumInt(e -> e.Length.get())*1d) / getEpisodeCount());
+			return Opt.of((int)Math.round((iteratorEpisodes().sumInt(e -> e.Length.get())*1d) / getEpisodeCount()));
 		});
 	}
 
 	@Override
-	public Integer getConsensEpisodeLength() {
+	public Opt<Integer> getConsensEpisodeLength() {
 		return _cache.get(SeriesCache.CONSENS_EPISODE_LENGTH, null, ser->
 		{
-			if (getEpisodeCount() == 0) return null;
+			if (getEpisodeCount() == 0) return Opt.empty();
 
 			Map.Entry<Integer, List<CCEpisode>> mostCommon = iteratorEpisodes().groupBy(e -> e.Length.get()).autosortByProperty(e -> e.getValue().size()).lastOrNull();
-			if (mostCommon == null) return null;
+			if (mostCommon == null) return Opt.empty();
 
 			if (mostCommon.getValue().size() * 3 >= getEpisodeCount() * 2) { // 66% of episodes have same length
-				return mostCommon.getKey();
+				return Opt.of(mostCommon.getKey());
 			}
 
-			return null;
+			return Opt.empty();
 		});
 	}
 

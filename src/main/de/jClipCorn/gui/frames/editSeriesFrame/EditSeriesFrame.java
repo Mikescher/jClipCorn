@@ -746,9 +746,9 @@ public class EditSeriesFrame extends JCCFrame
 		newEp.Title.set("<untitled>"); //$NON-NLS-1$
 		newEp.AddDate.set(CCDate.getCurrentDate());
 		newEp.EpisodeNumber.set(season.getNextEpisodeNumber());
-		Integer commonLen = season.getCommonEpisodeLength();
-		if (commonLen == null) commonLen = season.getConsensEpisodeLength();
-		if (commonLen != null) newEp.Length.set(commonLen);
+		var commonLen = season.getCommonEpisodeLength();
+		if (commonLen.isEmpty()) commonLen = season.getConsensEpisodeLength();
+		if (commonLen.isPresent()) newEp.Length.set(commonLen.get());
 
 		updateSeasonPanel(false);
 	}

@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.elementProps.impl.EStringProp;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.stream.CCStream;
 
 public interface IEpisodeOwner {
@@ -11,8 +12,9 @@ public interface IEpisodeOwner {
 
 	CCMovieList getMovieList();
 
-	Integer getCommonEpisodeLength();
-	Integer getConsensEpisodeLength();
+	Opt<Integer> getCommonEpisodeLength();
+	Opt<Integer> getConsensEpisodeLength();
+	Opt<Integer> getAverageEpisodeLength();
 
 	EStringProp title();
 }

@@ -19,6 +19,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
@@ -412,10 +413,10 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 	
 	@Override
-	public Integer getCommonEpisodeLength() {
+	public Opt<Integer> getCommonEpisodeLength() {
 		return _cache.get(SeasonCache.COMMON_EPISODE_LENGTH, null, sea->
 		{
-			if (getEpisodeCount() == 0) return null;
+			if (getEpisodeCount() == 0) return Opt.empty();
 
 			int len = -1;
 			for (int i = 0; i < getEpisodeCount(); i++) {
@@ -423,39 +424,39 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 				if (ep.Length.get() > 0)
 					if (len > 0 && ep.Length.get() != len) {
-						return null;
+						return Opt.empty();
 					} else {
 						len = ep.Length.get();
 					}
 			}
 
-			return len;
+			return Opt.of(len);
 		});
 	}
 
-	public Integer getAverageEpisodeLength() {
+	public Opt<Integer> getAverageEpisodeLength() {
 		return _cache.get(SeasonCache.AVERAGE_EPISODE_LENGTH, null, sea->
 		{
-			if (getEpisodeCount() == 0) return null;
+			if (getEpisodeCount() == 0) return Opt.empty();
 
-			return (int)Math.round((iteratorEpisodes().sumInt(e -> e.Length.get())*1d) / getEpisodeCount());
+			return Opt.of((int)Math.round((iteratorEpisodes().sumInt(e -> e.Length.get())*1d) / getEpisodeCount()));
 		});
 	}
 
 	@Override
-	public Integer getConsensEpisodeLength() {
+	public Opt<Integer> getConsensEpisodeLength() {
 		return _cache.get(SeasonCache.CONSENS_EPISODE_LENGTH, null, sea->
 		{
-			if (getEpisodeCount() == 0) return null;
+			if (getEpisodeCount() == 0) return Opt.empty();
 
 			Map.Entry<Integer, List<CCEpisode>> mostCommon = iteratorEpisodes().groupBy(e -> e.Length.get()).autosortByProperty(e -> e.getValue().size()).lastOrNull();
-			if (mostCommon == null) return null;
+			if (mostCommon == null) return Opt.empty();
 
 			if (mostCommon.getValue().size() * 3 >= getEpisodeCount() * 2) { // 66% of episodes have same length
-				return mostCommon.getKey();
+				return Opt.of(mostCommon.getKey());
 			}
 
-			return null;
+			return Opt.empty();
 		});
 	}
 	

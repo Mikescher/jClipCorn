@@ -10,20 +10,23 @@ public class LogListModel extends DefaultListModel<String> implements ListSelect
 	private static final long serialVersionUID = -3406456293654719505L;
 
 	private final CCLogType type;
-	private final JTextArea info;
+	private final JTextArea extraText;
+	private final JTextArea extraTrace;
 	private final JList<String> list;
 	
-	public LogListModel(JList<String> lst, CCLogType type, JTextArea info) {
-		this.type = type;
-		this.info = info;
-		this.list = lst;
+	public LogListModel(JList<String> lst, CCLogType type, JTextArea extraText, JTextArea extraTrace) {
+		this.type       = type;
+		this.extraText  = extraText;
+		this.extraTrace = extraTrace;
+		this.list       = lst;
 		
 		lst.addListSelectionListener(this);
 	}
 	
 	@Override
 	public String getElementAt(int i) {
-		return CCLog.getElement(type, i).getFormatted(CCLogElement.FORMAT_LEVEL_SHORT);
+		var cle = CCLog.getElement(type, i);
+		return cle.getTypeStringRepresentation() + ": " + cle.getFirstLine() + "\n";
 	}
 	
 	@Override
@@ -33,8 +36,13 @@ public class LogListModel extends DefaultListModel<String> implements ListSelect
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		info.setText(CCLog.getElement(type, list.getSelectedIndex()).getFormatted(CCLogElement.FORMAT_LEVEL_LIST_FULL));
-		info.setCaretPosition(0); // Scroll dat bitch to top 
+		var cle = CCLog.getElement(type, list.getSelectedIndex());
+
+		extraText.setText(cle.getTypeStringRepresentation() + " (" + cle.getTime().toStringUINormal() + "): " + cle.getText());
+		extraText.setCaretPosition(0); // Scroll dat bitch to top
+
+		extraTrace.setText(cle.getFormattedStackTrace(false));
+		extraTrace.setCaretPosition(0); // Scroll dat bitch to top
 	}
 
 	@Override

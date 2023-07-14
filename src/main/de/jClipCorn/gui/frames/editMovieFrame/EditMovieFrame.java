@@ -473,8 +473,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	}
 
 	private void calculateMediaInfoAndSetLength() {
-		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
+		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
@@ -510,8 +509,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	}
 
 	private void calculateMediaInfoAndSetLanguage() {
-		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
+		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
@@ -560,8 +558,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	}
 
 	private void calculateAndSetMediaInfo() {
-		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
+		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
@@ -596,8 +593,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	}
 
 	private void calculateAndShowMediaInfo() {
-		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
+		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
@@ -621,8 +617,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	}
 
 	private void calculateMediaInfoAndSetSubs() {
-		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
+		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}

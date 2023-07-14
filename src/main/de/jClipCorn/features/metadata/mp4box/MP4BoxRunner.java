@@ -18,6 +18,8 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,12 +42,17 @@ public class MP4BoxRunner implements MetadataSource {
 	@SuppressWarnings("nls")
 	@Override
 	public PartialMediaInfo run(FSPath filename) throws IOException, MetadataQueryException {
-		var boxppath = ccprops().PROP_PLAY_MP4BOX_PATH.getValue();
-		if (! boxppath.exists()) throw new MP4BoxQueryException("MP4Box not found"); //$NON-NLS-1$
+		var boxppath = ccprops().PROP_PLAY_MP4BOX_PATH.getValue().getPathAndArgs();
+		if (! boxppath.Item1.exists()) throw new MP4BoxQueryException("MP4Box not found"); //$NON-NLS-1$
 
 		BasicFileAttributes attr = filename.readFileAttr();
 
-		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(boxppath.toAbsolutePathString(), "-info", filename.toAbsolutePathString()); //$NON-NLS-1$
+		var args = new ArrayList<String>();
+		args.add("-info"); //$NON-NLS-1$
+		args.add(filename.toAbsolutePathString());
+		args.addAll(Arrays.asList(boxppath.Item2));
+
+		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(boxppath.Item1.toAbsolutePathString(), args.toArray(new String[0]));
 
 		if (proc.Item1 != 0) throw new MP4BoxQueryException("MP4Box returned " + proc.Item1, proc.Item2 + "\n\n\n\n" + proc.Item3); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -106,13 +113,6 @@ public class MP4BoxRunner implements MetadataSource {
 
 	@Override
 	public boolean isConfiguredAndRunnable() {
-		var ffpath = ccprops().PROP_PLAY_MP4BOX_PATH.getValue();
-		if (FSPath.isNullOrEmpty(ffpath)) return false;
-
-		if (!ffpath.exists()) return false;
-		if (!ffpath.isFile()) return false;
-		if (!ffpath.canExecute()) return false;
-
-		return true;
+		return ccprops().PROP_PLAY_MP4BOX_PATH.getValue().existsAndCanExecute();
 	}
 }

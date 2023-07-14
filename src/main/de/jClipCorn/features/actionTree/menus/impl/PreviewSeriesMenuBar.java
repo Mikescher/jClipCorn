@@ -34,7 +34,7 @@ public class PreviewSeriesMenuBar extends ClipMenuBar {
 	{
 		addMaster("PreviewSeriesFrame.Menu.Series");
 		{
-			if (ccprops().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops())))
+			if (ccprops().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()).Item1))
 			{
 				addActionNode("QueueSeriesInRobot");
 				addSeparator();
@@ -49,7 +49,7 @@ public class PreviewSeriesMenuBar extends ClipMenuBar {
 		}
 		addMaster("PreviewSeriesFrame.Menu.Season");
 		{
-			if (ccprops().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops())))
+			if (ccprops().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()).Item1))
 			{
 				addActionNode("QueueSeasonInRobot");
 				addSeparator();

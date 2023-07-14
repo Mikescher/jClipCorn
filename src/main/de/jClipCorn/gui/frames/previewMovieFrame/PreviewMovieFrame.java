@@ -230,8 +230,7 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 	}
 
 	private void showMediaInfo(int index) {
-		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
+		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}

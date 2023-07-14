@@ -50,12 +50,15 @@ public class CCNamedPathProperty extends CCProperty<NamedPathVar> {
 			new ColumnSpec[]
 			{
 				FormSpecs.UNRELATED_GAP_COLSPEC,
+
 				ColumnSpec.decode("default"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("160px"), //$NON-NLS-1$
+
 				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("80px"), //$NON-NLS-1$
-				FormSpecs.UNRELATED_GAP_COLSPEC,
+
 				ColumnSpec.decode("default"), //$NON-NLS-1$
-				FormSpecs.UNRELATED_GAP_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 			},
 			new RowSpec[]
@@ -159,7 +162,8 @@ public class CCNamedPathProperty extends CCProperty<NamedPathVar> {
 		return Str.equals(val.serialize(), getValue().serialize());
 	}
 
-	public String getLabelRowAlign()      { return "default"; } //$NON-NLS-1$
-	public String getComponent1RowAlign() { return "default"; } //$NON-NLS-1$
-	public String getComponent2RowAlign() { return "top";     } //$NON-NLS-1$
+	@Override public String getLabelRowAlign()      { return "default"; } //$NON-NLS-1$
+	@Override public String getComponent1RowAlign() { return "default"; } //$NON-NLS-1$
+	@Override public String getComponent2RowAlign() { return "top";     } //$NON-NLS-1$
+	@Override public boolean getComponentBottomMargin() { return true; }
 }

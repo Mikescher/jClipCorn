@@ -90,7 +90,9 @@ public abstract class CCProperty<T> {
 	public abstract void setComponentValueToValue(Component c, T val);
 	public abstract T getComponentValue(Component c);
 
-	public String getLabelRowAlign()      { return "default"; } //$NON-NLS-1$
-	public String getComponent1RowAlign() { return "default"; } //$NON-NLS-1$
-	public String getComponent2RowAlign() { return "default"; } //$NON-NLS-1$
+	public String  getLabelRowAlign()         { return "default"; } //$NON-NLS-1$
+	public String  getComponent1RowAlign()    { return "default"; } //$NON-NLS-1$
+	public String  getComponent2RowAlign()    { return "default"; } //$NON-NLS-1$
+	public boolean getComponent1ColStretch()  { return false; }
+	public boolean getComponentBottomMargin() { return false; }
 }

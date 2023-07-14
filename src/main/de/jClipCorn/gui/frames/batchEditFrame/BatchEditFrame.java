@@ -137,8 +137,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 	}
 
 	private void showCodecMetadata() {
-		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
+		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
@@ -195,8 +194,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 	}
 
 	private void parseCodecMetadata_Lang() {
-		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
+		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
@@ -223,8 +221,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 	}
 
 	private void parseCodecMetadata_Subs() {
-		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
+		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
@@ -245,8 +242,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 	}
 
 	private void parseCodecMetadata_MediaInfo() {
-		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
+		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}
@@ -260,8 +256,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 	}
 
 	private void parseCodecMetadata_Len() {
-		var mqp = ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue();
-		if (FSPath.isNullOrEmpty(mqp) || !mqp.fileExists() || !mqp.canExecute()) {
+		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
 			return;
 		}

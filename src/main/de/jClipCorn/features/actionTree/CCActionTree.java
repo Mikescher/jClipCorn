@@ -956,7 +956,7 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 	private void onClickMoviesPlayInRobot(CCTreeActionEvent e) {
 
 		if (!ccprops().PROP_VLC_ROBOT_ENABLED.getValue()) return;
-		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()))) return;
+		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()).Item1)) return;
 
 		e.ifMovieSource(p -> VLCRobotFrame.show(e.SwingOwner, movielist).enqueue(p));
 	}
@@ -964,7 +964,7 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 	private void onClickOtherSeasonPlayInRobot(CCTreeActionEvent e) {
 
 		if (!ccprops().PROP_VLC_ROBOT_ENABLED.getValue()) return;
-		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()))) return;
+		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()).Item1)) return;
 
 		e.ifSeasonSource(p -> VLCRobotFrame.show(e.SwingOwner, movielist).enqueue(p));
 	}
@@ -972,7 +972,7 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 	private void onClickOtherSeriesPlayInRobot(CCTreeActionEvent e) {
 
 		if (!ccprops().PROP_VLC_ROBOT_ENABLED.getValue()) return;
-		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()))) return;
+		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()).Item1)) return;
 
 		e.ifSeriesSource(p -> VLCRobotFrame.show(e.SwingOwner, movielist).enqueue(p));
 	}
@@ -980,7 +980,7 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 	private void onClickOtherEpisodePlayInRobot(CCTreeActionEvent e) {
 
 		if (!ccprops().PROP_VLC_ROBOT_ENABLED.getValue()) return;
-		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()))) return;
+		if (FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()).Item1)) return;
 
 		e.ifEpisodeSource(p -> VLCRobotFrame.show(e.SwingOwner, movielist).enqueue(p));
 	}

@@ -20,6 +20,8 @@ import org.json.JSONTokener;
 
 import java.io.IOException;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class FFProbeRunner implements MetadataSource {
 
@@ -39,12 +41,16 @@ public abstract class FFProbeRunner implements MetadataSource {
 
 	@SuppressWarnings("nls")
 	public FFProbeResult query(FSPath filename) throws IOException, FFProbeQueryException {
-		var ffppath = ccprops().PROP_PLAY_FFPROBE_PATH.getValue();
-		if (! ffppath.exists()) throw new FFProbeQueryException("FFProbe not found"); //$NON-NLS-1$
+		var ffppath = ccprops().PROP_PLAY_FFPROBE_PATH.getValue().getPathAndArgs();
+		if (! ffppath.Item1.exists()) throw new FFProbeQueryException("FFProbe not found"); //$NON-NLS-1$
 
 		BasicFileAttributes attr = filename.readFileAttr();
 
-		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(ffppath.toAbsolutePathString(), getArgs(filename));
+		var args = new ArrayList<String>();
+		args.addAll(Arrays.asList(getArgs(filename)));
+		args.addAll(Arrays.asList(ffppath.Item2));
+
+		Tuple3<Integer, String, String> proc = ProcessHelper.procExec(ffppath.Item1.toAbsolutePathString(), args.toArray(new String[0]));
 
 		if (proc.Item1 != 0) throw new FFProbeQueryException("FFProbe returned " + proc.Item1, proc.Item2 + "\n\n\n\n" + proc.Item3); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -173,13 +179,6 @@ public abstract class FFProbeRunner implements MetadataSource {
 
 	@Override
 	public boolean isConfiguredAndRunnable() {
-		var ffpath = ccprops().PROP_PLAY_FFPROBE_PATH.getValue();
-		if (FSPath.isNullOrEmpty(ffpath)) return false;
-
-		if (!ffpath.exists()) return false;
-		if (!ffpath.isFile()) return false;
-		if (!ffpath.canExecute()) return false;
-
-		return true;
+		return ccprops().PROP_PLAY_FFPROBE_PATH.getValue().existsAndCanExecute();
 	}
 }

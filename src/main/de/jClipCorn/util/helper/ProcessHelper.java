@@ -59,9 +59,14 @@ public class ProcessHelper {
 
 	public static Tuple3<Integer, String, String> procExec(String cmd, String... args) throws IOException
 	{
-		Runtime rt = Runtime.getRuntime();
 		String[] commands = CCStreams.iterate(args).prepend(cmd).toArray(new String[0]);
-		Process proc = rt.exec(commands);
+
+		var procbuilder = new ProcessBuilder(commands);
+
+		Process proc = procbuilder
+				.redirectError(ProcessBuilder.Redirect.PIPE)
+				.redirectOutput(ProcessBuilder.Redirect.PIPE)
+				.start();
 
 		StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream());
 		StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream());

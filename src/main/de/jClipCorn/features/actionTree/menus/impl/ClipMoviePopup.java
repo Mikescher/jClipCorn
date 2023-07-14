@@ -28,7 +28,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		addPlayAction(_movie, false);
 		addPlayAction(_movie, true);
 
-		if (ccprops().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops())))
+		if (ccprops().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()).Item1))
 		{
 			addAction("QueueMovieInRobot");
 		}

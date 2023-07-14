@@ -52,10 +52,10 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 	{
 		updateTabHeader();
 
-		var modError = new LogListModel(lsErrors, CCLogType.LOG_ELEM_ERROR, memoErrors);
-		var modWarn  = new LogListModel(lsWarnings, CCLogType.LOG_ELEM_WARNING, memoWarnings);
-		var modInfo  = new LogListModel(lsInformations, CCLogType.LOG_ELEM_INFORMATION, memoInformations);
-		var modUndef = new LogListModel(lsUndefinied, CCLogType.LOG_ELEM_UNDEFINED, memoUndefinied);
+		var modError = new LogListModel(lsErrors, CCLogType.LOG_ELEM_ERROR, memoErrorsText, memoErrorsTrace);
+		var modWarn  = new LogListModel(lsWarnings, CCLogType.LOG_ELEM_WARNING, memoWarningsText, memoWarningsTrace);
+		var modInfo  = new LogListModel(lsInformations, CCLogType.LOG_ELEM_INFORMATION, memoInformationsText, memoInformationsTrace);
+		var modUndef = new LogListModel(lsUndefinied, CCLogType.LOG_ELEM_UNDEFINED, memoUndefiniedText, memoUndefiniedTrace);
 
 		lsErrors.setModel(modError);
 		lsWarnings.setModel(modWarn);
@@ -153,20 +153,36 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 		tpnlMain.setTitleAt(5, LocaleBundle.getString("CCLog.Changes")      + " (" + CCLog.getChangeCount()                         + ")");
 	}
 
-	private void showMoreErrors() {
-		if (!memoErrors.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoErrors.getText(), false); //$NON-NLS-1$
+	private void showMoreErrorsText() {
+		if (!memoErrorsText.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoErrorsText.getText(), false); //$NON-NLS-1$
 	}
 
-	private void showMoreWarnings() {
-		if (!memoWarnings.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoWarnings.getText(), false); //$NON-NLS-1$
+	private void showMoreErrorsTrace() {
+		if (!memoErrorsTrace.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoErrorsTrace.getText(), false); //$NON-NLS-1$
 	}
 
-	private void showMoreInformations() {
-		if (!memoInformations.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoInformations.getText(), false); //$NON-NLS-1$
+	private void showMoreWarningsText() {
+		if (!memoWarningsText.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoWarningsText.getText(), false); //$NON-NLS-1$
 	}
 
-	private void showMoreUndefinieds() {
-		if (!memoUndefinied.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoUndefinied.getText(), false); //$NON-NLS-1$
+	private void showMoreWarningsTrace() {
+		if (!memoWarningsTrace.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoWarningsTrace.getText(), false); //$NON-NLS-1$
+	}
+
+	private void showMoreInformationsText() {
+		if (!memoInformationsText.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoInformationsText.getText(), false); //$NON-NLS-1$
+	}
+
+	private void showMoreInformationsTrace() {
+		if (!memoInformationsTrace.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoInformationsTrace.getText(), false); //$NON-NLS-1$
+	}
+
+	private void showMoreUndefiniedsText() {
+		if (!memoUndefiniedText.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoUndefiniedText.getText(), false); //$NON-NLS-1$
+	}
+
+	private void showMoreUndefiniedsTrace() {
+		if (!memoUndefiniedTrace.getText().isEmpty()) GenericTextDialog.showText(LogFrame.this, LocaleBundle.getString("CCLogFrame.this.title"), memoUndefiniedTrace.getText(), false); //$NON-NLS-1$
 	}
 
 	private void showMoreSQL() {
@@ -205,27 +221,51 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 		tabErrors = new JPanel();
 		scrollPane1 = new JScrollPane();
 		lsErrors = new JList<>();
+		panel1 = new JSplitPane();
+		scrollPane6 = new JScrollPane();
+		scrollPane12 = new JScrollPane();
+		memoErrorsText = new JTextArea();
 		scrollPane2 = new JScrollPane();
-		memoErrors = new JTextArea();
+		memoErrorsTrace = new JTextArea();
+		panel5 = new JPanel();
 		button1 = new JButton();
+		button7 = new JButton();
 		tabWarnings = new JPanel();
 		scrollPane3 = new JScrollPane();
 		lsWarnings = new JList<>();
+		panel2 = new JSplitPane();
 		scrollPane7 = new JScrollPane();
-		memoWarnings = new JTextArea();
+		memoWarningsText = new JTextArea();
+		scrollPane13 = new JScrollPane();
+		scrollPane14 = new JScrollPane();
+		memoWarningsTrace = new JTextArea();
+		panel6 = new JPanel();
 		button2 = new JButton();
+		button10 = new JButton();
 		tabInformations = new JPanel();
 		scrollPane4 = new JScrollPane();
 		lsInformations = new JList<>();
+		panel3 = new JSplitPane();
 		scrollPane8 = new JScrollPane();
-		memoInformations = new JTextArea();
+		memoInformationsText = new JTextArea();
+		scrollPane15 = new JScrollPane();
+		scrollPane16 = new JScrollPane();
+		memoInformationsTrace = new JTextArea();
+		panel7 = new JPanel();
 		button3 = new JButton();
+		button9 = new JButton();
 		tabUndefinied = new JPanel();
 		scrollPane5 = new JScrollPane();
 		lsUndefinied = new JList<>();
+		panel4 = new JSplitPane();
 		scrollPane9 = new JScrollPane();
-		memoUndefinied = new JTextArea();
+		memoUndefiniedText = new JTextArea();
+		scrollPane17 = new JScrollPane();
+		scrollPane18 = new JScrollPane();
+		memoUndefiniedTrace = new JTextArea();
+		panel8 = new JPanel();
 		button4 = new JButton();
+		button8 = new JButton();
 		tabSQL = new JPanel();
 		lsSQL = new LogSQLTable(this, movielist);
 		label15 = new JLabel();
@@ -310,21 +350,55 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 				}
 				tabErrors.add(scrollPane1, CC.xy(2, 2, CC.FILL, CC.FILL));
 
-				//======== scrollPane2 ========
+				//======== panel1 ========
 				{
+					panel1.setOrientation(JSplitPane.VERTICAL_SPLIT);
+					panel1.setResizeWeight(0.5);
 
-					//---- memoErrors ----
-					memoErrors.setForeground(new Color(0x00e000));
-					memoErrors.setBackground(new Color(0x202020));
-					memoErrors.setEditable(false);
-					scrollPane2.setViewportView(memoErrors);
+					//======== scrollPane6 ========
+					{
+
+						//======== scrollPane12 ========
+						{
+
+							//---- memoErrorsText ----
+							memoErrorsText.setForeground(new Color(0x00e000));
+							memoErrorsText.setBackground(new Color(0x202020));
+							memoErrorsText.setEditable(false);
+							scrollPane12.setViewportView(memoErrorsText);
+						}
+						scrollPane6.setViewportView(scrollPane12);
+					}
+					panel1.setTopComponent(scrollPane6);
+
+					//======== scrollPane2 ========
+					{
+
+						//---- memoErrorsTrace ----
+						memoErrorsTrace.setForeground(new Color(0x00e000));
+						memoErrorsTrace.setBackground(new Color(0x202020));
+						memoErrorsTrace.setEditable(false);
+						scrollPane2.setViewportView(memoErrorsTrace);
+					}
+					panel1.setBottomComponent(scrollPane2);
 				}
-				tabErrors.add(scrollPane2, CC.xy(4, 2, CC.FILL, CC.FILL));
+				tabErrors.add(panel1, CC.xy(4, 2, CC.DEFAULT, CC.FILL));
 
-				//---- button1 ----
-				button1.setText("..."); //$NON-NLS-1$
-				button1.addActionListener(e -> showMoreErrors());
-				tabErrors.add(button1, CC.xy(4, 4, CC.RIGHT, CC.DEFAULT));
+				//======== panel5 ========
+				{
+					panel5.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+
+					//---- button1 ----
+					button1.setText("..."); //$NON-NLS-1$
+					button1.addActionListener(e -> showMoreErrorsText());
+					panel5.add(button1);
+
+					//---- button7 ----
+					button7.setText("..."); //$NON-NLS-1$
+					button7.addActionListener(e -> showMoreErrorsTrace());
+					panel5.add(button7);
+				}
+				tabErrors.add(panel5, CC.xy(4, 4));
 			}
 			tpnlMain.addTab(LocaleBundle.getString("CCLog.Errors"), tabErrors); //$NON-NLS-1$
 
@@ -343,21 +417,55 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 				}
 				tabWarnings.add(scrollPane3, CC.xy(2, 2, CC.FILL, CC.FILL));
 
-				//======== scrollPane7 ========
+				//======== panel2 ========
 				{
+					panel2.setOrientation(JSplitPane.VERTICAL_SPLIT);
+					panel2.setResizeWeight(0.5);
 
-					//---- memoWarnings ----
-					memoWarnings.setForeground(new Color(0x00e000));
-					memoWarnings.setBackground(new Color(0x202020));
-					memoWarnings.setEditable(false);
-					scrollPane7.setViewportView(memoWarnings);
+					//======== scrollPane7 ========
+					{
+
+						//---- memoWarningsText ----
+						memoWarningsText.setForeground(new Color(0x00e000));
+						memoWarningsText.setBackground(new Color(0x202020));
+						memoWarningsText.setEditable(false);
+						scrollPane7.setViewportView(memoWarningsText);
+					}
+					panel2.setTopComponent(scrollPane7);
+
+					//======== scrollPane13 ========
+					{
+
+						//======== scrollPane14 ========
+						{
+
+							//---- memoWarningsTrace ----
+							memoWarningsTrace.setForeground(new Color(0x00e000));
+							memoWarningsTrace.setBackground(new Color(0x202020));
+							memoWarningsTrace.setEditable(false);
+							scrollPane14.setViewportView(memoWarningsTrace);
+						}
+						scrollPane13.setViewportView(scrollPane14);
+					}
+					panel2.setBottomComponent(scrollPane13);
 				}
-				tabWarnings.add(scrollPane7, CC.xy(4, 2, CC.FILL, CC.FILL));
+				tabWarnings.add(panel2, CC.xy(4, 2, CC.DEFAULT, CC.FILL));
 
-				//---- button2 ----
-				button2.setText("..."); //$NON-NLS-1$
-				button2.addActionListener(e -> showMoreWarnings());
-				tabWarnings.add(button2, CC.xy(4, 4, CC.RIGHT, CC.DEFAULT));
+				//======== panel6 ========
+				{
+					panel6.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+
+					//---- button2 ----
+					button2.setText("..."); //$NON-NLS-1$
+					button2.addActionListener(e -> showMoreWarningsText());
+					panel6.add(button2);
+
+					//---- button10 ----
+					button10.setText("..."); //$NON-NLS-1$
+					button10.addActionListener(e -> showMoreWarningsTrace());
+					panel6.add(button10);
+				}
+				tabWarnings.add(panel6, CC.xy(4, 4));
 			}
 			tpnlMain.addTab(LocaleBundle.getString("CCLog.Warnings"), tabWarnings); //$NON-NLS-1$
 
@@ -376,21 +484,55 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 				}
 				tabInformations.add(scrollPane4, CC.xy(2, 2, CC.FILL, CC.FILL));
 
-				//======== scrollPane8 ========
+				//======== panel3 ========
 				{
+					panel3.setOrientation(JSplitPane.VERTICAL_SPLIT);
+					panel3.setResizeWeight(0.5);
 
-					//---- memoInformations ----
-					memoInformations.setForeground(new Color(0x00e000));
-					memoInformations.setBackground(new Color(0x202020));
-					memoInformations.setEditable(false);
-					scrollPane8.setViewportView(memoInformations);
+					//======== scrollPane8 ========
+					{
+
+						//---- memoInformationsText ----
+						memoInformationsText.setForeground(new Color(0x00e000));
+						memoInformationsText.setBackground(new Color(0x202020));
+						memoInformationsText.setEditable(false);
+						scrollPane8.setViewportView(memoInformationsText);
+					}
+					panel3.setTopComponent(scrollPane8);
+
+					//======== scrollPane15 ========
+					{
+
+						//======== scrollPane16 ========
+						{
+
+							//---- memoInformationsTrace ----
+							memoInformationsTrace.setForeground(new Color(0x00e000));
+							memoInformationsTrace.setBackground(new Color(0x202020));
+							memoInformationsTrace.setEditable(false);
+							scrollPane16.setViewportView(memoInformationsTrace);
+						}
+						scrollPane15.setViewportView(scrollPane16);
+					}
+					panel3.setBottomComponent(scrollPane15);
 				}
-				tabInformations.add(scrollPane8, CC.xy(4, 2, CC.FILL, CC.FILL));
+				tabInformations.add(panel3, CC.xy(4, 2, CC.DEFAULT, CC.FILL));
 
-				//---- button3 ----
-				button3.setText("..."); //$NON-NLS-1$
-				button3.addActionListener(e -> showMoreInformations());
-				tabInformations.add(button3, CC.xy(4, 4, CC.RIGHT, CC.DEFAULT));
+				//======== panel7 ========
+				{
+					panel7.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+
+					//---- button3 ----
+					button3.setText("..."); //$NON-NLS-1$
+					button3.addActionListener(e -> showMoreInformationsText());
+					panel7.add(button3);
+
+					//---- button9 ----
+					button9.setText("..."); //$NON-NLS-1$
+					button9.addActionListener(e -> showMoreInformationsTrace());
+					panel7.add(button9);
+				}
+				tabInformations.add(panel7, CC.xy(4, 4));
 			}
 			tpnlMain.addTab(LocaleBundle.getString("CCLog.Informations"), tabInformations); //$NON-NLS-1$
 
@@ -409,21 +551,55 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 				}
 				tabUndefinied.add(scrollPane5, CC.xy(2, 2, CC.FILL, CC.FILL));
 
-				//======== scrollPane9 ========
+				//======== panel4 ========
 				{
+					panel4.setOrientation(JSplitPane.VERTICAL_SPLIT);
+					panel4.setResizeWeight(0.5);
 
-					//---- memoUndefinied ----
-					memoUndefinied.setForeground(new Color(0x00e000));
-					memoUndefinied.setBackground(new Color(0x202020));
-					memoUndefinied.setEditable(false);
-					scrollPane9.setViewportView(memoUndefinied);
+					//======== scrollPane9 ========
+					{
+
+						//---- memoUndefiniedText ----
+						memoUndefiniedText.setForeground(new Color(0x00e000));
+						memoUndefiniedText.setBackground(new Color(0x202020));
+						memoUndefiniedText.setEditable(false);
+						scrollPane9.setViewportView(memoUndefiniedText);
+					}
+					panel4.setTopComponent(scrollPane9);
+
+					//======== scrollPane17 ========
+					{
+
+						//======== scrollPane18 ========
+						{
+
+							//---- memoUndefiniedTrace ----
+							memoUndefiniedTrace.setForeground(new Color(0x00e000));
+							memoUndefiniedTrace.setBackground(new Color(0x202020));
+							memoUndefiniedTrace.setEditable(false);
+							scrollPane18.setViewportView(memoUndefiniedTrace);
+						}
+						scrollPane17.setViewportView(scrollPane18);
+					}
+					panel4.setBottomComponent(scrollPane17);
 				}
-				tabUndefinied.add(scrollPane9, CC.xy(4, 2, CC.FILL, CC.FILL));
+				tabUndefinied.add(panel4, CC.xy(4, 2, CC.DEFAULT, CC.FILL));
 
-				//---- button4 ----
-				button4.setText("..."); //$NON-NLS-1$
-				button4.addActionListener(e -> showMoreUndefinieds());
-				tabUndefinied.add(button4, CC.xy(4, 4, CC.RIGHT, CC.DEFAULT));
+				//======== panel8 ========
+				{
+					panel8.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+
+					//---- button4 ----
+					button4.setText("..."); //$NON-NLS-1$
+					button4.addActionListener(e -> showMoreUndefiniedsText());
+					panel8.add(button4);
+
+					//---- button8 ----
+					button8.setText("..."); //$NON-NLS-1$
+					button8.addActionListener(e -> showMoreUndefiniedsTrace());
+					panel8.add(button8);
+				}
+				tabUndefinied.add(panel8, CC.xy(4, 4));
 			}
 			tpnlMain.addTab(LocaleBundle.getString("CCLog.Undefinieds"), tabUndefinied); //$NON-NLS-1$
 
@@ -589,7 +765,7 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 			tpnlMain.addTab(LocaleBundle.getString("LogFrame.TabLiveDisplay"), tabLiveDisplay); //$NON-NLS-1$
 		}
 		contentPane.add(tpnlMain, CC.xy(2, 2, CC.FILL, CC.FILL));
-		setSize(1010, 570);
+		setSize(1010, 700);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -599,27 +775,51 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 	private JPanel tabErrors;
 	private JScrollPane scrollPane1;
 	private JList<String> lsErrors;
+	private JSplitPane panel1;
+	private JScrollPane scrollPane6;
+	private JScrollPane scrollPane12;
+	private JTextArea memoErrorsText;
 	private JScrollPane scrollPane2;
-	private JTextArea memoErrors;
+	private JTextArea memoErrorsTrace;
+	private JPanel panel5;
 	private JButton button1;
+	private JButton button7;
 	private JPanel tabWarnings;
 	private JScrollPane scrollPane3;
 	private JList<String> lsWarnings;
+	private JSplitPane panel2;
 	private JScrollPane scrollPane7;
-	private JTextArea memoWarnings;
+	private JTextArea memoWarningsText;
+	private JScrollPane scrollPane13;
+	private JScrollPane scrollPane14;
+	private JTextArea memoWarningsTrace;
+	private JPanel panel6;
 	private JButton button2;
+	private JButton button10;
 	private JPanel tabInformations;
 	private JScrollPane scrollPane4;
 	private JList<String> lsInformations;
+	private JSplitPane panel3;
 	private JScrollPane scrollPane8;
-	private JTextArea memoInformations;
+	private JTextArea memoInformationsText;
+	private JScrollPane scrollPane15;
+	private JScrollPane scrollPane16;
+	private JTextArea memoInformationsTrace;
+	private JPanel panel7;
 	private JButton button3;
+	private JButton button9;
 	private JPanel tabUndefinied;
 	private JScrollPane scrollPane5;
 	private JList<String> lsUndefinied;
+	private JSplitPane panel4;
 	private JScrollPane scrollPane9;
-	private JTextArea memoUndefinied;
+	private JTextArea memoUndefiniedText;
+	private JScrollPane scrollPane17;
+	private JScrollPane scrollPane18;
+	private JTextArea memoUndefiniedTrace;
+	private JPanel panel8;
 	private JButton button4;
+	private JButton button8;
 	private JPanel tabSQL;
 	private LogSQLTable lsSQL;
 	private JLabel label15;

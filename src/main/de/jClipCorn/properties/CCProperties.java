@@ -7,6 +7,7 @@ import de.jClipCorn.gui.frames.vlcRobot.VLCRobotFrequency;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.toolbar.ClipToolbar;
 import de.jClipCorn.properties.enumerations.*;
+import de.jClipCorn.properties.impl.*;
 import de.jClipCorn.properties.property.*;
 import de.jClipCorn.properties.property.CCEnumSetProperty.EnumSetValue;
 import de.jClipCorn.properties.property.CCFSPathProperty.CCPathPropertyMode;
@@ -78,7 +79,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_STATUSBAR_CALC_SERIES_IN_LENGTH;
 	public CCBoolProperty                                   PROP_STATUSBAR_CALC_SERIES_IN_SIZE;
 	public CCLookAndFeelProperty                            PROP_UI_APPTHEME;
-	public CCFSPathProperty                                 PROP_PLAY_VLC_PATH;
+	public CCExecutableProperty                             PROP_PLAY_VLC_PATH;
 	public CCBoolProperty                                   PROP_PLAY_VLC_FULLSCREEN;
 	public CCBoolProperty                                   PROP_PLAY_VLC_AUTOPLAY;
 	public CCBoolProperty                                   PROP_PLAY_USESTANDARDONMISSINGVLC;
@@ -178,10 +179,10 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_STATBAR_DRIVESCAN;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_VIEWCOUNT;
 	public CCBoolProperty                                   PROP_DRIVEMAP_REMOUNT_NETDRIVES;
-	public CCFSPathProperty                                 PROP_PLAY_MEDIAINFO_PATH;
-	public CCFSPathProperty                                 PROP_PLAY_FFMPEG_PATH;
-	public CCFSPathProperty                                 PROP_PLAY_FFPROBE_PATH;
-	public CCFSPathProperty                                 PROP_PLAY_MP4BOX_PATH;
+	public CCExecutableProperty                             PROP_PLAY_MEDIAINFO_PATH;
+	public CCExecutableProperty                             PROP_PLAY_FFMPEG_PATH;
+	public CCExecutableProperty                             PROP_PLAY_FFPROBE_PATH;
+	public CCExecutableProperty                             PROP_PLAY_MP4BOX_PATH;
 	public CCBoolProperty                                   PROP_PREVIEWSERIES_SINGLETON;
 	public CCBoolProperty                                   PROP_PREVIEWMOVIE_SINGLETON;
 	public CCBoolProperty                                   PROP_DATABASE_LOAD_ALL_COVERDATA;
@@ -336,17 +337,18 @@ public class CCProperties implements ICCPropertySource {
 		PROP_PLAY_USESTANDARDONMISSINGVLC       = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_USESTANDARDONMISSINGVLC",        true);
 		PROP_PLAY_VLCSINGLEINSTANCEMODE         = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLCSINGLEINSTANCEMODE",          true);
 
-		PROP_PLAY_VLC_PATH                      = new CCFSPathProperty(CAT_TOOLS,           this,   "PROP_PLAY_VLC_PATH",                       FSPath.Empty,                       "vlc.exe",       CCPathPropertyMode.FILES);
+		PROP_PLAY_VLC_PATH                      = new CCExecutableProperty(CAT_TOOLS,       this,   "PROP_PLAY_VLC_PATH",                       FSPath.Empty,                       VLCPathConf.INST);
+
 		PROP_PLAY_ALT_PROG_1                    = new CCNamedPathProperty(CAT_TOOLS,        this,   "PROP_PLAY_ALT_PROG_1",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
 		PROP_PLAY_ALT_PROG_2                    = new CCNamedPathProperty(CAT_TOOLS,        this,   "PROP_PLAY_ALT_PROG_2",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
 		PROP_PLAY_ALT_PROG_3                    = new CCNamedPathProperty(CAT_TOOLS,        this,   "PROP_PLAY_ALT_PROG_3",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
 		PROP_PLAY_ALT_PROG_4                    = new CCNamedPathProperty(CAT_TOOLS,        this,   "PROP_PLAY_ALT_PROG_4",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
 		PROP_PLAY_ALT_PROG_5                    = new CCNamedPathProperty(CAT_TOOLS,        this,   "PROP_PLAY_ALT_PROG_5",                     NamedPathVar.EMPTY,                 ".exe",          CCPathPropertyMode.FILES);
 
-		PROP_PLAY_MEDIAINFO_PATH                = new CCFSPathProperty(CAT_TOOLS,           this,   "PROP_PLAY_MEDIAINFO_PATH",                 FSPath.Empty,                       "mediainfo.exe", CCPathPropertyMode.FILES);
-		PROP_PLAY_FFMPEG_PATH                   = new CCFSPathProperty(CAT_TOOLS,           this,   "PROP_PLAY_FFMPEG_PATH",                    FSPath.Empty,                       "ffmpeg.exe",    CCPathPropertyMode.FILES);
-		PROP_PLAY_FFPROBE_PATH                  = new CCFSPathProperty(CAT_TOOLS,           this,   "PROP_PLAY_FFPROBE_PATH",                   FSPath.Empty,                       "ffprobe.exe",   CCPathPropertyMode.FILES);
-		PROP_PLAY_MP4BOX_PATH                   = new CCFSPathProperty(CAT_TOOLS,           this,   "PROP_PLAY_MP4BOX_PATH",                    FSPath.Empty,                       "mp4box.exe",    CCPathPropertyMode.FILES);
+		PROP_PLAY_MEDIAINFO_PATH                = new CCExecutableProperty(CAT_TOOLS,       this,   "PROP_PLAY_MEDIAINFO_PATH",                 FSPath.Empty,                       MediaInfoPathConf.INST);
+		PROP_PLAY_FFMPEG_PATH                   = new CCExecutableProperty(CAT_TOOLS,       this,   "PROP_PLAY_FFMPEG_PATH",                    FSPath.Empty,                       FFMPEGPathConf.INST);
+		PROP_PLAY_FFPROBE_PATH                  = new CCExecutableProperty(CAT_TOOLS,       this,   "PROP_PLAY_FFPROBE_PATH",                   FSPath.Empty,                       FFProbePathConf.INST);
+		PROP_PLAY_MP4BOX_PATH                   = new CCExecutableProperty(CAT_TOOLS,       this,   "PROP_PLAY_MP4BOX_PATH",                    FSPath.Empty,                       MP4BoxPathConf.INST);
 
 		PROP_BACKUP_CREATEBACKUPS               = new CCBoolProperty(CAT_BACKUP,            this,   "PROP_BACKUP_CREATEBACKUPS",                false);
 		PROP_BACKUP_FOLDERNAME                  = new CCStringProperty(CAT_BACKUP,          this,   "PROP_BACKUP_FOLDERNAME",                   "jClipCorn_backup");

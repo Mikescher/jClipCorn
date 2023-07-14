@@ -1,6 +1,7 @@
 package de.jClipCorn.features.log;
 
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCTime;
 
 import java.util.ArrayList;
@@ -58,30 +59,30 @@ public class CCLogElement {
 	public String getFormatted(int level) {
 		switch (level) {
 		case FORMAT_LEVEL_PREVIEW:
-			return getTypeStringRepresentation() + ": " + getFirstLine(text) + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
+			return getTypeStringRepresentation() + ": " + getFirstLine() + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		case FORMAT_LEVEL_SHORT:
 			return getTypeStringRepresentation() + ": " + text + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		case FORMAT_LEVEL_MID:
 			return getTypeStringRepresentation() + ": " + text + "\n" + getCallerTrace() + '\n'; //$NON-NLS-1$ //$NON-NLS-2$
 		case FORMAT_LEVEL_FULL:
 		default:
-			return getTypeStringRepresentation() + ": " + text + "\n" + getFormattedStackTrace() + '\n'; //$NON-NLS-1$ //$NON-NLS-2$
+			return getTypeStringRepresentation() + ": " + text + "\n" + getFormattedStackTrace(true) + '\n'; //$NON-NLS-1$ //$NON-NLS-2$
 		case FORMAT_LEVEL_LIST_FULL:
-			return getTypeStringRepresentation() + " (" + time.toStringUINormal() + "): " + text + "\n" + getFormattedStackTrace() + '\n'; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return getTypeStringRepresentation() + " (" + time.toStringUINormal() + "): " + text + "\n" + getFormattedStackTrace(true) + '\n'; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 	
-	private static String getFirstLine(String txt) {
-		int i = txt.indexOf('\n');
+	public String getFirstLine() {
+		int i = text.indexOf('\n');
 		if (i == -1) {
-			return txt;
+			return text;
 		} else {
-			return txt.substring(0, i);
+			return text.substring(0, i);
 		}
 		
 	}
 
-	private String getTypeStringRepresentation() {
+	public String getTypeStringRepresentation() {
 		String pref = count > 1 ? "[" + count + "x] " : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		
 		switch (type) {
@@ -100,11 +101,11 @@ public class CCLogElement {
 		}
 	}
 
-	private String getFormattedStackTrace() {
+	public String getFormattedStackTrace(boolean indent) {
 		StringBuilder stbuilder = new StringBuilder();
 		for (StackTraceElement ste : sTrace) {
 			if (! ste.getClassName().endsWith("." + EXCLUSION_CLASS)) { //$NON-NLS-1$
-				stbuilder.append(formatStackTraceElement(ste));
+				stbuilder.append(formatStackTraceElement(ste, indent));
 			}
 		}
 		
@@ -118,17 +119,17 @@ public class CCLogElement {
 	private String getCallerTrace() {
 		for (StackTraceElement ste : sTrace) {
 			if (! ste.getClassName().endsWith("." + EXCLUSION_CLASS)) { //$NON-NLS-1$
-				return formatStackTraceElement(ste);
+				return formatStackTraceElement(ste, true);
 			}
 		}
-		return formatStackTraceElement(sTrace.get(0));
+		return formatStackTraceElement(sTrace.get(0), true);
 	}
 	
-	private String formatStackTraceElement(StackTraceElement ste) {
+	private String formatStackTraceElement(StackTraceElement ste, boolean indent) {
 		if (ste.getFileName() != null && ste.getLineNumber() >= 0) {
-			return "\tat " + ste.getClassName() + "." + ste.getMethodName() + " (" + ste.getFileName() + ":" + ste.getLineNumber() + ")\n";   //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$//$NON-NLS-5$
+			return (indent ? "\t" : "") + "at " + ste.getClassName() + "." + ste.getMethodName() + " (" + ste.getFileName() + ":" + ste.getLineNumber() + ")\n";   //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$//$NON-NLS-5$
 		} else {
-			return "\tat " + ste.getClassName() + "." + ste.getMethodName() + "\n";   //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+			return (indent ? "\t" : "") + "at " + ste.getClassName() + "." + ste.getMethodName() + "\n";   //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 	
@@ -191,5 +192,13 @@ public class CCLogElement {
 
 	public int getCount() {
 		return count;
+	}
+
+	public CCTime getTime() {
+		return time;
+	}
+
+	public String getText() {
+		return text;
 	}
 }

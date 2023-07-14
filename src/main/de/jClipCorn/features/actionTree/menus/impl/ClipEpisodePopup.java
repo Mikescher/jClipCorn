@@ -28,7 +28,7 @@ public class ClipEpisodePopup extends ClipPopupMenu {
 		addPlayAction(_episode, false);
 		addPlayAction(_episode, true);
 
-		if (ccprops().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops())))
+		if (ccprops().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()).Item1))
 			addAction("QueueEpisodeInRobot");
 
 		//#############

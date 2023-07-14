@@ -37,7 +37,7 @@ public class PreviewMovieMenuBar extends ClipMenuBar {
 		{
 			addActionNode("PlayMovie");
 			addActionNode("PlayMovieAnonymous");
-			if (ccprops().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops())))
+			if (ccprops().PROP_VLC_ROBOT_ENABLED.getValue() && !FSPath.isNullOrEmpty(MoviePlayer.getVLCPath(ccprops()).Item1))
 			{
 				addActionNode("QueueMovieInRobot");
 			}

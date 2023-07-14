@@ -37,28 +37,59 @@ new FormModel {
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
-					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-						name: "scrollPane2"
-						add( new FormComponent( "javax.swing.JTextArea" ) {
-							name: "memoErrors"
-							"foreground": &Color0 new java.awt.Color( 0, 224, 0, 255 )
-							"background": &Color1 new java.awt.Color( 32, 32, 32, 255 )
-							"editable": false
+					add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
+						name: "panel1"
+						"orientation": 0
+						"resizeWeight": 0.5
+						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+							name: "scrollPane6"
+							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+								name: "scrollPane12"
+								add( new FormComponent( "javax.swing.JTextArea" ) {
+									name: "memoErrorsText"
+									"foreground": &Color0 new java.awt.Color( 0, 224, 0, 255 )
+									"background": &Color1 new java.awt.Color( 32, 32, 32, 255 )
+									"editable": false
+								} )
+							} )
+						}, new FormLayoutConstraints( class java.lang.String ) {
+							"value": "left"
+						} )
+						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+							name: "scrollPane2"
+							add( new FormComponent( "javax.swing.JTextArea" ) {
+								name: "memoErrorsTrace"
+								"foreground": #Color0
+								"background": #Color1
+								"editable": false
+							} )
+						}, new FormLayoutConstraints( class java.lang.String ) {
+							"value": "right"
 						} )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
 						"gridY": 2
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button1"
-						"text": "..."
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreErrors", false ) )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
+						"alignment": 2
+						"vgap": 0
+						"hgap": 0
+					} ) {
+						name: "panel5"
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "button1"
+							"text": "..."
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreErrorsText", false ) )
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "button7"
+							"text": "..."
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreErrorsTrace", false ) )
+						} )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
 						"gridY": 4
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "CCLog.Errors" )
@@ -83,28 +114,59 @@ new FormModel {
 						"gridX": 2
 						"gridY": 2
 					} )
-					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-						name: "scrollPane7"
-						add( new FormComponent( "javax.swing.JTextArea" ) {
-							name: "memoWarnings"
-							"foreground": #Color0
-							"background": #Color1
-							"editable": false
+					add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
+						name: "panel2"
+						"orientation": 0
+						"resizeWeight": 0.5
+						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+							name: "scrollPane7"
+							add( new FormComponent( "javax.swing.JTextArea" ) {
+								name: "memoWarningsText"
+								"foreground": #Color0
+								"background": #Color1
+								"editable": false
+							} )
+						}, new FormLayoutConstraints( class java.lang.String ) {
+							"value": "left"
+						} )
+						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+							name: "scrollPane13"
+							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+								name: "scrollPane14"
+								add( new FormComponent( "javax.swing.JTextArea" ) {
+									name: "memoWarningsTrace"
+									"foreground": #Color0
+									"background": #Color1
+									"editable": false
+								} )
+							} )
+						}, new FormLayoutConstraints( class java.lang.String ) {
+							"value": "right"
 						} )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
 						"gridY": 2
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
-						"gridX": 4
 					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button2"
-						"text": "..."
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreWarnings", false ) )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
+						"vgap": 0
+						"hgap": 0
+						"alignment": 2
+					} ) {
+						name: "panel6"
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "button2"
+							"text": "..."
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreWarningsText", false ) )
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "button10"
+							"text": "..."
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreWarningsTrace", false ) )
+						} )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridY": 4
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
 						"gridX": 4
+						"gridY": 4
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "CCLog.Warnings" )
@@ -129,28 +191,59 @@ new FormModel {
 						"gridX": 2
 						"gridY": 2
 					} )
-					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-						name: "scrollPane8"
-						add( new FormComponent( "javax.swing.JTextArea" ) {
-							name: "memoInformations"
-							"foreground": #Color0
-							"background": #Color1
-							"editable": false
+					add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
+						name: "panel3"
+						"orientation": 0
+						"resizeWeight": 0.5
+						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+							name: "scrollPane8"
+							add( new FormComponent( "javax.swing.JTextArea" ) {
+								name: "memoInformationsText"
+								"foreground": #Color0
+								"background": #Color1
+								"editable": false
+							} )
+						}, new FormLayoutConstraints( class java.lang.String ) {
+							"value": "left"
+						} )
+						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+							name: "scrollPane15"
+							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+								name: "scrollPane16"
+								add( new FormComponent( "javax.swing.JTextArea" ) {
+									name: "memoInformationsTrace"
+									"foreground": #Color0
+									"background": #Color1
+									"editable": false
+								} )
+							} )
+						}, new FormLayoutConstraints( class java.lang.String ) {
+							"value": "right"
 						} )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
 						"gridY": 2
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
-						"gridX": 4
 					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button3"
-						"text": "..."
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreInformations", false ) )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
+						"hgap": 0
+						"vgap": 0
+						"alignment": 2
+					} ) {
+						name: "panel7"
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "button3"
+							"text": "..."
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreInformationsText", false ) )
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "button9"
+							"text": "..."
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreInformationsTrace", false ) )
+						} )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridY": 4
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
 						"gridX": 4
+						"gridY": 4
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "CCLog.Informations" )
@@ -175,28 +268,59 @@ new FormModel {
 						"gridX": 2
 						"gridY": 2
 					} )
-					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-						name: "scrollPane9"
-						add( new FormComponent( "javax.swing.JTextArea" ) {
-							name: "memoUndefinied"
-							"foreground": #Color0
-							"background": #Color1
-							"editable": false
+					add( new FormContainer( "javax.swing.JSplitPane", new FormLayoutManager( class javax.swing.JSplitPane ) ) {
+						name: "panel4"
+						"orientation": 0
+						"resizeWeight": 0.5
+						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+							name: "scrollPane9"
+							add( new FormComponent( "javax.swing.JTextArea" ) {
+								name: "memoUndefiniedText"
+								"foreground": #Color0
+								"background": #Color1
+								"editable": false
+							} )
+						}, new FormLayoutConstraints( class java.lang.String ) {
+							"value": "left"
+						} )
+						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+							name: "scrollPane17"
+							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+								name: "scrollPane18"
+								add( new FormComponent( "javax.swing.JTextArea" ) {
+									name: "memoUndefiniedTrace"
+									"foreground": #Color0
+									"background": #Color1
+									"editable": false
+								} )
+							} )
+						}, new FormLayoutConstraints( class java.lang.String ) {
+							"value": "right"
 						} )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 4
 						"gridY": 2
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
-						"gridX": 4
 					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button4"
-						"text": "..."
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreUndefinieds", false ) )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
+						"hgap": 0
+						"vgap": 0
+						"alignment": 2
+					} ) {
+						name: "panel8"
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "button4"
+							"text": "..."
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreUndefiniedsText", false ) )
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "button8"
+							"text": "..."
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreUndefiniedsTrace", false ) )
+						} )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridY": 4
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
 						"gridX": 4
+						"gridY": 4
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "CCLog.Undefinieds" )
@@ -559,7 +683,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 1010, 570 )
+			"size": new java.awt.Dimension( 1010, 700 )
 		} )
 	}
 }

@@ -242,7 +242,7 @@ public class InitialConfigFrame extends JDialog {
 			LookAndFeelManager.setLookAndFeel(cbxLooknFeel.getSelectedEnum(), false);
 		}
 				
-		if (!edVLCPath.getPath().isEmpty()) ccprops.PROP_PLAY_VLC_PATH.setValue(edVLCPath.getPath());
+		if (!edVLCPath.getPath().isEmpty()) ccprops.PROP_PLAY_VLC_PATH.setValueSingle(edVLCPath.getPath());
 		
 		result = true;
 

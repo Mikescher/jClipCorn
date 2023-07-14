@@ -317,15 +317,15 @@ public class VLCConnection {
 
 	public void startPlayer()
 	{
-		var vlc = MoviePlayer.getVLCPath(ccprops());
+		var vlcPathAndArgs = MoviePlayer.getVLCPath(ccprops());
 
-		if (FSPath.isNullOrEmpty(vlc)) {
+		if (FSPath.isNullOrEmpty(vlcPathAndArgs.Item1)) {
 			CCLog.addWarning(LocaleBundle.getString("LogMessage.VLCNotFound")); //$NON-NLS-1$
 			return;
 		}
 
 		try {
-			List<String> parameters = MoviePlayer.getParameters(vlc, null, ccprops());
+			List<String> parameters = MoviePlayer.getParameters(vlcPathAndArgs, ccprops(), true);
 
 			ProcessBuilder pb = new ProcessBuilder(parameters);
 			pb.redirectOutput(new File(ApplicationHelper.getNullFile()));

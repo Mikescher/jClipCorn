@@ -6,6 +6,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.NamedPathVar;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ApplicationHelper;
@@ -36,7 +37,7 @@ public class MoviePlayer {
 	private final static String DRIVE_1 = "C:" + FSPath.SEPERATOR; //$NON-NLS-1$
 	private final static String DRIVE_2 = "H:" + FSPath.SEPERATOR; //$NON-NLS-1$
 	
-	private static FSPath lastVLCPath = null;
+	private static Tuple<FSPath, String[]> lastVLCPath = Tuple.Create(FSPath.Empty, new String[0]);
 	
 	public static void play(CCMovie mov, NamedPathVar player) {
 		List<FSPath> al = new ArrayList<>();
@@ -55,18 +56,13 @@ public class MoviePlayer {
 	}
 
 	@SuppressWarnings("nls")
-	public static List<String> getParameters(FSPath path, NamedPathVar player, CCProperties ccprops) {
+	public static List<String> getParameters(Tuple<FSPath, String[]> pathAndArgs, CCProperties ccprops, boolean isvlc) {
 		List<String> parameters = new ArrayList<>();
 
-		parameters.add(path.toString());
+		parameters.add(pathAndArgs.Item1.toString());
+		parameters.addAll(List.of(pathAndArgs.Item2));
 
-		if (player != null)
-		{
-			if (!Str.isNullOrWhitespace(player.Arguments)) parameters.addAll(List.of(player.Arguments.split(" ")));
-
-			return parameters;
-		}
-		else
+		if (isvlc)
 		{
 			parameters.add("--no-random");
 			parameters.add("--no-loop");
@@ -83,16 +79,16 @@ public class MoviePlayer {
 				parameters.add("--http-port=" + ccprops.PROP_VLC_ROBOT_PORT.getValue());
 				parameters.add("--http-password=" + ccprops.PROP_VLC_ROBOT_PASSWORD.getValue());
 			}
-
-			return parameters;
 		}
+
+		return parameters;
 	}
 
 	@SuppressWarnings("nls")
 	public static void play(List<FSPath> abspaths, NamedPathVar player, CCProperties ccprops) {
-		var playerpath = (player == null) ? getVLCPath(ccprops) : player.Path;
+		var playerpath = (player == null) ? getVLCPath(ccprops) : Tuple.Create(player.Path, player.Arguments.split(" "));
 		
-		if (FSPath.isNullOrEmpty(playerpath)) {
+		if (FSPath.isNullOrEmpty(playerpath.Item1)) {
 			CCLog.addWarning(LocaleBundle.getString("LogMessage.VLCNotFound"));
 			
 			if (ccprops.PROP_PLAY_USESTANDARDONMISSINGVLC.getValue()) {
@@ -105,7 +101,7 @@ public class MoviePlayer {
 				}
 			}
 		} else {
-			List<String> parameters = getParameters(playerpath, player, ccprops);
+			List<String> parameters = getParameters(playerpath, ccprops, player == null);
 			
 			for (var abspath : abspaths) {
 				if (ApplicationHelper.isWindows()) {
@@ -128,19 +124,17 @@ public class MoviePlayer {
 		}
 	}
 	
-	public static FSPath getVLCPath(CCProperties ccprops) {
-		var vlcpath = ccprops.PROP_PLAY_VLC_PATH.getValue();
-		
-		if (!FSPath.isNullOrEmpty(lastVLCPath)) {
-			if (lastVLCPath.exists()) {
+	public static Tuple<FSPath, String[]> getVLCPath(CCProperties ccprops) {
+		if (!FSPath.isNullOrEmpty(lastVLCPath.Item1)) {
+			if (lastVLCPath.Item1.exists()) {
 				return lastVLCPath;
 			}
 		}
+
+		var vlcpath = ccprops.PROP_PLAY_VLC_PATH.getValue().getPathAndArgs();
 		
-		if (! vlcpath.isEmpty()) {
-			if (vlcpath.exists()) {
-				return lastVLCPath = vlcpath;
-			}
+		if (! vlcpath.Item1.isEmpty() && vlcpath.Item1.exists()) {
+			return lastVLCPath = vlcpath;
 		}
 		
 		if (ApplicationHelper.isWindows())
@@ -148,14 +142,14 @@ public class MoviePlayer {
 			for (String ss : PATHS_WIN) {
 				var path = FSPath.create(DRIVE_1 + ss);
 				if (path.exists()) {
-					return lastVLCPath = path;
+					return lastVLCPath = Tuple.Create(path, new String[0]);
 				}
 			}
 			
 			for (String ss : PATHS_WIN) {
 				var path = FSPath.create(DRIVE_2 + ss);
 				if (path.exists()) {
-					return lastVLCPath = path;
+					return lastVLCPath = Tuple.Create(path, new String[0]);
 				}
 			}
 			
@@ -164,7 +158,7 @@ public class MoviePlayer {
 					for (String ss : PATHS_WIN) {
 						var path = FSPath.create(f.getAbsolutePath() + ss);
 						if (path.exists()) {
-							return lastVLCPath = path;
+							return lastVLCPath = Tuple.Create(path, new String[0]);
 						}
 					}
 				}
@@ -174,11 +168,11 @@ public class MoviePlayer {
 			for (String npath : PATHS_NIX) {
 				var path = FSPath.create(npath);
 				if (path.exists()) {
-					return lastVLCPath = path;
+					return lastVLCPath = Tuple.Create(path, new String[0]);
 				}
 			}
 		}
 
-		return lastVLCPath = FSPath.Empty;
+		return lastVLCPath = Tuple.Create(FSPath.Empty, new String[0]);
 	}
 }

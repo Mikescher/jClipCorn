@@ -16,11 +16,13 @@ import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class AutomaticSettingsFrame extends JCCFrame {
 	private static final long serialVersionUID = 4681197289662529891L;
@@ -53,7 +55,7 @@ public abstract class AutomaticSettingsFrame extends JCCFrame {
 	private void initGUI() {
 		List<Component> tabOrder = new ArrayList<>();
 
-		setSize(new Dimension(1150, 650));
+		setSize(new Dimension(1200, 650));
 		
 		setMinimumSize(new Dimension(650, 400));
 		setTitle(LocaleBundle.getString("Settingsframe.this.title")); //$NON-NLS-1$
@@ -140,44 +142,70 @@ public abstract class AutomaticSettingsFrame extends JCCFrame {
 		
 		scrlPane.setViewportView(pnlTab);
 		scrlPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		
-		pnlTab.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("50dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC},
-			getRowSpec(properties.getCountForCategory(category))));
 
-		int c = 1;
+		var colspec = new ColumnSpec[]
+		{
+			FormSpecs.RELATED_GAP_COLSPEC,
+			FormSpecs.DEFAULT_COLSPEC,
+			FormSpecs.RELATED_GAP_COLSPEC,
+			ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+			FormSpecs.RELATED_GAP_COLSPEC,
+			ColumnSpec.decode("50dlu"), //$NON-NLS-1$
+			FormSpecs.RELATED_GAP_COLSPEC,
+			FormSpecs.DEFAULT_COLSPEC,
+			FormSpecs.RELATED_GAP_COLSPEC,
+		};
+
+		var rowspec = CCStreams
+				.iterate(properties.getPropertyList())
+				.filter(p -> p.getCategory().equals(category))
+				.map(p -> new RowSpec[]{FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, p.getComponentBottomMargin() ? FormSpecs.UNRELATED_GAP_ROWSPEC : null})
+				.flatten(CCStreams::iterate)
+				.filter(Objects::nonNull)
+				.append(FormSpecs.RELATED_GAP_ROWSPEC)
+				.toArray(new RowSpec[0]);
+
+		pnlTab.setLayout(new FormLayout(colspec, rowspec));
+
+		int c = 2;
+
 		for (final CCProperty<Object> p : properties.getPropertyList()) {
 			if (p.getCategory().equals(category)) {
 				JLabel info = new JLabel(p.getDescription());
-				pnlTab.add(info, "2, " + c*2 + ", right, " + p.getLabelRowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
+				pnlTab.add(info, "2, " + c + ", right, " + p.getLabelRowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
 
 				final Component comp1 = p.getComponent();
-				pnlTab.add(comp1, "4, " + c*2 + ", fill, " + p.getComponent1RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
-				tabOrder.add(comp1);
-				
-				Component comp2 = p.getSecondaryComponent(comp1);
-				
-				if (comp2 != null) {
-					pnlTab.add(comp2, "6, " + c*2 + ", left, " + p.getComponent2RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
+				final Component comp2 = p.getSecondaryComponent(comp1);
+
+				if (comp2 == null && p.getComponent1ColStretch()) {
+
+					pnlTab.add(comp1, "4, " + c + ",3, 1, fill, " + p.getComponent1RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
+					tabOrder.add(comp1);
+
+				} else if (comp2 == null) {
+
+					pnlTab.add(comp1, "4, " + c + ", fill, " + p.getComponent1RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
+					tabOrder.add(comp1);
+
+				} else {
+
+					pnlTab.add(comp1, "4, " + c + ", fill, " + p.getComponent1RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
+					tabOrder.add(comp1);
+
+					pnlTab.add(comp2, "6, " + c + ", left, " + p.getComponent2RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
 					tabOrder.add(comp2);
 				}
 
 				JButton btnReset = new JButton(LocaleBundle.getString("Settingsframe.btnReset.title")); //$NON-NLS-1$
 				btnReset.addActionListener(e -> p.setComponentValueToValue(comp1, p.getDefault()));
-				pnlTab.add(btnReset, "8, " + c*2); //$NON-NLS-1$
+				pnlTab.add(btnReset, "8, " + c); //$NON-NLS-1$
 				tabOrder.add(btnReset);
 				
 				elements.add(new PropertyElement(p, comp1));
-				
-				c++;
+
+				c+=2;
+
+				if (p.getComponentBottomMargin()) c++;
 			}
 		}
 		

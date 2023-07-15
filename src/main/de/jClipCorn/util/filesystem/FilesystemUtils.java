@@ -141,7 +141,10 @@ public class FilesystemUtils {
 				if (Desktop.isDesktopSupported())
 				{
 					Desktop desktop = Desktop.getDesktop();
-					desktop.browse(abspath.toURI()); // Throws
+					if (abspath.isFile())
+						desktop.browse(abspath.getParent().toURI()); // Throws
+					else
+						desktop.browse(abspath.toURI()); // Throws
 				}
 			}
 		}

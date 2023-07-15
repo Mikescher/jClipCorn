@@ -20,6 +20,7 @@ public abstract class WatchHistoryElement implements Comparable<WatchHistoryElem
 	public abstract CCTagList getTags();
 	public abstract CCFileFormat getFormat();
 	public abstract CCFileSize getSize();
+	public abstract int getCounter();
 
 	public abstract ImageIcon getNameIcon();
 	public abstract String getFullNamePart1();

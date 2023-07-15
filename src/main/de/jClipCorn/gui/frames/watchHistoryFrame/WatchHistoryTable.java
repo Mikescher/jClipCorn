@@ -10,6 +10,7 @@ import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.OrdinalFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,13 +34,18 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 	@SuppressWarnings("nls")
 	protected JCCSimpleColumnList<WatchHistoryElement> configureColumns() {
 		JCCSimpleColumnList<WatchHistoryElement> r = new JCCSimpleColumnList<>(this);
-		
+
 		r.add("ClipTableModel.Title")
-		 .withSize("star,min=auto,max=400,expandonly")
-		 .withText(WatchHistoryElement::getName)
-		 .withIcon(WatchHistoryElement::getNameIcon)
-		 .sortable();
-		
+			.withSize("star,min=auto,max=400,priority=max,expandonly")
+			.withText(WatchHistoryElement::getName)
+			.withIcon(WatchHistoryElement::getNameIcon)
+			.sortable();
+
+		r.add("@#")
+			.withSize("auto")
+			.withText(p -> OrdinalFormatter.formatOrdinal(p.getCounter()))
+			.unsortable();
+
 		r.add("WatchHistoryFrame.tableHeaders.Date")
 		 .withSize("auto")
 		 .withText(e -> e.getTimestamp().toStringUIShort())

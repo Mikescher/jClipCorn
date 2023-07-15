@@ -14,10 +14,12 @@ import java.awt.image.BufferedImage;
 import java.text.MessageFormat;
 
 public class WatchHistoryEpisodeElement extends WatchHistoryElement {
+	public final int Counter;
 	public final CCDateTime Timestamp;
 	public final CCEpisode Episode;
 	
-	public WatchHistoryEpisodeElement(CCDateTime _timestamp, CCEpisode _episode) {
+	public WatchHistoryEpisodeElement(int _c, CCDateTime _timestamp, CCEpisode _episode) {
+		Counter = _c;
 		Timestamp = _timestamp;
 		Episode = _episode;
 	}
@@ -66,6 +68,11 @@ public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 	@Override
 	public CCFileSize getSize() {
 		return Episode.getFilesize();
+	}
+
+	@Override
+	public int getCounter() {
+		return Counter;
 	}
 
 	@Override

@@ -121,14 +121,14 @@ public class WatchHistoryFrame extends JCCFrame {
 		data.clear();
 
 		for (CCMovie mov : movielist.iteratorMovies()) {
-			for (CCDateTime timestamp : mov.ViewedHistory.get().ccstream().filter(d -> !d.isUnspecifiedDateTime())) {
-				data.add(new WatchHistoryMovieElement(timestamp, mov));
+			for (var e : mov.ViewedHistory.get().ccstream().filter(d -> !d.isUnspecifiedDateTime()).index()) {
+				data.add(new WatchHistoryMovieElement(e.Index+1, e.Value, mov));
 			}
 		}
 
 		for (CCEpisode episode : movielist.iteratorEpisodes()) {
-			for (CCDateTime timestamp : episode.ViewedHistory.get().ccstream().filter(d -> !d.isUnspecifiedDateTime())) {
-				data.add(new WatchHistoryEpisodeElement(timestamp, episode));
+			for (var e : episode.ViewedHistory.get().ccstream().filter(d -> !d.isUnspecifiedDateTime()).index()) {
+				data.add(new WatchHistoryEpisodeElement(e.Index+1, e.Value, episode));
 			}
 		}
 

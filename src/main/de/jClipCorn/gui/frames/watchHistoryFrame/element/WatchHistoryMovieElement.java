@@ -12,10 +12,12 @@ import javax.swing.*;
 import java.awt.image.BufferedImage;
 
 public class WatchHistoryMovieElement extends WatchHistoryElement{
+	public final int Counter;
 	public final CCDateTime Timestamp;
 	public final CCMovie Movie;
 	
-	public WatchHistoryMovieElement(CCDateTime _timestamp, CCMovie _movie) {
+	public WatchHistoryMovieElement(int _c, CCDateTime _timestamp, CCMovie _movie) {
+		Counter = _c;
 		Timestamp = _timestamp;
 		Movie = _movie;
 	}
@@ -63,6 +65,11 @@ public class WatchHistoryMovieElement extends WatchHistoryElement{
 	@Override
 	public CCFileSize getSize() {
 		return Movie.getFilesize();
+	}
+
+	@Override
+	public int getCounter() {
+		return Counter;
 	}
 
 	@Override

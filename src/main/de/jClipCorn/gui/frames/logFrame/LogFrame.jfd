@@ -82,6 +82,9 @@ new FormModel {
 							"text": "..."
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreErrorsText", false ) )
 						} )
+						add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+							name: "hSpacer1"
+						} )
 						add( new FormComponent( "javax.swing.JButton" ) {
 							name: "button7"
 							"text": "..."
@@ -158,6 +161,9 @@ new FormModel {
 							name: "button2"
 							"text": "..."
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreWarningsText", false ) )
+						} )
+						add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+							name: "hSpacer2"
 						} )
 						add( new FormComponent( "javax.swing.JButton" ) {
 							name: "button10"
@@ -236,6 +242,9 @@ new FormModel {
 							"text": "..."
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreInformationsText", false ) )
 						} )
+						add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+							name: "hSpacer3"
+						} )
 						add( new FormComponent( "javax.swing.JButton" ) {
 							name: "button9"
 							"text": "..."
@@ -312,6 +321,9 @@ new FormModel {
 							name: "button4"
 							"text": "..."
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showMoreUndefiniedsText", false ) )
+						} )
+						add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+							name: "hSpacer4"
 						} )
 						add( new FormComponent( "javax.swing.JButton" ) {
 							name: "button8"

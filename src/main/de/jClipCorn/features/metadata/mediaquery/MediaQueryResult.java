@@ -22,6 +22,7 @@ public class MediaQueryResult {
 	private static final Pattern REX_LANGUAGE_REPEAT = Pattern.compile("^\\s*(\\w+)(\\s*/\\s*\\1)+\\s*$"); //$NON-NLS-1$
 	private static final Pattern REX_LANGUAGE_STR1   = Pattern.compile("^([^\\s]+)\\s*\\(?<r>[^\\s]+\\)$"); //$NON-NLS-1$
 	private static final Pattern REX_LANGUAGE_STR2   = Pattern.compile("^(?<r>[^\\s]+)\\s*\\([^\\s]+\\)$"); //$NON-NLS-1$
+	private static final Pattern REX_LANGUAGE_STR3   = Pattern.compile("^(?<r1>[^\\-]+)-(?<r2>[^\\-]+)$"); //$NON-NLS-1$
 
 	public final String Raw;
 	
@@ -187,8 +188,11 @@ public class MediaQueryResult {
 
 		if (!Str.isNullOrWhitespace(_langval))
 		{
-			var r = getLanguageOrNullFromStr(_langval);
-			if (r != null) return r;
+			{ var r = getLanguageOrNullFromStr(_langval); if (r != null) return r; }
+
+			Matcher m2 = REX_LANGUAGE_STR3.matcher(_langval);
+			if (m2.matches()) { var r = getLanguageOrNullFromStr(m2.group("r1").trim()); if (r != null) return r; }
+			if (m2.matches()) { var r = getLanguageOrNullFromStr(m2.group("r2").trim()); if (r != null) return r; }
 		}
 
 		if (!Str.isNullOrWhitespace(_title))

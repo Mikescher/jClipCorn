@@ -229,6 +229,7 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 		memoErrorsTrace = new JTextArea();
 		panel5 = new JPanel();
 		button1 = new JButton();
+		hSpacer1 = new JPanel(null);
 		button7 = new JButton();
 		tabWarnings = new JPanel();
 		scrollPane3 = new JScrollPane();
@@ -241,6 +242,7 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 		memoWarningsTrace = new JTextArea();
 		panel6 = new JPanel();
 		button2 = new JButton();
+		hSpacer2 = new JPanel(null);
 		button10 = new JButton();
 		tabInformations = new JPanel();
 		scrollPane4 = new JScrollPane();
@@ -253,6 +255,7 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 		memoInformationsTrace = new JTextArea();
 		panel7 = new JPanel();
 		button3 = new JButton();
+		hSpacer3 = new JPanel(null);
 		button9 = new JButton();
 		tabUndefinied = new JPanel();
 		scrollPane5 = new JScrollPane();
@@ -265,6 +268,7 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 		memoUndefiniedTrace = new JTextArea();
 		panel8 = new JPanel();
 		button4 = new JButton();
+		hSpacer4 = new JPanel(null);
 		button8 = new JButton();
 		tabSQL = new JPanel();
 		lsSQL = new LogSQLTable(this, movielist);
@@ -392,6 +396,7 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 					button1.setText("..."); //$NON-NLS-1$
 					button1.addActionListener(e -> showMoreErrorsText());
 					panel5.add(button1);
+					panel5.add(hSpacer1);
 
 					//---- button7 ----
 					button7.setText("..."); //$NON-NLS-1$
@@ -459,6 +464,7 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 					button2.setText("..."); //$NON-NLS-1$
 					button2.addActionListener(e -> showMoreWarningsText());
 					panel6.add(button2);
+					panel6.add(hSpacer2);
 
 					//---- button10 ----
 					button10.setText("..."); //$NON-NLS-1$
@@ -526,6 +532,7 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 					button3.setText("..."); //$NON-NLS-1$
 					button3.addActionListener(e -> showMoreInformationsText());
 					panel7.add(button3);
+					panel7.add(hSpacer3);
 
 					//---- button9 ----
 					button9.setText("..."); //$NON-NLS-1$
@@ -593,6 +600,7 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 					button4.setText("..."); //$NON-NLS-1$
 					button4.addActionListener(e -> showMoreUndefiniedsText());
 					panel8.add(button4);
+					panel8.add(hSpacer4);
 
 					//---- button8 ----
 					button8.setText("..."); //$NON-NLS-1$
@@ -783,6 +791,7 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 	private JTextArea memoErrorsTrace;
 	private JPanel panel5;
 	private JButton button1;
+	private JPanel hSpacer1;
 	private JButton button7;
 	private JPanel tabWarnings;
 	private JScrollPane scrollPane3;
@@ -795,6 +804,7 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 	private JTextArea memoWarningsTrace;
 	private JPanel panel6;
 	private JButton button2;
+	private JPanel hSpacer2;
 	private JButton button10;
 	private JPanel tabInformations;
 	private JScrollPane scrollPane4;
@@ -807,6 +817,7 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 	private JTextArea memoInformationsTrace;
 	private JPanel panel7;
 	private JButton button3;
+	private JPanel hSpacer3;
 	private JButton button9;
 	private JPanel tabUndefinied;
 	private JScrollPane scrollPane5;
@@ -819,6 +830,7 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 	private JTextArea memoUndefiniedTrace;
 	private JPanel panel8;
 	private JButton button4;
+	private JPanel hSpacer4;
 	private JButton button8;
 	private JPanel tabSQL;
 	private LogSQLTable lsSQL;

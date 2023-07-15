@@ -141,11 +141,11 @@ public class FilesystemUtils {
 				if (Desktop.isDesktopSupported())
 				{
 					Desktop desktop = Desktop.getDesktop();
-					desktop.browse(new URI("File://" + abspath)); // Throws
+					desktop.browse(abspath.toURI()); // Throws
 				}
 			}
 		}
-		catch (IOException | URISyntaxException e)
+		catch (IOException e)
 		{
 			CCLog.addError(e);
 		}

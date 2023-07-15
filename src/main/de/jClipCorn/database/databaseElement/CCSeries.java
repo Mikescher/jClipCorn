@@ -739,7 +739,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 			if (getEpisodeCount() == 0 && fallbackLanguage != null) lang = fallbackLanguage;
 
 
-			if (!(lang.isExact(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue()) && ccprops().PROP_SKIP_DEFAULT_LANG_IN_FILENAMES.getValue())) {
+			if (!(lang.isExact(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue()) && ccprops().PROP_SKIP_DEFAULT_LANG_IN_FILENAMES.getValue()) && !lang.isEmpty()) {
 				seriesfoldername.append(String.format(" [%s]", lang.serializeToFilenameString()));
 			}
 

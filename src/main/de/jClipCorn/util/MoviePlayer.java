@@ -86,7 +86,7 @@ public class MoviePlayer {
 
 	@SuppressWarnings("nls")
 	public static void play(List<FSPath> abspaths, NamedPathVar player, CCProperties ccprops) {
-		var playerpath = (player == null) ? getVLCPath(ccprops) : Tuple.Create(player.Path, player.Arguments.split(" "));
+		var playerpath = (player == null) ? getVLCPath(ccprops) : Tuple.Create(player.Path, FSPath.splitArguments(player.Arguments));
 		
 		if (FSPath.isNullOrEmpty(playerpath.Item1)) {
 			CCLog.addWarning(LocaleBundle.getString("LogMessage.VLCNotFound"));

@@ -86,6 +86,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		boolean bb = isEnabled();
 
 		btnAddFiles.setEnabled(       bb);
+		cbSortedAdd.setEnabled(       bb);
 		btnInsertTitles.setEnabled(   bb && _hasFiles);
 		spnFirstEpNumber.setEnabled(  bb && _hasFiles);
 		lblFirstEpNumber.setEnabled(  bb && _hasFiles);

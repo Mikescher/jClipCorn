@@ -38,7 +38,7 @@ public class BinaryPathVar {
 
 		for (var sbpv : Values) {
 		    if (Str.isNullOrEmpty(sbpv.Hostname) || sbpv.Hostname.equalsIgnoreCase(hostname)) {
-				return Tuple.Create(sbpv.Path, sbpv.Args.trim().split(" "));
+				return Tuple.Create(sbpv.Path, FSPath.splitArguments(sbpv.Args));
 			}
 		}
 

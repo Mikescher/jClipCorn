@@ -454,4 +454,11 @@ public class FSPath implements IPath, Comparable<FSPath> {
 	public static boolean isNullOrEmpty(FSPath p) {
 		return p == null || p.isEmpty();
 	}
+
+	public static String[] splitArguments(String args) {
+		//this is only a very rudimentary implementation, should later
+
+		args = args.trim();
+		return CCStreams.iterate(args.split(" ")).filter(p -> !p.equals("")).toArray(new String[0]);
+	}
 }

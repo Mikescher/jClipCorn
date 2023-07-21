@@ -8,15 +8,14 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
+import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.filesystem.CCPath;
-import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
@@ -27,6 +26,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UpdateCodecFrame extends JCCFrame
 {
@@ -113,10 +113,10 @@ public class UpdateCodecFrame extends JCCFrame
 			if (!elem.Processed) continue;
 			if (elem.MQResult == null) continue;
 
-			int v = elem.getNewDuration();
-			if (v == -1) continue;
+			var v = elem.getNewDuration();
+			if (v.isEmpty()) continue;
 
-			if (v != elem.Element.length().get()) { elem.Element.length().set(v); count++; }
+			if (!Objects.equals(v.get(), elem.Element.length().get())) { elem.Element.length().set(v.get()); count++; }
 		}
 
 		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.CodecUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.CodecUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
@@ -301,15 +301,15 @@ public class UpdateCodecFrame extends JCCFrame
 					if (parts.size() == 0) throw new MediaQueryException("Element has no associated files"); //$NON-NLS-1$
 
 					StringBuilder raw = new StringBuilder();
-					List<MediaQueryResult> dat = new ArrayList<>();
+					List<VideoMetadata> dat = new ArrayList<>();
 
 					for (int pi = 0; pi < parts.size(); pi++) {
-						var r = new MediaQueryRunner(movielist).query(parts.get(pi).toFSPath(this), false);
+						var r = new MediaInfoRunner(movielist).run(parts.get(pi).toFSPath(this));
 
 						dat.add(r);
 
 						if (pi > 0) raw.append("\n\n--------------------------------------\n\n"); //$NON-NLS-1$
-						raw.append(r.Raw);
+						raw.append(r.RawOutput);
 
 						if (cancelBackground) return;
 					}

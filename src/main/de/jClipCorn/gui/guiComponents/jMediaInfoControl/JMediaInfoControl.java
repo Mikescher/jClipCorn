@@ -4,7 +4,7 @@ import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
+import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.gui.frames.editMediaInfoDialog.EditMediaInfoDialog;
 import de.jClipCorn.gui.frames.editMediaInfoDialog.MediaInfoResultHandler;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
@@ -28,7 +28,7 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 	private ReadableTextField edit;
 
 	private PartialMediaInfo value = null;
-	private MediaQueryResult queryResult = null;
+	private VideoMetadata queryResult = null;
 
 	private final Func0to1<FSPath> _pathProvider;
 	private final CCMovieList movielist;
@@ -99,8 +99,8 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 		updateUIControls();
 	}
 	
-	public void setValue(MediaQueryResult r) {
-		PartialMediaInfo cc = r.toPartial();
+	public void setValue(VideoMetadata r) {
+		PartialMediaInfo cc = r.toPartialMediaInfo();
 
 		for (var l: listenerList.getListeners(LanguageChangedListener.class)) l.languageChanged(new ActionEvent(cc, -1, Str.Empty));
 

@@ -9,8 +9,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
+import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
+import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
 import de.jClipCorn.gui.frames.omniParserFrame.OmniParserFrame;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.language.LanguageSetChooserDialog;
@@ -233,6 +233,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		oframe.setVisible(true);
 	}
 
+	@SuppressWarnings("nls")
 	private void onGetLength() {
 		List<NewEpisodeVM> data = lsData.getDataCopy();
 		if (data.size() == 0) return;
@@ -255,19 +256,19 @@ public class AddMultiEpisodesFrame extends JCCFrame
 					if (data.get(i).MediaQueryResult == null)
 					{
 						try {
-							data.get(i).MediaQueryResult = new MediaQueryRunner(movielist).query(data.get(i).SourcePath, true);
-						} catch (IOException | MediaQueryException e) {
+							data.get(i).MediaQueryResult = new MediaInfoRunner(movielist).run(data.get(i).SourcePath);
+						} catch (IOException | MetadataQueryException e) {
 							CCLog.addError(e);
 							data.get(i).MediaQueryResult = null;
 						}
 					}
 
-					lens[i] = (data.get(i).MediaQueryResult == null || data.get(i).MediaQueryResult.Duration == -1) ? -1 : (data.get(i).MediaQueryResult.Duration / 60);
+					lens[i] = (data.get(i).MediaQueryResult == null || !data.get(i).MediaQueryResult.Duration.isPresent()) ? -1 : (data.get(i).MediaQueryResult.Duration.orElse(0.0) / 60);
 
-					if (data.get(i).MediaQueryResult == null || data.get(i).MediaQueryResult.Duration == -1) {
+					if (data.get(i).MediaQueryResult == null || !data.get(i).MediaQueryResult.Duration.isPresent()) {
 						lens[i] = -1;
 					} else {
-						lens[i] = (data.get(i).MediaQueryResult.Duration / 60);
+						lens[i] = (data.get(i).MediaQueryResult.Duration.orElse(0.0) / 60);
 						successsum += lens[i];
 						successcount++;
 					}
@@ -373,6 +374,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		}).start();
 	}
 
+	@SuppressWarnings("nls")
 	private void onGetLanguages() {
 		List<NewEpisodeVM> data = lsData.getDataCopy();
 		if (data.size() == 0) return;
@@ -393,27 +395,30 @@ public class AddMultiEpisodesFrame extends JCCFrame
 					if (data.get(i).MediaQueryResult == null)
 					{
 						try {
-							data.get(i).MediaQueryResult = new MediaQueryRunner(movielist).query(data.get(i).SourcePath, true);
-						} catch (IOException | MediaQueryException e) {
+							data.get(i).MediaQueryResult = new MediaInfoRunner(movielist).run(data.get(i).SourcePath);
+						} catch (IOException | MetadataQueryException e) {
 							data.get(i).MediaQueryResult = null;
 						}
 					}
 
 					if (data.get(i).MediaQueryResult == null ||
-						data.get(i).MediaQueryResult.AudioLanguages == null ||
+						data.get(i).MediaQueryResult.hasErrorAudioLanguages() ||
+						data.get(i).MediaQueryResult.hasEmptyAudioLanguages() ||
 						data.get(i).MediaQueryResult.AudioLanguages.isEmpty() ||
+						data.get(i).MediaQueryResult.hasErrorSubtitleLanguages() ||
+						data.get(i).MediaQueryResult.hasEmptySubtitleLanguages() ||
 						data.get(i).MediaQueryResult.SubtitleLanguages.isEmpty())
 					{
 						errors.add(i);
 					}
 					else
 					{
-						data.get(i).Language = data.get(i).MediaQueryResult.AudioLanguages;
-						data.get(i).Subtitles = data.get(i).MediaQueryResult.SubtitleLanguages;
+						data.get(i).Language = data.get(i).MediaQueryResult.getValidAudioLanguages();
+						data.get(i).Subtitles = data.get(i).MediaQueryResult.getValidSubtitleLanguages();
 					}
 				}
 
-				final String errorsList = CCStreams.iterate(errors).stringjoin(p -> p+"", ", "); //$NON-NLS-1$ //$NON-NLS-2$
+				final String errorsList = CCStreams.iterate(errors).stringjoin(p -> p+"", ", ");
 
 				SwingUtils.invokeLater(() ->
 				{
@@ -456,6 +461,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		}).start();
 	}
 
+	@SuppressWarnings("nls")
 	private void onGetMediaInfo() {
 		List<NewEpisodeVM> data = lsData.getDataCopy();
 		if (data.size() == 0) return;
@@ -476,13 +482,13 @@ public class AddMultiEpisodesFrame extends JCCFrame
 					if (data.get(i).MediaQueryResult == null)
 					{
 						try {
-							data.get(i).MediaQueryResult = new MediaQueryRunner(movielist).query(data.get(i).SourcePath, true);
-						} catch (IOException | MediaQueryException e) {
+							data.get(i).MediaQueryResult = new MediaInfoRunner(movielist).run(data.get(i).SourcePath);
+						} catch (IOException | MetadataQueryException e) {
 							data.get(i).MediaQueryResult = null;
 						}
 					}
 
-					data.get(i).MediaInfo = (data.get(i).MediaQueryResult == null) ? CCMediaInfo.EMPTY : data.get(i).MediaQueryResult.toMediaInfo();
+					data.get(i).MediaInfo = (data.get(i).MediaQueryResult == null) ? CCMediaInfo.EMPTY : data.get(i).MediaQueryResult.toPartialMediaInfo().toMediaInfo();
 					if (data.get(i).MediaInfo.isUnset()) err = true;
 					data.get(i).validate(target);
 				}

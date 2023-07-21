@@ -1,7 +1,6 @@
 package de.jClipCorn.properties.impl;
 
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.properties.property.CCExecutableProperty;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple3;

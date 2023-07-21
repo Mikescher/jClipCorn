@@ -11,8 +11,8 @@ import de.jClipCorn.database.databaseElement.datapacks.SeasonDataPack;
 import de.jClipCorn.database.databaseElement.datapacks.SeriesDataPack;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
+import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
+import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.gui.frames.addMultiEpisodesFrame.AddMultiEpisodesFrame;
@@ -39,6 +39,7 @@ import de.jClipCorn.gui.guiComponents.onlinescore.OnlineScoreControl;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.guiComponents.tags.TagPanel;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -1039,6 +1040,7 @@ public class EditSeriesFrame extends JCCFrame
 		}
 	}
 
+	@SuppressWarnings("nls")
 	private void parseCodecMetadata_Lang() {
 		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
@@ -1046,28 +1048,51 @@ public class EditSeriesFrame extends JCCFrame
 		}
 
 		try {
-			MediaQueryResult dat = new MediaQueryRunner(movielist).query(edEpisodePart.getPath().toFSPath(this), false);
+			var dat = new MediaInfoRunner(movielist).run(edEpisodePart.getPath().toFSPath(this));
 
-			if (dat.AudioLanguages == null) {
-				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
-				return;
+			var anyAudioLangErr = false;
+			var anyAudioLangEmpty = false;
+
+			var errOutput = new StringBuilder();
+			for (var alang : dat.AudioLanguages) {
+				if (alang.isEmpty()) {
+					errOutput.append(Str.format("[---] (empty)\n"));
+					anyAudioLangEmpty = true;
+				}
+				else if (alang.isError()) {
+					errOutput.append(Str.format("[---] {0}\n", alang.getErr().TextShort));
+					anyAudioLangErr = true;
+				}
+				else {
+					errOutput.append(Str.format("[{0}] (ok)\n", alang.get().getShortString()));
+				}
 			}
 
-			CCDBLanguageSet dbll = dat.AudioLanguages;
+			if (anyAudioLangErr)
+			{
+				var dialogRes = DialogHelper.showYesNoDlg(this, LocaleBundle.getString("Dialogs.MetadataError_caption"), LocaleBundle.getString("AddMovieFrame.dialog_errlang") + "\n\n" + errOutput);
+				if (!dialogRes) return;
+			}
+			else if (anyAudioLangEmpty)
+			{
+				var dialogRes = DialogHelper.showYesNoDlg(this, LocaleBundle.getString("Dialogs.MetadataError_caption"), LocaleBundle.getString("AddMovieFrame.dialog_emptylang") + "\n\n" + errOutput);
+				if (!dialogRes) return;
+			}
 
-			if (dbll.isEmpty()) {
+			if (dat.getValidAudioLanguages().isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
 				return;
 			} else {
-				ctrlEpisodeLanguage.setValue(dbll);
+				ctrlEpisodeLanguage.setValue(dat.getValidAudioLanguages());
 			}
 
-		} catch (IOException | MediaQueryException e) {
+		} catch (IOException | MetadataQueryException e) {
 			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
+	@SuppressWarnings("nls")
 	private void parseCodecMetadata_Subs() {
 		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
@@ -1075,21 +1100,46 @@ public class EditSeriesFrame extends JCCFrame
 		}
 
 		try {
-			MediaQueryResult dat = new MediaQueryRunner(movielist).query(edEpisodePart.getPath().toFSPath(this), false);
+			var dat = new MediaInfoRunner(movielist).run(edEpisodePart.getPath().toFSPath(this));
 
-			if (dat.SubtitleLanguages == null) {
-				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
-				return;
+			var anySubLangErr = false;
+			var anySubLangEmpty = false;
+
+			var errOutput = new StringBuilder();
+			for (var alang : dat.SubtitleLanguages) {
+				if (alang.isEmpty()) {
+					errOutput.append(Str.format("[---] (empty)\n"));
+					anySubLangEmpty = true;
+				}
+				else if (alang.isError()) {
+					errOutput.append(Str.format("[---] {0}\n", alang.getErr().TextShort));
+					anySubLangErr = true;
+				}
+				else {
+					errOutput.append(Str.format("[{0}] (ok)\n", alang.get().getShortString()));
+				}
 			}
 
-			ctrlEpisodeSubtitles.setValue(dat.SubtitleLanguages);
+			if (anySubLangErr)
+			{
+				var dialogRes = DialogHelper.showYesNoDlg(this, LocaleBundle.getString("Dialogs.MetadataError_caption"), LocaleBundle.getString("AddMovieFrame.dialog_errlang") + "\n\n" + errOutput);
+				if (!dialogRes) return;
+			}
+			else if (anySubLangEmpty)
+			{
+				var dialogRes = DialogHelper.showYesNoDlg(this, LocaleBundle.getString("Dialogs.MetadataError_caption"), LocaleBundle.getString("AddMovieFrame.dialog_emptylang") + "\n\n" + errOutput);
+				if (!dialogRes) return;
+			}
 
-		} catch (IOException | MediaQueryException e) {
+			ctrlEpisodeSubtitles.setValue(dat.getValidSubtitleLanguages());
+
+		} catch (IOException | MetadataQueryException e) {
 			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
+	@SuppressWarnings("nls")
 	private void parseCodecMetadata_Len() {
 		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
@@ -1097,13 +1147,13 @@ public class EditSeriesFrame extends JCCFrame
 		}
 
 		try {
-			MediaQueryResult dat = new MediaQueryRunner(movielist).query(edEpisodePart.getPath().toFSPath(this), true);
+			var dat = new MediaInfoRunner(movielist).run(edEpisodePart.getPath().toFSPath(this));
 
-			int dur = (dat.Duration==-1)?(-1):(int)(dat.Duration/60);
-			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
-			spnEpisodeLength.setValue(dur);
+			if (!dat.Duration.isPresent()) throw new MediaQueryException("Duration == -1");
 
-		} catch (IOException | MediaQueryException e) {
+			spnEpisodeLength.setValue((int)(dat.Duration.get()/60));
+
+		} catch (IOException | MetadataQueryException e) {
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
@@ -1115,11 +1165,11 @@ public class EditSeriesFrame extends JCCFrame
 		}
 
 		try {
-			MediaQueryResult dat = new MediaQueryRunner(movielist).query(edEpisodePart.getPath().toFSPath(this), true);
+			var dat = new MediaInfoRunner(movielist).run(edEpisodePart.getPath().toFSPath(this));
 
 			ctrlEpisodeMediaInfo.setValue(dat);
 
-		} catch (IOException | MediaQueryException e) {
+		} catch (IOException | MetadataQueryException e) {
 			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -1132,10 +1182,10 @@ public class EditSeriesFrame extends JCCFrame
 		}
 
 		try {
-			String dat = new MediaQueryRunner(movielist).queryRaw(edEpisodePart.getPath().toFSPath(this));
+			String dat = new MediaInfoRunner(movielist).run(edEpisodePart.getPath().toFSPath(this)).RawOutput;
 
 			GenericTextDialog.showText(this, getTitle(), dat, false);
-		} catch (IOException | MediaQueryException e) {
+		} catch (IOException | MetadataQueryException e) {
 			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}

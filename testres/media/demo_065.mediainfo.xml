@@ -1,0 +1,856 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MediaInfo
+    xmlns="https://mediaarea.net/mediainfo"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://mediaarea.net/mediainfo https://mediaarea.net/mediainfo/mediainfo_2_0.xsd"
+    version="2.0">
+<creatingLibrary version="23.07" url="https://mediaarea.net/MediaInfo">MediaInfoLib</creatingLibrary>
+<media ref="The Pale Blue Eye [GER+ENG].mkv">
+<track type="General">
+<UniqueID>281539077845565061586595879455010170287</UniqueID>
+<VideoCount>1</VideoCount>
+<AudioCount>2</AudioCount>
+<TextCount>39</TextCount>
+<MenuCount>1</MenuCount>
+<FileExtension>mkv</FileExtension>
+<Format>Matroska</Format>
+<Format_Version>4</Format_Version>
+<FileSize>3032829820</FileSize>
+<Duration>7808.672</Duration>
+<OverallBitRate>3107140</OverallBitRate>
+<FrameRate>24.000</FrameRate>
+<FrameCount>185013</FrameCount>
+<StreamSize>3977776</StreamSize>
+<IsStreamable>Yes</IsStreamable>
+<Title>Der.denkwuerdige.Fall.des.Mr.Poe.2022.German.DL.1080p.DV.HDR.NF.WEB-PS</Title>
+<Movie>Der.denkwuerdige.Fall.des.Mr.Poe.2022.German.DL.1080p.DV.HDR.NF.WEB-PS</Movie>
+<Encoded_Date>2023-01-06 08:42:02 UTC</Encoded_Date>
+<File_Modified_Date>2023-01-06 08:42:18 UTC</File_Modified_Date>
+<File_Modified_Date_Local>2023-01-06 09:42:18</File_Modified_Date_Local>
+<Encoded_Application>mkvmerge v71.1.0 (&apos;Fortitude&apos;) 64-bit</Encoded_Application>
+<Encoded_Library>libebml v1.4.4 + libmatroska v1.7.1</Encoded_Library>
+</track>
+<track type="Video">
+<StreamOrder>0</StreamOrder>
+<ID>1</ID>
+<UniqueID>11406927897257240895</UniqueID>
+<Format>HEVC</Format>
+<Format_Profile>Main 10</Format_Profile>
+<Format_Level>4</Format_Level>
+<Format_Tier>Main</Format_Tier>
+<HDR_Format>Dolby Vision / SMPTE ST 2086</HDR_Format>
+<HDR_Format_Version>1.0 / </HDR_Format_Version>
+<HDR_Format_Profile>dvhe.08 / </HDR_Format_Profile>
+<HDR_Format_Level>03 / </HDR_Format_Level>
+<HDR_Format_Settings>BL+RPU / </HDR_Format_Settings>
+<HDR_Format_Compatibility>HDR10 / HDR10</HDR_Format_Compatibility>
+<CodecID>V_MPEGH/ISO/HEVC</CodecID>
+<Duration>7708.875000000</Duration>
+<BitRate>1585291</BitRate>
+<Width>1920</Width>
+<Height>1080</Height>
+<Sampled_Width>1920</Sampled_Width>
+<Sampled_Height>1080</Sampled_Height>
+<PixelAspectRatio>1.000</PixelAspectRatio>
+<DisplayAspectRatio>1.778</DisplayAspectRatio>
+<FrameRate_Mode>CFR</FrameRate_Mode>
+<FrameRate>24.000</FrameRate>
+<FrameRate_Num>24</FrameRate_Num>
+<FrameRate_Den>1</FrameRate_Den>
+<FrameCount>185013</FrameCount>
+<ColorSpace>YUV</ColorSpace>
+<ChromaSubsampling>4:2:0</ChromaSubsampling>
+<ChromaSubsampling_Position>Type 2</ChromaSubsampling_Position>
+<BitDepth>10</BitDepth>
+<Delay>0.000</Delay>
+<Delay_Source>Container</Delay_Source>
+<StreamSize>1527602045</StreamSize>
+<Default>Yes</Default>
+<Forced>No</Forced>
+<colour_description_present>Yes</colour_description_present>
+<colour_description_present_Source>Stream</colour_description_present_Source>
+<colour_range>Limited</colour_range>
+<colour_range_Source>Stream</colour_range_Source>
+<colour_primaries>BT.2020</colour_primaries>
+<colour_primaries_Source>Stream</colour_primaries_Source>
+<transfer_characteristics>PQ</transfer_characteristics>
+<transfer_characteristics_Source>Stream</transfer_characteristics_Source>
+<matrix_coefficients>BT.2020 non-constant</matrix_coefficients>
+<matrix_coefficients_Source>Stream</matrix_coefficients_Source>
+<MasteringDisplay_ColorPrimaries>Display P3</MasteringDisplay_ColorPrimaries>
+<MasteringDisplay_ColorPrimaries_Source>Stream</MasteringDisplay_ColorPrimaries_Source>
+<MasteringDisplay_Luminance>min: 0.0050 cd/m2, max: 4000 cd/m2</MasteringDisplay_Luminance>
+<MasteringDisplay_Luminance_Source>Stream</MasteringDisplay_Luminance_Source>
+<MaxCLL>756 cd/m2</MaxCLL>
+<MaxCLL_Source>Stream</MaxCLL_Source>
+<MaxFALL>97 cd/m2</MaxFALL>
+<MaxFALL_Source>Stream</MaxFALL_Source>
+</track>
+<track type="Audio" typeorder="1">
+<StreamOrder>1</StreamOrder>
+<ID>2</ID>
+<UniqueID>13199217473275926349</UniqueID>
+<Format>E-AC-3</Format>
+<Format_Commercial_IfAny>Dolby Digital Plus with Dolby Atmos</Format_Commercial_IfAny>
+<Format_Settings_Endianness>Big</Format_Settings_Endianness>
+<Format_AdditionalFeatures>JOC</Format_AdditionalFeatures>
+<CodecID>A_EAC3</CodecID>
+<Duration>7808.672000000</Duration>
+<BitRate_Mode>CBR</BitRate_Mode>
+<BitRate>768000</BitRate>
+<Channels>6</Channels>
+<ChannelPositions>Front: L C R, Side: L R, LFE</ChannelPositions>
+<ChannelLayout>L R C LFE Ls Rs</ChannelLayout>
+<SamplesPerFrame>1536</SamplesPerFrame>
+<SamplingRate>48000</SamplingRate>
+<SamplingCount>374816256</SamplingCount>
+<FrameRate>31.250</FrameRate>
+<FrameCount>244021</FrameCount>
+<Compression_Mode>Lossy</Compression_Mode>
+<Delay>0.000</Delay>
+<Delay_Source>Container</Delay_Source>
+<Video_Delay>0.000</Video_Delay>
+<StreamSize>749632512</StreamSize>
+<Title>German</Title>
+<Language>de</Language>
+<ServiceKind>CM</ServiceKind>
+<Default>Yes</Default>
+<Forced>No</Forced>
+<extra>
+<ComplexityIndex>16</ComplexityIndex>
+<NumberOfDynamicObjects>15</NumberOfDynamicObjects>
+<BedChannelCount>1</BedChannelCount>
+<BedChannelConfiguration>LFE</BedChannelConfiguration>
+<bsid>16</bsid>
+<dialnorm>-30</dialnorm>
+<compr>-0.28</compr>
+<acmod>7</acmod>
+<lfeon>1</lfeon>
+<dialnorm_Average>-30</dialnorm_Average>
+<dialnorm_Minimum>-30</dialnorm_Minimum>
+<compr_Average>4.72</compr_Average>
+<compr_Minimum>-5.49</compr_Minimum>
+<compr_Maximum>6.02</compr_Maximum>
+<compr_Count>1493</compr_Count>
+</extra>
+</track>
+<track type="Audio" typeorder="2">
+<StreamOrder>2</StreamOrder>
+<ID>3</ID>
+<UniqueID>12806613433336333127</UniqueID>
+<Format>E-AC-3</Format>
+<Format_Commercial_IfAny>Dolby Digital Plus with Dolby Atmos</Format_Commercial_IfAny>
+<Format_Settings_Endianness>Big</Format_Settings_Endianness>
+<Format_AdditionalFeatures>JOC</Format_AdditionalFeatures>
+<CodecID>A_EAC3</CodecID>
+<Duration>7808.672000000</Duration>
+<BitRate_Mode>CBR</BitRate_Mode>
+<BitRate>768000</BitRate>
+<Channels>6</Channels>
+<ChannelPositions>Front: L C R, Side: L R, LFE</ChannelPositions>
+<ChannelLayout>L R C LFE Ls Rs</ChannelLayout>
+<SamplesPerFrame>1536</SamplesPerFrame>
+<SamplingRate>48000</SamplingRate>
+<SamplingCount>374816256</SamplingCount>
+<FrameRate>31.250</FrameRate>
+<FrameCount>244021</FrameCount>
+<Compression_Mode>Lossy</Compression_Mode>
+<Delay>0.000</Delay>
+<Delay_Source>Container</Delay_Source>
+<Video_Delay>0.000</Video_Delay>
+<StreamSize>749632512</StreamSize>
+<Title>English</Title>
+<Language>en</Language>
+<ServiceKind>CM</ServiceKind>
+<Default>No</Default>
+<Forced>No</Forced>
+<extra>
+<ComplexityIndex>16</ComplexityIndex>
+<NumberOfDynamicObjects>15</NumberOfDynamicObjects>
+<BedChannelCount>1</BedChannelCount>
+<BedChannelConfiguration>LFE</BedChannelConfiguration>
+<bsid>16</bsid>
+<dialnorm>-28</dialnorm>
+<compr>-0.28</compr>
+<acmod>7</acmod>
+<lfeon>1</lfeon>
+<dialnorm_Average>-28</dialnorm_Average>
+<dialnorm_Minimum>-28</dialnorm_Minimum>
+<compr_Average>4.77</compr_Average>
+<compr_Minimum>-3.25</compr_Minimum>
+<compr_Maximum>6.02</compr_Maximum>
+<compr_Count>1499</compr_Count>
+</extra>
+</track>
+<track type="Text" typeorder="1">
+<StreamOrder>3</StreamOrder>
+<ID>4</ID>
+<UniqueID>6568304216582577315</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7663.291000000</Duration>
+<BitRate>0</BitRate>
+<FrameRate>0.003</FrameRate>
+<FrameCount>26</FrameCount>
+<ElementCount>26</ElementCount>
+<StreamSize>911</StreamSize>
+<Title>German (Forced)</Title>
+<Language>de</Language>
+<Default>Yes</Default>
+<Forced>Yes</Forced>
+</track>
+<track type="Text" typeorder="2">
+<StreamOrder>4</StreamOrder>
+<ID>5</ID>
+<UniqueID>3246236272024200071</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7657.416000000</Duration>
+<BitRate>48</BitRate>
+<FrameRate>0.172</FrameRate>
+<FrameCount>1314</FrameCount>
+<ElementCount>1314</ElementCount>
+<StreamSize>46802</StreamSize>
+<Title>German</Title>
+<Language>de</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="3">
+<StreamOrder>5</StreamOrder>
+<ID>6</ID>
+<UniqueID>8353521710835473196</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>79</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1338</FrameCount>
+<ElementCount>1338</ElementCount>
+<StreamSize>76680</StreamSize>
+<Title>Arabic</Title>
+<Language>ar</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="4">
+<StreamOrder>6</StreamOrder>
+<ID>7</ID>
+<UniqueID>14139407349105775928</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7664.916000000</Duration>
+<BitRate>49</BitRate>
+<FrameRate>0.179</FrameRate>
+<FrameCount>1370</FrameCount>
+<ElementCount>1370</ElementCount>
+<StreamSize>47151</StreamSize>
+<Title>Catalan</Title>
+<Language>ca</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="5">
+<StreamOrder>7</StreamOrder>
+<ID>8</ID>
+<UniqueID>5149305066449157973</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>46</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1336</FrameCount>
+<ElementCount>1336</ElementCount>
+<StreamSize>44185</StreamSize>
+<Title>Czech</Title>
+<Language>cs</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="6">
+<StreamOrder>8</StreamOrder>
+<ID>9</ID>
+<UniqueID>3571046171096604793</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>44</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1335</FrameCount>
+<ElementCount>1335</ElementCount>
+<StreamSize>43130</StreamSize>
+<Title>Danish</Title>
+<Language>da</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="7">
+<StreamOrder>9</StreamOrder>
+<ID>10</ID>
+<UniqueID>3683814120358735487</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7661.334000000</Duration>
+<BitRate>81</BitRate>
+<FrameRate>0.180</FrameRate>
+<FrameCount>1376</FrameCount>
+<ElementCount>1376</ElementCount>
+<StreamSize>78072</StreamSize>
+<Title>Modern Greek (1453-)</Title>
+<Language>el</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="8">
+<StreamOrder>10</StreamOrder>
+<ID>11</ID>
+<UniqueID>16493760183783008579</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7332.875000000</Duration>
+<BitRate>57</BitRate>
+<FrameRate>0.212</FrameRate>
+<FrameCount>1557</FrameCount>
+<ElementCount>1557</ElementCount>
+<StreamSize>52756</StreamSize>
+<Title>English (SDH)</Title>
+<Language>en</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="9">
+<StreamOrder>11</StreamOrder>
+<ID>12</ID>
+<UniqueID>13115791898267056664</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>48</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1338</FrameCount>
+<ElementCount>1338</ElementCount>
+<StreamSize>46892</StreamSize>
+<Title>Spanish</Title>
+<Language>es</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="10">
+<StreamOrder>12</StreamOrder>
+<ID>13</ID>
+<UniqueID>5594934425103288434</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>48</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1337</FrameCount>
+<ElementCount>1337</ElementCount>
+<StreamSize>46069</StreamSize>
+<Title>Spanish</Title>
+<Language>es</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="11">
+<StreamOrder>13</StreamOrder>
+<ID>14</ID>
+<UniqueID>12027277351257958532</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.250000000</Duration>
+<BitRate>46</BitRate>
+<FrameRate>0.177</FrameRate>
+<FrameCount>1356</FrameCount>
+<ElementCount>1356</ElementCount>
+<StreamSize>44133</StreamSize>
+<Title>Basque</Title>
+<Language>eu</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="12">
+<StreamOrder>14</StreamOrder>
+<ID>15</ID>
+<UniqueID>4163721760491288083</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>44</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1333</FrameCount>
+<ElementCount>1333</ElementCount>
+<StreamSize>42707</StreamSize>
+<Title>Finnish</Title>
+<Language>fi</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="13">
+<StreamOrder>15</StreamOrder>
+<ID>16</ID>
+<UniqueID>11127131782809274770</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>43</BitRate>
+<FrameRate>0.175</FrameRate>
+<FrameCount>1341</FrameCount>
+<ElementCount>1341</ElementCount>
+<StreamSize>41456</StreamSize>
+<Title>Filipino</Title>
+<Language>fil</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="14">
+<StreamOrder>16</StreamOrder>
+<ID>17</ID>
+<UniqueID>10537998596688403393</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>50</BitRate>
+<FrameRate>0.186</FrameRate>
+<FrameCount>1430</FrameCount>
+<ElementCount>1430</ElementCount>
+<StreamSize>48169</StreamSize>
+<Title>French</Title>
+<Language>fr</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="15">
+<StreamOrder>17</StreamOrder>
+<ID>18</ID>
+<UniqueID>14949539425081663594</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>43</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1336</FrameCount>
+<ElementCount>1336</ElementCount>
+<StreamSize>41317</StreamSize>
+<Title>Galician</Title>
+<Language>gl</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="16">
+<StreamOrder>18</StreamOrder>
+<ID>19</ID>
+<UniqueID>12252880048803943172</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>73</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1335</FrameCount>
+<ElementCount>1335</ElementCount>
+<StreamSize>70139</StreamSize>
+<Title>Hebrew</Title>
+<Language>he</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="17">
+<StreamOrder>19</StreamOrder>
+<ID>20</ID>
+<UniqueID>7968293554095619165</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>44</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1338</FrameCount>
+<ElementCount>1338</ElementCount>
+<StreamSize>43096</StreamSize>
+<Title>Croatian</Title>
+<Language>hr</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="18">
+<StreamOrder>20</StreamOrder>
+<ID>21</ID>
+<UniqueID>3360974562920607566</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>48</BitRate>
+<FrameRate>0.173</FrameRate>
+<FrameCount>1328</FrameCount>
+<ElementCount>1328</ElementCount>
+<StreamSize>46070</StreamSize>
+<Title>Hungarian</Title>
+<Language>hu</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="19">
+<StreamOrder>21</StreamOrder>
+<ID>22</ID>
+<UniqueID>9153145163421141290</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>45</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1336</FrameCount>
+<ElementCount>1336</ElementCount>
+<StreamSize>43958</StreamSize>
+<Title>Indonesian</Title>
+<Language>id</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="20">
+<StreamOrder>22</StreamOrder>
+<ID>23</ID>
+<UniqueID>9927744788256951409</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>47</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1338</FrameCount>
+<ElementCount>1338</ElementCount>
+<StreamSize>45866</StreamSize>
+<Title>Italian</Title>
+<Language>it</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="21">
+<StreamOrder>23</StreamOrder>
+<ID>24</ID>
+<UniqueID>10527533328501337512</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7670.291000000</Duration>
+<BitRate>51</BitRate>
+<FrameRate>0.188</FrameRate>
+<FrameCount>1440</FrameCount>
+<ElementCount>1440</ElementCount>
+<StreamSize>49368</StreamSize>
+<Title>Japanese</Title>
+<Language>ja</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="22">
+<StreamOrder>24</StreamOrder>
+<ID>25</ID>
+<UniqueID>6241495185972835214</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>54</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1337</FrameCount>
+<ElementCount>1337</ElementCount>
+<StreamSize>52451</StreamSize>
+<Title>Korean</Title>
+<Language>ko</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="23">
+<StreamOrder>25</StreamOrder>
+<ID>26</ID>
+<UniqueID>5801434659669343922</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>45</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1336</FrameCount>
+<ElementCount>1336</ElementCount>
+<StreamSize>43774</StreamSize>
+<Title>Malay (macrolanguage)</Title>
+<Language>ms</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="24">
+<StreamOrder>26</StreamOrder>
+<ID>27</ID>
+<UniqueID>3614707582089682138</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7659.583000000</Duration>
+<BitRate>43</BitRate>
+<FrameRate>0.165</FrameRate>
+<FrameCount>1266</FrameCount>
+<ElementCount>1266</ElementCount>
+<StreamSize>41901</StreamSize>
+<Title>Norwegian Bokmål</Title>
+<Language>nb</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="25">
+<StreamOrder>27</StreamOrder>
+<ID>28</ID>
+<UniqueID>3612273528257122694</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>45</BitRate>
+<FrameRate>0.165</FrameRate>
+<FrameCount>1269</FrameCount>
+<ElementCount>1269</ElementCount>
+<StreamSize>43481</StreamSize>
+<Title>Dutch</Title>
+<Language>nl</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="26">
+<StreamOrder>28</StreamOrder>
+<ID>29</ID>
+<UniqueID>14599644594272040632</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>45</BitRate>
+<FrameRate>0.173</FrameRate>
+<FrameCount>1324</FrameCount>
+<ElementCount>1324</ElementCount>
+<StreamSize>43540</StreamSize>
+<Title>Polish</Title>
+<Language>pl</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="27">
+<StreamOrder>29</StreamOrder>
+<ID>30</ID>
+<UniqueID>9084201308487025932</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>45</BitRate>
+<FrameRate>0.173</FrameRate>
+<FrameCount>1324</FrameCount>
+<ElementCount>1324</ElementCount>
+<StreamSize>43160</StreamSize>
+<Title>Portuguese</Title>
+<Language>pt</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="28">
+<StreamOrder>30</StreamOrder>
+<ID>31</ID>
+<UniqueID>12898783283167112561</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>48</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1338</FrameCount>
+<ElementCount>1338</ElementCount>
+<StreamSize>46476</StreamSize>
+<Title>Portuguese</Title>
+<Language>pt</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="29">
+<StreamOrder>31</StreamOrder>
+<ID>32</ID>
+<UniqueID>25019330105122083</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>51</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1336</FrameCount>
+<ElementCount>1336</ElementCount>
+<StreamSize>49409</StreamSize>
+<Title>Romanian</Title>
+<Language>ro</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="30">
+<StreamOrder>32</StreamOrder>
+<ID>33</ID>
+<UniqueID>12247641318379632651</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>78</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1337</FrameCount>
+<ElementCount>1337</ElementCount>
+<StreamSize>75545</StreamSize>
+<Title>Russian</Title>
+<Language>ru</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="31">
+<StreamOrder>33</StreamOrder>
+<ID>34</ID>
+<UniqueID>1235119120339692290</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>45</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1335</FrameCount>
+<ElementCount>1335</ElementCount>
+<StreamSize>43767</StreamSize>
+<Title>Swedish</Title>
+<Language>sv</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="32">
+<StreamOrder>34</StreamOrder>
+<ID>35</ID>
+<UniqueID>1196953578986405624</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>127</BitRate>
+<FrameRate>0.175</FrameRate>
+<FrameCount>1339</FrameCount>
+<ElementCount>1339</ElementCount>
+<StreamSize>122552</StreamSize>
+<Title>Thai</Title>
+<Language>th</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="33">
+<StreamOrder>35</StreamOrder>
+<ID>36</ID>
+<UniqueID>9807439243392229313</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7684.583000000</Duration>
+<BitRate>50</BitRate>
+<FrameRate>0.179</FrameRate>
+<FrameCount>1377</FrameCount>
+<ElementCount>1377</ElementCount>
+<StreamSize>48705</StreamSize>
+<Title>Turkish</Title>
+<Language>tr</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="34">
+<StreamOrder>36</StreamOrder>
+<ID>37</ID>
+<UniqueID>11659878976973409972</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>48</BitRate>
+<FrameRate>0.175</FrameRate>
+<FrameCount>1340</FrameCount>
+<ElementCount>1340</ElementCount>
+<StreamSize>46216</StreamSize>
+<Title>Turkish</Title>
+<Language>tr</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="35">
+<StreamOrder>37</StreamOrder>
+<ID>38</ID>
+<UniqueID>250706883467272586</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7684.583000000</Duration>
+<BitRate>60</BitRate>
+<FrameRate>0.216</FrameRate>
+<FrameCount>1659</FrameCount>
+<ElementCount>1659</ElementCount>
+<StreamSize>58258</StreamSize>
+<Title>Turkish (SDH)</Title>
+<Language>tr</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="36">
+<StreamOrder>38</StreamOrder>
+<ID>39</ID>
+<UniqueID>5926851518387433669</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>79</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1337</FrameCount>
+<ElementCount>1337</ElementCount>
+<StreamSize>76195</StreamSize>
+<Title>Ukrainian</Title>
+<Language>uk</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="37">
+<StreamOrder>39</StreamOrder>
+<ID>40</ID>
+<UniqueID>13501848044027239593</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7684.083000000</Duration>
+<BitRate>63</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1337</FrameCount>
+<ElementCount>1337</ElementCount>
+<StreamSize>61161</StreamSize>
+<Title>Vietnamese</Title>
+<Language>vi</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="38">
+<StreamOrder>40</StreamOrder>
+<ID>41</ID>
+<UniqueID>1972588078464414623</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>48</BitRate>
+<FrameRate>0.175</FrameRate>
+<FrameCount>1339</FrameCount>
+<ElementCount>1339</ElementCount>
+<StreamSize>46152</StreamSize>
+<Title>Simplified, Chinese</Title>
+<Language>zh</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Text" typeorder="39">
+<StreamOrder>41</StreamOrder>
+<ID>42</ID>
+<UniqueID>7287399640319142260</UniqueID>
+<Format>UTF-8</Format>
+<CodecID>S_TEXT/UTF8</CodecID>
+<Duration>7668.083000000</Duration>
+<BitRate>45</BitRate>
+<FrameRate>0.174</FrameRate>
+<FrameCount>1338</FrameCount>
+<ElementCount>1338</ElementCount>
+<StreamSize>43305</StreamSize>
+<Title>Traditional, Chinese</Title>
+<Language>zh</Language>
+<Default>No</Default>
+<Forced>No</Forced>
+</track>
+<track type="Menu">
+<extra>
+<_00_00_00_000>en:Part 01</_00_00_00_000>
+<_02_00_51_450>en:Credits</_02_00_51_450>
+</extra>
+</track>
+</media>
+</MediaInfo>
+

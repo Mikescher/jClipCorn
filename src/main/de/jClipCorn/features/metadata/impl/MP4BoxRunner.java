@@ -1,21 +1,19 @@
-package de.jClipCorn.features.metadata.mp4box;
+package de.jClipCorn.features.metadata.impl;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.features.metadata.MetadataSource;
-import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.features.metadata.MetadataError;
+import de.jClipCorn.features.metadata.MetadataSourceType;
+import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.metadata.exceptions.MP4BoxQueryException;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.properties.CCProperties;
-import de.jClipCorn.util.Str;
-import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datatypes.ErrOpt;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ProcessHelper;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -25,11 +23,7 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MP4BoxRunner implements MetadataSource {
-
-	// https://trac.ffmpeg.org/wiki/FFprobeTips
-
-	// https://stackoverflow.com/a/28376817/1761622
+public class MP4BoxRunner extends MetadataRunner {
 
 	private final CCMovieList movielist;
 
@@ -43,7 +37,8 @@ public class MP4BoxRunner implements MetadataSource {
 
 	@SuppressWarnings("nls")
 	@Override
-	public PartialMediaInfo run(FSPath filename) throws IOException, MetadataQueryException {
+	public VideoMetadata run(FSPath filename) throws IOException, MetadataQueryException
+	{
 		var boxppath = ccprops().PROP_PLAY_MP4BOX_PATH.getValue().getPathAndArgs();
 		if (! boxppath.Item1.exists()) throw new MP4BoxQueryException("MP4Box not found"); //$NON-NLS-1$
 
@@ -61,9 +56,9 @@ public class MP4BoxRunner implements MetadataSource {
 		String ffoutput = proc.Item3;
 
 		try	{
-			var hash = ChecksumHelper.fastVideoHash(filename);
+			var fvhash = ChecksumHelper.fastVideoHash(filename);
 
-			return parse(ffoutput, hash, attr);
+			return parse(ffoutput, fvhash, attr, filename);
 
 		} catch (JSONException e) {
 			throw new MP4BoxQueryException(e.getMessage(), ExceptionUtils.getStackTrace(e) + "\n\n\n--------------\n\n\n" + ffoutput); //$NON-NLS-1$
@@ -72,50 +67,55 @@ public class MP4BoxRunner implements MetadataSource {
 		}
 	}
 
-	@NotNull
-	public PartialMediaInfo parse(String ffoutput, String hash, BasicFileAttributes attr) {
-		var rawout = Opt.of(ffoutput);
-		var cdate = Opt.of(attr.creationTime().toMillis());
-		var mdate = Opt.of(attr.lastModifiedTime().toMillis());
-		var checksum = Opt.of(hash);
+	@SuppressWarnings("nls")
+	public VideoMetadata parse(String ffoutput, String fvhash, BasicFileAttributes attr, FSPath filename) {
+		var cdate    = ErrOpt.<Long,   MetadataError>of(attr.creationTime().toMillis());
+		var mdate    = ErrOpt.<Long,   MetadataError>of(attr.lastModifiedTime().toMillis());
+		var checksum = ErrOpt.<String, MetadataError>of(fvhash);
 
-		var duration = Opt.<Double>empty();
-		var width = Opt.<Integer>empty();
-		var height = Opt.<Integer>empty();
+		var duration = ErrOpt.<Double, MetadataError>empty();
 
 		for (String line : SimpleFileUtils.splitLines(ffoutput))
 		{
 			Matcher m1 = Pattern.compile("^\\s+Computed Duration ([0-9]+):([0-9]+):([0-9]+).([0-9]+) - Indicated Duration .*$").matcher(line);
 			if (m1.matches()) {
-				double h = Integer.parseInt(m1.group(1));
-				double m = Integer.parseInt(m1.group(2));
-				double s = Integer.parseInt(m1.group(3));
 
-				duration = Opt.of(h*3600 + m*60 + s);
-				continue;
-			}
+				duration = ErrOpt.of(() ->
+				{
+					double h = Integer.parseInt(m1.group(1));
+					double m = Integer.parseInt(m1.group(2));
+					double s = Integer.parseInt(m1.group(3));
 
-			Matcher m2 = Pattern.compile("^.*Video - Visual Size ([0-9]+) x ([0-9]+)$").matcher(line);
-			if (m2.matches()) {
-				width  = Opt.of(Integer.parseInt(m2.group(1)));
-				height = Opt.of(Integer.parseInt(m2.group(2)));
-				continue;
+					return h*3600 + m*60 + s;
+				}, MetadataError::Wrap);
 			}
 		}
 
-		return PartialMediaInfo.create
-				(
-						rawout,
-						cdate, mdate, Opt.of(new CCFileSize(attr.size())), checksum,
-						duration, Opt.empty(),
-						Opt.empty(), width, height, Opt.empty(), Opt.empty(), Opt.empty(), Opt.empty(),
-						Opt.empty(), Opt.empty(), Opt.empty(), Opt.empty()
-				);
+		return new VideoMetadata
+		(
+			getSourceType(),
+			filename,
+			ffoutput,
+			cdate,
+			mdate,
+			checksum,
+			ErrOpt.empty(),
+			ErrOpt.empty(),
+			ErrOpt.empty(),
+			duration,
+			ErrOpt.empty(),
+			ErrOpt.empty(),
+			new ArrayList<>(),
+			new ArrayList<>(),
+			new ArrayList<>(),
+			new ArrayList<>(),
+			new ArrayList<>()
+		);
 	}
 
 	@Override
-	public String getFullOutput(FSPath filename, PartialMediaInfo result) {
-		return result.RawOutput.orElse(Str.Empty);
+	public MetadataSourceType getSourceType() {
+		return MetadataSourceType.MP4BOX;
 	}
 
 	@Override

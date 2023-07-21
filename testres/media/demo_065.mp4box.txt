@@ -1,0 +1,38 @@
+[AC3Dmx] 11113 bytes unrecovered before sync word
+[AC3Dmx] 9 bytes unrecovered before sync word
+[AC3Dmx] 1212 bytes unrecovered before sync word
+[AC3Dmx] 9 bytes unrecovered before sync word
+[AC3Dmx] 2413 bytes unrecovered before sync word
+[AC3Dmx] 9 bytes unrecovered before sync word
+[AC3Dmx] 1211 bytes unrecovered before sync word
+[AC3Dmx] 9 bytes unrecovered before sync word
+[AC3Dmx] 2420 bytes unrecovered before sync word
+[AC3Dmx] 9 bytes unrecovered before sync word
+[AC3Dmx] 5789 bytes unrecovered before sync word
+[AC3Dmx] 9 bytes unrecovered before sync word
+[AC3Dmx] 22253 bytes unrecovered before sync word
+[AC3Dmx] 9 bytes unrecovered before sync word
+[AC3Dmx] 11639 bytes unrecovered before sync word
+[AC3Dmx] 9 bytes unrecovered before sync word
+[AC3Dmx] 29175 bytes unrecovered before sync word
+[AC3Dmx] 9 bytes unrecovered before sync word
+[AC3Dmx] 16112 bytes unrecovered before sync word
+[AC3Dmx] 9 bytes unrecovered before sync word
+[AC3Dmx] 36250 bytes unrecovered before sync word
+[AC3Dmx] 9 bytes unrecovered before sync word
+[AC3Dmx] 1925 bytes unrecovered before sync word
+[AC3Dmx] 11995 bytes unrecovered before sync word
+[AC3Dmx] 9 bytes unrecovered before sync word
+[AC3Dmx] 54714 bytes unrecovered before sync word
+[AC3Dmx] 15431 bytes unrecovered before sync word
+[AC3Dmx] 2449 bytes unrecovered before sync word
+[AC3Dmx] 9 bytes unrecovered before sync word
+[AC3Dmx] 37139 bytes unrecovered before sync word
+[AC3Dmx] 23652 bytes unrecovered before sync word
+[AC3Dmx] 9 bytes unrecovered before sync word
+Import probing results for The Pale Blue Eye [GER+ENG].mkv:
+File has 1 tracks
+- Track 1 type: Audio - Codec Enhanced AC3 Audio
+        SampleRate 48000 - 6 channels
+
+For more details, use `gpac -i The Pale Blue Eye [GER+ENG].mkv inspect[:deep][:analyze=on|bs]`

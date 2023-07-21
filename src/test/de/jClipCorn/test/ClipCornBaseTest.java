@@ -10,9 +10,7 @@ import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.datatypes.Opt;
-import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.datatypes.Tuple3;
+import de.jClipCorn.util.datatypes.*;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -249,13 +247,17 @@ public class ClipCornBaseTest {
 		}
 	}
 
-	public static <T> void assertOptEquals(T expected, Opt<T> actual) {
+	public static <T> void assertOptEquals(T expected, IOpt<T> actual) {
 		assertTrue(actual.isPresent());
 		if (actual.isPresent()) assertEquals(null, expected, actual.get());
 	}
 
-	public static <T> void assertOptEmpty(Opt<T> actual) {
+	public static <T> void assertOptEmpty(IOpt<T> actual) {
 		assertTrue(actual.isEmpty());
+	}
+
+	public static <T1, T2> void assertOptError(ErrOpt<T1, T2> actual) {
+		assertTrue(actual.isError());
 	}
 
 	protected static FSPath createAutocleanedDir(String ident) throws IOException {

@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class Opt<T> {
+public class Opt<T> implements IOpt<T> {
 	public static final Opt<?> EMPTY = new Opt<>();
 
 	public static final Opt<Boolean> False = new Opt<>(false);
@@ -68,10 +68,25 @@ public class Opt<T> {
 		return isSet ? value : other;
 	}
 
+	public Opt<T> orElseFlat(Opt<T> other) {
+		return isSet ? this : other;
+	}
+
 	@SuppressWarnings("unchecked")
-	public <TVal> Opt<TVal> flatten(Func1to1<T, Opt<TVal>> map) {
+	public <TVal> Opt<TVal> flatMap(Func1to1<T, IOpt<TVal>> map) {
 		if (!isPresent()) return (Opt<TVal>) EMPTY;
-		return map.invoke(value);
+		var v = map.invoke(value);
+		if (v.isPresent()) return Opt.of(v.get());
+		return (Opt<TVal>) EMPTY;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <TVal, TErr> ErrOpt<TVal, TErr> flatErrMap(Func1to1<T, ErrOpt<TVal, TErr>> map) {
+		if (!isPresent()) return ErrOpt.empty();
+		var v = map.invoke(value);
+		if (v.isPresent()) return ErrOpt.of(v.get());
+		if (v.isError()) return ErrOpt.err(v.getErr());
+		return ErrOpt.empty();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -99,5 +114,10 @@ public class Opt<T> {
 		if (this.isEmpty() && other.isEmpty()) return true;
 		if (this.isEmpty() || other.isEmpty()) return false;
 		return cmp.invoke(this.get(), other.get());
+	}
+
+	public <TErrType> ErrOpt<T, TErrType> toErrOpt() {
+		if (this.isEmpty()) return ErrOpt.empty();
+		return ErrOpt.of(this.value);
 	}
 }

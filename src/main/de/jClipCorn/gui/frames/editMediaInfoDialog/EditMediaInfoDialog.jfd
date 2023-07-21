@@ -63,7 +63,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.frames.editMediaInfoDialog.MIButton" ) {
 					name: "btnRunFFProbeFull"
-					"metadataSourceType": enum de.jClipCorn.features.metadata.MetadataSourceType FFPROBE
+					"metadataSourceType": enum de.jClipCorn.features.metadata.MetadataSourceType FFPROBE_FULL
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
 					"gridY": 3
@@ -91,7 +91,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.frames.editMediaInfoDialog.MIButton" ) {
 					name: "btnRunFFProbeFast"
-					"metadataSourceType": enum de.jClipCorn.features.metadata.MetadataSourceType FFMPEG
+					"metadataSourceType": enum de.jClipCorn.features.metadata.MetadataSourceType FFPROBE_FAST
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
 					"gridY": 5
@@ -527,11 +527,21 @@ new FormModel {
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "default"
-				"$rowSpecs": "default"
+				"$columnSpecs": "labelcompgap, default:grow, labelcompgap"
+				"$rowSpecs": "linegap, default:grow, labelcompgap"
 			} ) {
 				name: "panel1"
 				"border": new javax.swing.border.TitledBorder( "i18nKey=EditMediaInfoDialog.Tracks" )
+				add( new FormContainer( "de.jClipCorn.gui.frames.editMediaInfoDialog.MetadataTrackTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "tabTracks"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(this);"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 2
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 6
 				"gridY": 4

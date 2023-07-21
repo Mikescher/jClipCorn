@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.editMediaInfoDialog;
 
 import de.jClipCorn.features.metadata.MetadataSourceType;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.util.datatypes.Opt;
 
 import javax.swing.*;
@@ -10,8 +11,9 @@ import java.awt.event.ActionEvent;
 public class MIDialogResultSet {
 	public final MetadataSourceType Type;
 
-	public Opt<PartialMediaInfo> Data1 = Opt.empty();
-	public Opt<String> Data2 = Opt.empty();
+	private Opt<PartialMediaInfo> Data1 = Opt.empty();
+	private Opt<String>           Data2 = Opt.empty();
+	private Opt<VideoMetadata>    Data3 = Opt.empty();
 
 	private final EditMediaInfoDialog owner;
 
@@ -39,19 +41,19 @@ public class MIDialogResultSet {
 	}
 
 	private void onApply(ActionEvent actionEvent) {
-		Data1.ifPresent(d -> owner.doApply(d));
+		Data1.ifPresent(d -> owner.doApply(d, Data3));
 	}
 
 	private void onHint(ActionEvent actionEvent) {
-		Data1.ifPresent(d -> owner.doShowHints(Opt.of(d), Type));
+		Data1.ifPresent(d -> owner.doShowHints(Opt.of(d), Type, Data3));
 	}
 
 	private void onShow(ActionEvent actionEvent) {
-		Data2.ifPresent(d -> owner.doShowOutput(d));
+		Data2.ifPresent(owner::doShowOutput);
 	}
 
 	private void onRun(ActionEvent actionEvent) {
-		owner.doQuery(Type.getMetadataSource(owner.getMovieList()), this);
+		owner.doQuery(Type.getRunner(owner.getMovieList()), this);
 	}
 
 	public void updateEnabled(boolean isRunning) {
@@ -61,12 +63,9 @@ public class MIDialogResultSet {
 		btnApply.setEnabled(!isRunning && Data1.isPresent());
 	}
 
-	public void updateData(PartialMediaInfo mi, String raw) {
+	public void updateData(PartialMediaInfo mi, VideoMetadata vmd) {
 		Data1 = Opt.of(mi);
-		Data2 = Opt.of(raw);
-	}
-
-	public void updateData(PartialMediaInfo mi) {
-		Data1 = Opt.of(mi);
+		Data2 = mi.RawOutput;
+		Data3 = Opt.ofNullable(vmd);
 	}
 }

@@ -5,7 +5,7 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
+import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.ICCPropertySource;
@@ -35,7 +35,7 @@ public class NewEpisodeVM implements IEpisodeData, ICCPropertySource {
 	public CCMediaInfo MediaInfo = CCMediaInfo.EMPTY;
 	public boolean NoMove = false;
 
-	public MediaQueryResult MediaQueryResult = null;
+	public VideoMetadata MediaQueryResult = null;
 	public FSPath TargetRoot = FSPath.Empty;
 
 	private final CCMovieList movielist;

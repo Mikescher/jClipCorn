@@ -46,6 +46,14 @@ public class CCXMLElement
 		return hasAttribute(s0) && CCStreams.iterate(s).all(this::hasAttribute);
 	}
 
+	public boolean hasChild(String attrName) {
+		return getFirstChildOrNull(attrName) != null;
+	}
+
+	public boolean hasChildWithNonWhitespaceValue(String attrName) {
+		return !Str.isNullOrWhitespace(getFirstChildValueOrDefault(attrName, ""));
+	}
+
 	public CCXMLParser getOwner() {
 		return _owner;
 	}

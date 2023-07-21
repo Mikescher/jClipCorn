@@ -12,13 +12,18 @@ import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewMovieMenuBar;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
+import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
+import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
-import de.jClipCorn.gui.guiComponents.*;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
+import de.jClipCorn.gui.guiComponents.JReadableCCPathTextField;
+import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.cover.CoverLabelFullsize;
-import de.jClipCorn.gui.guiComponents.iconComponents.*;
-import de.jClipCorn.gui.guiComponents.language.*;
+import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button;
+import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon32Button;
+import de.jClipCorn.gui.guiComponents.iconComponents.OnlineRefButton;
+import de.jClipCorn.gui.guiComponents.iconComponents.OnlineScoreDisplay;
+import de.jClipCorn.gui.guiComponents.language.LanguageListDisplay;
 import de.jClipCorn.gui.guiComponents.language.LanguageSetDisplay;
 import de.jClipCorn.gui.guiComponents.tags.TagDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -28,7 +33,6 @@ import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
@@ -236,8 +240,8 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 		}
 
 		try {
-			GenericTextDialog.showText(this, getTitle(), new MediaQueryRunner(movielist).queryRaw(movie.Parts.get(index).toFSPath(this)), false);
-		} catch (IOException | MediaQueryException e) {
+			GenericTextDialog.showText(this, getTitle(), new MediaInfoRunner(movielist).run(movie.Parts.get(index).toFSPath(this)).RawOutput, false);
+		} catch (IOException | MetadataQueryException e) {
 			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}

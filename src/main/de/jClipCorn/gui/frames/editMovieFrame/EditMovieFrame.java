@@ -6,9 +6,10 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.MovieDataPack;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
+import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
+import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
@@ -41,6 +42,7 @@ import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.DirtyUtil;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.ImageCropperResultListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
@@ -479,16 +481,16 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		}
 
 		try {
-			List<MediaQueryResult> dat = new ArrayList<>();
+			List<VideoMetadata> dat = new ArrayList<>();
 
-			var mq = new MediaQueryRunner(movielist);
+			var mq = new MediaInfoRunner(movielist);
 
-			if (!edPart0.getPath().isEmpty()) dat.add(mq.query(edPart0.getPath().toFSPath(this), false));
-			if (!edPart1.getPath().isEmpty()) dat.add(mq.query(edPart1.getPath().toFSPath(this), false));
-			if (!edPart2.getPath().isEmpty()) dat.add(mq.query(edPart2.getPath().toFSPath(this), false));
-			if (!edPart3.getPath().isEmpty()) dat.add(mq.query(edPart3.getPath().toFSPath(this), false));
-			if (!edPart4.getPath().isEmpty()) dat.add(mq.query(edPart4.getPath().toFSPath(this), false));
-			if (!edPart5.getPath().isEmpty()) dat.add(mq.query(edPart5.getPath().toFSPath(this), false));
+			if (!edPart0.getPath().isEmpty()) dat.add(mq.run(edPart0.getPath().toFSPath(this)));
+			if (!edPart1.getPath().isEmpty()) dat.add(mq.run(edPart1.getPath().toFSPath(this)));
+			if (!edPart2.getPath().isEmpty()) dat.add(mq.run(edPart2.getPath().toFSPath(this)));
+			if (!edPart3.getPath().isEmpty()) dat.add(mq.run(edPart3.getPath().toFSPath(this)));
+			if (!edPart4.getPath().isEmpty()) dat.add(mq.run(edPart4.getPath().toFSPath(this)));
+			if (!edPart5.getPath().isEmpty()) dat.add(mq.run(edPart5.getPath().toFSPath(this)));
 
 			if (dat.isEmpty()) {
 				lblLenAuto.setText(Str.Empty);
@@ -498,16 +500,20 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 
 			lblLenAuto.setText(Str.Empty);
 
-			int dur = (int) (CCStreams.iterate(dat).any(d -> d.Duration == -1) ? -1 : (CCStreams.iterate(dat).sumDouble(d -> d.Duration)/60));
-			if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
-			setLength(dur);
+			if (CCStreams.iterate(dat).any(d -> d.Duration.isEmpty())) {
+				throw new MediaQueryException("some files have missing <Duration>"); //$NON-NLS-1$
+			}
 
-		} catch (IOException | MediaQueryException e) {
+			var dur = CCStreams.iterate(dat).sumDouble(d -> d.Duration.get())/60;
+			setLength((int)dur);
+
+		} catch (IOException | MetadataQueryException e) {
 			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
+	@SuppressWarnings("nls")
 	private void calculateMediaInfoAndSetLanguage() {
 		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
@@ -515,16 +521,16 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		}
 
 		try {
-			List<MediaQueryResult> dat = new ArrayList<>();
+			List<VideoMetadata> dat = new ArrayList<>();
 
-			var mq = new MediaQueryRunner(movielist);
+			var mq = new MediaInfoRunner(movielist);
 
-			if (!edPart0.getPath().isEmpty()) dat.add(mq.query(edPart0.getPath().toFSPath(this), false));
-			if (!edPart1.getPath().isEmpty()) dat.add(mq.query(edPart1.getPath().toFSPath(this), false));
-			if (!edPart2.getPath().isEmpty()) dat.add(mq.query(edPart2.getPath().toFSPath(this), false));
-			if (!edPart3.getPath().isEmpty()) dat.add(mq.query(edPart3.getPath().toFSPath(this), false));
-			if (!edPart4.getPath().isEmpty()) dat.add(mq.query(edPart4.getPath().toFSPath(this), false));
-			if (!edPart5.getPath().isEmpty()) dat.add(mq.query(edPart5.getPath().toFSPath(this), false));
+			if (!edPart0.getPath().isEmpty()) dat.add(mq.run(edPart0.getPath().toFSPath(this)));
+			if (!edPart1.getPath().isEmpty()) dat.add(mq.run(edPart1.getPath().toFSPath(this)));
+			if (!edPart2.getPath().isEmpty()) dat.add(mq.run(edPart2.getPath().toFSPath(this)));
+			if (!edPart3.getPath().isEmpty()) dat.add(mq.run(edPart3.getPath().toFSPath(this)));
+			if (!edPart4.getPath().isEmpty()) dat.add(mq.run(edPart4.getPath().toFSPath(this)));
+			if (!edPart5.getPath().isEmpty()) dat.add(mq.run(edPart5.getPath().toFSPath(this)));
 
 			if (dat.isEmpty()) {
 				lblLenAuto.setText(Str.Empty);
@@ -532,31 +538,69 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 				return;
 			}
 
-			int dur = (int) (CCStreams.iterate(dat).any(d -> d.Duration == -1) ? -1 : (CCStreams.iterate(dat).sumDouble(d -> d.Duration)/60));
-			if (dur != -1) lblLenAuto.setText("("+dur+")"); //$NON-NLS-1$ //$NON-NLS-2$
-			if (dur == -1) lblLenAuto.setText(Str.Empty);
+			if (CCStreams.iterate(dat).any(d -> d.Duration.isEmpty())) {
+				var dur = CCStreams.iterate(dat).sumDouble(d -> d.Duration.get())/60;
+				setLength((int)dur);
+				lblLenAuto.setText("("+((int)dur)+")");
+			} else {
+				lblLenAuto.setText(Str.Empty);
+			}
 
-			if (CCStreams.iterate(dat).any(d -> d.AudioLanguages == null)) {
+			if (CCStreams.iterate(dat).any(d -> d.AudioLanguages.size() == 0)) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
 				return;
 			}
 
-			CCDBLanguageSet dbll = dat.get(0).AudioLanguages;
-			for (int i = 1; i < dat.size(); i++) dbll = CCDBLanguageSet.intersection(dbll, dat.get(i).AudioLanguages);
+			var anyAudioLangErr = false;
+			var anyAudioLangEmpty = false;
+
+			var errOutput = new StringBuilder();
+			for (var vmd : dat) {
+				errOutput.append(Str.format("{0}\n", vmd.InputFile.getFilenameWithExt()));
+				errOutput.append("=======================================================\n");
+				for (var alang : vmd.AudioLanguages) {
+					if (alang.isEmpty()) {
+						errOutput.append(Str.format("[---] (empty)\n"));
+						anyAudioLangEmpty = true;
+					}
+					else if (alang.isError()) {
+						errOutput.append(Str.format("[---] {0}\n", alang.getErr().TextShort));
+						anyAudioLangErr = true;
+					}
+					else {
+						errOutput.append(Str.format("[{0}] (ok)\n", alang.get().getShortString()));
+					}
+				}
+				errOutput.append("\n");
+			}
+
+			if (anyAudioLangErr)
+			{
+				var dialogRes = DialogHelper.showYesNoDlg(this, LocaleBundle.getString("Dialogs.MetadataError_caption"), LocaleBundle.getString("AddMovieFrame.dialog_errlang") + "\n\n" + errOutput);
+				if (!dialogRes) return;
+			}
+			else if (anyAudioLangEmpty)
+			{
+				var dialogRes = DialogHelper.showYesNoDlg(this, LocaleBundle.getString("Dialogs.MetadataError_caption"), LocaleBundle.getString("AddMovieFrame.dialog_emptylang") + "\n\n" + errOutput);
+				if (!dialogRes) return;
+			}
+
+			CCDBLanguageSet dbll = dat.get(0).getValidAudioLanguages();
+			for (int i = 1; i < dat.size(); i++) dbll = CCDBLanguageSet.intersection(dbll, dat.get(i).getValidAudioLanguages());
 
 			if (dbll.isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
-				return;
 			} else {
 				setMovieLanguage(dbll);
 			}
 
-		} catch (IOException | MediaQueryException e) {
+		} catch (IOException | MetadataQueryException e) {
 			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
+	@SuppressWarnings("nls")
 	private void calculateAndSetMediaInfo() {
 		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
@@ -564,34 +608,41 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		}
 
 		try {
-			List<MediaQueryResult> dat = new ArrayList<>();
+			List<VideoMetadata> dat = new ArrayList<>();
 
-			var mq = new MediaQueryRunner(movielist);
+			var mq = new MediaInfoRunner(movielist);
 
-			if (!edPart0.getPath().isEmpty()) dat.add(mq.query(edPart0.getPath().toFSPath(this), true));
-			if (!edPart1.getPath().isEmpty()) dat.add(mq.query(edPart1.getPath().toFSPath(this), true));
-			if (!edPart2.getPath().isEmpty()) dat.add(mq.query(edPart2.getPath().toFSPath(this), true));
-			if (!edPart3.getPath().isEmpty()) dat.add(mq.query(edPart3.getPath().toFSPath(this), true));
-			if (!edPart4.getPath().isEmpty()) dat.add(mq.query(edPart4.getPath().toFSPath(this), true));
-			if (!edPart5.getPath().isEmpty()) dat.add(mq.query(edPart5.getPath().toFSPath(this), true));
+			if (!edPart0.getPath().isEmpty()) dat.add(mq.run(edPart0.getPath().toFSPath(this)));
+			if (!edPart1.getPath().isEmpty()) dat.add(mq.run(edPart1.getPath().toFSPath(this)));
+			if (!edPart2.getPath().isEmpty()) dat.add(mq.run(edPart2.getPath().toFSPath(this)));
+			if (!edPart3.getPath().isEmpty()) dat.add(mq.run(edPart3.getPath().toFSPath(this)));
+			if (!edPart4.getPath().isEmpty()) dat.add(mq.run(edPart4.getPath().toFSPath(this)));
+			if (!edPart5.getPath().isEmpty()) dat.add(mq.run(edPart5.getPath().toFSPath(this)));
 
 			if (dat.isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
 				return;
 			}
 
-			int dur = (int) (CCStreams.iterate(dat).any(d -> d.Duration == -1) ? -1 : (CCStreams.iterate(dat).sumDouble(d -> d.Duration)/60));
-			if (dur != -1) lblLenAuto.setText("("+dur+")"); //$NON-NLS-1$ //$NON-NLS-2$
-			if (dur == -1) lblLenAuto.setText(Str.Empty);
+			if (CCStreams.iterate(dat).any(d -> d.Duration.isEmpty()))
+			{
+				SwingUtils.invokeLater(() -> lblLenAuto.setText(Str.Empty));
+			}
+			else
+			{
+				var dur = CCStreams.iterate(dat).sumDouble(d -> d.Duration.get())/60;
+				SwingUtils.invokeLater(() -> lblLenAuto.setText("("+((int)dur)+")"));
+			}
 
 			ctrlMediaInfo.setValue(dat.get(0));
 
-		} catch (IOException | MediaQueryException e) {
+		} catch (IOException | MetadataQueryException e) {
 			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
+	@SuppressWarnings("nls")
 	private void calculateAndShowMediaInfo() {
 		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
@@ -600,22 +651,23 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 
 		StringBuilder b = new StringBuilder();
 
-		try {
-			var mq = new MediaQueryRunner(movielist);
+		var mq = new MediaInfoRunner(movielist);
 
-			if (!edPart0.getPath().isEmpty()) b.append(mq.queryRaw(edPart0.getPath().toFSPath(this))).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!edPart1.getPath().isEmpty()) b.append(mq.queryRaw(edPart1.getPath().toFSPath(this))).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!edPart2.getPath().isEmpty()) b.append(mq.queryRaw(edPart2.getPath().toFSPath(this))).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!edPart3.getPath().isEmpty()) b.append(mq.queryRaw(edPart3.getPath().toFSPath(this))).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!edPart4.getPath().isEmpty()) b.append(mq.queryRaw(edPart4.getPath().toFSPath(this))).append("\n\n\n\n\n"); //$NON-NLS-1$
-			if (!edPart5.getPath().isEmpty()) b.append(mq.queryRaw(edPart5.getPath().toFSPath(this))).append("\n\n\n\n\n"); //$NON-NLS-1$
+		try {
+			if (!edPart0.getPath().isEmpty()) b.append(mq.run(edPart0.getPath().toFSPath(this)).RawOutput).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart1.getPath().isEmpty()) b.append(mq.run(edPart1.getPath().toFSPath(this)).RawOutput).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart2.getPath().isEmpty()) b.append(mq.run(edPart2.getPath().toFSPath(this)).RawOutput).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart3.getPath().isEmpty()) b.append(mq.run(edPart3.getPath().toFSPath(this)).RawOutput).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart4.getPath().isEmpty()) b.append(mq.run(edPart4.getPath().toFSPath(this)).RawOutput).append("\n\n\n\n\n"); //$NON-NLS-1$
+			if (!edPart5.getPath().isEmpty()) b.append(mq.run(edPart5.getPath().toFSPath(this)).RawOutput).append("\n\n\n\n\n"); //$NON-NLS-1$
 
 			GenericTextDialog.showText(this, getTitle(), b.toString(), false);
-		} catch (IOException | MediaQueryException e) {
+		} catch (IOException | MetadataQueryException e) {
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
+	@SuppressWarnings("nls")
 	private void calculateMediaInfoAndSetSubs() {
 		if (!ccprops().PROP_PLAY_MEDIAINFO_PATH.getValue().existsAndCanExecute()) {
 			DialogHelper.showLocalError(this, "Dialogs.MediaInfoNotFound"); //$NON-NLS-1$
@@ -623,34 +675,63 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		}
 
 		try {
-			List<MediaQueryResult> dat = new ArrayList<>();
+			List<VideoMetadata> dat = new ArrayList<>();
 
-			var mq = new MediaQueryRunner(movielist);
+			var mq = new MediaInfoRunner(movielist);
 
-			if (!edPart0.getPath().isEmpty()) dat.add(mq.query(edPart0.getPath().toFSPath(this), false));
-			if (!edPart1.getPath().isEmpty()) dat.add(mq.query(edPart1.getPath().toFSPath(this), false));
-			if (!edPart2.getPath().isEmpty()) dat.add(mq.query(edPart2.getPath().toFSPath(this), false));
-			if (!edPart3.getPath().isEmpty()) dat.add(mq.query(edPart3.getPath().toFSPath(this), false));
-			if (!edPart4.getPath().isEmpty()) dat.add(mq.query(edPart4.getPath().toFSPath(this), false));
-			if (!edPart5.getPath().isEmpty()) dat.add(mq.query(edPart5.getPath().toFSPath(this), false));
+			if (!edPart0.getPath().isEmpty()) dat.add(mq.run(edPart0.getPath().toFSPath(this)));
+			if (!edPart1.getPath().isEmpty()) dat.add(mq.run(edPart1.getPath().toFSPath(this)));
+			if (!edPart2.getPath().isEmpty()) dat.add(mq.run(edPart2.getPath().toFSPath(this)));
+			if (!edPart3.getPath().isEmpty()) dat.add(mq.run(edPart3.getPath().toFSPath(this)));
+			if (!edPart4.getPath().isEmpty()) dat.add(mq.run(edPart4.getPath().toFSPath(this)));
+			if (!edPart5.getPath().isEmpty()) dat.add(mq.run(edPart5.getPath().toFSPath(this)));
 
 			if (dat.isEmpty()) {
 				DialogHelper.showLocalError(this, "Dialogs.MediaInfoEmpty"); //$NON-NLS-1$
 				return;
 			}
 
-			if (CCStreams.iterate(dat).any(d -> d.SubtitleLanguages == null)) {
-				DialogHelper.showLocalError(this, "Dialogs.MediaInfoFailed"); //$NON-NLS-1$
-				return;
+			var anySubLangErr = false;
+			var anySubLangEmpty = false;
+
+			var errOutput = new StringBuilder();
+			for (var vmd : dat) {
+				errOutput.append(Str.format("{0}\n", vmd.InputFile.getFilenameWithExt()));
+				errOutput.append("=======================================================\n");
+				for (var alang : vmd.SubtitleLanguages) {
+					if (alang.isEmpty()) {
+						errOutput.append(Str.format("[---] (empty)\n"));
+						anySubLangEmpty = true;
+					}
+					else if (alang.isError()) {
+						errOutput.append(Str.format("[---] {0}\n", alang.getErr().TextShort));
+						anySubLangErr = true;
+					}
+					else {
+						errOutput.append(Str.format("[{0}] (ok)\n", alang.get().getShortString()));
+					}
+				}
+				errOutput.append("\n");
 			}
 
-			CCDBLanguageList dbll = dat.get(0).SubtitleLanguages;
-			for (int i = 1; i < dat.size(); i++) if (!dat.get(i).SubtitleLanguages.isEqual(dbll)) throw new MediaQueryException("Files [1] and [" + (i+1)+"] have different subtitles");
+			if (anySubLangErr)
+			{
+				var dialogRes = DialogHelper.showYesNoDlg(this, LocaleBundle.getString("Dialogs.MetadataError_caption"), LocaleBundle.getString("AddMovieFrame.dialog_errlang") + "\n\n" + errOutput);
+				if (!dialogRes) return;
+			}
+			else if (anySubLangEmpty)
+			{
+				var dialogRes = DialogHelper.showYesNoDlg(this, LocaleBundle.getString("Dialogs.MetadataError_caption"), LocaleBundle.getString("AddMovieFrame.dialog_emptylang") + "\n\n" + errOutput);
+				if (!dialogRes) return;
+			}
+
+			CCDBLanguageList dbll = dat.get(0).getValidSubtitleLanguages();
+			for (int i = 1; i < dat.size(); i++) if (!dat.get(i).getValidSubtitleLanguages().isEqual(dbll)) throw new MediaQueryException("Files [1] and [" + (i+1)+"] have different subtitles");
 
 			lblMISubWarning.setVisible(false);
 			setSubtitleLanguage(dbll);
 
-		} catch (IOException | MediaQueryException e) {
+		} catch (IOException | MetadataQueryException e) {
 			CCLog.addWarning(e);
 			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
 			lblMISubWarning.setVisible(true);

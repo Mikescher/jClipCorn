@@ -6,11 +6,12 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.metadata.MetadataSource;
+import de.jClipCorn.features.metadata.ITrackMetadata;
 import de.jClipCorn.features.metadata.MetadataSourceType;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
+import de.jClipCorn.features.metadata.impl.MetadataRunner;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.guiComponents.JFSPathTextField;
@@ -53,11 +54,11 @@ public class EditMediaInfoDialog extends JCCDialog
 		setLocationRelativeTo(owner);
 	}
 
-	public EditMediaInfoDialog(Component owner, CCMovieList ml, FSPath path, MediaQueryResult r, MediaInfoResultHandler h) {
+	public EditMediaInfoDialog(Component owner, CCMovieList ml, FSPath path, VideoMetadata r, MediaInfoResultHandler h) {
 		super(ml);
 
 		initComponents();
-		postInit(path, r.toPartial(), h);
+		postInit(path, r.toPartialMediaInfo(), h);
 
 		setLocationRelativeTo(owner);
 	}
@@ -89,10 +90,10 @@ public class EditMediaInfoDialog extends JCCDialog
 
 		_results = new MIDialogResultSet[]
 		{
-			new MIDialogResultSet(this, MetadataSourceType.MEDIAINFO, btnRunMediaInfo,   btnShowMediaInfo,   btnHintsMediaInfo,   btnApplyMediaInfo),
-			new MIDialogResultSet(this, MetadataSourceType.FFPROBE,   btnRunFFProbeFull, btnShowFFProbeFull, btnHintsFFProbeFull, btnApplyFFProbeFull),
-			new MIDialogResultSet(this, MetadataSourceType.FFMPEG,    btnRunFFProbeFast, btnShowFFProbeFast, btnHintsFFProbeFast, btnApplyFFProbeFast),
-			new MIDialogResultSet(this, MetadataSourceType.MP4BOX,    btnRunMP4Box,      btnShowMP4Box,      btnHintsMP4Box,      btnApplyMP4Box),
+			new MIDialogResultSet(this, MetadataSourceType.MEDIAINFO,    btnRunMediaInfo,   btnShowMediaInfo,   btnHintsMediaInfo,   btnApplyMediaInfo),
+			new MIDialogResultSet(this, MetadataSourceType.FFPROBE_FULL, btnRunFFProbeFull, btnShowFFProbeFull, btnHintsFFProbeFull, btnApplyFFProbeFull),
+			new MIDialogResultSet(this, MetadataSourceType.FFPROBE_FAST, btnRunFFProbeFast, btnShowFFProbeFast, btnHintsFFProbeFast, btnApplyFFProbeFast),
+			new MIDialogResultSet(this, MetadataSourceType.MP4BOX,       btnRunMP4Box,      btnShowMP4Box,      btnHintsMP4Box,      btnApplyMP4Box),
 		};
 
 		for (MIDialogResultSet mdrs : _results) mdrs.init();
@@ -102,13 +103,13 @@ public class EditMediaInfoDialog extends JCCDialog
 		if (r != null)
 		{
 			MIDialogResultSet rs = CCStreams.iterate(_results).singleOrNull(p -> p.Type == MetadataSourceType.MEDIAINFO);
-			rs.updateData(r);
-			doApply(r);
-			doShowHints(Opt.of(r), MetadataSourceType.MEDIAINFO);
+			rs.updateData(r, null);
+			doApply(r, Opt.empty());
+			doShowHints(Opt.of(r), MetadataSourceType.MEDIAINFO, Opt.empty());
 		}
 	}
 
-	public void doShowHints(Opt<PartialMediaInfo> mi, MetadataSourceType typ) {
+	public void doShowHints(Opt<PartialMediaInfo> mi, MetadataSourceType typ, Opt<VideoMetadata> vmd) {
 		doUpdateEnabled(false);
 
 		if (_hintType == typ && typ != null) {
@@ -118,23 +119,23 @@ public class EditMediaInfoDialog extends JCCDialog
 
 		_hintType = typ;
 
-		lblHintCDate.setText(mi.flatten(p -> p.CDate).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintMDate.setText(mi.flatten(p -> p.MDate).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintFilesize.setText(mi.flatten(p -> p.Filesize).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintDuration.setText(mi.flatten(p -> p.Duration).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintBitrate.setText(mi.flatten(p -> p.Bitrate).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintVideoFormat.setText(mi.flatten(p -> p.VideoFormat).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintVideoWidth.setText(mi.flatten(p -> p.Width).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintVideoHeight.setText(mi.flatten(p -> p.Height).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintVideoFramerate.setText(mi.flatten(p -> p.Framerate).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintVideoBitdepth.setText(mi.flatten(p -> p.Bitdepth).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintVideoFramecount.setText(mi.flatten(p -> p.Framecount).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintVideoCodec.setText(mi.flatten(p -> p.VideoCodec).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintAudioFormat.setText(mi.flatten(p -> p.AudioFormat).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintAudioChannels.setText(mi.flatten(p -> p.AudioChannels).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintAudioCodec.setText(mi.flatten(p -> p.AudioCodec).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintAudioSamplerate.setText(mi.flatten(p -> p.AudioSamplerate).mapOrElse(p -> "("+p+")", Str.Empty)); //$NON-NLS-1$ //$NON-NLS-2$
-		lblHintChecksum.setText(mi.flatten(p -> p.Checksum).mapOrElse(p -> p, Str.Empty));
+		lblHintCDate.setText(mi.flatMap(p -> p.CDate).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintMDate.setText(mi.flatMap(p -> p.MDate).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintFilesize.setText(mi.flatMap(p -> p.Filesize).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintDuration.setText(mi.flatMap(p -> p.Duration).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintBitrate.setText(mi.flatMap(p -> p.Bitrate).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintVideoFormat.setText(mi.flatMap(p -> p.VideoFormat).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintVideoWidth.setText(mi.flatMap(p -> p.Width).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintVideoHeight.setText(mi.flatMap(p -> p.Height).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintVideoFramerate.setText(mi.flatMap(p -> p.Framerate).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintVideoBitdepth.setText(mi.flatMap(p -> p.Bitdepth).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintVideoFramecount.setText(mi.flatMap(p -> p.Framecount).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintVideoCodec.setText(mi.flatMap(p -> p.VideoCodec).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintAudioFormat.setText(mi.flatMap(p -> p.AudioFormat).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintAudioChannels.setText(mi.flatMap(p -> p.AudioChannels).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintAudioCodec.setText(mi.flatMap(p -> p.AudioCodec).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintAudioSamplerate.setText(mi.flatMap(p -> p.AudioSamplerate).mapOrElse(p -> "("+p+")", Str.Empty));
+		lblHintChecksum.setText(mi.flatMap(p -> p.Checksum).mapOrElse(p -> p, Str.Empty));
 
 		// -----------------------------------------------------------
 
@@ -155,9 +156,18 @@ public class EditMediaInfoDialog extends JCCDialog
 		lblHintAudioCodec.setToolTipText(lblHintAudioCodec.getText());
 		lblHintAudioSamplerate.setToolTipText(lblHintAudioSamplerate.getText());
 		lblHintChecksum.setToolTipText(lblHintChecksum.getText());
+
+		if (vmd.isPresent()) {
+			var t1 = CCStreams.iterate(vmd.get().VideoTracks).cast(ITrackMetadata.class);
+			var t2 = CCStreams.iterate(vmd.get().AudioTracks).cast(ITrackMetadata.class);
+			var t3 = CCStreams.iterate(vmd.get().SubtitleTracks).cast(ITrackMetadata.class);
+			tabTracks.setData(t1.append(t2).append(t3).toList());
+		} else {
+			tabTracks.clearData();
+		}
 	}
 
-	public void doQuery(MetadataSource source, MIDialogResultSet set) {
+	public void doQuery(MetadataRunner source, MIDialogResultSet set) {
 		if (! source.isConfiguredAndRunnable()) {
 			DialogHelper.showLocalError(this, "Dialogs.MetaDataSourceNotFound"); //$NON-NLS-1$
 			return;
@@ -171,12 +181,11 @@ public class EditMediaInfoDialog extends JCCDialog
 		{
 			try
 			{
-				PartialMediaInfo mqr = source.run(filename);
-				String raw = source.getFullOutput(filename, mqr);
+				var mqr = source.run(filename);
 				SwingUtils.invokeLater(() ->
 				{
-					set.updateData(mqr, raw);
-					doShowHints(Opt.of(mqr), set.Type);
+					set.updateData(mqr.toPartialMediaInfo(), mqr);
+					doShowHints(Opt.of(mqr.toPartialMediaInfo()), set.Type, Opt.of(mqr));
 				});
 			}
 			catch (IOException e) {
@@ -213,7 +222,7 @@ public class EditMediaInfoDialog extends JCCDialog
 		GenericTextDialog.showText(this, "MediaInfo", txt, true); //$NON-NLS-1$
 	}
 
-	public void doApply(PartialMediaInfo mi) {
+	public void doApply(PartialMediaInfo mi, Opt<VideoMetadata> vmd) {
 		mi.CDate.ifPresent(v -> ctrlCDate.setValue(v));
 		mi.MDate.ifPresent(v -> ctrlMDate.setValue(v));
 		mi.Checksum.ifPresent(v -> ctrlChecksum.setText(v));
@@ -233,6 +242,15 @@ public class EditMediaInfoDialog extends JCCDialog
 		mi.AudioChannels.ifPresent(v -> ctrlAudioChannels.setValue(v));
 		mi.AudioCodec.ifPresent(v -> ctrlAudioCodec.setText(v));
 		mi.AudioSamplerate.ifPresent(v -> ctrlAudioSamplerate.setValue(v));
+
+		if (vmd.isPresent()) {
+			var t1 = CCStreams.iterate(vmd.get().VideoTracks).cast(ITrackMetadata.class);
+			var t2 = CCStreams.iterate(vmd.get().AudioTracks).cast(ITrackMetadata.class);
+			var t3 = CCStreams.iterate(vmd.get().SubtitleTracks).cast(ITrackMetadata.class);
+			tabTracks.setData(t1.append(t2).append(t3).toList());
+		} else {
+			tabTracks.clearData();
+		}
 	}
 
 	public void doUpdateEnabled(boolean isRunning) {
@@ -407,6 +425,7 @@ public class EditMediaInfoDialog extends JCCDialog
 		ctrlVideoCodec = new JTextField();
 		lblHintVideoCodec = new JLabel();
 		panel1 = new JPanel();
+		tabTracks = new MetadataTrackTable(this);
 		pnlAudio = new JPanel();
 		lblAudioFormat = new JLabel();
 		ctrlAudioFormat = new JTextField();
@@ -455,7 +474,7 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlTop.add(progressBar, CC.xy(1, 3, CC.FILL, CC.FILL));
 
 			//---- btnRunFFProbeFull ----
-			btnRunFFProbeFull.setMetadataSourceType(MetadataSourceType.FFPROBE);
+			btnRunFFProbeFull.setMetadataSourceType(MetadataSourceType.FFPROBE_FULL);
 			pnlTop.add(btnRunFFProbeFull, CC.xy(3, 3));
 
 			//---- btnShowFFProbeFull ----
@@ -471,7 +490,7 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlTop.add(btnApplyFFProbeFull, CC.xy(9, 3));
 
 			//---- btnRunFFProbeFast ----
-			btnRunFFProbeFast.setMetadataSourceType(MetadataSourceType.FFMPEG);
+			btnRunFFProbeFast.setMetadataSourceType(MetadataSourceType.FFPROBE_FAST);
 			pnlTop.add(btnRunFFProbeFast, CC.xy(3, 5));
 
 			//---- btnShowFFProbeFast ----
@@ -713,8 +732,9 @@ public class EditMediaInfoDialog extends JCCDialog
 		{
 			panel1.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.Tracks"))); //$NON-NLS-1$
 			panel1.setLayout(new FormLayout(
-				"default", //$NON-NLS-1$
-				"default")); //$NON-NLS-1$
+				"$lcgap, default:grow, $lcgap", //$NON-NLS-1$
+				"$lgap, default:grow, $lcgap")); //$NON-NLS-1$
+			panel1.add(tabTracks, CC.xy(2, 2, CC.DEFAULT, CC.FILL));
 		}
 		contentPane.add(panel1, CC.xywh(6, 4, 1, 3, CC.FILL, CC.FILL));
 
@@ -848,6 +868,7 @@ public class EditMediaInfoDialog extends JCCDialog
 	private JTextField ctrlVideoCodec;
 	private JLabel lblHintVideoCodec;
 	private JPanel panel1;
+	private MetadataTrackTable tabTracks;
 	private JPanel pnlAudio;
 	private JLabel lblAudioFormat;
 	private JTextField ctrlAudioFormat;

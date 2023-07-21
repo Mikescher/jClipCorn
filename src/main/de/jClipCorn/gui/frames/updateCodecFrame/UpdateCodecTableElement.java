@@ -8,12 +8,13 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.util.CCMediaInfoField;
+import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -24,7 +25,7 @@ public class UpdateCodecTableElement {
 
 	public final ICCPlayableElement Element;
 
-	public List<MediaQueryResult> MQResult = null;
+	public List<VideoMetadata> MQResult = null;
 	public String MQError = null;	
 	
 	public String MQResultString = null;
@@ -122,7 +123,7 @@ public class UpdateCodecTableElement {
 		if (!Processed) return false;
 		if (MQResult == null) return false;
 
-		if (getNewDuration() != -1 && Math.abs(Element.length().get() - getNewDuration()) > Element.length().get()*maxLenDiff) return true;
+		if (getNewDuration().isPresent() && Math.abs(Element.length().get() - getNewDuration().get()) > Element.length().get()*maxLenDiff) return true;
 
 		return false;
 	}
@@ -147,8 +148,8 @@ public class UpdateCodecTableElement {
 			return CCDBLanguageSet.EMPTY;
 		}
 
-		CCDBLanguageSet dbll = MQResult.get(0).AudioLanguages;
-		for (int i = 1; i < MQResult.size(); i++) dbll = CCDBLanguageSet.intersection(dbll, MQResult.get(i).AudioLanguages);
+		CCDBLanguageSet dbll = MQResult.get(0).getValidAudioLanguages();
+		for (int i = 1; i < MQResult.size(); i++) dbll = CCDBLanguageSet.intersection(dbll, MQResult.get(i).getValidAudioLanguages());
 		return dbll;
 	}
 
@@ -160,12 +161,7 @@ public class UpdateCodecTableElement {
 		if (MQResult == null) return CCDBLanguageList.EMPTY;
 		if (MQResult.size() == 0) return CCDBLanguageList.EMPTY;
 
-		for (var r : MQResult)
-		{
-			if (r.SubtitleLanguages != null) return r.SubtitleLanguages;
-		}
-
-		return getOldSubtitles();
+		return MQResult.get(0).getValidSubtitleLanguages();
 	}
 
 	public String getOldLengthStr() {
@@ -174,44 +170,48 @@ public class UpdateCodecTableElement {
 
 	public String getNewLengthStr() {
 		if (MQResult == null) return Str.Empty;
-		int nd = getNewDuration();
-		if (nd == -1) return "/None/"; //$NON-NLS-1$
-		return TimeIntervallFormatter.format(nd);
+
+		var nd = getNewDuration();
+		if (nd.isEmpty()) return "/None/"; //$NON-NLS-1$
+
+		return TimeIntervallFormatter.format(nd.get());
 	}
 
 	public int getOldDuration() {
 		return Element.length().get();
 	}
 
-	public int getNewDuration() {
-		if (MQResult == null) return -1;
+	public Opt<Integer> getNewDuration() {
+		if (MQResult == null) return Opt.empty();
 
-		for (MediaQueryResult mqr : MQResult) if (mqr.Duration == -1) return -1;
+		for (var mqr : MQResult) if (!mqr.Duration.isPresent()) return Opt.empty();
 
 		double d = 0;
-		for (MediaQueryResult mqr : MQResult) d += mqr.Duration;
+		for (var mqr : MQResult) d += mqr.Duration.orElse(0.0);
 
-		return (int)(d/60);
+		return Opt.of((int)(d/60));
 	}
 
 	public String getNewResolution() {
 		if (!Processed) return Str.Empty;
 		if (MQResult == null) return Str.Empty;
 
-		int w = CCStreams.iterate(MQResult).map(p -> p.Video.Width).minOrDefault(Integer::compare, 0);
-		int h = CCStreams.iterate(MQResult).map(p -> p.Video.Height).minOrDefault(Integer::compare, 0);
+		int w = CCStreams.iterate(MQResult).map(p -> p.getDefaultVideoTrack().flatErrMap(q -> q.Width).orElse(-1)).minOrDefault(Integer::compare, -1);
+		int h = CCStreams.iterate(MQResult).map(p -> p.getDefaultVideoTrack().flatErrMap(q -> q.Height).orElse(-1)).minOrDefault(Integer::compare, -1);
+
+		if (w < 0 || h < 0) return "N/A"; //$NON-NLS-1$
 
 		return Str.format("{0} x {1}", w, h); //$NON-NLS-1$
 	}
 
 	public void check() throws MediaQueryException {
-		if (CCStreams.iterate(MQResult).any(r -> r.AudioLanguages == null) && !CCStreams.iterate(MQResult).all(r -> r.AudioLanguages == null)) {
+		if ( CCStreams.iterate(MQResult).any(r -> !r.allAudioLanguagesValid())) {
 			throw new MediaQueryException("Some parts have no audio-language specified"); //$NON-NLS-1$
 		}
-		if (CCStreams.iterate(MQResult).any(r -> r.AudioLanguages == null) && !getOldLanguage().isSingle()) {
+		if (CCStreams.iterate(MQResult).any(r -> !r.allAudioLanguagesValid()) && !getOldLanguage().isSingle()) {
 			throw new MediaQueryException("Some parts have no audio-language specified"); //$NON-NLS-1$
 		}
-		if (CCStreams.iterate(MQResult).any(r -> r.SubtitleLanguages == null)) {
+		if (CCStreams.iterate(MQResult).any(r -> !r.allSubtitleLanguagesValid())) {
 			throw new MediaQueryException("Some parts have no subtitle-language specified"); //$NON-NLS-1$
 		}
 	}
@@ -224,7 +224,7 @@ public class UpdateCodecTableElement {
 		if (!Processed) return CCMediaInfo.EMPTY;
 		if (MQResult == null) return CCMediaInfo.EMPTY;
 		if (MQResult.isEmpty()) return CCMediaInfo.EMPTY;
-		return MQResult.get(0).toMediaInfo();
+		return MQResult.get(0).toPartialMediaInfo().toMediaInfo();
 	}
 
 	public CCGenreList getSourceGenres() {

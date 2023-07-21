@@ -3,8 +3,7 @@ package de.jClipCorn.gui.frames.batchEditFrame;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryResult;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
+import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -175,11 +174,11 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> LANGUAGE_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		MediaQueryResult dat = new MediaQueryRunner(ep.getSource().getMovieList()).query(ep.part.toFSPath(ep.ccprops()), false);
+		var dat = new MediaInfoRunner(ep.getSource().getMovieList()).run(ep.part.toFSPath(ep.ccprops()));
 
-		if (dat.AudioLanguages == null) throw new MediaQueryException("No language in file"); //$NON-NLS-1$
+		if (!dat.allAudioLanguagesValid()) throw new MediaQueryException("Errorneous language in file"); //$NON-NLS-1$
 
-		CCDBLanguageSet dbll = dat.AudioLanguages;
+		CCDBLanguageSet dbll = dat.getValidAudioLanguages();
 
 		if (dbll.isEmpty()) throw new MediaQueryException("Language is empty"); //$NON-NLS-1$
 		ep.language = dbll;
@@ -187,26 +186,27 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> SUBTITLES_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		MediaQueryResult dat = new MediaQueryRunner(ep.getSource().getMovieList()).query(ep.part.toFSPath(ep.ccprops()), false);
+		var dat = new MediaInfoRunner(ep.getSource().getMovieList()).run(ep.part.toFSPath(ep.ccprops()));
 
-		if (dat.SubtitleLanguages == null) throw new MediaQueryException("No language in file"); //$NON-NLS-1$
+		if (!dat.allSubtitleLanguagesValid()) throw new MediaQueryException("Errorneous language in file"); //$NON-NLS-1$
 
-		ep.subtitles = dat.SubtitleLanguages;
+		ep.subtitles = dat.getValidSubtitleLanguages();
 	});
 
 	public static BatchEditMethod<Void> LENGTH_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		MediaQueryResult dat = new MediaQueryRunner(ep.getSource().getMovieList()).query(ep.part.toFSPath(ep.ccprops()), true);
+		var dat = new MediaInfoRunner(ep.getSource().getMovieList()).run(ep.part.toFSPath(ep.ccprops()));
 
-		int dur = dat.Duration==-1 ? -1 :(int)(dat.Duration/60);
-		if (dur == -1) throw new MediaQueryException("Duration == -1"); //$NON-NLS-1$
-		ep.length = dur;
+		if (dat.Duration.isError()) throw new MediaQueryException(dat.Duration.getErr().TextShort, dat.Duration.getErr());
+		if (dat.Duration.isEmpty()) throw new MediaQueryException("Duration is Empty");
+
+		ep.length = (int)(dat.Duration.get()/60);
 	});
 
 	public static BatchEditMethod<Void> MEDIAINFO_FROM_FILE = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		MediaQueryResult dat = new MediaQueryRunner(ep.getSource().getMovieList()).query(ep.part.toFSPath(ep.ccprops()), true);
-		ep.mediaInfo = dat.toPartial();
+		var dat = new MediaInfoRunner(ep.getSource().getMovieList()).run(ep.part.toFSPath(ep.ccprops()));
+		ep.mediaInfo = dat.toPartialMediaInfo();
 	});
 
 	public static BatchEditMethod<Void> MEDIAINFO_CLEAR = new BatchEditMethod<>((ep, param, opt) ->

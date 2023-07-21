@@ -1,14 +1,17 @@
 package de.jClipCorn.test;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.features.metadata.mp4box.MP4BoxRunner;
+import de.jClipCorn.features.metadata.MetadataSourceType;
+import de.jClipCorn.features.metadata.impl.MP4BoxRunner;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import org.junit.Test;
 
-@SuppressWarnings("nls")
-public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
+import static junit.framework.TestCase.assertEquals;
 
+@SuppressWarnings("nls")
+public class TestMetadataRunner_MP4Box extends ClipCornBaseTest
+{
 	@Test
 	public void testMetadataRunner_000_mp4box() throws Exception {
 		CCMovieList ml = createEmptyDB();
@@ -18,28 +21,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_000.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_000.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(1500.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -51,28 +67,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_001.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_001.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -84,28 +113,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_002.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_002.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -117,28 +159,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_003.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_003.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -150,28 +205,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_004.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_004.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(5500.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -183,28 +251,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_005.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_005.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -216,28 +297,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_006.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_006.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -249,28 +343,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_007.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_007.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -282,28 +389,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_008.mpeg"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_008.mpeg"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -315,28 +435,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_009.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_009.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -348,28 +481,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_010.mpeg"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_010.mpeg"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -381,28 +527,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_011.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_011.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -414,28 +573,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_012.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_012.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(6806.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -447,28 +619,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_013.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_013.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -480,28 +665,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_014.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_014.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -513,28 +711,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_015.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_015.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -546,28 +757,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_016.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_016.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(2402.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -579,28 +803,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_017.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_017.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -612,28 +849,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_018.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_018.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -645,28 +895,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_019.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_019.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -678,28 +941,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_020.wmv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_020.wmv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -711,28 +987,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_021.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_021.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -744,28 +1033,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_022.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_022.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -777,28 +1079,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_023.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_023.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -810,28 +1125,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_024.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_024.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(2604.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -843,28 +1171,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_025.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_025.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -876,28 +1217,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_026.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_026.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -909,28 +1263,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_027.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_027.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -942,28 +1309,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_028.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_028.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(2717.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -975,28 +1355,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_029.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_029.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1008,28 +1401,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_030.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_030.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1041,28 +1447,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_031.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_031.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1074,28 +1493,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_032.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_032.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(7088.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1107,28 +1539,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_033.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_033.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1140,28 +1585,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_034.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_034.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1173,28 +1631,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_035.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_035.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1206,28 +1677,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_036.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_036.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(2007.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1239,28 +1723,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_037.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_037.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1272,28 +1769,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_038.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_038.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1305,28 +1815,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_039.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_039.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1338,28 +1861,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_040.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_040.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(7508.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1371,28 +1907,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_041.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_041.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1404,28 +1953,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_042.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_042.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1437,28 +1999,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_043.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_043.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1470,28 +2045,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_044.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_044.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(5690.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1503,28 +2091,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_045.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_045.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1536,28 +2137,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_046.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_046.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1569,28 +2183,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_047.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_047.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1602,28 +2229,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_048.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_048.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(6480.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1635,28 +2275,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_049.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_049.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1668,28 +2321,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_050.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_050.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1701,28 +2367,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_051.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_051.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1734,28 +2413,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_052.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_052.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(5452.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1767,28 +2459,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_053.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_053.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1800,28 +2505,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_054.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_054.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1833,28 +2551,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_055.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_055.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1866,28 +2597,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_056.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_056.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(5632.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1899,28 +2643,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_057.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_057.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1932,28 +2689,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_058.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_058.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1965,28 +2735,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_059.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_059.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -1998,28 +2781,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_060.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_060.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(6042.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -2031,28 +2827,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_061.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_061.mkv"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -2064,28 +2873,41 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_062.avi"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_062.avi"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEmpty(vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEmpty(vmd.Width);
-		assertOptEmpty(vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
 	@Test
@@ -2097,28 +2919,132 @@ public class TestMetadataRunner_MP4Box extends ClipCornBaseTest {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_063.mp4"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_063.mp4"), vmd.InputFile);
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
-		assertOptEquals(new CCFileSize(1073741824), vmd.Filesize);
-		assertOptEquals(fvhash, vmd.Checksum);
 
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
 		assertOptEquals(6300.0, vmd.Duration);
-		assertOptEmpty(vmd.Bitrate);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
 
-		assertOptEmpty(vmd.VideoFormat);
-		assertOptEquals(128, vmd.Width);
-		assertOptEquals(96, vmd.Height);
-		assertOptEmpty(vmd.Framerate);
-		assertOptEmpty(vmd.Bitdepth);
-		assertOptEmpty(vmd.Framecount);
-		assertOptEmpty(vmd.VideoCodec);
+		assertOptEmpty(vmd.getTotalBitrate());
 
-		assertOptEmpty(vmd.AudioFormat);
-		assertOptEmpty(vmd.AudioChannels);
-		assertOptEmpty(vmd.AudioCodec);
-		assertOptEmpty(vmd.AudioSamplerate);
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
 	}
 
+	@Test
+	public void testMetadataRunner_064_mp4box() throws Exception {
+		CCMovieList ml = createEmptyDB();
+
+		var id = "064";
+
+		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
+		var fvhash = dummyFVH();
+		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/demo_064.mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/demo_064.mkv"), vmd.InputFile);
+
+		assertOptEquals(946681200L, vmd.CDate);
+		assertOptEquals(978303600L, vmd.MDate);
+
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
+		assertOptEmpty(vmd.Duration);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
+
+		assertOptEmpty(vmd.getTotalBitrate());
+
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
+	}
+
+	@Test
+	public void testMetadataRunner_065_mp4box() throws Exception {
+		CCMovieList ml = createEmptyDB();
+
+		var id = "065";
+
+		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mp4box.txt", ClipCornBaseTest.class);
+		var fvhash = dummyFVH();
+		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
+		var vmd = new MP4BoxRunner(ml).parse(out, fvhash, attr, FSPath.create("/temp/The Pale Blue Eye [GER+ENG].mkv"));
+
+		assertEquals(MetadataSourceType.MP4BOX, vmd.SourceType);
+		assertEquals(FSPath.create("/temp/The Pale Blue Eye [GER+ENG].mkv"), vmd.InputFile);
+
+		assertOptEquals(946681200L, vmd.CDate);
+		assertOptEquals(978303600L, vmd.MDate);
+
+		assertOptEquals("[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]", vmd.Checksum);
+
+		assertOptEmpty(vmd.Format);
+		assertOptEmpty(vmd.Format_Version);
+		assertOptEmpty(vmd.FileSize);
+		assertOptEmpty(vmd.Duration);
+		assertOptEmpty(vmd.OverallBitRate);
+		assertOptEmpty(vmd.FrameRate);
+
+		assertOptEmpty(vmd.getTotalBitrate());
+
+		assertEquals("", vmd.getValidAudioLanguages().serializeToFilenameString());
+		assertEquals("", vmd.getValidSubtitleLanguages().serializeToString());
+
+		assertEquals(false, vmd.hasEmptyAudioLanguages());
+		assertEquals(false, vmd.hasErrorAudioLanguages());
+		assertEquals(false, vmd.hasEmptySubtitleLanguages());
+		assertEquals(false, vmd.hasErrorSubtitleLanguages());
+
+		assertEquals(0, vmd.VideoTracks.size());
+		assertEquals(0, vmd.AudioTracks.size());
+		assertEquals(0, vmd.SubtitleTracks.size());
+
+		assertOptEmpty(vmd.getDefaultVideoTrack());
+
+		assertOptEmpty(vmd.getDefaultAudioTrack());
+
+	}
 }

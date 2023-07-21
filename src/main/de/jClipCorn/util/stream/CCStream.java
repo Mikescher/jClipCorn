@@ -421,6 +421,12 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return null;
 	}
 
+	public Opt<TType> first() {
+		CCStream<TType> it = cloneFresh();
+		if (it.hasNext()) return Opt.of(it.next());
+		return Opt.empty();
+	}
+
 	public TType firstOr(TType elseValue) {
 		CCStream<TType> it = cloneFresh();
 		if (it.hasNext()) return it.next();
@@ -431,11 +437,23 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return this.filter(filter).firstOrNull();
 	}
 
+	public Opt<TType> first(Func1to1<TType, Boolean> filter) {
+		return this.filter(filter).first();
+	}
+
 	public TType lastOrNull() {
 		CCStream<TType> it = cloneFresh();
 		TType last = null;
 		while (it.hasNext()) last = it.next();
 		return last;
+	}
+
+	public Opt<TType> last() {
+		CCStream<TType> it = cloneFresh();
+		var hasLast = false;
+		TType last = null;
+		while (it.hasNext()) { last = it.next();hasLast = true; }
+		return hasLast ? Opt.of(last) : Opt.empty();
 	}
 
 	public TType lastOr(TType elseValue) {
@@ -448,7 +466,11 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 	public TType lastOrNull(Func1to1<TType, Boolean> filter) {
 		return this.filter(filter).lastOrNull();
 	}
-	
+
+	public Opt<TType> last(Func1to1<TType, Boolean> filter) {
+		return this.filter(filter).last();
+	}
+
 	public int sumInt(Func1to1<TType, Integer> op) {
 		int v = 0;
 		for (TType t : this) v += op.invoke(t);

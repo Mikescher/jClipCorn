@@ -5,7 +5,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.InnerMediaQueryException;
-import de.jClipCorn.features.metadata.mediaquery.MediaQueryRunner;
+import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.Str;
@@ -380,6 +380,6 @@ public class DatabaseSeeder {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", DatabaseSeeder.class);
 		var fvhash = ChecksumHelper.fastVideoHash(Collections.singletonList(dest));
 		var attr = dest.readFileAttr();
-		return new MediaQueryRunner(ml).parse(out, fvhash, attr, false).toPartial();
+		return new MediaInfoRunner(ml).parse(out, fvhash, attr, dest).toPartialMediaInfo();
 	}
 }

@@ -1,186 +1,34 @@
-package de.jClipCorn.features.metadata.mediaquery;
+package de.jClipCorn.features.metadata.impl;
 
-import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.features.metadata.*;
 import de.jClipCorn.features.metadata.exceptions.InnerMediaQueryException;
+import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datatypes.ErrOpt;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.stream.CCStreams;
-import de.jClipCorn.util.xml.CCXMLElement;
-import de.jClipCorn.util.xml.CCXMLException;
-import de.jClipCorn.util.xml.CCXMLParser;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
+import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MediaQueryResult {
+public abstract class MetadataRunner {
 
-	private static final Pattern REX_LANGUAGE_REPEAT = Pattern.compile("^\\s*(\\w+)(\\s*/\\s*\\1)+\\s*$"); //$NON-NLS-1$
+	private static final Pattern REX_LANGUAGE_REPEAT = Pattern.compile("^\\s*(\\w+)(\\s*/\\s*\\1)+\\s*$");  //$NON-NLS-1$
 	private static final Pattern REX_LANGUAGE_STR1   = Pattern.compile("^([^\\s]+)\\s*\\(?<r>[^\\s]+\\)$"); //$NON-NLS-1$
 	private static final Pattern REX_LANGUAGE_STR2   = Pattern.compile("^(?<r>[^\\s]+)\\s*\\([^\\s]+\\)$"); //$NON-NLS-1$
-	private static final Pattern REX_LANGUAGE_STR3   = Pattern.compile("^(?<r1>[^\\-]+)-(?<r2>[^\\-]+)$"); //$NON-NLS-1$
+	private static final Pattern REX_LANGUAGE_STR3   = Pattern.compile("^(?<r1>[^\\-]+)-(?<r2>[^\\-]+)$");  //$NON-NLS-1$
 
-	public final String Raw;
-	
-	public final long CDate;             // from file attributes
-	public final long MDate;             // from file attributes
-
-	public final String Checksum;
-
-	public final String Format;          // NULL if not set
-	public final String Format_Version;  // NULL if not set
-	public final long FileSize;
-	public final double Duration;        // -1 if not set
-	public final int OverallBitRate;     // -1 if not set
-	public final double FrameRate;       // -1 if not set
-
-	public final MediaQueryResultVideoTrack Video;
-
-	public final List<MediaQueryResultVideoTrack> VideoTracks;
-	public final List<MediaQueryResultAudioTrack> AudioTracks;
-	public final List<MediaQueryResultSubtitleTrack> SubtitleTracks;
-
-	public final CCDBLanguageSet AudioLanguages;   // NULL if only 1 Language without a specifier
-	public final CCDBLanguageList SubtitleLanguages;
-
-	private MediaQueryResult(String raw,
-							 String hash, long cdate, long mdate, String format, String format_Version, long fileSize,
-							 double duration, int overallBitRate, double frameRate,
-							 MediaQueryResultVideoTrack video, List<MediaQueryResultVideoTrack> videoTracks,
-							 List<MediaQueryResultAudioTrack> audioTracks,
-							 List<MediaQueryResultSubtitleTrack> subtitleTracks,
-							 CCDBLanguageSet language, CCDBLanguageList subtitles) {
-
-		Raw               = raw;
-		Checksum          = hash;
-		CDate             = cdate;
-		MDate             = mdate;
-		Format            = format;
-		Format_Version    = format_Version;
-		FileSize          = fileSize;
-		Duration          = duration;
-		OverallBitRate    = overallBitRate;
-		FrameRate         = frameRate;
-		Video             = video;
-		VideoTracks       = Collections.unmodifiableList(videoTracks);
-		AudioTracks       = Collections.unmodifiableList(audioTracks);
-		SubtitleTracks    = Collections.unmodifiableList(subtitleTracks);
-		AudioLanguages    = language;
-		SubtitleLanguages = subtitles;
-
-	}
-
-	@SuppressWarnings("nls")
-	public static MediaQueryResult parse(String raw, long cdate, long mdate, String hash, CCXMLElement xml, boolean doNotValidateLangs) throws InnerMediaQueryException, CCXMLException {
-		boolean foundGeneral = false;
-		boolean foundVideo = false;
-
-		String format         = Str.Empty;
-		String format_Version = Str.Empty;
-		long   fileSize       = 0;
-		double duration       = 0.0;
-		int    overallBitRate = 0;
-		double frameRate      = 0.0;
-
-		List<MediaQueryResultVideoTrack>    vtracks = new ArrayList<>();
-		List<MediaQueryResultAudioTrack>    atracks = new ArrayList<>();
-		List<MediaQueryResultSubtitleTrack> stracks = new ArrayList<>();
-
-		for (CCXMLElement track : xml.getAllChildren("track"))
-		{
-			String strtype = track.getAttributeValueOrThrow("type");
-			switch (strtype) {
-				case "General":
-					foundGeneral = true;
-
-					format         = track.getFirstChildValueOrDefault("Format", null);
-					format_Version = track.getFirstChildValueOrDefault("Format_Version", null);
-					fileSize       = track.getFirstChildLongValueOrThrow("FileSize");
-					duration       = track.getFirstChildDoubleValueOrDefault("Duration", -1);
-					overallBitRate = track.getFirstChildIntValueOrDefault("OverallBitRate", -1);
-					frameRate      = track.getFirstChildDoubleValueOrDefault("FrameRate", -1);
-
-					break;
-				case "Video":
-					foundVideo = true;
-					vtracks.add(MediaQueryResultVideoTrack.parse(track));
-					break;
-				case "Audio":
-					atracks.add(MediaQueryResultAudioTrack.parse(track));
-					break;
-				case "Text":
-					stracks.add(MediaQueryResultSubtitleTrack.parse(track));
-					break;
-				case "Menu":
-				case "Other":
-					// Ignored
-					break;
-				default:
-					throw new InnerMediaQueryException("Unknown Track Type: " + strtype);
-			}
-		}
-
-		if (!foundGeneral) throw new InnerMediaQueryException("No track 'General' found");
-		if (!foundVideo)   throw new InnerMediaQueryException("No track 'Video' found");
-
-		if (vtracks.size() == 1 && vtracks.get(0).Duration != -1) duration = vtracks.get(0).Duration;
-
-		CCDBLanguageSet alng = getAudioLang(atracks, doNotValidateLangs);
-		CCDBLanguageList slng = getSubLang(stracks, doNotValidateLangs);
-
-		return new MediaQueryResult(
-				raw, hash,
-				cdate, mdate,
-				format, format_Version, fileSize, duration, overallBitRate, frameRate,
-				vtracks.get(0), vtracks,
-				atracks, stracks,
-				alng, slng);
-	}
-
-	private static CCDBLanguageSet getAudioLang(List<MediaQueryResultAudioTrack> tcks, boolean doNotValidateLangs) throws InnerMediaQueryException {
-
-		if (tcks.size() == 1 && tcks.get(0).Language == null) return null;
-
-		if (CCStreams.iterate(tcks).any(t -> t.Language == null))
-		{
-			if (doNotValidateLangs) return null;
-			String info = CCStreams.iterate(tcks).stringjoin(t -> t.Language==null ? "NULL": t.Language, ", "); //$NON-NLS-1$ //$NON-NLS-2$
-			throw new InnerMediaQueryException("No audio language set in tracks ("+info+")"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-
-		HashSet<CCDBLanguage> lng = new HashSet<>();
-		for (var t : tcks) lng.add(t.getLanguage());
-		return CCDBLanguageSet.createDirect(lng);
-	}
-
-	private static CCDBLanguageList getSubLang(List<MediaQueryResultSubtitleTrack> tcks, boolean doNotValidateLangs) throws InnerMediaQueryException
+	protected List<ErrOpt<CCDBLanguage, MetadataError>> extractAudioLangs(List<AudioTrackMetadata> atracks)
 	{
-		try
-		{
-			List<CCDBLanguage> lng = new ArrayList<>();
-			for (var t : tcks)
-			{
-				var l = doNotValidateLangs ? t.getLanguageOrNull() : t.getLanguage();
-				if (l != null) lng.add(l);
-			}
-			return CCDBLanguageList.createDirect(lng);
-		}
-		catch (InnerMediaQueryException e)
-		{
-			String info = CCStreams.iterate(tcks).stringjoin(t -> "["+(t.Language==null ? "NULL": t.Language)+"|"+(t.Title==null ? "NULL": t.Title)+"] --> " + Opt.ofNullable(t.getLanguageOrNull()).mapOrElse(CCDBLanguage::getLongString, "/NULL/"), "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			throw new InnerMediaQueryException("No subtitle language set in tracks\n\n"+info, e); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		return CCStreams.iterate(atracks).map(AudioTrackMetadata::calcCCDBLanguage).toList();
 	}
 
-	@SuppressWarnings("nls")
-	public static boolean parseBool(String value) throws InnerMediaQueryException {
-		if (value.equals("Yes")) return true;
-		if (value.equals("No")) return false;
-		throw new InnerMediaQueryException("Unknown boolean := '" + value + "'");
+	protected List<ErrOpt<CCDBLanguage, MetadataError>> extractSubLangs(List<SubtitleTrackMetadata> stracks)
+	{
+		return CCStreams.iterate(stracks).map(SubtitleTrackMetadata::calcCCDBLanguage).toList();
 	}
 
 	@SuppressWarnings("nls")
@@ -207,21 +55,6 @@ public class MediaQueryResult {
 		}
 
 		throw new InnerMediaQueryException("Unknown audio language: ['" + _langval + "' | '" + _title + "']");
-	}
-
-	private static CCDBLanguage getLanguageOrNullFromStr(String langval)
-	{
-		var r1 = getLanguageOrNullFromIdent(langval);
-		if (r1 != null) return r1;
-
-		var langvalFix = Str.tryFixEncodingErrors(langval);
-		for (var lv2 : langvalFix)
-		{
-			var r2 = getLanguageOrNullFromIdent(lv2);
-			if (r2 != null) return r2;
-		}
-
-		return null;
 	}
 
 	@SuppressWarnings("nls")
@@ -504,121 +337,24 @@ public class MediaQueryResult {
 		return false;
 	}
 
-	public static int parsePseudoPercInt(CCXMLParser owner, String val, int def) throws CCXMLException {
-		if (val == null) return def;
-		if (!val.contains("/"))
+	private static CCDBLanguage getLanguageOrNullFromStr(String langval)
+	{
+		var r1 = getLanguageOrNullFromIdent(langval);
+		if (r1 != null) return r1;
+
+		var langvalFix = Str.tryFixEncodingErrors(langval);
+		for (var lv2 : langvalFix)
 		{
-			try {
-				return Integer.parseInt(val);
-			} catch (NumberFormatException e) {
-				throw new CCXMLException(Str.format("The value \"{0}\" is not an pseudo-integer", val), owner.getXMLString()); //$NON-NLS-1$
-			}
+			var r2 = getLanguageOrNullFromIdent(lv2);
+			if (r2 != null) return r2;
 		}
-		else
-		{
-			var split = val.split("/");
-			try {
-				var sa = Integer.parseInt(split[0].trim());
-				var sb = Integer.parseInt(split[1].trim());
 
-				return (int)Math.round((sa*1.0) / (sb*1.0));
-
-			} catch (NumberFormatException e) {
-				throw new CCXMLException(Str.format("The value \"{0}\" is not an pseudo-integer", val), owner.getXMLString()); //$NON-NLS-1$
-			}
-		}
+		return null;
 	}
 
-	public CCMediaInfo toMediaInfo() {
-		MediaQueryResultVideoTrack video = getDefaultVideoTrack();
-		if (video == null) return CCMediaInfo.EMPTY;
 
-		MediaQueryResultAudioTrack audio = getDefaultAudioTrack();
-		if (audio == null) return CCMediaInfo.EMPTY;
+	public abstract VideoMetadata run(FSPath filename) throws IOException, MetadataQueryException;
 
-		int tbr = getTotalBitrate();
-
-		if (Duration         == -1)   return CCMediaInfo.EMPTY;
-		if (OverallBitRate   == -1)   return CCMediaInfo.EMPTY;
-
-		if (video.Format     == null) return CCMediaInfo.EMPTY;
-		if (video.FrameRate  == -1)   return CCMediaInfo.EMPTY;
-		if (video.BitDepth   == -1)   return CCMediaInfo.EMPTY;
-		if (video.FrameCount == -1)   return CCMediaInfo.EMPTY;
-		//if (video.CodecID    == null) return CCMediaInfo.EMPTY;
-
-		if (audio.Format     == null) return CCMediaInfo.EMPTY;
-		if (audio.Channels   == -1)   return CCMediaInfo.EMPTY;
-		//if (audio.CodecID    == null) return CCMediaInfo.EMPTY;
-
-		if (tbr              == -1)   return CCMediaInfo.EMPTY;
-
-		if (FileSize   <= 0)          return CCMediaInfo.EMPTY;
-
-		return CCMediaInfo.create
-		(
-			CDate, MDate, new CCFileSize(FileSize), Checksum,
-			Duration, tbr,
-			video.Format, video.Width, video.Height, video.FrameRate, video.BitDepth, video.FrameCount, Str.coalesce(video.CodecID),
-			audio.Format, audio.Channels, Str.coalesce(audio.CodecID), audio.Samplingrate
-		);
-	}
-
-	public int getTotalBitrate() {
-		MediaQueryResultVideoTrack video = getDefaultVideoTrack();
-		if (video == null) return -1;
-
-		MediaQueryResultAudioTrack audio = getDefaultAudioTrack();
-		if (audio == null) return -1;
-
-		int br_vid = (video.BitRateNominal != -1) ? video.BitRateNominal : video.BitRate;
-		int br_aud = (audio.BitRateNominal != -1) ? audio.BitRateNominal : audio.BitRate;
-
-		if (br_vid == -1 || br_aud == -1) return OverallBitRate; // can also be -1
-
-		if (OverallBitRate != -1 && OverallBitRate < (br_vid + br_aud)) return OverallBitRate;
-
-		return br_vid + br_aud;
-	}
-
-	public MediaQueryResultVideoTrack getDefaultVideoTrack() {
-		MediaQueryResultVideoTrack video = CCStreams.iterate(VideoTracks).firstOrNull(t -> t.Default);
-		if (video == null && !VideoTracks.isEmpty()) video = VideoTracks.get(0);
-		return video;
-	}
-
-	public MediaQueryResultAudioTrack getDefaultAudioTrack() {
-		MediaQueryResultAudioTrack audio = CCStreams.iterate(AudioTracks).firstOrNull(t -> t.Default);
-		if (audio == null && !AudioTracks.isEmpty()) audio = AudioTracks.get(0);
-		return audio;
-	}
-
-	public PartialMediaInfo toPartial() {
-		MediaQueryResultVideoTrack video = getDefaultVideoTrack();
-		MediaQueryResultAudioTrack audio = getDefaultAudioTrack();
-
-		int tbr = getTotalBitrate();
-
-		return PartialMediaInfo.create
-		(
-			Opt.of(Raw),
-			Opt.of(CDate),
-			Opt.of(MDate),
-			Opt.of(new CCFileSize(FileSize)),
-			Str.isNullOrWhitespace(Checksum) ? Opt.empty() : Opt.of(Checksum),
-			(Duration==-1) ? Opt.empty() : Opt.of(Duration),
-			(tbr==-1) ? Opt.empty() : Opt.of(tbr),
-			(video == null || Str.isNullOrWhitespace(video.Format)) ? Opt.empty() : Opt.of(video.Format),
-			(video == null || video.Width <= 0) ? Opt.empty() : Opt.of(video.Width),
-			(video == null || video.Height <= 0) ? Opt.empty() : Opt.of(video.Height),
-			(video == null || video.FrameRate == -1) ? Opt.empty() : Opt.of(video.FrameRate),
-			(video == null || video.BitDepth == -1) ? Opt.empty() : Opt.of(video.BitDepth),
-			(video == null || video.FrameCount == -1) ? Opt.empty() : Opt.of(video.FrameCount),
-			(video == null || Str.isNullOrWhitespace(video.CodecID)) ? Opt.empty() : Opt.of(video.CodecID),
-			(audio == null || Str.isNullOrWhitespace(audio.Format)) ? Opt.empty() : Opt.of(audio.Format),
-			(audio == null || audio.Channels == -1) ? Opt.empty() : Opt.of(audio.Channels),
-			(audio == null || Str.isNullOrWhitespace(audio.CodecID)) ? Opt.empty() : Opt.of(audio.CodecID),
-			(audio == null || audio.Samplingrate == -1) ? Opt.empty() : Opt.of(audio.Samplingrate)
-		);
-	}
+	public abstract MetadataSourceType getSourceType();
+	public abstract boolean isConfiguredAndRunnable();
 }

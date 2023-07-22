@@ -239,7 +239,7 @@ public class Main {
  - [ ] CustomFilterEditDialog
  - [X] DatabaseHistoryFrame
  - [ ] DisplayGenresDialog
- - [ ] EditMediaInfoDialog
+ - [x] EditMediaInfoDialog
  - [X] EditMovieFrame
  - [X] EditSeriesFrame
  - [ ] EditStringListPropertyFrame

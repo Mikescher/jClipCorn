@@ -2,7 +2,6 @@ package de.jClipCorn.gui.frames.editMediaInfoDialog;
 
 import de.jClipCorn.features.metadata.MetadataSourceType;
 import de.jClipCorn.features.metadata.PartialMediaInfo;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.Opt;
 
 import javax.swing.*;
@@ -31,12 +30,6 @@ public class MIDialogResultSet {
 	}
 
 	public void init() {
-		btnRun.setIcon(Type.getIcon().get16x16());
-		btnRun.setText(Type.asString());
-		btnShow.setText(LocaleBundle.getString("EditMediaInfoDialog.btnShow")); //$NON-NLS-1$
-		btnHint.setText(LocaleBundle.getString("EditMediaInfoDialog.btnHints")); //$NON-NLS-1$
-		btnApply.setText(LocaleBundle.getString("UIGeneric.btnApply.text")); //$NON-NLS-1$
-		
 		updateEnabled(false);
 
 		btnRun.addActionListener(this::onRun);

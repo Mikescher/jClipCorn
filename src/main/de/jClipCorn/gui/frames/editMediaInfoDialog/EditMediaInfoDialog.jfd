@@ -1,0 +1,656 @@
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.7" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "EditMediaInfoDialog"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCDialog", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, 0dlu:grow, labelcompgap, 0dlu:grow, labelcompgap, 0dlu:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default:grow, linegap, default:grow, linegap, default, unrelgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": new FormMessage( null, "EditMediaInfoDialog.title" )
+			"defaultCloseOperation": 2
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default:grow, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default"
+				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default"
+			} ) {
+				name: "pnlTop"
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.JFSPathTextField" ) {
+					name: "edFilepath"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.frames.editMediaInfoDialog.MIButton" ) {
+					name: "btnRunMediaInfo"
+					"metadataSourceType": enum de.jClipCorn.features.metadata.MetadataSourceType MEDIAINFO
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnShowMediaInfo"
+					"text": new FormMessage( null, "EditMediaInfoDialog.btnShow" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnHintsMediaInfo"
+					"text": new FormMessage( null, "EditMediaInfoDialog.btnHints" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnApplyMediaInfo"
+					"text": new FormMessage( null, "UIGeneric.btnApply.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 9
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JProgressBar" ) {
+					name: "progressBar"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.frames.editMediaInfoDialog.MIButton" ) {
+					name: "btnRunFFProbeFull"
+					"metadataSourceType": enum de.jClipCorn.features.metadata.MetadataSourceType FFPROBE
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnShowFFProbeFull"
+					"text": new FormMessage( null, "EditMediaInfoDialog.btnShow" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnHintsFFProbeFull"
+					"text": new FormMessage( null, "EditMediaInfoDialog.btnHints" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnApplyFFProbeFull"
+					"text": new FormMessage( null, "UIGeneric.btnApply.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 9
+					"gridY": 3
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.frames.editMediaInfoDialog.MIButton" ) {
+					name: "btnRunFFProbeFast"
+					"metadataSourceType": enum de.jClipCorn.features.metadata.MetadataSourceType FFMPEG
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnShowFFProbeFast"
+					"text": new FormMessage( null, "EditMediaInfoDialog.btnShow" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnHintsFFProbeFast"
+					"text": new FormMessage( null, "EditMediaInfoDialog.btnHints" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnApplyFFProbeFast"
+					"text": new FormMessage( null, "UIGeneric.btnApply.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 9
+					"gridY": 5
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.frames.editMediaInfoDialog.MIButton" ) {
+					name: "btnRunMP4Box"
+					"metadataSourceType": enum de.jClipCorn.features.metadata.MetadataSourceType MP4BOX
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 7
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnShowMP4Box"
+					"text": new FormMessage( null, "EditMediaInfoDialog.btnShow" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 7
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnHintsMP4Box"
+					"text": new FormMessage( null, "EditMediaInfoDialog.btnHints" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 7
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnApplyMP4Box"
+					"text": new FormMessage( null, "UIGeneric.btnApply.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 9
+					"gridY": 7
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"gridWidth": 5
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "labelcompgap, default, labelcompgap, default:grow, labelcompgap, 60dlu, labelcompgap"
+				"$rowSpecs": "linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap"
+			} ) {
+				name: "pnlGeneral"
+				"border": new javax.swing.border.TitledBorder( "i18nKey=EditMediaInfoDialog.header1" )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblGeneralCDate"
+					"text": new FormMessage( null, "EditMediaInfoDialog.CDate" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 2
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "ctrlCDate"
+					"model": &SpinnerNumberModel0 new javax.swing.SpinnerNumberModel {
+						stepSize: 1l
+						value: 0l
+					}
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "ctrlCDateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 2
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintCDate"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 2
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblFullCDate"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 4
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblGeneralMDate"
+					"text": new FormMessage( null, "EditMediaInfoDialog.MDate" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 6
+					"gridX": 2
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "ctrlMDate"
+					"model": #SpinnerNumberModel0
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "ctrlMDateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 6
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintMDate"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 6
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblFullMDate"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 8
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblGeneralFilesize"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Filesize" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 10
+					"gridX": 2
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "ctrlFilesize"
+					"model": #SpinnerNumberModel0
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "ctrlFilesizeChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 10
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintFilesize"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 10
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblFullFilesize1"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 12
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblGeneralDuration"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Duration" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 14
+					"gridX": 2
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "ctrlDuration"
+					"model": new javax.swing.SpinnerNumberModel {
+						stepSize: 1.0
+						value: 0.0
+					}
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "ctrlDurationChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 14
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintDuration"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 14
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblFullDuration1"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 16
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblFullDuration2"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 18
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblGeneralBitrate"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Bitrate" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 20
+					"gridX": 2
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "ctrlBitrate"
+					"model": new javax.swing.SpinnerNumberModel
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "ctrlBitrateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 20
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintBitrate"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 20
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblFullBitrate"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 22
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblChecksum"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Checksum" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 24
+					"gridX": 2
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintChecksum"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 24
+					"gridWidth": 3
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "ctrlChecksum"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 26
+					"gridWidth": 5
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"gridHeight": 3
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "labelcompgap, default, labelcompgap, default:grow, labelcompgap, 60dlu, labelcompgap"
+				"$rowSpecs": "linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap"
+			} ) {
+				name: "pnlVideo"
+				"border": new javax.swing.border.TitledBorder( "i18nKey=EditMediaInfoDialog.header2" )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblVideoFormat"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Format" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 2
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "ctrlVideoFormat"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 2
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintVideoFormat"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 2
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblVideoWidth"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Width" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 4
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "ctrlVideoWidth"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 4
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintVideoWidth"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 4
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblVideoHeight"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Height" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 6
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "ctrlVideoHeight"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 6
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintVideoHeight"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 6
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblVideoFramerate"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Framerate" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 8
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "ctrlVideoFramerate"
+					"model": new javax.swing.SpinnerNumberModel {
+						stepSize: 1.0
+						value: 0.0
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 8
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintVideoFramerate"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 8
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblVideoBitdepth"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Bitdepth" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 10
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "ctrlVideoBitdepth"
+					"model": new javax.swing.SpinnerNumberModel {
+						stepSize: 1s
+						value: 0s
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 10
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintVideoBitdepth"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 10
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblVideoFramecount"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Framecount" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 12
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "ctrlVideoFramecount"
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "ctrlVideoFramecountChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 12
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintVideoFramecount"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 12
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblFullFramecount"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 14
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblVideoCodec"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Codec" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 16
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "ctrlVideoCodec"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 16
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintVideoCodec"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 16
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 4
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default"
+				"$rowSpecs": "default"
+			} ) {
+				name: "panel1"
+				"border": new javax.swing.border.TitledBorder( "i18nKey=EditMediaInfoDialog.Tracks" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 4
+				"gridHeight": 3
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "labelcompgap, default, labelcompgap, default:grow, labelcompgap, 60dlu, labelcompgap"
+				"$rowSpecs": "linegap, default, linegap, default, linegap, default, linegap, default, linegap"
+			} ) {
+				name: "pnlAudio"
+				"border": new javax.swing.border.TitledBorder( "i18nKey=EditMediaInfoDialog.header3" )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblAudioFormat"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Format" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 2
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "ctrlAudioFormat"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 2
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintAudioFormat"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 2
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblAudioChannels"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Channels" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 4
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "ctrlAudioChannels"
+					"model": new javax.swing.SpinnerNumberModel {
+						stepSize: 1s
+						value: 0s
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 4
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintAudioChannels"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 4
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblAudioCodec"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Codec" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 6
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "ctrlAudioCodec"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 6
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintAudioCodec"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 6
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblAudioSamplerate"
+					"text": new FormMessage( null, "EditMediaInfoDialog.Samplerate" )
+					"horizontalAlignment": 11
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 8
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "ctrlAudioSamplerate"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 8
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblHintAudioSamplerate"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 8
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 6
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnOK"
+				"text": new FormMessage( null, "UIGeneric.btnOK.text" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOK", true ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 8
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 1300, 775 )
+		} )
+	}
+}

@@ -1,9 +1,7 @@
 package de.jClipCorn.gui.frames.editMediaInfoDialog;
 
-import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
@@ -17,9 +15,7 @@ import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.guiComponents.JFSPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.adapter.ChangeLambdaAdapter;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -32,95 +28,14 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.TimeZone;
 
-public class EditMediaInfoDialog extends JCCDialog {
-	private static final long serialVersionUID = -9200470525584039395L;
-	
-	private JFSPathTextField edFilepath;
-	private JPanel pnlGeneral;
-	private JPanel pnlVideo;
-	private JPanel pnlAudio;
-	private JButton btnOK;
-	private JPanel panel_3;
-	private JButton btnRunMediaInfo;
-	private JLabel lblGeneralCDate;
-	private JSpinner ctrlCDate;
-	private JLabel lblHintCDate;
-	private JLabel lblGeneralMDate;
-	private JLabel lblGeneralFilesize;
-	private JLabel lblGeneralDuration;
-	private JLabel lblGeneralBitrate;
-	private JSpinner ctrlMDate;
-	private JSpinner ctrlFilesize;
-	private JSpinner ctrlDuration;
-	private JSpinner ctrlBitrate;
-	private JLabel lblHintMDate;
-	private JLabel lblHintFilesize;
-	private JLabel lblHintDuration;
-	private JLabel lblHintBitrate;
-	private JLabel lblVideoFormat;
-	private JLabel lblVideoWidth;
-	private JLabel lblVideoHeight;
-	private JLabel lblVideoFramerate;
-	private JLabel lblVideoBitdepth;
-	private JLabel lblVideoFramecount;
-	private JLabel lblVideoCodec;
-	private JLabel lblHintVideoFormat;
-	private JLabel lblHintVideoWidth;
-	private JLabel lblHintVideoHeight;
-	private JLabel lblHintVideoFramerate;
-	private JLabel lblHintVideoBitdepth;
-	private JLabel lblHintVideoFramecount;
-	private JLabel lblHintVideoCodec;
-	private JTextField ctrlVideoFormat;
-	private JSpinner ctrlVideoWidth;
-	private JSpinner ctrlVideoHeight;
-	private JSpinner ctrlVideoFramerate;
-	private JSpinner ctrlVideoBitdepth;
-	private JSpinner ctrlVideoFramecount;
-	private JTextField ctrlVideoCodec;
-	private JLabel lblAudioFormat;
-	private JLabel lblAudioChannels;
-	private JLabel lblAudioCodec;
-	private JLabel lblAudioSamplerate;
-	private JTextField ctrlAudioFormat;
-	private JSpinner ctrlAudioChannels;
-	private JSpinner ctrlAudioSamplerate;
-	private JTextField ctrlAudioCodec;
-	private JLabel lblHintAudioFormat;
-	private JLabel lblHintAudioChannels;
-	private JLabel lblHintAudioCodec;
-	private JLabel lblHintAudioSamplerate;
-	private JButton btnApplyMediaInfo;
-	private JButton btnShowMediaInfo;
-	private JLabel lblFullCDate;
-	private JLabel lblFullMDate;
-	private JLabel lblFullFilesize1;
-	private JLabel lblFullDuration1;
-	private JLabel lblFullDuration2;
-	private JLabel lblFullBitrate;
-	private JLabel lblFullFramecount;
-	private JButton btnRunFFProbe;
-	private JButton btnShowFFProbe;
-	private JButton btnApplyFFProbe;
-	private JProgressBar progressBar;
-	private JButton btnRunFFMpeg;
-	private JButton btnShowFFMpeg;
-	private JButton btnApplyFFMpeg;
-	private JButton btnHintsMediaInfo;
-	private JButton btnHintsFFProbe;
-	private JButton btnHintsFFMpeg;
-	private JButton btnRunMP4Box;
-	private JButton btnShowMP4Box;
-	private JButton btnHintsMP4Box;
-	private JButton btnApplyMP4Box;
-	private JTextField ctrlChecksum;
-	private JLabel lblChecksum;
-	private JLabel lblHintChecksum;
-
+public class EditMediaInfoDialog extends JCCDialog
+{
 	private MIDialogResultSet[] _results = new MIDialogResultSet[0];
 	private MediaInfoResultHandler _handler = null;
 	private MetadataSourceType _hintType = null;
@@ -128,481 +43,69 @@ public class EditMediaInfoDialog extends JCCDialog {
 	private Color colOK;
 	private Color colErr;
 
-	@SuppressWarnings("unused")
-	private EditMediaInfoDialog(Component owner, CCMovieList ml) {
+	public EditMediaInfoDialog(Component owner, CCMovieList ml)
+	{
 		super(ml);
-		
-		initGUI();
 
-		initSources();
-		
+		initComponents();
+		postInit(null, null, null);
+
 		setLocationRelativeTo(owner);
-		
-		doShowHints(Opt.empty(), null);
 	}
 
 	public EditMediaInfoDialog(Component owner, CCMovieList ml, FSPath path, MediaQueryResult r, MediaInfoResultHandler h) {
 		super(ml);
-		_handler = h;
-		
-		initGUI();
-		edFilepath.setPath(path == null ? FSPath.Empty : path);
 
-		initSources();
+		initComponents();
+		postInit(path, r.toPartial(), h);
 
 		setLocationRelativeTo(owner);
-
-		MIDialogResultSet rs = CCStreams.iterate(_results).singleOrNull(p -> p.Type == MetadataSourceType.MEDIAINFO);
-		rs.updateData(r.toPartial());
-		doApply(r.toPartial());
-		doShowHints(Opt.of(r.toPartial()), MetadataSourceType.MEDIAINFO);
 	}
 
 	public EditMediaInfoDialog(Component owner, CCMovieList ml, FSPath path, PartialMediaInfo r, MediaInfoResultHandler h) {
 		super(ml);
-		_handler = h;
-		
-		initGUI();
-		edFilepath.setPath(path == null ? FSPath.Empty : path);
 
-		initSources();
+		initComponents();
+		postInit(path, r, h);
 
 		setLocationRelativeTo(owner);
-
-		MIDialogResultSet rs = CCStreams.iterate(_results).singleOrNull(p -> p.Type == MetadataSourceType.MEDIAINFO);
-		rs.updateData(r);
-		doApply(r);
-		doShowHints(Opt.of(r), MetadataSourceType.MEDIAINFO);
 	}
 
 	public EditMediaInfoDialog(Component owner, CCMovieList ml, FSPath path, MediaInfoResultHandler h) {
 		super(ml);
-		_handler = h;
-		
-		initGUI();
-		edFilepath.setPath(path == null ? FSPath.Empty : path);
 
-		initSources();
+		initComponents();
+		postInit(path, null, h);
 
 		setLocationRelativeTo(owner);
-
-		doShowHints(Opt.empty(), null);
 	}
 
-	private void initSources() {
-		_results = new MIDialogResultSet[]
-		{
-			new MIDialogResultSet(this, MetadataSourceType.MEDIAINFO, btnRunMediaInfo, btnShowMediaInfo, btnHintsMediaInfo, btnApplyMediaInfo),
-			new MIDialogResultSet(this, MetadataSourceType.FFPROBE,   btnRunFFProbe,   btnShowFFProbe,   btnHintsFFProbe,   btnApplyFFProbe),
-			new MIDialogResultSet(this, MetadataSourceType.FFMPEG,    btnRunFFMpeg,    btnShowFFMpeg,    btnHintsFFMpeg,    btnApplyFFMpeg),
-			new MIDialogResultSet(this, MetadataSourceType.MP4BOX,    btnRunMP4Box,    btnShowMP4Box,    btnHintsMP4Box,    btnApplyMP4Box),
-		};
-		
-		for (MIDialogResultSet r : _results) r.init();
-	}
-	
-	private void initGUI() {
-		setModal(true);
-		setBounds(100, 100, 1000, 550);
-		setTitle(LocaleBundle.getString("EditMediaInfoDialog.title")); //$NON-NLS-1$
-		setMinimumSize(new Dimension(750, 350));
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setResizable(true);
-		
-		getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
-		
-		panel_3 = new JPanel();
-		getContentPane().add(panel_3, "2, 2, 5, 1, fill, fill"); //$NON-NLS-1$
-		panel_3.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(30dlu;default)"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(30dlu;default)"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(30dlu;default)"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(30dlu;default)"),}, //$NON-NLS-1$
-			new RowSpec[] {
-				RowSpec.decode("max(12dlu;pref)"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(12dlu;default)"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(12dlu;default)"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(12dlu;default)"),})); //$NON-NLS-1$
-		
-		edFilepath = new JFSPathTextField();
-		panel_3.add(edFilepath, "1, 1, fill, center"); //$NON-NLS-1$
-		edFilepath.setColumns(10);
-		
-		btnRunMediaInfo = new JButton();
-		panel_3.add(btnRunMediaInfo, "3, 1, fill, fill"); //$NON-NLS-1$
-		
-		btnApplyMediaInfo = new JButton();
-
-		btnShowMediaInfo = new JButton();
-		panel_3.add(btnShowMediaInfo, "5, 1, fill, fill"); //$NON-NLS-1$
-		
-		btnHintsMediaInfo = new JButton();
-		panel_3.add(btnHintsMediaInfo, "7, 1, fill, fill"); //$NON-NLS-1$
-		panel_3.add(btnApplyMediaInfo, "9, 1, fill, fill"); //$NON-NLS-1$
-		
-		btnRunFFProbe = new JButton();
-
-		progressBar = new JProgressBar();
-		panel_3.add(progressBar, "1, 3, fill, fill"); //$NON-NLS-1$
-		panel_3.add(btnRunFFProbe, "3, 3, default, fill"); //$NON-NLS-1$
-		
-		btnShowFFProbe = new JButton();
-		panel_3.add(btnShowFFProbe, "5, 3, fill, fill"); //$NON-NLS-1$
-		
-		btnApplyFFProbe = new JButton();
-
-		btnHintsFFProbe = new JButton();
-		panel_3.add(btnHintsFFProbe, "7, 3, fill, fill"); //$NON-NLS-1$
-		panel_3.add(btnApplyFFProbe, "9, 3, fill, fill"); //$NON-NLS-1$
-		
-		btnRunFFMpeg = new JButton();
-		panel_3.add(btnRunFFMpeg, "3, 5, default, fill"); //$NON-NLS-1$
-		
-		btnShowFFMpeg = new JButton();
-		panel_3.add(btnShowFFMpeg, "5, 5, fill, fill"); //$NON-NLS-1$
-		
-		btnHintsFFMpeg = new JButton();
-		panel_3.add(btnHintsFFMpeg, "7, 5, fill, fill"); //$NON-NLS-1$
-		
-		btnApplyFFMpeg = new JButton();
-		panel_3.add(btnApplyFFMpeg, "9, 5, fill, fill"); //$NON-NLS-1$
-		
-		btnRunMP4Box = new JButton();
-		panel_3.add(btnRunMP4Box, "3, 7, default, fill"); //$NON-NLS-1$
-		
-		btnShowMP4Box = new JButton();
-		panel_3.add(btnShowMP4Box, "5, 7, fill, fill"); //$NON-NLS-1$
-		
-		btnHintsMP4Box = new JButton();
-		panel_3.add(btnHintsMP4Box, "7, 7, fill, fill"); //$NON-NLS-1$
-		
-		btnApplyMP4Box = new JButton();
-		panel_3.add(btnApplyMP4Box, "9, 7, fill, fill"); //$NON-NLS-1$
-		
-		pnlGeneral = new JPanel();
-		pnlGeneral.setBorder(new TitledBorder(null, LocaleBundle.getString("EditMediaInfoDialog.header1"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
-		getContentPane().add(pnlGeneral, "2, 4, fill, fill"); //$NON-NLS-1$
-		pnlGeneral.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.PREF_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("60dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		lblGeneralCDate = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.CDate")); //$NON-NLS-1$
-		pnlGeneral.add(lblGeneralCDate, "2, 2, right, default"); //$NON-NLS-1$
-		
-		ctrlCDate = new JSpinner();
-		ctrlCDate.setModel(new SpinnerNumberModel(0L, null, null, 1L));
-		ctrlCDate.addChangeListener(new ChangeLambdaAdapter(() -> lblFullCDate.setText(CCDateTime.createFromFileTimestamp((long)ctrlCDate.getValue(), TimeZone.getDefault()).toStringISO())));
-		pnlGeneral.add(ctrlCDate, "4, 2, fill, default"); //$NON-NLS-1$
-		
-		lblHintCDate = new JLabel(""); //$NON-NLS-1$
-		pnlGeneral.add(lblHintCDate, "6, 2, fill, fill"); //$NON-NLS-1$
-		
-		lblFullCDate = new JLabel(""); //$NON-NLS-1$
-		lblFullCDate.setHorizontalAlignment(SwingConstants.RIGHT);
-		pnlGeneral.add(lblFullCDate, "4, 4, fill, fill"); //$NON-NLS-1$
-		
-		lblGeneralMDate = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.MDate")); //$NON-NLS-1$
-		pnlGeneral.add(lblGeneralMDate, "2, 6, right, default"); //$NON-NLS-1$
-		
-		ctrlMDate = new JSpinner();
-		ctrlMDate.setModel(new SpinnerNumberModel(0L, null, null, 1L));
-		ctrlMDate.addChangeListener(new ChangeLambdaAdapter(() -> lblFullMDate.setText(CCDateTime.createFromFileTimestamp((long)ctrlMDate.getValue(), TimeZone.getDefault()).toStringISO())));
-		pnlGeneral.add(ctrlMDate, "4, 6, fill, default"); //$NON-NLS-1$
-		
-		lblHintMDate = new JLabel(""); //$NON-NLS-1$
-		pnlGeneral.add(lblHintMDate, "6, 6, fill, fill"); //$NON-NLS-1$
-		
-		lblFullMDate = new JLabel(""); //$NON-NLS-1$
-		lblFullMDate.setHorizontalAlignment(SwingConstants.RIGHT);
-		pnlGeneral.add(lblFullMDate, "4, 8, fill, fill"); //$NON-NLS-1$
-		
-		lblGeneralFilesize = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Filesize")); //$NON-NLS-1$
-		pnlGeneral.add(lblGeneralFilesize, "2, 10, right, default"); //$NON-NLS-1$
-		
-		ctrlFilesize = new JSpinner();
-		ctrlFilesize.setModel(new SpinnerNumberModel(0L, null, null, 1L));
-		ctrlFilesize.addChangeListener(new ChangeLambdaAdapter(() -> lblFullFilesize1.setText(FileSizeFormatter.formatPrecise(new CCFileSize((long)ctrlFilesize.getValue())))));
-		pnlGeneral.add(ctrlFilesize, "4, 10"); //$NON-NLS-1$
-		
-		lblHintFilesize = new JLabel(""); //$NON-NLS-1$
-		pnlGeneral.add(lblHintFilesize, "6, 10, fill, fill"); //$NON-NLS-1$
-		
-		lblFullFilesize1 = new JLabel(""); //$NON-NLS-1$
-		lblFullFilesize1.setHorizontalAlignment(SwingConstants.RIGHT);
-		pnlGeneral.add(lblFullFilesize1, "4, 12, fill, fill"); //$NON-NLS-1$
-		
-		lblGeneralDuration = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Duration")); //$NON-NLS-1$
-		pnlGeneral.add(lblGeneralDuration, "2, 14, right, default"); //$NON-NLS-1$
-		
-		ctrlDuration = new JSpinner();
-		ctrlDuration.setModel(new SpinnerNumberModel((double) 0, null, null, 1d));
-		ctrlDuration.addChangeListener(new ChangeLambdaAdapter(() ->
-		{
-			int m = (int)Math.round(((double)ctrlDuration.getValue())/60);
-			lblFullDuration1.setText(TimeIntervallFormatter.formatShort(m));
-			lblFullDuration2.setText(TimeIntervallFormatter.format(m));
-		}));
-		pnlGeneral.add(ctrlDuration, "4, 14"); //$NON-NLS-1$
-		
-		lblHintDuration = new JLabel(""); //$NON-NLS-1$
-		pnlGeneral.add(lblHintDuration, "6, 14, fill, fill"); //$NON-NLS-1$
-		
-		lblFullDuration1 = new JLabel(""); //$NON-NLS-1$
-		lblFullDuration1.setHorizontalAlignment(SwingConstants.RIGHT);
-		pnlGeneral.add(lblFullDuration1, "4, 16, fill, fill"); //$NON-NLS-1$
-		
-		lblFullDuration2 = new JLabel(""); //$NON-NLS-1$
-		lblFullDuration2.setHorizontalAlignment(SwingConstants.RIGHT);
-		pnlGeneral.add(lblFullDuration2, "4, 18, fill, fill"); //$NON-NLS-1$
-		
-		lblGeneralBitrate = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Bitrate")); //$NON-NLS-1$
-		pnlGeneral.add(lblGeneralBitrate, "2, 20, right, default"); //$NON-NLS-1$
-		
-		ctrlBitrate = new JSpinner();
-		ctrlBitrate.setModel(new SpinnerNumberModel(0, null, null, 1));
-		ctrlBitrate.addChangeListener(new ChangeLambdaAdapter(() -> lblFullBitrate.setText(Str.spacegroupformat((int)Math.round(((int)ctrlBitrate.getValue())/1000.0)) + " kbit/s"))); //$NON-NLS-1$
-		pnlGeneral.add(ctrlBitrate, "4, 20"); //$NON-NLS-1$
-		
-		lblHintBitrate = new JLabel(""); //$NON-NLS-1$
-		pnlGeneral.add(lblHintBitrate, "6, 20, fill, fill"); //$NON-NLS-1$
-		
-		lblFullBitrate = new JLabel(""); //$NON-NLS-1$
-		lblFullBitrate.setHorizontalAlignment(SwingConstants.RIGHT);
-		pnlGeneral.add(lblFullBitrate, "4, 22, fill, fill"); //$NON-NLS-1$
-		
-		lblChecksum = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Checksum")); //$NON-NLS-1$
-		pnlGeneral.add(lblChecksum, "2, 24, right, default"); //$NON-NLS-1$
-		
-		lblHintChecksum = new JLabel(""); //$NON-NLS-1$
-		pnlGeneral.add(lblHintChecksum, "4, 24, 3, 1, fill, fill"); //$NON-NLS-1$
-		
-		ctrlChecksum = new JTextField();
-		pnlGeneral.add(ctrlChecksum, "2, 26, 5, 1, fill, default"); //$NON-NLS-1$
-		ctrlChecksum.setColumns(10);
-		
-		pnlVideo = new JPanel();
-		pnlVideo.setBorder(new TitledBorder(null, LocaleBundle.getString("EditMediaInfoDialog.header2"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
-		getContentPane().add(pnlVideo, "4, 4, fill, fill"); //$NON-NLS-1$
-		pnlVideo.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.PREF_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("60dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		lblVideoFormat = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Format")); //$NON-NLS-1$
-		pnlVideo.add(lblVideoFormat, "2, 2, right, default"); //$NON-NLS-1$
-		
-		ctrlVideoFormat = new JTextField();
-		pnlVideo.add(ctrlVideoFormat, "4, 2, fill, default"); //$NON-NLS-1$
-		ctrlVideoFormat.setColumns(10);
-		
-		lblHintVideoFormat = new JLabel(""); //$NON-NLS-1$
-		pnlVideo.add(lblHintVideoFormat, "6, 2, fill, fill"); //$NON-NLS-1$
-		
-		lblVideoWidth = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Width")); //$NON-NLS-1$
-		pnlVideo.add(lblVideoWidth, "2, 4, right, default"); //$NON-NLS-1$
-		
-		ctrlVideoWidth = new JSpinner();
-		pnlVideo.add(ctrlVideoWidth, "4, 4"); //$NON-NLS-1$
-		
-		lblHintVideoWidth = new JLabel(""); //$NON-NLS-1$
-		pnlVideo.add(lblHintVideoWidth, "6, 4, fill, fill"); //$NON-NLS-1$
-		
-		lblVideoHeight = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Height")); //$NON-NLS-1$
-		pnlVideo.add(lblVideoHeight, "2, 6, right, default"); //$NON-NLS-1$
-		
-		ctrlVideoHeight = new JSpinner();
-		pnlVideo.add(ctrlVideoHeight, "4, 6"); //$NON-NLS-1$
-		
-		lblHintVideoHeight = new JLabel(""); //$NON-NLS-1$
-		pnlVideo.add(lblHintVideoHeight, "6, 6, fill, fill"); //$NON-NLS-1$
-		
-		lblVideoFramerate = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Framerate")); //$NON-NLS-1$
-		pnlVideo.add(lblVideoFramerate, "2, 8, right, default"); //$NON-NLS-1$
-		
-		ctrlVideoFramerate = new JSpinner();
-		ctrlVideoFramerate.setModel(new SpinnerNumberModel((double) 0, null, null, 1d));
-		pnlVideo.add(ctrlVideoFramerate, "4, 8"); //$NON-NLS-1$
-		
-		lblHintVideoFramerate = new JLabel(""); //$NON-NLS-1$
-		pnlVideo.add(lblHintVideoFramerate, "6, 8, fill, fill"); //$NON-NLS-1$
-		
-		lblVideoBitdepth = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Bitdepth")); //$NON-NLS-1$
-		pnlVideo.add(lblVideoBitdepth, "2, 10, right, default"); //$NON-NLS-1$
-		
-		ctrlVideoBitdepth = new JSpinner();
-		ctrlVideoBitdepth.setModel(new SpinnerNumberModel((short) 0, null, null, (short) 1));
-		pnlVideo.add(ctrlVideoBitdepth, "4, 10"); //$NON-NLS-1$
-		
-		lblHintVideoBitdepth = new JLabel(""); //$NON-NLS-1$
-		pnlVideo.add(lblHintVideoBitdepth, "6, 10, fill, fill"); //$NON-NLS-1$
-		
-		lblVideoFramecount = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Framecount")); //$NON-NLS-1$
-		pnlVideo.add(lblVideoFramecount, "2, 12, right, default"); //$NON-NLS-1$
-		
-		ctrlVideoFramecount = new JSpinner();
-		ctrlVideoFramecount.setModel(new SpinnerNumberModel(0, null, null, 1));
-		ctrlVideoFramecount.addChangeListener(new ChangeLambdaAdapter(() -> lblFullFramecount.setText(Str.spacegroupformat((int)ctrlVideoFramecount.getValue()))));
-		pnlVideo.add(ctrlVideoFramecount, "4, 12"); //$NON-NLS-1$
-		
-		lblHintVideoFramecount = new JLabel(""); //$NON-NLS-1$
-		pnlVideo.add(lblHintVideoFramecount, "6, 12, fill, fill"); //$NON-NLS-1$
-		
-		lblFullFramecount = new JLabel(""); //$NON-NLS-1$
-		lblFullFramecount.setHorizontalAlignment(SwingConstants.RIGHT);
-		pnlVideo.add(lblFullFramecount, "4, 14, fill, fill"); //$NON-NLS-1$
-		
-		lblVideoCodec = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Codec")); //$NON-NLS-1$
-		pnlVideo.add(lblVideoCodec, "2, 16, right, default"); //$NON-NLS-1$
-		
-		ctrlVideoCodec = new JTextField();
-		pnlVideo.add(ctrlVideoCodec, "4, 16, fill, default"); //$NON-NLS-1$
-		ctrlVideoCodec.setColumns(10);
-		
-		lblHintVideoCodec = new JLabel(""); //$NON-NLS-1$
-		pnlVideo.add(lblHintVideoCodec, "6, 16, fill, fill"); //$NON-NLS-1$
-		
-		pnlAudio = new JPanel();
-		pnlAudio.setBorder(new TitledBorder(null, LocaleBundle.getString("EditMediaInfoDialog.header3"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
-		getContentPane().add(pnlAudio, "6, 4, fill, fill"); //$NON-NLS-1$
-		pnlAudio.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.PREF_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("1dlu:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("60dlu"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,}));
-		
-		lblAudioFormat = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Format")); //$NON-NLS-1$
-		pnlAudio.add(lblAudioFormat, "2, 2, right, default"); //$NON-NLS-1$
-		
-		ctrlAudioFormat = new JTextField();
-		pnlAudio.add(ctrlAudioFormat, "4, 2, fill, default"); //$NON-NLS-1$
-		ctrlAudioFormat.setColumns(10);
-		
-		lblHintAudioFormat = new JLabel(""); //$NON-NLS-1$
-		pnlAudio.add(lblHintAudioFormat, "6, 2, fill, fill"); //$NON-NLS-1$
-		
-		lblAudioChannels = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Channels")); //$NON-NLS-1$
-		pnlAudio.add(lblAudioChannels, "2, 4, right, default"); //$NON-NLS-1$
-		
-		ctrlAudioChannels = new JSpinner();
-		ctrlAudioChannels.setModel(new SpinnerNumberModel((short) 0, null, null, (short) 1));
-		pnlAudio.add(ctrlAudioChannels, "4, 4"); //$NON-NLS-1$
-		
-		lblHintAudioChannels = new JLabel(""); //$NON-NLS-1$
-		pnlAudio.add(lblHintAudioChannels, "6, 4, fill, fill"); //$NON-NLS-1$
-		
-		lblAudioCodec = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Codec")); //$NON-NLS-1$
-		pnlAudio.add(lblAudioCodec, "2, 6, right, default"); //$NON-NLS-1$
-		
-		ctrlAudioCodec = new JTextField();
-		pnlAudio.add(ctrlAudioCodec, "4, 6, fill, default"); //$NON-NLS-1$
-		ctrlAudioCodec.setColumns(10);
-		
-		lblHintAudioCodec = new JLabel(""); //$NON-NLS-1$
-		pnlAudio.add(lblHintAudioCodec, "6, 6, fill, fill"); //$NON-NLS-1$
-		
-		lblAudioSamplerate = new JLabel(LocaleBundle.getString("EditMediaInfoDialog.Samplerate")); //$NON-NLS-1$
-		pnlAudio.add(lblAudioSamplerate, "2, 8, right, default"); //$NON-NLS-1$
-		
-		ctrlAudioSamplerate = new JSpinner();
-		pnlAudio.add(ctrlAudioSamplerate, "4, 8"); //$NON-NLS-1$
-		
-		lblHintAudioSamplerate = new JLabel(""); //$NON-NLS-1$
-		pnlAudio.add(lblHintAudioSamplerate, "6, 8, fill, fill"); //$NON-NLS-1$
-		
-		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnOK.addActionListener(e -> onOK());
-		getContentPane().add(btnOK, "6, 6, right, default"); //$NON-NLS-1$
-
+	private void postInit(FSPath path, PartialMediaInfo r, MediaInfoResultHandler h)
+	{
 		colOK = lblVideoBitdepth.getForeground();
 		colErr = Color.RED;
+
+		_handler = h;
+
+		_results = new MIDialogResultSet[]
+		{
+			new MIDialogResultSet(this, MetadataSourceType.MEDIAINFO, btnRunMediaInfo,   btnShowMediaInfo,   btnHintsMediaInfo,   btnApplyMediaInfo),
+			new MIDialogResultSet(this, MetadataSourceType.FFPROBE,   btnRunFFProbeFull, btnShowFFProbeFull, btnHintsFFProbeFull, btnApplyFFProbeFull),
+			new MIDialogResultSet(this, MetadataSourceType.FFMPEG,    btnRunFFProbeFast, btnShowFFProbeFast, btnHintsFFProbeFast, btnApplyFFProbeFast),
+			new MIDialogResultSet(this, MetadataSourceType.MP4BOX,    btnRunMP4Box,      btnShowMP4Box,      btnHintsMP4Box,      btnApplyMP4Box),
+		};
+
+		for (MIDialogResultSet mdrs : _results) mdrs.init();
+
+		edFilepath.setPath(path == null ? FSPath.Empty : path);
+
+		if (r != null)
+		{
+			MIDialogResultSet rs = CCStreams.iterate(_results).singleOrNull(p -> p.Type == MetadataSourceType.MEDIAINFO);
+			rs.updateData(r);
+			doApply(r);
+			doShowHints(Opt.of(r), MetadataSourceType.MEDIAINFO);
+		}
 	}
 
 	public void doShowHints(Opt<PartialMediaInfo> mi, MetadataSourceType typ) {
@@ -799,7 +302,7 @@ public class EditMediaInfoDialog extends JCCDialog {
 		return CCMediaInfo.create(cdate, mdate, new CCFileSize(fsize), chksum, durat, brate, vfmt, width, height, frate, bdepth, fcount, vcodec, afmt, achnls, acodec, srate);
 	}
 
-	private void onOK() {
+	private void onOK(ActionEvent e) {
 		CCMediaInfo mi = getData();
 		if (mi == null) return;
 
@@ -807,4 +310,557 @@ public class EditMediaInfoDialog extends JCCDialog {
 
 		dispose();
 	}
+
+	private void ctrlCDateChanged(ChangeEvent e) {
+		lblFullCDate.setText(CCDateTime.createFromFileTimestamp((long)ctrlCDate.getValue(), TimeZone.getDefault()).toStringISO());
+	}
+
+	private void ctrlMDateChanged(ChangeEvent e) {
+		lblFullMDate.setText(CCDateTime.createFromFileTimestamp((long)ctrlMDate.getValue(), TimeZone.getDefault()).toStringISO());
+	}
+
+	private void ctrlFilesizeChanged(ChangeEvent e) {
+		lblFullFilesize1.setText(FileSizeFormatter.formatPrecise(new CCFileSize((long)ctrlFilesize.getValue())));
+	}
+
+	private void ctrlDurationChanged(ChangeEvent e) {
+		int m = (int)Math.round(((double)ctrlDuration.getValue())/60);
+		lblFullDuration1.setText(TimeIntervallFormatter.formatShort(m));
+		lblFullDuration2.setText(TimeIntervallFormatter.format(m));
+	}
+
+	private void ctrlBitrateChanged(ChangeEvent e) {
+		lblFullBitrate.setText(Str.spacegroupformat((int)Math.round(((int)ctrlBitrate.getValue())/1000.0)) + " kbit/s"); //$NON-NLS-1$
+	}
+
+	private void ctrlVideoFramecountChanged(ChangeEvent e) {
+		lblFullFramecount.setText(Str.spacegroupformat((int)ctrlVideoFramecount.getValue()));
+	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		pnlTop = new JPanel();
+		edFilepath = new JFSPathTextField();
+		btnRunMediaInfo = new MIButton();
+		btnShowMediaInfo = new JButton();
+		btnHintsMediaInfo = new JButton();
+		btnApplyMediaInfo = new JButton();
+		progressBar = new JProgressBar();
+		btnRunFFProbeFull = new MIButton();
+		btnShowFFProbeFull = new JButton();
+		btnHintsFFProbeFull = new JButton();
+		btnApplyFFProbeFull = new JButton();
+		btnRunFFProbeFast = new MIButton();
+		btnShowFFProbeFast = new JButton();
+		btnHintsFFProbeFast = new JButton();
+		btnApplyFFProbeFast = new JButton();
+		btnRunMP4Box = new MIButton();
+		btnShowMP4Box = new JButton();
+		btnHintsMP4Box = new JButton();
+		btnApplyMP4Box = new JButton();
+		pnlGeneral = new JPanel();
+		lblGeneralCDate = new JLabel();
+		ctrlCDate = new JSpinner();
+		lblHintCDate = new JLabel();
+		lblFullCDate = new JLabel();
+		lblGeneralMDate = new JLabel();
+		ctrlMDate = new JSpinner();
+		lblHintMDate = new JLabel();
+		lblFullMDate = new JLabel();
+		lblGeneralFilesize = new JLabel();
+		ctrlFilesize = new JSpinner();
+		lblHintFilesize = new JLabel();
+		lblFullFilesize1 = new JLabel();
+		lblGeneralDuration = new JLabel();
+		ctrlDuration = new JSpinner();
+		lblHintDuration = new JLabel();
+		lblFullDuration1 = new JLabel();
+		lblFullDuration2 = new JLabel();
+		lblGeneralBitrate = new JLabel();
+		ctrlBitrate = new JSpinner();
+		lblHintBitrate = new JLabel();
+		lblFullBitrate = new JLabel();
+		lblChecksum = new JLabel();
+		lblHintChecksum = new JLabel();
+		ctrlChecksum = new JTextField();
+		pnlVideo = new JPanel();
+		lblVideoFormat = new JLabel();
+		ctrlVideoFormat = new JTextField();
+		lblHintVideoFormat = new JLabel();
+		lblVideoWidth = new JLabel();
+		ctrlVideoWidth = new JSpinner();
+		lblHintVideoWidth = new JLabel();
+		lblVideoHeight = new JLabel();
+		ctrlVideoHeight = new JSpinner();
+		lblHintVideoHeight = new JLabel();
+		lblVideoFramerate = new JLabel();
+		ctrlVideoFramerate = new JSpinner();
+		lblHintVideoFramerate = new JLabel();
+		lblVideoBitdepth = new JLabel();
+		ctrlVideoBitdepth = new JSpinner();
+		lblHintVideoBitdepth = new JLabel();
+		lblVideoFramecount = new JLabel();
+		ctrlVideoFramecount = new JSpinner();
+		lblHintVideoFramecount = new JLabel();
+		lblFullFramecount = new JLabel();
+		lblVideoCodec = new JLabel();
+		ctrlVideoCodec = new JTextField();
+		lblHintVideoCodec = new JLabel();
+		panel1 = new JPanel();
+		pnlAudio = new JPanel();
+		lblAudioFormat = new JLabel();
+		ctrlAudioFormat = new JTextField();
+		lblHintAudioFormat = new JLabel();
+		lblAudioChannels = new JLabel();
+		ctrlAudioChannels = new JSpinner();
+		lblHintAudioChannels = new JLabel();
+		lblAudioCodec = new JLabel();
+		ctrlAudioCodec = new JTextField();
+		lblHintAudioCodec = new JLabel();
+		lblAudioSamplerate = new JLabel();
+		ctrlAudioSamplerate = new JSpinner();
+		lblHintAudioSamplerate = new JLabel();
+		btnOK = new JButton();
+
+		//======== this ========
+		setTitle(LocaleBundle.getString("EditMediaInfoDialog.title")); //$NON-NLS-1$
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		var contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$ugap, 2*(0dlu:grow, $lcgap), 0dlu:grow, $ugap", //$NON-NLS-1$
+			"$ugap, default, 2*($lgap, default:grow), $lgap, default, $ugap")); //$NON-NLS-1$
+
+		//======== pnlTop ========
+		{
+			pnlTop.setLayout(new FormLayout(
+				"default:grow, 4*($lcgap, default)", //$NON-NLS-1$
+				"3*(default, $lgap), default")); //$NON-NLS-1$
+			pnlTop.add(edFilepath, CC.xy(1, 1));
+
+			//---- btnRunMediaInfo ----
+			btnRunMediaInfo.setMetadataSourceType(MetadataSourceType.MEDIAINFO);
+			pnlTop.add(btnRunMediaInfo, CC.xy(3, 1));
+
+			//---- btnShowMediaInfo ----
+			btnShowMediaInfo.setText(LocaleBundle.getString("EditMediaInfoDialog.btnShow")); //$NON-NLS-1$
+			pnlTop.add(btnShowMediaInfo, CC.xy(5, 1));
+
+			//---- btnHintsMediaInfo ----
+			btnHintsMediaInfo.setText(LocaleBundle.getString("EditMediaInfoDialog.btnHints")); //$NON-NLS-1$
+			pnlTop.add(btnHintsMediaInfo, CC.xy(7, 1));
+
+			//---- btnApplyMediaInfo ----
+			btnApplyMediaInfo.setText(LocaleBundle.getString("UIGeneric.btnApply.text")); //$NON-NLS-1$
+			pnlTop.add(btnApplyMediaInfo, CC.xy(9, 1));
+			pnlTop.add(progressBar, CC.xy(1, 3, CC.FILL, CC.FILL));
+
+			//---- btnRunFFProbeFull ----
+			btnRunFFProbeFull.setMetadataSourceType(MetadataSourceType.FFPROBE);
+			pnlTop.add(btnRunFFProbeFull, CC.xy(3, 3));
+
+			//---- btnShowFFProbeFull ----
+			btnShowFFProbeFull.setText(LocaleBundle.getString("EditMediaInfoDialog.btnShow")); //$NON-NLS-1$
+			pnlTop.add(btnShowFFProbeFull, CC.xy(5, 3));
+
+			//---- btnHintsFFProbeFull ----
+			btnHintsFFProbeFull.setText(LocaleBundle.getString("EditMediaInfoDialog.btnHints")); //$NON-NLS-1$
+			pnlTop.add(btnHintsFFProbeFull, CC.xy(7, 3));
+
+			//---- btnApplyFFProbeFull ----
+			btnApplyFFProbeFull.setText(LocaleBundle.getString("UIGeneric.btnApply.text")); //$NON-NLS-1$
+			pnlTop.add(btnApplyFFProbeFull, CC.xy(9, 3));
+
+			//---- btnRunFFProbeFast ----
+			btnRunFFProbeFast.setMetadataSourceType(MetadataSourceType.FFMPEG);
+			pnlTop.add(btnRunFFProbeFast, CC.xy(3, 5));
+
+			//---- btnShowFFProbeFast ----
+			btnShowFFProbeFast.setText(LocaleBundle.getString("EditMediaInfoDialog.btnShow")); //$NON-NLS-1$
+			pnlTop.add(btnShowFFProbeFast, CC.xy(5, 5));
+
+			//---- btnHintsFFProbeFast ----
+			btnHintsFFProbeFast.setText(LocaleBundle.getString("EditMediaInfoDialog.btnHints")); //$NON-NLS-1$
+			pnlTop.add(btnHintsFFProbeFast, CC.xy(7, 5));
+
+			//---- btnApplyFFProbeFast ----
+			btnApplyFFProbeFast.setText(LocaleBundle.getString("UIGeneric.btnApply.text")); //$NON-NLS-1$
+			pnlTop.add(btnApplyFFProbeFast, CC.xy(9, 5));
+
+			//---- btnRunMP4Box ----
+			btnRunMP4Box.setMetadataSourceType(MetadataSourceType.MP4BOX);
+			pnlTop.add(btnRunMP4Box, CC.xy(3, 7));
+
+			//---- btnShowMP4Box ----
+			btnShowMP4Box.setText(LocaleBundle.getString("EditMediaInfoDialog.btnShow")); //$NON-NLS-1$
+			pnlTop.add(btnShowMP4Box, CC.xy(5, 7));
+
+			//---- btnHintsMP4Box ----
+			btnHintsMP4Box.setText(LocaleBundle.getString("EditMediaInfoDialog.btnHints")); //$NON-NLS-1$
+			pnlTop.add(btnHintsMP4Box, CC.xy(7, 7));
+
+			//---- btnApplyMP4Box ----
+			btnApplyMP4Box.setText(LocaleBundle.getString("UIGeneric.btnApply.text")); //$NON-NLS-1$
+			pnlTop.add(btnApplyMP4Box, CC.xy(9, 7));
+		}
+		contentPane.add(pnlTop, CC.xywh(2, 2, 5, 1, CC.FILL, CC.FILL));
+
+		//======== pnlGeneral ========
+		{
+			pnlGeneral.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.header1"))); //$NON-NLS-1$
+			pnlGeneral.setLayout(new FormLayout(
+				"$lcgap, default, $lcgap, default:grow, $lcgap, 60dlu, $lcgap", //$NON-NLS-1$
+				"13*($lgap, default), $lgap")); //$NON-NLS-1$
+
+			//---- lblGeneralCDate ----
+			lblGeneralCDate.setText(LocaleBundle.getString("EditMediaInfoDialog.CDate")); //$NON-NLS-1$
+			lblGeneralCDate.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlGeneral.add(lblGeneralCDate, CC.xy(2, 2));
+
+			//---- ctrlCDate ----
+			ctrlCDate.setModel(new SpinnerNumberModel(0L, null, null, 1L));
+			ctrlCDate.addChangeListener(e -> ctrlCDateChanged(e));
+			pnlGeneral.add(ctrlCDate, CC.xy(4, 2));
+
+			//---- lblHintCDate ----
+			lblHintCDate.setText("<dynamic>"); //$NON-NLS-1$
+			pnlGeneral.add(lblHintCDate, CC.xy(6, 2));
+
+			//---- lblFullCDate ----
+			lblFullCDate.setText("<dynamic>"); //$NON-NLS-1$
+			pnlGeneral.add(lblFullCDate, CC.xy(4, 4));
+
+			//---- lblGeneralMDate ----
+			lblGeneralMDate.setText(LocaleBundle.getString("EditMediaInfoDialog.MDate")); //$NON-NLS-1$
+			lblGeneralMDate.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlGeneral.add(lblGeneralMDate, CC.xy(2, 6));
+
+			//---- ctrlMDate ----
+			ctrlMDate.setModel(new SpinnerNumberModel(0L, null, null, 1L));
+			ctrlMDate.addChangeListener(e -> ctrlMDateChanged(e));
+			pnlGeneral.add(ctrlMDate, CC.xy(4, 6));
+
+			//---- lblHintMDate ----
+			lblHintMDate.setText("<dynamic>"); //$NON-NLS-1$
+			pnlGeneral.add(lblHintMDate, CC.xy(6, 6));
+
+			//---- lblFullMDate ----
+			lblFullMDate.setText("<dynamic>"); //$NON-NLS-1$
+			pnlGeneral.add(lblFullMDate, CC.xy(4, 8));
+
+			//---- lblGeneralFilesize ----
+			lblGeneralFilesize.setText(LocaleBundle.getString("EditMediaInfoDialog.Filesize")); //$NON-NLS-1$
+			lblGeneralFilesize.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlGeneral.add(lblGeneralFilesize, CC.xy(2, 10));
+
+			//---- ctrlFilesize ----
+			ctrlFilesize.setModel(new SpinnerNumberModel(0L, null, null, 1L));
+			ctrlFilesize.addChangeListener(e -> ctrlFilesizeChanged(e));
+			pnlGeneral.add(ctrlFilesize, CC.xy(4, 10));
+
+			//---- lblHintFilesize ----
+			lblHintFilesize.setText("<dynamic>"); //$NON-NLS-1$
+			pnlGeneral.add(lblHintFilesize, CC.xy(6, 10));
+
+			//---- lblFullFilesize1 ----
+			lblFullFilesize1.setText("<dynamic>"); //$NON-NLS-1$
+			pnlGeneral.add(lblFullFilesize1, CC.xy(4, 12));
+
+			//---- lblGeneralDuration ----
+			lblGeneralDuration.setText(LocaleBundle.getString("EditMediaInfoDialog.Duration")); //$NON-NLS-1$
+			lblGeneralDuration.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlGeneral.add(lblGeneralDuration, CC.xy(2, 14));
+
+			//---- ctrlDuration ----
+			ctrlDuration.setModel(new SpinnerNumberModel(0.0, null, null, 1.0));
+			ctrlDuration.addChangeListener(e -> ctrlDurationChanged(e));
+			pnlGeneral.add(ctrlDuration, CC.xy(4, 14));
+
+			//---- lblHintDuration ----
+			lblHintDuration.setText("<dynamic>"); //$NON-NLS-1$
+			pnlGeneral.add(lblHintDuration, CC.xy(6, 14));
+
+			//---- lblFullDuration1 ----
+			lblFullDuration1.setText("<dynamic>"); //$NON-NLS-1$
+			pnlGeneral.add(lblFullDuration1, CC.xy(4, 16));
+
+			//---- lblFullDuration2 ----
+			lblFullDuration2.setText("<dynamic>"); //$NON-NLS-1$
+			pnlGeneral.add(lblFullDuration2, CC.xy(4, 18));
+
+			//---- lblGeneralBitrate ----
+			lblGeneralBitrate.setText(LocaleBundle.getString("EditMediaInfoDialog.Bitrate")); //$NON-NLS-1$
+			lblGeneralBitrate.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlGeneral.add(lblGeneralBitrate, CC.xy(2, 20));
+
+			//---- ctrlBitrate ----
+			ctrlBitrate.setModel(new SpinnerNumberModel(0, null, null, 1));
+			ctrlBitrate.addChangeListener(e -> ctrlBitrateChanged(e));
+			pnlGeneral.add(ctrlBitrate, CC.xy(4, 20));
+
+			//---- lblHintBitrate ----
+			lblHintBitrate.setText("<dynamic>"); //$NON-NLS-1$
+			pnlGeneral.add(lblHintBitrate, CC.xy(6, 20));
+
+			//---- lblFullBitrate ----
+			lblFullBitrate.setText("<dynamic>"); //$NON-NLS-1$
+			pnlGeneral.add(lblFullBitrate, CC.xy(4, 22));
+
+			//---- lblChecksum ----
+			lblChecksum.setText(LocaleBundle.getString("EditMediaInfoDialog.Checksum")); //$NON-NLS-1$
+			lblChecksum.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlGeneral.add(lblChecksum, CC.xy(2, 24));
+
+			//---- lblHintChecksum ----
+			lblHintChecksum.setText("<dynamic>"); //$NON-NLS-1$
+			pnlGeneral.add(lblHintChecksum, CC.xywh(4, 24, 3, 1));
+			pnlGeneral.add(ctrlChecksum, CC.xywh(2, 26, 5, 1));
+		}
+		contentPane.add(pnlGeneral, CC.xywh(2, 4, 1, 3, CC.FILL, CC.FILL));
+
+		//======== pnlVideo ========
+		{
+			pnlVideo.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.header2"))); //$NON-NLS-1$
+			pnlVideo.setLayout(new FormLayout(
+				"$lcgap, default, $lcgap, default:grow, $lcgap, 60dlu, $lcgap", //$NON-NLS-1$
+				"8*($lgap, default), $lgap")); //$NON-NLS-1$
+
+			//---- lblVideoFormat ----
+			lblVideoFormat.setText(LocaleBundle.getString("EditMediaInfoDialog.Format")); //$NON-NLS-1$
+			lblVideoFormat.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlVideo.add(lblVideoFormat, CC.xy(2, 2));
+			pnlVideo.add(ctrlVideoFormat, CC.xy(4, 2));
+
+			//---- lblHintVideoFormat ----
+			lblHintVideoFormat.setText("<dynamic>"); //$NON-NLS-1$
+			pnlVideo.add(lblHintVideoFormat, CC.xy(6, 2));
+
+			//---- lblVideoWidth ----
+			lblVideoWidth.setText(LocaleBundle.getString("EditMediaInfoDialog.Width")); //$NON-NLS-1$
+			lblVideoWidth.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlVideo.add(lblVideoWidth, CC.xy(2, 4));
+			pnlVideo.add(ctrlVideoWidth, CC.xy(4, 4));
+
+			//---- lblHintVideoWidth ----
+			lblHintVideoWidth.setText("<dynamic>"); //$NON-NLS-1$
+			pnlVideo.add(lblHintVideoWidth, CC.xy(6, 4));
+
+			//---- lblVideoHeight ----
+			lblVideoHeight.setText(LocaleBundle.getString("EditMediaInfoDialog.Height")); //$NON-NLS-1$
+			lblVideoHeight.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlVideo.add(lblVideoHeight, CC.xy(2, 6));
+			pnlVideo.add(ctrlVideoHeight, CC.xy(4, 6));
+
+			//---- lblHintVideoHeight ----
+			lblHintVideoHeight.setText("<dynamic>"); //$NON-NLS-1$
+			pnlVideo.add(lblHintVideoHeight, CC.xy(6, 6));
+
+			//---- lblVideoFramerate ----
+			lblVideoFramerate.setText(LocaleBundle.getString("EditMediaInfoDialog.Framerate")); //$NON-NLS-1$
+			lblVideoFramerate.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlVideo.add(lblVideoFramerate, CC.xy(2, 8));
+
+			//---- ctrlVideoFramerate ----
+			ctrlVideoFramerate.setModel(new SpinnerNumberModel(0.0, null, null, 1.0));
+			pnlVideo.add(ctrlVideoFramerate, CC.xy(4, 8));
+
+			//---- lblHintVideoFramerate ----
+			lblHintVideoFramerate.setText("<dynamic>"); //$NON-NLS-1$
+			pnlVideo.add(lblHintVideoFramerate, CC.xy(6, 8));
+
+			//---- lblVideoBitdepth ----
+			lblVideoBitdepth.setText(LocaleBundle.getString("EditMediaInfoDialog.Bitdepth")); //$NON-NLS-1$
+			lblVideoBitdepth.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlVideo.add(lblVideoBitdepth, CC.xy(2, 10));
+
+			//---- ctrlVideoBitdepth ----
+			ctrlVideoBitdepth.setModel(new SpinnerNumberModel((short) 0, null, null, (short) 1));
+			pnlVideo.add(ctrlVideoBitdepth, CC.xy(4, 10));
+
+			//---- lblHintVideoBitdepth ----
+			lblHintVideoBitdepth.setText("<dynamic>"); //$NON-NLS-1$
+			pnlVideo.add(lblHintVideoBitdepth, CC.xy(6, 10));
+
+			//---- lblVideoFramecount ----
+			lblVideoFramecount.setText(LocaleBundle.getString("EditMediaInfoDialog.Framecount")); //$NON-NLS-1$
+			lblVideoFramecount.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlVideo.add(lblVideoFramecount, CC.xy(2, 12));
+
+			//---- ctrlVideoFramecount ----
+			ctrlVideoFramecount.addChangeListener(e -> ctrlVideoFramecountChanged(e));
+			pnlVideo.add(ctrlVideoFramecount, CC.xy(4, 12));
+
+			//---- lblHintVideoFramecount ----
+			lblHintVideoFramecount.setText("<dynamic>"); //$NON-NLS-1$
+			pnlVideo.add(lblHintVideoFramecount, CC.xy(6, 12));
+
+			//---- lblFullFramecount ----
+			lblFullFramecount.setText("<dynamic>"); //$NON-NLS-1$
+			pnlVideo.add(lblFullFramecount, CC.xy(4, 14));
+
+			//---- lblVideoCodec ----
+			lblVideoCodec.setText(LocaleBundle.getString("EditMediaInfoDialog.Codec")); //$NON-NLS-1$
+			lblVideoCodec.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlVideo.add(lblVideoCodec, CC.xy(2, 16));
+			pnlVideo.add(ctrlVideoCodec, CC.xy(4, 16));
+
+			//---- lblHintVideoCodec ----
+			lblHintVideoCodec.setText("<dynamic>"); //$NON-NLS-1$
+			pnlVideo.add(lblHintVideoCodec, CC.xy(6, 16));
+		}
+		contentPane.add(pnlVideo, CC.xy(4, 4, CC.FILL, CC.FILL));
+
+		//======== panel1 ========
+		{
+			panel1.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.Tracks"))); //$NON-NLS-1$
+			panel1.setLayout(new FormLayout(
+				"default", //$NON-NLS-1$
+				"default")); //$NON-NLS-1$
+		}
+		contentPane.add(panel1, CC.xywh(6, 4, 1, 3, CC.FILL, CC.FILL));
+
+		//======== pnlAudio ========
+		{
+			pnlAudio.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.header3"))); //$NON-NLS-1$
+			pnlAudio.setLayout(new FormLayout(
+				"$lcgap, default, $lcgap, default:grow, $lcgap, 60dlu, $lcgap", //$NON-NLS-1$
+				"4*($lgap, default), $lgap")); //$NON-NLS-1$
+
+			//---- lblAudioFormat ----
+			lblAudioFormat.setText(LocaleBundle.getString("EditMediaInfoDialog.Format")); //$NON-NLS-1$
+			lblAudioFormat.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlAudio.add(lblAudioFormat, CC.xy(2, 2));
+			pnlAudio.add(ctrlAudioFormat, CC.xy(4, 2));
+
+			//---- lblHintAudioFormat ----
+			lblHintAudioFormat.setText("<dynamic>"); //$NON-NLS-1$
+			pnlAudio.add(lblHintAudioFormat, CC.xy(6, 2));
+
+			//---- lblAudioChannels ----
+			lblAudioChannels.setText(LocaleBundle.getString("EditMediaInfoDialog.Channels")); //$NON-NLS-1$
+			lblAudioChannels.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlAudio.add(lblAudioChannels, CC.xy(2, 4));
+
+			//---- ctrlAudioChannels ----
+			ctrlAudioChannels.setModel(new SpinnerNumberModel((short) 0, null, null, (short) 1));
+			pnlAudio.add(ctrlAudioChannels, CC.xy(4, 4));
+
+			//---- lblHintAudioChannels ----
+			lblHintAudioChannels.setText("<dynamic>"); //$NON-NLS-1$
+			pnlAudio.add(lblHintAudioChannels, CC.xy(6, 4));
+
+			//---- lblAudioCodec ----
+			lblAudioCodec.setText(LocaleBundle.getString("EditMediaInfoDialog.Codec")); //$NON-NLS-1$
+			lblAudioCodec.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlAudio.add(lblAudioCodec, CC.xy(2, 6));
+			pnlAudio.add(ctrlAudioCodec, CC.xy(4, 6));
+
+			//---- lblHintAudioCodec ----
+			lblHintAudioCodec.setText("<dynamic>"); //$NON-NLS-1$
+			pnlAudio.add(lblHintAudioCodec, CC.xy(6, 6));
+
+			//---- lblAudioSamplerate ----
+			lblAudioSamplerate.setText(LocaleBundle.getString("EditMediaInfoDialog.Samplerate")); //$NON-NLS-1$
+			lblAudioSamplerate.setHorizontalAlignment(SwingConstants.TRAILING);
+			pnlAudio.add(lblAudioSamplerate, CC.xy(2, 8));
+			pnlAudio.add(ctrlAudioSamplerate, CC.xy(4, 8));
+
+			//---- lblHintAudioSamplerate ----
+			lblHintAudioSamplerate.setText("<dynamic>"); //$NON-NLS-1$
+			pnlAudio.add(lblHintAudioSamplerate, CC.xy(6, 8));
+		}
+		contentPane.add(pnlAudio, CC.xy(4, 6, CC.FILL, CC.FILL));
+
+		//---- btnOK ----
+		btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+		btnOK.addActionListener(e -> onOK(e));
+		contentPane.add(btnOK, CC.xy(6, 8, CC.RIGHT, CC.DEFAULT));
+		setSize(1300, 775);
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JPanel pnlTop;
+	private JFSPathTextField edFilepath;
+	private MIButton btnRunMediaInfo;
+	private JButton btnShowMediaInfo;
+	private JButton btnHintsMediaInfo;
+	private JButton btnApplyMediaInfo;
+	private JProgressBar progressBar;
+	private MIButton btnRunFFProbeFull;
+	private JButton btnShowFFProbeFull;
+	private JButton btnHintsFFProbeFull;
+	private JButton btnApplyFFProbeFull;
+	private MIButton btnRunFFProbeFast;
+	private JButton btnShowFFProbeFast;
+	private JButton btnHintsFFProbeFast;
+	private JButton btnApplyFFProbeFast;
+	private MIButton btnRunMP4Box;
+	private JButton btnShowMP4Box;
+	private JButton btnHintsMP4Box;
+	private JButton btnApplyMP4Box;
+	private JPanel pnlGeneral;
+	private JLabel lblGeneralCDate;
+	private JSpinner ctrlCDate;
+	private JLabel lblHintCDate;
+	private JLabel lblFullCDate;
+	private JLabel lblGeneralMDate;
+	private JSpinner ctrlMDate;
+	private JLabel lblHintMDate;
+	private JLabel lblFullMDate;
+	private JLabel lblGeneralFilesize;
+	private JSpinner ctrlFilesize;
+	private JLabel lblHintFilesize;
+	private JLabel lblFullFilesize1;
+	private JLabel lblGeneralDuration;
+	private JSpinner ctrlDuration;
+	private JLabel lblHintDuration;
+	private JLabel lblFullDuration1;
+	private JLabel lblFullDuration2;
+	private JLabel lblGeneralBitrate;
+	private JSpinner ctrlBitrate;
+	private JLabel lblHintBitrate;
+	private JLabel lblFullBitrate;
+	private JLabel lblChecksum;
+	private JLabel lblHintChecksum;
+	private JTextField ctrlChecksum;
+	private JPanel pnlVideo;
+	private JLabel lblVideoFormat;
+	private JTextField ctrlVideoFormat;
+	private JLabel lblHintVideoFormat;
+	private JLabel lblVideoWidth;
+	private JSpinner ctrlVideoWidth;
+	private JLabel lblHintVideoWidth;
+	private JLabel lblVideoHeight;
+	private JSpinner ctrlVideoHeight;
+	private JLabel lblHintVideoHeight;
+	private JLabel lblVideoFramerate;
+	private JSpinner ctrlVideoFramerate;
+	private JLabel lblHintVideoFramerate;
+	private JLabel lblVideoBitdepth;
+	private JSpinner ctrlVideoBitdepth;
+	private JLabel lblHintVideoBitdepth;
+	private JLabel lblVideoFramecount;
+	private JSpinner ctrlVideoFramecount;
+	private JLabel lblHintVideoFramecount;
+	private JLabel lblFullFramecount;
+	private JLabel lblVideoCodec;
+	private JTextField ctrlVideoCodec;
+	private JLabel lblHintVideoCodec;
+	private JPanel panel1;
+	private JPanel pnlAudio;
+	private JLabel lblAudioFormat;
+	private JTextField ctrlAudioFormat;
+	private JLabel lblHintAudioFormat;
+	private JLabel lblAudioChannels;
+	private JSpinner ctrlAudioChannels;
+	private JLabel lblHintAudioChannels;
+	private JLabel lblAudioCodec;
+	private JTextField ctrlAudioCodec;
+	private JLabel lblHintAudioCodec;
+	private JLabel lblAudioSamplerate;
+	private JSpinner ctrlAudioSamplerate;
+	private JLabel lblHintAudioSamplerate;
+	private JButton btnOK;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

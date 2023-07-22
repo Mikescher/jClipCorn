@@ -39,7 +39,6 @@ public abstract class FFProbeRunner implements MetadataSource {
 		return movielist.ccprops();
 	}
 
-	@SuppressWarnings("nls")
 	public FFProbeResult query(FSPath filename) throws IOException, FFProbeQueryException {
 		var ffppath = ccprops().PROP_PLAY_FFPROBE_PATH.getValue().getPathAndArgs();
 		if (! ffppath.Item1.exists()) throw new FFProbeQueryException("FFProbe not found"); //$NON-NLS-1$
@@ -56,6 +55,20 @@ public abstract class FFProbeRunner implements MetadataSource {
 
 		String ffjson = proc.Item2;
 
+		try
+		{
+			var fvhash = ChecksumHelper.fastVideoHash(filename);
+
+			return parse(ffjson, fvhash, attr);
+		}
+		catch (Exception e)
+		{
+			throw new FFProbeQueryException("Could not parse Output JSON", ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e) + "\n\n\n--------------\n\n\n" + ffjson); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
+	}
+
+	@SuppressWarnings("nls")
+	public FFProbeResult parse(String ffjson, String fvhash, BasicFileAttributes attr) throws FFProbeQueryException {
 		try
 		{
 			JSONObject root = new JSONObject(new JSONTokener(ffjson));
@@ -90,17 +103,15 @@ public abstract class FFProbeRunner implements MetadataSource {
 			int audSampleRate       = getIntFromStr(astream, "sample_rate"); //$NON-NLS-1$
 			int audChannels         = getIntDirect(astream, "channels"); //$NON-NLS-1$
 
-			var hash = ChecksumHelper.fastVideoHash(filename);
-
 			return new FFProbeResult(
 					ffjson,
 					cdate, mdate, fsize,
 					vidCodecName, vidCdecLongName, vidProfile,
 					width, height,
-					(short)bitdepth, framecount, framerate,
+					(short) bitdepth, framecount, framerate,
 					duration, bitrate,
-					audCodecName, audCodecLongName, audSampleRate, (short)audChannels,
-					hash);
+					audCodecName, audCodecLongName, audSampleRate, (short) audChannels,
+					fvhash);
 
 		} catch (JSONException e) {
 			throw new FFProbeQueryException(e.getMessage(), ExceptionUtils.getStackTrace(e) + "\n\n\n--------------\n\n\n" + ffjson); //$NON-NLS-1$

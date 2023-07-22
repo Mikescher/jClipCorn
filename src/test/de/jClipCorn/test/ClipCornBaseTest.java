@@ -30,6 +30,8 @@ import org.junit.Before;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -247,6 +249,15 @@ public class ClipCornBaseTest {
 		}
 	}
 
+	public static <T> void assertOptEquals(T expected, Opt<T> actual) {
+		assertTrue(actual.isPresent());
+		if (actual.isPresent()) assertEquals(null, expected, actual.get());
+	}
+
+	public static <T> void assertOptEmpty(Opt<T> actual) {
+		assertTrue(actual.isEmpty());
+	}
+
 	protected static FSPath createAutocleanedDir(String ident) throws IOException {
 		var tempPath = FilesystemUtils.getTempPath().append("jcc_unittests").append(Str.format("{0}_{1}_{2}", ident, CCDateTime.getCurrentDateTime().toStringFilesystem(), UUID.randomUUID()));
 		tempPath.mkdirsWithException();
@@ -274,4 +285,56 @@ public class ClipCornBaseTest {
 		return mlRet;
 	}
 
+	protected BasicFileAttributes dummyFileAttr(long cdate, long mdate, long adate, long size) {
+		return new BasicFileAttributes() {
+			@Override
+			public FileTime lastModifiedTime() {
+				return FileTime.fromMillis(mdate);
+			}
+
+			@Override
+			public FileTime lastAccessTime() {
+				return FileTime.fromMillis(adate);
+			}
+
+			@Override
+			public FileTime creationTime() {
+				return FileTime.fromMillis(cdate);
+			}
+
+			@Override
+			public boolean isRegularFile() {
+				return true;
+			}
+
+			@Override
+			public boolean isDirectory() {
+				return false;
+			}
+
+			@Override
+			public boolean isSymbolicLink() {
+				return false;
+			}
+
+			@Override
+			public boolean isOther() {
+				return false;
+			}
+
+			@Override
+			public long size() {
+				return size;
+			}
+
+			@Override
+			public Object fileKey() {
+				return null;
+			}
+		};
+	}
+
+	protected String dummyFVH() {
+		return "[02-0000000000-1-0F:0F:0F:0F:0F:0F:0F:0F]";
+	}
 }

@@ -1993,7 +1993,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 
 			var r = db.querySQL("PRAGMA foreign_key_check;", 4);
 
-			if (r.size() > 0) throw new Exception("foreign_key_check returned " + r.size() + " errors");
+			if (r.size() > 0) throw new Exception("sqlite::pragma::foreign_key_check returned " + r.size() + " errors");
 		}
 		catch (Exception ex)
 		{
@@ -2006,10 +2006,10 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			pcl.stepSub("Check database foreign keys");
 
 			var r1 = db.querySingleStringSQLThrow("PRAGMA integrity_check;", 0);
-			if (!r1.equalsIgnoreCase("ok")) throw new Exception("integrity_check == '" + r1 + "'");
+			if (!r1.equalsIgnoreCase("ok")) throw new Exception("sqlite::pragma::integrity_check returned '" + r1 + "'");
 
 			var r2 = db.querySingleStringSQLThrow("PRAGMA quick_check;", 0);
-			if (!r2.equalsIgnoreCase("ok")) throw new Exception("integrity_check == '" + r2 + "'");
+			if (!r2.equalsIgnoreCase("ok")) throw new Exception("sqlite::pragma::quick_check returned '" + r2 + "'");
 		}
 		catch (Exception ex)
 		{

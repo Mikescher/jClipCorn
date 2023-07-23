@@ -622,7 +622,7 @@ public class CCDatabase {
 			stmt.setStr(DatabaseStructure.COL_MOV_GROUPS,            mov.getGroups().toSerializationString());
 			stmt.setInt(DatabaseStructure.COL_MOV_COVERID,           mov.getCoverID());
 
-			var mi = mov.MediaInfo.getPartial();
+			var mi = mov.MediaInfo.get();
 
 			stmt.setNullableLng(DatabaseStructure.COL_MOV_MI_FILESIZE,   mi.Filesize.mapOrElse(CCFileSize::getBytes, null));
 			stmt.setNullableLng(DatabaseStructure.COL_MOV_MI_CDATE,      mi.CDate.orElse(null));
@@ -738,7 +738,7 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_EPIS_SCORE,         ep.Score.get().asInt());
 			stmt.setStr(DatabaseStructure.COL_EPIS_SCORECOMMENT,  ep.ScoreComment.get());
 
-			var mi = ep.MediaInfo.getPartial();
+			var mi = ep.MediaInfo.get();
 
 			stmt.setNullableLng(DatabaseStructure.COL_EPIS_MI_FILESIZE,   mi.Filesize.mapOrElse(CCFileSize::getBytes, null));
 			stmt.setNullableLng(DatabaseStructure.COL_EPIS_MI_CDATE,      mi.CDate.orElse(null));

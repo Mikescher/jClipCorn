@@ -457,35 +457,35 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addMovieValidation(
 				DatabaseErrorType.ERROR_MEDIAINFO_UNSET,
 				o -> o.ValidateMovies,
-				mov -> mov.mediaInfo().get().isUnset(),
+				mov -> !mov.mediaInfo().get().isFullySet(),
 				mov -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_MEDIAINFO_UNSET, mov,
-						CCStreams.iterate(mov.mediaInfo().getPartial().validate(false)).map(p -> Tuple.Create("MediaInfo."+p+".IsSet", "false")).toList()
+						CCStreams.iterate(mov.mediaInfo().get().validate(false)).map(p -> Tuple.Create("MediaInfo."+p+".IsSet", "false")).toList()
 				));
 
 		// invalid MediaInfo
 		addMovieValidation(
 				DatabaseErrorType.ERROR_MEDIAINFO_INVALID,
 				o -> o.ValidateMovies,
-				mov -> mov.mediaInfo().get().isSet() && !mov.mediaInfo().getPartial().validate().isEmpty(),
+				mov -> !mov.mediaInfo().get().validate().isEmpty(),
 				mov -> DatabaseError.createSingleAdditional(
 						movielist,
 						DatabaseErrorType.ERROR_MEDIAINFO_INVALID, mov,
-						mov.mediaInfo().getPartial().validate().stream().findFirst().orElse("?"),
-						"MediaInfo.validate", String.join(";", mov.mediaInfo().getPartial().validate())
+						mov.mediaInfo().get().validate().stream().findFirst().orElse("?"),
+						"MediaInfo.validate", String.join(";", mov.mediaInfo().get().validate())
 				));
 
 		// MediaInfo size does not match movie filesize
 		addMovieValidation(
 				DatabaseErrorType.ERROR_MEDIAINFO_SIZE_MISMATCH,
 				o -> o.ValidateMovies,
-				mov -> mov.mediaInfo().get().isSet() && (mov.getPartcount()==1 && !CCFileSize.isEqual(mov.mediaInfo().get().getFilesize(), mov.getFilesize())),
+				mov -> mov.mediaInfo().get().Filesize.isPresent() && (mov.getPartcount()==1 && !CCFileSize.isEqual(mov.mediaInfo().get().Filesize.get(), mov.getFilesize())),
 				mov -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_MEDIAINFO_SIZE_MISMATCH, mov,
 						"Partcount", String.valueOf(mov.getPartcount()),
-						"MediaInfo.Filesize", String.valueOf(mov.mediaInfo().get().getFilesize().getBytes()),
+						"MediaInfo.Filesize", String.valueOf(mov.mediaInfo().get().Filesize.get().getBytes()),
 						"Database.Filesize", String.valueOf(mov.getFilesize().getBytes())
 						));
 
@@ -493,14 +493,14 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addMovieValidation(
 				DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH,
 				o -> o.ValidateMovies,
-				mov -> mov.mediaInfo().get().isSet() &&
+				mov -> mov.mediaInfo().get().Duration.isPresent() &&
 						mov.getPartcount()==1 &&
 						!mov.Tags.get(CCSingleTag.TAG_MISSING_TIME) &&
 						!mov.Tags.get(CCSingleTag.TAG_FILE_CORRUPTED) &&
 						!mov.Tags.get(CCSingleTag.TAG_WATCH_CAMRIP) &&
 						!mov.Tags.get(CCSingleTag.TAG_WATCH_MICDUBBED) &&
 						!mov.Tags.get(CCSingleTag.TAG_WRONG_LANGUAGE) &&
-						isDiff(mov.mediaInfo().get().getDurationInMinutes(), mov.getLength(), 0.10, 10),
+						isDiff(mov.mediaInfo().get().getDurationInMinutes().get(), mov.getLength(), 0.10, 10),
 				mov -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH, mov,
@@ -514,15 +514,15 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateVideoFiles,
 				(mov, e) ->
 				{
-					if (mov.mediaInfo().get().isSet()) {
+					if (mov.mediaInfo().get().CDate.isPresent()) {
 						try {
 							BasicFileAttributes attr = mov.Parts.get(0).toFSPath(this).readFileAttr();
-							if (attr.creationTime().toMillis() != mov.mediaInfo().get().getCDate())
+							if (attr.creationTime().toMillis() != mov.mediaInfo().get().CDate.get())
 								e.add(DatabaseError.createSingle(
 										movielist,
 										DatabaseErrorType.ERROR_MEDIAINFO_CDATE_CHANGED, mov,
 										"Filesystem.CDate.Milliseconds", String.valueOf(attr.creationTime().toMillis()),
-										"MediaInfo.CDate.Milliseconds", String.valueOf(mov.mediaInfo().get().getCDate())
+										"MediaInfo.CDate.Milliseconds", String.valueOf(mov.mediaInfo().get().CDate.get())
 										));
 						} catch (IOException ex) {
 							/**/
@@ -534,15 +534,15 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateVideoFiles,
 				(mov, e) ->
 				{
-					if (mov.mediaInfo().get().isSet()) {
+					if (mov.mediaInfo().get().MDate.isPresent()) {
 						try {
 							BasicFileAttributes attr = mov.Parts.get(0).toFSPath(this).readFileAttr();
-							if (attr.lastModifiedTime().toMillis() != mov.mediaInfo().get().getMDate())
+							if (attr.lastModifiedTime().toMillis() != mov.mediaInfo().get().MDate.get())
 								e.add(DatabaseError.createSingle(
 										movielist,
 										DatabaseErrorType.ERROR_MEDIAINFO_MDATE_CHANGED, mov,
 										"Filesystem.MDate.Milliseconds", String.valueOf(attr.lastModifiedTime().toMillis()),
-										"MediaInfo.MDate.Milliseconds", String.valueOf(mov.mediaInfo().get().getMDate())
+										"MediaInfo.MDate.Milliseconds", String.valueOf(mov.mediaInfo().get().MDate.get())
 								));
 						} catch (IOException ex) {
 							/**/
@@ -556,8 +556,8 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateVideoFiles,
 				(mov, e) ->
 				{
-					if (mov.mediaInfo().get().isSet()) {
-						if (!CCFileSize.isEqual(mov.Parts.get(0).toFSPath(this).filesize(), mov.mediaInfo().get().getFilesize()))
+					if (mov.mediaInfo().get().Filesize.isPresent()) {
+						if (!CCFileSize.isEqual(mov.Parts.get(0).toFSPath(this).filesize(), mov.mediaInfo().get().Filesize.get()))
 							e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED, mov));
 					}
 				});
@@ -578,24 +578,24 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addMovieValidation(
 				DatabaseErrorType.ERROR_INVALID_HASH,
 				o -> o.ValidateMovies,
-				mov -> mov.mediaInfo().get().isSet() && !ChecksumHelper.isValidVideoHash(mov.mediaInfo().get().getChecksum()),
+				mov -> mov.mediaInfo().get().Checksum.isPresent() && !ChecksumHelper.isValidVideoHash(mov.mediaInfo().get().Checksum.get()),
 				mov -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_INVALID_HASH, mov,
-						"Checksum", mov.mediaInfo().get().getChecksum()
+						"Checksum", mov.mediaInfo().get().Checksum.get()
 				));
 
 		// Hash is impossible (length/fislesize mismatch)
 		addMovieValidation(
 				DatabaseErrorType.ERROR_IMPOSSIBLE_HASH,
 				o -> o.ValidateMovies,
-				mov -> mov.mediaInfo().get().isSet() &&
-					   ChecksumHelper.isValidVideoHash(mov.mediaInfo().get().getChecksum()) &&
-					   !ChecksumHelper.isPossibleVideoHash(mov.mediaInfo().get().getChecksum(), mov.mediaInfo().get()),
+				mov -> mov.mediaInfo().get().Checksum.isPresent() &&
+					   ChecksumHelper.isValidVideoHash(mov.mediaInfo().get().Checksum.get()) &&
+					   !ChecksumHelper.isPossibleVideoHash(mov.mediaInfo().get().Checksum.get(), mov.mediaInfo().get()),
 				mov -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_IMPOSSIBLE_HASH, mov,
-						"Checksum", mov.mediaInfo().get().getChecksum()
+						"Checksum", mov.mediaInfo().get().Checksum.get()
 				));
 
 		// Muted language in subtitles
@@ -993,21 +993,21 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addEpisodeValidation(
 				DatabaseErrorType.ERROR_MEDIAINFO_UNSET,
 				o -> o.ValidateEpisodes,
-				episode -> episode.mediaInfo().get().isUnset(),
+				episode -> !episode.mediaInfo().get().isFullySet(),
 				episode -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_MEDIAINFO_UNSET, episode,
-						CCStreams.iterate(episode.mediaInfo().getPartial().validate(false)).map(p -> Tuple.Create("MediaInfo."+p+".IsSet", "false")).toList()));
+						CCStreams.iterate(episode.mediaInfo().get().validate(false)).map(p -> Tuple.Create("MediaInfo."+p+".IsSet", "false")).toList()));
 
 		// MediaInfo size does not match movie filesize
 		addEpisodeValidation(
 				DatabaseErrorType.ERROR_MEDIAINFO_SIZE_MISMATCH,
 				o -> o.ValidateEpisodes,
-				episode -> episode.mediaInfo().get().isSet() && !CCFileSize.isEqual(episode.mediaInfo().get().getFilesize(), episode.getFilesize()),
+				episode -> episode.mediaInfo().get().Filesize.isPresent() && !CCFileSize.isEqual(episode.mediaInfo().get().Filesize.get(), episode.getFilesize()),
 				episode -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_MEDIAINFO_SIZE_MISMATCH, episode,
-						"MediaInfo.Filesize", String.valueOf(episode.mediaInfo().get().getFilesize().getBytes()),
+						"MediaInfo.Filesize", String.valueOf(episode.mediaInfo().get().Filesize.get().getBytes()),
 						"Database.Filesize", String.valueOf(episode.getFilesize().getBytes())
 						));
 
@@ -1015,13 +1015,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addEpisodeValidation(
 				DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH,
 				o -> o.ValidateEpisodes,
-				episode -> episode.mediaInfo().get().isSet() &&
+				episode -> episode.mediaInfo().get().Duration.isPresent() &&
 						!episode.Tags.get(CCSingleTag.TAG_MISSING_TIME) &&
 						!episode.Tags.get(CCSingleTag.TAG_FILE_CORRUPTED) &&
 						!episode.Tags.get(CCSingleTag.TAG_WATCH_CAMRIP) &&
 						!episode.Tags.get(CCSingleTag.TAG_WATCH_MICDUBBED) &&
 						!episode.Tags.get(CCSingleTag.TAG_WRONG_LANGUAGE) &&
-						isDiff(episode.mediaInfo().get().getDurationInMinutes(), episode.getLength(), 0.33, 5),
+						isDiff(episode.mediaInfo().get().getDurationInMinutes().get(), episode.getLength(), 0.33, 5),
 				episode -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_MEDIAINFO_LENGTH_MISMATCH, episode,
@@ -1035,15 +1035,15 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateVideoFiles,
 				(episode, e) ->
 				{
-					if (episode.mediaInfo().get().isSet()) {
+					if (episode.mediaInfo().get().CDate.isPresent()) {
 						try {
 							BasicFileAttributes attr = episode.getPart().toFSPath(this).readFileAttr();
-							if (attr.creationTime().toMillis() != episode.mediaInfo().get().getCDate())
+							if (attr.creationTime().toMillis() != episode.mediaInfo().get().CDate.get())
 								e.add(DatabaseError.createSingle(
 										movielist,
 										DatabaseErrorType.ERROR_MEDIAINFO_CDATE_CHANGED, episode,
 										"Filesystem.CDate.Milliseconds", String.valueOf(attr.creationTime().toMillis()),
-										"MediaInfo.CDate.Milliseconds", String.valueOf(episode.mediaInfo().get().getCDate())
+										"MediaInfo.CDate.Milliseconds", String.valueOf(episode.mediaInfo().get().CDate.get())
 								));
 						} catch (IOException ex) {
 							/**/
@@ -1055,15 +1055,15 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateVideoFiles,
 				(episode, e) ->
 				{
-					if (episode.mediaInfo().get().isSet()) {
+					if (episode.mediaInfo().get().MDate.isPresent()) {
 						try {
 							BasicFileAttributes attr = episode.getPart().toFSPath(this).readFileAttr();
-							if (attr.lastModifiedTime().toMillis() != episode.mediaInfo().get().getMDate())
+							if (attr.lastModifiedTime().toMillis() != episode.mediaInfo().get().MDate.get())
 								e.add(DatabaseError.createSingle(
 										movielist,
 										DatabaseErrorType.ERROR_MEDIAINFO_MDATE_CHANGED, episode,
 										"Filesystem.MDate.Milliseconds", String.valueOf(attr.lastModifiedTime().toMillis()),
-										"MediaInfo.MDate.Milliseconds", String.valueOf(episode.mediaInfo().get().getMDate())
+										"MediaInfo.MDate.Milliseconds", String.valueOf(episode.mediaInfo().get().MDate.get())
 								));
 						} catch (IOException ex) {
 							/**/
@@ -1077,8 +1077,8 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateVideoFiles,
 				(episode, e) ->
 				{
-					if (episode.mediaInfo().get().isSet()) {
-						if (!CCFileSize.isEqual(episode.getPart().toFSPath(this).filesize(), episode.mediaInfo().get().getFilesize()))
+					if (episode.mediaInfo().get().Filesize.isPresent()) {
+						if (!CCFileSize.isEqual(episode.getPart().toFSPath(this).filesize(), episode.mediaInfo().get().Filesize.get()))
 							e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_MEDIAINFO_FILE_CHANGED, episode));
 					}
 				});
@@ -1203,34 +1203,34 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addEpisodeValidation(
 				DatabaseErrorType.ERROR_MEDIAINFO_INVALID,
 				o -> o.ValidateEpisodes,
-				episode -> episode.mediaInfo().get().isSet() && !episode.mediaInfo().getPartial().validate().isEmpty(),
+				episode -> !episode.mediaInfo().get().validate().isEmpty(),
 				episode -> DatabaseError.createSingleAdditional(
 						movielist, DatabaseErrorType.ERROR_MEDIAINFO_INVALID, episode,
-						episode.mediaInfo().getPartial().validate().stream().findFirst().orElse("?"),
-						"MediaInfo.validate", String.join(";", episode.mediaInfo().getPartial().validate())
+						episode.mediaInfo().get().validate().stream().findFirst().orElse("?"),
+						"MediaInfo.validate", String.join(";", episode.mediaInfo().get().validate())
 				));
 
 		// Hash is invalid
 		addEpisodeValidation(
 				DatabaseErrorType.ERROR_INVALID_HASH,
 				o -> o.ValidateEpisodes,
-				episode -> episode.mediaInfo().get().isSet() && !ChecksumHelper.isValidVideoHash(episode.mediaInfo().get().getChecksum()),
+				episode -> episode.mediaInfo().get().Checksum.isPresent() && !ChecksumHelper.isValidVideoHash(episode.mediaInfo().get().Checksum.get()),
 				episode -> DatabaseError.createSingle(
 						movielist, DatabaseErrorType.ERROR_INVALID_HASH, episode,
-						"Checksum", episode.mediaInfo().get().getChecksum()
+						"Checksum", episode.mediaInfo().get().Checksum.get()
 				));
 
 		// Hash is impossible (length/fislesize mismatch)
 		addEpisodeValidation(
 				DatabaseErrorType.ERROR_IMPOSSIBLE_HASH,
 				o -> o.ValidateEpisodes,
-				episode -> episode.mediaInfo().get().isSet() &&
-						ChecksumHelper.isValidVideoHash(episode.mediaInfo().get().getChecksum()) &&
-						!ChecksumHelper.isPossibleVideoHash(episode.mediaInfo().get().getChecksum(), episode.mediaInfo().get()),
+				episode -> episode.mediaInfo().get().Checksum.isPresent() &&
+						ChecksumHelper.isValidVideoHash(episode.mediaInfo().get().Checksum.get()) &&
+						!ChecksumHelper.isPossibleVideoHash(episode.mediaInfo().get().Checksum.get(), episode.mediaInfo().get()),
 				episode -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_IMPOSSIBLE_HASH, episode,
-						"Checksum", episode.mediaInfo().get().getChecksum()
+						"Checksum", episode.mediaInfo().get().Checksum.get()
 				));
 
 		// Muted language in subtitles
@@ -1591,10 +1591,10 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 
 		for (ICCPlayableElement el : movielist.iteratorPlayables())
 		{
-			if (el.mediaInfo().get().isUnset()) continue;
-			if (Str.isNullOrWhitespace(el.mediaInfo().get().getChecksum())) continue;
+			if (el.mediaInfo().get().Checksum.isEmpty()) continue;
+			if (Str.isNullOrWhitespace(el.mediaInfo().get().Checksum.get())) continue;
 
-			var key = el.mediaInfo().get().getChecksum();
+			var key = el.mediaInfo().get().Checksum.get();
 
 			if (!xmap.containsKey(key))
 			{
@@ -1607,10 +1607,10 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						DatabaseErrorType.ERROR_DUPLICATE_FILE, el, xmap.get(key),
 						"Element1.ID", String.valueOf(xmap.get(key).getLocalID()),
 						"Element1.Title", xmap.get(key).getQualifiedTitle(),
-						"Element1.MediaInfo.Checksum", xmap.get(key).mediaInfo().get().getChecksum(),
+						"Element1.MediaInfo.Checksum", xmap.get(key).mediaInfo().get().Checksum.get(),
 						"Element2.ID", String.valueOf(xmap.get(key).getLocalID()),
 						"Element2.Title", xmap.get(key).getQualifiedTitle(),
-						"Element2.MediaInfo.Checksum", xmap.get(key).mediaInfo().get().getChecksum()
+						"Element2.MediaInfo.Checksum", xmap.get(key).mediaInfo().get().Checksum.get()
 				));
 			}
 

@@ -5,6 +5,7 @@ import de.jClipCorn.features.statistics.StatisticsChart;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryLabelPositions;
@@ -57,8 +58,9 @@ public class StatisticsMediaInfoVideoCodecChart extends StatisticsChart {
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		Map<String, Integer> values = source
 				.iteratorMoviesOrEpisodes(movielist)
-				.filter(e -> e.mediaInfo().get().isSet())
-				.map(e -> e.mediaInfo().get().getVideoCodec())
+				.map(e -> e.mediaInfo().get().VideoCodec)
+				.filter(Opt::isPresent)
+				.map(Opt::get)
 				.groupBy(e -> e)
 				.toMap(Map.Entry::getKey, e -> e.getValue().size()); 
 

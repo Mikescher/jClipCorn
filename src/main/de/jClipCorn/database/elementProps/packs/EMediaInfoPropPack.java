@@ -1,11 +1,9 @@
 package de.jClipCorn.database.elementProps.packs;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.database.elementProps.impl.*;
-import de.jClipCorn.features.metadata.PartialMediaInfo;
-import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 
 public class EMediaInfoPropPack extends EPropertyPack {
 
@@ -28,11 +26,10 @@ public class EMediaInfoPropPack extends EPropertyPack {
 	public final EOptIntProp      AudioSamplerate;
 
 	private CCMediaInfo _cache = null;
-	private PartialMediaInfo _cachePartial = null;
 	private IEProperty[] _properties = null;
 	private boolean _ignoreCacheUpdates = false;
 
-	public EMediaInfoPropPack(String namePrefix, PartialMediaInfo startValue, IPropertyParent parent)
+	public EMediaInfoPropPack(String namePrefix, CCMediaInfo startValue, IPropertyParent parent)
 	{
 		CDate           = new EOptLongProp(    namePrefix + ".CDate",           startValue.CDate,            parent, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
 		MDate           = new EOptLongProp(    namePrefix + ".MDate",           startValue.MDate,            parent, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
@@ -76,9 +73,8 @@ public class EMediaInfoPropPack extends EPropertyPack {
 	private void updateCache() {
 		if (_ignoreCacheUpdates) return;
 
-		_cachePartial = PartialMediaInfo.create
+		_cache = CCMediaInfo.create
 		(
-			Opt.empty(),
 			CDate.get(),
 			MDate.get(),
 			Filesize.get(),
@@ -97,16 +93,10 @@ public class EMediaInfoPropPack extends EPropertyPack {
 			AudioCodec.get(),
 			AudioSamplerate.get()
 		);
-
-		_cache = _cachePartial.toMediaInfo();
 	}
 
 	public CCMediaInfo get() {
 		return _cache;
-	}
-
-	public PartialMediaInfo getPartial() {
-		return _cachePartial;
 	}
 
 	public IEProperty[] getProperties()
@@ -139,36 +129,6 @@ public class EMediaInfoPropPack extends EPropertyPack {
 	}
 
 	public void set(CCMediaInfo v) {
-		try
-		{
-			_ignoreCacheUpdates = true;
-
-			CDate           .set(Opt.of(v.getCDate()));
-			MDate           .set(Opt.of(v.getMDate()));
-			Checksum        .set(Opt.of(v.getChecksum()));
-			Filesize        .set(Opt.of(v.getFilesize()));
-			Duration        .set(Opt.of(v.getDuration()));
-			Bitrate         .set(Opt.of(v.getBitrate()));
-			VideoFormat     .set(Opt.of(v.getVideoFormat()));
-			Width           .set(Opt.of(v.getWidth()));
-			Height          .set(Opt.of(v.getHeight()));
-			Framerate       .set(Opt.of(v.getFramerate()));
-			Bitdepth        .set(Opt.of(v.getBitdepth()));
-			Framecount      .set(Opt.of(v.getFramecount()));
-			VideoCodec      .set(Opt.of(v.getVideoCodec()));
-			AudioFormat     .set(Opt.of(v.getAudioFormat()));
-			AudioChannels   .set(Opt.of(v.getAudioChannels()));
-			AudioCodec      .set(Opt.of(v.getAudioCodec()));
-			AudioSamplerate .set(Opt.of(v.getAudioSamplerate()));
-		}
-		finally
-		{
-			_ignoreCacheUpdates = false;
-			updateCache();
-		}
-	}
-
-	public void set(PartialMediaInfo v) {
 		try
 		{
 			_ignoreCacheUpdates = true;

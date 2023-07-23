@@ -178,16 +178,10 @@ public class SearchFrame extends JCCFrame
 			}
 			if (movFound) continue;
 
-			if (mov.mediaInfo().get().isSet())
-			{
-				if (mov.mediaInfo().get().getVideoCodec().equalsIgnoreCase(searchString)) { result.add(mov); continue; }
-
-				if (mov.mediaInfo().get().getVideoFormat().equalsIgnoreCase(searchString)) { result.add(mov); continue; }
-
-				if (mov.mediaInfo().get().getAudioCodec().equalsIgnoreCase(searchString)) { result.add(mov); continue; }
-
-				if (mov.mediaInfo().get().getAudioFormat().equalsIgnoreCase(searchString)) { result.add(mov); continue; }
-			}
+			if (mov.mediaInfo().get().VideoCodec  .map(p -> p.equalsIgnoreCase(searchString)).orElse(false)) { result.add(mov); continue; }
+			if (mov.mediaInfo().get().VideoFormat .map(p -> p.equalsIgnoreCase(searchString)).orElse(false)) { result.add(mov); continue; }
+			if (mov.mediaInfo().get().AudioCodec  .map(p -> p.equalsIgnoreCase(searchString)).orElse(false)) { result.add(mov); continue; }
+			if (mov.mediaInfo().get().AudioFormat .map(p -> p.equalsIgnoreCase(searchString)).orElse(false)) { result.add(mov); continue; }
 
 		}
 
@@ -214,16 +208,10 @@ public class SearchFrame extends JCCFrame
 					}
 					if (epiFound) continue;
 
-					if (epi.mediaInfo().get().isSet())
-					{
-						if (epi.mediaInfo().get().getVideoCodec().equalsIgnoreCase(searchString)) { result.add(epi); continue; }
-
-						if (epi.mediaInfo().get().getVideoFormat().equalsIgnoreCase(searchString)) { result.add(epi); continue; }
-
-						if (epi.mediaInfo().get().getAudioCodec().equalsIgnoreCase(searchString)) { result.add(epi); continue; }
-
-						if (epi.mediaInfo().get().getAudioFormat().equalsIgnoreCase(searchString)) { result.add(epi); continue; }
-					}
+					if (epi.mediaInfo().get().VideoCodec  .map(p -> p.equalsIgnoreCase(searchString)).orElse(false)) { result.add(epi); continue; }
+					if (epi.mediaInfo().get().VideoFormat .map(p -> p.equalsIgnoreCase(searchString)).orElse(false)) { result.add(epi); continue; }
+					if (epi.mediaInfo().get().AudioCodec  .map(p -> p.equalsIgnoreCase(searchString)).orElse(false)) { result.add(epi); continue; }
+					if (epi.mediaInfo().get().AudioFormat .map(p -> p.equalsIgnoreCase(searchString)).orElse(false)) { result.add(epi); continue; }
 				}
 
 				if (searchString.equals("{all}")) { result.add(sea); continue; } //$NON-NLS-1$

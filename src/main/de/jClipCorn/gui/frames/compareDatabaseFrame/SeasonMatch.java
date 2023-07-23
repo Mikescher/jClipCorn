@@ -70,9 +70,7 @@ public class SeasonMatch extends ComparisonMatch {
 
 	public EpisodeMatch addEpisodeMatch(CCEpisode loc, CCEpisode ext) {
 		var updateFile = State.Ruleset.ShouldUpdateFiles(loc.getLocalID(), ext.getLocalID()) &&
-				         loc.MediaInfo.get().isSet() &&
-				         ext.MediaInfo.get().isSet() &&
-				         !Str.equals(loc.MediaInfo.get().getChecksum(), ext.MediaInfo.get().getChecksum());
+						 !loc.MediaInfo.get().Checksum.isEqual(ext.MediaInfo.get().Checksum, Str::equals);
 
 		var propLoc = CCStreams.iterate(loc.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 		var propExt = CCStreams.iterate(ext.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);

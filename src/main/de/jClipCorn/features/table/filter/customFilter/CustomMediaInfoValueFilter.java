@@ -1,10 +1,13 @@
 package de.jClipCorn.features.table.filter.customFilter;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.*;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.util.CCMediaInfoField;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.features.table.filter.AbstractCustomStructureElementFilter;
 import de.jClipCorn.features.table.filter.filterConfig.*;
@@ -12,6 +15,7 @@ import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializatio
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.AnyMatchType;
+import de.jClipCorn.util.datatypes.Opt;
 
 import java.util.List;
 
@@ -47,9 +51,9 @@ public class CustomMediaInfoValueFilter extends AbstractCustomStructureElementFi
 
 	private boolean matches(CCMediaInfo mi)
 	{
-		if (field != CCMediaInfoField.IS_SET && mi.isUnset()) return false;
-
-		return matches(field.get(mi));
+		var v = field.get(mi);
+		if (v.isEmpty()) return false;
+		return matches(v.get());
 	}
 
 	private boolean matches(String str)
@@ -133,8 +137,9 @@ public class CustomMediaInfoValueFilter extends AbstractCustomStructureElementFi
 		return movielist
 				.iteratorPlayables()
 				.map(e -> e.mediaInfo().get())
-				.filter(p -> field == CCMediaInfoField.IS_SET || p.isSet())
 				.map(p -> field.get(p))
+				.filter(Opt::isPresent)
+				.map(Opt::get)
 				.unique()
 				.autosort()
 				.enumerate();

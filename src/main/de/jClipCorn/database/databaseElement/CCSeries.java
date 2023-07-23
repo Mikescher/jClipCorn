@@ -12,7 +12,6 @@ import de.jClipCorn.database.util.iterators.DirectSeasonsIterator;
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
 import de.jClipCorn.util.datatypes.Opt;
@@ -146,8 +145,8 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		{
 			double l = 0;
 			for (CCEpisode ee: iteratorEpisodes()) {
-				if (!ee.MediaInfo.get().isSet()) return Opt.empty();
-				l += ee.MediaInfo.get().getDuration();
+				if (ee.MediaInfo.get().Duration.isEmpty()) return Opt.empty();
+				l += ee.MediaInfo.get().Duration.get();
 			}
 			return Opt.of(l);
 		});
@@ -943,30 +942,42 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		{
 			if (getEpisodeCount() == 0) return CCQualityCategory.UNSET;
 
-			if (iteratorEpisodes().any(e -> e.MediaInfo.get().isUnset())) return CCQualityCategory.UNSET;
+			var ctypes = iteratorEpisodes()
+					.map(e -> e.MediaInfo.get())
+					.map(e -> e.getCategory(getSeries().Genres.get()).map(CCQualityCategory::getCategoryType))
+					.toList();
 
-			double avg = iteratorEpisodes().map(e -> e.MediaInfo.get().getCategory(getSeries().Genres.get()).getCategoryType()).avgValueOrDefault(e -> (double)e.asInt(), 0);
+			if (CCStreams.iterate(ctypes).any(p -> p.isEmpty() || p.get() == CCQualityCategoryType.UNKOWN)) return CCQualityCategory.UNSET;
 
-			CCQualityResolutionType rtype = iteratorEpisodes()
-					.map(e -> e.MediaInfo.get().getCategory(getSeries().Genres.get()).getResolutionType())
+			double avg = CCStreams.iterate(ctypes).filter(Opt::isPresent).map(Opt::get).avgValueOrDefault(e -> (double)e.asInt(), 0);
+
+			var rtypes = iteratorEpisodes()
+					.map(e -> e.MediaInfo.get())
+					.map(e -> e.getCategory(getSeries().Genres.get()).map(CCQualityCategory::getResolutionType))
+					.toList();
+
+			if (CCStreams.iterate(rtypes).any(Opt::isEmpty)) return CCQualityCategory.UNSET;
+
+			CCQualityResolutionType rtype = CCStreams.iterate(rtypes)
+					.filter(Opt::isPresent)
+					.map(Opt::get)
 					.groupBy(e -> e)
 					.map(Map.Entry::getKey)
 					.singleOrDefault(null, null);
 
-			if (rtype == null)
-				rtype = CCQualityResolutionType.MULTIPLE;
+			if (rtype == null) rtype = CCQualityResolutionType.MULTIPLE;
 
 			CCQualityCategoryType ct = CCQualityCategoryType.getWrapper().findOrNull((int)Math.round(avg));
 			if (ct == null) return CCQualityCategory.UNSET; // should never happen ??
 
 			String longtext = Str.format(LocaleBundle.getFormattedString("JMediaInfoControl.episodes", getEpisodeCount()));
 
-			int minBitrate = iteratorEpisodes().map(e -> e.MediaInfo.get().getBitrate()).autoMinValueOrDefault(e -> e, 0);
-			int maxBitrate = iteratorEpisodes().map(e -> e.MediaInfo.get().getBitrate()).autoMaxValueOrDefault(e -> e, 0);
-			int minDuration = iteratorEpisodes().map(e -> (int)e.MediaInfo.get().getDuration()).autoMinValueOrDefault(e -> e, 0);
-			int maxDuration = iteratorEpisodes().map(e -> (int)e.MediaInfo.get().getDuration()).autoMaxValueOrDefault(e -> e, 0);
-			int minFramerate = iteratorEpisodes().map(e -> (int)Math.round(e.MediaInfo.get().getFramerate())).autoMinValueOrDefault(e -> e, 0);
-			int maxFramerate = iteratorEpisodes().map(e -> (int)Math.round(e.MediaInfo.get().getFramerate())).autoMaxValueOrDefault(e -> e, 0);
+			int minBitrate   = iteratorEpisodes().map(e -> e.MediaInfo.get().Bitrate)  .filter(Opt::isPresent).map(Opt::get).autoMinValueOrDefault(e -> e, 0);
+			int maxBitrate   = iteratorEpisodes().map(e -> e.MediaInfo.get().Bitrate)  .filter(Opt::isPresent).map(Opt::get).autoMaxValueOrDefault(e -> e, 0);
+			int minDuration  = iteratorEpisodes().map(e -> e.MediaInfo.get().Duration) .filter(Opt::isPresent).map(Opt::get).map(p -> (int)(double)p).autoMinValueOrDefault(e -> e, 0);
+			int maxDuration  = iteratorEpisodes().map(e -> e.MediaInfo.get().Duration) .filter(Opt::isPresent).map(Opt::get).map(p -> (int)(double)p).autoMaxValueOrDefault(e -> e, 0);
+			int minFramerate = iteratorEpisodes().map(e -> e.MediaInfo.get().Framerate).filter(Opt::isPresent).map(Opt::get).map(p -> (int)Math.round(p)).autoMinValueOrDefault(e -> e, 0);
+			int maxFramerate = iteratorEpisodes().map(e -> e.MediaInfo.get().Framerate).filter(Opt::isPresent).map(Opt::get).map(p -> (int)Math.round(p)).autoMaxValueOrDefault(e -> e, 0);
 
 			StringBuilder b = new StringBuilder();
 			b.append("<html>");

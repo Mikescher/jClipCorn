@@ -1,7 +1,7 @@
 package de.jClipCorn.gui.frames.batchEditFrame;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
 import de.jClipCorn.util.Str;
@@ -206,12 +206,12 @@ public class BatchEditMethods
 	public static BatchEditMethod<Void> MEDIAINFO_FROM_FILE = new BatchEditMethod<>((ep, param, opt) ->
 	{
 		var dat = new MediaInfoRunner(ep.getSource().getMovieList()).run(ep.part.toFSPath(ep.ccprops()));
-		ep.mediaInfo = dat.toPartialMediaInfo();
+		ep.mediaInfo = dat.toMediaInfo();
 	});
 
 	public static BatchEditMethod<Void> MEDIAINFO_CLEAR = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.mediaInfo = PartialMediaInfo.EMPTY;
+		ep.mediaInfo = CCMediaInfo.EMPTY;
 	});
 
 	public static BatchEditMethod<Void> MEDIAINFO_CALC_HASH = new BatchEditMethod<>((ep, param, opt) ->
@@ -272,7 +272,7 @@ public class BatchEditMethods
 
 	public static BatchEditMethod<Void> MEDIAINFO_RESET = new BatchEditMethod<>((ep, param, opt) ->
 	{
-		ep.mediaInfo = ep.getSource().mediaInfo().getPartial();
+		ep.mediaInfo = ep.getSource().mediaInfo().get();
 	});
 
 	public static BatchEditMethod<Void> LANGUAGE_RESET = new BatchEditMethod<>((ep, param, opt) ->

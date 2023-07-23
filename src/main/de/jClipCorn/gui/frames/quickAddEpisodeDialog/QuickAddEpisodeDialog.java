@@ -8,7 +8,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.EpisodeDataPack;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
@@ -203,7 +203,7 @@ public class QuickAddEpisodeDialog extends JCCDialog
 		CCTagList tags = CCTagList.EMPTY;
 		var filesize = src.filesize();
 		CCFileFormat format = CCFileFormat.getMovieFormatFromPath(src);
-		PartialMediaInfo minfo = edMediaInfo.getValue();
+		CCMediaInfo minfo = edMediaInfo.getValue();
 
 		var epack = new EpisodeDataPack(episodenumber, title, length, format, filesize, CCPath.createFromFSPath(dst, this), adddate, history, tags, lang, subs, minfo);
 

@@ -2,15 +2,12 @@ package de.jClipCorn.gui.frames.updateCodecFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
-import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 	private static final long serialVersionUID = 3308858204018846266L;
@@ -75,15 +72,15 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 
 		r.add("UpdateCodecFrame.Table.ColumnQualityOld")
 		 .withSize("auto")
-		 .withText(e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getLongText())
-		 .withIcon(e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getIcon())
-		 .withTooltip(e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).getTooltip());
+		 .withText(   e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).map(CCQualityCategory::getLongText).orElse(Str.Empty))
+		 .withIcon(   e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).map(CCQualityCategory::getIcon).orElse(null))
+		 .withTooltip(e -> e.getOldMediaInfo().getCategory(e.getSourceGenres()).map(CCQualityCategory::getTooltip).orElse(Str.Empty));
 
 		r.add("UpdateCodecFrame.Table.ColumnQualityNew")
 		 .withSize("auto")
-		 .withText(e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getLongText())
-		 .withIcon(e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getIcon())
-		 .withTooltip(e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).getTooltip());
+		 .withText(   e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).map(CCQualityCategory::getLongText).orElse(Str.Empty))
+		 .withIcon(   e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).map(CCQualityCategory::getIcon).orElse(null))
+		 .withTooltip(e -> e.getNewMediaInfo().getCategory(e.getSourceGenres()).map(CCQualityCategory::getTooltip).orElse(Str.Empty));
 		
 		return r;
 	}

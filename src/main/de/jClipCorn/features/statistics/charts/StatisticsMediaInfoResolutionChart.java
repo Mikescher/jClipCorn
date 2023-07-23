@@ -58,16 +58,17 @@ public class StatisticsMediaInfoResolutionChart extends StatisticsChart {
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		Map<CCMediaInfo, Integer> values = source
 				.iteratorMoviesOrEpisodes(movielist)
-				.filter(e -> e.mediaInfo().get().isSet())
-				.groupBy(e -> e.mediaInfo().get().getWidth()+"x"+e.mediaInfo().get().getHeight()) //$NON-NLS-1$
+				.filter(e -> e.mediaInfo().get().Width.isPresent())
+				.filter(e -> e.mediaInfo().get().Height.isPresent())
+				.groupBy(e -> e.mediaInfo().get().Width.get()+"x"+e.mediaInfo().get().Height.get()) //$NON-NLS-1$
 				.autosortByProperty(e -> -e.getValue().size())
 				.take(64)
 				.toMap(e -> e.getValue().get(0).mediaInfo().get(), e -> e.getValue().size());
 
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-		for (Map.Entry<CCMediaInfo, Integer> elem : CCStreams.iterate(values.entrySet()).autosortByProperty(e -> e.getKey().getWidth()*e.getKey().getHeight())) {
-			dataset.addValue(elem.getValue(), "Series0", elem.getKey().getWidth()+"x"+ elem.getKey().getHeight()); //$NON-NLS-1$ //$NON-NLS-2$
+		for (Map.Entry<CCMediaInfo, Integer> elem : CCStreams.iterate(values.entrySet()).autosortByProperty(e -> e.getKey().Width.get()*e.getKey().Height.get())) {
+			dataset.addValue(elem.getValue(), "Series0", elem.getKey().Width.get()+"x"+ elem.getKey().Height.get()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
         return dataset;

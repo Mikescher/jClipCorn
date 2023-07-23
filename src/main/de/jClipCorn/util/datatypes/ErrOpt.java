@@ -138,4 +138,29 @@ public class ErrOpt<TData, TError> implements IOpt<TData> {
 		if (isPresent()) return Opt.of(valueData);
 		return Opt.empty();
 	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public boolean equals(Object o) {
+		if (this == o) return true;
+
+		if (o == null || getClass() != o.getClass()) return false;
+
+		return this.isEqual((ErrOpt<TData, TError>) o, Object::equals, Object::equals);
+	}
+
+	@Override
+	public int hashCode() {
+		if (mode == MODE_EMPTY) {
+			return 0;
+		} else if (mode == MODE_ERROR) {
+			if (valueErr == null) return 1;
+			var hc = valueErr.hashCode();
+			return hc * 3 + 2;
+		} else {
+			if (valueData == null) return 1;
+			var hc = valueData.hashCode();
+			return hc * 3 + 1;
+		}
+	}
 }

@@ -2,8 +2,8 @@ package de.jClipCorn.gui.guiComponents.jMediaInfoControl;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
-import de.jClipCorn.features.metadata.PartialMediaInfo;
 import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.gui.frames.editMediaInfoDialog.EditMediaInfoDialog;
 import de.jClipCorn.gui.frames.editMediaInfoDialog.MediaInfoResultHandler;
@@ -27,7 +27,7 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 	private JButton btnEdit;
 	private ReadableTextField edit;
 
-	private PartialMediaInfo value = null;
+	private CCMediaInfo value = null;
 	private VideoMetadata queryResult = null;
 
 	private final Func0to1<FSPath> _pathProvider;
@@ -85,12 +85,12 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 		return new Dimension(80, 20);
 	}
 
-	public PartialMediaInfo getValue() {
-		if (value == null) return PartialMediaInfo.EMPTY;
+	public CCMediaInfo getValue() {
+		if (value == null) return CCMediaInfo.EMPTY;
 		return value;
 	}
 
-	public void setValue(PartialMediaInfo ref) {
+	public void setValue(CCMediaInfo ref) {
 		for (var l: listenerList.getListeners(LanguageChangedListener.class)) l.languageChanged(new ActionEvent(ref==null ? CCMediaInfo.EMPTY : ref, -1, Str.Empty));
 
 		value = ref;
@@ -100,7 +100,7 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 	}
 	
 	public void setValue(VideoMetadata r) {
-		PartialMediaInfo cc = r.toPartialMediaInfo();
+		CCMediaInfo cc = r.toMediaInfo();
 
 		for (var l: listenerList.getListeners(LanguageChangedListener.class)) l.languageChanged(new ActionEvent(cc, -1, Str.Empty));
 
@@ -123,14 +123,14 @@ public class JMediaInfoControl extends JPanel implements MediaInfoResultHandler
 			else edit.setText(LocaleBundle.getString("JMediaInfoControl.partial")); //$NON-NLS-1$
 			image.setIcon(Resources.ICN_TABLE_QUALITY_0.get());
 		} else {
-			edit.setText(value.toMediaInfo().getCategory(null).getLongText());
-			image.setIcon(value.toMediaInfo().getCategory(null).getIcon());
-			image.setToolTipText(value.toMediaInfo().getCategory(null).getTooltip());
+			edit.setText        (value.getCategory(null).orElse(CCQualityCategory.UNSET).getLongText());
+			image.setIcon       (value.getCategory(null).orElse(CCQualityCategory.UNSET).getIcon());
+			image.setToolTipText(value.getCategory(null).orElse(CCQualityCategory.UNSET).getTooltip());
 		}
 	}
 
 	@Override
 	public void onApplyMediaInfo(CCMediaInfo mi) {
-		setValue(mi.toPartial());
+		setValue(mi);
 	}
 }

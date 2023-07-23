@@ -7,6 +7,7 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.driver.DatabaseStructure;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -77,22 +78,22 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(CCOnlineScore.create((short)6, (short)10), movRead.getOnlinescore());
 		assertEquals("C:\\test.mov", movRead.Parts.get(0).toString());
 
-		assertEquals(1565454159, movRead.mediaInfo().get().getCDate());
-		assertEquals(1565454169, movRead.mediaInfo().get().getMDate());
-		assertEquals(1570732032, movRead.mediaInfo().get().getFilesize().getBytes());
-		assertEquals(5903.904, movRead.mediaInfo().get().getDuration(), 0.000001);
-		assertEquals(2128398, movRead.mediaInfo().get().getBitrate());
-		assertEquals("MPEG-4 Visual", movRead.mediaInfo().get().getVideoFormat());
-		assertEquals(720, movRead.mediaInfo().get().getWidth());
-		assertEquals(304, movRead.mediaInfo().get().getHeight());
-		assertEquals(23.976, movRead.mediaInfo().get().getFramerate(), 0.000001);
-		assertEquals(8, movRead.mediaInfo().get().getBitdepth());
-		assertEquals(141552, movRead.mediaInfo().get().getFramecount());
-		assertEquals("XVID", movRead.mediaInfo().get().getVideoCodec());
-		assertEquals("AC-3", movRead.mediaInfo().get().getAudioFormat());
-		assertEquals(6, movRead.mediaInfo().get().getAudioChannels());
-		assertEquals("2000", movRead.mediaInfo().get().getAudioCodec());
-		assertEquals(48000, movRead.mediaInfo().get().getAudioSamplerate());
+		assertEquals(1565454159,      movRead.mediaInfo().get().CDate.get().longValue());
+		assertEquals(1565454169,      movRead.mediaInfo().get().MDate.get().longValue());
+		assertEquals(1570732032,      movRead.mediaInfo().get().Filesize.get().getBytes());
+		assertEquals(5903.904,        movRead.mediaInfo().get().Duration.get(), 0.000001);
+		assertEquals(2128398,         movRead.mediaInfo().get().Bitrate.get().intValue());
+		assertEquals("MPEG-4 Visual", movRead.mediaInfo().get().VideoFormat.get());
+		assertEquals(720,             movRead.mediaInfo().get().Width.get().intValue());
+		assertEquals(304,             movRead.mediaInfo().get().Height.get().intValue());
+		assertEquals(23.976,          movRead.mediaInfo().get().Framerate.get(), 0.000001);
+		assertEquals(8,               movRead.mediaInfo().get().Bitdepth.get().shortValue());
+		assertEquals(141552,          movRead.mediaInfo().get().Framecount.get().intValue());
+		assertEquals("XVID",          movRead.mediaInfo().get().VideoCodec.get());
+		assertEquals("AC-3",          movRead.mediaInfo().get().AudioFormat.get());
+		assertEquals(6,               movRead.mediaInfo().get().AudioChannels.get().shortValue());
+		assertEquals("2000",          movRead.mediaInfo().get().AudioCodec.get());
+		assertEquals(48000,           movRead.mediaInfo().get().AudioSamplerate.get().intValue());
 	}
 
 	@Test
@@ -194,22 +195,22 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(CCDate.create(1, 1, 2000), epiRead.getAddDate());
 		assertEquals(CCDateTimeList.create(CCDateTime.create(10, 1, 2000, 6, 0, 0), CCDateTime.create(12, 1, 2000, 12, 0, 0), CCDateTime.create(22, 1, 2000, 18, 0, 0)), epiRead.ViewedHistory.get());
 		assertEquals(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.RUSSIAN, CCDBLanguage.SPANISH), epiRead.getLanguage());
-		assertEquals(1555300800000L, epiRead.mediaInfo().get().getCDate());
-		assertEquals(1555309800000L, epiRead.mediaInfo().get().getMDate());
-		assertEquals(3570481288L, epiRead.mediaInfo().get().getFilesize().getBytes());
-		assertEquals(5932.933, epiRead.mediaInfo().get().getDuration(), 0.000001);
-		assertEquals(4814457, epiRead.mediaInfo().get().getBitrate());
-		assertEquals("AVC", epiRead.mediaInfo().get().getVideoFormat());
-		assertEquals(1920, epiRead.mediaInfo().get().getWidth());
-		assertEquals(1080, epiRead.mediaInfo().get().getHeight());
-		assertEquals(23.976, epiRead.mediaInfo().get().getFramerate(), 0.000001);
-		assertEquals(8, epiRead.mediaInfo().get().getBitdepth());
-		assertEquals(142248, epiRead.mediaInfo().get().getFramecount());
-		assertEquals("V_MPEG4/ISO/AVC", epiRead.mediaInfo().get().getVideoCodec());
-		assertEquals("AC-3", epiRead.mediaInfo().get().getAudioFormat());
-		assertEquals(2, epiRead.mediaInfo().get().getAudioChannels());
-		assertEquals("A_AC3", epiRead.mediaInfo().get().getAudioCodec());
-		assertEquals(48000, epiRead.mediaInfo().get().getAudioSamplerate());
+		assertEquals(1555300800000L,    epiRead.mediaInfo().get().CDate.get().longValue());
+		assertEquals(1555309800000L,    epiRead.mediaInfo().get().MDate.get().longValue());
+		assertEquals(3570481288L,       epiRead.mediaInfo().get().Filesize.get().getBytes());
+		assertEquals(5932.933,          epiRead.mediaInfo().get().Duration.get(), 0.000001);
+		assertEquals(4814457,           epiRead.mediaInfo().get().Bitrate.get().intValue());
+		assertEquals("AVC",             epiRead.mediaInfo().get().VideoFormat.get());
+		assertEquals(1920,              epiRead.mediaInfo().get().Width.get().intValue());
+		assertEquals(1080,              epiRead.mediaInfo().get().Height.get().intValue());
+		assertEquals(23.976,            epiRead.mediaInfo().get().Framerate.get(), 0.000001);
+		assertEquals(8,                 epiRead.mediaInfo().get().Bitdepth.get().shortValue());
+		assertEquals(142248,            epiRead.mediaInfo().get().Framecount.get().intValue());
+		assertEquals("V_MPEG4/ISO/AVC", epiRead.mediaInfo().get().VideoCodec.get());
+		assertEquals("AC-3",            epiRead.mediaInfo().get().AudioFormat.get());
+		assertEquals(2,                 epiRead.mediaInfo().get().AudioChannels.get().shortValue());
+		assertEquals("A_AC3",           epiRead.mediaInfo().get().AudioCodec.get());
+		assertEquals(48000,             epiRead.mediaInfo().get().AudioSamplerate.get().intValue());
 	}
 
 	@Test

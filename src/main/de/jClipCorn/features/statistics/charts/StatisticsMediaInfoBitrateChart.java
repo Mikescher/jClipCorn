@@ -4,6 +4,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.statistics.StatisticsChart;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.stream.CCStreams;
 import org.jfree.chart.JFreeChart;
@@ -53,8 +54,10 @@ public class StatisticsMediaInfoBitrateChart extends StatisticsChart {
 	private XYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		List<Integer> values = source
 				.iteratorMoviesOrEpisodes(movielist)
-				.filter(e -> e.mediaInfo().get().isSet())
-				.map(e -> e.mediaInfo().get().getBitrate() / 1000)
+				.map(p -> p.mediaInfo().get().Bitrate)
+				.filter(Opt::isPresent)
+				.map(Opt::get)
+				.map(e -> e / 1000)
 				.map(e -> e / 10)
 				.filter(e -> e > 0)
 				.enumerate();

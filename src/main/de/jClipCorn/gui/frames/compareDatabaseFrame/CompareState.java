@@ -44,9 +44,7 @@ public class CompareState {
 
 	public MovieMatch addMovieMatch(CCMovie loc, CCMovie ext) {
 		var updateFile = Ruleset.ShouldUpdateFiles(loc.getLocalID(), ext.getLocalID()) &&
-				         loc.MediaInfo.get().isSet() &&
-				         ext.MediaInfo.get().isSet() &&
-				         !Str.equals(loc.MediaInfo.get().getChecksum(), ext.MediaInfo.get().getChecksum());
+				         !loc.MediaInfo.get().Checksum.isEqual(ext.MediaInfo.get().Checksum, Str::equals);
 
 		var updateCover = Ruleset.ShouldUpdateCover(loc.getLocalID(), ext.getLocalID()) && !Str.equals(loc.getCoverInfo().Checksum, ext.getCoverInfo().Checksum);
 

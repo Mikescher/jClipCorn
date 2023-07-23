@@ -6,7 +6,6 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
@@ -135,8 +134,8 @@ public class UpdateCodecFrame extends JCCFrame
 			if (!elem.Processed) continue;
 			if (elem.MQResult == null) continue;
 
-			CCMediaInfo v = elem.getNewMediaInfo();
-			if (v.isUnset()) continue;
+			var v = elem.getNewMediaInfo();
+			if (v.isFullyEmpty()) continue;
 
 			if (!elem.Element.mediaInfo().get().equals(v)) { elem.Element.mediaInfo().set(v); count++; }
 		}

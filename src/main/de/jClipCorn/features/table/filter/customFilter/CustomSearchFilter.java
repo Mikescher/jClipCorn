@@ -4,7 +4,6 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.features.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
@@ -51,14 +50,11 @@ public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 				}
 			}
 
-			CCMediaInfo minfo = e.asMovie().mediaInfo().get();
-			if (minfo.isSet())
-			{
-				if (minfo.getVideoCodec().equalsIgnoreCase(searchTerm)) return true;
-				if (minfo.getVideoFormat().equalsIgnoreCase(searchTerm)) return true;
-				if (minfo.getAudioCodec().equalsIgnoreCase(searchTerm)) return true;
-				if (minfo.getAudioFormat().equalsIgnoreCase(searchTerm)) return true;
-			}
+			var minfo = e.asMovie().mediaInfo().get();
+			if (minfo.VideoCodec  .map(v -> v.equalsIgnoreCase(searchTerm)) .orElse(false)) return true;
+			if (minfo.VideoFormat .map(v -> v.equalsIgnoreCase(searchTerm)) .orElse(false)) return true;
+			if (minfo.AudioCodec  .map(v -> v.equalsIgnoreCase(searchTerm)) .orElse(false)) return true;
+			if (minfo.AudioFormat .map(v -> v.equalsIgnoreCase(searchTerm)) .orElse(false)) return true;
 
 		} else if (e.isSeries()) {
 			for (CCDBLanguage lang : e.asSeries().getAllLanguages()) {

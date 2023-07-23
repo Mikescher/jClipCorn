@@ -7,7 +7,6 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewMovieMenuBar;
@@ -107,11 +106,12 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 		new PreviewMovieFrame(owner, data).setVisible(true);
 	}
 
+	@SuppressWarnings("nls")
 	private void updateData() {
 		if (movie == null) return;
 
 		if (Main.DEBUG) {
-			setTitle("<" + movie.getLocalID() + "> " + movie.getCompleteTitle() + " (" + movie.getCoverID() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			setTitle("<" + movie.getLocalID() + "> " + movie.getCompleteTitle() + " (" + movie.getCoverID() + ")");
 		} else {
 			setTitle(movie.getCompleteTitle());
 		}
@@ -180,25 +180,26 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 
 		btnOnlineRef.setValue(movie.OnlineReference.get());
 
-		CCMediaInfo mi = movie.MediaInfo.get();
+		var mi = movie.MediaInfo.get();
 
-		edMI_CDate   .setText(mi.isUnset() ? Str.Empty : CCDateTime.createFromFileTimestamp(mi.getCDate(), TimeZone.getDefault()).toStringISO());
-		edMI_MDate   .setText(mi.isUnset() ? Str.Empty : CCDateTime.createFromFileTimestamp(mi.getMDate(), TimeZone.getDefault()).toStringISO());
-		edMI_Filesize.setText(mi.isUnset() ? Str.Empty : FileSizeFormatter.formatPrecise(mi.getFilesize()));
-		edMI_Duration.setText(mi.isUnset() ? Str.Empty : TimeIntervallFormatter.formatSeconds(mi.getDuration()));
-		edMI_Bitrate .setText(mi.isUnset() ? Str.Empty : Str.spacegroupformat(mi.getNormalizedBitrate()) + " kbit/s"); //$NON-NLS-1$
 
-		edMI_VideoFormat    .setText(mi.isUnset() ? Str.Empty : mi.getVideoFormat());
-		edMI_VideoResolution.setText(mi.isUnset() ? Str.Empty : Str.format("{0,number,#} x {1,number,#}", mi.getWidth(), mi.getHeight())); //$NON-NLS-1$
-		edMI_VideoFramerate .setText(mi.isUnset() ? Str.Empty : String.valueOf((int)Math.round(mi.getFramerate())));
-		edMI_VideoBitdepth  .setText(mi.isUnset() ? Str.Empty : String.valueOf(mi.getBitdepth()));
-		edMI_VideoFramecount.setText(mi.isUnset() ? Str.Empty : Str.spacegroupformat(mi.getFramecount()));
-		edMI_VideoCodec     .setText(mi.isUnset() ? Str.Empty : mi.getVideoCodec());
+		edMI_CDate           .setText(mi.CDate                  .map(v -> CCDateTime.createFromFileTimestamp(v, TimeZone.getDefault()).toStringISO()) .orElse(Str.Empty));
+		edMI_MDate           .setText(mi.MDate                  .map(v -> CCDateTime.createFromFileTimestamp(v, TimeZone.getDefault()).toStringISO()) .orElse(Str.Empty));
+		edMI_Filesize        .setText(mi.Filesize               .map(FileSizeFormatter::formatPrecise)                                                .orElse(Str.Empty));
+		edMI_Duration        .setText(mi.Duration               .map(TimeIntervallFormatter::formatSeconds)                                           .orElse(Str.Empty));
+		edMI_Bitrate         .setText(mi.getNormalizedBitrate() .map(v -> Str.spacegroupformat(v) + " kbit/s")                                        .orElse(Str.Empty));
 
-		edMI_AudioFormat    .setText(mi.isUnset() ? Str.Empty : mi.getAudioFormat());
-		edMI_AudioChannels  .setText(mi.isUnset() ? Str.Empty : String.valueOf(mi.getAudioChannels()));
-		edMI_AudioCodec     .setText(mi.isUnset() ? Str.Empty : mi.getAudioCodec());
-		edMI_AudioSamplerate.setText(mi.isUnset() ? Str.Empty : Str.spacegroupformat(mi.getAudioSamplerate()));
+		edMI_VideoFormat     .setText(mi.VideoFormat            .map(v -> v)                                                                          .orElse(Str.Empty));
+		edMI_VideoResolution .setText(mi.getResolution()        .map(v -> Str.format("{0,number,#} x {1,number,#}", v.Item1, v.Item2))                .orElse(Str.Empty));
+		edMI_VideoFramerate  .setText(mi.Framerate              .map(v -> String.valueOf((int)Math.round(v)))                                         .orElse(Str.Empty));
+		edMI_VideoBitdepth   .setText(mi.Bitdepth               .map(String::valueOf)                                                                 .orElse(Str.Empty));
+		edMI_VideoFramecount .setText(mi.Framecount             .map(Str::spacegroupformat)                                                           .orElse(Str.Empty));
+		edMI_VideoCodec      .setText(mi.VideoCodec             .map(v -> v)                                                                          .orElse(Str.Empty));
+
+		edMI_AudioFormat     .setText(mi.AudioFormat            .map(v -> v)                                                                          .orElse(Str.Empty));
+		edMI_AudioChannels   .setText(mi.AudioChannels          .map(String::valueOf)                                                                 .orElse(Str.Empty));
+		edMI_AudioCodec      .setText(mi.AudioCodec             .map(v -> v)                                                                          .orElse(Str.Empty));
+		edMI_AudioSamplerate .setText(mi.AudioSamplerate        .map(Str::spacegroupformat)                                                           .orElse(Str.Empty));
 
 		btnMediaInfo0.setEnabled(!movie.Parts.get(0).isEmpty());
 		btnOpenDir0  .setEnabled(!movie.Parts.get(0).isEmpty());

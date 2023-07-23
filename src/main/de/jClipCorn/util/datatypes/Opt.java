@@ -1,5 +1,7 @@
 package de.jClipCorn.util.datatypes;
 
+import de.jClipCorn.util.lambda.Func0to0;
+import de.jClipCorn.util.lambda.Func1to0;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.lambda.Func2to1;
 
@@ -64,6 +66,10 @@ public class Opt<T> implements IOpt<T> {
 		if (isSet) consumer.accept(value);
 	}
 
+	public void ifOrElse(Func1to0<T> consumerPresent, Func0to0 consumerEmpty) {
+		if (isSet) consumerPresent.invoke(value); else consumerEmpty.invoke();
+	}
+
 	public T orElse(T other) {
 		return isSet ? value : other;
 	}
@@ -119,5 +125,26 @@ public class Opt<T> implements IOpt<T> {
 	public <TErrType> ErrOpt<T, TErrType> toErrOpt() {
 		if (this.isEmpty()) return ErrOpt.empty();
 		return ErrOpt.of(this.value);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public boolean equals(Object o) {
+		if (this == o) return true;
+
+		if (o == null || getClass() != o.getClass()) return false;
+
+		return this.isEqual((Opt<T>) o, Object::equals);
+	}
+
+	@Override
+	public int hashCode() {
+		if (isSet) {
+			if (value == null) return 1;
+			var hc = value.hashCode();
+			return (hc < 0) ? hc : hc + 2;
+		} else {
+			return 0;
+		}
 	}
 }

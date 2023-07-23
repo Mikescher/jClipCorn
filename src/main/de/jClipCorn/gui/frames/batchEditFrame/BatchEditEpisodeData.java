@@ -3,7 +3,7 @@ package de.jClipCorn.gui.frames.batchEditFrame;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
-import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.util.datetime.CCDate;
@@ -24,7 +24,7 @@ public class BatchEditEpisodeData implements IEpisodeData, ICCPropertySource
 	public CCDateTimeList   viewedHistory;
 	public CCDBLanguageSet  language;
 	public CCDBLanguageList subtitles;
-	public PartialMediaInfo mediaInfo;
+	public CCMediaInfo mediaInfo;
 
 	public BatchEditEpisodeData(CCEpisode e) {
 		_source = e;
@@ -40,7 +40,7 @@ public class BatchEditEpisodeData implements IEpisodeData, ICCPropertySource
 		viewedHistory = e.ViewedHistory.get();
 		language      = e.Language.get();
 		subtitles     = e.Subtitles.get();
-		mediaInfo     = e.MediaInfo.getPartial();
+		mediaInfo     = e.MediaInfo.get();
 	}
 
 	public CCEpisode getSource() {
@@ -58,7 +58,7 @@ public class BatchEditEpisodeData implements IEpisodeData, ICCPropertySource
 	public boolean isDirty_ViewedHistory() { return !_source.ViewedHistory.get().isEqual(viewedHistory); }
 	public boolean isDirty_Language()      { return !_source.Language.get().isEqual(language); }
 	public boolean isDirty_Subtitles()     { return !_source.Subtitles.get().isEqual(subtitles); }
-	public boolean isDirty_MediaInfo()     { return !_source.MediaInfo.getPartial().isEqual(mediaInfo); }
+	public boolean isDirty_MediaInfo()     { return !_source.MediaInfo.get().isEqual(mediaInfo); }
 
 	public boolean isDirty()
 	{
@@ -83,8 +83,7 @@ public class BatchEditEpisodeData implements IEpisodeData, ICCPropertySource
 	@Override public CCTagList getTags() { return CCTagList.EMPTY; }
 	@Override public CCDBLanguageSet getLanguage() { return language; }
 	@Override public CCDBLanguageList getSubtitles() { return subtitles; }
-	@Override public CCMediaInfo getMediaInfo() { return mediaInfo.toMediaInfo(); }
-	@Override public PartialMediaInfo getPartialMediaInfo() { return mediaInfo; }
+	@Override public CCMediaInfo getMediaInfo() { return mediaInfo; }
 	@Override public int getEpisodeNumber() { return episodeNumber; }
 	@Override public String getTitle() { return title; }
 	@Override public int getLength() { return length; }

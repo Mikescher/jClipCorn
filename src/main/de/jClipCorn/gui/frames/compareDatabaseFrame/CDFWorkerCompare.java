@@ -66,12 +66,9 @@ public class CDFWorkerCompare
 		// Movies with the same checksum are matches
 		for (var mloc : new ArrayList<>(movsLoc))
 		{
-			if (mloc.MediaInfo.get().isUnset() || Str.isNullOrWhitespace(mloc.MediaInfo.get().getChecksum())) continue;
+			if (mloc.MediaInfo.get().Checksum.isEmpty()) continue;
 
-			var mext = CCStreams.iterate(movsExt).singleOrDefault(m ->
-			{
-				return Str.equals(m.MediaInfo.get().getChecksum(), mloc.MediaInfo.get().getChecksum());
-			}, null, null);
+			var mext = CCStreams.iterate(movsExt).singleOrDefault(m -> m.MediaInfo.get().Checksum.isEqual(mloc.MediaInfo.get().Checksum, Str::equals), null, null);
 			if (mext == null) continue;
 
 			state.addMovieMatch(mloc, mext);
@@ -395,12 +392,9 @@ public class CDFWorkerCompare
 		// Episodes with the same checksum are matches
 		for (var eloc : new ArrayList<>(episLoc))
 		{
-			if (eloc.MediaInfo.get().isUnset() || Str.isNullOrWhitespace(eloc.MediaInfo.get().getChecksum())) continue;
+			if (eloc.MediaInfo.get().Checksum.isEmpty()) continue;
 
-			var eext = CCStreams.iterate(episExt).singleOrDefault(e ->
-			{
-				return Str.equals(e.MediaInfo.get().getChecksum(), eloc.MediaInfo.get().getChecksum());
-			}, null, null);
+			var eext = CCStreams.iterate(episExt).singleOrDefault(e -> e.MediaInfo.get().Checksum.isEqual(eloc.MediaInfo.get().Checksum, Str::equals), null, null);
 			if (eext == null) continue;
 
 			match.addEpisodeMatch(eloc, eext);

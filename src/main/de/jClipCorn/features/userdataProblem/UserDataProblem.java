@@ -234,13 +234,23 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 
-		if (!newdata.getMediaInfo().isSet()) {
-			String err = String.join(";", newdata.getPartialMediaInfo().validate());
-			ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET, err));
-		} else {
-			if (!CCFileSize.isEqual(newdata.getMediaInfo().getFilesize(), newdata.getFilesize()) && partcount_nonempty == 1) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
-			String err = String.join(";", newdata.getPartialMediaInfo().validate());
-			if (!err.isEmpty()) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_DATA, err));
+		{
+			var newDataMI = newdata.getMediaInfo();
+			if (!newDataMI.isFullySet())
+			{
+				String err = String.join(";", newDataMI.validate());
+				ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET, err));
+			}
+			else
+			{
+				if (newDataMI.Filesize.isPresent() && !CCFileSize.isEqual(newDataMI.Filesize.get(), newdata.getFilesize()) && partcount_nonempty == 1)
+				{
+					ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
+				}
+
+				String err = String.join(";", newDataMI.validate());
+				if (!err.isEmpty()) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_DATA, err));
+			}
 		}
 
 		//################################################################################################################
@@ -467,13 +477,24 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 
-		if (!newdata.getMediaInfo().isSet()) {
-			String err = String.join(";", newdata.getPartialMediaInfo().validate());
-			ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET, err));
-		} else {
-			if (!CCFileSize.isEqual(newdata.getMediaInfo().getFilesize(), newdata.getFilesize())) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
-			String err = String.join(";", newdata.getPartialMediaInfo().validate());
-			if (!err.isEmpty()) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_DATA, err));
+		{
+			var newDataMI = newdata.getMediaInfo();
+
+			if (!newDataMI.isFullySet())
+			{
+				String err = String.join(";", newdata.getMediaInfo().validate());
+				ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_UNSET, err));
+			}
+			else
+			{
+				if (newDataMI.Filesize.isPresent() && !CCFileSize.isEqual(newDataMI.Filesize.get(), newdata.getFilesize()))
+				{
+					ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_FILESIZE));
+				}
+
+				String err = String.join(";", newdata.getMediaInfo().validate());
+				if (!err.isEmpty()) ret.add(new UserDataProblem(PROBLEM_MEDIAINFO_WRONG_DATA, err));
+			}
 		}
 
 		//################################################################################################################

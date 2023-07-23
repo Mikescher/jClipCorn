@@ -5,6 +5,7 @@ import de.jClipCorn.features.statistics.StatisticsChart;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.stream.CCStreams;
 import org.jfree.chart.ChartFactory;
@@ -58,8 +59,9 @@ public class StatisticsMediaInfoFramerateChart extends StatisticsChart {
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		Map<String, Tuple<Double, Integer>> values = source
 				.iteratorMoviesOrEpisodes(movielist)
-				.filter(e -> e.mediaInfo().get().isSet())
-				.map(e -> e.mediaInfo().get().getFramerate())
+				.map(e -> e.mediaInfo().get().Framerate)
+				.filter(Opt::isPresent)
+				.map(Opt::get)
 				.autosort()
 				.groupBy(e -> e)
 				.toMap(e -> Str.format("{0,number,0.#}", e.getKey()), e -> Tuple.Create(e.getKey(), e.getValue().size())); //$NON-NLS-1$

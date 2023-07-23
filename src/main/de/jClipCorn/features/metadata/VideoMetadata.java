@@ -1,9 +1,6 @@
 package de.jClipCorn.features.metadata;
 
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
-import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.util.datatypes.ErrOpt;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -141,14 +138,13 @@ public class VideoMetadata {
 		return CCStreams.iterate(this.SubtitleLanguages).all(ErrOpt::isPresent);
 	}
 
-	public PartialMediaInfo toPartialMediaInfo()
+	public CCMediaInfo toMediaInfo()
 	{
 		var video = getDefaultVideoTrack();
 		var audio = getDefaultAudioTrack();
 
-		return PartialMediaInfo.create
+		return CCMediaInfo.create
 		(
-			Opt.of(RawOutput),
 			CDate.toOpt(),
 			MDate.toOpt(),
 			FileSize.map(CCFileSize::new).toOpt(),

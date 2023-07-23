@@ -1,7 +1,9 @@
 package de.jClipCorn.database.util;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
@@ -14,39 +16,41 @@ import java.util.TimeZone;
 @SuppressWarnings({"nls", "Convert2MethodRef"})
 public enum CCMediaInfoField implements ContinoousEnum<CCMediaInfoField>
 {
-	IS_SET(0,           LocaleBundle.getString("Mediainfofield.is_set"),          e -> e.isSet() ? "true" : "false"),
-	CDATE_SEC(1,        LocaleBundle.getString("Mediainfofield.cdate_sec"),       e -> String.valueOf(e.getCDate())),
-	CDATE_DT(2,         LocaleBundle.getString("Mediainfofield.cdate_dt"),        e -> CCDateTime.createFromFileTimestamp(e.getCDate(), TimeZone.getDefault()).toStringISO()),
-	MDATE_SEC(3,        LocaleBundle.getString("Mediainfofield.mdate_sec"),       e -> String.valueOf(e.getMDate())),
-	MDATE_DT(4,         LocaleBundle.getString("Mediainfofield.mdate_dt"),        e -> CCDateTime.createFromFileTimestamp(e.getMDate(), TimeZone.getDefault()).toStringISO()),
-	FILESIZE_B(5,       LocaleBundle.getString("Mediainfofield.filesize_b"),      e -> String.valueOf(e.getFilesize().getBytes())),
-	FILESIZE_KB(6,      LocaleBundle.getString("Mediainfofield.filesize_kb"),     e -> String.valueOf(e.getFilesize().getKiloBytes())),
-	FILESIZE_MB(7,      LocaleBundle.getString("Mediainfofield.filesize_mb"),     e -> String.valueOf(e.getFilesize().getMegaBytes())),
-	DURATION_SEC(8,     LocaleBundle.getString("Mediainfofield.duration_sec"),    e -> String.valueOf(e.getNormalizedDuration())),
-	DURATION_MIN(9,     LocaleBundle.getString("Mediainfofield.duration_min"),    e -> String.valueOf(Math.round(e.getDuration() / 60))),
-	BITRATE_BIT(10,     LocaleBundle.getString("Mediainfofield.bitrate_bit"),     e -> String.valueOf(e.getBitrate())),
-	BITRATE_KBIT(11,    LocaleBundle.getString("Mediainfofield.bitrate_kbit"),    e -> String.valueOf(e.getNormalizedBitrate())),
-	BITRATE_MBIT(12,    LocaleBundle.getString("Mediainfofield.bitrate_mbit"),    e -> String.valueOf((int)Math.round(e.getBitrate() / 1000.0 / 1000.0))),
-	VIDEOFORMAT(13,     LocaleBundle.getString("Mediainfofield.videoformat"),     e -> e.getVideoFormat()),
-	WIDTH(14,           LocaleBundle.getString("Mediainfofield.width"),           e -> String.valueOf(e.getWidth())),
-	HEIGHT(15,          LocaleBundle.getString("Mediainfofield.height"),          e -> String.valueOf(e.getHeight())),
-	FRAMERATE(16,       LocaleBundle.getString("Mediainfofield.framerate"),       e -> String.valueOf(e.getFramerate())),
-	BITDEPTH(17,        LocaleBundle.getString("Mediainfofield.bitdepth"),        e -> String.valueOf(e.getBitdepth())),
-	FRAMECOUNT(18,      LocaleBundle.getString("Mediainfofield.framecount"),      e -> String.valueOf(e.getFramecount())),
-	VIDEOCODEC(19,      LocaleBundle.getString("Mediainfofield.videocodec"),      e -> e.getVideoCodec()),
-	AUDIOFORMAT(20,     LocaleBundle.getString("Mediainfofield.audioformat"),     e -> e.getAudioFormat()),
-	AUDIOCHANNELS(21,   LocaleBundle.getString("Mediainfofield.audiochannels"),   e -> String.valueOf(e.getAudioChannels())),
-	AUDIOCODEC(22,      LocaleBundle.getString("Mediainfofield.audiocodec"),      e -> e.getAudioCodec()),
-	AUDIOSAMPLERATE(23, LocaleBundle.getString("Mediainfofield.audiosamplerate"), e -> String.valueOf(e.getAudioSamplerate())),
-	FASTVIDEOHASH(24,   LocaleBundle.getString("Mediainfofield.checksum"),        e -> e.getChecksum());
+	IS_SET(0,           LocaleBundle.getString("Mediainfofield.is_set"),          e -> Opt.of(e.isFullySet() ? "true" : "false")),
+	CDATE_SEC(1,        LocaleBundle.getString("Mediainfofield.cdate_sec"),       e -> e.CDate.map(String::valueOf)),
+	CDATE_DT(2,         LocaleBundle.getString("Mediainfofield.cdate_dt"),        e -> e.CDate.map(p -> CCDateTime.createFromFileTimestamp(p, TimeZone.getDefault()).toStringISO()).map(String::valueOf)),
+	MDATE_SEC(3,        LocaleBundle.getString("Mediainfofield.mdate_sec"),       e -> e.MDate.map(String::valueOf)),
+	MDATE_DT(4,         LocaleBundle.getString("Mediainfofield.mdate_dt"),        e -> e.MDate.map(p -> CCDateTime.createFromFileTimestamp(p, TimeZone.getDefault()).toStringISO()).map(String::valueOf)),
+	FILESIZE_B(5,       LocaleBundle.getString("Mediainfofield.filesize_b"),      e -> e.Filesize.map(CCFileSize::getBytes).map(String::valueOf)),
+	FILESIZE_KB(6,      LocaleBundle.getString("Mediainfofield.filesize_kb"),     e -> e.Filesize.map(CCFileSize::getKiloBytes).map(String::valueOf)),
+	FILESIZE_MB(7,      LocaleBundle.getString("Mediainfofield.filesize_mb"),     e -> e.Filesize.map(CCFileSize::getMegaBytes).map(String::valueOf)),
+	DURATION_SEC(8,     LocaleBundle.getString("Mediainfofield.duration_sec"),    e -> e.getNormalizedDuration().map(String::valueOf)),
+	DURATION_MIN(9,     LocaleBundle.getString("Mediainfofield.duration_min"),    e -> e.Duration.map(p -> Math.round(p/60)).map(String::valueOf)),
+	BITRATE_BIT(10,     LocaleBundle.getString("Mediainfofield.bitrate_bit"),     e -> e.Bitrate.map(String::valueOf)),
+	BITRATE_KBIT(11,    LocaleBundle.getString("Mediainfofield.bitrate_kbit"),    e -> e.getNormalizedBitrate().map(String::valueOf)),
+	BITRATE_MBIT(12,    LocaleBundle.getString("Mediainfofield.bitrate_mbit"),    e -> e.Bitrate.map(p -> Math.round(p / 1000.0 / 1000.0)).map(String::valueOf)),
+	VIDEOFORMAT(13,     LocaleBundle.getString("Mediainfofield.videoformat"),     e -> e.VideoFormat),
+	WIDTH(14,           LocaleBundle.getString("Mediainfofield.width"),           e -> e.Width.map(String::valueOf)),
+	HEIGHT(15,          LocaleBundle.getString("Mediainfofield.height"),          e -> e.Height.map(String::valueOf)),
+	FRAMERATE(16,       LocaleBundle.getString("Mediainfofield.framerate"),       e -> e.Framerate.map(String::valueOf)),
+	BITDEPTH(17,        LocaleBundle.getString("Mediainfofield.bitdepth"),        e -> e.Bitdepth.map(String::valueOf)),
+	FRAMECOUNT(18,      LocaleBundle.getString("Mediainfofield.framecount"),      e -> e.Framecount.map(String::valueOf)),
+	VIDEOCODEC(19,      LocaleBundle.getString("Mediainfofield.videocodec"),      e -> e.VideoCodec),
+	AUDIOFORMAT(20,     LocaleBundle.getString("Mediainfofield.audioformat"),     e -> e.AudioFormat),
+	AUDIOCHANNELS(21,   LocaleBundle.getString("Mediainfofield.audiochannels"),   e -> e.AudioChannels.map(String::valueOf)),
+	AUDIOCODEC(22,      LocaleBundle.getString("Mediainfofield.audiocodec"),      e -> e.AudioCodec),
+	AUDIOSAMPLERATE(23, LocaleBundle.getString("Mediainfofield.audiosamplerate"), e -> e.AudioSamplerate.map(String::valueOf)),
+	FASTVIDEOHASH(24,   LocaleBundle.getString("Mediainfofield.checksum"),        e -> e.Checksum),
+	IS_UNSET(25,        LocaleBundle.getString("Mediainfofield.is_unset"),        e -> Opt.of(e.isFullyEmpty()   ? "true" : "false")),
+	IS_PARTSET(26,      LocaleBundle.getString("Mediainfofield.is_mixed_set"),    e -> Opt.of(e.isPartiallySet() ? "true" : "false"));
 
 	private final int id;
 	private final String desc;
-	private final Func1to1<CCMediaInfo, String> getter;
+	private final Func1to1<CCMediaInfo, Opt<String>> getter;
 
 	private static final EnumWrapper<CCMediaInfoField> wrapper = new EnumWrapper<>(IS_SET);
 
-	CCMediaInfoField(int val, String description, Func1to1<CCMediaInfo, String> valueGetter) {
+	CCMediaInfoField(int val, String description, Func1to1<CCMediaInfo, Opt<String>> valueGetter) {
 		id = val;
 		desc = description;
 		getter = valueGetter;
@@ -81,7 +85,7 @@ public enum CCMediaInfoField implements ContinoousEnum<CCMediaInfoField>
 		return CCMediaInfoField.values();
 	}
 
-	public String get(CCMediaInfo minfo) {
+	public Opt<String> get(CCMediaInfo minfo) {
 		return getter.invoke(minfo);
 	}
 }

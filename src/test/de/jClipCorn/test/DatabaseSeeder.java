@@ -3,7 +3,7 @@ package de.jClipCorn.test;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.InnerMediaQueryException;
 import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
 import de.jClipCorn.properties.CCProperties;
@@ -376,10 +376,10 @@ public class DatabaseSeeder {
 		SimpleFileUtils.writeGzippedResource(dest, "/media/demo_"+id+"."+ext+".gz", DatabaseSeeder.class);
 	}
 
-	private static PartialMediaInfo mi(CCMovieList ml, String id, FSPath dest) throws InnerMediaQueryException, CCXMLException, IOException, FVHException {
+	private static CCMediaInfo mi(CCMovieList ml, String id, FSPath dest) throws InnerMediaQueryException, CCXMLException, IOException, FVHException {
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", DatabaseSeeder.class);
 		var fvhash = ChecksumHelper.fastVideoHash(Collections.singletonList(dest));
 		var attr = dest.readFileAttr();
-		return new MediaInfoRunner(ml).parse(out, fvhash, attr, dest).toPartialMediaInfo();
+		return new MediaInfoRunner(ml).parse(out, fvhash, attr, dest).toMediaInfo();
 	}
 }

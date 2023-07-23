@@ -51,13 +51,15 @@ public class StatisticsMediaInfoSetChart extends StatisticsChart {
 	private PieDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		CCStream<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
 		
-		int va = it.count(e -> e.mediaInfo().get().isSet());
-		int vb = it.count(e -> e.mediaInfo().get().isUnset());
-		
+		int va = it.count(e -> e.mediaInfo().get().isFullySet());
+		int vb = it.count(e -> e.mediaInfo().get().isFullyEmpty());
+		int vc = it.count(e -> !e.mediaInfo().get().isFullySet() && !e.mediaInfo().get().isFullyEmpty());
+
 		DefaultPieDataset dataset = new DefaultPieDataset();
 		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.mi_set")   + " [" + va + "]", va); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.mi_unset") + " [" + vb + "]", vb); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		
+		dataset.setValue(LocaleBundle.getString("StatisticsFrame.chartAxis.mi_mixed") + " [" + vc + "]", vc); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
         return dataset;
 	}
 

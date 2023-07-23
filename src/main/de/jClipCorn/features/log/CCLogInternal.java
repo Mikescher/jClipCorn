@@ -5,7 +5,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -88,7 +87,7 @@ public class CCLogInternal {
 				if (! cle.isType(CCLogType.LOG_ELEM_INFORMATION))
 					System.out.println(cle.getFormatted().trim());
 			} else {
-				System.out.println(cle.getFormatted().trim());
+				System.out.println(cle.getFormatted(CCLogElement.FORMAT_LEVEL_FULL).trim());
 			}
 
 			if (type == CCLogType.LOG_ELEM_FATALERROR) {

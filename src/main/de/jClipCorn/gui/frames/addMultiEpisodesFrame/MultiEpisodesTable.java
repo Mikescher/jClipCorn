@@ -2,15 +2,11 @@ package de.jClipCorn.gui.frames.addMultiEpisodesFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveEntry;
+import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
-import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 	private static final long serialVersionUID = 6919528266265643678L;
@@ -68,9 +64,9 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 
 		r.add("MultiEpisodesTable.Quality")
 				.withSize("auto")
-				.withText(e -> e.MediaInfo.getCategory(_src.getGenres()).getLongText())
-				.withIcon(e -> e.MediaInfo.getCategory(_src.getGenres()).getIcon())
-				.withTooltip(e -> e.MediaInfo.getCategory(_src.getGenres()).getTooltip());
+				.withText(e -> e.MediaInfo.getCategory(_src.getGenres()).map(CCQualityCategory::getLongText).orElse(Str.Empty))
+				.withIcon(e -> e.MediaInfo.getCategory(_src.getGenres()).map(CCQualityCategory::getIcon).orElse(null))
+				.withTooltip(e -> e.MediaInfo.getCategory(_src.getGenres()).map(CCQualityCategory::getTooltip).orElse(Str.Empty));
 
 		return r;
 	}

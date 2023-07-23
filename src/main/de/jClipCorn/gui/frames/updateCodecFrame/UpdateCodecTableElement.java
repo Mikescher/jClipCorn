@@ -6,8 +6,8 @@ import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.util.CCMediaInfoField;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
@@ -86,7 +86,10 @@ public class UpdateCodecTableElement {
 			var va = f.get(a);
 			var vb = f.get(b);
 
-			if (!Str.equals(va, vb)) return f.asString();
+			if (va.isEmpty() && vb.isEmpty()) continue;
+			if (va.isEmpty() || vb.isEmpty()) return f.asString();
+
+			if (!Str.equals(va.get(), vb.get())) return f.asString();
 		}
 
 		return null;
@@ -224,7 +227,7 @@ public class UpdateCodecTableElement {
 		if (!Processed) return CCMediaInfo.EMPTY;
 		if (MQResult == null) return CCMediaInfo.EMPTY;
 		if (MQResult.isEmpty()) return CCMediaInfo.EMPTY;
-		return MQResult.get(0).toPartialMediaInfo().toMediaInfo();
+		return MQResult.get(0).toMediaInfo();
 	}
 
 	public CCGenreList getSourceGenres() {

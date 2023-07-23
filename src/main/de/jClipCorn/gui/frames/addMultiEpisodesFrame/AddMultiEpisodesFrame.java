@@ -6,9 +6,9 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
 import de.jClipCorn.gui.frames.omniParserFrame.OmniParserFrame;
@@ -494,8 +494,8 @@ public class AddMultiEpisodesFrame extends JCCFrame
 						}
 					}
 
-					data.get(i).MediaInfo = (data.get(i).MediaQueryResult == null) ? CCMediaInfo.EMPTY : data.get(i).MediaQueryResult.toPartialMediaInfo().toMediaInfo();
-					if (data.get(i).MediaInfo.isUnset()) err = true;
+					data.get(i).MediaInfo = (data.get(i).MediaQueryResult == null) ? CCMediaInfo.EMPTY : data.get(i).MediaQueryResult.toMediaInfo();
+					if (!data.get(i).MediaInfo.isFullySet()) err = true;
 					data.get(i).validate(target);
 				}
 

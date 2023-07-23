@@ -613,7 +613,7 @@ public class EditSeriesFrame extends JCCFrame
 			edEpisodeTags.setValue(episode.Tags.get());
 			ctrlEpisodeLanguage.setValue(episode.Language.get());
 			ctrlEpisodeSubtitles.setValue(episode.Subtitles.get());
-			ctrlEpisodeMediaInfo.setValue(episode.MediaInfo.getPartial());
+			ctrlEpisodeMediaInfo.setValue(episode.MediaInfo.get());
 
 			testEpisodePart();
 		}

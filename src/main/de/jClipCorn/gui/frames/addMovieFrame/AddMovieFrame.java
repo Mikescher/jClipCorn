@@ -7,6 +7,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.MovieDataPack;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
@@ -423,7 +424,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 	}
 
 	public void setMediaInfo(CCMediaInfo mi) {
-		ctrlMediaInfo.setValue(mi.toPartial());
+		ctrlMediaInfo.setValue(mi);
 	}
 
 	@Override

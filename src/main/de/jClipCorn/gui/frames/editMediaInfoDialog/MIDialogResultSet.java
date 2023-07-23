@@ -1,7 +1,7 @@
 package de.jClipCorn.gui.frames.editMediaInfoDialog;
 
 import de.jClipCorn.features.metadata.MetadataSourceType;
-import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.util.datatypes.Opt;
 
@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 public class MIDialogResultSet {
 	public final MetadataSourceType Type;
 
-	private Opt<PartialMediaInfo> Data1 = Opt.empty();
+	private Opt<CCMediaInfo> Data1 = Opt.empty();
 	private Opt<String>           Data2 = Opt.empty();
 	private Opt<VideoMetadata>    Data3 = Opt.empty();
 
@@ -63,9 +63,9 @@ public class MIDialogResultSet {
 		btnApply.setEnabled(!isRunning && Data1.isPresent());
 	}
 
-	public void updateData(PartialMediaInfo mi, VideoMetadata vmd) {
+	public void updateData(CCMediaInfo mi, VideoMetadata vmd) {
 		Data1 = Opt.of(mi);
-		Data2 = mi.RawOutput;
+		Data2 = Opt.ofNullable(vmd).flatMap(p -> Opt.ofNullable(p.RawOutput));
 		Data3 = Opt.ofNullable(vmd);
 	}
 }

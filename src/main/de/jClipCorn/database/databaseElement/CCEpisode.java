@@ -15,7 +15,7 @@ import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.ICCPropertySource;
@@ -44,7 +44,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	private final EpisodeCache _cache = new EpisodeCache(this);
 
 	public final EIntProp                LocalID       = new EIntProp(          "LocalID",       -1,                           this, EPropertyType.DATABASE_PRIMARY_ID);
-	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     PartialMediaInfo.EMPTY,       this);
+	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,       this);
 	public final EIntProp                EpisodeNumber = new EIntProp(          "EpisodeNumber", 0,                            this, EPropertyType.OBJECTIVE_METADATA);
 	public final EStringProp             Title         = new EStringProp(       "Title",         Str.Empty,                    this, EPropertyType.OBJECTIVE_METADATA);
 	public final EIntProp                Length        = new EIntProp(          "Length",        0,                            this, EPropertyType.OBJECTIVE_METADATA);
@@ -133,11 +133,6 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	@Override
 	public CCMediaInfo getMediaInfo() {
 		return MediaInfo.get();
-	}
-
-	@Override
-	public PartialMediaInfo getPartialMediaInfo() {
-		return MediaInfo.getPartial();
 	}
 
 	@Override
@@ -312,7 +307,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	@Override
 	public CCQualityCategory getMediaInfoCategory() {
-		return MediaInfo.get().getCategory(getSeries().Genres.get());
+		return MediaInfo.get().getCategory(getSeries().Genres.get()).orElse(CCQualityCategory.UNSET);
 	}
 
 	@Override

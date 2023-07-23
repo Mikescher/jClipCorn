@@ -1,9 +1,11 @@
 package de.jClipCorn.features.statistics.charts;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.features.statistics.StatisticsChart;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.formatter.ByteFormat;
 import de.jClipCorn.util.stream.CCStreams;
@@ -54,8 +56,10 @@ public class StatisticsMediaInfoFilesizeChart extends StatisticsChart {
 	private XYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		List<Long> values = source
 				.iteratorMoviesOrEpisodes(movielist)
-				.filter(e -> e.mediaInfo().get().isSet())
-				.map(e -> (e.mediaInfo().get().getFilesize().getMegaBytes()))
+				.map(e -> e.mediaInfo().get().Filesize)
+				.filter(Opt::isPresent)
+				.map(Opt::get)
+				.map(CCFileSize::getMegaBytes)
 				.enumerate();
 
 		long min = CCStreams.iterate(values).autoMinOrDefault(-1L);

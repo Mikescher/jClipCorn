@@ -2,7 +2,6 @@ package de.jClipCorn.features.serialization.xmlexport.impl;
 
 import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.*;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.ByteUtilies;
@@ -62,30 +61,29 @@ public class DatabaseXMLExporterImpl {
 		}
 
 		e.setAttribute("history",      o.ViewedHistory.get().toSerializationString());
-		e.setAttribute("year",         o.getYear() + "");
+		e.setAttribute("year",         String.valueOf((o.getYear())));
 		e.setAttribute("zyklus",       o.getZyklus().getTitle());
-		e.setAttribute("zyklusnumber", o.getZyklus().getNumber() + "");
+		e.setAttribute("zyklusnumber", String.valueOf((o.getZyklus().getNumber())));
 
-		CCMediaInfo minfo = o.mediaInfo().get();
-		if (minfo.isSet()) {
-			e.setAttribute("mediainfo.filesize",        minfo.getFilesize().getBytes()+"");
-			e.setAttribute("mediainfo.cdate",           minfo.getCDate()+"");
-			e.setAttribute("mediainfo.mdate",           minfo.getMDate()+"");
-			e.setAttribute("mediainfo.audioformat",     minfo.getAudioFormat());
-			e.setAttribute("mediainfo.videoformat",     minfo.getVideoFormat());
-			e.setAttribute("mediainfo.width",           minfo.getWidth()+"");
-			e.setAttribute("mediainfo.height",          minfo.getHeight()+"");
-			e.setAttribute("mediainfo.framerate",       Double.toString(minfo.getFramerate()));
-			e.setAttribute("mediainfo.duration",        Double.toString(minfo.getDuration()));
-			e.setAttribute("mediainfo.bitdepth",        minfo.getBitdepth()+"");
-			e.setAttribute("mediainfo.bitrate",         minfo.getBitrate()+"");
-			e.setAttribute("mediainfo.framecount",      minfo.getFramecount()+"");
-			e.setAttribute("mediainfo.audiochannels",   minfo.getAudioChannels()+"");
-			e.setAttribute("mediainfo.videocodec",      minfo.getVideoCodec());
-			e.setAttribute("mediainfo.audiocodec",      minfo.getAudioCodec());
-			e.setAttribute("mediainfo.audiosamplerate", minfo.getAudioSamplerate()+"");
-			e.setAttribute("mediainfo.checksum",        minfo.getChecksum());
-		}
+		var minfo = o.mediaInfo().get();
+
+		minfo.Filesize        .ifPresent( v -> e.setAttribute("mediainfo.filesize",        String.valueOf(v.getBytes())));
+		minfo.CDate           .ifPresent( v -> e.setAttribute("mediainfo.cdate",           String.valueOf(v)));
+		minfo.MDate           .ifPresent( v -> e.setAttribute("mediainfo.mdate",           String.valueOf(v)));
+		minfo.AudioFormat     .ifPresent( v -> e.setAttribute("mediainfo.audioformat",     v));
+		minfo.VideoFormat     .ifPresent( v -> e.setAttribute("mediainfo.videoformat",     v));
+		minfo.Width           .ifPresent( v -> e.setAttribute("mediainfo.width",           String.valueOf(v)));
+		minfo.Height          .ifPresent( v -> e.setAttribute("mediainfo.height",          String.valueOf(v)));
+		minfo.Framerate       .ifPresent( v -> e.setAttribute("mediainfo.framerate",       Double.toString(v)));
+		minfo.Duration        .ifPresent( v -> e.setAttribute("mediainfo.duration",        Double.toString(v)));
+		minfo.Bitdepth        .ifPresent( v -> e.setAttribute("mediainfo.bitdepth",        String.valueOf(v)));
+		minfo.Bitrate         .ifPresent( v -> e.setAttribute("mediainfo.bitrate",         String.valueOf(v)));
+		minfo.Framecount      .ifPresent( v -> e.setAttribute("mediainfo.framecount",      String.valueOf(v)));
+		minfo.AudioChannels   .ifPresent( v -> e.setAttribute("mediainfo.audiochannels",   String.valueOf(v)));
+		minfo.VideoCodec      .ifPresent( v -> e.setAttribute("mediainfo.videocodec",      v));
+		minfo.AudioCodec      .ifPresent( v -> e.setAttribute("mediainfo.audiocodec",      v));
+		minfo.AudioSamplerate .ifPresent( v -> e.setAttribute("mediainfo.audiosamplerate", String.valueOf(v)));
+		minfo.Checksum        .ifPresent( v -> e.setAttribute("mediainfo.checksum",        v));
 
 		if (s.FileHash) e.setAttribute("filehash", o.getFastViewHashSafe());
 	}
@@ -129,26 +127,25 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("score",         String.valueOf(o.Score.get().asInt()));
 		e.setAttribute("comment",       o.ScoreComment.get());
 
-		CCMediaInfo minfo = o.mediaInfo().get();
-		if (minfo.isSet()) {
-			e.setAttribute("mediainfo.filesize",        minfo.getFilesize().getBytes()+"");
-			e.setAttribute("mediainfo.cdate",           minfo.getCDate()+"");
-			e.setAttribute("mediainfo.mdate",           minfo.getMDate()+"");
-			e.setAttribute("mediainfo.audioformat",     minfo.getAudioFormat());
-			e.setAttribute("mediainfo.videoformat",     minfo.getVideoFormat());
-			e.setAttribute("mediainfo.width",           minfo.getWidth()+"");
-			e.setAttribute("mediainfo.height",          minfo.getHeight()+"");
-			e.setAttribute("mediainfo.framerate",       Double.toString(minfo.getFramerate()));
-			e.setAttribute("mediainfo.duration",        Double.toString(minfo.getDuration()));
-			e.setAttribute("mediainfo.bitdepth",        minfo.getBitdepth()+"");
-			e.setAttribute("mediainfo.bitrate",         minfo.getBitrate()+"");
-			e.setAttribute("mediainfo.framecount",      minfo.getFramecount()+"");
-			e.setAttribute("mediainfo.audiochannels",   minfo.getAudioChannels()+"");
-			e.setAttribute("mediainfo.videocodec",      minfo.getVideoCodec());
-			e.setAttribute("mediainfo.audiocodec",      minfo.getAudioCodec());
-			e.setAttribute("mediainfo.audiosamplerate", minfo.getAudioSamplerate()+"");
-			e.setAttribute("mediainfo.checksum",        minfo.getChecksum());
-		}
+		var minfo = o.mediaInfo().get();
+
+		minfo.Filesize        .ifPresent( v -> e.setAttribute("mediainfo.filesize",        String.valueOf(v.getBytes())));
+		minfo.CDate           .ifPresent( v -> e.setAttribute("mediainfo.cdate",           String.valueOf(v)));
+		minfo.MDate           .ifPresent( v -> e.setAttribute("mediainfo.mdate",           String.valueOf(v)));
+		minfo.AudioFormat     .ifPresent( v -> e.setAttribute("mediainfo.audioformat",     v));
+		minfo.VideoFormat     .ifPresent( v -> e.setAttribute("mediainfo.videoformat",     v));
+		minfo.Width           .ifPresent( v -> e.setAttribute("mediainfo.width",           String.valueOf(v)));
+		minfo.Height          .ifPresent( v -> e.setAttribute("mediainfo.height",          String.valueOf(v)));
+		minfo.Framerate       .ifPresent( v -> e.setAttribute("mediainfo.framerate",       Double.toString(v)));
+		minfo.Duration        .ifPresent( v -> e.setAttribute("mediainfo.duration",        Double.toString(v)));
+		minfo.Bitdepth        .ifPresent( v -> e.setAttribute("mediainfo.bitdepth",        String.valueOf(v)));
+		minfo.Bitrate         .ifPresent( v -> e.setAttribute("mediainfo.bitrate",         String.valueOf(v)));
+		minfo.Framecount      .ifPresent( v -> e.setAttribute("mediainfo.framecount",      String.valueOf(v)));
+		minfo.AudioChannels   .ifPresent( v -> e.setAttribute("mediainfo.audiochannels",   String.valueOf(v)));
+		minfo.VideoCodec      .ifPresent( v -> e.setAttribute("mediainfo.videocodec",      v));
+		minfo.AudioCodec      .ifPresent( v -> e.setAttribute("mediainfo.audiocodec",      v));
+		minfo.AudioSamplerate .ifPresent( v -> e.setAttribute("mediainfo.audiosamplerate", String.valueOf(v)));
+		minfo.Checksum        .ifPresent( v -> e.setAttribute("mediainfo.checksum",        v));
 
 		if (s.FileHash) e.setAttribute("filehash", o.getFastViewHashSafe());
 	}

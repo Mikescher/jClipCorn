@@ -4,11 +4,10 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.metadata.ITrackMetadata;
 import de.jClipCorn.features.metadata.MetadataSourceType;
-import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.features.metadata.impl.MetadataRunner;
@@ -58,12 +57,12 @@ public class EditMediaInfoDialog extends JCCDialog
 		super(ml);
 
 		initComponents();
-		postInit(path, r.toPartialMediaInfo(), h);
+		postInit(path, r.toMediaInfo(), h);
 
 		setLocationRelativeTo(owner);
 	}
 
-	public EditMediaInfoDialog(Component owner, CCMovieList ml, FSPath path, PartialMediaInfo r, MediaInfoResultHandler h) {
+	public EditMediaInfoDialog(Component owner, CCMovieList ml, FSPath path, CCMediaInfo r, MediaInfoResultHandler h) {
 		super(ml);
 
 		initComponents();
@@ -81,7 +80,7 @@ public class EditMediaInfoDialog extends JCCDialog
 		setLocationRelativeTo(owner);
 	}
 
-	private void postInit(FSPath path, PartialMediaInfo r, MediaInfoResultHandler h)
+	private void postInit(FSPath path, CCMediaInfo r, MediaInfoResultHandler h)
 	{
 		colOK = lblVideoBitdepth.getForeground();
 		colErr = Color.RED;
@@ -109,7 +108,7 @@ public class EditMediaInfoDialog extends JCCDialog
 		}
 	}
 
-	public void doShowHints(Opt<PartialMediaInfo> mi, MetadataSourceType typ, Opt<VideoMetadata> vmd) {
+	public void doShowHints(Opt<CCMediaInfo> mi, MetadataSourceType typ, Opt<VideoMetadata> vmd) {
 		doUpdateEnabled(false);
 
 		if (_hintType == typ && typ != null) {
@@ -184,8 +183,8 @@ public class EditMediaInfoDialog extends JCCDialog
 				var mqr = source.run(filename);
 				SwingUtils.invokeLater(() ->
 				{
-					set.updateData(mqr.toPartialMediaInfo(), mqr);
-					doShowHints(Opt.of(mqr.toPartialMediaInfo()), set.Type, Opt.of(mqr));
+					set.updateData(mqr.toMediaInfo(), mqr);
+					doShowHints(Opt.of(mqr.toMediaInfo()), set.Type, Opt.of(mqr));
 				});
 			}
 			catch (IOException e) {
@@ -222,7 +221,7 @@ public class EditMediaInfoDialog extends JCCDialog
 		GenericTextDialog.showText(this, "MediaInfo", txt, true); //$NON-NLS-1$
 	}
 
-	public void doApply(PartialMediaInfo mi, Opt<VideoMetadata> vmd) {
+	public void doApply(CCMediaInfo mi, Opt<VideoMetadata> vmd) {
 		mi.CDate.ifPresent(v -> ctrlCDate.setValue(v));
 		mi.MDate.ifPresent(v -> ctrlMDate.setValue(v));
 		mi.Checksum.ifPresent(v -> ctrlChecksum.setText(v));
@@ -315,14 +314,14 @@ public class EditMediaInfoDialog extends JCCDialog
 		if (srate  <= 0)                    { lblAudioSamplerate.setForeground(colErr); err = true; }
 		if (Str.isNullOrWhitespace(chksum)) { lblChecksum.setForeground(colErr);        err = true; }
 
-		if (err) return null;
+		if (err) return CCMediaInfo.EMPTY;
 
 		return CCMediaInfo.create(cdate, mdate, new CCFileSize(fsize), chksum, durat, brate, vfmt, width, height, frate, bdepth, fcount, vcodec, afmt, achnls, acodec, srate);
 	}
 
 	private void onOK(ActionEvent e) {
-		CCMediaInfo mi = getData();
-		if (mi == null) return;
+		var mi = getData();
+		if (mi.isFullyEmpty()) return;
 
 		if (_handler != null) _handler.onApplyMediaInfo(mi);
 

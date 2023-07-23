@@ -66,7 +66,6 @@ public class StatisticsMediaInfoQualityCategoryChart extends StatisticsChart {
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		Map<CCQualityCategoryType, Integer> values = source
 				.iteratorMoviesOrEpisodes(movielist)
-				.filter(e -> e.mediaInfo().get().isSet())
 				.map(e -> e.getMediaInfoCategory().getCategoryType())
 				.groupBy(e -> e)
 				.toMap(Map.Entry::getKey, e -> e.getValue().size());

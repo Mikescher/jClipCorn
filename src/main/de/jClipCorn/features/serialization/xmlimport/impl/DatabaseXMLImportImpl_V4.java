@@ -2,7 +2,7 @@ package de.jClipCorn.features.serialization.xmlimport.impl;
 
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.features.metadata.PartialMediaInfo;
+import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.serialization.xmlimport.IDatabaseXMLImporterImpl;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
 import de.jClipCorn.util.datatypes.Opt;
@@ -79,8 +79,7 @@ public class DatabaseXMLImportImpl_V4 implements IDatabaseXMLImporterImpl
 
 			if (e.hasAllAttributes("mediainfo.filesize", "mediainfo.cdate", "mediainfo.mdate", "mediainfo.audioformat", "mediainfo.videoformat", "mediainfo.width", "mediainfo.height", "mediainfo.framerate", "mediainfo.duration", "mediainfo.bitdepth", "mediainfo.bitrate", "mediainfo.framecount", "mediainfo.audiochannels", "mediainfo.videocodec", "mediainfo.audiocodec", "mediainfo.audiosamplerate"))
 			{
-				o.MediaInfo.set(PartialMediaInfo.create(
-					Opt.empty(),
+				o.MediaInfo.set(CCMediaInfo.create(
 					Opt.of(e.getAttributeLongValueOrThrow("mediainfo.cdate")),
 					Opt.of(e.getAttributeLongValueOrThrow("mediainfo.mdate")),
 					Opt.of(new CCFileSize(e.getAttributeLongValueOrThrow("mediainfo.filesize"))),
@@ -176,8 +175,7 @@ public class DatabaseXMLImportImpl_V4 implements IDatabaseXMLImporterImpl
 
 			if (e.hasAllAttributes("mediainfo.filesize", "mediainfo.cdate", "mediainfo.mdate", "mediainfo.audioformat", "mediainfo.videoformat", "mediainfo.width", "mediainfo.height", "mediainfo.framerate", "mediainfo.duration", "mediainfo.bitdepth", "mediainfo.bitrate", "mediainfo.framecount", "mediainfo.audiochannels", "mediainfo.videocodec", "mediainfo.audiocodec", "mediainfo.audiosamplerate"))
 			{
-				o.MediaInfo.set(PartialMediaInfo.create(
-					Opt.empty(),
+				o.MediaInfo.set(CCMediaInfo.create(
 					Opt.of(e.getAttributeLongValueOrThrow("mediainfo.cdate")),
 					Opt.of(e.getAttributeLongValueOrThrow("mediainfo.mdate")),
 					Opt.of(new CCFileSize(e.getAttributeLongValueOrThrow("mediainfo.filesize"))),

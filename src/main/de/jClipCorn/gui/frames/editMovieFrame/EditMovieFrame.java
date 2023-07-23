@@ -180,7 +180,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		edReference.setValue(movie.OnlineReference.get());
 		edGroups.setValue(movie.Groups.get());
 
-		ctrlMediaInfo.setValue(movie.MediaInfo.getPartial());
+		ctrlMediaInfo.setValue(movie.MediaInfo.get());
 
 		testPaths();
 	}

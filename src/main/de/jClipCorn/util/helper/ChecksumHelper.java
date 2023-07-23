@@ -159,15 +159,17 @@ public class ChecksumHelper
 
 		if (version.get() == 1)
 		{
+			if (mediainfo.Filesize.isEmpty()) return false;
+
 			// filesize should match
-			if (!Str.equals(split[1], StringUtils.leftPad(Long.toHexString(mediainfo.getFilesize().getBytes()).toUpperCase(), 10, "0"))) return false;
+			if (!Str.equals(split[1], StringUtils.leftPad(Long.toHexString(mediainfo.Filesize.get().getBytes()).toUpperCase(), 10, "0"))) return false;
 
 			return true;
 		}
 		else if (version.get() == 2)
 		{
 			// filesize should match
-			if (!Str.equals(split[1], StringUtils.leftPad(Long.toHexString(mediainfo.getFilesize().getBytes()).toUpperCase(), 10, "0"))) return false;
+			if (!Str.equals(split[1], StringUtils.leftPad(Long.toHexString(mediainfo.Filesize.get().getBytes()).toUpperCase(), 10, "0"))) return false;
 
 			return true;
 		}

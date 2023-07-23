@@ -415,8 +415,7 @@ public class DatabaseAutofixer {
 	public static boolean fixError_MediaInfoFilesizeMismatch(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof ICCPlayableElement) {
 			ICCPlayableElement elem = (ICCPlayableElement) err.getElement1();
-			CCMediaInfo mi = elem.mediaInfo().get();
-			if (!mi.isSet()) return false;
+			var mi = elem.mediaInfo().get();
 
 			long fsz = 0;
 			for (var p : elem.getParts()) {
@@ -425,7 +424,7 @@ public class DatabaseAutofixer {
 				fsz += f.filesize().getBytes();
 			}
 
-			if (fsz != mi.getFilesize().getBytes()) return false;
+			if (mi.Filesize.isEmpty() || fsz != mi.Filesize.map(CCFileSize::getBytes).get()) return false;
 
 			elem.fileSize().set(fsz);
 			return true;
@@ -473,8 +472,6 @@ public class DatabaseAutofixer {
 	public static boolean fixError_MediaInfoCDate(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof ICCPlayableElement) {
 			ICCPlayableElement elem = (ICCPlayableElement) err.getElement1();
-			CCMediaInfo mi = elem.mediaInfo().get();
-			if (!mi.isSet()) return false;
 
 			try {
 				BasicFileAttributes attr = elem.getParts().get(0).toFSPath(ml).readFileAttr();
@@ -495,8 +492,6 @@ public class DatabaseAutofixer {
 	public static boolean fixError_MediaInfoMDate(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof ICCPlayableElement) {
 			ICCPlayableElement elem = (ICCPlayableElement) err.getElement1();
-			CCMediaInfo mi = elem.mediaInfo().get();
-			if (!mi.isSet()) return false;
 
 			try {
 				BasicFileAttributes attr = elem.getParts().get(0).toFSPath(ml).readFileAttr();

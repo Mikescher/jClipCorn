@@ -4,6 +4,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.statistics.StatisticsChart;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -66,8 +67,10 @@ public class StatisticsMediaInfoCDateChart extends StatisticsChart {
 		CCDate now = CCDate.getCurrentDate();
 		List<CCDate> dates = source
 				.iteratorMoviesOrEpisodes(movielist)
-				.filter(e -> e.mediaInfo().get().isSet())
-				.map(e -> CCDateTime.createFromFileTimestamp(e.mediaInfo().get().getCDate(), TimeZone.getDefault()).date.getSetDay(1))
+				.map(e -> e.mediaInfo().get().CDate)
+				.filter(Opt::isPresent)
+				.map(Opt::get)
+				.map(e -> CCDateTime.createFromFileTimestamp(e, TimeZone.getDefault()).date.getSetDay(1))
 				.filter(d -> d.isLessEqualsThan(now))
 				.enumerate();
 		

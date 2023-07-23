@@ -19,7 +19,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -52,7 +52,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -85,7 +85,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -118,7 +118,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -151,7 +151,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -184,7 +184,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -217,7 +217,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -250,7 +250,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -283,7 +283,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -316,7 +316,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -349,7 +349,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -382,7 +382,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -415,7 +415,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -448,7 +448,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -481,7 +481,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -514,7 +514,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -547,7 +547,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -580,7 +580,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -613,7 +613,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -646,7 +646,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -679,7 +679,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -712,7 +712,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -745,7 +745,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -778,7 +778,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -811,7 +811,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -844,7 +844,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -877,7 +877,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -910,7 +910,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -943,7 +943,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -976,7 +976,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1009,7 +1009,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1042,7 +1042,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1075,7 +1075,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1108,7 +1108,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1141,7 +1141,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1174,7 +1174,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1207,7 +1207,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1240,7 +1240,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1273,7 +1273,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1306,7 +1306,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1339,7 +1339,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1372,7 +1372,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1405,7 +1405,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1438,7 +1438,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1471,7 +1471,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1504,7 +1504,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1537,7 +1537,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1570,7 +1570,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1603,7 +1603,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1636,7 +1636,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1669,7 +1669,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1702,7 +1702,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1735,7 +1735,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1768,7 +1768,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1801,7 +1801,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1834,7 +1834,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1867,7 +1867,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1900,7 +1900,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1933,7 +1933,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1966,7 +1966,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -1999,7 +1999,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -2032,7 +2032,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -2065,7 +2065,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);
@@ -2098,7 +2098,7 @@ public class TestMetadataRunner_PartialMediaInfo extends ClipCornBaseTest
 		var out = SimpleFileUtils.readTextResource("/media/demo_"+id+".mediainfo.xml", ClipCornBaseTest.class);
 		var fvhash = dummyFVH();
 		var attr = dummyFileAttr(946681200, 978303600, 1009839600, 1073741824);
-		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toPartialMediaInfo();
+		var vmd = new MediaInfoRunner(ml).parse(out, fvhash, attr, FSPath.create("/tmp")).toMediaInfo();
 
 		assertOptEquals(946681200L, vmd.CDate);
 		assertOptEquals(978303600L, vmd.MDate);

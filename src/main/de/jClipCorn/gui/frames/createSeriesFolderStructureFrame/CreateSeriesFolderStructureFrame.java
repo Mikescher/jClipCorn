@@ -1,28 +1,27 @@
 package de.jClipCorn.gui.frames.createSeriesFolderStructureFrame;
 
-import java.awt.event.*;
-import com.jgoodies.forms.factories.*;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import de.jClipCorn.gui.guiComponents.cover.*;
+import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
+import de.jClipCorn.gui.guiComponents.ReadableTextField;
+import de.jClipCorn.gui.guiComponents.cover.CoverLabelFullsize;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.stream.CCStreams;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class CreateSeriesFolderStructureFrame extends JCCFrame
 {
@@ -294,7 +293,7 @@ public class CreateSeriesFolderStructureFrame extends JCCFrame
 					"default")); //$NON-NLS-1$
 
 				//---- btnOk ----
-				btnOk.setText(LocaleBundle.getString("UIGeneric.btnOk.text")); //$NON-NLS-1$
+				btnOk.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 				btnOk.setEnabled(false);
 				btnOk.addActionListener(e -> startMoving(e));
 				panel2.add(btnOk, CC.xy(1, 1, CC.FILL, CC.DEFAULT));

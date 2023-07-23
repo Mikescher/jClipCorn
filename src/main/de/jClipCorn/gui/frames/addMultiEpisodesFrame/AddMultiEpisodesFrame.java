@@ -383,6 +383,8 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		progressBar.setValue(0);
 		progressBar.setMaximum(data.size());
 
+		final var ignoreInvLangs = cbxIgnoreInvalidLanguages.isSelected();
+
 		new Thread(() ->
 		{
 			try
@@ -402,12 +404,16 @@ public class AddMultiEpisodesFrame extends JCCFrame
 					}
 
 					if (data.get(i).MediaQueryResult == null ||
-						data.get(i).MediaQueryResult.hasErrorAudioLanguages() ||
-						data.get(i).MediaQueryResult.hasEmptyAudioLanguages() ||
-						data.get(i).MediaQueryResult.AudioLanguages.isEmpty() ||
-						data.get(i).MediaQueryResult.hasErrorSubtitleLanguages() ||
-						data.get(i).MediaQueryResult.hasEmptySubtitleLanguages() ||
-						data.get(i).MediaQueryResult.SubtitleLanguages.isEmpty())
+						(
+							!ignoreInvLangs &&
+							(
+								data.get(i).MediaQueryResult.hasErrorAudioLanguages() ||
+								data.get(i).MediaQueryResult.hasEmptyAudioLanguages() ||
+								data.get(i).MediaQueryResult.AudioLanguages.isEmpty() ||
+								data.get(i).MediaQueryResult.hasErrorSubtitleLanguages() ||
+								data.get(i).MediaQueryResult.hasEmptySubtitleLanguages()
+							)
+						))
 					{
 						errors.add(i);
 					}
@@ -758,6 +764,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		cbxIgnoreProblems = new JCheckBox();
 		btnOkayRename = new JButton();
 		btnOkayMove = new JButton();
+		cbxIgnoreInvalidLanguages = new JCheckBox();
 		lblFirstEpNumber = new JLabel();
 		spnFirstEpNumber = new JSpinner();
 		panel2 = new JPanel();
@@ -849,6 +856,10 @@ public class AddMultiEpisodesFrame extends JCCFrame
 			btnOkayMove.addActionListener(e -> onOkayMove());
 			panel1.add(btnOkayMove, CC.xy(19, 5));
 
+			//---- cbxIgnoreInvalidLanguages ----
+			cbxIgnoreInvalidLanguages.setText(LocaleBundle.getString("AddMultiEpisodesFrame.cbxIgnoreInvalidLanguages")); //$NON-NLS-1$
+			panel1.add(cbxIgnoreInvalidLanguages, CC.xywh(5, 7, 5, 1));
+
 			//---- lblFirstEpNumber ----
 			lblFirstEpNumber.setText(LocaleBundle.getString("AddMultiEpisodesFrame.NumberSpinnerLabel")); //$NON-NLS-1$
 			panel1.add(lblFirstEpNumber, CC.xy(11, 7));
@@ -891,6 +902,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 	private JCheckBox cbxIgnoreProblems;
 	private JButton btnOkayRename;
 	private JButton btnOkayMove;
+	private JCheckBox cbxIgnoreInvalidLanguages;
 	private JLabel lblFirstEpNumber;
 	private JSpinner spnFirstEpNumber;
 	private JPanel panel2;

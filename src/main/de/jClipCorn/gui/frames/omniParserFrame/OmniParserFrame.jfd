@@ -1,0 +1,265 @@
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.7" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "OmniParserFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCDialog", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, 0dlu:grow(0.3), labelcompgap, 0dlu:grow(0.4), labelcompgap, 0dlu:grow(0.1), labelcompgap, pref, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, 0dlu:grow, linegap, 0dlu:grow, linegap, default, unrelgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": new FormMessage( null, "OmniParserFrame.this.title" )
+			"defaultCloseOperation": 2
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default, labelcompgap, default, labelcompgap, default"
+				"$rowSpecs": "default"
+			} ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnLoadFromFiles"
+					"text": new FormMessage( null, "OmniParserFrame.btnLoadFromFiles.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onLoadFromFiles", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnLoadFromFolder"
+					"text": new FormMessage( null, "OmniParserFrame.btnLoadFromFolder.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onLoadFromFolder", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnLoadFromClipboard"
+					"text": new FormMessage( null, "OmniParserFrame.btnLoadFromClipboard.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "loadFromClipBoard", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 1
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"gridWidth": 7
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default:grow"
+				"$rowSpecs": "default, linegap, default:grow"
+			} ) {
+				name: "panel3"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label1"
+					"text": new FormMessage( null, "OmniParserFrame.labelStep1.text" )
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "scrollPane1"
+					add( new FormComponent( "javax.swing.JTextArea" ) {
+						name: "memoPlaintext"
+						"lineWrap": true
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"gridHeight": 3
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default:grow"
+				"$rowSpecs": "default, linegap, default:grow"
+			} ) {
+				name: "panel4"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label2"
+					"text": new FormMessage( null, "OmniParserFrame.labelStep2.text" )
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "scrlPnlFormattedText"
+					"horizontalScrollBarPolicy": 32
+					"verticalScrollBarPolicy": 22
+					add( new FormComponent( "javax.swing.JTextArea" ) {
+						name: "memoFormattedText"
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 4
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"gridWidth": 3
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default:grow"
+				"$rowSpecs": "default, linegap, default:grow"
+			} ) {
+				name: "panel5"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label3"
+					"text": new FormMessage( null, "OmniParserFrame.labelStep3.text" )
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "scrlPnlParsedText"
+					"horizontalScrollBarPolicy": 32
+					"verticalScrollBarPolicy": 22
+					add( new FormComponent( "javax.swing.JTextArea" ) {
+						name: "memoParsedText"
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 8
+				"gridY": 4
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default:grow"
+				"$rowSpecs": "default, linegap, default:grow"
+			} ) {
+				name: "panel6"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label4"
+					"text": new FormMessage( null, "OmniParserFrame.labelStep4.text" )
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormContainer( "de.jClipCorn.gui.frames.omniParserFrame.OmniParserResultTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "tableCompare"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(this);"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 6
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"gridWidth": 3
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "labelcompgap, default:grow, labelcompgap"
+				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default"
+			} ) {
+				name: "panel7"
+				"border": new javax.swing.border.TitledBorder( "i18nKey=OmniParserFrame.labelOptions.text" )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "chckbxSplitLines"
+					"text": new FormMessage( null, "OmniParserFrame.chkbxSplit.text" )
+					"selected": true
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "onPlainTextChanged", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "chckbxRepUmlauts"
+					"text": new FormMessage( null, "OmniParserFrame.chkbxReplUmlauts.text" )
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "onFormattedTextChanged", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "chckbxRemInforStrings"
+					"text": new FormMessage( null, "OmniParserFrame.chkbxRemInfoStr.text" )
+					"selected": true
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "onFormattedTextChanged", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "chckbxRecogSpaceChars"
+					"text": new FormMessage( null, "OmniParserFrame.chkbxRecogSpace.text" )
+					"selected": true
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "onFormattedTextChanged", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 7
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "chckbxRemRepStrings"
+					"text": new FormMessage( null, "OmniParserFrame.chkbxRemRepPhrases.text" )
+					"selected": true
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "onFormattedTextChanged", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 9
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 8
+				"gridY": 6
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "0dlu:grow, default, labelcompgap, default, 0dlu:grow"
+				"$rowSpecs": "default"
+			} ) {
+				name: "panel2"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnOK"
+					"text": new FormMessage( null, "UIGeneric.btnOK.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOK", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnCancel"
+					"text": new FormMessage( null, "UIGeneric.btnCancel.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onCancel", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 1
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 8
+				"gridWidth": 7
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 1100, 570 )
+		} )
+	}
+}

@@ -255,7 +255,7 @@ public class Main {
  - [ ] InputErrorFrame
  - [X] LogFrame
  - [x] MoveSeriesFrame
- - [ ] OmniParserFrame
+ - [x] OmniParserFrame
  - [ ] OrganizeFilterFrame
  - [X] ParseOnlineFrame
  - [ ] ParseWatchDataFrame

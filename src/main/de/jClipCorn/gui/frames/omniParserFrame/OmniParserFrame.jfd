@@ -178,7 +178,7 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "labelcompgap, default:grow, labelcompgap"
-				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default"
+				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default"
 			} ) {
 				name: "panel7"
 				"border": new javax.swing.border.TitledBorder( "i18nKey=OmniParserFrame.labelOptions.text" )
@@ -226,6 +226,14 @@ new FormModel {
 					"gridX": 2
 					"gridY": 9
 				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbxAllowMismatchedSizes"
+					"text": new FormMessage( null, "OmniParserFrame.cbxAllowMismatchedSizes" )
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "onFormattedTextChanged", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 11
+				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 8
 				"gridY": 6
@@ -239,6 +247,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnOK"
 					"text": new FormMessage( null, "UIGeneric.btnOK.text" )
+					"enabled": false
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOK", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2

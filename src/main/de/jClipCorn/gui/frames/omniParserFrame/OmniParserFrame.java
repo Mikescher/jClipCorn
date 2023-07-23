@@ -8,7 +8,7 @@ import de.jClipCorn.gui.guiComponents.VerticalScrollPaneSynchronizer;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
-import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.listener.OmniParserCallbackListener;
@@ -148,6 +148,15 @@ public class OmniParserFrame extends JCCDialog
 	private void onParsedTextChanged() {
 		if (! fullycreated) return;
 		updateCompareTable();
+
+		if (cbxAllowMismatchedSizes.isSelected())
+		{
+			btnOK.setEnabled(true);
+		}
+		else
+		{
+			btnOK.setEnabled(SimpleFileUtils.splitLines(memoParsedText.getText()).length == old_titles.size());
+		}
 	}
 
 	private void onOK(ActionEvent e) {
@@ -159,17 +168,19 @@ public class OmniParserFrame extends JCCDialog
 		dispose();
 	}
 
-	private void updateCompareTable() {
+	private void updateCompareTable()
+	{
 		String input = memoParsedText.getText();
 
 		List<String> list = new ArrayList<>(Arrays.asList(SimpleFileUtils.splitLines(input)));
 
-		var model = new ArrayList<Tuple<String, String>>();
+		var model = new ArrayList<Tuple3<Boolean, String, String>>();
 
-		for (int i = 0; i < old_titles.size(); i++) {
-			var vOld = old_titles.get(i);
-			var vNew = (i < list.size()) ? (list.get(i)) : (old_titles.get(i));
-			model.add(Tuple.Create(vOld, vNew));
+		for (int i = 0; i < Math.max(old_titles.size(), list.size()); i++)
+		{
+			var vOld = (i < old_titles.size()) ? old_titles.get(i) : Str.Empty;
+			var vNew = (i < list.size())       ? (list.get(i))     : Str.Empty;
+			model.add(Tuple3.Create(i < old_titles.size() && i < list.size(), vOld, vNew));
 		}
 
 		tableCompare.setData(model);
@@ -210,6 +221,7 @@ public class OmniParserFrame extends JCCDialog
 		chckbxRemInforStrings = new JCheckBox();
 		chckbxRecogSpaceChars = new JCheckBox();
 		chckbxRemRepStrings = new JCheckBox();
+		cbxAllowMismatchedSizes = new JCheckBox();
 		panel2 = new JPanel();
 		btnOK = new JButton();
 		btnCancel = new JButton();
@@ -328,7 +340,7 @@ public class OmniParserFrame extends JCCDialog
 			panel7.setBorder(new TitledBorder(LocaleBundle.getString("OmniParserFrame.labelOptions.text"))); //$NON-NLS-1$
 			panel7.setLayout(new FormLayout(
 				"$lcgap, default:grow, $lcgap", //$NON-NLS-1$
-				"4*(default, $lgap), default")); //$NON-NLS-1$
+				"5*(default, $lgap), default")); //$NON-NLS-1$
 
 			//---- chckbxSplitLines ----
 			chckbxSplitLines.setText(LocaleBundle.getString("OmniParserFrame.chkbxSplit.text")); //$NON-NLS-1$
@@ -358,6 +370,11 @@ public class OmniParserFrame extends JCCDialog
 			chckbxRemRepStrings.setSelected(true);
 			chckbxRemRepStrings.addChangeListener(e -> onFormattedTextChanged());
 			panel7.add(chckbxRemRepStrings, CC.xy(2, 9));
+
+			//---- cbxAllowMismatchedSizes ----
+			cbxAllowMismatchedSizes.setText(LocaleBundle.getString("OmniParserFrame.cbxAllowMismatchedSizes")); //$NON-NLS-1$
+			cbxAllowMismatchedSizes.addChangeListener(e -> onFormattedTextChanged());
+			panel7.add(cbxAllowMismatchedSizes, CC.xy(2, 11));
 		}
 		contentPane.add(panel7, CC.xy(8, 6, CC.DEFAULT, CC.FILL));
 
@@ -369,6 +386,7 @@ public class OmniParserFrame extends JCCDialog
 
 			//---- btnOK ----
 			btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+			btnOK.setEnabled(false);
 			btnOK.addActionListener(e -> onOK(e));
 			panel2.add(btnOK, CC.xy(2, 1));
 
@@ -409,6 +427,7 @@ public class OmniParserFrame extends JCCDialog
 	private JCheckBox chckbxRemInforStrings;
 	private JCheckBox chckbxRecogSpaceChars;
 	private JCheckBox chckbxRemRepStrings;
+	private JCheckBox cbxAllowMismatchedSizes;
 	private JPanel panel2;
 	private JButton btnOK;
 	private JButton btnCancel;

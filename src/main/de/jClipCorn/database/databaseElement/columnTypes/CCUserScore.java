@@ -10,14 +10,14 @@ import de.jClipCorn.util.enumextension.IEnumWrapper;
 import javax.swing.*;
 
 public enum CCUserScore implements ContinoousEnum<CCUserScore> {
-	RATING_0  (0, 1),  // Fucking bullshit crap
-	RATING_I  (1, 2),  // bad movie
-	RATING_II (2, 3),  // not recommended
-	RATING_III(3, 5),  // good enough to watch
-	RATING_IV (4, 6),  // recommended - good movie
-	RATING_V  (5, 7),  // I f*** love this piece of movie-artwork
-	RATING_NO (6, 0),  // Unrated
-	RATING_MID(7, 4);  // Average - meets expectations
+	RATING_0  (0, 1),  // [-3] Fucking bullshit crap
+	RATING_I  (1, 2),  // [-2] bad movie
+	RATING_II (2, 3),  // [-1] not recommended
+	RATING_III(3, 5),  // [+1] good enough to watch
+	RATING_IV (4, 6),  // [+2] recommended - good movie
+	RATING_V  (5, 7),  // [+3] I f*** love this piece of movie-artwork
+	RATING_NO (6, 0),  // [..] Unrated
+	RATING_MID(7, 4);  // [  ] Average - meets expectations
 
 	private final static String[] NAMES = {
 		LocaleBundle.getString("CCMovieScore.R0"),   //$NON-NLS-1$

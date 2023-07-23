@@ -9,6 +9,7 @@ import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseStructure;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.comparator.StringComparator;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -234,6 +235,8 @@ public class CCDatabaseHistory {
 		List<CCCombinedHistoryEntry> backlog = new ArrayList<>();
 
 		List<String[]> rawdata = _db.queryHistory(start, limit, idfilter);
+
+		rawdata = CCStreams.iterate(rawdata).reverse().sortByProperty(p -> p[2], new StringComparator(true)).enumerate();
 
 		lst.setMax( rawdata.size() + (mergeAggressive?rawdata.size():0) );
 		for (String[] raw : rawdata) {

@@ -142,7 +142,7 @@ public class Statements {
 					.setSQL("SELECT COUNT(*) FROM HISTORY")
 					.build(d, statements);
 
-			queryHistoryStatement = SQLBuilder.createSelectAll(TAB_HISTORY).setOrder(COL_HISTORY_DATE, SQLOrder.ASC).build(d, statements);
+			queryHistoryStatement = SQLBuilder.createSelectAll(TAB_HISTORY).setOrder(COL_HISTORY_DATE, SQLOrder.DESC).build(d, statements);
 
 			queryHistoryStatementFiltered = SQLBuilder.createSelectAll(TAB_HISTORY)
 					.addPreparedWhereCondition(COL_HISTORY_ID)
@@ -150,7 +150,7 @@ public class Statements {
 					.build(d, statements);
 
 			queryHistoryStatementLimited = SQLBuilder.createCustom(TAB_HISTORY)
-					.setSQL("SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY] WHERE [DATE] > ? ORDER BY [DATE] ASC")
+					.setSQL("SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY] WHERE [DATE] > ? ORDER BY [DATE] DESC")
 					.setCustomSelectField(1, COL_HISTORY_TABLE)
 					.setCustomSelectField(2, COL_HISTORY_ID)
 					.setCustomSelectField(3, COL_HISTORY_DATE)
@@ -162,7 +162,7 @@ public class Statements {
 					.build(d, statements);
 
 			queryHistoryStatementFilteredLimited = SQLBuilder.createCustom(TAB_HISTORY)
-					.setSQL("SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY] WHERE ([ID] = ?) AND ([DATE] > ?) ORDER BY [DATE] ASC")
+					.setSQL("SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY] WHERE ([ID] = ?) AND ([DATE] > ?) ORDER BY [DATE] DESC")
 					.setCustomSelectField(1, COL_HISTORY_TABLE)
 					.setCustomSelectField(2, COL_HISTORY_ID)
 					.setCustomSelectField(3, COL_HISTORY_DATE)

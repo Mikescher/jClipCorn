@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.history.CCCombinedHistoryEntry;
 import de.jClipCorn.database.history.CCDatabaseHistory;
+import de.jClipCorn.database.history.CCHistoryAction;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
@@ -139,6 +140,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 		boolean optTrivial1 = cbxIgnoreTrivial.isSelected();
 		boolean optTrivial2 = cbxIgnoreIDChanges.isSelected();
 		boolean optAggressive = cbxDoAgressiveMerges.isSelected();
+		boolean optUpdatesOnly = cbxUpdatesOnly.isSelected();
 
 		new Thread(() ->
 		{
@@ -172,11 +174,15 @@ public class DatabaseHistoryFrame extends JCCFrame
 
 				var data = queryRes.Item1;
 
+				if (optUpdatesOnly) data = CCStreams.iterate(data).filter(p -> p.Action == CCHistoryAction.UPDATE).toList();
+
 				Collections.reverse(data);
+
+				final var _data = data;
 
 				SwingUtils.invokeLater(() ->
 				{
-					tableEntries.setData(data);
+					tableEntries.setData(_data);
 					_processedRowCount = queryRes.Item2;
 
 					tableEntries.autoResize();
@@ -297,6 +303,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 		label4 = new JLabel();
 		cbxDoAgressiveMerges = new JCheckBox();
 		edFilter = new JTextField();
+		cbxUpdatesOnly = new JCheckBox();
 		progressBar = new JProgressBar();
 		splitPane1 = new JSplitPane();
 		tableEntries = new DatabaseHistoryTable(this);
@@ -312,7 +319,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
 			"$rgap, default, $lcgap, 100dlu:grow, 3*($lcgap, default), $lcgap, [70dlu,default], $rgap", //$NON-NLS-1$
-			"$rgap, 6*(default, $lgap), 15dlu, $lgap, default:grow, 2*($lgap, default), $rgap")); //$NON-NLS-1$
+			"$rgap, 7*(default, $lgap), 15dlu, $lgap, default:grow, 2*($lgap, default), $rgap")); //$NON-NLS-1$
 
 		//---- label1 ----
 		label1.setText(LocaleBundle.getString("DatabaseHistoryFrame.lblStatus")); //$NON-NLS-1$
@@ -369,7 +376,11 @@ public class DatabaseHistoryFrame extends JCCFrame
 		cbxDoAgressiveMerges.setSelected(true);
 		contentPane.add(cbxDoAgressiveMerges, CC.xywh(2, 12, 7, 1));
 		contentPane.add(edFilter, CC.xy(12, 12));
-		contentPane.add(progressBar, CC.xywh(2, 14, 11, 1, CC.DEFAULT, CC.FILL));
+
+		//---- cbxUpdatesOnly ----
+		cbxUpdatesOnly.setText(LocaleBundle.getString("DatabaseHistoryFrame.cbxUpdatesOnly")); //$NON-NLS-1$
+		contentPane.add(cbxUpdatesOnly, CC.xywh(2, 14, 7, 1));
+		contentPane.add(progressBar, CC.xywh(2, 16, 11, 1, CC.DEFAULT, CC.FILL));
 
 		//======== splitPane1 ========
 		{
@@ -390,20 +401,20 @@ public class DatabaseHistoryFrame extends JCCFrame
 			}
 			splitPane1.setBottomComponent(tableChanges);
 		}
-		contentPane.add(splitPane1, CC.xywh(2, 16, 11, 1, CC.DEFAULT, CC.FILL));
+		contentPane.add(splitPane1, CC.xywh(2, 18, 11, 1, CC.DEFAULT, CC.FILL));
 
 		//---- label5 ----
 		label5.setText(LocaleBundle.getString("DatabaseHistoryFrame.Table.ColumnOld")); //$NON-NLS-1$
 		label5.setHorizontalAlignment(SwingConstants.TRAILING);
-		contentPane.add(label5, CC.xy(2, 18));
-		contentPane.add(tfOldValue, CC.xywh(4, 18, 9, 1));
+		contentPane.add(label5, CC.xy(2, 20));
+		contentPane.add(tfOldValue, CC.xywh(4, 20, 9, 1));
 
 		//---- label6 ----
 		label6.setText(LocaleBundle.getString("DatabaseHistoryFrame.Table.ColumnNew")); //$NON-NLS-1$
 		label6.setHorizontalAlignment(SwingConstants.TRAILING);
-		contentPane.add(label6, CC.xy(2, 20));
-		contentPane.add(tfNewValue, CC.xywh(4, 20, 9, 1));
-		setSize(715, 650);
+		contentPane.add(label6, CC.xy(2, 22));
+		contentPane.add(tfNewValue, CC.xywh(4, 22, 9, 1));
+		setSize(715, 700);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -424,6 +435,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 	private JLabel label4;
 	private JCheckBox cbxDoAgressiveMerges;
 	private JTextField edFilter;
+	private JCheckBox cbxUpdatesOnly;
 	private JProgressBar progressBar;
 	private JSplitPane splitPane1;
 	private DatabaseHistoryTable tableEntries;

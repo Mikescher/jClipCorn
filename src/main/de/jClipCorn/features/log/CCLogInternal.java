@@ -82,12 +82,15 @@ public class CCLogInternal {
 				log.add(cle);
 			}
 
-			if (isUnitTest) {
+			if (isUnitTest)
+			{
 				// Don't show infos in unit tests
-				if (! cle.isType(CCLogType.LOG_ELEM_INFORMATION))
-					System.out.println(cle.getFormatted().trim());
-			} else {
-				System.out.println(cle.getFormatted(CCLogElement.FORMAT_LEVEL_FULL).trim());
+				if (! cle.isType(CCLogType.LOG_ELEM_INFORMATION)) System.out.println(cle.getFormatted().trim());
+			}
+			else
+			{
+				if (cle.isType(CCLogType.LOG_ELEM_INFORMATION)) System.out.println(cle.getFormatted(CCLogElement.FORMAT_LEVEL_SHORT).trim());
+				else                                            System.out.println(cle.getFormatted(CCLogElement.FORMAT_LEVEL_FULL).trim());
 			}
 
 			if (type == CCLogType.LOG_ELEM_FATALERROR) {

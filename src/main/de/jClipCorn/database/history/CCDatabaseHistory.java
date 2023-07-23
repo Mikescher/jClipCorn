@@ -26,10 +26,11 @@ import java.util.*;
 import static de.jClipCorn.util.sqlwrapper.SQLBuilderHelper.forceSQLEscape;
 
 public class CCDatabaseHistory {
-	private final static int MERGE_DIFF_TIME  = 15 * 60; // sec
-	private final static int MERGE_MAX_TIME   = 45 * 60; // sec
-	private final static int MERGE_SHORT_TIME = 8;       // sec
-	private final static int MERGE_LOOKAHEAD  = 10;
+	private final static int MERGE_DIFF_TIME        = 15 * 60; // sec
+	private final static int MERGE_MAX_TIME         = 45 * 60; // sec
+	private final static int MERGE_MAX_LOOKBHEHIND  = 512;
+	private final static int MERGE_AGGR_SHORT_TIME  = 8;       // sec
+	private final static int MERGE_AGGR_LOOKAHEAD   = 10;
 
 	private final CCDatabase _db;
 
@@ -222,11 +223,11 @@ public class CCDatabaseHistory {
 		}
 	}
 
-	public List<CCCombinedHistoryEntry> query(CCMovieList ml, boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, Opt<Integer> limit, ProgressCallbackListener lst) throws CCFormatException {
+	public Tuple<List<CCCombinedHistoryEntry>, Integer> query(CCMovieList ml, boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, Opt<Integer> limit, ProgressCallbackListener lst) throws CCFormatException {
 		return query(ml, excludeViewedOnly, excludeInfoIDChanges, excludeOrderingChanges, mergeAggressive, start, limit, lst, null);
 	}
 
-	public List<CCCombinedHistoryEntry> query(CCMovieList ml, boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, Opt<Integer> limit, ProgressCallbackListener lst, String idfilter) throws CCFormatException {
+	public Tuple<List<CCCombinedHistoryEntry>, Integer> query(CCMovieList ml, boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, Opt<Integer> limit, ProgressCallbackListener lst, String idfilter) throws CCFormatException {
 		if (lst == null) lst = new ProgressCallbackSink();
 
 		List<CCCombinedHistoryEntry> result  = new ArrayList<>();
@@ -251,6 +252,7 @@ public class CCDatabaseHistory {
 			CCCombinedHistoryEntry base = CCStreams.iterate(backlog).reverse().firstOrNull(p -> shouldCombine(p, table, id, field, action, timestamp, oldvalue));
 			if (base == null)
 			{
+				// remove previous entries with the same [TABLE+ID] (= same row)
 				List<CCCombinedHistoryEntry> drop1 = CCStreams.iterate(backlog).filter(p -> p.Table == table && Str.equals(p.ID, id)).enumerate();
 				backlog.removeAll(drop1);
 				result.addAll(drop1);
@@ -264,9 +266,13 @@ public class CCDatabaseHistory {
 				newentry.Changes.add(new CCHistorySingleChange(field, oldvalue, newvalue));
 				newentry.HistoryRowCount = 1;
 
-				List<CCCombinedHistoryEntry> drop2 = CCStreams.iterate(backlog).filter(p -> CCDateTime.diffInSeconds(newentry.Timestamp1, p.Timestamp2)>MERGE_DIFF_TIME).enumerate();
+				// remove previous entries that are too old and cann no longer be merged realistically
+				List<CCCombinedHistoryEntry> drop2 = CCStreams.iterate(backlog).filter(p -> CCDateTime.diffInSeconds(p.Timestamp2, newentry.Timestamp1)>MERGE_DIFF_TIME).enumerate();
 				backlog.removeAll(drop2);
 				result.addAll(drop2);
+
+				// remove old entries until backlog is at most $MERGE_MAX_LOOKBHEHIND entries big (improves calc time)
+				if (backlog.size() > MERGE_MAX_LOOKBHEHIND) backlog = backlog.subList(backlog.size() - MERGE_MAX_LOOKBHEHIND, backlog.size());
 
 				backlog.add(newentry);
 			}
@@ -304,7 +310,7 @@ public class CCDatabaseHistory {
 
 				if (e1.Action != CCHistoryAction.REMOVE) continue;
 
-				for (int la=1; la <= MERGE_LOOKAHEAD; la++)
+				for (int la = 1; la <= MERGE_AGGR_LOOKAHEAD; la++)
 				{
 					if (bi+la >= result.size()) continue;
 
@@ -316,7 +322,7 @@ public class CCDatabaseHistory {
 						e2.Action == CCHistoryAction.INSERT &&
 						Str.equals(e1.ID, e2.ID) &&
 						e1.Changes.size() == e2.Changes.size() &&
-						CCDateTime.diffInSeconds(e1.Timestamp1, e2.Timestamp2) < MERGE_SHORT_TIME)
+						CCDateTime.diffInSeconds(e1.Timestamp1, e2.Timestamp2) < MERGE_AGGR_SHORT_TIME)
 					{
 						CCCombinedHistoryEntry e3 = new CCCombinedHistoryEntry();
 						e3.Table           = e1.Table;
@@ -364,7 +370,7 @@ public class CCDatabaseHistory {
 		lst.stepToMax();
 
 
-		return result;
+		return Tuple.Create(result, rawdata.size());
 	}
 
 	private boolean shouldCombine(CCCombinedHistoryEntry base, CCHistoryTable table, String id, String field, CCHistoryAction action, CCDateTime date, String oldValue)
@@ -388,8 +394,8 @@ public class CCDatabaseHistory {
 		{
 			int diff = CCDateTime.diffInSeconds(base.Timestamp2, date);
 
-			if (base.Action == CCHistoryAction.INSERT && Str.equals(field, "VIEWED")         && diff > MERGE_SHORT_TIME) return false; //$NON-NLS-1$
-			if (base.Action == CCHistoryAction.INSERT && Str.equals(field, "VIEWED_HISTORY") && diff > MERGE_SHORT_TIME) return false; //$NON-NLS-1$
+			if (base.Action == CCHistoryAction.INSERT && Str.equals(field, "VIEWED")         && diff > MERGE_AGGR_SHORT_TIME) return false; //$NON-NLS-1$
+			if (base.Action == CCHistoryAction.INSERT && Str.equals(field, "VIEWED_HISTORY") && diff > MERGE_AGGR_SHORT_TIME) return false; //$NON-NLS-1$
 
 			if (diff > MERGE_DIFF_TIME) return false;
 			if (CCDateTime.diffInSeconds(base.Timestamp1, date) > MERGE_MAX_TIME) return false;

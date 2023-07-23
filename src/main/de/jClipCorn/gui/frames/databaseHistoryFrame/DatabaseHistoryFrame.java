@@ -24,12 +24,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.List;
 
 public class DatabaseHistoryFrame extends JCCFrame
 {
 	private String _triggerError = Str.Empty;
 	private int _tcount;
+	private int _processedRowCount;
 
 	public DatabaseHistoryFrame(Component owner, CCMovieList mlist) {
 		super(mlist);
@@ -130,7 +130,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 		}).start();
 	}
 
-	private void queryHistory() { queryHistory(null, Opt.of(1024), false); }
+	private void queryHistory() { queryHistory(null, Opt.of(4096), false); }
 
 	private void queryHistory(CCDateTime dt) { queryHistory(dt, Opt.empty(), false); }
 
@@ -159,7 +159,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 				String filter = edFilter.getText();
 				if (Str.isNullOrWhitespace(filter)) filter = null;
 
-				List<CCCombinedHistoryEntry> data = movielist.getHistory().query(
+				var queryRes = movielist.getHistory().query(
 						movielist,
 						optTrivial1,
 						optTrivial2,
@@ -170,11 +170,14 @@ public class DatabaseHistoryFrame extends JCCFrame
 						new ProgressCallbackProgressBarHelper(progressBar, 100),
 						filter);
 
+				var data = queryRes.Item1;
+
 				Collections.reverse(data);
 
 				SwingUtils.invokeLater(() ->
 				{
 					tableEntries.setData(data);
+					_processedRowCount = queryRes.Item2;
 
 					tableEntries.autoResize();
 					updateUI(false);
@@ -183,7 +186,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 						btnGetHistory.setEnabled(true);
 						edFilter.setEnabled(true);
 					}
-					edTableSize.setText(_tcount + " (" + tableEntries.getDataDirect().size()+")"); //$NON-NLS-1$ //$NON-NLS-2$
+					edTableSize.setText(_tcount + " (" + _processedRowCount + " -> " + tableEntries.getDataDirect().size() + ")");
 				});
 
 			} catch (Throwable e) {
@@ -207,6 +210,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 		try {
 			movielist.getHistory().enableTrigger();
 			tableEntries.clearData();
+			_processedRowCount = 0;
 			updateUI(false);
 		} catch (SQLException e) {
 			CCLog.addError(e);
@@ -218,6 +222,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 		try {
 			movielist.getHistory().disableTrigger();
 			tableEntries.clearData();
+			_processedRowCount = 0;
 			updateUI(false);
 		} catch (SQLException e) {
 			CCLog.addError(e);

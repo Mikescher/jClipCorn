@@ -268,7 +268,7 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 
 	private void queryHistory() {
 		try {
-			var data = movielist.getHistory().query(movielist, false, false, false, true, null, Opt.empty(), null, Integer.toString(movie.getLocalID()));
+			var data = movielist.getHistory().query(movielist, false, false, false, true, null, Opt.empty(), null, Integer.toString(movie.getLocalID())).Item1;
 			tabHistoryEntries.setData(data);
 			tabHistoryChanges.clearData();
 			tabHistoryEntries.autoResize();

@@ -1389,7 +1389,7 @@ public class CCDatabase {
 		db.executeSQLThrow(sql);
 	}
 
-	public List<String[]> queryHistory(CCDateTime start, String idfilter) {
+	public List<String[]> queryHistory(CCDateTime start, Opt<Integer> limit, String idfilter) {
 		try {
 			List<String[]> result = new ArrayList<>();
 
@@ -1430,6 +1430,8 @@ public class CCDatabase {
 				arr[5] = rs.getNullableString(COL_HISTORY_OLD);
 				arr[6] = rs.getNullableString(COL_HISTORY_NEW);
 				result.add(arr);
+
+				if (limit.isPresent() && result.size() >= limit.get()) break;
 			}
 
 			rs.close();

@@ -29,6 +29,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
@@ -267,7 +268,7 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 
 	private void queryHistory() {
 		try {
-			var data = movielist.getHistory().query(movielist, false, false, false, true, null, null, Integer.toString(movie.getLocalID()));
+			var data = movielist.getHistory().query(movielist, false, false, false, true, null, Opt.empty(), null, Integer.toString(movie.getLocalID()));
 			tabHistoryEntries.setData(data);
 			tabHistoryChanges.clearData();
 			tabHistoryEntries.autoResize();

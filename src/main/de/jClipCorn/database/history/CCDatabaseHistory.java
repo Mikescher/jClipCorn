@@ -1,11 +1,15 @@
 package de.jClipCorn.database.history;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.*;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseStructure;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -218,17 +222,18 @@ public class CCDatabaseHistory {
 		}
 	}
 
-	public List<CCCombinedHistoryEntry> query(CCMovieList ml, boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, ProgressCallbackListener lst) throws CCFormatException {
-		return query(ml, excludeViewedOnly, excludeInfoIDChanges, excludeOrderingChanges, mergeAggressive, start, lst, null);
+	public List<CCCombinedHistoryEntry> query(CCMovieList ml, boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, Opt<Integer> limit, ProgressCallbackListener lst) throws CCFormatException {
+		return query(ml, excludeViewedOnly, excludeInfoIDChanges, excludeOrderingChanges, mergeAggressive, start, limit, lst, null);
 	}
 
-	public List<CCCombinedHistoryEntry> query(CCMovieList ml, boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, ProgressCallbackListener lst, String idfilter) throws CCFormatException {
+	public List<CCCombinedHistoryEntry> query(CCMovieList ml, boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, Opt<Integer> limit, ProgressCallbackListener lst, String idfilter) throws CCFormatException {
 		if (lst == null) lst = new ProgressCallbackSink();
 
 		List<CCCombinedHistoryEntry> result  = new ArrayList<>();
 		List<CCCombinedHistoryEntry> backlog = new ArrayList<>();
 
-		List<String[]> rawdata = _db.queryHistory(start, idfilter);
+		List<String[]> rawdata = _db.queryHistory(start, limit, idfilter);
+
 		lst.setMax( rawdata.size() + (mergeAggressive?rawdata.size():0) );
 		for (String[] raw : rawdata) {
 			lst.step();

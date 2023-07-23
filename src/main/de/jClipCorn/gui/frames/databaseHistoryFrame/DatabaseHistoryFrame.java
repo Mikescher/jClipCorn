@@ -12,6 +12,7 @@ import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -56,7 +57,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 
 		if (!Str.isNullOrWhitespace(idfilter)) {
 			edFilter.setText(idfilter);
-			queryHistory(null, true);
+			queryHistory(null, Opt.empty(), true);
 		}
 	}
 
@@ -129,11 +130,11 @@ public class DatabaseHistoryFrame extends JCCFrame
 		}).start();
 	}
 
-	private void queryHistory() { queryHistory(null, false); }
+	private void queryHistory() { queryHistory(null, Opt.of(1024), false); }
 
-	private void queryHistory(CCDateTime dt) { queryHistory(dt, false); }
+	private void queryHistory(CCDateTime dt) { queryHistory(dt, Opt.empty(), false); }
 
-	private void queryHistory(CCDateTime dt, boolean stayDisabled)
+	private void queryHistory(CCDateTime dt, Opt<Integer> limit, boolean stayDisabled)
 	{
 		boolean optTrivial1 = cbxIgnoreTrivial.isSelected();
 		boolean optTrivial2 = cbxIgnoreIDChanges.isSelected();
@@ -165,6 +166,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 						optTrivial1,
 						optAggressive,
 						dt,
+						limit,
 						new ProgressCallbackProgressBarHelper(progressBar, 100),
 						filter);
 

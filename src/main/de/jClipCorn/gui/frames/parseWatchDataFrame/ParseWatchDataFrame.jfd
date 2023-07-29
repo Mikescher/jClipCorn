@@ -1,0 +1,84 @@
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.7" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "ParseWatchDataFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, 0dlu:grow, labelcompgap, 0dlu:grow, unrelgap"
+			"$rowSpecs": "unrelgap, 0dlu:grow, linegap, 0dlu:grow, unrelgap, default, unrelgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": new FormMessage( null, "ParseWatchDataFrame.this.title" )
+			"defaultCloseOperation": 2
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "memoData"
+					"font": new com.jformdesigner.model.SwingDerivedFont( "Courier New", 0, 0, false )
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"gridHeight": 3
+			} )
+			add( new FormContainer( "de.jClipCorn.gui.frames.parseWatchDataFrame.ParseWatchDataTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "tableResults"
+				auxiliary() {
+					"JavaCodeGenerator.customCreateCode": "new ${field_type}(this);"
+				}
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 2
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane2"
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "memoLog"
+					"font": new com.jformdesigner.model.SwingDerivedFont( "Monospaced", 0, 0, false )
+					"editable": false
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 4
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
+				"vgap": 0
+			} ) {
+				name: "pnlBottom"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnExecute"
+					"text": new FormMessage( null, "UIGeneric.btnApply.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onExecute", false ) )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnCancel"
+					"text": new FormMessage( null, "UIGeneric.btnCancel.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onCancel", false ) )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnShowExample"
+					"text": new FormMessage( null, "ParseWatchDataFrame.btnExamples.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onShowExample", false ) )
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 6
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"gridWidth": 3
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 1100, 600 )
+		} )
+	}
+}

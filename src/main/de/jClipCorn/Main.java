@@ -235,7 +235,7 @@ public class Main {
  - [X] CompareDatabaseFrame
  - [X] CoverCropFrame
  - [ ] CoverPreviewFrame
- - [ ] CreateSeriesFolderStructureFrame
+ - [x] CreateSeriesFolderStructureFrame
  - [ ] CustomFilterEditDialog
  - [X] DatabaseHistoryFrame
  - [ ] DisplayGenresDialog
@@ -258,7 +258,7 @@ public class Main {
  - [x] OmniParserFrame
  - [ ] OrganizeFilterFrame
  - [X] ParseOnlineFrame
- - [ ] ParseWatchDataFrame
+ - [x] ParseWatchDataFrame
  - [X] PreviewMovieFrame
  - [X] PreviewSeriesFrame
  - [X] QuickAddEpisodeDialog

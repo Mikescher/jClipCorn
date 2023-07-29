@@ -1,8 +1,9 @@
 package de.jClipCorn.features.table.filter.customFilter;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
+import de.jClipCorn.features.table.filter.AbstractCustomStructureElementFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.features.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
@@ -10,7 +11,7 @@ import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterEnumChooserConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
 
-public class CustomUserScoreFilter extends AbstractCustomDatabaseElementFilter {
+public class CustomUserScoreFilter extends AbstractCustomStructureElementFilter {
 	private CCUserScore score = CCUserScore.RATING_NO;
 
 	public CustomUserScoreFilter(CCMovieList ml) {
@@ -18,7 +19,22 @@ public class CustomUserScoreFilter extends AbstractCustomDatabaseElementFilter {
 	}
 
 	@Override
-	public boolean includes(CCDatabaseElement e) {
+	public boolean includes(CCMovie e) {
+		return e.Score.get() == score;
+	}
+
+	@Override
+	public boolean includes(CCSeries e) {
+		return e.Score.get() == score;
+	}
+
+	@Override
+	public boolean includes(CCEpisode e) {
+		return e.Score.get() == score;
+	}
+
+	@Override
+	public boolean includes(CCSeason e) {
 		return e.Score.get() == score;
 	}
 

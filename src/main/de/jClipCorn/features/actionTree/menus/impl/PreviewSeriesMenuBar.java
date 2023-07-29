@@ -43,6 +43,7 @@ public class PreviewSeriesMenuBar extends ClipMenuBar {
 			addActionNode("BatchEditSeries");
 			addActionNode("EditSeries");
 			addActionTreeNode("SetSeriesRating");
+			addActionNode("EditSeriesRating");
 			addActionTreeNode("SetTags_Series");
 			addActionNode("OpenFolder");
 			addActionNode("RemSeries");
@@ -57,6 +58,8 @@ public class PreviewSeriesMenuBar extends ClipMenuBar {
 			addActionNode("AddEpisodes");
 			addActionNode("AddSingleEpisodes");
 			addActionNode("BatchEditSeason");
+			addActionTreeNode("SetSeasonRating");
+			addActionNode("EditSeasonRating");
 			addActionNode("RemSeason");
 			addActionNode("EditSeason");
 			addActionNode("OpenSeasonFolder");

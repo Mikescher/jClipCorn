@@ -25,6 +25,7 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.YearRange;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.HTMLFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -32,8 +33,8 @@ import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("restriction")
 public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColumn> {
@@ -84,13 +85,14 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			Str.Empty,
 			"auto",
 			LocaleBundle.getString("ClipTableModel.Score"),
-			(r,v) -> r.setIcon(v.Score.get().getIcon()),
+			(r,v) -> r.setIcon(v.Score.get().getIcon(!Str.isNullOrWhitespace(v.ScoreComment.get()))),
 			(r) -> false,
 			(v1,v2) -> CCUserScore.compare(v1.Score.get(), v2.Score.get()),
 			true,
-			(v,row) -> v.Score.get() == CCUserScore.RATING_NO ? null : v.Score.get().asString(),
+			(v,row) -> formatScoreTooltip(v.Score.get(), v.ScoreComment.get()),
 			(v) -> ccprops().PROP_MAINFRAME_CLICKABLESCORE.getValue() && v.Score.get() != CCUserScore.RATING_NO,
-			(v) -> setRowFilter(CustomUserScoreFilter.create(owner.getMovielist(), v.Score.get()), RowFilterSource.TABLE_CLICKED)
+			(v) -> setRowFilter(CustomUserScoreFilter.create(owner.getMovielist(), v.Score.get()), RowFilterSource.TABLE_CLICKED),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -105,7 +107,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -120,7 +123,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> v.getExtendedViewedState().getHistory().any() ? v.getExtendedViewedState().getHistory().getHTMLListFormatted(row) : null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -149,7 +153,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -182,7 +187,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> v.isMovie() && v.asMovie().Zyklus.get().isSet() && v.asMovie().Zyklus.get().hasNumber() ? v.asMovie().Zyklus.get().getDecimalFormatted() : null,
 			(v) -> ccprops().PROP_MAINFRAME_CLICKABLEZYKLUS.getValue() && v.isMovie() && v.asMovie().Zyklus.get().isSet(),
-			(v) -> { if (v.isMovie()) setRowFilter(CustomZyklusFilter.create(owner.getMovielist(), v.asMovie().Zyklus.get()), RowFilterSource.TABLE_CLICKED); }
+			(v) -> { if (v.isMovie()) setRowFilter(CustomZyklusFilter.create(owner.getMovielist(), v.asMovie().Zyklus.get()), RowFilterSource.TABLE_CLICKED); },
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -197,7 +203,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> v.getMediaInfoCategory().getTooltip(),
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -217,7 +224,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> (v.isMovie() ? v.asMovie().Language.get() : v.asSeries().getSemiCommonOrAllLanguages()).toOutputString(),
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -237,7 +245,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> (v.isMovie() ? v.asMovie().Subtitles.get() : v.asSeries().getAllSubtitles()).toOutputString(),
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -252,7 +261,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -272,7 +282,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -292,7 +303,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> TimeIntervallFormatter.format((v.isMovie() ? v.asMovie().Length.get() : v.asSeries().getLength())),
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -316,7 +328,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -331,7 +344,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> LocaleBundle.getString("CCMovieScore.Score") + ": " + v.OnlineScore.get().getDisplayString(),
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -346,7 +360,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> v.Tags.get().getAsString(),
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -361,7 +376,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -376,7 +392,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -396,7 +413,8 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -411,10 +429,18 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> FileSizeFormatter.formatBytes(v.getFilesize()),
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		return ccr;
+	}
+
+	private String formatScoreTooltip(CCUserScore score, String comm) {
+		if (score == CCUserScore.RATING_NO) return null;
+		if (Str.isNullOrWhitespace(comm)) return score.asString();
+
+		return HTMLFormatter.formatTooltip(score.asString(), Str.trim(comm));
 	}
 
 	protected void postInit()
@@ -577,7 +603,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 				column.setMaxWidth(0);
 				column.setPreferredWidth(0);
 
-				cfg[idx] = "0"; //$NON-NLS-1$
+				cfg[idx] = "hide"; //$NON-NLS-1$
 			}
 		}
 

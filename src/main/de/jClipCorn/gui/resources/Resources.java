@@ -324,14 +324,22 @@ public class Resources {
 	public final static IconRef ICN_TABLE_LANGUAGE_NONE		= register16x16Icon("/icons/table/language/language_none.png");
 	public final static IconRef ICN_TABLE_LANGUAGE_MORE		= register16x16Icon("/icons/table/language/language_more.png");
 
-	public final static MultiSizeIconRef ICN_TABLE_SCORE_0 	= registerMultisizeIcon("/icons/table/score/poo.png");
-	public final static MultiSizeIconRef ICN_TABLE_SCORE_1 	= registerMultisizeIcon("/icons/table/score/emotion_sick.png");
-	public final static MultiSizeIconRef ICN_TABLE_SCORE_2 	= registerMultisizeIcon("/icons/table/score/thumb_down.png");
-	public final static MultiSizeIconRef ICN_TABLE_SCORE_3 	= registerMultisizeIcon("/icons/table/score/thumb_up.png");
-	public final static MultiSizeIconRef ICN_TABLE_SCORE_4 	= registerMultisizeIcon("/icons/table/score/heart.png");
-	public final static MultiSizeIconRef ICN_TABLE_SCORE_5 	= registerMultisizeIcon("/icons/table/score/award_star_gold_3.png");
-	public final static MultiSizeIconRef ICN_TABLE_SCORE_6 	= registerMultisizeIcon("/icons/table/score/bullet_purple.png");
-	
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_0_NOCOMMENT = registerMultisizeIcon("/icons/table/score/poo.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_1_NOCOMMENT = registerMultisizeIcon("/icons/table/score/emotion_sick.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_2_NOCOMMENT = registerMultisizeIcon("/icons/table/score/thumb_down.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_3_NOCOMMENT = registerMultisizeIcon("/icons/table/score/thumb_up.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_4_NOCOMMENT = registerMultisizeIcon("/icons/table/score/heart.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_5_NOCOMMENT = registerMultisizeIcon("/icons/table/score/award_star_gold_3.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_6_NOCOMMENT = registerMultisizeIcon("/icons/table/score/bullet_purple.png");
+
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_0_COMMENT   = registerMultisizeIcon("/icons/table/score/poo_comment.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_1_COMMENT   = registerMultisizeIcon("/icons/table/score/emotion_sick_comment.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_2_COMMENT   = registerMultisizeIcon("/icons/table/score/thumb_down_comment.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_3_COMMENT   = registerMultisizeIcon("/icons/table/score/thumb_up_comment.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_4_COMMENT   = registerMultisizeIcon("/icons/table/score/heart_comment.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_5_COMMENT   = registerMultisizeIcon("/icons/table/score/award_star_gold_3_comment.png");
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_6_COMMENT   = registerMultisizeIcon("/icons/table/score/bullet_purple_comment.png");
+
 	public final static IconRef ICN_TABLE_FORMAT_0 			= register16x16Icon("/icons/table/format/ext0.png");
 	public final static IconRef ICN_TABLE_FORMAT_1 			= register16x16Icon("/icons/table/format/ext1.png");
 	public final static IconRef ICN_TABLE_FORMAT_2 			= register16x16Icon("/icons/table/format/ext2.png");

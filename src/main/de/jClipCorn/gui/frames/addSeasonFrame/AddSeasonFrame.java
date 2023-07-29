@@ -14,6 +14,7 @@ import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.jYearSpinner.JYearSpinner;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 
 import javax.swing.*;
@@ -100,11 +101,13 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 	public boolean checkUserData(List<UserDataProblem> ret)
 	{
 		var spack = new SeasonDataPack
-				(
-						edTitle.getText(),
-						spnYear.getValue(),
-						edCvrControl.getResizedImageForStorage()
-				);
+		(
+			edTitle.getText(),
+			spnYear.getValue(),
+			edCvrControl.getResizedImageForStorage(),
+			CCUserScore.RATING_NO,
+			Str.Empty
+		);
 
 		UserDataProblem.testSeasonData(ret, movielist, null, spack);
 

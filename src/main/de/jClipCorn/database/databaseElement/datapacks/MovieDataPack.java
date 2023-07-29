@@ -1,7 +1,6 @@
 package de.jClipCorn.database.databaseElement.datapacks;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 
@@ -26,6 +25,7 @@ public class MovieDataPack implements IMovieData
 	private final CCOnlineScore onlinescore;
 	private final CCFSK fsk;
 	private final CCUserScore score;
+	private final String scoreComment;
 	private final CCOnlineReferenceList onlineReference;
 	private final CCGroupList groups;
 	private final CCTagList tags;
@@ -34,29 +34,30 @@ public class MovieDataPack implements IMovieData
 	public MovieDataPack(CCMovieZyklus zyklus, CCMediaInfo mediaInfo, int length, CCDate addDate,
 						 CCFileFormat format, int year, CCFileSize filesize, List<CCPath> parts,
 						 CCDateTimeList viewedHistory, CCDBLanguageSet language, CCDBLanguageList subtitles, String title,
-						 CCGenreList genres, CCOnlineScore onlinescore, CCFSK fsk, CCUserScore score,
+						 CCGenreList genres, CCOnlineScore onlinescore, CCFSK fsk, CCUserScore score, String scoreComment,
 						 CCOnlineReferenceList onlineReference, CCGroupList groups, CCTagList tags, BufferedImage cover)
 	{
-		this.zyklus = zyklus;
-		this.mediaInfo = mediaInfo;
-		this.length = length;
-		this.addDate = addDate;
-		this.format = format;
-		this.year = year;
-		this.filesize = filesize;
-		this.parts = parts;
-		this.viewedHistory = viewedHistory;
-		this.language = language;
-		this.subtitles = subtitles;
-		this.title = title;
-		this.genres = genres;
-		this.onlinescore = onlinescore;
-		this.fsk = fsk;
-		this.score = score;
+		this.zyklus          = zyklus;
+		this.mediaInfo       = mediaInfo;
+		this.length          = length;
+		this.addDate         = addDate;
+		this.format          = format;
+		this.year            = year;
+		this.filesize        = filesize;
+		this.parts           = parts;
+		this.viewedHistory   = viewedHistory;
+		this.language        = language;
+		this.subtitles       = subtitles;
+		this.title           = title;
+		this.genres          = genres;
+		this.onlinescore     = onlinescore;
+		this.fsk             = fsk;
+		this.score           = score;
+		this.scoreComment    = scoreComment;
 		this.onlineReference = onlineReference;
-		this.groups = groups;
-		this.tags = tags;
-		this.cover = cover;
+		this.groups          = groups;
+		this.tags            = tags;
+		this.cover           = cover;
 	}
 
 	@Override public CCMovieZyklus getZyklus() { return zyklus; }
@@ -90,6 +91,8 @@ public class MovieDataPack implements IMovieData
 	@Override public CCFSK getFSK() { return fsk; }
 
 	@Override public CCUserScore getScore() { return score; }
+
+	@Override public String getScoreComment() { return scoreComment; }
 
 	@Override public CCOnlineReferenceList getOnlineReference() { return onlineReference; }
 

@@ -20,6 +20,7 @@ import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 import de.jClipCorn.gui.guiComponents.onlinescore.*;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
 
 import javax.swing.*;
@@ -135,6 +136,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 			spnOnlinescore.getValue(),
 			cbxFSK.getSelectedEnum().asFSKOrNull(),
 			CCUserScore.RATING_NO,
+			Str.Empty,
 			edReference.getValue(),
 			edGroups.getValue(),
 			CCTagList.EMPTY,

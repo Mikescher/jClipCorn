@@ -611,6 +611,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateMovies,
 				mov -> !mov.getOnlinescore().isValid(),
 				mov -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_INVALID_ONLINESCORE, mov));
+
+		// ScoreComment is set but Score is unset
+		addMovieValidation(
+				DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING,
+				o -> o.ValidateMovies,
+				mov -> mov.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(mov.getScoreComment()),
+				mov -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING, mov));
 	}
 
 	@SuppressWarnings({"Convert2MethodRef", "nls"})
@@ -804,9 +811,16 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		// Muted language in subtitles
 		addSeriesValidation(
 				DatabaseErrorType.ERROR_INVALID_ONLINESCORE,
-				o -> o.ValidateMovies,
+				o -> o.ValidateSeries,
 				series -> !series.getOnlinescore().isValid(),
 				series -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_INVALID_ONLINESCORE, series));
+
+		// ScoreComment is set but Score is unset
+		addSeriesValidation(
+				DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING,
+				o -> o.ValidateSeries,
+				series -> series.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(series.getScoreComment()),
+				series -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING, series));
 	}
 
 	@SuppressWarnings({"nls"})
@@ -891,7 +905,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				));
 
 		// Title contains invalid characters
-		addSeriesValidation(
+		addSeasonValidation(
 				DatabaseErrorType.ERROR_INVALID_CHARACTERS,
 				o -> o.ValidateSeasons,
 				season -> DatabaseStringNormalization.hasInvalidCharacters(season.getTitle()),
@@ -900,6 +914,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						DatabaseErrorType.ERROR_INVALID_CHARACTERS, season,
 						"Title", season.getTitle()
 				));
+
+		// ScoreComment is set but Score is unset
+		addSeasonValidation(
+				DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING,
+				o -> o.ValidateSeasons,
+				season -> season.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(season.getScoreComment()),
+				season -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING, season));
 	}
 
 	@SuppressWarnings({"nls"})
@@ -1239,6 +1260,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateEpisodes,
 				episode -> episode.getSubtitles().contains(CCDBLanguage.MUTED),
 				episode -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_SUBTITLE_MUTED, episode));
+
+		// ScoreComment is set but Score is unset
+		addEpisodeValidation(
+				DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING,
+				o -> o.ValidateEpisodes,
+				episode -> episode.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(episode.getScoreComment()),
+				episode -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING, episode));
 	}
 
 	@Override

@@ -48,7 +48,9 @@ public class ClipEpisodePopup extends ClipPopupMenu {
 		//#############
 		addSeparator();
 		//#############
-		
+
+		addActionMenuTree("SetEpisodeRating");
+		addAction("EditEpisodeRating");
 		addActionMenuTree("SetTags_Episode");
 		addAction("OpenEpisodeFolder");
 

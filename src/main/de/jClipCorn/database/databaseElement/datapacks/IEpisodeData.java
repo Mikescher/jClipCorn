@@ -1,7 +1,6 @@
 package de.jClipCorn.database.databaseElement.datapacks;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 
@@ -19,4 +18,6 @@ public interface IEpisodeData
 	CCDBLanguageSet getLanguage();
 	CCDBLanguageList getSubtitles();
 	CCMediaInfo getMediaInfo();
+	CCUserScore getScore();
+	String getScoreComment();
 }

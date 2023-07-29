@@ -357,6 +357,8 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 		episode.subtitles     = (ctrlSubs.getValue());
 		episode.mediaInfo     = (ctrlMediaInfo.getValue());
 		episode.viewedHistory = (ctrlHistory.getValue());
+		episode.score         = (ctrlScore.getSelectedEnum());
+		episode.scoreComment  = (ctrlComment.getText());
 
 		var idx = lsEpisodes.getSelectedIndex();
 		lsEpisodes.setSelectedIndex(-1);
@@ -398,7 +400,9 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			ctrlTags.getValue(),
 			ctrlLang.getValue(),
 			ctrlSubs.getValue(),
-			ctrlMediaInfo.getValue()
+			ctrlMediaInfo.getValue(),
+			ctrlScore.getSelectedEnum(),
+			ctrlComment.getText()
 		);
 
 		UserDataProblem.testEpisodeData(ret, target.getMovieList(), target, sel.getSource(), epack);
@@ -485,6 +489,8 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			ctrlSubs.setValue(episode.subtitles);
 			ctrlMediaInfo.setValue(episode.mediaInfo);
 			ctrlHistory.setValue(episode.viewedHistory);
+			ctrlScore.setSelectedEnum(episode.score);
+			ctrlComment.setText(episode.scoreComment);
 
 			lblDirtyTitle.setVisible(episode.isDirty_Title());
 			lblDirtyEpisodeNumber.setVisible(episode.isDirty_EpisodeNumber());
@@ -498,6 +504,8 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			lblDirtyMediaInfo.setVisible(episode.isDirty_MediaInfo());
 			lblDirtyHistory.setVisible(episode.isDirty_ViewedHistory());
 			lblDirtyTags.setVisible(episode.isDirty_Tags());
+			lblDirtyScore.setVisible(episode.isDirty_Score());
+			lblDirtyComment.setVisible(episode.isDirty_ScoreComment());
 
 			testPart();
 		}
@@ -588,6 +596,13 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 		label7 = new JLabel();
 		spnSize = new CCFileSizeSpinner();
 		btnRecalcSize = new JButton();
+		lblDirtyScore = new JLabel();
+		label8 = new JLabel();
+		ctrlScore = new CCEnumComboBox<CCUserScore>(CCUserScore.getWrapper());
+		lblDirtyComment = new JLabel();
+		label14 = new JLabel();
+		scrollPane2 = new JScrollPane();
+		ctrlComment = new JTextArea();
 		lblDirtyTags = new JLabel();
 		label12 = new JLabel();
 		ctrlTags = new TagPanel();
@@ -694,6 +709,13 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 		ctrlSideSubtitles = new LanguageListChooser();
 		button59 = new JButton();
 		button59.addActionListener(e -> BatchEditMethods.SUBTITLE_SET.run(this, ctrlSideSubtitles.getValue()));
+		ctrlSideScore = new CCEnumComboBox<CCUserScore>(CCUserScore.getWrapper());
+		button65 = new JButton();
+		button65.addActionListener(e -> BatchEditMethods.SCORE_SET.run(this, ctrlSideScore.getSelectedEnum()));
+		scrollPane1 = new JScrollPane();
+		ctrlSideScoreComment = new JTextArea();
+		button66 = new JButton();
+		button66.addActionListener(e -> BatchEditMethods.SCORECOMMENT_SET.run(this, ctrlSideScoreComment.getText()));
 		ctrlSideTags = new TagPanel();
 		button61 = new JButton();
 		button61.addActionListener(e -> BatchEditMethods.TAGS_SET.run(this, ctrlSideTags.getValue()));
@@ -810,7 +832,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			pnlInfo.setBorder(LineBorder.createBlackLineBorder());
 			pnlInfo.setLayout(new FormLayout(
 				"$rgap, 5dlu, default, $rgap, 1dlu:grow, $rgap, 50px, $rgap, 22px, $rgap", //$NON-NLS-1$
-				"$rgap, 5*(default, $ugap), default, $lgap, default, $ugap, 2*(default, $rgap), 3*(default, $ugap), 90dlu, $lgap, 0dlu:grow, $lgap, default, $lgap")); //$NON-NLS-1$
+				"$rgap, 5*(default, $ugap), default, $lgap, default, $ugap, 2*(default, $rgap), default, $lgap, 32dlu, $lgap, 3*(default, $ugap), 90dlu, $lgap, 0dlu:grow, $lgap, default, $lgap")); //$NON-NLS-1$
 
 			//---- lblDirtyTitle ----
 			lblDirtyTitle.setText("*"); //$NON-NLS-1$
@@ -922,51 +944,74 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			btnRecalcSize.addActionListener(e -> recalcFilesize());
 			pnlInfo.add(btnRecalcSize, CC.xy(5, 18));
 
+			//---- lblDirtyScore ----
+			lblDirtyScore.setText("*"); //$NON-NLS-1$
+			pnlInfo.add(lblDirtyScore, CC.xy(2, 20));
+
+			//---- label8 ----
+			label8.setText(LocaleBundle.getString("CCMovieScore.Score")); //$NON-NLS-1$
+			pnlInfo.add(label8, CC.xy(3, 20));
+			pnlInfo.add(ctrlScore, CC.xy(5, 20));
+
+			//---- lblDirtyComment ----
+			lblDirtyComment.setText("*"); //$NON-NLS-1$
+			pnlInfo.add(lblDirtyComment, CC.xy(2, 22));
+
+			//---- label14 ----
+			label14.setText(LocaleBundle.getString("EditMovieFrame.lblScoreComment")); //$NON-NLS-1$
+			pnlInfo.add(label14, CC.xy(3, 22));
+
+			//======== scrollPane2 ========
+			{
+				scrollPane2.setViewportView(ctrlComment);
+			}
+			pnlInfo.add(scrollPane2, CC.xy(5, 22, CC.DEFAULT, CC.FILL));
+
 			//---- lblDirtyTags ----
 			lblDirtyTags.setText("*"); //$NON-NLS-1$
-			pnlInfo.add(lblDirtyTags, CC.xy(2, 20));
+			pnlInfo.add(lblDirtyTags, CC.xy(2, 24));
 
 			//---- label12 ----
 			label12.setText(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
-			pnlInfo.add(label12, CC.xy(3, 20));
-			pnlInfo.add(ctrlTags, CC.xy(5, 20));
+			pnlInfo.add(label12, CC.xy(3, 24));
+			pnlInfo.add(ctrlTags, CC.xy(5, 24));
 
 			//---- lblDirtyAddDate ----
 			lblDirtyAddDate.setText("*"); //$NON-NLS-1$
-			pnlInfo.add(lblDirtyAddDate, CC.xy(2, 22));
+			pnlInfo.add(lblDirtyAddDate, CC.xy(2, 26));
 
 			//---- label9 ----
 			label9.setText(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
-			pnlInfo.add(label9, CC.xy(3, 22));
-			pnlInfo.add(spnAddDate, CC.xy(5, 22, CC.DEFAULT, CC.FILL));
+			pnlInfo.add(label9, CC.xy(3, 26));
+			pnlInfo.add(spnAddDate, CC.xy(5, 26, CC.DEFAULT, CC.FILL));
 
 			//---- btnToday ----
 			btnToday.setText(LocaleBundle.getString("AddEpisodeFrame.btnToday.text")); //$NON-NLS-1$
 			btnToday.addActionListener(e -> setToday());
-			pnlInfo.add(btnToday, CC.xywh(7, 22, 3, 1));
+			pnlInfo.add(btnToday, CC.xywh(7, 26, 3, 1));
 
 			//---- lblDirtyPath ----
 			lblDirtyPath.setText("*"); //$NON-NLS-1$
-			pnlInfo.add(lblDirtyPath, CC.xy(2, 24));
+			pnlInfo.add(lblDirtyPath, CC.xy(2, 28));
 
 			//---- label10 ----
 			label10.setText(LocaleBundle.getString("AddEpisodeFrame.lblPart.text")); //$NON-NLS-1$
-			pnlInfo.add(label10, CC.xy(3, 24));
-			pnlInfo.add(edPart, CC.xy(5, 24));
+			pnlInfo.add(label10, CC.xy(3, 28));
+			pnlInfo.add(edPart, CC.xy(5, 28));
 
 			//---- btnOpen ----
 			btnOpen.setText("..."); //$NON-NLS-1$
 			btnOpen.addActionListener(e -> openPart());
-			pnlInfo.add(btnOpen, CC.xywh(7, 24, 3, 1));
+			pnlInfo.add(btnOpen, CC.xywh(7, 28, 3, 1));
 
 			//---- lblDirtyHistory ----
 			lblDirtyHistory.setText("*"); //$NON-NLS-1$
-			pnlInfo.add(lblDirtyHistory, CC.xy(2, 26, CC.DEFAULT, CC.TOP));
+			pnlInfo.add(lblDirtyHistory, CC.xy(2, 30, CC.DEFAULT, CC.TOP));
 
 			//---- label11 ----
 			label11.setText(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
-			pnlInfo.add(label11, CC.xy(3, 26, CC.DEFAULT, CC.TOP));
-			pnlInfo.add(ctrlHistory, CC.xywh(5, 26, 5, 1, CC.DEFAULT, CC.FILL));
+			pnlInfo.add(label11, CC.xy(3, 30, CC.DEFAULT, CC.TOP));
+			pnlInfo.add(ctrlHistory, CC.xywh(5, 30, 5, 1, CC.DEFAULT, CC.FILL));
 
 			//======== panel1 ========
 			{
@@ -994,7 +1039,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 				btnEpNext.addActionListener(e -> onBtnNext());
 				panel1.add(btnEpNext, CC.xy(5, 1));
 			}
-			pnlInfo.add(panel1, CC.xywh(2, 30, 8, 1, CC.DEFAULT, CC.FILL));
+			pnlInfo.add(panel1, CC.xywh(2, 34, 8, 1, CC.DEFAULT, CC.FILL));
 		}
 		contentPane.add(pnlInfo, CC.xywh(4, 2, 1, 5));
 		contentPane.add(batchProgress, CC.xy(6, 2, CC.FILL, CC.FILL));
@@ -1002,6 +1047,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 		//======== tabbedPane1 ========
 		{
 			tabbedPane1.setTabPlacement(SwingConstants.BOTTOM);
+			tabbedPane1.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
 			//======== pnlTitleEdit ========
 			{
@@ -1164,8 +1210,8 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			//======== pnlProperties ========
 			{
 				pnlProperties.setLayout(new FormLayout(
-					"$lcgap, 200dlu, $lcgap, default:grow, $lcgap", //$NON-NLS-1$
-					"2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default")); //$NON-NLS-1$
+					"$lcgap, 0dlu:grow, $lcgap, pref, $lcgap", //$NON-NLS-1$
+					"2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, $ugap, $lgap, default, $lgap, 64dlu, $lgap, $ugap, $lgap, default, $lgap, 7dlu, $lgap, default")); //$NON-NLS-1$
 				pnlProperties.add(spnSideLength, CC.xy(2, 2));
 
 				//---- button31 ----
@@ -1186,16 +1232,31 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 				//---- button59 ----
 				button59.setText(LocaleBundle.getString("BatchEditFrame.btnSetSubtitles")); //$NON-NLS-1$
 				pnlProperties.add(button59, CC.xy(4, 10));
-				pnlProperties.add(ctrlSideTags, CC.xy(2, 14));
+				pnlProperties.add(ctrlSideScore, CC.xy(2, 14));
+
+				//---- button65 ----
+				button65.setText(LocaleBundle.getString("BatchEditFrame.SetScore")); //$NON-NLS-1$
+				pnlProperties.add(button65, CC.xy(4, 14));
+
+				//======== scrollPane1 ========
+				{
+					scrollPane1.setViewportView(ctrlSideScoreComment);
+				}
+				pnlProperties.add(scrollPane1, CC.xy(2, 16, CC.DEFAULT, CC.FILL));
+
+				//---- button66 ----
+				button66.setText(LocaleBundle.getString("BatchEditFrame.SetComment")); //$NON-NLS-1$
+				pnlProperties.add(button66, CC.xy(4, 16, CC.DEFAULT, CC.TOP));
+				pnlProperties.add(ctrlSideTags, CC.xy(2, 20));
 
 				//---- button61 ----
 				button61.setText(LocaleBundle.getString("BatchEditFrame.btnSetTags")); //$NON-NLS-1$
-				pnlProperties.add(button61, CC.xy(4, 14));
-				pnlProperties.add(spnSideAddDate, CC.xy(2, 18, CC.DEFAULT, CC.FILL));
+				pnlProperties.add(button61, CC.xy(4, 20));
+				pnlProperties.add(spnSideAddDate, CC.xy(2, 24, CC.DEFAULT, CC.FILL));
 
 				//---- button60 ----
 				button60.setText(LocaleBundle.getString("BatchEditFrame.btnSetAddDate")); //$NON-NLS-1$
-				pnlProperties.add(button60, CC.xy(4, 18));
+				pnlProperties.add(button60, CC.xy(4, 24));
 			}
 			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabProps"), pnlProperties); //$NON-NLS-1$
 
@@ -1376,7 +1437,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 		btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
 		btnOK.addActionListener(e -> onOKClicked());
 		contentPane.add(btnOK, CC.xy(4, 8, CC.CENTER, CC.FILL));
-		setSize(1250, 750);
+		setSize(1250, 850);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -1416,6 +1477,13 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 	private JLabel label7;
 	private CCFileSizeSpinner spnSize;
 	private JButton btnRecalcSize;
+	private JLabel lblDirtyScore;
+	private JLabel label8;
+	private CCEnumComboBox<CCUserScore> ctrlScore;
+	private JLabel lblDirtyComment;
+	private JLabel label14;
+	private JScrollPane scrollPane2;
+	private JTextArea ctrlComment;
 	private JLabel lblDirtyTags;
 	private JLabel label12;
 	private TagPanel ctrlTags;
@@ -1494,6 +1562,11 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 	private JButton button58;
 	private LanguageListChooser ctrlSideSubtitles;
 	private JButton button59;
+	private CCEnumComboBox<CCUserScore> ctrlSideScore;
+	private JButton button65;
+	private JScrollPane scrollPane1;
+	private JTextArea ctrlSideScoreComment;
+	private JButton button66;
 	private TagPanel ctrlSideTags;
 	private JButton button61;
 	private JCCDateSpinner spnSideAddDate;

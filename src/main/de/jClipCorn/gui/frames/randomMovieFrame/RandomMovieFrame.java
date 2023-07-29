@@ -94,7 +94,7 @@ public class RandomMovieFrame extends JCCFrame implements Runnable {
 					@Override
 					public void run() {
 						CCMovie mov = getNextRandMovie();
-						chooser.addCover(mov, mov);
+						chooser.addCover(mov);
 						chooser.inc();
 						chooser.repaint();
 					}
@@ -104,7 +104,7 @@ public class RandomMovieFrame extends JCCFrame implements Runnable {
 					@Override
 					public void run() {
 						CCMovie mov = getNextRandMovie();
-						chooser.addCover(mov, mov);
+						chooser.addCover(mov);
 						chooser.repaint();
 					}
 				});

@@ -205,7 +205,7 @@ public class QuickAddEpisodeDialog extends JCCDialog
 		CCFileFormat format = CCFileFormat.getMovieFormatFromPath(src);
 		CCMediaInfo minfo = edMediaInfo.getValue();
 
-		var epack = new EpisodeDataPack(episodenumber, title, length, format, filesize, CCPath.createFromFSPath(dst, this), adddate, history, tags, lang, subs, minfo);
+		var epack = new EpisodeDataPack(episodenumber, title, length, format, filesize, CCPath.createFromFSPath(dst, this), adddate, history, tags, lang, subs, minfo, CCUserScore.RATING_NO, Str.Empty);
 
 		java.util.List<UserDataProblem> problems = new ArrayList<>();
 		boolean probvalue = !check || checkUserDataEpisode(problems, epack, src, dst);

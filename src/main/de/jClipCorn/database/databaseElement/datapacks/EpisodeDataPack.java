@@ -1,7 +1,6 @@
 package de.jClipCorn.database.databaseElement.datapacks;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 
@@ -19,25 +18,30 @@ public class EpisodeDataPack implements IEpisodeData
 	private final CCDBLanguageSet language;
 	private final CCDBLanguageList subtitles;
 	private final CCMediaInfo mediaInfo;
+	private final CCUserScore score;
+	private final String scoreComment;
 
 	public EpisodeDataPack(int episodeNumber, String title, int length,
 						   CCFileFormat format, CCFileSize filesize,
 						   CCPath part,
 						   CCDate addDate, CCDateTimeList viewedHistory,
-						   CCTagList tags, CCDBLanguageSet language, CCDBLanguageList subtitles, CCMediaInfo mediaInfo)
+						   CCTagList tags, CCDBLanguageSet language, CCDBLanguageList subtitles, CCMediaInfo mediaInfo,
+						   CCUserScore score, String scoreComment)
 	{
 		this.episodeNumber = episodeNumber;
-		this.title = title;
-		this.length = length;
-		this.format = format;
-		this.filesize = filesize;
-		this.part = part;
-		this.addDate = addDate;
+		this.title         = title;
+		this.length        = length;
+		this.format        = format;
+		this.filesize      = filesize;
+		this.part          = part;
+		this.addDate       = addDate;
 		this.viewedHistory = viewedHistory;
-		this.tags = tags;
-		this.language = language;
-		this.subtitles = subtitles;
-		this.mediaInfo = mediaInfo;
+		this.tags          = tags;
+		this.language      = language;
+		this.subtitles     = subtitles;
+		this.mediaInfo     = mediaInfo;
+		this.score         = score;
+		this.scoreComment  = scoreComment;
 	}
 
 	@Override public int getEpisodeNumber() { return episodeNumber; }
@@ -63,4 +67,8 @@ public class EpisodeDataPack implements IEpisodeData
 	@Override public CCDBLanguageList getSubtitles() { return subtitles; }
 
 	@Override public CCMediaInfo getMediaInfo() { return mediaInfo; }
+
+	@Override public CCUserScore getScore() { return score; }
+
+	@Override public String getScoreComment() { return scoreComment; }
 }

@@ -205,7 +205,7 @@ public class ChangeScoreFrame extends JCCFrame {
 				}
 				
 				lblCover.setAndResizeCover(mov.getCover());
-				lblCurrent.setIcon(mov.Score.get().getIcon());
+				lblCurrent.setIcon(mov.Score.get().getIcon(false));
 				lblTitle.setText(mov.getCompleteTitle());
 			} else {
 				nextMovie();

@@ -71,47 +71,46 @@ public enum CCUserScore implements ContinoousEnum<CCUserScore> {
 		return NAMES[asInt()];
 	}
 	
-	public ImageIcon getIcon() {
-		switch (this) {
-		case RATING_0:
-			return Resources.ICN_TABLE_SCORE_0.get16x16();
-		case RATING_I:
-			return Resources.ICN_TABLE_SCORE_1.get16x16();
-		case RATING_II:
-			return Resources.ICN_TABLE_SCORE_2.get16x16();
-		case RATING_MID:
-			return Resources.ICN_TABLE_SCORE_6.get16x16();
-		case RATING_III:
-			return Resources.ICN_TABLE_SCORE_3.get16x16();
-		case RATING_IV:
-			return Resources.ICN_TABLE_SCORE_4.get16x16();
-		case RATING_V:
-			return Resources.ICN_TABLE_SCORE_5.get16x16();
-		case RATING_NO:
-		default:
-			return null;
-		}
+	public ImageIcon getIcon(boolean hasComment)
+	{
+		var icnref = this.getIconRef(hasComment);
+		if (icnref == null) return null;
+
+		return icnref.get16x16();
 	}
-	
-	public MultiSizeIconRef getIconRef() {
-		switch (this) {
-		case RATING_0:
-			return Resources.ICN_TABLE_SCORE_0;
-		case RATING_I:
-			return Resources.ICN_TABLE_SCORE_1;
-		case RATING_II:
-			return Resources.ICN_TABLE_SCORE_2;
-		case RATING_MID:
-			return Resources.ICN_TABLE_SCORE_6;
-		case RATING_III:
-			return Resources.ICN_TABLE_SCORE_3;
-		case RATING_IV:
-			return Resources.ICN_TABLE_SCORE_4;
-		case RATING_V:
-			return Resources.ICN_TABLE_SCORE_5;
-		case RATING_NO:
-		default:
-			return null;
+
+	@SuppressWarnings("DuplicateBranchesInSwitch")
+	public MultiSizeIconRef getIconRef(boolean hasComment)
+	{
+		if (hasComment)
+		{
+			switch (this)
+			{
+				case RATING_0:   return Resources.ICN_TABLE_SCORE_0_COMMENT;
+				case RATING_I:   return Resources.ICN_TABLE_SCORE_1_COMMENT;
+				case RATING_II:  return Resources.ICN_TABLE_SCORE_2_COMMENT;
+				case RATING_MID: return Resources.ICN_TABLE_SCORE_6_COMMENT;
+				case RATING_III: return Resources.ICN_TABLE_SCORE_3_COMMENT;
+				case RATING_IV:  return Resources.ICN_TABLE_SCORE_4_COMMENT;
+				case RATING_V:   return Resources.ICN_TABLE_SCORE_5_COMMENT;
+				case RATING_NO:  return null;
+				default:         return null;
+			}
+		}
+		else
+		{
+			switch (this)
+			{
+				case RATING_0:   return Resources.ICN_TABLE_SCORE_0_NOCOMMENT;
+				case RATING_I:   return Resources.ICN_TABLE_SCORE_1_NOCOMMENT;
+				case RATING_II:  return Resources.ICN_TABLE_SCORE_2_NOCOMMENT;
+				case RATING_MID: return Resources.ICN_TABLE_SCORE_6_NOCOMMENT;
+				case RATING_III: return Resources.ICN_TABLE_SCORE_3_NOCOMMENT;
+				case RATING_IV:  return Resources.ICN_TABLE_SCORE_4_NOCOMMENT;
+				case RATING_V:   return Resources.ICN_TABLE_SCORE_5_NOCOMMENT;
+				case RATING_NO:  return null;
+				default:         return null;
+			}
 		}
 	}
 

@@ -25,6 +25,7 @@ import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.frames.createSeriesFolderStructureFrame.CreateSeriesFolderStructureFrame;
 import de.jClipCorn.gui.frames.databaseHistoryFrame.DatabaseHistoryFrame;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
+import de.jClipCorn.gui.frames.editScoreFrame.EditScoreFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
 import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
 import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
@@ -206,15 +207,17 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 
 					CCActionElement movRating = add(movieExtra, "SetMovieRating", null, "ClipMenuBar.Other.MovieExtra.SetMovieRating", Resources.ICN_SIDEBAR_SCORE);
 					{
-						add(movRating, "SetMovRatingNO",  null, "CCMovieScore.RNO",  CCUserScore.RATING_NO.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_NO));
-						add(movRating, "SetMovRating0",   null, "CCMovieScore.R0",   CCUserScore.RATING_0.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_0));
-						add(movRating, "SetMovRating1",   null, "CCMovieScore.R1",   CCUserScore.RATING_I.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_I));
-						add(movRating, "SetMovRating2",   null, "CCMovieScore.R2",   CCUserScore.RATING_II.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_II));
-						add(movRating, "SetMovRatingMID", null, "CCMovieScore.RMID", CCUserScore.RATING_MID.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_MID));
-						add(movRating, "SetMovRating3",   null, "CCMovieScore.R3",   CCUserScore.RATING_III.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_III));
-						add(movRating, "SetMovRating4",   null, "CCMovieScore.R4",   CCUserScore.RATING_IV.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_IV));
-						add(movRating, "SetMovRating5",   null, "CCMovieScore.R5",   CCUserScore.RATING_V.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_V));
+						add(movRating, "SetMovRatingNO",  null, "CCMovieScore.RNO",  CCUserScore.RATING_NO.getIconRef(false),  true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_NO));
+						add(movRating, "SetMovRating0",   null, "CCMovieScore.R0",   CCUserScore.RATING_0.getIconRef(false),   true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_0));
+						add(movRating, "SetMovRating1",   null, "CCMovieScore.R1",   CCUserScore.RATING_I.getIconRef(false),   true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_I));
+						add(movRating, "SetMovRating2",   null, "CCMovieScore.R2",   CCUserScore.RATING_II.getIconRef(false),  true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_II));
+						add(movRating, "SetMovRatingMID", null, "CCMovieScore.RMID", CCUserScore.RATING_MID.getIconRef(false), true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_MID));
+						add(movRating, "SetMovRating3",   null, "CCMovieScore.R3",   CCUserScore.RATING_III.getIconRef(false), true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_III));
+						add(movRating, "SetMovRating4",   null, "CCMovieScore.R4",   CCUserScore.RATING_IV.getIconRef(false),  true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_IV));
+						add(movRating, "SetMovRating5",   null, "CCMovieScore.R5",   CCUserScore.RATING_V.getIconRef(false),   true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_V));
 					}
+
+					add(movieExtra, "EditMovieRating", null, "ClipMenuBar.Other.MovieExtra.EditRating", Resources.ICN_SIDEBAR_SCORE, this::onClickEditMovieOrSeriesRating);
 
 					CCActionElement elemTagsMov = add(movieExtra, "SetTags_Movies", null, "ClipMenuBar.Other.MovieExtra.SetTags", Resources.ICN_MENUBAR_TAGS);
 					{
@@ -235,20 +238,34 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 					add(season, "RemSeason",          null, "ClipMenuBar.Other.Season.RemSeason",          Resources.ICN_MENUBAR_REMOVE,          true,  this::onClickOtherSeasonDeleteSeason);
 					add(season, "EditSeason",         null, "ClipMenuBar.Other.Season.EditSeason",         Resources.ICN_MENUBAR_EDIT_SER,        true,  this::onClickOtherSeasonEditSeason);
 					add(season, "OpenSeasonFolder",   null, "ClipMenuBar.Other.Season.OpenSeasonFolder",   Resources.ICN_MENUBAR_FOLDER,          false, this::onClickOtherSeasonOpenFolder);
+
+					CCActionElement saesonRating = add(season, "SetSeasonRating", null, "ClipMenuBar.Other.Season.SetSeasonRating", Resources.ICN_SIDEBAR_SCORE);
+					{
+						add(saesonRating, "SetSeasonRatingNO",  null, "CCMovieScore.RNO",  CCUserScore.RATING_NO.getIconRef(false),  true, (e) -> onClickSeasonSetRating(e, CCUserScore.RATING_NO));
+						add(saesonRating, "SetSeasonRating0",   null, "CCMovieScore.R0",   CCUserScore.RATING_0.getIconRef(false),   true, (e) -> onClickSeasonSetRating(e, CCUserScore.RATING_0));
+						add(saesonRating, "SetSeasonRating1",   null, "CCMovieScore.R1",   CCUserScore.RATING_I.getIconRef(false),   true, (e) -> onClickSeasonSetRating(e, CCUserScore.RATING_I));
+						add(saesonRating, "SetSeasonRating2",   null, "CCMovieScore.R2",   CCUserScore.RATING_II.getIconRef(false),  true, (e) -> onClickSeasonSetRating(e, CCUserScore.RATING_II));
+						add(saesonRating, "SetSeasonRatingMID", null, "CCMovieScore.RMID", CCUserScore.RATING_MID.getIconRef(false), true, (e) -> onClickSeasonSetRating(e, CCUserScore.RATING_MID));
+						add(saesonRating, "SetSeasonRating3",   null, "CCMovieScore.R3",   CCUserScore.RATING_III.getIconRef(false), true, (e) -> onClickSeasonSetRating(e, CCUserScore.RATING_III));
+						add(saesonRating, "SetSeasonRating4",   null, "CCMovieScore.R4",   CCUserScore.RATING_IV.getIconRef(false),  true, (e) -> onClickSeasonSetRating(e, CCUserScore.RATING_IV));
+						add(saesonRating, "SetSeasonRating5",   null, "CCMovieScore.R5",   CCUserScore.RATING_V.getIconRef(false),   true, (e) -> onClickSeasonSetRating(e, CCUserScore.RATING_V));
+					}
+
+					add(season, "EditSeasonRating", null, "ClipMenuBar.Other.Season.EditRating", Resources.ICN_SIDEBAR_SCORE, this::onClickEditSeasonRating);
 				}
 
 				CCActionElement seriesExtra = add(other, "SeriesExtra", null, "", null);
 				{
 					CCActionElement serRating = add(seriesExtra, "SetSeriesRating", null, "ClipMenuBar.Other.SeriesExtra.SetSeriesRating", Resources.ICN_SIDEBAR_SCORE);
 					{
-						add(serRating, "SetSerRatingNO",  null, "CCMovieScore.RNO",  CCUserScore.RATING_NO.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_NO));
-						add(serRating, "SetSerRating0",   null, "CCMovieScore.R0",   CCUserScore.RATING_0.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_0));
-						add(serRating, "SetSerRating1",   null, "CCMovieScore.R1",   CCUserScore.RATING_I.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_I));
-						add(serRating, "SetSerRating2",   null, "CCMovieScore.R2",   CCUserScore.RATING_II.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_II));
-						add(serRating, "SetSerRatingMID", null, "CCMovieScore.RMID", CCUserScore.RATING_MID.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_MID));
-						add(serRating, "SetSerRating3",   null, "CCMovieScore.R3",   CCUserScore.RATING_III.getIconRef(), true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_III));
-						add(serRating, "SetSerRating4",   null, "CCMovieScore.R4",   CCUserScore.RATING_IV.getIconRef(),  true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_IV));
-						add(serRating, "SetSerRating5",   null, "CCMovieScore.R5",   CCUserScore.RATING_V.getIconRef(),   true, (e) -> onClickOtherSetRating(e, CCUserScore.RATING_V));
+						add(serRating, "SetSerRatingNO",  null, "CCMovieScore.RNO",  CCUserScore.RATING_NO.getIconRef(false),  true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_NO));
+						add(serRating, "SetSerRating0",   null, "CCMovieScore.R0",   CCUserScore.RATING_0.getIconRef(false),   true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_0));
+						add(serRating, "SetSerRating1",   null, "CCMovieScore.R1",   CCUserScore.RATING_I.getIconRef(false),   true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_I));
+						add(serRating, "SetSerRating2",   null, "CCMovieScore.R2",   CCUserScore.RATING_II.getIconRef(false),  true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_II));
+						add(serRating, "SetSerRatingMID", null, "CCMovieScore.RMID", CCUserScore.RATING_MID.getIconRef(false), true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_MID));
+						add(serRating, "SetSerRating3",   null, "CCMovieScore.R3",   CCUserScore.RATING_III.getIconRef(false), true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_III));
+						add(serRating, "SetSerRating4",   null, "CCMovieScore.R4",   CCUserScore.RATING_IV.getIconRef(false),  true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_IV));
+						add(serRating, "SetSerRating5",   null, "CCMovieScore.R5",   CCUserScore.RATING_V.getIconRef(false),   true, (e) -> onClickMovieOrSeriesSetRating(e, CCUserScore.RATING_V));
 					}
 
 					CCActionElement elemTagsSer = add(seriesExtra, "SetTags_Series", null, "ClipMenuBar.Other.SeriesExtra.SetTags", Resources.ICN_MENUBAR_TAGS);
@@ -258,6 +275,8 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 							add(elemTagsSer, String.format("SwitchTag_Series_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(e, tag));
 						}
 					}
+
+					add(seriesExtra, "EditSeriesRating", null, "ClipMenuBar.Other.SeriesExtra.EditRating", Resources.ICN_SIDEBAR_SCORE, this::onClickEditMovieOrSeriesRating);
 
 					add(seriesExtra, "ResumeSeries",        null, "ClipMenuBar.Other.SeriesExtra.ResumeSeries",       null,                           false, this::onClickOtherSeriesResumePlay);
 					add(seriesExtra, "QueueSeriesInRobot",  null, "ClipMenuBar.Other.SeriesExtra.QueueSeriesInRobot", Resources.ICN_MENUBAR_VLCROBOT, false, this::onClickOtherSeriesPlayInRobot);
@@ -282,6 +301,18 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 					add(episode, "SetEpisodeUnviewed",   null,     "ClipMenuBar.Other.Episode.SetEpisodeUnviewed",   Resources.ICN_MENUBAR_UNVIEWED,     true,  this::onClickOtherEpisodeUnviewed);
 					add(episode, "UndoEpisodeViewed",    null,     "ClipMenuBar.Other.Episode.UndoEpisodeViewed",    Resources.ICN_MENUBAR_UNDOVIEWED,   true,  this::onClickOtherEpisodeUndoViewed);
 
+					CCActionElement episodeRating = add(episode, "SetEpisodeRating", null, "ClipMenuBar.Other.Episode.SetEpisodeRating", Resources.ICN_SIDEBAR_SCORE);
+					{
+						add(episodeRating, "SetEpisodeRatingNO",  null, "CCMovieScore.RNO",  CCUserScore.RATING_NO.getIconRef(false),  true, (e) -> onClickEpisodeSetRating(e, CCUserScore.RATING_NO));
+						add(episodeRating, "SetEpisodeRating0",   null, "CCMovieScore.R0",   CCUserScore.RATING_0.getIconRef(false),   true, (e) -> onClickEpisodeSetRating(e, CCUserScore.RATING_0));
+						add(episodeRating, "SetEpisodeRating1",   null, "CCMovieScore.R1",   CCUserScore.RATING_I.getIconRef(false),   true, (e) -> onClickEpisodeSetRating(e, CCUserScore.RATING_I));
+						add(episodeRating, "SetEpisodeRating2",   null, "CCMovieScore.R2",   CCUserScore.RATING_II.getIconRef(false),  true, (e) -> onClickEpisodeSetRating(e, CCUserScore.RATING_II));
+						add(episodeRating, "SetEpisodeRatingMID", null, "CCMovieScore.RMID", CCUserScore.RATING_MID.getIconRef(false), true, (e) -> onClickEpisodeSetRating(e, CCUserScore.RATING_MID));
+						add(episodeRating, "SetEpisodeRating3",   null, "CCMovieScore.R3",   CCUserScore.RATING_III.getIconRef(false), true, (e) -> onClickEpisodeSetRating(e, CCUserScore.RATING_III));
+						add(episodeRating, "SetEpisodeRating4",   null, "CCMovieScore.R4",   CCUserScore.RATING_IV.getIconRef(false),  true, (e) -> onClickEpisodeSetRating(e, CCUserScore.RATING_IV));
+						add(episodeRating, "SetEpisodeRating5",   null, "CCMovieScore.R5",   CCUserScore.RATING_V.getIconRef(false),   true, (e) -> onClickEpisodeSetRating(e, CCUserScore.RATING_V));
+					}
+
 					CCActionElement elemTagsEpi = add(episode, "SetTags_Episode", null, "ClipMenuBar.Other.Episode.SetTags", Resources.ICN_MENUBAR_TAGS);
 					{
 						for (final CCSingleTag tag : CCTagList.TAGS) {
@@ -289,6 +320,8 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 							add(elemTagsEpi, String.format("SwitchTag_Episode_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(e, tag));
 						}
 					}
+
+					add(episode, "EditEpisodeRating", null, "ClipMenuBar.Other.Episode.EditRating", Resources.ICN_SIDEBAR_SCORE, this::onClickEditEpisodeRating);
 
 					add(episode, "OpenEpisodeFolder",  null,      "ClipMenuBar.Other.Episode.OpenEpisodeFolder", Resources.ICN_MENUBAR_FOLDER,          false, this::onClickOtherEpisodeOpenFolder);
 					add(episode, "ShowEpisodeHistory", null,      "ClipMenuBar.Other.Episode.ShowHistory",       Resources.ICN_MENUBAR_DATABASEHISTORY, false, this::onClickOtherShowHistory);
@@ -774,18 +807,52 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 			m.setViewedHistoryFromUI(history);
 		});
 	}
-	
-	private void onClickOtherSetRating(CCTreeActionEvent e, CCUserScore rating) {
+
+	private void onClickMovieOrSeriesSetRating(CCTreeActionEvent e, CCUserScore rating) {
 		e.ifDatabaseElementSource(d ->
 		{
-			if (e.SourceType == ActionSource.SHORTCUT && d.Score.get() == rating && rating != CCUserScore.RATING_NO) {
-				d.Score.set(CCUserScore.RATING_NO);
+			if (e.SourceType == ActionSource.SHORTCUT && d.score().get() == rating && rating != CCUserScore.RATING_NO) {
+				d.score().set(CCUserScore.RATING_NO);
 				return;
 			}
-			d.Score.set(rating);
+			d.score().set(rating);
 		});
 	}
-	
+
+	private void onClickSeasonSetRating(CCTreeActionEvent e, CCUserScore rating) {
+		e.ifSeasonSource(d ->
+		{
+			if (e.SourceType == ActionSource.SHORTCUT && d.score().get() == rating && rating != CCUserScore.RATING_NO) {
+				d.score().set(CCUserScore.RATING_NO);
+				return;
+			}
+			d.score().set(rating);
+		});
+	}
+
+	private void onClickEpisodeSetRating(CCTreeActionEvent e, CCUserScore rating) {
+		e.ifEpisodeSource(d ->
+		{
+			if (e.SourceType == ActionSource.SHORTCUT && d.score().get() == rating && rating != CCUserScore.RATING_NO) {
+				d.score().set(CCUserScore.RATING_NO);
+				return;
+			}
+			d.score().set(rating);
+		});
+	}
+
+	private void onClickEditMovieOrSeriesRating(CCTreeActionEvent e) {
+		e.ifDatabaseElementSource(d -> new EditScoreFrame(e.SwingOwner, movielist, d).setVisible(true));
+	}
+
+	private void onClickEditSeasonRating(CCTreeActionEvent e) {
+		e.ifSeasonSource(d -> new EditScoreFrame(e.SwingOwner, movielist, d).setVisible(true));
+	}
+
+	private void onClickEditEpisodeRating(CCTreeActionEvent e) {
+		e.ifEpisodeSource(d -> new EditScoreFrame(e.SwingOwner, movielist, d).setVisible(true));
+	}
+
 	private void onClickOtherShowInBrowser(CCTreeActionEvent e) {
 		e.ifDatabaseElementSource(d -> d.OnlineReference.get().Main.openInBrowser(d, ccprops()));
 	}

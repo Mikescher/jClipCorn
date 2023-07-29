@@ -166,7 +166,7 @@ public class FilterTree extends AbstractFilterTree {
 
 	private void initScore(DefaultMutableTreeNode parent) {
 		for (final CCUserScore score : CCUserScore.getWrapper().allDisplayValuesSorted()) {
-			addNodeF(parent, score.getIcon(), score.asString(), () -> CustomUserScoreFilter.create(movielist, score));
+			addNodeF(parent, score.getIcon(false), score.asString(), () -> CustomUserScoreFilter.create(movielist, score));
 		}
 	}
 	

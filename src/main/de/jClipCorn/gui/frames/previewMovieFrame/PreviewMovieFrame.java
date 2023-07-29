@@ -35,6 +35,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.HTMLFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
@@ -42,6 +43,7 @@ import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -145,8 +147,11 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 
 		lblYear.setText(movie.Year.get() + Str.Empty); //$NON-NLS-1$
 
-		lblUserScoreIcon.setIcon(movie.Score.get().getIcon());
+		lblUserScoreIcon.setIcon(movie.Score.get().getIcon(!Str.isNullOrWhitespace(movie.ScoreComment.get())));
 		lblUserScore.setText(movie.Score.get().asString());
+
+		lblScoreComment.setText(HTMLFormatter.formatTooltip(movie.ScoreComment.get()));
+		lblScoreComment.setVisible(!Str.isNullOrWhitespace(movie.ScoreComment.get()));
 
 		lblSize.setText(FileSizeFormatter.format(movie.FileSize.get()));
 
@@ -368,6 +373,7 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 		label12 = new JLabel();
 		lblUserScoreIcon = new JLabel();
 		lblUserScore = new JLabel();
+		lblScoreComment = new JLabel();
 		label13 = new JLabel();
 		lblTags = new TagDisplay();
 		panel6 = new JPanel();
@@ -494,7 +500,7 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 			//======== pnlTabMain ========
 			{
 				pnlTabMain.setLayout(new FormLayout(
-					"2*($lcgap, default), $lcgap, default:grow, $lcgap, 80dlu, $lcgap", //$NON-NLS-1$
+					"3*($lcgap, default), $lcgap, 0dlu:grow, $lcgap, 80dlu, $lcgap", //$NON-NLS-1$
 					"14*($lgap, default), $lgap, default:grow")); //$NON-NLS-1$
 
 				//---- label1 ----
@@ -504,7 +510,7 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 				//---- lblTitle ----
 				lblTitle.setText("<dynamic>"); //$NON-NLS-1$
 				pnlTabMain.add(lblTitle, CC.xy(6, 2));
-				pnlTabMain.add(btnOnlineRef, CC.xywh(8, 2, 1, 3, CC.DEFAULT, CC.TOP));
+				pnlTabMain.add(btnOnlineRef, CC.xywh(10, 2, 1, 3, CC.DEFAULT, CC.TOP));
 
 				//---- label2 ----
 				label2.setText(LocaleBundle.getString("AddMovieFrame.lblZyklus.text")); //$NON-NLS-1$
@@ -590,12 +596,17 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 
 				//---- label12 ----
 				label12.setText(LocaleBundle.getString("PreviewMovieFrame.btnScore.text")); //$NON-NLS-1$
-				pnlTabMain.add(label12, CC.xy(2, 26));
-				pnlTabMain.add(lblUserScoreIcon, CC.xy(4, 26, CC.FILL, CC.FILL));
+				pnlTabMain.add(label12, CC.xy(2, 26, CC.DEFAULT, CC.TOP));
+				pnlTabMain.add(lblUserScoreIcon, CC.xy(4, 26, CC.FILL, CC.TOP));
 
 				//---- lblUserScore ----
 				lblUserScore.setText("<dynamic>"); //$NON-NLS-1$
-				pnlTabMain.add(lblUserScore, CC.xy(6, 26));
+				pnlTabMain.add(lblUserScore, CC.xy(6, 26, CC.DEFAULT, CC.TOP));
+
+				//---- lblScoreComment ----
+				lblScoreComment.setText("text"); //$NON-NLS-1$
+				lblScoreComment.setBorder(new LineBorder(UIManager.getColor("Borders.ContrastBorderColor"))); //$NON-NLS-1$
+				pnlTabMain.add(lblScoreComment, CC.xywh(8, 26, 3, 1));
 
 				//---- label13 ----
 				label13.setText(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
@@ -638,7 +649,7 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 					}
 					panel6.add(scrollPane3, CC.xy(5, 3, CC.FILL, CC.FILL));
 				}
-				pnlTabMain.add(panel6, CC.xywh(2, 30, 7, 1, CC.FILL, CC.FILL));
+				pnlTabMain.add(panel6, CC.xywh(2, 30, 9, 1, CC.FILL, CC.FILL));
 			}
 			tabbedPane1.addTab(LocaleBundle.getString("PreviewMovieFrame.TabGeneral"), pnlTabMain); //$NON-NLS-1$
 
@@ -893,6 +904,7 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 	private JLabel label12;
 	private JLabel lblUserScoreIcon;
 	private JLabel lblUserScore;
+	private JLabel lblScoreComment;
 	private JLabel label13;
 	private TagDisplay lblTags;
 	private JPanel panel6;

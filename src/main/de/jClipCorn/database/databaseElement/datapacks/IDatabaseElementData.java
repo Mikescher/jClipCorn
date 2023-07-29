@@ -11,6 +11,7 @@ public interface IDatabaseElementData
 	CCOnlineScore getOnlinescore();
 	CCFSK getFSK();
 	CCUserScore getScore();
+	String getScoreComment();
 	CCOnlineReferenceList getOnlineReference();
 	CCGroupList getGroups();
 	CCTagList getTags();

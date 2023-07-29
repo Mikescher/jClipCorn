@@ -4,30 +4,39 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.elementProps.IEProperty;
+import de.jClipCorn.database.elementProps.impl.EEnumProp;
 import de.jClipCorn.database.elementProps.impl.EStringProp;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.util.datetime.CCDate;
 
+import java.awt.image.BufferedImage;
+
 public interface ICCDatabaseStructureElement {
 	// Movies, Series, Seasons, Episodes
 
-	EStringProp         title();
+	EStringProp            title();
 
-	CCTagList           getTags();
+	EEnumProp<CCUserScore> score();
+	EStringProp            scoreComment();
 
-	CCFileFormat        getFormat();
-	CCDate              getAddDate();
+	CCTagList              getTags();
 
-	ExtendedViewedState getExtendedViewedState();
-	String              getQualifiedTitle();
-	int                 getLocalID();
-	CCMovieList         getMovieList();
+	CCFileFormat           getFormat();
+	CCDate                 getAddDate();
 
-	ICalculationCache   getCache();
+	ExtendedViewedState    getExtendedViewedState();
+	String                 getQualifiedTitle();
+	int                    getLocalID();
+	CCMovieList            getMovieList();
 
-	IEProperty[]        getProperties();
-	boolean             isDirty();
-	void                resetDirty();
-	String[]            getDirty();
+	ICalculationCache      getCache();
+
+	IEProperty[]           getProperties();
+	boolean                isDirty();
+	void                   resetDirty();
+	String[]               getDirty();
+
+	BufferedImage getSelfOrParentCover();
 }

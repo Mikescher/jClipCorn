@@ -7,7 +7,7 @@ import de.jClipCorn.util.datatypes.Tuple;
 
 import java.awt.image.BufferedImage;
 
-public interface ICCCoveredElement {
+public interface ICCCoveredElement extends ICCDatabaseStructureElement {
 	// Movie, Season, Series
 
 	EStringProp title();

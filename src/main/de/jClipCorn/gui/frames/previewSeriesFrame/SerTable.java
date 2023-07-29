@@ -1,4 +1,4 @@
-package de.jClipCorn.gui.frames.previewSeriesFrame.serTable;
+package de.jClipCorn.gui.frames.previewSeriesFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
@@ -8,7 +8,6 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.features.actionTree.menus.impl.ClipEpisodePopup;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.guiComponents.jCCPrimaryTable.JCCPrimaryColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCPrimaryTable.JCCPrimaryTable;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -18,6 +17,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.HTMLFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 
 import javax.swing.*;
@@ -31,6 +31,7 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 	private final PreviewSeriesFrame owner;
 
 	private CCSeason season = null;
+	private boolean hasScore = true;
 
 	@DesignCreate
 	private static ClipTable designCreate() { return new ClipTable(CCMovieList.createStub(), null); }
@@ -48,8 +49,24 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
 		(
+			SeriesFrameColumn.USERSCORE,
+			Str.Empty,
+			"auto,min=24",
+			LocaleBundle.getString("PreviewSeriesFrame.serTable.UserScore"),
+			(r,v) -> r.setIcon(v.Score.get().getIcon(!Str.isNullOrWhitespace(v.ScoreComment.get()))),
+			(r) -> false,
+			(v1,v2) -> CCUserScore.compare(v1.Score.get(), v2.Score.get()),
+			false,
+			(v,row) -> formatScoreTooltip(v.Score.get(), v.ScoreComment.get()),
+			(v) -> false,
+			(v) -> noop(),
+			() -> !hasScore
+		));
+
+		ccr.add(new JCCPrimaryColumnPrototype<>
+		(
 			SeriesFrameColumn.EPISODE,
-			LocaleBundle.getString("PreviewSeriesFrame.serTable.Episode"),
+			"#",
 			"auto",
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Episode"),
 			(r,v) -> r.setText(v.EpisodeNumber.get().toString()),
@@ -58,7 +75,8 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			false,
 			(v,row) -> null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -73,7 +91,8 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			false,
 			(v,row) -> null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -88,7 +107,8 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			false,
 			(v,row) -> null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -131,7 +151,8 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			false,
 			(v,row) -> v.getExtendedViewedState().getHistory().any() ? v.getExtendedViewedState().getHistory().getHTMLListFormatted(row) : null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -146,7 +167,8 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			false,
 			(v,row) -> v.getMediaInfoCategory().getTooltip(),
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -161,7 +183,8 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			false,
 			(v,row) -> v.Language.get().toOutputString(),
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -176,7 +199,8 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			false,
 			(v,row) -> v.Subtitles.get().toOutputString(),
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -191,7 +215,8 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			false,
 			(v,row) -> TimeIntervallFormatter.format(v.Length.get()),
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -206,7 +231,8 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			false,
 			(v,row) -> v.Tags.get().getAsString(),
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -230,7 +256,8 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			false,
 			(v,row) -> null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -245,7 +272,8 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			false,
 			(v,row) -> null,
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -260,10 +288,18 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			false,
 			(v,row) -> FileSizeFormatter.formatBytes(v.FileSize.get()),
 			(v) -> false,
-			(v) -> noop()
+			(v) -> noop(),
+			() -> false
 		));
 
 		return ccr;
+	}
+
+	private String formatScoreTooltip(CCUserScore score, String comm) {
+		if (score == CCUserScore.RATING_NO) return null;
+		if (Str.isNullOrWhitespace(comm)) return score.asString();
+
+		return HTMLFormatter.formatTooltip(score.asString(), Str.trim(comm));
 	}
 
 	private void autoResize() {
@@ -342,6 +378,7 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 
 	public void changeSeason(CCSeason s) {
 		this.season = s;
+		this.hasScore = s.iteratorEpisodes().any(e -> e.Score.get() != CCUserScore.RATING_NO || !Str.isNullOrWhitespace(e.ScoreComment.get()));
 
 		getVerticalScrollBar().setValue(0);
 

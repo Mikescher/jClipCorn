@@ -2,10 +2,7 @@ package de.jClipCorn.gui.guiComponents.jCCPrimaryTable;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.table.renderer.TableRenderer;
-import de.jClipCorn.util.lambda.Func1to0;
-import de.jClipCorn.util.lambda.Func1to1;
-import de.jClipCorn.util.lambda.Func2to0;
-import de.jClipCorn.util.lambda.Func2to1;
+import de.jClipCorn.util.lambda.*;
 
 import javax.swing.table.TableCellRenderer;
 import java.util.Comparator;
@@ -23,6 +20,7 @@ public class JCCPrimaryColumnPrototype<TData, TEnum> {
 	public final Func2to1<TData, Integer, String> Tooltip;
 	public final Func1to1<TData, Boolean> IsClickable;
 	public final Func1to0<TData> Click;
+	public final Func0to1<Boolean> HideColumn;
 
 	public JCCPrimaryColumnPrototype(
 			TEnum id,
@@ -35,7 +33,8 @@ public class JCCPrimaryColumnPrototype<TData, TEnum> {
 			boolean isSortable,
 			Func2to1<TData, Integer, String> tooltip,
 			Func1to1<TData, Boolean> clickable,
-			Func1to0<TData> click
+			Func1to0<TData> click,
+			Func0to1<Boolean> hide
 	)
 	{
 		this.Identifier              = id;
@@ -49,6 +48,7 @@ public class JCCPrimaryColumnPrototype<TData, TEnum> {
 		this.Tooltip                 = tooltip;
 		this.IsClickable             = clickable;
 		this.Click                   = click;
+		this.HideColumn              = hide;
 	}
 
 	@SuppressWarnings("unchecked")

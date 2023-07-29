@@ -39,8 +39,9 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		//#############
 		addSeparator();
 		//#############
-		
+
 		addActionMenuTree("SetMovieRating");
+		addAction("EditMovieRating");
 		addActionMenuTree("SetTags_Movies");
 		addAction("SetMovieViewed");
 		addAction("SetMovieUnviewed");

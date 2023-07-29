@@ -33,6 +33,9 @@ public class NewEpisodeVM implements IEpisodeData, ICCPropertySource {
 	public int EpisodeNumber = -1;
 	public CCFileSize Filesize = CCFileSize.ZERO;
 	public CCMediaInfo MediaInfo = CCMediaInfo.EMPTY;
+	public CCUserScore Score = CCUserScore.RATING_NO;
+	public String ScoreComment = Str.Empty;
+
 	public boolean NoMove = false;
 
 	public VideoMetadata MediaQueryResult = null;
@@ -78,6 +81,16 @@ public class NewEpisodeVM implements IEpisodeData, ICCPropertySource {
 	@Override public CCFileSize getFilesize() { return Filesize; }
 
 	@Override public CCPath getPart() { return TargetPath; }
+
+	@Override
+	public CCUserScore getScore() {
+		return Score;
+	}
+
+	@Override
+	public String getScoreComment() {
+		return ScoreComment;
+	}
 
 	public void updateTarget(CCSeason season, CCDBLanguageSet commonLang, FSPath globalSeriesRoot)
 	{

@@ -69,7 +69,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_DB_EXCEPTION                       = new DatabaseErrorType(62, null);
 	public final static DatabaseErrorType ERROR_DB_DUPLICATE_ID                    = new DatabaseErrorType(63, null);
 	public final static DatabaseErrorType ERROR_DB_TOO_LARGE_ID                    = new DatabaseErrorType(64, null);
-	public final static DatabaseErrorType ERROR_DB_TYPE_SID_MISMATCH               = new DatabaseErrorType(65, null);
+	//public final static DatabaseErrorType ERROR_DB_TYPE_SID_MISMATCH             = new DatabaseErrorType(65, null);
 	public final static DatabaseErrorType ERROR_DB_MISSING_SERIES                  = new DatabaseErrorType(66, null);
 	public final static DatabaseErrorType ERROR_DB_MISSING_SEASON                  = new DatabaseErrorType(67, null);
 	public final static DatabaseErrorType ERROR_DB_MULTI_REF_COVER                 = new DatabaseErrorType(68, null);
@@ -78,7 +78,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_HTRIGGER_ENABLED_ERR               = new DatabaseErrorType(71, null);
 	public final static DatabaseErrorType ERROR_HTRIGGER_DISABLED_ERR              = new DatabaseErrorType(72, null);
 	public final static DatabaseErrorType ERROR_INVALID_CHARACTERS                 = new DatabaseErrorType(73, DatabaseAutofixer::fixError_InvalidCharacters);
-	public final static DatabaseErrorType ERROR_MEDIAINFO_FILE_ATTR_CHANGED        = new DatabaseErrorType(74, null);
+	//public final static DatabaseErrorType ERROR_MEDIAINFO_FILE_ATTR_CHANGED      = new DatabaseErrorType(74, null);
 	public final static DatabaseErrorType ERROR_MEDIAINFO_CDATE_CHANGED            = new DatabaseErrorType(75, DatabaseAutofixer::fixError_MediaInfoCDate);
 	public final static DatabaseErrorType ERROR_MEDIAINFO_MDATE_CHANGED            = new DatabaseErrorType(76, DatabaseAutofixer::fixError_MediaInfoMDate);
 	public final static DatabaseErrorType ERROR_DUPLICATE_FILE                     = new DatabaseErrorType(77, null);
@@ -87,6 +87,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_DB_TOO_LARGE_COVERID               = new DatabaseErrorType(80, null);
 	public final static DatabaseErrorType ERROR_SUBTITLE_MUTED                     = new DatabaseErrorType(81, null);
 	public final static DatabaseErrorType ERROR_INVALID_ONLINESCORE                = new DatabaseErrorType(82, null);
+	public final static DatabaseErrorType ERROR_COMMENT_WITHOUT_RATING             = new DatabaseErrorType(83, null);
 
 	private final int type;
 

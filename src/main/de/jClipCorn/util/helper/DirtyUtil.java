@@ -76,6 +76,7 @@ public class DirtyUtil
 		else if (c instanceof DateTimeListEditor) ((DateTimeListEditor)c).addValueChangedListener(e -> lstr.invoke());
 		else if (c instanceof OnlineScoreControl) ((OnlineScoreControl)c).addOnlineScoreChangedListener(e -> lstr.invoke());
 		else if (c instanceof CCFileSizeSpinner) ((CCFileSizeSpinner)c).addFileSizeChangedListener(e -> lstr.invoke());
+		else if (c instanceof JTextArea) ((JTextArea)c).getDocument().addDocumentListener(new DocumentLambdaAdapter(lstr::invoke));
 		else throw new IllegalArgumentException("Component " + c.getClass().getSimpleName() + " is not supported in initDirtyListener");
 	}
 }

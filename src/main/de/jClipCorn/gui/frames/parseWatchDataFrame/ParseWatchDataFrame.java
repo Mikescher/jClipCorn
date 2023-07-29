@@ -58,6 +58,29 @@ public class ParseWatchDataFrame extends JCCFrame
 		}
 	}
 
+	@SuppressWarnings("nls")
+	private void dataUpdated() {
+		java.util.List<String> errors = new ArrayList<>();
+		List<WatchDataChangeSet> set;
+
+		set = WatchDataParser.parse(movielist, memoData.getText(), errors);
+
+		memoLog.setText("");
+		for (String err : errors) {
+			memoLog.append(err + "\n");
+		}
+
+		btnExecute.setEnabled(errors.isEmpty());
+
+		updateResults(set);
+	}
+
+	private void updateResults(List<WatchDataChangeSet> change) {
+		changeSet = change;
+
+		tableResults.setData(change);
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		scrollPane1 = new JScrollPane();
@@ -121,29 +144,6 @@ public class ParseWatchDataFrame extends JCCFrame
 		setSize(1100, 600);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
-	}
-
-	@SuppressWarnings("nls")
-	private void dataUpdated() {
-		java.util.List<String> errors = new ArrayList<>();
-		List<WatchDataChangeSet> set;
-
-		set = WatchDataParser.parse(movielist, memoData.getText(), errors);
-
-		memoLog.setText("");
-		for (String err : errors) {
-			memoLog.append(err + "\n");
-		}
-
-		btnExecute.setEnabled(errors.isEmpty());
-
-		updateResults(set);
-	}
-
-	private void updateResults(List<WatchDataChangeSet> change) {
-		changeSet = change;
-
-		tableResults.setData(change);
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables

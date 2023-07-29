@@ -78,8 +78,10 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		};
 	}
 
-	public EIntProp    year()  { return  Year;  }
-	public EStringProp title() { return  Title; }
+	public EIntProp                year()          { return Year;          }
+	public EStringProp             title()         { return Title;         }
+	public EEnumProp<CCUserScore>  score()         { return Score;         }
+	public EStringProp             scoreComment()  { return ScoreComment;  }
 
 	public CCProperties ccprops() {
 		return getMovieList().ccprops();
@@ -275,7 +277,17 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 				return null;
 		}
 	}
-	
+
+	@Override
+	public CCUserScore getScore() {
+		return Score.get();
+	}
+
+	@Override
+	public String getScoreComment() {
+		return ScoreComment.get();
+	}
+
 	public CCDate calcMaximumAddDate() {
 		return _cache.get(SeasonCache.MAXIMUM_ADDDATE, null, sea->
 		{
@@ -735,5 +747,9 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	@SuppressWarnings("nls")
 	public boolean shouldHighlightAction(CCActionElement e) {
 		return false;
+	}
+
+	public BufferedImage getSelfOrParentCover() {
+		return getCover();
 	}
 }

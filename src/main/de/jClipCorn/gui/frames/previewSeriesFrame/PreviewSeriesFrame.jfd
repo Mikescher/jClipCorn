@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.12" encoding: "UTF-8"
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.7" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -88,6 +88,7 @@ new FormModel {
 					name: "cvrChooser"
 					"circleRadius": 300
 					"coverHalfSize": true
+					"showScores": true
 					auxiliary() {
 						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
 					}
@@ -204,6 +205,7 @@ new FormModel {
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
 					"gridY": 11
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "label7"
@@ -260,6 +262,7 @@ new FormModel {
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
 					"gridY": 17
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "label9"
@@ -335,21 +338,28 @@ new FormModel {
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "labelcompgap, 0dlu:grow, labelcompgap"
+				"$columnSpecs": "labelcompgap, 17dlu, labelcompgap, 0dlu:grow, labelcompgap, 17dlu, labelcompgap"
 				"$rowSpecs": "linegap, default, linegap, default:grow, linegap"
 			} ) {
 				name: "pnlMain"
 				"border": new javax.swing.border.LineBorder( sfield java.awt.Color gray, 1, false )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblSeasonScore"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 2
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "lblSeason"
 					"text": "<Season>"
 					"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 25, true )
 					"horizontalAlignment": 0
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 2
+					"gridX": 4
 					"gridY": 2
 				} )
-				add( new FormContainer( "de.jClipCorn.gui.frames.previewSeriesFrame.serTable.SerTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				add( new FormContainer( "de.jClipCorn.gui.frames.previewSeriesFrame.SerTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 					name: "tabSeason"
 					auxiliary() {
 						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist, this);"
@@ -359,6 +369,7 @@ new FormModel {
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					"gridX": 2
+					"gridWidth": 5
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 4

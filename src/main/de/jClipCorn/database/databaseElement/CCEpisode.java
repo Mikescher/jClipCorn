@@ -34,6 +34,7 @@ import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -110,6 +111,8 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public EDateTimeListProp       viewedHistory() { return ViewedHistory; }
 	public ELanguageSetProp        language()      { return Language;      }
 	public ELanguageListProp       subtitles()     { return Subtitles;     }
+	public EEnumProp<CCUserScore>  score()         { return Score;         }
+	public EStringProp             scoreComment()  { return ScoreComment;  }
 
 	public CCProperties ccprops() {
 		return getMovieList().ccprops();
@@ -173,6 +176,16 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	@Override
 	public CCDateTimeList getViewedHistory() {
 		return ViewedHistory.get();
+	}
+
+	@Override
+	public CCUserScore getScore() {
+		return Score.get();
+	}
+
+	@Override
+	public String getScoreComment() {
+		return ScoreComment.get();
 	}
 
 	public void setDefaultValues(boolean updateDB) {
@@ -470,5 +483,9 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		}
 
 		return false;
+	}
+
+	public BufferedImage getSelfOrParentCover() {
+		return getSeason().getCover();
 	}
 }

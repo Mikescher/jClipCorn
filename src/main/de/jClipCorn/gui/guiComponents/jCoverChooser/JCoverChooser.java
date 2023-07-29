@@ -3,9 +3,11 @@ package de.jClipCorn.gui.guiComponents.jCoverChooser;
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -36,10 +38,11 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	private int circleRadius = 500;
 	
 	private boolean mode3d;
+	private boolean showScores = false;
 
-	private final List<BufferedImage> images_full  = new ArrayList<>();
-	private final List<BufferedImage> images_scale = new ArrayList<>();
-	private final List<Object> objects = new ArrayList<>();
+	private final List<BufferedImage>     images_full  = new ArrayList<>();
+	private final List<BufferedImage>     images_scale = new ArrayList<>();
+	private final List<ICCCoveredElement> objects      = new ArrayList<>();
 	private int currSelected = 0;
 
 	private int lastClickTarget = -1;
@@ -118,10 +121,12 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	}
 	
 	public BufferedImage getSelectedImage() {
+		if (getSelectedIndex() < images_full.size()) return null;
 		return images_full.get(getSelectedIndex());
 	}
 	
-	public Object getSelectedObject() {
+	public ICCCoveredElement getSelectedObject() {
+		if (getSelectedIndex() < objects.size()) return null;
 		return objects.get(getSelectedIndex());
 	}
 
@@ -180,7 +185,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		return coverHalfSize ? ImageUtilities.HALF_COVER_WIDTH : ImageUtilities.BASE_COVER_WIDTH;
 	}
 
-	public void addCover(ICCCoveredElement elem, Object obj) {
+	public void addCover(ICCCoveredElement elem) {
 
 		if (asyncLoading) {
 
@@ -192,7 +197,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 			Tuple<Integer, Integer> sz = ImageUtilities.calcImageSizeToFit(bi.getWidth(), bi.getHeight(), getCoverWidth(), getCoverHeight());
 			images_scale.add(ImageUtilities.getScaledInstance(bi, sz.Item1, sz.Item2));
 			
-			objects.add(obj);
+			objects.add(elem);
 			
 			update();
 			
@@ -207,7 +212,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 			Tuple<Integer, Integer> sz = ImageUtilities.calcImageSizeToFit(bi.getWidth(), bi.getHeight(), getCoverWidth(), getCoverHeight());
 			images_scale.add(ImageUtilities.getScaledInstance(bi, sz.Item1, sz.Item2));
 			
-			objects.add(obj);
+			objects.add(elem);
 			
 			update();
 		}
@@ -269,22 +274,36 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		return MAX_EXTRACOVERCOUNT;
 	}
 
-	private void paintCover(Graphics g) {
+	private void paintCover(Graphics g)
+	{
 		int ecc = getExtraCoverCount();
 
-		for (int i = -ecc; i <= ecc; i++) {
+		for (int i = -ecc; i <= ecc; i++)
+		{
 			int imgid = currSelected + i;
 
 			TransformRectangle tr = rectangles.get(i);
 
-			if (coverIsSet(imgid)) {
-				
-				if (i == 0) {
+			if (coverIsSet(imgid))
+			{
+				if (i == 0)
+				{
 					g.drawImage(images_scale.get(imgid), tr.topLeft.x, tr.topLeft.y, tr.bottomRight.x - tr.topLeft.x, tr.bottomRight.y - tr.topLeft.y, null);
-				} else {
+				}
+				else
+				{
 					tr.draw(g, images_scale.get(imgid), false);
 				}
-				
+
+				if (showScores && objects.get(imgid).score().get() != CCUserScore.RATING_NO)
+				{
+					var icn = objects.get(imgid).score().get().getIconRef(!Str.isNullOrWhitespace(objects.get(imgid).scoreComment().get()));
+					if (icn != null)
+					{
+						if (i == 0) g.drawImage(icn.getImage16x16(), tr.bottomRight.x-18, tr.bottomRight.y-18, 16, 16, null);
+						else        g.drawImage(icn.getImage16x16(), tr.bottomRight.x-8,  tr.bottomRight.y-8,  16, 16, null);
+					}
+				}
 			}
 		}
 	}
@@ -429,7 +448,15 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	public boolean get3DMode() {
 		return mode3d;
 	}
-	
+
+	public void setShowScores(boolean ss) {
+		showScores = ss;
+	}
+
+	public boolean getShowScores() {
+		return showScores;
+	}
+
 	public int getElementCount() {
 		return images_full.size();
 	}

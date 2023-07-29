@@ -11,18 +11,19 @@ import java.util.List;
 
 @SuppressWarnings("nls")
 public enum SeriesFrameColumn implements ContinoousEnum<SeriesFrameColumn> {
-	EPISODE(    0, 100 ),
-	TITLE(      1, 101 ),
-	VIEWED(     2, 102 ),
-	LASTVIEWED( 3, 104 ),
-	QUALITY(    4, 105 ),
-	LANGUAGE(   5, 106 ),
-	SUBTITLES(  6, 108 ),
-	LENGTH(     7, 109 ),
-	TAGS(       8, 110 ),
-	ADDDATE(    9, 111 ),
-	FORMAT(     0, 112 ),
-	FILESIZE(   1, 113 );
+	EPISODE(    0, 2  ),
+	TITLE(      1, 3  ),
+	VIEWED(     2, 4  ),
+	LASTVIEWED( 3, 5  ),
+	QUALITY(    4, 6  ),
+	LANGUAGE(   5, 7  ),
+	SUBTITLES(  6, 8  ),
+	LENGTH(     7, 9  ),
+	TAGS(       8, 10 ),
+	ADDDATE(    9, 11 ),
+	FORMAT(    10, 12 ),
+	FILESIZE(  11, 13 ),
+	USERSCORE( 12, 1  );
 
 	private final static String[] NAMES = {
 		LocaleBundle.getString("PreviewSeriesFrame.serTable.Episode"),
@@ -37,6 +38,7 @@ public enum SeriesFrameColumn implements ContinoousEnum<SeriesFrameColumn> {
 		LocaleBundle.getString("PreviewSeriesFrame.serTable.Added"),
 		LocaleBundle.getString("PreviewSeriesFrame.serTable.Format"),
 		LocaleBundle.getString("PreviewSeriesFrame.serTable.Size"),
+		LocaleBundle.getString("PreviewSeriesFrame.serTable.UserScore"),
 	};
 
 	private final int id;

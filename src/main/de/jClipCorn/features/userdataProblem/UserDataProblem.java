@@ -4,6 +4,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
 import de.jClipCorn.database.databaseElement.datapacks.IMovieData;
 import de.jClipCorn.database.databaseElement.datapacks.ISeasonData;
@@ -54,6 +55,7 @@ public class UserDataProblem {
 	public final static int PROBLEM_MEDIAINFO_UNSET = 31;
 	public final static int PROBLEM_MEDIAINFO_WRONG_FILESIZE = 32;
 	public final static int PROBLEM_MEDIAINFO_WRONG_DATA = 33;
+	public final static int PROBLEM_COMMENT_WITHOUT_RATING = 34;
 
 	private final int pid; // Problem ID
 	private final Object[] additional; // Problem ID
@@ -317,10 +319,16 @@ public class UserDataProblem {
 		if (newdata.getLanguage().contains(CCDBLanguage.MUTED) && !newdata.getLanguage().isSingle()) {
 			ret.add(new UserDataProblem(PROBLEM_LANG_MUTED_SUBSET));
 		}
+
+		//################################################################################################################
+
+		if (newdata.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(newdata.getScoreComment())) {
+			ret.add(new UserDataProblem(PROBLEM_COMMENT_WITHOUT_RATING));
+		}
 	}
 	
-	public static void testSeriesData(List<UserDataProblem> ret, CCMovieList ml, CCSeries seriesSource, ISeriesData newdata) {
-
+	public static void testSeriesData(List<UserDataProblem> ret, CCMovieList ml, CCSeries seriesSource, ISeriesData newdata)
+	{
 		var gen0 = newdata.getGenres().getGenre(0).asInt();
 		var gen1 = newdata.getGenres().getGenre(1).asInt();
 		var gen2 = newdata.getGenres().getGenre(2).asInt();
@@ -397,9 +405,16 @@ public class UserDataProblem {
 		if (!newdata.getOnlineReference().isValid()) {
 			ret.add(new UserDataProblem(PROBLEM_INVALID_REFERENCE));
 		}
+
+		//################################################################################################################
+
+		if (newdata.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(newdata.getScoreComment())) {
+			ret.add(new UserDataProblem(PROBLEM_COMMENT_WITHOUT_RATING));
+		}
 	}
 	
-	public static void testSeasonData(List<UserDataProblem> ret, CCMovieList ml, CCSeason seasonSource, ISeasonData newdata) {
+	public static void testSeasonData(List<UserDataProblem> ret, CCMovieList ml, CCSeason seasonSource, ISeasonData newdata)
+	{
 		if (newdata.getTitle().isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
@@ -421,9 +436,16 @@ public class UserDataProblem {
 		if (Str.isUntrimmed(newdata.getTitle())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
 		}
+
+		//################################################################################################################
+
+		if (newdata.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(newdata.getScoreComment())) {
+			ret.add(new UserDataProblem(PROBLEM_COMMENT_WITHOUT_RATING));
+		}
 	}
 	
-	public static void testEpisodeData(List<UserDataProblem> ret, CCMovieList ml, IEpisodeOwner owner, CCEpisode episodeSource, IEpisodeData newdata) {
+	public static void testEpisodeData(List<UserDataProblem> ret, CCMovieList ml, IEpisodeOwner owner, CCEpisode episodeSource, IEpisodeData newdata)
+	{
 		if (newdata.getTitle().isEmpty()) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 		}
@@ -543,6 +565,12 @@ public class UserDataProblem {
 		
 		if (newdata.getLanguage().contains(CCDBLanguage.MUTED) && !newdata.getLanguage().isSingle()) {
 			ret.add(new UserDataProblem(PROBLEM_LANG_MUTED_SUBSET));
+		}
+
+		//################################################################################################################
+
+		if (newdata.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(newdata.getScoreComment())) {
+			ret.add(new UserDataProblem(PROBLEM_COMMENT_WITHOUT_RATING));
 		}
 	}
 	

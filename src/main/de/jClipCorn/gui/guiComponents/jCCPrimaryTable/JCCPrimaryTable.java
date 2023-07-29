@@ -182,7 +182,10 @@ public abstract class JCCPrimaryTable<TData, TEnum> extends JScrollPane
 		Arrays.fill(cfg, "auto"); //$NON-NLS-1$
 
 		for (var idx=0; idx < config.size(); idx++) {
-			cfg[idx] = config.get(idx).AdjusterConfig;
+			if (config.get(idx).HideColumn.invoke())
+				cfg[idx] = "hide";
+			else
+				cfg[idx] = config.get(idx).AdjusterConfig;
 		}
 
 		return CCStreams.iterate(cfg).stringjoin(e->e, "|"); //$NON-NLS-1$

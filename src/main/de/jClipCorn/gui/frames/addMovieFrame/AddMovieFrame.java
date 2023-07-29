@@ -541,6 +541,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				spnOnlineScore.getValue(),
 				cbxFSK.getSelectedEnum().asFSKOrNull(),
 				cbxScore.getSelectedEnum(),
+				Str.Empty,
 				edReference.getValue(),
 				edGroups.getValue(),
 				CCTagList.EMPTY,

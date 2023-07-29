@@ -11,24 +11,26 @@ public class SeriesDataPack implements ISeriesData
 	private final CCOnlineScore onlinescore;
 	private final CCFSK fsk;
 	private final CCUserScore score;
+	private final String scoreComment;
 	private final CCOnlineReferenceList onlineReference;
 	private final CCGroupList groups;
 	private final CCTagList tags;
 	private final BufferedImage cover;
 
 	public SeriesDataPack(String title, CCGenreList genres, CCOnlineScore onlinescore,
-						  CCFSK fsk, CCUserScore score, CCOnlineReferenceList onlineReference,
+						  CCFSK fsk, CCUserScore score, String scoreComment, CCOnlineReferenceList onlineReference,
 						  CCGroupList groups, CCTagList tags, BufferedImage cover)
 	{
-		this.title = title;
-		this.genres = genres;
-		this.onlinescore = onlinescore;
-		this.fsk = fsk;
-		this.score = score;
+		this.title           = title;
+		this.genres          = genres;
+		this.onlinescore     = onlinescore;
+		this.fsk             = fsk;
+		this.score           = score;
+		this.scoreComment    = scoreComment;
 		this.onlineReference = onlineReference;
-		this.groups = groups;
-		this.tags = tags;
-		this.cover = cover;
+		this.groups          = groups;
+		this.tags            = tags;
+		this.cover           = cover;
 	}
 
 	@Override public String getTitle() { return title; }
@@ -40,6 +42,8 @@ public class SeriesDataPack implements ISeriesData
 	@Override public CCFSK getFSK() { return fsk; }
 
 	@Override public CCUserScore getScore() { return score; }
+
+	@Override public String getScoreComment() { return scoreComment; }
 
 	@Override public CCOnlineReferenceList getOnlineReference() { return onlineReference; }
 

@@ -38,6 +38,8 @@ public class SerCoverChooserPopupMenu extends ClipPopupMenu {
 		addAction("AddEpisodes");
 		addAction("BatchEditSeason");
 		addAction("EditSeason");
+		addActionMenuTree("SetSeasonRating");
+		addAction("EditSeasonRating");
 		addAction("OpenSeasonFolder");
 		addAction("RemSeason");
 

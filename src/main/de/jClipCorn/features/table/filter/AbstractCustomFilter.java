@@ -59,6 +59,7 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_MI_SET           = 36;
 	public final static int CUSTOMFILTERID_MI_VALUE         = 37;
 	public final static int CUSTOMFILTERID_SUBTITLE         = 38;
+	public final static int CUSTOMFILTERID_USERSCORECOMMENT = 39;
 		
 	public abstract String getName();
 	public abstract String getPrecreateName();
@@ -182,6 +183,7 @@ public abstract class AbstractCustomFilter {
 			new CustomMediaInfoSetFilter(ml),
 			new CustomMediaInfoValueFilter(ml),
 			new CustomUserScoreFilter(ml),
+			new CustomUserCommentFilter(ml),
 			new CustomMainReferenceFilter(ml),
 			new CustomAnyReferenceFilter(ml),
 			new CustomTagFilter(ml),

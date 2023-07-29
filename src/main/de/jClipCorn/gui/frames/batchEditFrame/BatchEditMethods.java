@@ -172,6 +172,18 @@ public class BatchEditMethods
 		ep.addDate = param;
 	});
 
+	public static BatchEditMethod<CCUserScore> SCORE_SET = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		if (param == null) return;
+		ep.score = param;
+	});
+
+	public static BatchEditMethod<String> SCORECOMMENT_SET = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		if (param == null) return;
+		ep.scoreComment = param;
+	});
+
 	public static BatchEditMethod<Void> LANGUAGE_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
 	{
 		var dat = new MediaInfoRunner(ep.getSource().getMovieList()).run(ep.part.toFSPath(ep.ccprops()));

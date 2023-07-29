@@ -49,6 +49,7 @@ import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -172,6 +173,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		cbxGenre7.setSelectedEnum(movie.Genres.get().getGenre(7));
 
 		cbxScore.setSelectedEnum(movie.Score.get());
+		memoScoreComment.setText(movie.ScoreComment.get());
 		tagPnl.setValue(movie.Tags.get());
 
 		edCvrControl.setCover(movie.getCover());
@@ -414,6 +416,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 
 		movie.Tags.set(tagPnl.getValue());
 		movie.Score.set(cbxScore.getSelectedEnum());
+		movie.ScoreComment.set(memoScoreComment.getText());
 
 		movie.setCover(edCvrControl.getResizedImageForStorage());
 
@@ -454,6 +457,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 			spnOnlineScore.getValue(),
 			cbxFSK.getSelectedEnum(),
 			cbxScore.getSelectedEnum(),
+			memoScoreComment.getText(),
 			edReference.getValue(),
 			edGroups.getValue(),
 			CCTagList.EMPTY,
@@ -882,6 +886,9 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		btnRecalculateSize = new JButton();
 		label28 = new JLabel();
 		cbxScore = new CCEnumComboBox<CCUserScore>(CCUserScore.getWrapper());
+		label30 = new JLabel();
+		scrollPane1 = new JScrollPane();
+		memoScoreComment = new JTextArea();
 		label31 = new JLabel();
 		tagPnl = new TagPanel();
 		pnlRight = new JPanel();
@@ -1033,7 +1040,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 			{
 				pnlData.setLayout(new FormLayout(
 					"default, $lcgap, 0dlu:grow, $lcgap, [40dlu,default], $lcgap, 16dlu, $lcgap, 25dlu, $lcgap, [30dlu,default]", //$NON-NLS-1$
-					"16*(default, $lgap), default:grow")); //$NON-NLS-1$
+					"15*(default, $lgap), 16dlu:grow, $lgap, default")); //$NON-NLS-1$
 
 				//---- label15 ----
 				label15.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
@@ -1164,10 +1171,21 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 				pnlData.add(label28, CC.xy(1, 29));
 				pnlData.add(cbxScore, CC.xywh(3, 29, 3, 1));
 
+				//---- label30 ----
+				label30.setText(LocaleBundle.getString("EditMovieFrame.lblScoreComment")); //$NON-NLS-1$
+				label30.setBorder(new EmptyBorder(5, 0, 0, 0));
+				pnlData.add(label30, CC.xy(1, 31, CC.DEFAULT, CC.TOP));
+
+				//======== scrollPane1 ========
+				{
+					scrollPane1.setViewportView(memoScoreComment);
+				}
+				pnlData.add(scrollPane1, CC.xywh(3, 31, 3, 1, CC.DEFAULT, CC.FILL));
+
 				//---- label31 ----
 				label31.setText(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
-				pnlData.add(label31, CC.xy(1, 31));
-				pnlData.add(tagPnl, CC.xywh(3, 31, 3, 1));
+				pnlData.add(label31, CC.xy(1, 33));
+				pnlData.add(tagPnl, CC.xywh(3, 33, 3, 1));
 			}
 			pnlLeft.add(pnlData, CC.xy(1, 3, CC.FILL, CC.FILL));
 		}
@@ -1256,7 +1274,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 			pnlBottom.add(btnCancel);
 		}
 		contentPane.add(pnlBottom, CC.xywh(2, 4, 3, 1));
-		setSize(900, 900);
+		setSize(900, 925);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -1330,6 +1348,9 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	private JButton btnRecalculateSize;
 	private JLabel label28;
 	private CCEnumComboBox<CCUserScore> cbxScore;
+	private JLabel label30;
+	private JScrollPane scrollPane1;
+	private JTextArea memoScoreComment;
 	private JLabel label31;
 	private TagPanel tagPnl;
 	private JPanel pnlRight;

@@ -82,6 +82,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public EOnlineScorePropPack     onlineScore()     { return OnlineScore;     }
 	public EEnumProp<CCFSK>         fsk()             { return FSK;             }
 	public EEnumProp<CCUserScore>   score()           { return Score;           }
+	public EStringProp              scoreComment()    { return ScoreComment;    }
 	public EOnlineRefListProp       onlineReference() { return OnlineReference; }
 	public ETagListProp             tags()            { return Tags;            }
 
@@ -200,6 +201,11 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 
 	@Override
+	public String getScoreComment() {
+		return ScoreComment.get();
+	}
+
+	@Override
 	public CCOnlineReferenceList getOnlineReference() {
 		return OnlineReference.get();
 	}
@@ -250,6 +256,10 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public void forceUpdate() {
 		updateDB();
 		getCache().bust();
+	}
+
+	public BufferedImage getSelfOrParentCover() {
+		return getCover();
 	}
 
 	@Override

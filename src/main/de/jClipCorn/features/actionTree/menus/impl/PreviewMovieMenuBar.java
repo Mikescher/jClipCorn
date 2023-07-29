@@ -43,6 +43,7 @@ public class PreviewMovieMenuBar extends ClipMenuBar {
 			}
 			addSeparator();
 			addActionTreeNode("SetMovieRating");
+			addActionNode("EditMovieRating");
 			addActionTreeNode("SetTags_Movies");
 			addActionNode("SetMovieViewed");
 			addActionNode("SetMovieUnviewed");

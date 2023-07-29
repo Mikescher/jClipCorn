@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.12" encoding: "UTF-8"
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.7" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -87,7 +87,7 @@ new FormModel {
 				name: "tabbedPane1"
 				"tabPlacement": 3
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-					"$columnSpecs": "labelcompgap, default, labelcompgap, default, labelcompgap, default:grow, labelcompgap, 80dlu, labelcompgap"
+					"$columnSpecs": "labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, 0dlu:grow, labelcompgap, 80dlu, labelcompgap"
 					"$rowSpecs": "linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default:grow"
 				} ) {
 					name: "pnlTabMain"
@@ -111,7 +111,7 @@ new FormModel {
 							"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 8
+						"gridX": 10
 						"gridY": 2
 						"gridHeight": 3
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
@@ -299,6 +299,7 @@ new FormModel {
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
 						"gridY": 26
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "lblUserScoreIcon"
@@ -306,7 +307,7 @@ new FormModel {
 						"gridX": 4
 						"gridY": 26
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
-						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "lblUserScore"
@@ -314,6 +315,16 @@ new FormModel {
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
 						"gridY": 26
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "lblScoreComment"
+						"text": "text"
+						"border": new javax.swing.border.LineBorder( new com.jformdesigner.model.SwingColor( "Borders.ContrastBorderColor" ), 1, false )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 8
+						"gridY": 26
+						"gridWidth": 3
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label13"
@@ -400,7 +411,7 @@ new FormModel {
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
 						"gridY": 30
-						"gridWidth": 7
+						"gridWidth": 9
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )

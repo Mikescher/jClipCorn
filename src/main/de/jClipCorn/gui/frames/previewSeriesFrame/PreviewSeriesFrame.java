@@ -15,7 +15,6 @@ import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.actionTree.menus.impl.ClipEpisodePopup;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewSeriesMenuBar;
 import de.jClipCorn.features.actionTree.menus.impl.SerCoverChooserPopupMenu;
-import de.jClipCorn.gui.frames.previewSeriesFrame.serTable.SerTable;
 import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
 import de.jClipCorn.gui.frames.vlcRobot.VLCRobotFrame;
 import de.jClipCorn.gui.guiComponents.*;
@@ -36,6 +35,7 @@ import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.formatter.HTMLFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -238,7 +238,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		int ccidx = cvrChooser.getSelectedIndex();
 
 		cvrChooser.clear();
-		for(var v : series.iteratorSeasons()) cvrChooser.addCover(v, v);
+		for(var v : series.iteratorSeasons()) cvrChooser.addCover(v);
 
 		cvrChooser.setCurrSelected(ccidx);
 
@@ -254,7 +254,8 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		lblViewed.setIcon(ImageUtilities.sliceImage(Resources.ICN_TABLE_VIEWED_TRUE.get(), 0d, (series.getViewedCount() * 1d) / series.getEpisodeCount()));
 
 		lblScore.setText(Str.Empty);
-		lblScore.setIcon(series.Score.get().getIcon());
+		lblScore.setIcon(series.Score.get().getIcon(!Str.isNullOrWhitespace(series.ScoreComment.get())));
+		lblScore.setToolTipText(Str.isNullOrWhitespace(series.ScoreComment.get()) ? null : HTMLFormatter.formatTooltip(series.ScoreComment.get()));
 
 		ctrlLang.setValue(series.getAllLanguages());
 		ctrlSubs.setValue(series.getAllSubtitles());
@@ -304,6 +305,12 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		} else {
 			lblSeason.setText(String.format("%s (%d)", s.getTitle(), s.getYear())); //$NON-NLS-1$
 		}
+
+		var seasonIcon = s.Score.get().getIconRef(!Str.isNullOrWhitespace(s.ScoreComment.get()));
+		if (seasonIcon == null) lblSeasonScore.setIcon(null);
+		else                    lblSeasonScore.setIcon(seasonIcon.get32x32());
+
+		lblSeasonScore.setToolTipText(Str.isNullOrWhitespace(s.ScoreComment.get()) ? null : HTMLFormatter.formatTooltip(s.ScoreComment.get()));
 
 		if (tabSeason.getSeason() == s) {
 			int row_s = tabSeason.getSelectedRow();
@@ -448,6 +455,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		lblGenres = new MultiLineTextLabel();
 		btnOnline = new OnlineRefButton(movielist);
 		pnlMain = new JPanel();
+		lblSeasonScore = new JLabel();
 		lblSeason = new JLabel();
 		tabSeason = new SerTable(movielist, this);
 
@@ -518,6 +526,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			//---- cvrChooser ----
 			cvrChooser.setCircleRadius(300);
 			cvrChooser.setCoverHalfSize(true);
+			cvrChooser.setShowScores(true);
 			cvrChooser.addSelectionListener(e -> onCoverChooserSelected());
 			cvrChooser.addPopupListener(e -> onCoverChooserPopup(e));
 			pnlTop.add(cvrChooser, CC.xywh(3, 2, 3, 1, CC.FILL, CC.FILL));
@@ -585,7 +594,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			lblScore.setText("<dynamic>"); //$NON-NLS-1$
 			lblScore.setHorizontalTextPosition(SwingConstants.LEADING);
 			lblScore.setFont(lblScore.getFont().deriveFont(12f));
-			pnlInfo.add(lblScore, CC.xy(3, 11));
+			pnlInfo.add(lblScore, CC.xy(3, 11, CC.LEFT, CC.DEFAULT));
 
 			//---- label7 ----
 			label7.setText(LocaleBundle.getString("PreviewSeriesFrame.lblLanguage.text")); //$NON-NLS-1$
@@ -614,7 +623,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			lblFSK.setText("<dynamic>"); //$NON-NLS-1$
 			lblFSK.setHorizontalTextPosition(SwingConstants.LEADING);
 			lblFSK.setFont(lblFSK.getFont().deriveFont(12f));
-			pnlInfo.add(lblFSK, CC.xy(3, 17));
+			pnlInfo.add(lblFSK, CC.xy(3, 17, CC.LEFT, CC.DEFAULT));
 
 			//---- label9 ----
 			label9.setText(LocaleBundle.getString("PreviewSeriesFrame.lblTags.text")); //$NON-NLS-1$
@@ -653,15 +662,16 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		{
 			pnlMain.setBorder(LineBorder.createGrayLineBorder());
 			pnlMain.setLayout(new FormLayout(
-				"$lcgap, 0dlu:grow, $lcgap", //$NON-NLS-1$
+				"$lcgap, 17dlu, $lcgap, 0dlu:grow, $lcgap, 17dlu, $lcgap", //$NON-NLS-1$
 				"$lgap, default, $lgap, default:grow, $lgap")); //$NON-NLS-1$
+			pnlMain.add(lblSeasonScore, CC.xy(2, 2, CC.FILL, CC.DEFAULT));
 
 			//---- lblSeason ----
 			lblSeason.setText("<Season>"); //$NON-NLS-1$
 			lblSeason.setFont(lblSeason.getFont().deriveFont(25f));
 			lblSeason.setHorizontalAlignment(SwingConstants.CENTER);
-			pnlMain.add(lblSeason, CC.xy(2, 2));
-			pnlMain.add(tabSeason, CC.xy(2, 4, CC.FILL, CC.FILL));
+			pnlMain.add(lblSeason, CC.xy(4, 2));
+			pnlMain.add(tabSeason, CC.xywh(2, 4, 5, 1, CC.FILL, CC.FILL));
 		}
 		contentPane.add(pnlMain, CC.xy(4, 4, CC.FILL, CC.FILL));
 		setSize(1000, 750);
@@ -704,6 +714,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 	private MultiLineTextLabel lblGenres;
 	private OnlineRefButton btnOnline;
 	private JPanel pnlMain;
+	private JLabel lblSeasonScore;
 	private JLabel lblSeason;
 	private SerTable tabSeason;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables

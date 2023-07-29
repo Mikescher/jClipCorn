@@ -29,6 +29,7 @@ import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang.text.StrBuilder;
 
+import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

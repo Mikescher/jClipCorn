@@ -22,7 +22,7 @@ import java.util.List;
 public class TableColumnAdjuster implements PropertyChangeListener, TableModelListener {
 	private final static int COLUMNBORDER_WIDTH = 6; //Wert durch testen ermittelt ...
 
-	private enum TCACType { Auto, Fill, Fixed, Keep }
+	private enum TCACType { Auto, Fill, Fixed, Keep, Hide }
 	private enum TCALimitPriority { Min, Max }
 	private static class TCAConfig
 	{
@@ -229,6 +229,11 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			{
 				cfg.add(new TCAConfig(TCACType.Keep, 0, 0, min, max, prio, expandOnly));
 			}
+			else if ("hide".equals(components[0]))
+			{
+				cfg.add(new TCAConfig(TCACType.Hide, 0, 0, 0, 0, prio, false));
+				if (components.length > 1) throw new Error("Cannot parse TCA-config: 'hide cannot have additional modifier'");
+			}
 			else
 			{
 				throw new Error("Cannot parse TCA-config-string: '" + dat + "'");
@@ -257,6 +262,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 		int totalWidth = getContainerWidth() - COLUMNBORDER_WIDTH;
 
 		float[] columns = new float[tcm.getColumnCount()];
+		boolean[] hiddenColumns = new boolean[tcm.getColumnCount()];
 		TableColumn[] tcols = new TableColumn[tcm.getColumnCount()];
 		int[] auto = _autoCache;
 
@@ -273,7 +279,17 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 		// [1] Skip non-resizable columns
 		for (int i = 0; i < tcm.getColumnCount(); i++) if (!tcols[i].getResizable()) columns[i] = tcols[i].getWidth();
 
-		// [2] Process [KEEP] configured columns
+		// [2] Process [HIDE] configured columns
+		for (int i = 0; i < tcm.getColumnCount(); i++)
+		{
+			if (Float.isNaN(columns[i]) && cfg.get(i).Type == TCACType.Hide)
+			{
+				columns[i] = 0;
+				hiddenColumns[i] = true;
+			}
+		}
+
+		// [3] Process [KEEP] configured columns
 		for (int i = 0; i < tcm.getColumnCount(); i++)
 		{
 			if (Float.isNaN(columns[i]) && cfg.get(i).Type == TCACType.Keep)
@@ -301,7 +317,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			}
 		}
 
-		// [3] Process [FIXED] configured columns
+		// [4] Process [FIXED] configured columns
 		for (int i = 0; i < tcm.getColumnCount(); i++)
 		{
 			if (Float.isNaN(columns[i]) && cfg.get(i).Type == TCACType.Fixed)
@@ -329,7 +345,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			}
 		}
 
-		// [4] Process [AUTO] configured columns
+		// [5] Process [AUTO] configured columns
 		for (int i = 0; i < tcm.getColumnCount(); i++)
 		{
 			if (Float.isNaN(columns[i]) && cfg.get(i).Type == TCACType.Auto)
@@ -357,7 +373,7 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			}
 		}
 
-		// [5] Process [FILL] configured columns
+		// [6] Process [FILL] configured columns
 		int remaining = totalWidth;
 		int fillweight = 0;
 		for (int i = 0; i < tcm.getColumnCount(); i++)
@@ -393,10 +409,13 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 			}
 		}
 
-		// [6] Apply
+		// [7] Apply
 		for (int i = 0; i < tcm.getColumnCount(); i++)
 		{
-			setColumnWidth(tcols[i], (int)columns[i]);
+			if (hiddenColumns[i])
+				hideColumn(tcols[i]);
+			else
+				setColumnWidth(tcols[i], (int)columns[i]);
 		}
 	}
 
@@ -445,7 +464,16 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
 	private void setColumnWidth(final TableColumn tableColumn, final int width) {
 		if (tableColumn.getWidth() == width) return;
 		table.getTableHeader().setResizingColumn(tableColumn);
+		tableColumn.setMinWidth(0);
+		tableColumn.setMaxWidth(Integer.MAX_VALUE);
+		tableColumn.setPreferredWidth(width);
 		tableColumn.setWidth(width);
+	}
+
+	private void hideColumn(final TableColumn tableColumn) {
+		tableColumn.setMinWidth(0);
+		tableColumn.setMaxWidth(0);
+		tableColumn.setPreferredWidth(0);
 	}
 
 	@Override

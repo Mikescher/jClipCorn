@@ -110,7 +110,7 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "default, labelcompgap, 0dlu:grow"
-				"$rowSpecs": "default, linegap, default, unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, pref, linegap, pref, linegap, default:grow, linegap, pref"
+				"$rowSpecs": "default, linegap, default, unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, pref, linegap, pref, linegap, default, linegap, default, linegap, pref, linegap, pref, linegap, default:grow, linegap, pref"
 			} ) {
 				name: "pnlInfo"
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.cover.DatabaseElementPreviewLabel" ) {
@@ -220,6 +220,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageSetDisplay" ) {
 					name: "ctrlLang"
+					"doCalculatePrefSize": true
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
 					"gridY": 13
@@ -238,6 +239,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageListDisplay" ) {
 					name: "ctrlSubs"
+					"doCalculatePrefSize": true
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
 					"gridY": 15
@@ -379,7 +381,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 1000, 750 )
+			"size": new java.awt.Dimension( 1000, 950 )
 		} )
 	}
 }

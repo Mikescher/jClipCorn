@@ -39,6 +39,7 @@ import de.jClipCorn.util.formatter.HTMLFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
@@ -272,6 +273,8 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		lblGroups.setText(series.Groups.get().iterate().stringjoin(p->p.Name, "\n"));
 
 		lblGenres.setText(series.Genres.get().iterate().stringjoin(CCGenre::asString, "\n"));
+
+		ThreadUtils.delay(50, () -> { pnlInfo.revalidate(); });
 	}
 
 	private void autoPlay() {
@@ -537,7 +540,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		{
 			pnlInfo.setLayout(new FormLayout(
 				"default, $lcgap, 0dlu:grow", //$NON-NLS-1$
-				"default, $lgap, default, $ugap, 8*(default, $lgap), 2*(pref, $lgap), default:grow, $lgap, pref")); //$NON-NLS-1$
+				"default, $lgap, default, $ugap, 4*(default, $lgap), 2*(pref, $lgap), 2*(default, $lgap), 2*(pref, $lgap), default:grow, $lgap, pref")); //$NON-NLS-1$
 
 			//---- lblCover ----
 			lblCover.setNoOverlay(true);
@@ -602,6 +605,9 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			label7.setVerticalTextPosition(SwingConstants.TOP);
 			label7.setFont(label7.getFont().deriveFont(12f));
 			pnlInfo.add(label7, CC.xy(1, 13, CC.DEFAULT, CC.TOP));
+
+			//---- ctrlLang ----
+			ctrlLang.setDoCalculatePrefSize(true);
 			pnlInfo.add(ctrlLang, CC.xy(3, 13, CC.FILL, CC.FILL));
 
 			//---- label10 ----
@@ -610,6 +616,9 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			label10.setVerticalTextPosition(SwingConstants.TOP);
 			label10.setFont(label10.getFont().deriveFont(12f));
 			pnlInfo.add(label10, CC.xy(1, 15, CC.DEFAULT, CC.TOP));
+
+			//---- ctrlSubs ----
+			ctrlSubs.setDoCalculatePrefSize(true);
 			pnlInfo.add(ctrlSubs, CC.xy(3, 15, CC.FILL, CC.FILL));
 
 			//---- label5 ----
@@ -674,7 +683,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			pnlMain.add(tabSeason, CC.xywh(2, 4, 5, 1, CC.FILL, CC.FILL));
 		}
 		contentPane.add(pnlMain, CC.xy(4, 4, CC.FILL, CC.FILL));
-		setSize(1000, 750);
+		setSize(1000, 950);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}

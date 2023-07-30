@@ -99,7 +99,7 @@ public class CheckDatabaseFrame extends JCCFrame
 	}
 
 	private void cbValSeasonsItemStateChanged(ItemEvent e) {
-		ccprops().PROP_CHECKDATABASE_OPT_EXTRA.setValue(cbValAdditional.isSelected());
+		ccprops().PROP_CHECKDATABASE_OPT_SEASONS.setValue(cbValSeasons.isSelected());
 	}
 
 	private void cbValEpisodesItemStateChanged(ItemEvent e) {
@@ -115,7 +115,7 @@ public class CheckDatabaseFrame extends JCCFrame
 	}
 
 	private void cbValAdditionalItemStateChanged(ItemEvent e) {
-		ccprops().PROP_CHECKDATABASE_OPT_SEASONS.setValue(cbValSeasons.isSelected());
+		ccprops().PROP_CHECKDATABASE_OPT_EXTRA.setValue(cbValAdditional.isSelected());
 	}
 
 	private void autoFix() {

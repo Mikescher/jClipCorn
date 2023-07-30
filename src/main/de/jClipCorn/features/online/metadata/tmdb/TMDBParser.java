@@ -182,7 +182,7 @@ public class TMDBParser extends Metadataparser {
 			url += "&language=" + ccprops().PROP_TMDB_LANGUAGE.getValue().asDinIsoID();
 		}
 		
-		url += "&append_to_response=release_dates,content_ratings";
+		url += "&append_to_response=release_dates,content_ratings,external_ids";
 		
 		String json = HTTPUtilities.getRateLimitedHTML(movielist, url, false, false);
 		try {
@@ -224,9 +224,14 @@ public class TMDBParser extends Metadataparser {
 				result.Genres = new CCGenreList(genres);
 			}
 			
-			if (hasString(root, "imdb_id")) 
+			if (hasString(root, "imdb_id")) {
 				result.AltRef = CCSingleOnlineReference.createIMDB(root.getString("imdb_id"));
-			
+			}
+
+			if (root.has("external_ids") && hasString(root.getJSONObject("external_ids"), "imdb_id")) {
+				result.AltRef = CCSingleOnlineReference.createIMDB(root.getJSONObject("external_ids").getString("imdb_id"));
+			}
+
 			if (result.FSKList == null && root.has("release_dates")) {
 				JSONObject releases = root.getJSONObject("release_dates");
 				if (releases.has("results")) {

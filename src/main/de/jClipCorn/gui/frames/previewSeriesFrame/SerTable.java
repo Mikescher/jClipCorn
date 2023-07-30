@@ -32,6 +32,7 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 
 	private CCSeason season = null;
 	private boolean hasScore = true;
+	private boolean hasTags = true;
 
 	@DesignCreate
 	private static ClipTable designCreate() { return new ClipTable(CCMovieList.createStub(), null); }
@@ -232,7 +233,7 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			(v,row) -> v.Tags.get().getAsString(),
 			(v) -> false,
 			(v) -> noop(),
-			() -> false
+			() -> !hasTags
 		));
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
@@ -378,7 +379,8 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 
 	public void changeSeason(CCSeason s) {
 		this.season = s;
-		this.hasScore = s.iteratorEpisodes().any(e -> e.Score.get() != CCUserScore.RATING_NO || !Str.isNullOrWhitespace(e.ScoreComment.get()));
+		this.hasScore = (s == null) ? false : s.iteratorEpisodes().any(e -> e.Score.get() != CCUserScore.RATING_NO || !Str.isNullOrWhitespace(e.ScoreComment.get()));
+		this.hasTags  = (s == null) ? false : s.iteratorEpisodes().any(e -> e.Tags.get().hasTags());
 
 		getVerticalScrollBar().setValue(0);
 

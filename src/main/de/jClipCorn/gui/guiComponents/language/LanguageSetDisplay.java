@@ -28,7 +28,7 @@ public class LanguageSetDisplay extends JPanel {
 	}
 
 	private void init() {
-		setLayout(new FlowLayout(FlowLayout.LEFT, 0, GAP_Y));
+		setLayout(new FlowLayout(FlowLayout.LEFT, GAP_X, GAP_Y));
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
@@ -63,12 +63,6 @@ public class LanguageSetDisplay extends JPanel {
 			JLabel l = new JLabel(lng.getIcon());
 			l.setToolTipText(lng.asString());
 			add(l);
-
-			var gap = new JPanel();
-			gap.setPreferredSize(new Dimension(GAP_X, 1));
-			gap.setMinimumSize(new Dimension(GAP_X, 1));
-			gap.setMaximumSize(new Dimension(GAP_X, 1));
-			add(gap);
 		}
 
 		Component parent = getParent();

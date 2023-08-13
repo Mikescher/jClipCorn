@@ -103,8 +103,9 @@ public class ClipCornBaseTest {
 		{
 			for (var p : ml1.iteratorPlayables())
 			{
-				if (p.mediaInfo().get().Checksum.isPresent()) continue;
 				var mi = p.mediaInfo().get();
+				if (mi.Checksum.isPresent()) continue;
+				if (mi.Filesize.isEmpty()) continue;
 				var cs = Opt.of("[01-" + StringUtils.leftPad(Long.toHexString(mi.Filesize.orElse(CCFileSize.ZERO).getBytes()).toUpperCase(), 10, '0') + "-00:00:00:00:00:00:00:00]");
 				p.mediaInfo().Checksum.set(cs);
 			}

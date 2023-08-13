@@ -8,12 +8,16 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
+import de.jClipCorn.features.table.filter.AbstractCustomFilter;
+import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,8 +44,40 @@ public class UpdateMetadataFrame extends JCCFrame
 
 	private void postInit()
 	{
-		tableMain.setData(movielist.iteratorElements().map(UpdateMetadataTableElement::new).enumerate());
-		tableMain.autoResize();
+		initTable();
+
+		var defBackground = statusInputFilter.getBackground();
+		edInputFilter.getDocument().addDocumentListener(new DocumentLambdaAdapter(() -> {
+			if (edInputFilter.getText().equals("[0]"))
+				statusInputFilter.setBackground(defBackground);
+			else if (AbstractCustomFilter.createFilterFromExport(movielist, edInputFilter.getText()) == null)
+				statusInputFilter.setBackground(Color.RED);
+			else
+				statusInputFilter.setBackground(Color.GREEN);
+		}));
+	}
+
+	private void initTable()
+	{
+		tableMain.clearData();
+
+		try
+		{
+			var data = movielist.iteratorElements().map(UpdateMetadataTableElement::new).enumerate();
+
+			var filter = AbstractCustomFilter.createFilterFromExport(movielist, edInputFilter.getText());
+			if (filter == null) throw new Exception("failed to parse filter");
+
+			data = CCStreams.iterate(data).filter(elem -> filter.includes(elem.Element)).enumerate();
+
+			tableMain.setData(data);
+			tableMain.autoResize();
+		}
+		catch(Exception e)
+		{
+			CCLog.addWarning(e);
+			GenericTextDialog.showText(this, getTitle(), e.getMessage() + "\n\n" + ExceptionUtils.getMessage(e) + "\n\n" + ExceptionUtils.getStackTrace(e), false); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 
 	private void setFiltered(FilterState state, boolean triggerUpdate) {
@@ -131,6 +167,7 @@ public class UpdateMetadataFrame extends JCCFrame
 				btnUpdateSelectedOnlineScore.setEnabled(false);
 				btnUpdateAllReferences.setEnabled(false);
 				btnUpdateSelectedRefs.setEnabled(false);
+				btnInputFilter.setEnabled(false);
 			});
 			ThreadUtils.setProgressbarAndWait(progressBar, 0, 0, data.size()+1);
 
@@ -174,6 +211,7 @@ public class UpdateMetadataFrame extends JCCFrame
 				btnUpdateSelectedOnlineScore.setEnabled(!movielist.isReadonly());
 				btnUpdateAllReferences.setEnabled(!movielist.isReadonly());
 				btnUpdateSelectedRefs.setEnabled(!movielist.isReadonly());
+				btnInputFilter.setEnabled(false);
 			});
 			collThread = null;
 		}
@@ -312,8 +350,16 @@ public class UpdateMetadataFrame extends JCCFrame
 		tableMain.forceDataChangedRedraw();
 	}
 
+	private void filterInput() {
+		initTable();
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		statusInputFilter = new JPanel();
+		panel2 = new JPanel();
+		edInputFilter = new JTextField();
+		btnInputFilter = new JButton();
 		btnStartCollectingData = new JButton();
 		progressBar = new JProgressBar();
 		btnShowAll = new JToggleButton();
@@ -334,78 +380,120 @@ public class UpdateMetadataFrame extends JCCFrame
 		setMinimumSize(new Dimension(700, 400));
 		var contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default, $lcgap, default:grow, 2*($lcgap, default), $ugap", //$NON-NLS-1$
-			"$ugap, default, $lgap, default:grow, 3*($lgap, default), $ugap")); //$NON-NLS-1$
+			"$ugap, default, $lcgap, default:grow, 2*($lcgap, [75dlu,default]), $ugap", //$NON-NLS-1$
+			"$ugap, 2*(default, $lgap), default:grow, 3*($lgap, default), $ugap")); //$NON-NLS-1$
+
+		//======== statusInputFilter ========
+		{
+			statusInputFilter.setLayout(new FormLayout(
+				"14dlu, $lcgap, default:grow", //$NON-NLS-1$
+				"default")); //$NON-NLS-1$
+
+			//======== panel2 ========
+			{
+				panel2.setLayout(null);
+
+				{
+					// compute preferred size
+					Dimension preferredSize = new Dimension();
+					for(int i = 0; i < panel2.getComponentCount(); i++) {
+						Rectangle bounds = panel2.getComponent(i).getBounds();
+						preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+						preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+					}
+					Insets insets = panel2.getInsets();
+					preferredSize.width += insets.right;
+					preferredSize.height += insets.bottom;
+					panel2.setMinimumSize(preferredSize);
+					panel2.setPreferredSize(preferredSize);
+				}
+			}
+			statusInputFilter.add(panel2, CC.xy(1, 1));
+
+			//---- edInputFilter ----
+			edInputFilter.setText("[0]"); //$NON-NLS-1$
+			statusInputFilter.add(edInputFilter, CC.xy(3, 1));
+		}
+		contentPane.add(statusInputFilter, CC.xywh(2, 2, 3, 1, CC.FILL, CC.FILL));
+
+		//---- btnInputFilter ----
+		btnInputFilter.setText(LocaleBundle.getString("UpdateMetadataFrame.filterBtn")); //$NON-NLS-1$
+		btnInputFilter.addActionListener(e -> filterInput());
+		contentPane.add(btnInputFilter, CC.xywh(6, 2, 3, 1));
 
 		//---- btnStartCollectingData ----
 		btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect1")); //$NON-NLS-1$
 		btnStartCollectingData.addActionListener(e -> queryOnline());
-		contentPane.add(btnStartCollectingData, CC.xy(2, 2));
-		contentPane.add(progressBar, CC.xy(4, 2, CC.FILL, CC.FILL));
+		contentPane.add(btnStartCollectingData, CC.xy(2, 4));
+		contentPane.add(progressBar, CC.xy(4, 4, CC.FILL, CC.FILL));
 
 		//---- btnShowAll ----
 		btnShowAll.setText(LocaleBundle.getString("UpdateMetadataFrame.SwitchFilter1")); //$NON-NLS-1$
 		btnShowAll.setSelected(true);
 		btnShowAll.addActionListener(e -> showAll());
-		contentPane.add(btnShowAll, CC.xy(6, 2));
+		contentPane.add(btnShowAll, CC.xy(6, 4));
 
 		//---- btnShowFiltered ----
 		btnShowFiltered.setText(LocaleBundle.getString("UpdateMetadataFrame.SwitchFilter2")); //$NON-NLS-1$
 		btnShowFiltered.addActionListener(e -> showFiltered());
-		contentPane.add(btnShowFiltered, CC.xy(8, 2));
-		contentPane.add(tableMain, CC.xywh(2, 4, 7, 1, CC.FILL, CC.FILL));
+		contentPane.add(btnShowFiltered, CC.xy(8, 4));
+		contentPane.add(tableMain, CC.xywh(2, 6, 7, 1, CC.FILL, CC.FILL));
 
 		//---- btnUpdateSelectedOnlineScore ----
 		btnUpdateSelectedOnlineScore.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate3")); //$NON-NLS-1$
 		btnUpdateSelectedOnlineScore.setEnabled(false);
 		btnUpdateSelectedOnlineScore.addActionListener(e -> updateSelectedOnlineScore());
-		contentPane.add(btnUpdateSelectedOnlineScore, CC.xy(2, 6));
+		contentPane.add(btnUpdateSelectedOnlineScore, CC.xy(2, 8));
 
 		//---- btnUpdateAllOnlinescore ----
 		btnUpdateAllOnlinescore.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate1")); //$NON-NLS-1$
 		btnUpdateAllOnlinescore.setEnabled(false);
 		btnUpdateAllOnlinescore.addActionListener(e -> updateAllOnlineScore());
-		contentPane.add(btnUpdateAllOnlinescore, CC.xy(8, 6));
+		contentPane.add(btnUpdateAllOnlinescore, CC.xy(8, 8));
 
 		//---- btnUpdateSelectedGenres ----
 		btnUpdateSelectedGenres.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate4")); //$NON-NLS-1$
 		btnUpdateSelectedGenres.setEnabled(false);
 		btnUpdateSelectedGenres.addActionListener(e -> updateSelectedGenres());
-		contentPane.add(btnUpdateSelectedGenres, CC.xy(2, 8));
+		contentPane.add(btnUpdateSelectedGenres, CC.xy(2, 10));
 
 		//---- cbAllowDeleteGenres ----
 		cbAllowDeleteGenres.setText(LocaleBundle.getString("UpdateMetadataFrame.CBDelGenres")); //$NON-NLS-1$
 		cbAllowDeleteGenres.addActionListener(e -> onChangeAllowGenreDelete());
-		contentPane.add(cbAllowDeleteGenres, CC.xy(4, 8));
+		contentPane.add(cbAllowDeleteGenres, CC.xy(4, 10));
 
 		//---- btnUpdateAllGenres ----
 		btnUpdateAllGenres.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate2")); //$NON-NLS-1$
 		btnUpdateAllGenres.setEnabled(false);
 		btnUpdateAllGenres.addActionListener(e -> updateAllGenres());
-		contentPane.add(btnUpdateAllGenres, CC.xy(8, 8));
+		contentPane.add(btnUpdateAllGenres, CC.xy(8, 10));
 
 		//---- btnUpdateSelectedRefs ----
 		btnUpdateSelectedRefs.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate5")); //$NON-NLS-1$
 		btnUpdateSelectedRefs.setEnabled(false);
 		btnUpdateSelectedRefs.addActionListener(e -> updatSelectedOnlineReferences());
-		contentPane.add(btnUpdateSelectedRefs, CC.xy(2, 10));
+		contentPane.add(btnUpdateSelectedRefs, CC.xy(2, 12));
 
 		//---- cbAllowDeleteReferences ----
 		cbAllowDeleteReferences.setText(LocaleBundle.getString("UpdateMetadataFrame.CBDelReferences")); //$NON-NLS-1$
 		cbAllowDeleteReferences.addActionListener(e -> onChangeAllowRefDelete());
-		contentPane.add(cbAllowDeleteReferences, CC.xy(4, 10));
+		contentPane.add(cbAllowDeleteReferences, CC.xy(4, 12));
 
 		//---- btnUpdateAllReferences ----
 		btnUpdateAllReferences.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate6")); //$NON-NLS-1$
 		btnUpdateAllReferences.setEnabled(false);
 		btnUpdateAllReferences.addActionListener(e -> updateAllOnlineReferences());
-		contentPane.add(btnUpdateAllReferences, CC.xy(8, 10));
+		contentPane.add(btnUpdateAllReferences, CC.xy(8, 12));
 		setSize(1200, 650);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JPanel statusInputFilter;
+	private JPanel panel2;
+	private JTextField edInputFilter;
+	private JButton btnInputFilter;
 	private JButton btnStartCollectingData;
 	private JProgressBar progressBar;
 	private JToggleButton btnShowAll;

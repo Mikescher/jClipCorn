@@ -102,11 +102,10 @@ gradle-app.setting
 
 ClipCornDB/
 ClipCornDB*/
-data/
+
 jClipCorn_backup/
-mybuilds/
-# javadoc/
-jClipCorn_backup/
+_mybuilds/
+
 bin*/
 
 DerbManager*.jar

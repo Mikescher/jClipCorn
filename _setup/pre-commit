@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if git commit -v --dry-run | grep -i -E '//\s*TODO' >/dev/null 2>&1; then
+
+  echo "Trying to commit code with TODO comments"
+  echo "Fix them or commit with --no-verify"
+  echo ""
+  echo "========================================================================================================================"
+  echo ""
+  git commit -v --dry-run | grep -n --color -i -E -C 2 '//\s*TODO'
+  echo ""
+  echo "========================================================================================================================"
+  echo ""
+  exit 1
+
+else
+
+    exit 0
+
+fi
+
+
+
+
+
+
+

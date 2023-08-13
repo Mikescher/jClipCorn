@@ -96,7 +96,7 @@ tasks.register("anyReleaseJar", Jar) {
 
 	archiveBaseName      = 'jClipCorn'
 	archiveVersion       = extractProjectVersion()
-	destinationDirectory = file("$rootDir/mybuilds")
+	destinationDirectory = file("$rootDir/_mybuilds")
 	archiveFileName      = "jClipCorn "+extractProjectVersion()+".jar"
 
 	duplicatesStrategy = 'include'

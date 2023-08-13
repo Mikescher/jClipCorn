@@ -44,8 +44,8 @@ String createLaunch4jConfig()
 	return  "<launch4jConfig>"+
 			"<dontWrapJar>false</dontWrapJar>"+
 			"<headerType>gui</headerType>"+
-			"<jar>..\\mybuilds\\jClipCorn " + extractVersion() + ".jar</jar>"+
-			"<outfile>..\\mybuilds\\jClipCorn " + extractVersion() + ".exe</outfile>"+
+			"<jar>..\\_mybuilds\\_jClipCorn " + extractVersion() + ".jar</jar>"+
+			"<outfile>..\\_mybuilds\\jClipCorn " + extractVersion() + ".exe</outfile>"+
 			"<errTitle></errTitle>"+
 			"<cmdLine></cmdLine>"+
 			"<chdir></chdir>"+

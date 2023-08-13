@@ -179,7 +179,7 @@ public abstract class FFProbeRunner extends MetadataRunner {
 			height,
 			framerate,
 			framecount,
-			bitdepth.map(p -> p.shortValue()),
+			bitdepth.map(Integer::shortValue),
 			ErrOpt.empty(),
 			vdefault
 		);
@@ -204,6 +204,8 @@ public abstract class FFProbeRunner extends MetadataRunner {
 			language = getStr(obj.getJSONObject("tags"), "language");
 			title = getStr(obj.getJSONObject("tags"), "title");
 		}
+
+		if (language.isPresent() && language.get().equals("und")) language = ErrOpt.empty(); // `und` = undefined language
 
 		return new AudioTrackMetadata
 		(

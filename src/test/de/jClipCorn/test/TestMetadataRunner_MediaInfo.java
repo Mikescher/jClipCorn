@@ -88,7 +88,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(1500.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -177,7 +177,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(2500.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -266,7 +266,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(3500.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -355,7 +355,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(4500.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -444,7 +444,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5500.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -533,7 +533,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(6505.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -622,7 +622,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(7505.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -711,7 +711,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(8505.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -800,7 +800,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5704.96, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -889,7 +889,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(7207.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -978,7 +978,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(2402.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -1067,7 +1067,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(4604.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -1156,7 +1156,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(6806.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -1245,7 +1245,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(8508.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -1334,7 +1334,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5705.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -1423,7 +1423,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(7207.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -1512,7 +1512,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(2402.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -1601,7 +1601,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(4604.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -1690,7 +1690,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(6806.041, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -1779,7 +1779,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(8508.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -1868,7 +1868,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5015.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("WMA", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -1957,7 +1957,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(3700.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -2046,7 +2046,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5207.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -2135,7 +2135,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(7402.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -2224,7 +2224,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(2604.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -2313,7 +2313,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(4856.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -2402,7 +2402,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(6508.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -2491,7 +2491,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(8755.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -2580,7 +2580,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(2717.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -2669,7 +2669,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(4217.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -2758,7 +2758,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(3642.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -2847,7 +2847,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5866.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -2936,7 +2936,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(7088.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -3025,7 +3025,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(4500.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -3114,7 +3114,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(6505.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -3203,7 +3203,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(8705.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -3292,7 +3292,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(2007.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -3381,7 +3381,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(4000.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -3470,7 +3470,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(3600.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -3559,7 +3559,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5856.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -3648,7 +3648,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(7508.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -3737,7 +3737,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(2559.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -3826,7 +3826,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(4571.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -3915,7 +3915,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(8547.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -4004,7 +4004,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5690.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -4093,7 +4093,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5801.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -4182,7 +4182,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5093.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -4271,7 +4271,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(4470.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -4360,7 +4360,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(6480.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -4449,7 +4449,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(8496.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -4538,7 +4538,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5508.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -4627,7 +4627,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5519.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -4716,7 +4716,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5452.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -4805,7 +4805,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5537.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -4894,7 +4894,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(7540.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -4983,7 +4983,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(2551.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -5072,7 +5072,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5632.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -5161,7 +5161,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5755.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -5250,7 +5250,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5817.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -5339,7 +5339,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(5917.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -5428,7 +5428,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(6042.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -5517,7 +5517,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(6166.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -5606,7 +5606,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(6288.04, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("MPEG Audio", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -5695,7 +5695,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(6300.0, vmd.VideoTracks.get(0).Duration);
 		assertOptEmpty(vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("AAC", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -5784,7 +5784,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)8, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(6405.003, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("Vorbis", vmd.AudioTracks.get(0).Format);
 		assertOptEmpty(vmd.AudioTracks.get(0).Title);
@@ -5873,7 +5873,7 @@ public class TestMetadataRunner_MediaInfo extends ClipCornBaseTest
 		assertOptEquals((short)10, vmd.VideoTracks.get(0).BitDepth);
 		assertOptEquals(7708.875, vmd.VideoTracks.get(0).Duration);
 		assertOptEquals(true, vmd.VideoTracks.get(0).Default);
-		assertOptEmpty(vmd.AudioTracks.get(0).calcCCDBLanguage());
+		assertOptEmpty(vmd.VideoTracks.get(0).calcCCDBLanguage());
 
 		assertOptEquals("E-AC-3", vmd.AudioTracks.get(0).Format);
 		assertOptEquals("German", vmd.AudioTracks.get(0).Title);

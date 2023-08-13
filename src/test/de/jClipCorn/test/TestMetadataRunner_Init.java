@@ -139,7 +139,7 @@ public class TestMetadataRunner_Init extends ClipCornBaseTest {
 			printErrOptAssert(vmd.VideoTracks.get(j).BitDepth,           "vmd.VideoTracks.get("+j+").BitDepth");
 			printErrOptAssert(vmd.VideoTracks.get(j).Duration,           "vmd.VideoTracks.get("+j+").Duration");
 			printErrOptAssert(vmd.VideoTracks.get(j).Default,            "vmd.VideoTracks.get("+j+").Default");
-			printErrOptAssert(vmd.VideoTracks.get(j).calcCCDBLanguage(), "vmd.AudioTracks.get("+j+").calcCCDBLanguage()");
+			printErrOptAssert(vmd.VideoTracks.get(j).calcCCDBLanguage(), "vmd.VideoTracks.get("+j+").calcCCDBLanguage()");
 
 			System.out.println(Str.format(""));
 		}
@@ -171,6 +171,15 @@ public class TestMetadataRunner_Init extends ClipCornBaseTest {
 
 			System.out.println(Str.format(""));
 		}
+	}
+
+	public static void main(String[] arg) throws Exception {
+		var o  = new TestMetadataRunner_Init();
+
+		o.initMetadataRunner__mediainfo();
+		o.initMetadataRunner__ffprobefast();
+		o.initMetadataRunner__ffprobefull();
+		o.initMetadataRunner__mp4box();
 	}
 
 	//@Test

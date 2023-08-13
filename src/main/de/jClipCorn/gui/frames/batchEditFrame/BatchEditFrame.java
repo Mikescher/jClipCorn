@@ -340,7 +340,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 		if (!probvalue)
 		{
 			amied_isButtonNext = next;
-			InputErrorDialog amied = new InputErrorDialog(movielist, problems, this, this);
+			InputErrorDialog amied = new InputErrorDialog(movielist, problems, this, this, true);
 			amied.setVisible(true);
 			return false;
 		}
@@ -442,7 +442,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			}
 
 			if (allproblems.size() > 0) {
-				InputErrorDialog amied = new InputErrorDialog(movielist, allproblems, () -> onOKClicked(false), this, true);
+				InputErrorDialog amied = new InputErrorDialog(movielist, allproblems, () -> onOKClicked(false), this, true, true);
 				amied.setVisible(true);
 				return;
 			}

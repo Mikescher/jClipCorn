@@ -359,18 +359,22 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 
 		boolean probvalue = !check || checkUserData(problems);
 
+		boolean fatalErr = false;
+
 		// some problems are too fatal
-		if (probvalue && ! edCvrControl.isCoverSet()) {
+		if (!edCvrControl.isCoverSet()) {
 			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
 			probvalue = false;
+			fatalErr = true;
 		}
-		if (probvalue && edTitle.getText().isEmpty()) {
+		if (edTitle.getText().isEmpty()) {
 			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 			probvalue = false;
+			fatalErr = true;
 		}
 
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(movielist, problems, this, this);
+			InputErrorDialog amied = new InputErrorDialog(movielist, problems, this, this, !fatalErr);
 			amied.setVisible(true);
 			return;
 		}

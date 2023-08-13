@@ -668,20 +668,22 @@ public class EditSeriesFrame extends JCCFrame
 
 		boolean probvalue = !check || checkUserDataSeries(problems);
 
+		boolean fatalErr = false;
+
 		// some problems are too fatal
-		if (probvalue && ! edSeriesCvrControl.isCoverSet()) {
+		if (!edSeriesCvrControl.isCoverSet()) {
 			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
 			probvalue = false;
+			fatalErr = true;
 		}
-		if (probvalue && edSeriesTitle.getText().isEmpty()) {
+		if (edSeriesTitle.getText().isEmpty()) {
 			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 			probvalue = false;
+			fatalErr = true;
 		}
 
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(movielist, problems, () -> {
-				onOKSeries(false);
-			}, this) ;
+			InputErrorDialog amied = new InputErrorDialog(movielist, problems, () -> {onOKSeries(false);}, this, !fatalErr) ;
 			amied.setVisible(true);
 			return false;
 		}
@@ -852,17 +854,17 @@ public class EditSeriesFrame extends JCCFrame
 		boolean probvalue = !check || checkUserDataSeason(problems);
 
 		// some problems are too fatal
-		if (probvalue && ! edSeasonCvrControl.isCoverSet()) {
+		if (!edSeasonCvrControl.isCoverSet()) {
 			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_COVER));
 			probvalue = false;
 		}
-		if (probvalue && edSeasonTitle.getText().isEmpty()) {
+		if (edSeasonTitle.getText().isEmpty()) {
 			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 			probvalue = false;
 		}
 
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(movielist, problems, () -> onOKSeason(false), this);
+			InputErrorDialog amied = new InputErrorDialog(movielist, problems, () -> onOKSeason(false), this, true);
 			amied.setVisible(true);
 			return;
 		}
@@ -953,13 +955,13 @@ public class EditSeriesFrame extends JCCFrame
 		boolean probvalue = !check || checkUserDataEpisode(problems);
 
 		// some problems are too fatal
-		if (probvalue && edEpisodeTitle.getText().isEmpty()) {
+		if (edEpisodeTitle.getText().isEmpty()) {
 			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 			probvalue = false;
 		}
 
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(movielist, problems, () -> onOKEpisode(false), this) ;
+			InputErrorDialog amied = new InputErrorDialog(movielist, problems, () -> onOKEpisode(false), this, true) ;
 			amied.setVisible(true);
 			return;
 		}

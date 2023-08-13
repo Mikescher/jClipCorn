@@ -24,24 +24,27 @@ public class InputErrorDialog extends JCCDialog {
 	private JLabel lblYouHaveErrors;
 	private JPanel buttonPane;
 	private JButton okButton;
-	private JButton cancelButton;
+	private JButton ignoreButton;
 	private JList<String> lsErrors;
 	private DefaultListModel<String> lsErrorModel;
 
+	private final boolean canIgnore;
 	private final UserDataProblemHandler owner;
 
-	public InputErrorDialog(CCMovieList ml, List<UserDataProblem> problems, UserDataProblemHandler owner, Component parent) {
+	public InputErrorDialog(CCMovieList ml, List<UserDataProblem> problems, UserDataProblemHandler owner, Component parent, boolean canIgnore) {
 		super(ml);
 		this.owner = owner;
+		this.canIgnore = canIgnore;
 		initGUI(parent);
-		fillMemo(CCStreams.iterate(problems).map(p -> Tuple.Create(Str.Empty, p)).toList(), false);
+		fillMemo(CCStreams.iterate(problems).map(p -> Tuple.Create(Str.Empty, p)).unique(p -> p.Item1+"\t"+p.Item2.getPID()+"\t"+p.Item2.getText()).toList(), false);
 	}
 
-	public InputErrorDialog(CCMovieList ml, List<Tuple<String, UserDataProblem>> problems, UserDataProblemHandler owner, Component parent, boolean showsource) {
+	public InputErrorDialog(CCMovieList ml, List<Tuple<String, UserDataProblem>> problems, UserDataProblemHandler owner, Component parent, boolean showsource, boolean canIgnore) {
 		super(ml);
 		this.owner = owner;
+		this.canIgnore = canIgnore;
 		initGUI(parent);
-		fillMemo(problems, showsource);
+		fillMemo(CCStreams.iterate(problems).unique(p -> p.Item1+"\t"+p.Item2.getPID()+"\t"+p.Item2.getText()).toList(), showsource);
 	}
 
 	private void initGUI(Component parent) {
@@ -85,14 +88,16 @@ public class InputErrorDialog extends JCCDialog {
 		buttonPane.add(okButton);
 		getRootPane().setDefaultButton(okButton);
 
-		cancelButton = new JButton(LocaleBundle.getString("AddMovieInputErrorDialog.btnIgnore.text")); //$NON-NLS-1$
-		cancelButton.addActionListener(new ActionListener() {
+		ignoreButton = new JButton(LocaleBundle.getString("AddMovieInputErrorDialog.btnIgnore.text")); //$NON-NLS-1$
+		ignoreButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				onIgnoreClicked();
 			}
 		});
-		buttonPane.add(cancelButton);
+		ignoreButton.setEnabled(canIgnore);
+
+		buttonPane.add(ignoreButton);
 	}
 	
 	private void fillMemo(List<Tuple<String, UserDataProblem>> problems, boolean showsource) {

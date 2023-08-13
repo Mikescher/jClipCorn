@@ -210,14 +210,17 @@ public class QuickAddEpisodeDialog extends JCCDialog
 		java.util.List<UserDataProblem> problems = new ArrayList<>();
 		boolean probvalue = !check || checkUserDataEpisode(problems, epack, src, dst);
 
+		boolean fatalErr = false;
+
 		// some problems are too fatal
-		if (probvalue && Str.isNullOrWhitespace(title)) {
+		if (Str.isNullOrWhitespace(title)) {
 			problems.add(new UserDataProblem(UserDataProblem.PROBLEM_EMPTY_TITLE));
 			probvalue = false;
+			fatalErr = true;
 		}
 
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(movielist, problems, () -> tryAdd(false), this);
+			InputErrorDialog amied = new InputErrorDialog(movielist, problems, () -> tryAdd(false), this, !fatalErr);
 			amied.setVisible(true);
 			return;
 		}

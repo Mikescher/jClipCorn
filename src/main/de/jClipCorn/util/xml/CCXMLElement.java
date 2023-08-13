@@ -1,13 +1,13 @@
 package de.jClipCorn.util.xml;
 
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.exceptions.BooleanFormatException;
 import de.jClipCorn.util.lambda.Func1to0WithGenericException;
 import de.jClipCorn.util.stream.CCStream;
+import de.jClipCorn.util.stream.CCStreams;
 import org.jdom2.Attribute;
 import org.jdom2.Element;
-
-import de.jClipCorn.util.Str;
-import de.jClipCorn.util.stream.CCStreams;
 
 @SuppressWarnings("nls")
 public class CCXMLElement
@@ -128,6 +128,13 @@ public class CCXMLElement
 		return defaultValue;
 	}
 
+	public Opt<String> getAttributeValueOpt(String attrName) {
+		for (Attribute e : _element.getAttributes()) {
+			if (e.getName().equals(attrName)) return Opt.of(e.getValue());
+		}
+		return Opt.empty();
+	}
+
 	public int getAttributeIntValueOrThrow(String attrName) throws CCXMLException {
 		String v = getAttributeValueOrThrow(attrName);
 		try {
@@ -146,6 +153,16 @@ public class CCXMLElement
 		}
 	}
 
+	public Opt<Short> getAttributeShortValueOpt(String attrName) throws CCXMLException {
+		return getAttributeValueOpt(attrName).mapThrow(v -> {
+			try {
+				return Short.parseShort(v);
+			} catch (NumberFormatException e) {
+				throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not an integer", v, attrName, _path), _owner.getXMLString());
+			}
+		});
+	}
+
 	public long getAttributeLongValueOrThrow(String attrName) throws CCXMLException {
 		String v = getAttributeValueOrThrow(attrName);
 		try {
@@ -153,6 +170,16 @@ public class CCXMLElement
 		} catch (NumberFormatException e) {
 			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not a long", v, attrName, _path), _owner.getXMLString());
 		}
+	}
+
+	public Opt<Long> getAttributeLongValueOpt(String attrName) throws CCXMLException {
+		return getAttributeValueOpt(attrName).mapThrow(v -> {
+			try {
+				return Long.parseLong(v);
+			} catch (NumberFormatException e) {
+				throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not a long", v, attrName, _path), _owner.getXMLString());
+			}
+		});
 	}
 
 	public double getAttributeDoubleValueOrThrow(String attrName) throws CCXMLException {
@@ -164,6 +191,16 @@ public class CCXMLElement
 		}
 	}
 
+	public Opt<Double> getAttributeDoubleValueOpt(String attrName) throws CCXMLException {
+		return getAttributeValueOpt(attrName).mapThrow(v -> {
+			try {
+				return Double.parseDouble(v);
+			} catch (NumberFormatException e) {
+				throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not a double", v, attrName, _path), _owner.getXMLString());
+			}
+		});
+	}
+
 	public int getAttributeIntValueOrDefault(String attrName, int defaultValue) throws CCXMLException {
 		String v = getAttributeValueOrDefault(attrName, null);
 		if (v == null) return defaultValue;
@@ -172,6 +209,16 @@ public class CCXMLElement
 		} catch (NumberFormatException e) {
 			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not an integer", v, attrName, _path), _owner.getXMLString());
 		}
+	}
+
+	public Opt<Integer> getAttributeIntValueOpt(String attrName) throws CCXMLException {
+		return getAttributeValueOpt(attrName).mapThrow(v -> {
+			try {
+				return Integer.parseInt(v);
+			} catch (NumberFormatException e) {
+				throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not an integer", v, attrName, _path), _owner.getXMLString());
+			}
+		});
 	}
 
 	public boolean getAttributeBoolValueOrThrow(String attrName) throws CCXMLException {
@@ -191,6 +238,16 @@ public class CCXMLElement
 		} catch (BooleanFormatException e) {
 			throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not an boolean", v, attrName, _path), _owner.getXMLString());
 		}
+	}
+
+	public Opt<Boolean> getAttributeBoolValueOpt(String attrName) throws CCXMLException {
+		return getAttributeValueOpt(attrName).mapThrow(v -> {
+			try {
+				return parseBool(v);
+			} catch (BooleanFormatException e) {
+				throw new CCXMLException(Str.format("The value \"{0}\" in the attribute ''{1}'' in {2} is not a long", v, attrName, _path), _owner.getXMLString());
+			}
+		});
 	}
 
 	//####################################################################################

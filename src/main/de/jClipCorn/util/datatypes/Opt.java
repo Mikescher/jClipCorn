@@ -1,9 +1,6 @@
 package de.jClipCorn.util.datatypes;
 
-import de.jClipCorn.util.lambda.Func0to0;
-import de.jClipCorn.util.lambda.Func1to0;
-import de.jClipCorn.util.lambda.Func1to1;
-import de.jClipCorn.util.lambda.Func2to1;
+import de.jClipCorn.util.lambda.*;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -104,6 +101,12 @@ public class Opt<T> implements IOpt<T> {
 	public <TVal> TVal mapOrElse(Func1to1<T, TVal> map, TVal falllback) {
 		if (!isPresent()) return falllback;
 		return map.invoke(value);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <TVal, TExc extends Throwable> Opt<TVal> mapThrow(Func1to1WithGenericException<T, TVal, TExc> map) throws TExc {
+		if (!isPresent()) return (Opt<TVal>) EMPTY;
+		return Opt.of(map.invoke(value));
 	}
 
 	public Optional<T> toOptional() {

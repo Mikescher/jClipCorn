@@ -252,7 +252,7 @@ public class Main {
  - [X] GroupManageFrame
  - [ ] ImportElementsFrame
  - [ ] InitialConfigFrame
- - [ ] InputErrorFrame
+ - [x] InputErrorFrame
  - [X] LogFrame
  - [x] MoveSeriesFrame
  - [x] OmniParserFrame

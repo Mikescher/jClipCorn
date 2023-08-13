@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.frames.inputErrorFrame;
 
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
@@ -10,115 +12,134 @@ import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
-public class InputErrorDialog extends JCCDialog {
-	private static final long serialVersionUID = 2988199599783528024L;
-
-	private final JPanel contentPanel = new JPanel();
-	private JScrollPane scrollPane;
-	private JLabel lblYouHaveErrors;
-	private JPanel buttonPane;
-	private JButton okButton;
-	private JButton ignoreButton;
-	private JList<String> lsErrors;
-	private DefaultListModel<String> lsErrorModel;
-
+public class InputErrorDialog extends JCCDialog
+{
 	private final boolean canIgnore;
-	private final UserDataProblemHandler owner;
+	private final UserDataProblemHandler handler;
+	private final List<Tuple<String, UserDataProblem>> problems;
+	private final boolean showsource;
 
-	public InputErrorDialog(CCMovieList ml, List<UserDataProblem> problems, UserDataProblemHandler owner, Component parent, boolean canIgnore) {
+	public InputErrorDialog(Component owner, CCMovieList ml, java.util.List<UserDataProblem> problems, UserDataProblemHandler udph, boolean canIgnore)
+	{
 		super(ml);
-		this.owner = owner;
+
+		this.handler = udph;
+		this.problems = CCStreams.iterate(problems).map(p -> Tuple.Create(Str.Empty, p)).unique(p -> p.Item1+"\t"+p.Item2.getPID()+"\t"+p.Item2.getText()).toList();
+		this.showsource = false;
 		this.canIgnore = canIgnore;
-		initGUI(parent);
-		fillMemo(CCStreams.iterate(problems).map(p -> Tuple.Create(Str.Empty, p)).unique(p -> p.Item1+"\t"+p.Item2.getPID()+"\t"+p.Item2.getText()).toList(), false);
+
+		initComponents();
+		postInit();
+
+		setLocationRelativeTo(owner);
 	}
 
-	public InputErrorDialog(CCMovieList ml, List<Tuple<String, UserDataProblem>> problems, UserDataProblemHandler owner, Component parent, boolean showsource, boolean canIgnore) {
+	public InputErrorDialog(Component owner, CCMovieList ml, List<Tuple<String, UserDataProblem>> problems, UserDataProblemHandler udph, boolean showsource, boolean canIgnore)
+	{
 		super(ml);
-		this.owner = owner;
+
+		this.handler = udph;
+		this.problems = CCStreams.iterate(problems).unique(p -> p.Item1+"\t"+p.Item2.getPID()+"\t"+p.Item2.getText()).toList();
+		this.showsource = showsource;
 		this.canIgnore = canIgnore;
-		initGUI(parent);
-		fillMemo(CCStreams.iterate(problems).unique(p -> p.Item1+"\t"+p.Item2.getPID()+"\t"+p.Item2.getText()).toList(), showsource);
+
+		initComponents();
+		postInit();
+
+		setLocationRelativeTo(owner);
 	}
 
-	private void initGUI(Component parent) {
-		setTitle(LocaleBundle.getString("AddMovieInputErrorDialog.this.title")); //$NON-NLS-1$
+	private void postInit()
+	{
+		if (problems == null) return;
 
-		setModal(true);
-		setResizable(false);
-		setBounds(100, 100, 500, 300);
-		setLocationRelativeTo(parent);
-
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new BorderLayout(0, 0));
-
-		scrollPane = new JScrollPane();
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		contentPanel.add(scrollPane);
-
-		lsErrors = new JList<>(lsErrorModel = new DefaultListModel<>());
-		scrollPane.setViewportView(lsErrors);
-
-		lblYouHaveErrors = new JLabel(LocaleBundle.getString("AddMovieInputErrorDialog.lblErrors.text")); //$NON-NLS-1$
-		lblYouHaveErrors.setFont(new Font("Tahoma", Font.BOLD, 11)); //$NON-NLS-1$
-		lblYouHaveErrors.setForeground(Color.RED);
-		lblYouHaveErrors.setHorizontalAlignment(SwingConstants.CENTER);
-		contentPanel.add(lblYouHaveErrors, BorderLayout.NORTH);
-
-		buttonPane = new JPanel();
-		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		getContentPane().add(buttonPane, BorderLayout.SOUTH);
-
-		okButton = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		okButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-			}
-		});
-		buttonPane.add(okButton);
-		getRootPane().setDefaultButton(okButton);
-
-		ignoreButton = new JButton(LocaleBundle.getString("AddMovieInputErrorDialog.btnIgnore.text")); //$NON-NLS-1$
-		ignoreButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				onIgnoreClicked();
-			}
-		});
-		ignoreButton.setEnabled(canIgnore);
-
-		buttonPane.add(ignoreButton);
-	}
-	
-	private void fillMemo(List<Tuple<String, UserDataProblem>> problems, boolean showsource) {
-		if (problems == null) {
-			return;
-		}
-		
 		lblYouHaveErrors.setText(LocaleBundle.getFormattedString("AddMovieInputErrorDialog.lblErrors.text", problems.size())); //$NON-NLS-1$
-		
+
+		btnIgnore.setEnabled(canIgnore);
+
+		var lsErrorModel = new DefaultListModel<String>();
+
 		lsErrorModel.clear();
-		
+
 		for (Tuple<String, UserDataProblem> udp : problems) {
 			if (showsource)
 				lsErrorModel.addElement("[" + udp.Item1 + "] " + udp.Item2.getText()); //$NON-NLS-1$ //$NON-NLS-2$
 			else
 				lsErrorModel.addElement(udp.Item2.getText());
 		}
+
+		lsErrors.setModel(lsErrorModel);
 	}
-	
-	private void onIgnoreClicked() {
-		owner.onAMIEDIgnoreClicked();
+
+	private void onOkay() {
 		dispose();
 	}
+
+	private void onIgnore() {
+		handler.onAMIEDIgnoreClicked();
+		dispose();
+	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		lblYouHaveErrors = new JLabel();
+		scrollPane1 = new JScrollPane();
+		lsErrors = new JList<>();
+		panel1 = new JPanel();
+		button1 = new JButton();
+		btnIgnore = new JButton();
+
+		//======== this ========
+		setTitle(LocaleBundle.getString("AddMovieInputErrorDialog.this.title")); //$NON-NLS-1$
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		var contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$ugap, default:grow, $ugap", //$NON-NLS-1$
+			"$ugap, default, $lgap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
+
+		//---- lblYouHaveErrors ----
+		lblYouHaveErrors.setText(LocaleBundle.getString("AddMovieInputErrorDialog.lblErrors.text")); //$NON-NLS-1$
+		lblYouHaveErrors.setHorizontalAlignment(SwingConstants.CENTER);
+		lblYouHaveErrors.setForeground(Color.red);
+		lblYouHaveErrors.setFont(lblYouHaveErrors.getFont().deriveFont(lblYouHaveErrors.getFont().getStyle() | Font.BOLD));
+		contentPane.add(lblYouHaveErrors, CC.xy(2, 2));
+
+		//======== scrollPane1 ========
+		{
+			scrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+			scrollPane1.setViewportView(lsErrors);
+		}
+		contentPane.add(scrollPane1, CC.xy(2, 4, CC.DEFAULT, CC.FILL));
+
+		//======== panel1 ========
+		{
+			panel1.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+			//---- button1 ----
+			button1.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+			button1.addActionListener(e -> onOkay());
+			panel1.add(button1);
+
+			//---- btnIgnore ----
+			btnIgnore.setText(LocaleBundle.getString("AddMovieInputErrorDialog.btnIgnore.text")); //$NON-NLS-1$
+			btnIgnore.addActionListener(e -> onIgnore());
+			panel1.add(btnIgnore);
+		}
+		contentPane.add(panel1, CC.xy(2, 6, CC.FILL, CC.FILL));
+		setSize(650, 400);
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JLabel lblYouHaveErrors;
+	private JScrollPane scrollPane1;
+	private JList<String> lsErrors;
+	private JPanel panel1;
+	private JButton button1;
+	private JButton btnIgnore;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

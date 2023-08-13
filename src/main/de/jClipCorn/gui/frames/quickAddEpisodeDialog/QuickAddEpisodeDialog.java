@@ -220,7 +220,7 @@ public class QuickAddEpisodeDialog extends JCCDialog
 		}
 
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(movielist, problems, () -> tryAdd(false), this, !fatalErr);
+			InputErrorDialog amied = new InputErrorDialog(this, movielist, problems, () -> tryAdd(false), !fatalErr);
 			amied.setVisible(true);
 			return;
 		}

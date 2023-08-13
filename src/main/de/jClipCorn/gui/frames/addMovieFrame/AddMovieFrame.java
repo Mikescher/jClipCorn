@@ -160,7 +160,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		}
 
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(movielist, problems, this, this, !fatalErr);
+			InputErrorDialog amied = new InputErrorDialog(this, movielist, problems, this, !fatalErr);
 			amied.setVisible(true);
 			return;
 		}

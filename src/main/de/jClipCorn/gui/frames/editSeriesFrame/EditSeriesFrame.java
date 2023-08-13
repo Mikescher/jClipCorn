@@ -683,7 +683,7 @@ public class EditSeriesFrame extends JCCFrame
 		}
 
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(movielist, problems, () -> {onOKSeries(false);}, this, !fatalErr) ;
+			InputErrorDialog amied = new InputErrorDialog(this, movielist, problems, () -> {onOKSeries(false);}, !fatalErr) ;
 			amied.setVisible(true);
 			return false;
 		}
@@ -864,7 +864,7 @@ public class EditSeriesFrame extends JCCFrame
 		}
 
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(movielist, problems, () -> onOKSeason(false), this, true);
+			InputErrorDialog amied = new InputErrorDialog(this, movielist, problems, () -> onOKSeason(false), true);
 			amied.setVisible(true);
 			return;
 		}
@@ -961,7 +961,7 @@ public class EditSeriesFrame extends JCCFrame
 		}
 
 		if (! probvalue) {
-			InputErrorDialog amied = new InputErrorDialog(movielist, problems, () -> onOKEpisode(false), this, true) ;
+			InputErrorDialog amied = new InputErrorDialog(this, movielist, problems, () -> onOKEpisode(false), true) ;
 			amied.setVisible(true);
 			return;
 		}

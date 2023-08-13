@@ -288,6 +288,7 @@ public enum CCGenre implements ContinoousEnum<CCGenre> {
 		if (malEquals(txt, "Yaoi"))          return new CCGenre[]{};
 		if (malEquals(txt, "Yuri"))          return new CCGenre[]{};
 		if (malEquals(txt, "Seinen"))        return new CCGenre[]{CCGenre.GENRE_057};
+		if (malEquals(txt, "Isekai"))        return new CCGenre[]{CCGenre.GENRE_056};
 
 		return new CCGenre[]{};
 	}

@@ -32,13 +32,14 @@ public class MALParser extends Metadataparser {
 	private static final Pattern REGEX_AIRED = Pattern.compile("^\\s*[A-Za-z]{3}\\s+[0-9]{1,2},\\s+(?<year>[12][0-9]{3})(?:(?:\\s+to\\s+[A-Za-z]{3}\\s+[0-9]{1,2},\\s+[12][0-9]{3})|(?:\\s+to\\s+\\?))?\\s*$"); //$NON-NLS-1$
 	private static final Pattern REGEX_PREMIERED = Pattern.compile("^\\s*(Summer|Fall|Winter|Spring)\\s*(?<year>[12][0-9]{3})\\s*$"); //$NON-NLS-1$
 	private static final Pattern REGEX_RATING = Pattern.compile("^\\s*(?<rating>[A-Z0-9\\-]+) - .*$"); //$NON-NLS-1$
-	private static final Pattern REGEX_DURATION = Pattern.compile("^\\s*(?:(?<h>[0-9]+)\\s+hr\\.\\s+)?\\s*(?<m>[0-9]+)\\s+min\\. \\s*$"); //$NON-NLS-1$
+	private static final Pattern REGEX_DURATION = Pattern.compile("^\\s*(?:(?<h>[0-9]+)\\s+hr\\.\\s+)?\\s*(?<m>[0-9]+)\\s+min\\.\\s*(per ep\\.)\\s*$"); //$NON-NLS-1$
 
 	private final static String SOUP_SEARCH = ".content-result a[href^=https://myanimelist.net/anime/]"; //$NON-NLS-1$
 
-	private final static String SOUP_TITLE = "h1 span[itemprop=name]"; //$NON-NLS-1$
-	private final static String SOUP_COVER = "img.ac"; //$NON-NLS-1$
+	private final static String SOUP_TITLE = ".title-name"; //$NON-NLS-1$
+	private final static String SOUP_COVER = "*[itemprop=image]"; //$NON-NLS-1$
 	private final static String SOUP_SCORE = "div.score"; //$NON-NLS-1$
+	private final static String SOUP_GENRES = "*[itemprop=genre]"; //$NON-NLS-1$
 	private final static String SOUP_BORDER = "#content .borderClass div"; //$NON-NLS-1$
 
 	public MALParser(CCMovieList ml) {
@@ -71,6 +72,7 @@ public class MALParser extends Metadataparser {
 	}
 
 	@Override
+	@SuppressWarnings("nls")
 	public OnlineMetadata getMetadata(CCSingleOnlineReference ref, boolean downloadCover) {
 		String url = ref.getURL(ccprops());
 		String html = HTTPUtilities.getHTML(movielist, url, true, true);
@@ -79,7 +81,7 @@ public class MALParser extends Metadataparser {
 		OnlineMetadata result = new OnlineMetadata(ref);
 		
 		result.Title = getContentBySelector(soup, SOUP_TITLE);
-		result.CoverURL = getAttrBySelector(soup, SOUP_COVER, "src"); //$NON-NLS-1$
+		result.CoverURL = getAttrBySelector(soup, SOUP_COVER, "data-src");
 
 		var os = getFloatBySelector(soup, SOUP_SCORE);
 
@@ -89,46 +91,42 @@ public class MALParser extends Metadataparser {
 			Matcher matcher = REGEX_BORDER.matcher(elem.text());
 			if (!matcher.find()) continue;
 
-			String ident   = matcher.group("ident"); //$NON-NLS-1$
-			String content = matcher.group("content").trim(); //$NON-NLS-1$
+			String ident   = matcher.group("ident");
+			String content = matcher.group("content").trim();
 			
-			if (ident.equalsIgnoreCase("Aired")) { //$NON-NLS-1$
+			if (ident.equalsIgnoreCase("Aired")) {
 				
-				String y = RegExHelper.getGroup(REGEX_AIRED, content, "year"); //$NON-NLS-1$
+				String y = RegExHelper.getGroup(REGEX_AIRED, content, "year");
 				if (y != null) result.Year = Integer.parseInt(y);
 				
-			} else if (ident.equalsIgnoreCase("Premiered")) { //$NON-NLS-1$
+			} else if (ident.equalsIgnoreCase("Premiered")) {
 				
-				String y = RegExHelper.getGroup(REGEX_PREMIERED, content, "year"); //$NON-NLS-1$
+				String y = RegExHelper.getGroup(REGEX_PREMIERED, content, "year");
 				if (y != null) result.Year = Integer.parseInt(y);
 				
-			} else if (ident.equalsIgnoreCase("Genres")) { //$NON-NLS-1$
+			} else if (ident.equalsIgnoreCase("Rating")) {
 				
-				List<CCGenre> genres = CCStreams
-						.iterate(content.split(",")) //$NON-NLS-1$
-						.map(c -> CCGenre.parseFromMAL(c.trim()))
-						.flatten(CCStreams::iterate)
-						.prepend(CCGenre.GENRE_022)
-						.unique()
-						.enumerate();
-				
-				result.Genres = new CCGenreList(genres);
-				
-			} else if (ident.equalsIgnoreCase("Rating")) { //$NON-NLS-1$
-				
-				String r = RegExHelper.getGroup(REGEX_RATING, content, "rating"); //$NON-NLS-1$
+				String r = RegExHelper.getGroup(REGEX_RATING, content, "rating");
 				if (r != null) result.FSK = AgeRatingParser.getFSK(r, url);
 				
-			} else if (ident.equalsIgnoreCase("Duration")) { //$NON-NLS-1$
+			} else if (ident.equalsIgnoreCase("Duration")) {
 				
-				String rh = RegExHelper.getGroup(REGEX_DURATION, content, "h"); //$NON-NLS-1$
-				String rm = RegExHelper.getGroup(REGEX_DURATION, content, "m"); //$NON-NLS-1$
+				String rh = RegExHelper.getGroup(REGEX_DURATION, content, "h");
+				String rm = RegExHelper.getGroup(REGEX_DURATION, content, "m");
 				if (rm != null) {
 					result.Length = Integer.parseInt(rm) + 60*(rh != null ? Integer.parseInt(rh) : 0);
 				}
 				
 			}
 		}
+
+		var genres = new ArrayList<CCGenre>();
+		genres.add(CCGenre.GENRE_022);
+		for (Element elem: soup.select(SOUP_GENRES) ) {
+			genres.addAll(CCStreams.iterate(CCGenre.parseFromMAL(elem.text().trim())).toList());
+		}
+
+		result.Genres = new CCGenreList(CCStreams.iterate(genres).unique().toList());
 
 		if (downloadCover && !Str.isNullOrWhitespace(result.CoverURL)) result.Cover = HTTPUtilities.getImage(movielist, result.CoverURL);
 		

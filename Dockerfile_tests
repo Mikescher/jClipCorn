@@ -1,0 +1,9 @@
+FROM amazoncorretto:17
+
+ # needs `amazoncorretto:17`, because settings -> gradle -> "Gradle JVM"
+
+COPY . /source
+
+WORKDIR /source
+
+CMD ["./gradlew", "test"]

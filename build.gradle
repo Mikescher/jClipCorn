@@ -85,6 +85,10 @@ jar {
 	archiveVersion  = project.appversion
 }
 
+
+//=====================================================================================================================
+
+
 tasks.register("anyReleaseJar", Jar) {
 	group = 'Custom'
 
@@ -119,7 +123,7 @@ tasks.register("anyReleaseJar", Jar) {
 }
 
 
-
+//=====================================================================================================================
 
 
 tasks.register("manualReleaseJar") {
@@ -144,6 +148,9 @@ tasks.register("manualReleaseJar") {
 	}
 }
 manualReleaseJar.finalizedBy anyReleaseJar
+
+
+//=====================================================================================================================
 
 
 tasks.register("betaJar") {
@@ -173,8 +180,11 @@ tasks.register("betaJar") {
 		anyReleaseJar.archiveName = "${anyReleaseJar.baseName} ${anyReleaseJar.version}.${anyReleaseJar.extension}"
 	}
 }
-
 betaJar.finalizedBy anyReleaseJar
+
+
+//=====================================================================================================================
+
 
 tasks.register("changelog") {
 	group = 'Custom'
@@ -184,11 +194,29 @@ tasks.register("changelog") {
 	}
 }
 
+
+//=====================================================================================================================
+
+
+tasks.register("run-tests") {
+	group = 'Custom'
+
+	doLast {
+		commandLine 'bash', '-c', "docker run --rm \$(docker build -q . -f Dockerfile_tests || echo __err_build__)"
+	}
+}
+
+
+//=====================================================================================================================
+
+
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
+
 //=====================================================================================================================
+
 
 dependencies {
 	implementation 'commons-betwixt:commons-betwixt:20030211.133854'

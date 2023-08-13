@@ -72,8 +72,6 @@ public class LanguageListDisplay extends JPanel {
 			validate();
 			getParent().revalidate();
 		}
-
-		setToolTipText(value.toOutputString());
 	}
 
 	public CCDBLanguageList getValue() {

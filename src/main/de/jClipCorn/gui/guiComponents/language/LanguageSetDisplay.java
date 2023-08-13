@@ -70,8 +70,6 @@ public class LanguageSetDisplay extends JPanel {
 			validate();
 			getParent().revalidate();
 		}
-
-		setToolTipText(value.toOutputString());
 	}
 
 	public CCDBLanguageSet getValue() {

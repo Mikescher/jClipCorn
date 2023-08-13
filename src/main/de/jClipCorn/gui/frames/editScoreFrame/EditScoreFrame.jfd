@@ -46,8 +46,11 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane1"
+				"horizontalScrollBarPolicy": 31
 				add( new FormComponent( "javax.swing.JTextArea" ) {
 					name: "memoComment"
+					"lineWrap": true
+					"wrapStyleWord": true
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 4

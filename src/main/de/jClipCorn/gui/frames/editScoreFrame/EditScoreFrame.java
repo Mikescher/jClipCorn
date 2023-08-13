@@ -84,6 +84,11 @@ public class EditScoreFrame extends JCCFrame
 
 		//======== scrollPane1 ========
 		{
+			scrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+			//---- memoComment ----
+			memoComment.setLineWrap(true);
+			memoComment.setWrapStyleWord(true);
 			scrollPane1.setViewportView(memoComment);
 		}
 		contentPane.add(scrollPane1, CC.xywh(4, 4, 3, 1, CC.DEFAULT, CC.FILL));

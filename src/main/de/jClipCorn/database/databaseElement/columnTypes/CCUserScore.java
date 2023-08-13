@@ -58,7 +58,7 @@ public enum CCUserScore implements ContinoousEnum<CCUserScore> {
 	public int getOrder() { return order; }
 
 	public static int compare(CCUserScore s1, CCUserScore s2) {
-		return Integer.compare(s1.asInt(), s2.asInt());
+		return Integer.compare(s1.getOrder(), s2.getOrder());
 	}
 	
 	@Override

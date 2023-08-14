@@ -10,11 +10,17 @@ on: [push]
 
 jobs:
   run_tests:
-    name: Run jClipCorn test suite
+    name: Run jClipCorn test-suite
     runs-on: bfb-cicd-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v3
+      - name: Build test docker
+        id: build_docker
+        run: echo "DOCKER_IMG_ID=$(docker build -q . -f Dockerfile_tests || echo __err_build__)" >> $GITHUB_OUTPUT
       - name: Run tests
-        run: docker run --rm $(docker build -q . -f Dockerfile_tests || echo __err_build__)
+        run: docker run --rm "${{ steps.build_docker.outputs.DOCKER_IMG_ID }}"
+      - name: Cleanup
+        if: always()
+        run: docker image rm "${{ steps.build_docker.outputs.DOCKER_IMG_ID }}"
 

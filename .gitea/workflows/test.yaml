@@ -3,8 +3,8 @@
 # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
 # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
 
-name: Build Docker and Deploy
-run-name: Build & Deploy ${{ gitea.ref }} on ${{ gitea.actor }}
+name: Run testsuite
+run-name: Run testsuite (${{ gitea.ref }} on ${{ gitea.actor }})
 
 on: [push]
 

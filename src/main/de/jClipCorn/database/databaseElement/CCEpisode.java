@@ -376,9 +376,9 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 			}
 		}
 
-		MoviePlayer.play(this, player);
+		var playSucc = MoviePlayer.play(this, player);
 
-		if (updateViewedAndHistory) updateViewedAndHistoryFromUI();
+		if (playSucc && updateViewedAndHistory) updateViewedAndHistoryFromUI();
 	}
 
 	@Override

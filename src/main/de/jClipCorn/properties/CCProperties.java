@@ -214,6 +214,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCFSPathProperty                                 PROP_DATABASE_DIR;
 	public CCEnumProperty<SeriesViewCountMode>              PROP_SERIES_VIEWCOUNT_MODE;
 	public CCBoolProperty                                   PROP_SKIP_DEFAULT_LANG_IN_FILENAMES;
+	public CCBoolProperty                                   PROP_PLAY_FAILONMISSINGFILES;
 
 	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public boolean ARG_READONLY = false;
@@ -415,6 +416,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_MAX_FASTREWATCH_HOUR_DIFF          = new CCPIntProperty(NONVISIBLE,            this,   "PROP_MAX_FASTREWATCH_HOUR_DIFF",           3);
 		PROP_MAINFRAME_COLUMN_SIZE_CACHE        = new CCStringProperty(NONVISIBLE,          this,   "PROP_MAINFRAME_COLUMN_SIZE_CACHE",         Str.Empty);
 		PROP_MAINFRAME_FILTERTREE_RECOLLAPSE    = new CCBoolProperty(NONVISIBLE,            this,   "PROP_MAINFRAME_FILTERTREE_RECOLLAPSE",     false);
+		PROP_PLAY_FAILONMISSINGFILES            = new CCBoolProperty(NONVISIBLE,            this,   "PROP_PLAY_FAILONMISSINGFILES",             true);
 
 		PROP_ADD_MOVIE_RELATIVE_AUTO            = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",             true);
 		PROP_PATHSYNTAX_SELF                    = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELF",                     true);

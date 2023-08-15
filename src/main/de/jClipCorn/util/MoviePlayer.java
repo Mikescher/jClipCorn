@@ -39,20 +39,20 @@ public class MoviePlayer {
 	
 	private static Tuple<FSPath, String[]> lastVLCPath = Tuple.Create(FSPath.Empty, new String[0]);
 	
-	public static void play(CCMovie mov, NamedPathVar player) {
+	public static boolean play(CCMovie mov, NamedPathVar player) {
 		List<FSPath> al = new ArrayList<>();
 		for (var p: mov.getParts()) al.add(p.toFSPath(mov.ccprops()));
-		play(al, player, mov.getMovieList().ccprops());
+		return play(al, player, mov.getMovieList().ccprops());
 	}
 	
-	public static void play(CCEpisode ep, NamedPathVar player) {
-		play(ep.Part.get().toFSPath(ep.ccprops()), player, ep.getMovieList().ccprops());
+	public static boolean play(CCEpisode ep, NamedPathVar player) {
+		return play(ep.Part.get().toFSPath(ep.ccprops()), player, ep.getMovieList().ccprops());
 	}
 	
-	public static void play(FSPath abspath, NamedPathVar player, CCProperties ccprops) {
+	public static boolean play(FSPath abspath, NamedPathVar player, CCProperties ccprops) {
 		List<FSPath> al = new ArrayList<>();
 		al.add(abspath);
-		play(al, player, ccprops);
+		return play(al, player, ccprops);
 	}
 
 	@SuppressWarnings("nls")
@@ -85,7 +85,7 @@ public class MoviePlayer {
 	}
 
 	@SuppressWarnings("nls")
-	public static void play(List<FSPath> abspaths, NamedPathVar player, CCProperties ccprops) {
+	public static boolean play(List<FSPath> abspaths, NamedPathVar player, CCProperties ccprops)  {
 		var playerpath = (player == null) ? getVLCPath(ccprops) : Tuple.Create(player.Path, FSPath.splitArguments(player.Arguments));
 		
 		if (FSPath.isNullOrEmpty(playerpath.Item1)) {
@@ -96,14 +96,24 @@ public class MoviePlayer {
 					for (var s : abspaths) {
 						Desktop.getDesktop().open(s.toFile());
 					}
+					return true;
 				} catch (IOException | IllegalArgumentException e) {
 					CCLog.addError(e);
+					return false;
 				}
+			} else {
+				return false;
 			}
 		} else {
 			List<String> parameters = getParameters(playerpath, ccprops, player == null);
 			
 			for (var abspath : abspaths) {
+
+				if (ccprops.PROP_PLAY_FAILONMISSINGFILES.getValue() && !abspath.fileExists()) {
+					CCLog.addError(LocaleBundle.getString("LogMessage.VLCPlayFileNotFound"));
+					return false;
+				}
+
 				if (ApplicationHelper.isWindows()) {
 					parameters.add("\"" + abspath.toAbsolutePathString() + "\"");
 				} else {
@@ -117,9 +127,11 @@ public class MoviePlayer {
 				pb.redirectOutput(new File(ApplicationHelper.getNullFile()));
 				pb.redirectError(new File(ApplicationHelper.getNullFile()));
 				pb.start();
+				return true;
 
 			} catch (IOException e) {
 				CCLog.addError(e);
+				return false;
 			}
 		}
 	}

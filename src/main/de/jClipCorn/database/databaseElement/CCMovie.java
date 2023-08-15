@@ -251,9 +251,9 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 			}
 		}
 
-		MoviePlayer.play(this, player);
+		var playSucc = MoviePlayer.play(this, player);
 
-		if (updateViewedAndHistory) updateViewedAndHistoryFromUI();
+		if (playSucc && updateViewedAndHistory) updateViewedAndHistoryFromUI();
 	}
 
 	@Override

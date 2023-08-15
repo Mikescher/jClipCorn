@@ -18,15 +18,17 @@ public class GenericTextDialog extends JDialog {
 
 	private final boolean _editable;
 	private final Func1to0<String> _callback;
+	private final boolean _monospace;
 
 	/**
 	 * Create the frame.
 	 */
-	private GenericTextDialog(Component owner, String title, String content, boolean modal, boolean editable, Func1to0<String> callback) {
+	private GenericTextDialog(Component owner, String title, String content, boolean modal, boolean editable, Func1to0<String> callback, boolean monospace) {
 		super();
 
-		_editable = editable;
-		_callback = callback;
+		_editable  = editable;
+		_callback  = callback;
+		_monospace = monospace;
 
 		initGUI(title, content, modal);
 		setLocationRelativeTo(owner);
@@ -34,12 +36,17 @@ public class GenericTextDialog extends JDialog {
 
 	public static void showText(Component owner, String title, String content, boolean modal) {
 		if (owner instanceof JDialog && ((JDialog)owner).isModal()) modal = true;
-		new GenericTextDialog(owner, title, content, modal, false, null).setVisible(true);
+		new GenericTextDialog(owner, title, content, modal, false, null, false).setVisible(true);
+	}
+
+	public static void showMonoText(Component owner, String title, String content, boolean modal) {
+		if (owner instanceof JDialog && ((JDialog)owner).isModal()) modal = true;
+		new GenericTextDialog(owner, title, content, modal, false, null, true).setVisible(true);
 	}
 
 	public static void showEditableText(Component owner, String title, String content, boolean modal, Func1to0<String> callback) {
 		if (owner instanceof JDialog && ((JDialog)owner).isModal()) modal = true;
-		new GenericTextDialog(owner, title, content, modal, true, callback).setVisible(true);
+		new GenericTextDialog(owner, title, content, modal, true, callback, false).setVisible(true);
 	}
 
 	private void initGUI(String title, String content, boolean modal) {
@@ -69,6 +76,7 @@ public class GenericTextDialog extends JDialog {
 		scrollPane.setViewportView(textArea);
 		textArea.setEditable(_editable);
 		textArea.setText(content);
+		if (_monospace) textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 		scrollPane.getVerticalScrollBar().setValue(0);
 		SwingUtils.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(0));
 

@@ -5,16 +5,19 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.cover.CoverLabelFullsize;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -118,20 +121,21 @@ public class CreateSeriesFolderStructureFrame extends JCCFrame
 		btnOk.setEnabled(!CCStreams.iterate(elements).any(e -> e.State== CSFSElement.CSFSState.Error) && ! movielist.isReadonly());
 	}
 
+	@SuppressWarnings("nls")
 	private void startMoving(ActionEvent e) {
 		lsTest.setData(new ArrayList<>());
 
 		if (! testMoving()) {
-			DialogHelper.showDispatchLocalInformation(this, "CreateSeriesFolderStructureFrame.dialogs.couldnotmove"); //$NON-NLS-1$
+			DialogHelper.showDispatchLocalInformation(this, "CreateSeriesFolderStructureFrame.dialogs.couldnotmove");
 			return;
 		}
 
-		if (DialogHelper.showLocaleYesNo(this, "CreateSeriesFolderStructureFrame.dialogs.sure")) { //$NON-NLS-1$
+		if (DialogHelper.showLocaleYesNo(this, "CreateSeriesFolderStructureFrame.dialogs.sure")) {
 			var parentfolder = edPath.getPath();
 
 			new Thread(() ->
 			{
-				var success = false;
+				var errors = new ArrayList<Tuple<String, String>>();
 
 				try {
 
@@ -161,24 +165,26 @@ public class CreateSeriesFolderStructureFrame extends JCCFrame
 								if (file.equals(newfile)) {
 									final int _v = curr++;
 									SwingUtils.invokeLater(() -> this.progress.setValue(_v));
-									continue; // Skip already existing and correct Files
 								} else {
-									DialogHelper.showDispatchError(this, LocaleBundle.getString("CreateSeriesFolderStructureFrame.dialogs.error_caption"), LocaleBundle.getFormattedString("CreateSeriesFolderStructureFrame.dialogs.error", episode.getTitle())); //$NON-NLS-1$ //$NON-NLS-2$
-									return;
+									errors.add(Tuple.Create(episode.getTitle(), "Target already exists"));
+								}
+								continue;
+							}
+
+							if (! mkdirfolder.isDirectory()) {
+								var succ = mkdirfolder.mkdirsSafe();
+								if (!succ) {
+									errors.add(Tuple.Create(episode.getTitle(), "Failed to create parent directory"));
+									continue;
 								}
 							}
 
-							boolean succ = true;
-							if (! mkdirfolder.isDirectory()) {
-								succ = mkdirfolder.mkdirsSafe();
-							}
-							if (succ) {
-								succ = file.renameToSafe(newfile);
-							}
-
-							if (! succ) {
-								DialogHelper.showDispatchError(this, LocaleBundle.getString("CreateSeriesFolderStructureFrame.dialogs.error_caption"), LocaleBundle.getFormattedString("CreateSeriesFolderStructureFrame.dialogs.error", episode.getTitle())); //$NON-NLS-1$ //$NON-NLS-2$
-								return;
+							{
+								var succ = file.renameToSafe(newfile);
+								if (!succ) {
+									errors.add(Tuple.Create(episode.getTitle(), "Failed to rename file"));
+									continue;
+								}
 							}
 
 							episode.Part.set(CCPath.createFromFSPath(newfile, this));
@@ -188,26 +194,39 @@ public class CreateSeriesFolderStructureFrame extends JCCFrame
 						}
 					}
 
-					success = true;
-
 				} finally {
 
-					var _success = success;
+					var _errors = new ArrayList<>(errors);
 
 					SwingUtils.invokeAndWaitSafe(() ->
 					{
-						if (_success)
+						if (_errors.isEmpty())
 						{
 							btnOk.setEnabled(false);
 							btnChoose.setEnabled(false);
 							btnTest.setEnabled(false);
+							DialogHelper.showDispatchLocalInformation(this, "CreateSeriesFolderStructureFrame.dialogs.success");
+							CreateSeriesFolderStructureFrame.this.dispose();
 						}
 						else
 						{
 							btnOk.setEnabled(false);
-							btnChoose.setEnabled(true);
-							btnTest.setEnabled(true);
+							btnChoose.setEnabled(false);
+							btnTest.setEnabled(false);
+
+							var pad = CCStreams.iterate(_errors).autoMax(p -> p.Item1.length()).orElse(0);
+
+							var errStr = CCStreams
+									.iterate(_errors)
+									.map(p -> StringUtils.rightPad(p.Item1, pad) + "    :=    " + p.Item2).stringjoin("\n");
+
+							GenericTextDialog.showMonoText(
+									CreateSeriesFolderStructureFrame.this,
+									LocaleBundle.getString("CreateSeriesFolderStructureFrame.dialogs.error_caption"),
+									LocaleBundle.getString("CreateSeriesFolderStructureFrame.dialogs.error") + "\n\n\n" + errStr,
+									true);
 						}
+
 					});
 
 				}

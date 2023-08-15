@@ -518,7 +518,11 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 	public <TAttrType> CCStream<TAttrType> flatten(Func1to1<TType, Iterator<TAttrType>> selector) {
 		return new FlattenedStream<>(this, selector);
 	}
-	
+
+	public String stringjoin(String seperator) {
+		return stringjoin(Object::toString, seperator);
+	}
+
 	public String stringjoin(Func1to1<TType, String> selector) {
 		StringBuilder buildr = new StringBuilder();
 

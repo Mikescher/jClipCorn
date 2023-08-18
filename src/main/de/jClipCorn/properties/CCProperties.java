@@ -216,6 +216,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_SKIP_DEFAULT_LANG_IN_FILENAMES;
 	public CCBoolProperty                                   PROP_PLAY_FAILONMISSINGFILES;
 	public CCBoolProperty                                   PROP_RESET_SORT_ON_FILTERCLEAR;
+	public CCBoolProperty                                   PROP_CHARSELECTOR_DYNAMIC_OPACTITY;
 
 	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public boolean ARG_READONLY = false;
@@ -297,6 +298,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_MAINFRAME_ASYNC_COVER_LOADING      = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_ASYNC_COVER_LOADING",       false);
 		PROP_MAINFRAME_SHOW_VIEWCOUNT      		= new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_VIEWCOUNT",       		true);
 		PROP_MAINFRAME_VISIBLE_COLUMNS          = new CCEnumSetProperty<>(CAT_VIEW,         this,   "PROP_MAINFRAME_VISIBLE_COLUMNS",           getDefColumns(),                   MainFrameColumn.getWrapper());
+		PROP_CHARSELECTOR_DYNAMIC_OPACTITY      = new CCBoolProperty(CAT_VIEW,              this,   "PROP_CHARSELECTOR_DYNAMIC_OPACTITY",       true);
 
 		PROP_DATABASE_NAME                      = new CCStringProperty(CAT_DATABASE,        this,   "PROP_DATABASE_NAME",                       "ClipCornDB");
 		PROP_DATABASE_DIR                       = new CCFSPathProperty(CAT_DATABASE,        this,   "PROP_DATABASE_DIR",                        FSPath.Empty,                       "",          CCPathPropertyMode.DIRECTORIES);

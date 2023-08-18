@@ -17,11 +17,11 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.table.filter.customFilter.CustomSearchFilter;
 import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
-import de.jClipCorn.gui.guiComponents.cover.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.guiComponents.FileDrop;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
+import de.jClipCorn.gui.guiComponents.cover.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.mainFrame.charSelector.ClipCharSortSelector;
+import de.jClipCorn.gui.mainFrame.charSelector.ClipCharSelector;
 import de.jClipCorn.gui.mainFrame.filterTree.FilterTree;
 import de.jClipCorn.gui.mainFrame.menuBar.MainFrameMenuBar;
 import de.jClipCorn.gui.mainFrame.searchField.SearchField;
@@ -56,7 +56,7 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 		super(movielist);
 
 		movielist.addChangeListener(_mlListener = new CCDBUpdateAdapter() { @Override public void onAfterLoad() { onMovieListAfterLoad(); } });
-		CCActionTree actionTree = new CCActionTree(this);
+		CCActionTree actionTree = new CCActionTree(movielist);
 
 		initComponents();
 		postInit();
@@ -328,7 +328,7 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 		filterTree = new FilterTree(movielist);
 		coverImage = new DatabaseElementPreviewLabel(movielist, false);
 		clipTable = new ClipTable(movielist, this);
-		clipCharSelector = new ClipCharSortSelector(this);
+		clipCharSelector = new ClipCharSelector(this);
 		statusbar = new ClipStatusBar(this, movielist);
 
 		//======== this ========
@@ -354,7 +354,12 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 			panelTop.setLayout(new FormLayout(
 				"default:grow, 2*($lcgap, default), $lcgap", //$NON-NLS-1$
 				"default")); //$NON-NLS-1$
-			panelTop.add(toolbar, CC.xy(1, 1));
+
+			//======== toolbar ========
+			{
+				toolbar.setLayout(null);
+			}
+			panelTop.add(toolbar, CC.xy(1, 1, CC.DEFAULT, CC.FILL));
 
 			//---- edSearch ----
 			edSearch.setColumns(16);
@@ -399,7 +404,7 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 	private FilterTree filterTree;
 	private DatabaseElementPreviewLabel coverImage;
 	private ClipTable clipTable;
-	private ClipCharSortSelector clipCharSelector;
+	private ClipCharSelector clipCharSelector;
 	private ClipStatusBar statusbar;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

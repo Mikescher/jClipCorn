@@ -3,10 +3,13 @@ package de.jClipCorn.gui.mainFrame.charSelector;
 import de.jClipCorn.features.table.filter.customFilter.CustomCharFilter;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.mainFrame.table.RowFilterSource;
+import de.jClipCorn.properties.CCProperties;
 
 import javax.swing.*;
+import java.util.Objects;
+import java.util.Set;
 
-public class AbstractClipCharSortSelector extends JToolBar {
+public abstract class AbstractClipCharSortSelector extends JToolBar {
 	private static final long serialVersionUID = -8270219279263812975L;
 	
 	protected final MainFrame owner;	
@@ -15,10 +18,17 @@ public class AbstractClipCharSortSelector extends JToolBar {
 		super();
 		this.owner = mf;
 	}
-	
+
+	public CCProperties ccprops() {
+		return this.owner.ccprops();
+	}
+
 	protected void onClick(String search) {
+
+		CustomCharFilter filter;
+
 		if (search == null) {
-			owner.getClipTable().setRowFilter(null, RowFilterSource.CHARSELECTOR, true);
+			owner.getClipTable().setRowFilter(filter = null, RowFilterSource.CHARSELECTOR, true);
 		} else {
 
 			var oldFilter = owner.getClipTable().getRowFilter();
@@ -26,21 +36,37 @@ public class AbstractClipCharSortSelector extends JToolBar {
 			if (oldFilter == null) {
 
 				// simply set filter (no old filter)
-				owner.getClipTable().setRowFilter(CustomCharFilter.createSingle(owner.getMovielist(), search), RowFilterSource.CHARSELECTOR, false);
+				owner.getClipTable().setRowFilter(filter = CustomCharFilter.createSingle(owner.getMovielist(), search), RowFilterSource.CHARSELECTOR, false);
 
 			} else if (oldFilter.getFilter() instanceof CustomCharFilter) {
 
 				// append
 				var fltr = (CustomCharFilter)oldFilter.getFilter();
-				owner.getClipTable().setRowFilter(fltr.appendCharset(search), RowFilterSource.CHARSELECTOR, false);
+				owner.getClipTable().setRowFilter(filter = fltr.appendCharset(search), RowFilterSource.CHARSELECTOR, false);
 
 			} else {
 
 				//override existing filter
-				owner.getClipTable().setRowFilter(CustomCharFilter.createSingle(owner.getMovielist(), search), RowFilterSource.CHARSELECTOR, false);
+				owner.getClipTable().setRowFilter(filter = CustomCharFilter.createSingle(owner.getMovielist(), search), RowFilterSource.CHARSELECTOR, false);
 
 			}
-
 		}
+
+		if (ccprops().PROP_CHARSELECTOR_DYNAMIC_OPACTITY.getValue()) {
+			var chars = owner
+					.getMovielist()
+					.iteratorElements()
+					.filter(elem -> filter == null || filter.includes(elem))
+					.map(p -> CustomCharFilter.getRelevantCharacter(p, filter == null ? 0 : filter.getLength()))
+					.filter(Objects::nonNull)
+					.map(Character::toUpperCase)
+					.unique()
+					.toSet();
+
+			updateButtonInactive(chars);
+		}
+
 	}
+
+	protected abstract void updateButtonInactive(Set<Character> chars);
 }

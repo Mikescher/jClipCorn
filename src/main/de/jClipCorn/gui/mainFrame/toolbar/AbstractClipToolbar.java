@@ -2,7 +2,7 @@ package de.jClipCorn.gui.mainFrame.toolbar;
 
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionElement;
-import de.jClipCorn.features.actionTree.CCActionTree;
+import de.jClipCorn.features.actionTree.UIActionTree;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
@@ -13,8 +13,8 @@ import javax.swing.*;
 public class AbstractClipToolbar extends JToolBar {
 	private static final long serialVersionUID = -8713389540339519009L;
 
-	protected JButton addAction(String actionIdent) {
-		final CCActionElement el = CCActionTree.getInstance().find(actionIdent);
+	protected JButton addAction(UIActionTree tree, String actionIdent) {
+		final CCActionElement el = tree.find(actionIdent);
 		
 		if (el == null) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorActionNotFound", actionIdent)); //$NON-NLS-1$

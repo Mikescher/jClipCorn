@@ -1,9 +1,9 @@
 package de.jClipCorn.features.table.filter.customFilter;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
-import de.jClipCorn.features.table.filter.filterConfig.CustomFilterCharConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterStringConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
@@ -20,6 +20,24 @@ public class CustomCharFilter extends AbstractCustomFilter {
 
 	public CustomCharFilter(CCMovieList ml) {
 		super(ml);
+	}
+
+	public static Character getRelevantCharacter(CCDatabaseElement e, int len) {
+		String title = e.title().get();
+
+		for (String s : EXCLUSIONS) {
+			if (title.startsWith(s + Str.SingleSpace)) {
+				title = title.substring(s.length() + 1);
+			}
+		}
+
+		title = title.replaceAll(" ", "");
+
+		if (title.length() <= len) {
+			return null;
+		}
+
+		return title.charAt(len);
 	}
 
 	@Override
@@ -45,6 +63,10 @@ public class CustomCharFilter extends AbstractCustomFilter {
 		}
 
 		return true;
+	}
+
+	public int getLength() {
+		return charset.length;
 	}
 
 	@Override

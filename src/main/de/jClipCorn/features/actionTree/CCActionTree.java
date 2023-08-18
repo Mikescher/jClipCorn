@@ -89,10 +89,10 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 	
 	private final CCMovieList movielist;
 
-	public CCActionTree(MainFrame mf) {
+	public CCActionTree(CCMovieList ml) {
 		super();
 		
-		this.movielist = mf.getMovielist();
+		this.movielist = ml;
 
 		init(ccprops());
 	}

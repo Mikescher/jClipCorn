@@ -2,6 +2,11 @@ package de.jClipCorn.gui.mainFrame.toolbar;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.actionTree.CCActionTree;
+import de.jClipCorn.features.actionTree.UIActionTree;
+
+import java.awt.*;
+import java.util.List;
 
 
 public class ClipToolbar extends AbstractClipToolbar {
@@ -13,37 +18,43 @@ public class ClipToolbar extends AbstractClipToolbar {
 	private final CCMovieList movielist;
 
 	@DesignCreate
-	private static ClipToolbar designCreate() { return new ClipToolbar(null, true); }
+	private static ClipToolbar designCreate() { return new ClipToolbar(null); }
 
 	public ClipToolbar(CCMovieList ml) {
-		this(ml, false);
-	}
-
-	public ClipToolbar(CCMovieList ml, boolean dummy) {
 		super();
 		movielist = ml;
 
 		setFloatable(false);
 
-		if (!dummy) create();
+		if (ml != null) {
+			create(CCActionTree.getInstance(), movielist.ccprops().PROP_TOOLBAR_ELEMENTS.getValueAsArray());
+		} else {
+			// dummy data for DesignCreate
+			create(new CCActionTree(CCMovieList.createStub()), List.of(ClipToolbar.STANDARD_CONFIG.split("\\|")));
+		}
 	}
 
 	public void recreate()
 	{
 		removeAll();
-		create();
+		create(CCActionTree.getInstance(), movielist.ccprops().PROP_TOOLBAR_ELEMENTS.getValueAsArray());
 
 		invalidate();
 		repaint();
 	}
 
-	private void create() {
-		for (String elem : movielist.ccprops().PROP_TOOLBAR_ELEMENTS.getValueAsArray()) {
+	private void create(UIActionTree tree, java.util.List<String> btns) {
+		for (String elem : btns) {
 			if (elem.equals(IDENT_SEPERATOR)) {
 				addSeparator();
 			} else {
-				addAction(elem);
+				addAction(tree, elem);
 			}
 		}
+	}
+
+	@Override
+	public void setLayout(LayoutManager mgr) {
+		if (mgr != null) super.setLayout(mgr); // make setLayout(null) a noop, because JGoodiesFormLayout always wants to add a call to it -.-
 	}
 }

@@ -63,8 +63,7 @@ public final class Str {
 		return new String(Base64.decodeBase64(v), UTF8);
 	}
 
-	public static String safeSubstring(String s, int start, int len)
-	{
+	public static String safeSubstring(String s, int start, int len) {
 		if (start > s.length()) return Str.Empty;
 
 		return s.substring(start, Math.min(s.length(), start + len));
@@ -166,5 +165,59 @@ public final class Str {
 		catch (UnsupportedEncodingException e) { /* */ }
 
 		return r;
+	}
+
+	public static String getCommonPrefix(List<String> strings) {
+
+		if (strings.isEmpty()) return Str.Empty;
+
+		var prefix = Str.Empty;
+
+		for (;;)
+		{
+			if (strings.get(0).length() <= prefix.length()) return prefix;
+
+			var testPrefix = strings.get(0).substring(0, prefix.length()+1);
+
+			boolean equal = true;
+			for (var entry : strings)
+			{
+				if (entry.length() < testPrefix.length()) return prefix;
+
+				if (! entry.startsWith(testPrefix)) return prefix;
+
+			}
+			if (!equal) return prefix;
+
+			prefix = testPrefix;
+		}
+
+	}
+
+	public static String getCommonPrefixIgnoreCase(List<String> strings) {
+
+		if (strings.isEmpty()) return Str.Empty;
+
+		var prefix = Str.Empty;
+
+		for (;;)
+		{
+			if (strings.get(0).length() <= prefix.length()) return prefix;
+
+			var testPrefix = strings.get(0).substring(0, prefix.length()+1);
+
+			boolean equal = true;
+			for (var entry : strings)
+			{
+				if (entry.length() < testPrefix.length()) return prefix;
+
+				if (! entry.substring(0, testPrefix.length()).equalsIgnoreCase(testPrefix)) return prefix;
+
+			}
+			if (!equal) return prefix;
+
+			prefix = testPrefix;
+		}
+
 	}
 }

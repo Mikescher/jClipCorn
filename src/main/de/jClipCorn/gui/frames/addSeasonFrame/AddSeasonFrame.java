@@ -44,7 +44,7 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 
 	private void postInit()
 	{
-		//
+		this.edTitle.setText(this.parent.guessNextSeasonTitle().orElse(Str.Empty));
 	}
 
 	@Override

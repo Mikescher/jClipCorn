@@ -27,9 +27,9 @@ import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrBuilder;
 
-import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +37,9 @@ import java.util.regex.Pattern;
 public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISeriesData {
 	private final static int GUIDE_W_BORDER = 2;
 	private final static int GUIDE_W_PADDING = 6;
-	
+
+	private static final Pattern REGEX_TITLE_NUM = Pattern.compile("^(.+)([0-9]+)$"); //$NON-NLS-1$
+
 	private final List<CCSeason> seasons = new Vector<>();
 
 	private final SeriesCache _cache;
@@ -1038,5 +1040,43 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 	public Opt<Integer> getMaxEpisodeNumber() {
 		return _cache.get(SeriesCache.MAX_EPISODE_NUMBER, null, ser-> iteratorEpisodes().map(p -> p.EpisodeNumber.get()).autoMax());
+	}
+
+	public Opt<String> guessNextSeasonTitle() {
+		var seasonTitles = this.iteratorSeasons().map(p -> p.Title.get()).enumerate();
+		if (seasonTitles.isEmpty()) return Opt.empty();
+
+		if (seasonTitles.size() == 1)
+		{
+			var m = REGEX_TITLE_NUM.matcher(seasonTitles.get(0));
+			if (!m.matches()) return Opt.empty();
+
+			var g0 = m.group(1);
+
+			var g1 = m.group(2);
+			var n1 = Str.tryParseInt(g1);
+
+			if (n1.isPresent()) return Opt.empty();
+
+			return Opt.of(g0 + StringUtils.leftPad(String.valueOf(n1.get()+1), g1.length(), '0'));
+		}
+		else
+		{
+
+			var prefix = Str.getCommonPrefixIgnoreCase(seasonTitles);
+			if (prefix.isEmpty()) return Opt.empty();
+
+			var suffixes = CCStreams.iterate(seasonTitles).map(p -> p.substring(prefix.length())).map(Str::tryParseInt).enumerate();
+
+			int n = -1;
+			for (var sfx : suffixes)
+			{
+				if (sfx.isEmpty()) return Opt.empty();
+				if (sfx.get() <= n) return Opt.empty();
+				n = sfx.get();
+			}
+
+			return Opt.of(prefix + StringUtils.leftPad(String.valueOf(n+1), (seasonTitles.get(0).length() - prefix.length()), '0'));
+		}
 	}
 }

@@ -18,7 +18,7 @@ public class AbstractClipCharSortSelector extends JToolBar {
 	
 	protected void onClick(String search) {
 		if (search == null) {
-			owner.getClipTable().setRowFilter(null, RowFilterSource.CHARSELECTOR);
+			owner.getClipTable().setRowFilter(null, RowFilterSource.CHARSELECTOR, true);
 		} else {
 
 			var oldFilter = owner.getClipTable().getRowFilter();
@@ -26,18 +26,18 @@ public class AbstractClipCharSortSelector extends JToolBar {
 			if (oldFilter == null) {
 
 				// simply set filter (no old filter)
-				owner.getClipTable().setRowFilter(CustomCharFilter.createSingle(owner.getMovielist(), search), RowFilterSource.CHARSELECTOR);
+				owner.getClipTable().setRowFilter(CustomCharFilter.createSingle(owner.getMovielist(), search), RowFilterSource.CHARSELECTOR, false);
 
 			} else if (oldFilter.getFilter() instanceof CustomCharFilter) {
 
 				// append
 				var fltr = (CustomCharFilter)oldFilter.getFilter();
-				owner.getClipTable().setRowFilter(fltr.appendCharset(search), RowFilterSource.CHARSELECTOR);
+				owner.getClipTable().setRowFilter(fltr.appendCharset(search), RowFilterSource.CHARSELECTOR, false);
 
 			} else {
 
 				//override existing filter
-				owner.getClipTable().setRowFilter(CustomCharFilter.createSingle(owner.getMovielist(), search), RowFilterSource.CHARSELECTOR);
+				owner.getClipTable().setRowFilter(CustomCharFilter.createSingle(owner.getMovielist(), search), RowFilterSource.CHARSELECTOR, false);
 
 			}
 

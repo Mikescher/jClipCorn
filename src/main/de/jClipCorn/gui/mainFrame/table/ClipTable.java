@@ -28,6 +28,7 @@ import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.HTMLFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.stream.CCStreams;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -91,7 +92,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> formatScoreTooltip(v.Score.get(), v.ScoreComment.get()),
 			(v) -> ccprops().PROP_MAINFRAME_CLICKABLESCORE.getValue() && v.Score.get() != CCUserScore.RATING_NO,
-			(v) -> setRowFilter(CustomUserScoreFilter.create(owner.getMovielist(), v.Score.get()), RowFilterSource.TABLE_CLICKED),
+			(v) -> setRowFilter(CustomUserScoreFilter.create(owner.getMovielist(), v.Score.get()), RowFilterSource.TABLE_CLICKED, false),
 			() -> false
 		));
 
@@ -187,7 +188,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			true,
 			(v,row) -> v.isMovie() && v.asMovie().Zyklus.get().isSet() && v.asMovie().Zyklus.get().hasNumber() ? v.asMovie().Zyklus.get().getDecimalFormatted() : null,
 			(v) -> ccprops().PROP_MAINFRAME_CLICKABLEZYKLUS.getValue() && v.isMovie() && v.asMovie().Zyklus.get().isSet(),
-			(v) -> { if (v.isMovie()) setRowFilter(CustomZyklusFilter.create(owner.getMovielist(), v.asMovie().Zyklus.get()), RowFilterSource.TABLE_CLICKED); },
+			(v) -> { if (v.isMovie()) setRowFilter(CustomZyklusFilter.create(owner.getMovielist(), v.asMovie().Zyklus.get()), RowFilterSource.TABLE_CLICKED, false); },
 			() -> false
 		));
 
@@ -544,8 +545,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 		return Opt.empty();
 	}
 
-	@SuppressWarnings("unchecked")
-	public void setRowFilter(AbstractCustomFilter filterimpl, RowFilterSource source) { // Source kann null sein
+	public void setRowFilter(@Nullable AbstractCustomFilter filterimpl, @Nullable RowFilterSource source, boolean manualReset) {
 		if (model.hasVolatileRowIndexMapping()) model.clearRowIndexMapping();
 
 		if (!suppressRowFilterResetEvents) {
@@ -574,7 +574,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			table.setRowFilter(currentFilter);
 		}
 
-		if (! table.isSortedByColumn()) {
+		if (!table.isSortedByColumn() || (ccprops().PROP_RESET_SORT_ON_FILTERCLEAR.getValue() && manualReset)) {
 			table.setSortKey(getInitialSortKey());
 		}
 

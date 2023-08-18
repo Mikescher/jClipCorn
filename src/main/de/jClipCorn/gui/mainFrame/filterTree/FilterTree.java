@@ -132,7 +132,7 @@ public class FilterTree extends AbstractFilterTree {
 	private void initAll(DefaultMutableTreeNode parent) {
 		parent.setUserObject(new SimpleTreeObject(Resources.ICN_SIDEBAR_ALL.get(), LocaleBundle.getString("FilterTree.All"), e ->  //$NON-NLS-1$
 		{
-			table.setRowFilter(null, RowFilterSource.SIDEBAR);
+			table.setRowFilter(null, RowFilterSource.SIDEBAR, true);
 			collapseAll();
 		}));
 	}
@@ -300,7 +300,7 @@ public class FilterTree extends AbstractFilterTree {
 		
 		new CustomFilterEditDialog(table.getMainFrame(), movielist, fcfilter, () ->
 		{
-			table.setRowFilter(fcfilter.getFilter(), RowFilterSource.SIDEBAR);
+			table.setRowFilter(fcfilter.getFilter(), RowFilterSource.SIDEBAR, false);
 
 			if (! fcfilter.getName().equals(CustomFilterList.NAME_TEMPORARY) && !customFilterList.contains(fcfilter)) {
 				customFilterList.add(fcfilter);
@@ -338,9 +338,9 @@ public class FilterTree extends AbstractFilterTree {
 				
 				op.combineWith(filter.invoke());
 
-				table.setRowFilter(op, RowFilterSource.SIDEBAR);
+				table.setRowFilter(op, RowFilterSource.SIDEBAR, false);
 			} else {
-				table.setRowFilter(filter.invoke(), RowFilterSource.SIDEBAR);
+				table.setRowFilter(filter.invoke(), RowFilterSource.SIDEBAR, false);
 			}
 			
 		}));

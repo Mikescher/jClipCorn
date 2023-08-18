@@ -170,9 +170,9 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 	public void startSearch() {
 		String search = edSearch.getRealText().trim();
 		if (search.isEmpty()) {
-			clipTable.setRowFilter(null, RowFilterSource.TEXTFIELD);
+			clipTable.setRowFilter(null, RowFilterSource.TEXTFIELD, false); // manualReset=false, we do not want to reset sort order here
 		} else {
-			clipTable.setRowFilter(CustomSearchFilter.create(movielist, search), RowFilterSource.TEXTFIELD);
+			clipTable.setRowFilter(CustomSearchFilter.create(movielist, search), RowFilterSource.TEXTFIELD, false);
 		}
 	}
 

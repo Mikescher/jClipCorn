@@ -1297,7 +1297,7 @@ new FormModel {
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "relgap, 0dlu:grow, labelcompgap, 0dlu:grow(0.75), relgap"
-					"$rowSpecs": "linegap, default, linegap, 7dlu, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default"
+					"$rowSpecs": "linegap, default, linegap, 7dlu, linegap, default, linegap, 7dlu, linegap, default, linegap, 7dlu, linegap, default, linegap, default, linegap, default, linegap, 7dlu, linegap, default, linegap, 7dlu, linegap, default, linegap, 14dlu, linegap, default, linegap, default"
 				} ) {
 					name: "pnlMetadata"
 					add( new FormComponent( "javax.swing.JButton" ) {
@@ -1323,32 +1323,21 @@ new FormModel {
 						"gridX": 2
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button67"
+						"text": new FormMessage( null, "BatchEditFrame.ReadMultipleMetadata" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.METADATA_READALL.run(this, Tuple.Create(cbxSkipInvalidAudioLanguages.isSelected(), cbxSkipInvalidSubLanguages.isSelected())));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 10
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button38"
 						"text": new FormMessage( null, "BatchEditFrame.btnFormatFromPath" )
 						auxiliary() {
 							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.FORMAT_FROM_FILE.run(this, null));"
-						}
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridY": 10
-						"gridWidth": 3
-						"gridX": 2
-					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button39"
-						"text": new FormMessage( null, "AddEpisodeFrame.btnMassSetLang.title" )
-						auxiliary() {
-							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.LANGUAGE_FROM_FILE_MEDIAINFO.run(this, null));"
-						}
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridY": 12
-						"gridWidth": 3
-						"gridX": 2
-					} )
-					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button56"
-						"text": new FormMessage( null, "BatchEditFrame.btnMassSetSubs.title" )
-						auxiliary() {
-							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.SUBTITLES_FROM_FILE_MEDIAINFO.run(this, null));"
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridY": 14
@@ -1356,13 +1345,24 @@ new FormModel {
 						"gridX": 2
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
-						name: "button40"
-						"text": new FormMessage( null, "AddEpisodeFrame.btnMassSetLen.title" )
+						name: "button39"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnMassSetLang.title" )
 						auxiliary() {
-							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.LENGTH_FROM_FILE_MEDIAINFO.run(this, null));"
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.LANGUAGE_FROM_FILE_MEDIAINFO.run(this, cbxSkipInvalidAudioLanguages.isSelected()));"
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridY": 16
+						"gridWidth": 3
+						"gridX": 2
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button56"
+						"text": new FormMessage( null, "BatchEditFrame.btnMassSetSubs.title" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.SUBTITLES_FROM_FILE_MEDIAINFO.run(this, cbxSkipInvalidSubLanguages.isSelected()));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 18
 						"gridWidth": 3
 						"gridX": 2
 					} )
@@ -1373,7 +1373,7 @@ new FormModel {
 							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.MEDIAINFO_FROM_FILE.run(this, null));"
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridY": 20
+						"gridY": 22
 						"gridX": 2
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
@@ -1384,7 +1384,34 @@ new FormModel {
 						}
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 4
-						"gridY": 20
+						"gridY": 22
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button40"
+						"text": new FormMessage( null, "AddEpisodeFrame.btnMassSetLen.title" )
+						auxiliary() {
+							"JavaCodeGenerator.postCreateCode": "${field}.addActionListener(e -> BatchEditMethods.LENGTH_FROM_FILE_MEDIAINFO.run(this, null));"
+						}
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 26
+						"gridWidth": 3
+						"gridX": 2
+					} )
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "cbxSkipInvalidAudioLanguages"
+						"text": new FormMessage( null, "BatchEditFrame.cbxSkipInvalidAudioLanguages" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 30
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "cbxSkipInvalidSubLanguages"
+						"text": new FormMessage( null, "BatchEditFrame.cbxSkipInvalidSubtitleLanguages" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 32
+						"gridWidth": 3
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": new FormMessage( null, "BatchEditFrame.TabMetadata" )

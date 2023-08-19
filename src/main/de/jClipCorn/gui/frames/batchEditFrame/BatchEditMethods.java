@@ -184,11 +184,11 @@ public class BatchEditMethods
 		ep.scoreComment = param;
 	});
 
-	public static BatchEditMethod<Void> LANGUAGE_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
+	public static BatchEditMethod<Boolean> LANGUAGE_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
 	{
 		var dat = new MediaInfoRunner(ep.getSource().getMovieList()).run(ep.part.toFSPath(ep.ccprops()));
 
-		if (!dat.allAudioLanguagesValid()) throw new MediaQueryException("Errorneous language in file"); //$NON-NLS-1$
+		if (!param && !dat.allAudioLanguagesValid()) throw new MediaQueryException("Errorneous language in file"); //$NON-NLS-1$
 
 		CCDBLanguageSet dbll = dat.getValidAudioLanguages();
 
@@ -196,11 +196,11 @@ public class BatchEditMethods
 		ep.language = dbll;
 	});
 
-	public static BatchEditMethod<Void> SUBTITLES_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
+	public static BatchEditMethod<Boolean> SUBTITLES_FROM_FILE_MEDIAINFO = new BatchEditMethod<>((ep, param, opt) ->
 	{
 		var dat = new MediaInfoRunner(ep.getSource().getMovieList()).run(ep.part.toFSPath(ep.ccprops()));
 
-		if (!dat.allSubtitleLanguagesValid()) throw new MediaQueryException("Errorneous language in file"); //$NON-NLS-1$
+		if (!param && !dat.allSubtitleLanguagesValid()) throw new MediaQueryException("Errorneous language in file"); //$NON-NLS-1$
 
 		ep.subtitles = dat.getValidSubtitleLanguages();
 	});
@@ -229,6 +229,27 @@ public class BatchEditMethods
 	public static BatchEditMethod<Void> MEDIAINFO_CALC_HASH = new BatchEditMethod<>((ep, param, opt) ->
 	{
 		ep.mediaInfo = ep.mediaInfo.WithChecksum(Opt.of(ChecksumHelper.fastVideoHash(ep.part.toFSPath(ep.ccprops()))));
+	});
+
+	public static BatchEditMethod<Tuple<Boolean, Boolean>> METADATA_READALL = new BatchEditMethod<>((ep, param, opt) ->
+	{
+		var dat = new MediaInfoRunner(ep.getSource().getMovieList()).run(ep.part.toFSPath(ep.ccprops()));
+
+		if (dat.Duration.isError()) throw new MediaQueryException(dat.Duration.getErr().TextShort, dat.Duration.getErr());
+		if (dat.Duration.isEmpty()) throw new MediaQueryException("Duration is Empty");
+
+		if (!param.Item2 && !dat.allSubtitleLanguagesValid()) throw new MediaQueryException("Errorneous language in file"); //$NON-NLS-1$
+
+		if (!param.Item1 && !dat.allAudioLanguagesValid()) throw new MediaQueryException("Errorneous language in file"); //$NON-NLS-1$
+
+		CCDBLanguageSet dbll = dat.getValidAudioLanguages();
+		if (!param.Item1 && dbll.isEmpty()) throw new MediaQueryException("Language is empty"); //$NON-NLS-1$
+
+		ep.mediaInfo = dat.toMediaInfo();
+		ep.length = (int)(dat.Duration.get()/60);
+		ep.subtitles = dat.getValidSubtitleLanguages();
+		if (!dbll.isEmpty()) ep.language = dbll;
+		ep.filesize = ep.part.toFSPath(ep.ccprops()).filesize();
 	});
 
 	public static BatchEditMethod<CCDateTime> VIEWED_ADD = new BatchEditMethod<>((ep, param, opt) ->

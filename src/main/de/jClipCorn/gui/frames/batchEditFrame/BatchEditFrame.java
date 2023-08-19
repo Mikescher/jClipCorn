@@ -762,18 +762,22 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 		button27.addActionListener(e -> BatchEditMethods.FILESIZE_FROM_FILE.run(this, null));
 		button35 = new JButton();
 		button35.addActionListener(e -> BatchEditMethods.MEDIAINFO_CLEAR.run(this, null));
+		button67 = new JButton();
+		button67.addActionListener(e -> BatchEditMethods.METADATA_READALL.run(this, Tuple.Create(cbxSkipInvalidAudioLanguages.isSelected(), cbxSkipInvalidSubLanguages.isSelected())));
 		button38 = new JButton();
 		button38.addActionListener(e -> BatchEditMethods.FORMAT_FROM_FILE.run(this, null));
 		button39 = new JButton();
-		button39.addActionListener(e -> BatchEditMethods.LANGUAGE_FROM_FILE_MEDIAINFO.run(this, null));
+		button39.addActionListener(e -> BatchEditMethods.LANGUAGE_FROM_FILE_MEDIAINFO.run(this, cbxSkipInvalidAudioLanguages.isSelected()));
 		button56 = new JButton();
-		button56.addActionListener(e -> BatchEditMethods.SUBTITLES_FROM_FILE_MEDIAINFO.run(this, null));
-		button40 = new JButton();
-		button40.addActionListener(e -> BatchEditMethods.LENGTH_FROM_FILE_MEDIAINFO.run(this, null));
+		button56.addActionListener(e -> BatchEditMethods.SUBTITLES_FROM_FILE_MEDIAINFO.run(this, cbxSkipInvalidSubLanguages.isSelected()));
 		button41 = new JButton();
 		button41.addActionListener(e -> BatchEditMethods.MEDIAINFO_FROM_FILE.run(this, null));
 		button42 = new JButton();
 		button42.addActionListener(e -> BatchEditMethods.MEDIAINFO_CALC_HASH.run(this, null));
+		button40 = new JButton();
+		button40.addActionListener(e -> BatchEditMethods.LENGTH_FROM_FILE_MEDIAINFO.run(this, null));
+		cbxSkipInvalidAudioLanguages = new JCheckBox();
+		cbxSkipInvalidSubLanguages = new JCheckBox();
 		pnlReset = new JPanel();
 		button43 = new JButton();
 		button43.addActionListener(e -> BatchEditMethods.TITLE_RESET.run(this, null));
@@ -1334,7 +1338,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			{
 				pnlMetadata.setLayout(new FormLayout(
 					"$rgap, 0dlu:grow, $lcgap, 0dlu:grow(0.75), $rgap", //$NON-NLS-1$
-					"$lgap, default, $lgap, 7dlu, $lgap, default, $lgap, 7dlu, 4*($lgap, default), $lgap, 7dlu, $lgap, default")); //$NON-NLS-1$
+					"$lgap, default, $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default, $lgap, 7dlu, 3*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default, $lgap, 14dlu, 2*($lgap, default)")); //$NON-NLS-1$
 
 				//---- button27 ----
 				button27.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetEpSize.text")); //$NON-NLS-1$
@@ -1344,29 +1348,41 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 				button35.setText(LocaleBundle.getString("BatchEditFrame.ClearMediaInfo")); //$NON-NLS-1$
 				pnlMetadata.add(button35, CC.xywh(2, 6, 3, 1));
 
+				//---- button67 ----
+				button67.setText(LocaleBundle.getString("BatchEditFrame.ReadMultipleMetadata")); //$NON-NLS-1$
+				pnlMetadata.add(button67, CC.xywh(2, 10, 3, 1));
+
 				//---- button38 ----
 				button38.setText(LocaleBundle.getString("BatchEditFrame.btnFormatFromPath")); //$NON-NLS-1$
-				pnlMetadata.add(button38, CC.xywh(2, 10, 3, 1));
+				pnlMetadata.add(button38, CC.xywh(2, 14, 3, 1));
 
 				//---- button39 ----
 				button39.setText(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLang.title")); //$NON-NLS-1$
-				pnlMetadata.add(button39, CC.xywh(2, 12, 3, 1));
+				pnlMetadata.add(button39, CC.xywh(2, 16, 3, 1));
 
 				//---- button56 ----
 				button56.setText(LocaleBundle.getString("BatchEditFrame.btnMassSetSubs.title")); //$NON-NLS-1$
-				pnlMetadata.add(button56, CC.xywh(2, 14, 3, 1));
-
-				//---- button40 ----
-				button40.setText(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLen.title")); //$NON-NLS-1$
-				pnlMetadata.add(button40, CC.xywh(2, 16, 3, 1));
+				pnlMetadata.add(button56, CC.xywh(2, 18, 3, 1));
 
 				//---- button41 ----
 				button41.setText(LocaleBundle.getString("AddEpisodeFrame.btnMassSetMediaInfo.title")); //$NON-NLS-1$
-				pnlMetadata.add(button41, CC.xy(2, 20));
+				pnlMetadata.add(button41, CC.xy(2, 22));
 
 				//---- button42 ----
 				button42.setText(LocaleBundle.getString("BatchEditFrame.HashCalc")); //$NON-NLS-1$
-				pnlMetadata.add(button42, CC.xy(4, 20));
+				pnlMetadata.add(button42, CC.xy(4, 22));
+
+				//---- button40 ----
+				button40.setText(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLen.title")); //$NON-NLS-1$
+				pnlMetadata.add(button40, CC.xywh(2, 26, 3, 1));
+
+				//---- cbxSkipInvalidAudioLanguages ----
+				cbxSkipInvalidAudioLanguages.setText(LocaleBundle.getString("BatchEditFrame.cbxSkipInvalidAudioLanguages")); //$NON-NLS-1$
+				pnlMetadata.add(cbxSkipInvalidAudioLanguages, CC.xywh(2, 30, 3, 1));
+
+				//---- cbxSkipInvalidSubLanguages ----
+				cbxSkipInvalidSubLanguages.setText(LocaleBundle.getString("BatchEditFrame.cbxSkipInvalidSubtitleLanguages")); //$NON-NLS-1$
+				pnlMetadata.add(cbxSkipInvalidSubLanguages, CC.xywh(2, 32, 3, 1));
 			}
 			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabMetadata"), pnlMetadata); //$NON-NLS-1$
 
@@ -1595,12 +1611,15 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 	private JPanel pnlMetadata;
 	private JButton button27;
 	private JButton button35;
+	private JButton button67;
 	private JButton button38;
 	private JButton button39;
 	private JButton button56;
-	private JButton button40;
 	private JButton button41;
 	private JButton button42;
+	private JButton button40;
+	private JCheckBox cbxSkipInvalidAudioLanguages;
+	private JCheckBox cbxSkipInvalidSubLanguages;
 	private JPanel pnlReset;
 	private JButton button43;
 	private JButton button44;

@@ -482,7 +482,7 @@ public class StatisticsFrame extends JCCFrame
 			pnlCenter.setLayout(new BorderLayout());
 		}
 		contentPane.add(pnlCenter, CC.xy(4, 4, CC.FILL, CC.FILL));
-		setSize(1000, 600);
+		setSize(1200, 600);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}

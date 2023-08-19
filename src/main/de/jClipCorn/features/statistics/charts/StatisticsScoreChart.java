@@ -1,5 +1,6 @@
 package de.jClipCorn.features.statistics.charts;
 
+import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.features.statistics.StatisticsChart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -66,7 +67,7 @@ public class StatisticsScoreChart extends StatisticsChart {
 	}
 	
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCStream<CCDatabaseElement> it = source.iterator(movielist).cast();
+		CCStream<ICCDatabaseStructureElement> it = source.iterator(movielist);
 		
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
@@ -99,6 +100,6 @@ public class StatisticsScoreChart extends StatisticsChart {
 
 	@Override
 	public StatisticsTypeFilter[] supportedTypes() {
-		return new StatisticsTypeFilter[]{StatisticsTypeFilter.STF_MOVIES, StatisticsTypeFilter.STF_SERIES, StatisticsTypeFilter.STF_MOVIES_AND_SERIES};
+		return new StatisticsTypeFilter[]{StatisticsTypeFilter.STF_MOVIES, StatisticsTypeFilter.STF_SERIES, StatisticsTypeFilter.STF_SEASONS, StatisticsTypeFilter.STF_EPISODES, StatisticsTypeFilter.STF_ALL};
 	}
 }

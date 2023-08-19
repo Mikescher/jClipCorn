@@ -204,15 +204,15 @@ public class StatisticsHelper {
 		return result;
 	}
 	
-	public static int[] getCountForAllScores(CCStream<CCDatabaseElement> it) {
+	public static int[] getCountForAllScores(CCStream<ICCDatabaseStructureElement> it) {
 		int[] result = new int[CCUserScore.values().length];
 		
 		for (int i = 0; i < (CCUserScore.values().length); i++) {
 			result[i] = 0;
 		}
 		
-		for (CCDatabaseElement m : it) {
-			result[m.Score.get().asInt()]++;
+		for (var m : it) {
+			result[m.score().get().asInt()]++;
 		}
 		
 		return result;
@@ -227,12 +227,8 @@ public class StatisticsHelper {
 	}
 	
 	public static int[] getCountForAllYears(int minYear, int count, CCStream<ICCDatedElement> it) {
-		int[] result = new int[count];
-		
-		for (int i = 0; i < count; i++) {
-			result[i] = 0;
-		}
-		
+		int[] result = new int[count]; // default all zero
+
 		for (ICCDatedElement m : it) {
 			result[m.year().get() - minYear]++;
 		}

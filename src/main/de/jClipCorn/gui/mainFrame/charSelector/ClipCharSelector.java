@@ -12,6 +12,8 @@ public class ClipCharSelector extends JPanel {
 	@DesignCreate
 	private static ClipCharSelector designCreate() { return new ClipCharSelector(null); }
 
+	private final AbstractClipCharSortSelector _component;
+
 	public ClipCharSelector(MainFrame mf) {
 		super();
 
@@ -20,9 +22,13 @@ public class ClipCharSelector extends JPanel {
 		var isFull = !LookAndFeelManager.isRadiance();
 
 		if (isFull) {
-			this.add(new ClipCharSortSelectorFull(mf));
+			this.add(_component = new ClipCharSortSelectorFull(mf));
 		} else {
-			this.add(new ClipCharSortSelectorSmall(mf));
+			this.add(_component = new ClipCharSortSelectorSmall(mf));
 		}
+	}
+
+	public void reset() {
+		_component.reset();
 	}
 }

@@ -4,6 +4,7 @@ import de.jClipCorn.features.table.filter.customFilter.CustomCharFilter;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.mainFrame.table.RowFilterSource;
 import de.jClipCorn.properties.CCProperties;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Objects;
@@ -52,21 +53,28 @@ public abstract class AbstractClipCharSortSelector extends JToolBar {
 			}
 		}
 
-		if (ccprops().PROP_CHARSELECTOR_DYNAMIC_OPACTITY.getValue()) {
-			var chars = owner
-					.getMovielist()
-					.iteratorElements()
-					.filter(elem -> filter == null || filter.includes(elem))
-					.map(p -> CustomCharFilter.getRelevantCharacter(p, filter == null ? 0 : filter.getLength()))
-					.filter(Objects::nonNull)
-					.map(Character::toUpperCase)
-					.unique()
-					.toSet();
+		updateButtonOpacity(filter);
+	}
 
-			updateButtonInactive(chars);
-		}
+	private void updateButtonOpacity(@Nullable  CustomCharFilter filter) {
+		if (!ccprops().PROP_CHARSELECTOR_DYNAMIC_OPACTITY.getValue()) return;
 
+		var chars = owner
+				.getMovielist()
+				.iteratorElements()
+				.filter(elem -> filter == null || filter.includes(elem))
+				.map(p -> CustomCharFilter.getRelevantCharacter(p, filter == null ? 0 : filter.getLength()))
+				.filter(Objects::nonNull)
+				.map(Character::toUpperCase)
+				.unique()
+				.toSet();
+
+		updateButtonInactive(chars);
 	}
 
 	protected abstract void updateButtonInactive(Set<Character> chars);
+
+	public void reset() {
+		updateButtonOpacity(null);
+	}
 }

@@ -239,7 +239,7 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 	}
 
 	public void resetCharSelector() {
-		//--
+		clipCharSelector.reset();
 	}
 
 	public void resetSidebar() {

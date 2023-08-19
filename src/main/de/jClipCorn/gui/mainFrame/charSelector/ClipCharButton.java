@@ -20,6 +20,8 @@ public class ClipCharButton extends JButton {
 	}
 
 	public void setInactive(boolean b) {
+		if (inactive == b) return;
+
 		inactive = b;
 
 		if (this.inactive) {

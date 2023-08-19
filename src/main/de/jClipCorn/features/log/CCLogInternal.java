@@ -73,34 +73,28 @@ public class CCLogInternal {
 
 		CCLogElement lle = lastLogElem();
 
-		if (cle.equals(lle)) {
-			lle.inc();
-			System.out.println("LAST EXCEPTION x " + lle.getCount()); //$NON-NLS-1$
-			return;
-		} else {
-			synchronized (_dataLock) {
-				log.add(cle);
-			}
+		synchronized (_dataLock) {
+			log.add(cle);
+		}
 
-			if (isUnitTest)
-			{
-				// Don't show infos in unit tests
-				if (! cle.isType(CCLogType.LOG_ELEM_INFORMATION)) System.out.println(cle.getFormatted().trim());
-			}
-			else
-			{
-				if (cle.isType(CCLogType.LOG_ELEM_INFORMATION)) System.out.println(cle.getFormatted(CCLogElement.FORMAT_LEVEL_SHORT).trim());
-				else                                            System.out.println(cle.getFormatted(CCLogElement.FORMAT_LEVEL_FULL).trim());
-			}
+		if (isUnitTest)
+		{
+			// Don't show infos in unit tests
+			if (! cle.isType(CCLogType.LOG_ELEM_INFORMATION)) System.out.println(cle.getFormatted().trim());
+		}
+		else
+		{
+			if (cle.isType(CCLogType.LOG_ELEM_INFORMATION)) System.out.println(cle.getFormatted(CCLogElement.FORMAT_LEVEL_SHORT).trim());
+			else                                            System.out.println(cle.getFormatted(CCLogElement.FORMAT_LEVEL_FULL).trim());
+		}
 
-			if (type == CCLogType.LOG_ELEM_FATALERROR) {
-				DialogHelper.showDispatchError(null, LocaleBundle.getString("Main.AbortCaption"), LocaleBundle.getFormattedString("Main.AbortMessage", cle.getFormatted(CCLogElement.FORMAT_LEVEL_MID))); //$NON-NLS-1$ //$NON-NLS-2$
-				fatalabort();
-			}
+		if (type == CCLogType.LOG_ELEM_FATALERROR) {
+			DialogHelper.showDispatchError(null, LocaleBundle.getString("Main.AbortCaption"), LocaleBundle.getFormattedString("Main.AbortMessage", cle.getFormatted(CCLogElement.FORMAT_LEVEL_MID))); //$NON-NLS-1$ //$NON-NLS-2$
+			fatalabort();
+		}
 
-			if (type == CCLogType.LOG_ELEM_ERROR) {
-				updateMainFrameLabel();
-			}
+		if (type == CCLogType.LOG_ELEM_ERROR) {
+			updateMainFrameLabel();
 		}
 
 		if (cle.isType(CCLogType.LOG_ELEM_ERROR)) hasUnwatchedErrors.set(true);

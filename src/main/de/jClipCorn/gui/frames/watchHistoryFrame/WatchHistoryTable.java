@@ -62,7 +62,7 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 		r.add(Str.Empty)
 		 .withSize("auto")
 		 .withIcon(e -> e.getLanguage().getIcon())
-		 .withTooltip(e -> e.getLanguage().toOutputString())
+		 .withTooltip(e -> e.getLanguage().toTooltipString())
 		 .sortable();
 		
 		r.add("ClipTableModel.Length")

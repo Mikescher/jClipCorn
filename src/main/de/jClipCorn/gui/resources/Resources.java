@@ -323,6 +323,7 @@ public class Resources {
 
 	public final static IconRef ICN_TABLE_LANGUAGE_NONE		= register16x16Icon("/icons/table/language/language_none.png");
 	public final static IconRef ICN_TABLE_LANGUAGE_MORE		= register16x16Icon("/icons/table/language/language_more.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_DOT3		= register16x16Icon("/icons/table/language/language_dot3.png");
 
 	public final static MultiSizeIconRef ICN_TABLE_SCORE_0_NOCOMMENT = registerMultisizeIcon("/icons/table/score/poo.png");
 	public final static MultiSizeIconRef ICN_TABLE_SCORE_1_NOCOMMENT = registerMultisizeIcon("/icons/table/score/emotion_sick.png");

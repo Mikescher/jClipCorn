@@ -55,11 +55,11 @@ public class MultiEpisodesTable extends JCCSimpleTable<NewEpisodeVM> {
 		r.add("MultiEpisodesTable.Language")
 				.withSize("auto")
 				.withIcon(e -> e.Language.getFullIcon())
-				.withTooltip(e -> e.Language.toOutputString());
+				.withTooltip(e -> e.Language.toTooltipString());
 
 		r.add("MultiEpisodesTable.Subtitles")
 				.withSize("auto")
-				.withIcon(e -> e.Subtitles.getIcon())
+				.withIcon(e -> e.Subtitles.getIcon(-1))
 				.withTooltip(e -> e.Subtitles.toOutputString());
 
 		r.add("MultiEpisodesTable.Quality")

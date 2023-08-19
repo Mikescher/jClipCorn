@@ -182,7 +182,7 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			(r) -> true,
 			(v1,v2) -> CCDBLanguageSet.compare(v1.Language.get(), v2.Language.get()),
 			false,
-			(v,row) -> v.Language.get().toOutputString(),
+			(v,row) -> v.Language.get().toTooltipString(),
 			(v) -> false,
 			(v) -> noop(),
 			() -> false
@@ -194,11 +194,11 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Subtitles"),
 			"auto",
 			LocaleBundle.getString("PreviewSeriesFrame.serTable.Subtitles"),
-			(r,v) -> { r.setHorizontalAlignment(SwingConstants.LEFT); r.setIcon(v.Subtitles.get().getIcon()); },
+			(r,v) -> { r.setHorizontalAlignment(SwingConstants.LEFT); r.setIcon(v.Subtitles.get().getIcon(ccprops().PROP_TABLE_MAX_SUBTITLE_COUNT.getValue())); },
 			(r) -> true,
 			(v1,v2) -> CCDBLanguageList.compare(v1.Subtitles.get(), v2.Subtitles.get()),
 			false,
-			(v,row) -> v.Subtitles.get().toOutputString(),
+			(v,row) -> v.Subtitles.get().toTooltipString(),
 			(v) -> false,
 			(v) -> noop(),
 			() -> false

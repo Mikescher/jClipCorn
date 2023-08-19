@@ -67,6 +67,8 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 
 	private static final EnumWrapper<CCDBLanguage> wrapper = new EnumWrapper<>(GERMAN);
 
+	public static final CCDBLanguage[] PRIMARY_LANGUAGES = {CCDBLanguage.GERMAN, CCDBLanguage.ENGLISH, CCDBLanguage.JAPANESE};
+
 	private final int id;
 
 	private final String shortName;

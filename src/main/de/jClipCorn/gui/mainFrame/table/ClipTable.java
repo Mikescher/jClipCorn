@@ -223,7 +223,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 				return CCDBLanguageSet.compare(o1, o2);
 			},
 			true,
-			(v,row) -> (v.isMovie() ? v.asMovie().Language.get() : v.asSeries().getSemiCommonOrAllLanguages()).toOutputString(),
+			(v,row) -> (v.isMovie() ? v.asMovie().Language.get() : v.asSeries().getSemiCommonOrAllLanguages()).toTooltipString(),
 			(v) -> false,
 			(v) -> noop(),
 			() -> false
@@ -235,7 +235,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			LocaleBundle.getString("ClipTableModel.Subtitle"),
 			"auto",
 			LocaleBundle.getString("ClipTableModel.Subtitle"),
-			(r,v) -> { r.setHorizontalAlignment(SwingConstants.LEFT); r.setIcon((v.isMovie() ? v.asMovie().Subtitles.get() : v.asSeries().getAllSubtitles()).getIcon()); } ,
+			(r,v) -> { r.setHorizontalAlignment(SwingConstants.LEFT); r.setIcon((v.isMovie() ? v.asMovie().Subtitles.get() : v.asSeries().getAllSubtitles()).getIcon(ccprops().PROP_TABLE_MAX_SUBTITLE_COUNT.getValue())); } ,
 			(r) -> true,
 			(v1,v2) ->
 			{

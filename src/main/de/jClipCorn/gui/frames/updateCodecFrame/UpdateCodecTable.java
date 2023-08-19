@@ -52,12 +52,12 @@ public class UpdateCodecTable extends JCCSimpleTable<UpdateCodecTableElement> {
 
 		r.add("UpdateCodecFrame.Table.ColumnSubsOld")
 		 .withSize("auto")
-		 .withIcon(e -> e.getOldSubtitles().getIcon())
+		 .withIcon(e -> e.getOldSubtitles().getIcon(-1))
 		 .sortable();
 
 		r.add("UpdateCodecFrame.Table.ColumnSubsNew")
 		 .withSize("auto")
-		 .withIcon(e -> e.getNewSubtitles().getIcon())
+		 .withIcon(e -> e.getNewSubtitles().getIcon(-1))
 		 .sortable();
 
 		r.add("UpdateCodecFrame.Table.ColumnLengthOld")

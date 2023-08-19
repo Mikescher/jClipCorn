@@ -98,6 +98,18 @@ public class CCDBLanguageSet implements CCIterable<CCDBLanguage> {
 		return CCStreams.iterate(_languages).autosort().stringjoin(CCDBLanguage::getShortString, ","); //$NON-NLS-1$
 	}
 
+	public String toTooltipString() {
+		if (isEmpty()) return LocaleBundle.getString("CCMovieLanguageList.Empty"); //$NON-NLS-1$
+
+		StringBuilder b = new StringBuilder();
+
+		b.append("<html>");
+		for (var lng : _languages) b.append(lng.asString()).append("<br/>");
+		b.append("</html>");
+
+		return b.toString();
+	}
+
 	public boolean isExact(CCDBLanguage lang) {
 		return _languages.size()==1 && _languages.contains(lang);
 	}

@@ -140,21 +140,56 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 		return _languages.contains(ignored);
 	}
 
-	public ImageIcon getIcon() {
+	public ImageIcon getIcon(int maxCount) {
 		if (isEmpty()) return Resources.ICN_TRANSPARENT.get16x16();
 		if (isSingle()) return _languages.iterator().next().getIcon();
 
-		String key = serializeToString(); //$NON-NLS-1$
+		String key = "@CCDBLanguageList::" + serializeToString() + "::" + maxCount; //$NON-NLS-1$
 
 		ImageIcon icn = _fullIconCache.get(key);
 		if (icn != null) return icn;
 
-		BufferedImage img = new BufferedImage(16 + (_languages.size()-1) * (16+2), 16, BufferedImage.TYPE_4BYTE_ABGR);
+		var showMoreIcon = false;
+
+		var languages = _languages;
+		if (maxCount != -1 && languages.size() > maxCount)
+		{
+			showMoreIcon = true;
+
+			languages = new ArrayList<>(_languages.subList(0, (int)Math.ceil(maxCount / 2.0)));
+			var remaining = new ArrayList<>(_languages.subList(languages.size(), _languages.size()));
+
+			var prim = new HashSet<>(CCStreams.iterate(CCDBLanguage.PRIMARY_LANGUAGES).toList());
+
+			while (languages.size() < maxCount && !remaining.isEmpty()) {
+				var match = false;
+				for (int i = 0; i < remaining.size(); i++) {
+					if (prim.contains(remaining.get(i))) {
+						match = true;
+						languages.add(remaining.get(i));
+						remaining.remove(i);
+						break;
+					}
+				}
+				if (!match) break;
+			}
+
+			while (languages.size() < maxCount && !remaining.isEmpty()) {
+				languages.add(remaining.get(0));
+				remaining.remove(0);
+			}
+		}
+
+		BufferedImage img = new BufferedImage(16 + (languages.size()-1 + (showMoreIcon?1:0)) * (16+2), 16, BufferedImage.TYPE_4BYTE_ABGR);
 
 		Graphics g = img.getGraphics();
-		for (int i = 0; i < _languages.size(); i++)
+		for (int i = 0; i < languages.size(); i++)
 		{
-			g.drawImage(_languages.get(i).getIconRef().getImage(), i * (16 + 2), 0, null);
+			g.drawImage(languages.get(i).getIconRef().getImage(), i * (16 + 2), 0, null);
+		}
+		if (showMoreIcon)
+		{
+			g.drawImage(Resources.ICN_TABLE_LANGUAGE_DOT3.getImage(), languages.size() * (16 + 2), 0, null);
 		}
 
 		icn = new ImageIcon(img);
@@ -202,5 +237,17 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 	public String toShortOutputString(String emptyStr) {
 		if (isEmpty()) return emptyStr;
 		return CCStreams.iterate(_languages).autosort().stringjoin(CCDBLanguage::getShortString, ","); //$NON-NLS-1$
+	}
+
+	public String toTooltipString() {
+		if (isEmpty()) return LocaleBundle.getString("CCMovieLanguageList.Empty"); //$NON-NLS-1$
+
+		StringBuilder b = new StringBuilder();
+
+		b.append("<html>");
+		for (var lng : _languages) b.append(lng.asString()).append("<br/>");
+		b.append("</html>");
+
+		return b.toString();
 	}
 }

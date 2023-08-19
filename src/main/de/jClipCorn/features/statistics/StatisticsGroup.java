@@ -1,16 +1,14 @@
 package de.jClipCorn.features.statistics;
 
+import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
+import de.jClipCorn.util.lambda.Func1to1;
+
+import javax.swing.*;
 import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.swing.JComponent;
-
-import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
-import de.jClipCorn.util.lambda.Func1to1;
 
 public class StatisticsGroup {
 	private final StatisticsPanel template;
@@ -23,7 +21,7 @@ public class StatisticsGroup {
 		super();
 		this.chartPanels = new HashMap<>();
 		this.constructor = _ctr;
-		this.template = _ctr.invoke(StatisticsTypeFilter.MOVIES);
+		this.template = _ctr.invoke(StatisticsTypeFilter.STF_MOVIES);
 	}
 	
 	public JComponent getComponent(StatisticsTypeFilter source) {
@@ -43,11 +41,7 @@ public class StatisticsGroup {
 	public String getTitle() {
 		return template.createTitle();
 	}
-	
-	public String getCaptionToggle2() {
-		return template.createToggleTwoCaption();
-	}
-	
+
 	@Override
 	public String toString() {
 		return template.createTitle();
@@ -61,7 +55,7 @@ public class StatisticsGroup {
 		return template.usesFilterableYearRange();
 	}
 
-	public StatisticsTypeFilter supportedTypes() {
+	public StatisticsTypeFilter[] supportedTypes() {
 		return template.supportedTypes();
 	}
 

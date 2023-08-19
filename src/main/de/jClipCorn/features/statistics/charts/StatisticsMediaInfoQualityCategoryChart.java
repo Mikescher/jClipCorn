@@ -1,9 +1,10 @@
 package de.jClipCorn.features.statistics.charts;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.util.CCQualityCategoryType;
 import de.jClipCorn.features.statistics.StatisticsChart;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
+import de.jClipCorn.features.statistics.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -65,7 +66,8 @@ public class StatisticsMediaInfoQualityCategoryChart extends StatisticsChart {
 	
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		Map<CCQualityCategoryType, Integer> values = source
-				.iteratorMoviesOrEpisodes(movielist)
+				.iterator(movielist)
+				.<ICCPlayableElement>cast()
 				.map(e -> e.getMediaInfoCategory().getCategoryType())
 				.groupBy(e -> e)
 				.toMap(Map.Entry::getKey, e -> e.getValue().size());
@@ -97,12 +99,7 @@ public class StatisticsMediaInfoQualityCategoryChart extends StatisticsChart {
 	}
 
 	@Override
-	public StatisticsTypeFilter supportedTypes() {
-		return StatisticsTypeFilter.BOTH;
-	}
-
-	@Override
-	public String createToggleTwoCaption() {
-		return LocaleBundle.getString("StatisticsFrame.this.toggleSeries"); //$NON-NLS-1$
+	public StatisticsTypeFilter[] supportedTypes() {
+		return new StatisticsTypeFilter[]{StatisticsTypeFilter.STF_MOVIES, StatisticsTypeFilter.STF_EPISODES, StatisticsTypeFilter.STF_MOVIES_AND_EPISODES};
 	}
 }

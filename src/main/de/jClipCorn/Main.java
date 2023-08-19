@@ -269,7 +269,7 @@ public class Main {
  - [/] SettingsFrame
  - [ ] ShowIncompleteFilmSeriesFrame
  - [x] ShowUpdateFrame
- - [ ] StatisticsFrame
+ - [x] StatisticsFrame
  - [ ] TextExportFrame
  - [X] UpdateCodecFrame
  - [X] UpdateMetadataFrame

@@ -4,7 +4,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.features.statistics.StatisticsHelper;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
+import de.jClipCorn.features.statistics.StatisticsTypeFilter;
 import de.jClipCorn.gui.guiComponents.HorizontalScalablePane;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -418,12 +418,7 @@ public class StatisticsSeriesTimelineCombined extends StatisticsPanel {
 	}
 
 	@Override
-	public StatisticsTypeFilter supportedTypes() {
-		return StatisticsTypeFilter.SERIES;
-	}
-
-	@Override
-	public String createToggleTwoCaption() {
-		return LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes"); //$NON-NLS-1$
+	public StatisticsTypeFilter[] supportedTypes() {
+		return new StatisticsTypeFilter[]{StatisticsTypeFilter.STF_MOVIES, StatisticsTypeFilter.STF_EPISODES, StatisticsTypeFilter.STF_MOVIES_AND_EPISODES};
 	}
 }

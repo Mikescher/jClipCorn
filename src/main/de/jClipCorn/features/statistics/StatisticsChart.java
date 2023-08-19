@@ -2,7 +2,6 @@ package de.jClipCorn.features.statistics;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.properties.CCProperties;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -12,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.Arrays;
 
 public abstract class StatisticsChart extends StatisticsPanel {
 	protected final static boolean ROTATE_PIE = false;
@@ -39,7 +39,7 @@ public abstract class StatisticsChart extends StatisticsPanel {
 	}
 
 	private JFreeChart getChart() {
-		if (! supportedTypes().contains(source)) return null;
+		if (!Arrays.asList(supportedTypes()).contains(source)) return null;
 		
 		return createChart(movielist, source);
 	}
@@ -76,16 +76,8 @@ public abstract class StatisticsChart extends StatisticsPanel {
 		});
 		
 		chartPanel.setChart(chart);
-		
-		
-		if (source == StatisticsTypeFilter.MOVIES && ! movielist.hasMovies())
-			chartPanel.setVisible(false);
-		else if (source == StatisticsTypeFilter.SERIES && ! movielist.hasSeries())
-			chartPanel.setVisible(false);
-		else if (source == StatisticsTypeFilter.BOTH && movielist.getElementCount() == 0)
-			chartPanel.setVisible(false);
-		else
-			chartPanel.setVisible(true);
+
+		chartPanel.setVisible(true);
 		
 		
 		return chartPanel;

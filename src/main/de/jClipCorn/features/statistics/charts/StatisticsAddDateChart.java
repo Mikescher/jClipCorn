@@ -1,11 +1,13 @@
 package de.jClipCorn.features.statistics.charts;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Vector;
-
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.features.statistics.StatisticsChart;
+import de.jClipCorn.features.statistics.StatisticsHelper;
+import de.jClipCorn.features.statistics.StatisticsTypeFilter;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.stream.CCStream;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
@@ -15,13 +17,10 @@ import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYDataset;
 
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.ICCPlayableElement;
-import de.jClipCorn.features.statistics.StatisticsHelper;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.stream.CCStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Vector;
 
 public class StatisticsAddDateChart extends StatisticsChart {
 
@@ -67,7 +66,7 @@ public class StatisticsAddDateChart extends StatisticsChart {
 	}
 	
 	private XYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCStream<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
+		CCStream<ICCPlayableElement> it = source.iterator(movielist).cast();
 		
 		CCDate mindate = StatisticsHelper.getFirstAddDate(movielist.iteratorPlayables());
 		CCDate maxdate = StatisticsHelper.getLastAddDate(movielist.iteratorPlayables());
@@ -129,12 +128,7 @@ public class StatisticsAddDateChart extends StatisticsChart {
 	}
 
 	@Override
-	public StatisticsTypeFilter supportedTypes() {
-		return StatisticsTypeFilter.BOTH;
-	}
-
-	@Override
-	public String createToggleTwoCaption() {
-		return LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes"); //$NON-NLS-1$
+	public StatisticsTypeFilter[] supportedTypes() {
+		return new StatisticsTypeFilter[]{StatisticsTypeFilter.STF_MOVIES, StatisticsTypeFilter.STF_EPISODES, StatisticsTypeFilter.STF_MOVIES_AND_EPISODES};
 	}
 }

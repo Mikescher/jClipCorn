@@ -11,7 +11,6 @@ import org.junit.runners.Parameterized.Parameters;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.statistics.ClipCornStatistics;
 import de.jClipCorn.features.statistics.StatisticsGroup;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
 import de.jClipCorn.util.lambda.Func1to1;
 
 @RunWith(Parameterized.class)
@@ -30,12 +29,8 @@ public class TestStatisticsCharts extends ClipCornBaseTest {
 		CCMovieList ml = createExampleDB();
 
 		StatisticsGroup group = supplier.invoke(ml);
-		
-		if (group.supportedTypes().containsMovies()) group.getComponent(StatisticsTypeFilter.MOVIES);
 
-		if (group.supportedTypes().containsSeries()) group.getComponent(StatisticsTypeFilter.SERIES);
-
-		if (group.supportedTypes().containsBoth()) group.getComponent(StatisticsTypeFilter.BOTH);
+		for (var st : group.supportedTypes()) group.getComponent(st);
 	}
 
 	@Test
@@ -43,11 +38,7 @@ public class TestStatisticsCharts extends ClipCornBaseTest {
 		CCMovieList ml = createEmptyDB();
 
 		StatisticsGroup group = supplier.invoke(ml);
-		
-		if (group.supportedTypes().containsMovies()) group.getComponent(StatisticsTypeFilter.MOVIES);
 
-		if (group.supportedTypes().containsSeries()) group.getComponent(StatisticsTypeFilter.SERIES);
-
-		if (group.supportedTypes().containsBoth()) group.getComponent(StatisticsTypeFilter.BOTH);
+		for (var st : group.supportedTypes()) group.getComponent(st);
 	}
 }

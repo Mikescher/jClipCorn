@@ -1,19 +1,13 @@
 package de.jClipCorn.features.statistics.charts;
 
-import java.awt.Color;
-import java.awt.event.ComponentEvent;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Vector;
-
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.features.statistics.StatisticsChart;
+import de.jClipCorn.features.statistics.StatisticsHelper;
+import de.jClipCorn.features.statistics.StatisticsTypeFilter;
+import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.datetime.CCDate;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
@@ -28,13 +22,13 @@ import org.jfree.chart.ui.TextAnchor;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYDataset;
 
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.features.statistics.StatisticsHelper;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.datetime.CCDate;
+import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class StatisticsSeriesViewedChart extends StatisticsChart {
 
@@ -285,12 +279,7 @@ public class StatisticsSeriesViewedChart extends StatisticsChart {
 	}
 
 	@Override
-	public StatisticsTypeFilter supportedTypes() {
-		return StatisticsTypeFilter.SERIES;
-	}
-
-	@Override
-	public String createToggleTwoCaption() {
-		return LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes"); //$NON-NLS-1$
+	public StatisticsTypeFilter[] supportedTypes() {
+		return new StatisticsTypeFilter[]{StatisticsTypeFilter.STF_MOVIES, StatisticsTypeFilter.STF_EPISODES, StatisticsTypeFilter.STF_MOVIES_AND_EPISODES};
 	}
 }

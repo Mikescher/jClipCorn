@@ -1,9 +1,10 @@
 package de.jClipCorn.features.statistics.charts;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.statistics.StatisticsChart;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
+import de.jClipCorn.features.statistics.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.stream.CCStreams;
@@ -57,7 +58,8 @@ public class StatisticsMediaInfoResolutionChart extends StatisticsChart {
 	
 	private DefaultCategoryDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		Map<CCMediaInfo, Integer> values = source
-				.iteratorMoviesOrEpisodes(movielist)
+				.iterator(movielist)
+				.<ICCPlayableElement>cast()
 				.filter(e -> e.mediaInfo().get().Width.isPresent())
 				.filter(e -> e.mediaInfo().get().Height.isPresent())
 				.groupBy(e -> e.mediaInfo().get().Width.get()+"x"+e.mediaInfo().get().Height.get()) //$NON-NLS-1$
@@ -90,12 +92,7 @@ public class StatisticsMediaInfoResolutionChart extends StatisticsChart {
 	}
 
 	@Override
-	public StatisticsTypeFilter supportedTypes() {
-		return StatisticsTypeFilter.BOTH;
-	}
-
-	@Override
-	public String createToggleTwoCaption() {
-		return LocaleBundle.getString("StatisticsFrame.this.toggleSeries"); //$NON-NLS-1$
+	public StatisticsTypeFilter[] supportedTypes() {
+		return new StatisticsTypeFilter[]{StatisticsTypeFilter.STF_MOVIES, StatisticsTypeFilter.STF_EPISODES, StatisticsTypeFilter.STF_MOVIES_AND_EPISODES};
 	}
 }

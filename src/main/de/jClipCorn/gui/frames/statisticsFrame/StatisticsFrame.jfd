@@ -1,0 +1,215 @@
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.7" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "StatisticsFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, 185dlu, labelcompgap, default:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default:grow, unrelgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": new FormMessage( null, "StatisticsFrame.this.title" )
+			"defaultCloseOperation": 2
+			"minimumSize": new java.awt.Dimension( 925, 485 )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "100dlu, labelcompgap, 82dlu, labelcompgap, pref, labelcompgap, 300px, labelcompgap, pref, labelcompgap, default:grow"
+				"$rowSpecs": "default"
+			} ) {
+				name: "pnlTop"
+				add( new FormComponent( "javax.swing.JComboBox" ) {
+					name: "cbxChooseChart"
+					"maximumRowCount": 32
+					auxiliary() {
+						"JavaCodeGenerator.typeParameters": "StatisticsGroup"
+					}
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onSelectChart", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnPrevChart"
+					"text": "<"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onPrevChart", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblChartCaption"
+					"text": new FormMessage( null, "StatisticsFrame.this.title" )
+					"horizontalAlignment": 0
+					"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 0, false )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnNextChart"
+					"text": ">"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onNextChart", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 9
+					"gridY": 1
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
+					"alignment": 2
+					"vgap": 0
+					"hgap": 0
+				} ) {
+					name: "pnlFilter"
+					add( new FormComponent( "javax.swing.JToggleButton" ) {
+						name: "btnFilterMovies"
+						"text": new FormMessage( null, "StatisticsFrame.this.toggleMovies" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFilterMovies", false ) )
+					} )
+					add( new FormComponent( "javax.swing.JToggleButton" ) {
+						name: "btnFilterSeries"
+						"text": new FormMessage( null, "StatisticsFrame.this.toggleSeries" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFilterSeries", false ) )
+					} )
+					add( new FormComponent( "javax.swing.JToggleButton" ) {
+						name: "btnFilterSeasons"
+						"text": new FormMessage( null, "StatisticsFrame.this.toggleSeasons" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFilterSeasons", false ) )
+					} )
+					add( new FormComponent( "javax.swing.JToggleButton" ) {
+						name: "btnFilterEpisodes"
+						"text": new FormMessage( null, "StatisticsFrame.this.toggleEpisodes" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFilterEpisodes", false ) )
+					} )
+					add( new FormComponent( "javax.swing.JToggleButton" ) {
+						name: "btnFilterMovesAndSeries"
+						"text": new FormMessage( null, "StatisticsFrame.this.toggleBoth" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFilterMovesAndSeries", false ) )
+					} )
+					add( new FormComponent( "javax.swing.JToggleButton" ) {
+						name: "btnFilterMovesAndSeasons"
+						"text": new FormMessage( null, "StatisticsFrame.this.toggleBoth" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFilterMovesAndSeasons", false ) )
+					} )
+					add( new FormComponent( "javax.swing.JToggleButton" ) {
+						name: "btnFilterMovesAndEpisodes"
+						"text": new FormMessage( null, "StatisticsFrame.this.toggleBoth" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFilterMovesAndEpisodes", false ) )
+					} )
+					add( new FormComponent( "javax.swing.JToggleButton" ) {
+						name: "btnFilterAll"
+						"text": new FormMessage( null, "StatisticsFrame.this.toggleAll" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFilterAll", false ) )
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 11
+					"gridY": 1
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"gridWidth": 3
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "pnlLeft"
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "default:grow"
+					"$rowSpecs": "fill:0dlu:grow, 0dlu:grow"
+				} ) {
+					name: "pnlLeftTop"
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "sclSidebarDataLeft"
+						"verticalScrollBarPolicy": 22
+						add( new FormComponent( "de.jClipCorn.gui.frames.statisticsFrame.StatisticsDataListPanel" ) {
+							name: "pnlSidebarValues"
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 1
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrlFilterListLeft"
+						add( new FormComponent( "javax.swing.JList" ) {
+							name: "lsFilterListLeft"
+							auxiliary() {
+								"JavaCodeGenerator.typeParameters": "StatisticsGroup"
+							}
+							addEvent( new FormEvent( "javax.swing.event.ListSelectionListener", "valueChanged", "lsAltLeftValueChanged", false ) )
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 2
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "Center"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "0dlu:grow"
+					"$rowSpecs": "linegap, fill:default:grow, linegap, max(pref;0dlu)"
+				} ) {
+					name: "pnlLeftBottom"
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+						"$columnSpecs": "default, labelcompgap, default:grow, labelcompgap, default"
+						"$rowSpecs": "fill:default:grow"
+					} ) {
+						name: "pnlYearRange"
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "button1"
+							"text": "<"
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onPrevYear", false ) )
+						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "lblYear"
+							"text": new FormMessage( null, "StatisticsFrame.this.allTime" )
+							"horizontalAlignment": 0
+							"font": new com.jformdesigner.model.SwingDerivedFont( "Courier New", 1, 16, true )
+						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+							"gridX": 3
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "button2"
+							"text": ">"
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onNextYear", false ) )
+						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+							"gridX": 5
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 2
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "pnlCheckSeries"
+						add( new FormComponent( "de.jClipCorn.gui.frames.statisticsFrame.SeriesCheckBoxList" ) {
+							name: "seriesList"
+							"visibleRowCount": 16
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onSeriesListAction", false ) )
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridY": 4
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "Last"
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "pnlCenter"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 4
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 1000, 600 )
+		} )
+	}
+}

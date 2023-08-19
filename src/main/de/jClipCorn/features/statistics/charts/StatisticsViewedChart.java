@@ -12,7 +12,7 @@ import org.jfree.data.general.PieDataset;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.features.statistics.StatisticsHelper;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
+import de.jClipCorn.features.statistics.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.stream.CCStream;
 
@@ -51,7 +51,7 @@ public class StatisticsViewedChart extends StatisticsChart {
 	}
 	
 	private PieDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCStream<ICCPlayableElement> it = source.iteratorMoviesOrEpisodes(movielist);
+		CCStream<ICCPlayableElement> it = source.iterator(movielist).cast();
 		
 		int vc = StatisticsHelper.getViewedCount(it);
 		int nvc = StatisticsHelper.getUnviewedCount(it);
@@ -79,12 +79,7 @@ public class StatisticsViewedChart extends StatisticsChart {
 	}
 
 	@Override
-	public StatisticsTypeFilter supportedTypes() {
-		return StatisticsTypeFilter.BOTH;
-	}
-
-	@Override
-	public String createToggleTwoCaption() {
-		return LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes"); //$NON-NLS-1$
+	public StatisticsTypeFilter[] supportedTypes() {
+		return new StatisticsTypeFilter[]{StatisticsTypeFilter.STF_MOVIES, StatisticsTypeFilter.STF_EPISODES, StatisticsTypeFilter.STF_MOVIES_AND_EPISODES};
 	}
 }

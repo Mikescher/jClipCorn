@@ -1,6 +1,12 @@
 package de.jClipCorn.gui.frames.statisticsFrame;
 
-import java.awt.Component;
+import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.gui.localization.LocaleBundle;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -10,24 +16,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JCheckBox;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
-import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-
-import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.gui.localization.LocaleBundle;
-
 public class SeriesCheckBoxList extends JList<SeriesCheckBoxList.SeriesCheckBoxListElement>{
 	private static final long serialVersionUID = 2770307068259908722L;
 	
 	protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 
-	private List<ActionListener> actionListener = new ArrayList<>();
+	private final List<ActionListener> actionListener = new ArrayList<>();
 	
 	public SeriesCheckBoxList() {
 		super();
@@ -116,6 +110,9 @@ public class SeriesCheckBoxList extends JList<SeriesCheckBoxList.SeriesCheckBoxL
 
 	public void addActionListener(ActionListener al) {
 		actionListener.add(al);
+	}
+	public void removeActionListener(ActionListener al) {
+		actionListener.remove(al);
 	}
 
 	public Map<CCSeries, Boolean> getMap() {

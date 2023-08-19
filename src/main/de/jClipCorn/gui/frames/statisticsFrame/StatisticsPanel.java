@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.statisticsFrame;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.features.statistics.StatisticsTypeFilter;
 import de.jClipCorn.properties.CCProperties;
 
 import javax.swing.*;
@@ -15,10 +16,9 @@ public abstract class StatisticsPanel {
 	
 	public abstract boolean usesFilterableSeries();
 	public abstract boolean usesFilterableYearRange();
-	public abstract StatisticsTypeFilter supportedTypes();
+	public abstract StatisticsTypeFilter[] supportedTypes();
 
 	public abstract String createTitle();
-	public abstract String createToggleTwoCaption();
 
 	private JComponent cache;
 	private int yearRangeCache = -1;

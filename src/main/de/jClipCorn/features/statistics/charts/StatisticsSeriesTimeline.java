@@ -8,7 +8,7 @@ import de.jClipCorn.features.statistics.timeline.TimelineDateCaptionComponent;
 import de.jClipCorn.features.statistics.timeline.TimelineDisplayComponent;
 import de.jClipCorn.features.statistics.timeline.TimelineEmptyCaptionComponent;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsPanel;
-import de.jClipCorn.gui.frames.statisticsFrame.StatisticsTypeFilter;
+import de.jClipCorn.features.statistics.StatisticsTypeFilter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDatespan;
@@ -127,12 +127,7 @@ public class StatisticsSeriesTimeline extends StatisticsPanel {
 	}
 
 	@Override
-	public StatisticsTypeFilter supportedTypes() {
-		return StatisticsTypeFilter.SERIES;
-	}
-
-	@Override
-	public String createToggleTwoCaption() {
-		return LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes"); //$NON-NLS-1$
+	public StatisticsTypeFilter[] supportedTypes() {
+		return new StatisticsTypeFilter[]{StatisticsTypeFilter.STF_MOVIES, StatisticsTypeFilter.STF_EPISODES, StatisticsTypeFilter.STF_MOVIES_AND_EPISODES};
 	}
 }

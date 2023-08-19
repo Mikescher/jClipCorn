@@ -8,8 +8,8 @@ public class ProgressCallbackProgressBarHelper implements ProgressCallbackListen
 	private final JProgressBar progressBar;
 	private final int resolution;
 
-	private int value;
-	private int max;
+	private long value;
+	private long max;
 
 	public ProgressCallbackProgressBarHelper(JProgressBar p, int resolution) {
 		this.progressBar = p;
@@ -25,11 +25,11 @@ public class ProgressCallbackProgressBarHelper implements ProgressCallbackListen
 	}
 
 	@Override
-	public void step(final int inc) {
+	public void step(final long inc) {
 		int pold = (int)((value*1.0*resolution) / (max));
 		value += inc;
 		int pnew = (int)((value*1.0*resolution) / (max));
-		if (pold != pnew) SwingUtils.invokeLater(() -> progressBar.setValue(value));
+		if (pold != pnew) SwingUtils.invokeLater(() -> progressBar.setValue(pnew));
 	}
 
 	@Override
@@ -37,12 +37,12 @@ public class ProgressCallbackProgressBarHelper implements ProgressCallbackListen
 		int pold = (int)((value*1.0*resolution) / (max));
 		value = max;
 		int pnew = (int)((value*1.0*resolution) / (max));
-		if (pold != pnew) SwingUtils.invokeLater(() -> progressBar.setValue(value));
+		if (pold != pnew) SwingUtils.invokeLater(() -> progressBar.setValue(pnew));
 	}
 
 	@Override
-	public void setMax(final int max) {
-		SwingUtils.invokeAndWaitConditional(() -> progressBar.setMaximum(max));
+	public void setMax(final long max) {
+		SwingUtils.invokeAndWaitConditional(() -> progressBar.setMaximum(resolution));
 		this.max = max;
 	}
 

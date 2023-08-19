@@ -4,10 +4,13 @@ import de.jClipCorn.util.helper.SwingUtils;
 
 import javax.swing.*;
 
-public class ProgressCallbackProgressMonitorHelper implements ProgressCallbackListener {
+public class ProgressCallbackProgressMonitorHelper implements ProgressCallbackListener
+{
+	private final static int REAL_MAX = 65536;
+
 	private final ProgressMonitor monitor;
-	private int progress;
-	private int max;
+	private long progress;
+	private long max;
 	
 	public ProgressCallbackProgressMonitorHelper(ProgressMonitor p) {
 		this.monitor = p;
@@ -27,14 +30,14 @@ public class ProgressCallbackProgressMonitorHelper implements ProgressCallbackLi
 	}
 
 	@Override
-	public void step(final int inc) {
+	public void step(final long inc) {
 		progress += inc;
 
 		update();
 	}
 
 	@Override
-	public void setMax(final int pmax) {
+	public void setMax(final long pmax) {
 		max = pmax;
 		
 		update();
@@ -58,13 +61,14 @@ public class ProgressCallbackProgressMonitorHelper implements ProgressCallbackLi
 	private void update() {
 		final String message = String.format("Completed %.1f%%.\n", getPercentage()); //$NON-NLS-1$
 
-		SwingUtils.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				monitor.setMaximum(max);
-				monitor.setNote(message);
-				monitor.setProgress(progress);
-			}
+		SwingUtils.invokeLater(() ->
+		{
+			// ProgressMonitor only supports int - shrink down to 16bit
+			var monitorVal = (max==0) ? 0 : (int)Math.round((progress*REAL_MAX)/(1.0*max));
+
+			monitor.setMaximum(REAL_MAX);
+			monitor.setNote(message);
+			monitor.setProgress(monitorVal);
 		});
 	}
 }

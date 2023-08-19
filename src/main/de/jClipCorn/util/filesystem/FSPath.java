@@ -4,6 +4,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.ApplicationHelper;
+import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.io.FileUtils;
@@ -290,6 +291,10 @@ public class FSPath implements IPath, Comparable<FSPath> {
 
 	public int countAllFilesRecursive() {
 		return list().sumInt(p -> p.isDirectory() ? p.countAllFilesRecursive() : 1);
+	}
+
+	public long sumAllFileSizes(boolean recursive, Func1to1<FSPath, Boolean> excluded) {
+		return list(p -> !excluded.invoke(p)).sumLong(p -> p.isDirectory() ? (recursive ? p.sumAllFileSizes(recursive, excluded) : 0) : p.filesize().getBytes());
 	}
 
 	public FSPath forceExtension(String ext) {

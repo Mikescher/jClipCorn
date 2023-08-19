@@ -19,7 +19,6 @@ import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.importElementsFrame.ImportElementsFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.TimeKeeper;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.exceptions.CCFormatException;
@@ -27,6 +26,7 @@ import de.jClipCorn.util.exceptions.SerializationException;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
@@ -75,7 +75,8 @@ public class ExportHelper {
 	
 	public static void zipDir(FSPath owner, FSPath zipDir, ZipOutputStream zos, boolean recursively, Func1to1<FSPath, Boolean> excluded, ProgressCallbackListener pcl) {
 		pcl.reset();
-		pcl.setMax(zipDir.countAllFilesRecursive());
+		var max = zipDir.sumAllFileSizes(recursively, excluded);
+		pcl.setMax(max);
 		
 		doZipDir(owner, zipDir, zos, recursively, excluded, pcl);
 	}
@@ -108,10 +109,11 @@ public class ExportHelper {
 
 					while ((bytesIn = fis.read(readBuffer)) != -1) {
 						zos.write(readBuffer, 0, bytesIn);
+						if (pcl != null) pcl.step(bytesIn);
 					}
 				}
 
-				if (pcl != null) pcl.step();
+
 			}
 		} catch (Exception e) {
 			CCLog.addError(e);

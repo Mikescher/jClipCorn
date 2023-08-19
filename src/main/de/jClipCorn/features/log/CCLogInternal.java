@@ -97,10 +97,10 @@ public class CCLogInternal {
 			updateMainFrameLabel();
 		}
 
-		if (cle.isType(CCLogType.LOG_ELEM_ERROR)) hasUnwatchedErrors.set(true);
-		if (cle.isType(CCLogType.LOG_ELEM_WARNING)) hasUnwatchedWarnings.set(true);
+		if (cle.isType(CCLogType.LOG_ELEM_ERROR))       hasUnwatchedErrors.set(true);
+		if (cle.isType(CCLogType.LOG_ELEM_WARNING))     hasUnwatchedWarnings.set(true);
 		if (cle.isType(CCLogType.LOG_ELEM_INFORMATION)) hasUnwatchedInformation.set(true);
-		if (cle.isType(CCLogType.LOG_ELEM_UNDEFINED)) hasUnwatchedUndefineds.set(true);
+		if (cle.isType(CCLogType.LOG_ELEM_UNDEFINED))   hasUnwatchedUndefineds.set(true);
 
 		setChangedFlag();
 	}

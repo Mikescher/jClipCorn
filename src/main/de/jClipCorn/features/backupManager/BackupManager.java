@@ -40,7 +40,7 @@ public class BackupManager {
 
 	private final AtomicBoolean isInitialised = new AtomicBoolean(false);
 
-	private List<CCBackup> backuplist = new ArrayList<>();
+	private final List<CCBackup> backuplist = new ArrayList<>();
 
 	public BackupManager(CCMovieList ml) {
 		this.movielist = ml;

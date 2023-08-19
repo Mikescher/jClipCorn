@@ -1056,7 +1056,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 			var g1 = m.group(2);
 			var n1 = Str.tryParseInt(g1);
 
-			if (n1.isPresent()) return Opt.empty();
+			if (n1.isEmpty()) return Opt.empty();
 
 			return Opt.of(g0 + StringUtils.leftPad(String.valueOf(n1.get()+1), g1.length(), '0'));
 		}

@@ -198,8 +198,15 @@ public class CCGroupList implements CCIterable<CCGroup> {
 			if (!groupsSorted.get(ii).Visible) continue;
 				
 			String group = groupsSorted.get(ii).Name;
-			
 			int width = fm.stringWidth(group);
+
+			var limited = false;
+			while (!group.isEmpty() && width > (bi.getWidth() - 2 * PADDING_X - MARGIN )) {
+				group = group.substring(0, group.length()-1);
+				width = fm.stringWidth(group + "...");
+				limited = true;
+			}
+			if (limited) group = group + "...";
 			
 			if (alpha)
 				g.setColor(groupsSorted.get(ii).Color);

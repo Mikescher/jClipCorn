@@ -49,4 +49,8 @@ public class CCPropertyCategory {
 	public String getCaption() {
 		return LocaleBundle.getString("Settingsframe.tabbedCpt.Caption_" + Name); //$NON-NLS-1$
 	}
+
+	public boolean showFilter() {
+		return this == CCProperties.CAT_KEYSTROKES;
+	}
 }

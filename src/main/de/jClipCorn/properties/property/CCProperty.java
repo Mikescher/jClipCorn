@@ -6,6 +6,7 @@ import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.util.datatypes.Opt;
 
 import java.awt.*;
+import java.util.Locale;
 
 public abstract class CCProperty<T> {
 	protected final CCProperties properties;
@@ -65,11 +66,15 @@ public abstract class CCProperty<T> {
 	public String getDescription() {
 		return LocaleBundle.getString("Settingsframe.tabbedPnl." + getIdentifier()); //$NON-NLS-1$
 	}
-	
+
 	public String getDescriptionOrEmpty() {
 		return LocaleBundle.getStringOrDefault("Settingsframe.tabbedPnl." + getIdentifier(), ""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
+	public String getDescriptionOrEmpty(Locale loc) {
+		return LocaleBundle.getStringOrDefaultInLocale(loc, "Settingsframe.tabbedPnl." + getIdentifier(), ""); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
 	public Component getAlternativeComponent() {
 		return getComponent();
 	}

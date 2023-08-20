@@ -1,11 +1,11 @@
 package de.jClipCorn.gui.frames.settingsFrame;
 
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.Main;
-import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.gui.frames.extendedSettingsFrame.ExtendedSettingsFrame;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -13,6 +13,8 @@ import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.properties.property.CCProperty;
+import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -128,88 +130,156 @@ public abstract class AutomaticSettingsFrame extends JCCFrame {
 		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(tabOrder));
 	}
 
+	@SuppressWarnings("nls")
 	private List<Component> initPanel(CCPropertyCategory category) {
-		List<Component> tabOrder = new ArrayList<>();
-		
 		JPanel pnlRoot = new JPanel();
 		JScrollPane scrlPane = new JScrollPane();
-		
-		JPanel pnlTab = new JPanel();
+
+		JPanel pnlTabOuter = new JPanel();
 		tpnlSettings.addTab(category.getCaption(), null, pnlRoot, null);
-		
+
 		pnlRoot.setLayout(new BorderLayout());
 		pnlRoot.add(scrlPane, BorderLayout.CENTER);
-		
-		scrlPane.setViewportView(pnlTab);
+
+		scrlPane.setViewportView(pnlTabOuter);
 		scrlPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+		var pnlTabInner = new JPanel();
+
+		if (category.showFilter())
+		{
+			var cspec = new ColumnSpec[]{FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC};
+			var rspec = new RowSpec[]{FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, RowSpec.decode("14dlu"), RowSpec.decode("default:grow")};
+			pnlTabOuter.setLayout(new FormLayout(cspec, rspec));
+
+			var tf = new JTextField();
+			tf.getDocument().addDocumentListener(new DocumentLambdaAdapter(() ->
+			{
+				if (tf.getText().isEmpty())
+					reinitPanel(pnlTabInner, category, Opt.empty());
+				else
+					reinitPanel(pnlTabInner, category, Opt.of(tf.getText()));
+
+				pnlRoot.invalidate();
+				pnlRoot.revalidate();
+				pnlRoot.repaint();
+
+				scrlPane.invalidate();
+				scrlPane.revalidate();
+				scrlPane.repaint();
+
+				pnlTabInner.invalidate();
+				pnlTabInner.revalidate();
+				pnlTabInner.repaint();
+			}));
+			pnlTabOuter.add(tf, CC.xy(2, 2, CC.FILL, CC.FILL));
+
+			pnlTabOuter.add(pnlTabInner, CC.xyw(1, 4, 3, CC.FILL, CC.FILL));
+		}
+		else
+		{
+			var cspec = new ColumnSpec[]{FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC};
+			var rspec = new RowSpec[]{FormSpecs.RELATED_GAP_ROWSPEC, RowSpec.decode("default:grow")};
+			pnlTabOuter.setLayout(new FormLayout(cspec, rspec));
+
+			pnlTabOuter.add(pnlTabInner, CC.xyw(1, 2, 3, CC.FILL, CC.FILL));
+		}
+
+		return reinitPanel(pnlTabInner, category, Opt.empty());
+	}
+
+	@SuppressWarnings("nls")
+	private List<Component> reinitPanel(JPanel pnlTab, CCPropertyCategory category, Opt<String> filter) {
+		List<Component> tabOrder = new ArrayList<>();
+
+		pnlTab.removeAll();
 
 		var colspec = new ColumnSpec[]
 		{
 			FormSpecs.RELATED_GAP_COLSPEC,
 			FormSpecs.DEFAULT_COLSPEC,
 			FormSpecs.RELATED_GAP_COLSPEC,
-			ColumnSpec.decode("default:grow"), //$NON-NLS-1$
+			ColumnSpec.decode("default:grow"),
 			FormSpecs.RELATED_GAP_COLSPEC,
-			ColumnSpec.decode("50dlu"), //$NON-NLS-1$
+			ColumnSpec.decode("50dlu"),
 			FormSpecs.RELATED_GAP_COLSPEC,
 			FormSpecs.DEFAULT_COLSPEC,
 			FormSpecs.RELATED_GAP_COLSPEC,
 		};
 
-		var rowspec = CCStreams
+		var props = CCStreams
 				.iterate(properties.getPropertyList())
 				.filter(p -> p.getCategory().equals(category))
+				.filter(p -> filterBySearch(p, filter))
+				.enumerate();
+
+		var rowspec = CCStreams
+				.iterate(props)
 				.map(p -> new RowSpec[]{FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, p.getComponentBottomMargin() ? FormSpecs.UNRELATED_GAP_ROWSPEC : null})
 				.flatten(CCStreams::iterate)
 				.filter(Objects::nonNull)
 				.append(FormSpecs.RELATED_GAP_ROWSPEC)
-				.toArray(new RowSpec[0]);
+				.enumerate();
 
-		pnlTab.setLayout(new FormLayout(colspec, rowspec));
+		pnlTab.setLayout(new FormLayout(colspec, rowspec.toArray(new RowSpec[0])));
 
 		int c = 2;
 
-		for (final CCProperty<Object> p : properties.getPropertyList()) {
-			if (p.getCategory().equals(category)) {
-				JLabel info = new JLabel(p.getDescription());
-				pnlTab.add(info, "2, " + c + ", right, " + p.getLabelRowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
+		for (final CCProperty<Object> p : props) {
+			JLabel info = new JLabel(p.getDescription());
+			pnlTab.add(info, "2, " + c + ", right, " + p.getLabelRowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
 
-				final Component comp1 = p.getComponent();
-				final Component comp2 = p.getSecondaryComponent(comp1);
+			final Component comp1 = p.getComponent();
+			final Component comp2 = p.getSecondaryComponent(comp1);
 
-				if (comp2 == null && p.getComponent1ColStretch()) {
+			if (comp2 == null && p.getComponent1ColStretch()) {
 
-					pnlTab.add(comp1, "4, " + c + ",3, 1, fill, " + p.getComponent1RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
-					tabOrder.add(comp1);
+				pnlTab.add(comp1, "4, " + c + ",3, 1, fill, " + p.getComponent1RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
+				tabOrder.add(comp1);
 
-				} else if (comp2 == null) {
+			} else if (comp2 == null) {
 
-					pnlTab.add(comp1, "4, " + c + ", fill, " + p.getComponent1RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
-					tabOrder.add(comp1);
+				pnlTab.add(comp1, "4, " + c + ", fill, " + p.getComponent1RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
+				tabOrder.add(comp1);
 
-				} else {
+			} else {
 
-					pnlTab.add(comp1, "4, " + c + ", fill, " + p.getComponent1RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
-					tabOrder.add(comp1);
+				pnlTab.add(comp1, "4, " + c + ", fill, " + p.getComponent1RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
+				tabOrder.add(comp1);
 
-					pnlTab.add(comp2, "6, " + c + ", left, " + p.getComponent2RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
-					tabOrder.add(comp2);
-				}
-
-				JButton btnReset = new JButton(LocaleBundle.getString("Settingsframe.btnReset.title")); //$NON-NLS-1$
-				btnReset.addActionListener(e -> p.setComponentValueToValue(comp1, p.getDefault()));
-				pnlTab.add(btnReset, "8, " + c); //$NON-NLS-1$
-				tabOrder.add(btnReset);
-				
-				elements.add(new PropertyElement(p, comp1));
-
-				c+=2;
-
-				if (p.getComponentBottomMargin()) c++;
+				pnlTab.add(comp2, "6, " + c + ", left, " + p.getComponent2RowAlign()); //$NON-NLS-1$ //$NON-NLS-2$
+				tabOrder.add(comp2);
 			}
+
+			JButton btnReset = new JButton(LocaleBundle.getString("Settingsframe.btnReset.title")); //$NON-NLS-1$
+			btnReset.addActionListener(e -> p.setComponentValueToValue(comp1, p.getDefault()));
+			pnlTab.add(btnReset, "8, " + c); //$NON-NLS-1$
+			tabOrder.add(btnReset);
+
+			elements.add(new PropertyElement(p, comp1));
+
+			c+=2;
+
+			if (p.getComponentBottomMargin()) c++;
 		}
 		
 		return tabOrder;
+	}
+
+	private boolean filterBySearch(CCProperty<Object> prop, Opt<String> filter) {
+		if (filter.isEmpty()) return true;
+
+		var lcf = filter.get().toLowerCase();
+
+		if (prop.getIdentifier().toLowerCase().contains(lcf)) return true;
+
+		for (var loc : LocaleBundle.listLocales()) {
+			if (prop.getDescriptionOrEmpty(loc).toLowerCase().contains(lcf)) return true;
+		}
+
+		if (prop.getDescription().toLowerCase().contains(lcf)) return true; // because some props override getDescription()
+
+		return false;
 	}
 
 	private void setValues() {

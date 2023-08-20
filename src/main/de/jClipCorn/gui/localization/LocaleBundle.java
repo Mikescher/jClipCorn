@@ -46,6 +46,18 @@ public class LocaleBundle {
 		}
 	}
 
+	public static String getStringOrDefaultInLocale(Locale loc, String ident, String def) {
+		try {
+			if (ident.startsWith("@")) return ident.substring(1); //$NON-NLS-1$
+
+			if (! ResourceBundle.getBundle(DEFAULT_BASENAME, loc).containsKey(ident)) return def;
+			return ResourceBundle.getBundle(DEFAULT_BASENAME, loc).getString(ident);
+		} catch (MissingResourceException e) {
+			CCLog.addError(e);
+			return ""; //$NON-NLS-1$
+		}
+	}
+
 	@SuppressWarnings("nls")
 	public static String getString(String ident) {
 		try {

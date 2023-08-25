@@ -9,8 +9,8 @@ public class ClipCharButton extends JButton {
 
 	private boolean inactive = false;
 
-	private Color c1;
-	private Color c2;
+	private final Color c1;
+	private final Color c2;
 
 	public ClipCharButton(String s) {
 		super(s);

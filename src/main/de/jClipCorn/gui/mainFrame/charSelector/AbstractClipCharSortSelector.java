@@ -59,6 +59,8 @@ public abstract class AbstractClipCharSortSelector extends JToolBar {
 	private void updateButtonOpacity(@Nullable  CustomCharFilter filter) {
 		if (!ccprops().PROP_CHARSELECTOR_DYNAMIC_OPACTITY.getValue()) return;
 
+		if (!owner.getMovielist().isLoaded()) return;
+
 		var chars = owner
 				.getMovielist()
 				.iteratorElements()

@@ -250,6 +250,10 @@ public class CCMovieList implements ICCPropertySource {
 		return isLoading || !isLoaded;
 	}
 
+	public boolean isLoaded() {
+		return isLoaded;
+	}
+
 	public CCDatabaseElement getDatabaseElementBySort(int row) { // WARNIG SORT <> MOVIEID || SORT IN DATABASE (SORTED BY MOVIEID)
 		return list.get(row);
 	}

@@ -209,7 +209,7 @@ public class BackupManager {
 		ProgressMonitor monitor = DialogHelper.getLocalPersistentProgressMonitor(c, "MainFrame.backupRunning"); //$NON-NLS-1$
 
 		try {
-			createBackupInternal(name, date, persistent, jccversion, dbversion, new ProgressCallbackProgressMonitorHelper(monitor), false);
+			createBackupInternal(name, date, persistent, jccversion, dbversion, new ProgressCallbackProgressMonitorHelper(monitor, true), false);
 		} catch (Exception | Error e) {
 			CCLog.addError(e);
 			monitor.setProgress(monitor.getMaximum());
@@ -287,14 +287,14 @@ public class BackupManager {
 
 		ProgressMonitor monitor = DialogHelper.getLocalPersistentProgressMonitor(c, "BackupsManagerFrame.dialogs.restoreRunning1"); //$NON-NLS-1$
 
-		if (!FilesystemUtils.deleteFolderContent(directory, true, new ProgressCallbackProgressMonitorHelper(monitor))) {
+		if (!FilesystemUtils.deleteFolderContent(directory, true, new ProgressCallbackProgressMonitorHelper(monitor, true))) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.RestoreFailed")); //$NON-NLS-1$
 			return false;
 		}
 
 		monitor = DialogHelper.getLocalPersistentProgressMonitor(c, "BackupsManagerFrame.dialogs.restoreRunning2"); //$NON-NLS-1$
 
-		if (!ExportHelper.unzipBackupDir(archive, directoryP, new ProgressCallbackProgressMonitorHelper(monitor))) {
+		if (!ExportHelper.unzipBackupDir(archive, directoryP, new ProgressCallbackProgressMonitorHelper(monitor, true))) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.RestoreFailed")); //$NON-NLS-1$
 			return false;
 		}

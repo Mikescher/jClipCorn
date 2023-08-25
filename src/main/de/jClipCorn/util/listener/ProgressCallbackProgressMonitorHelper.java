@@ -1,19 +1,26 @@
 package de.jClipCorn.util.listener;
 
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.SwingUtils;
 
 import javax.swing.*;
 
 public class ProgressCallbackProgressMonitorHelper implements ProgressCallbackListener
 {
-	private final static int REAL_MAX = 65536;
+	private final static int REAL_MAX = 1000;
 
 	private final ProgressMonitor monitor;
+	private final boolean skipNoop;
+
+	private String _currCache = Str.Empty;
+
 	private long progress;
 	private long max;
 	
-	public ProgressCallbackProgressMonitorHelper(ProgressMonitor p) {
+	public ProgressCallbackProgressMonitorHelper(ProgressMonitor p, boolean skipNoop) {
 		this.monitor = p;
+		this.skipNoop = skipNoop;
+
 		progress = 0;
 		max = 1;
 	}
@@ -58,13 +65,23 @@ public class ProgressCallbackProgressMonitorHelper implements ProgressCallbackLi
 		}
 	}
 	
-	private void update() {
+	private void update()
+	{
+		// ProgressMonitor only supports int - shrink down to 16bit
+		var monitorVal = (max==0) ? 0 : (int)Math.round((progress*REAL_MAX)/(1.0*max));
+
+		if (skipNoop)
+		{
+			String newCache = String.format("%d | %d | %.1f", monitorVal, max, getPercentage()); //$NON-NLS-1$
+			if (Str.equals(newCache, _currCache)) return; // nothing changed, update is unneccessary
+			_currCache = newCache;
+		}
+
 		final String message = String.format("Completed %.1f%%.\n", getPercentage()); //$NON-NLS-1$
 
 		SwingUtils.invokeLater(() ->
 		{
-			// ProgressMonitor only supports int - shrink down to 16bit
-			var monitorVal = (max==0) ? 0 : (int)Math.round((progress*REAL_MAX)/(1.0*max));
+
 
 			monitor.setMaximum(REAL_MAX);
 			monitor.setNote(message);

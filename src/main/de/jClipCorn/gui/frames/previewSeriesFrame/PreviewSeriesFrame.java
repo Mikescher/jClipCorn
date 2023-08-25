@@ -6,6 +6,8 @@ import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.NextEpisodeHelper;
 import de.jClipCorn.features.actionTree.ActionSource;
@@ -40,6 +42,7 @@ import de.jClipCorn.util.formatter.TimeIntervallFormatter;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
+import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
@@ -48,9 +51,7 @@ import org.apache.commons.lang.StringUtils;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -329,6 +330,20 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			tabSeason.changeSeason(s);
 		}
 
+		var seriesOnlineRef = series.onlineReference().get();
+		var seasonOnlineRefs = seriesOnlineRef.ccstream().filter(p -> p.hasDescription() && p.description.equals(s.title().get())).toList();
+		if (seasonOnlineRefs.isEmpty()) {
+			btnSeasonOnlinescore.setVisible(false);
+		} else {
+			btnSeasonOnlinescore.setVisible(true);
+			if (CCStreams.iterate(seasonOnlineRefs).any(p -> p.type == seriesOnlineRef.Main.type && seriesOnlineRef.Main.type != CCOnlineRefType.NONE)) {
+				btnSeasonOnlinescore.setIcon(seriesOnlineRef.Main.type.getIcon16x16());
+			} else {
+				btnSeasonOnlinescore.setIcon(seasonOnlineRefs.get(0).type.getIcon16x16());
+			}
+		}
+
+
 	}
 
 	private void startSearch() {
@@ -422,6 +437,27 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		SwingUtils.invokeLater(() -> QuickAddEpisodeDialog.show(this, s, f0));
 	}
 
+	private void onBtnSeasonOnlinescoreMouseClicked(MouseEvent e) {
+		var season = getSelectedSeason();
+		if (season == null) return;
+
+		var seasonOnlineRefs = series.onlineReference().get().ccstream().filter(p -> p.hasDescription() && p.description.equals(season.title().get())).toList();
+
+		if (seasonOnlineRefs.size() == 1) {
+			HTTPUtilities.openInBrowser(seasonOnlineRefs.get(0).getURL(movielist.ccprops()));
+			return;
+		}
+
+		JPopupMenu menu = new JPopupMenu();
+		for (final CCSingleOnlineReference soref : seasonOnlineRefs) {
+			JMenuItem mi = new JMenuItem(soref.type.asString());
+			mi.setIcon(soref.type.getIcon16x16());
+			mi.addActionListener(e1 -> HTTPUtilities.openInBrowser(soref.getURL(movielist.ccprops())));
+			menu.add(mi);
+		}
+		menu.show(e.getComponent(), e.getX(), e.getY());
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		pnlTop = new JPanel();
@@ -460,6 +496,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		pnlMain = new JPanel();
 		lblSeasonScore = new JLabel();
 		lblSeason = new JLabel();
+		btnSeasonOnlinescore = new JButton();
 		tabSeason = new SerTable(movielist, this);
 
 		//======== this ========
@@ -673,13 +710,23 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			pnlMain.setLayout(new FormLayout(
 				"$lcgap, 17dlu, $lcgap, 0dlu:grow, $lcgap, 17dlu, $lcgap", //$NON-NLS-1$
 				"$lgap, default, $lgap, default:grow, $lgap")); //$NON-NLS-1$
-			pnlMain.add(lblSeasonScore, CC.xy(2, 2, CC.FILL, CC.DEFAULT));
+			pnlMain.add(lblSeasonScore, CC.xy(2, 2, CC.FILL, CC.FILL));
 
 			//---- lblSeason ----
 			lblSeason.setText("<Season>"); //$NON-NLS-1$
 			lblSeason.setFont(lblSeason.getFont().deriveFont(25f));
 			lblSeason.setHorizontalAlignment(SwingConstants.CENTER);
 			pnlMain.add(lblSeason, CC.xy(4, 2));
+
+			//---- btnSeasonOnlinescore ----
+			btnSeasonOnlinescore.setIcon(new ImageIcon(getClass().getResource("/icons/onlineReferences/ref01_16x16.png"))); //$NON-NLS-1$
+			btnSeasonOnlinescore.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					onBtnSeasonOnlinescoreMouseClicked(e);
+				}
+			});
+			pnlMain.add(btnSeasonOnlinescore, CC.xy(6, 2, CC.CENTER, CC.CENTER));
 			pnlMain.add(tabSeason, CC.xywh(2, 4, 5, 1, CC.FILL, CC.FILL));
 		}
 		contentPane.add(pnlMain, CC.xy(4, 4, CC.FILL, CC.FILL));
@@ -725,6 +772,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 	private JPanel pnlMain;
 	private JLabel lblSeasonScore;
 	private JLabel lblSeason;
+	private JButton btnSeasonOnlinescore;
 	private SerTable tabSeason;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

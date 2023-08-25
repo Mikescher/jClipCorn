@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.7" encoding: "UTF-8"
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.8" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -351,6 +351,7 @@ new FormModel {
 					"gridX": 2
 					"gridY": 2
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "lblSeason"
@@ -360,6 +361,16 @@ new FormModel {
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 4
 					"gridY": 2
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnSeasonOnlinescore"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/onlineReferences/ref01_16x16.png" )
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "onBtnSeasonOnlinescoreMouseClicked", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 6
+					"gridY": 2
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
 				} )
 				add( new FormContainer( "de.jClipCorn.gui.frames.previewSeriesFrame.SerTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 					name: "tabSeason"

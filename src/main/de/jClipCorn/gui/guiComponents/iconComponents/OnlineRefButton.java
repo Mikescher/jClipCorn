@@ -8,8 +8,6 @@ import de.jClipCorn.util.http.HTTPUtilities;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -37,13 +35,10 @@ public class OnlineRefButton extends JPanel {
 
 		btnMain = new JButton();
 		add(btnMain, BorderLayout.CENTER);
-		btnMain.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (value == null || value.Main.isUnset()) return;
-				
-				HTTPUtilities.openInBrowser(value.Main.getURL(movielist.ccprops()));
-			}
+		btnMain.addActionListener(arg0 -> {
+			if (value == null || value.Main.isUnset()) return;
+
+			HTTPUtilities.openInBrowser(value.Main.getURL(movielist.ccprops()));
 		});
 		
 		btnDropDown = new JButton("V"); //$NON-NLS-1$
@@ -56,12 +51,7 @@ public class OnlineRefButton extends JPanel {
 				for (final CCSingleOnlineReference soref : value.Additional) {
 					JMenuItem mi = new JMenuItem(soref.hasDescription() ? soref.description : soref.type.asString());
 					mi.setIcon(soref.type.getIcon16x16());
-					mi.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							HTTPUtilities.openInBrowser(soref.getURL(movielist.ccprops()));
-						}
-					});
+					mi.addActionListener(e1 -> HTTPUtilities.openInBrowser(soref.getURL(movielist.ccprops())));
 					menu.add(mi);
 				}
 				menu.show(OnlineRefButton.this, e.getX(), e.getY());

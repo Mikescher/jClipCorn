@@ -94,6 +94,6 @@ public class StatisticsMediaInfoFramerateChart extends StatisticsChart {
 
 	@Override
 	public StatisticsTypeFilter[] supportedTypes() {
-		return new StatisticsTypeFilter[]{StatisticsTypeFilter.STF_MOVIES, StatisticsTypeFilter.STF_SERIES, StatisticsTypeFilter.STF_MOVIES_AND_SERIES};
+		return new StatisticsTypeFilter[]{StatisticsTypeFilter.STF_MOVIES, StatisticsTypeFilter.STF_EPISODES, StatisticsTypeFilter.STF_MOVIES_AND_EPISODES};
 	}
 }

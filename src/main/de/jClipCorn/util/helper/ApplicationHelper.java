@@ -104,6 +104,14 @@ public class ApplicationHelper {
 		return os_property.contains("mac");
 	}
 
+	public static boolean isKDE() {
+		return System.getenv("XDG_CURRENT_DESKTOP").equalsIgnoreCase("KDE");
+	}
+
+	public static boolean isGnome() {
+		return System.getenv("XDG_CURRENT_DESKTOP").equalsIgnoreCase("GNOME");
+	}
+
 	public static String getCurrentUsername() {
 		return System.getProperty("user.name"); //$NON-NLS-1$
 	}

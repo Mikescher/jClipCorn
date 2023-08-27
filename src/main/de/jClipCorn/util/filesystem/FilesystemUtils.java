@@ -13,8 +13,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -133,8 +131,12 @@ public class FilesystemUtils {
 
 				final File batch = File.createTempFile( "jClipCorn_exec_", ".bat" );
 				try(var ps = new PrintStream(batch, "IBM850")) { ps.println( "explorer.exe /select,\"" + abspath + '"'); }
-				Runtime.getRuntime().exec( batch.getAbsolutePath());
+				Runtime.getRuntime().exec(new String[]{batch.getAbsolutePath()});
 				batch.deleteOnExit();
+			}
+			else if (ApplicationHelper.isKDE())
+			{
+				Runtime.getRuntime().exec(new String[]{"dolphin", "--select", abspath.toAbsolutePathString()});
 			}
 			else if (ApplicationHelper.isUnix() || ApplicationHelper.isMac())
 			{

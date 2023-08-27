@@ -24,6 +24,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class CheckDatabaseFrame extends JCCFrame
@@ -40,6 +41,7 @@ public class CheckDatabaseFrame extends JCCFrame
 		setLocationRelativeTo(owner);
 	}
 
+	@SuppressWarnings("nls")
 	private void postInit()
 	{
 		btnFixSelected.setEnabled(false);
@@ -51,13 +53,29 @@ public class CheckDatabaseFrame extends JCCFrame
 		lblProgress1.setText(Str.Empty);
 		lblProgress2.setText(Str.Empty);
 
-		cbValMovies.setSelected(ccprops().PROP_CHECKDATABASE_OPT_MOVIES.getValue());
-		cbValCoverFiles.setSelected(ccprops().PROP_CHECKDATABASE_OPT_COVERS.getValue());
-		cbValSeries.setSelected(ccprops().PROP_CHECKDATABASE_OPT_SERIES.getValue());
-		cbValVideoFiles.setSelected(ccprops().PROP_CHECKDATABASE_OPT_FILES.getValue());
-		cbValSeasons.setSelected(ccprops().PROP_CHECKDATABASE_OPT_SEASONS.getValue());
-		cbValEpisodes.setSelected(ccprops().PROP_CHECKDATABASE_OPT_EPISODES.getValue());
-		cbValAdditional.setSelected(ccprops().PROP_CHECKDATABASE_OPT_EXTRA.getValue());
+		var props = ccprops().PROP_CHECKDATABASE_OPTIONS.getValue();
+
+		cbValMovies.setSelected(           props.contains("MOVIES")            );
+		cbValSeries.setSelected(           props.contains("SERIES")            );
+		cbValSeasons.setSelected(          props.contains("SEASONS")           );
+		cbValEpisodes.setSelected(         props.contains("EPISODES")          );
+
+		cbValCovers.setSelected(           props.contains("COVERS")            );
+		cbValGroups.setSelected(           props.contains("GROUPS")            );
+		cbValOnlineRefs.setSelected(       props.contains("ONLINEREFS")        );
+
+		cbValCoverFiles.setSelected(       props.contains("COVER_FILES")       );
+		cbValVideoFiles.setSelected(       props.contains("VIDEO_FILES")       );
+
+		cbValDatabase.setSelected(         props.contains("DATABASE")          );
+		cbValDuplicates.setSelected(       props.contains("DUPLICATES")        );
+		cbValSeriesStructure.setSelected(  props.contains("SERIES_STRUCTURE")  );
+		cbValEmptyDirs.setSelected(        props.contains("EMPTY_DIRS")        );
+
+		if (!ccprops().PROP_VALIDATE_CHECK_SERIES_STRUCTURE.getValue()) {
+			cbValSeriesStructure.setSelected(false);
+			cbValSeriesStructure.setEnabled(false);
+		}
 	}
 
 	private void onErrorSelected() {
@@ -90,32 +108,27 @@ public class CheckDatabaseFrame extends JCCFrame
 		if (e.getClickCount() == 2 && lsMain.getSelectedIndex() >= 0) lsMain.getSelectedValue().startEditing(this);
 	}
 
-	private void cbValMoviesItemStateChanged(ItemEvent e) {
-		ccprops().PROP_CHECKDATABASE_OPT_MOVIES.setValue(cbValMovies.isSelected());
-	}
+	@SuppressWarnings("nls")
+	private void cbxAnyItemStateChanged(ItemEvent e) {
+		var v = new HashSet<String>();
+		if (cbValMovies.isSelected())          v.add("MOVIES");
+		if (cbValSeries.isSelected())          v.add("SERIES");
+		if (cbValSeasons.isSelected())         v.add("SEASONS");
+		if (cbValEpisodes.isSelected())        v.add("EPISODES");
 
-	private void cbValSeriesItemStateChanged(ItemEvent e) {
-		ccprops().PROP_CHECKDATABASE_OPT_SERIES.setValue(cbValSeries.isSelected());
-	}
+		if (cbValCovers.isSelected())          v.add("COVERS");
+		if (cbValGroups.isSelected())          v.add("GROUPS");
+		if (cbValOnlineRefs.isSelected())      v.add("ONLINEREFS");
 
-	private void cbValSeasonsItemStateChanged(ItemEvent e) {
-		ccprops().PROP_CHECKDATABASE_OPT_SEASONS.setValue(cbValSeasons.isSelected());
-	}
+		if (cbValCoverFiles.isSelected())      v.add("COVER_FILES");
+		if (cbValVideoFiles.isSelected())      v.add("VIDEO_FILES");
+		
+		if (cbValDatabase.isSelected())        v.add("DATABASE");
+		if (cbValDuplicates.isSelected())      v.add("DUPLICATES");
+		if (cbValSeriesStructure.isSelected()) v.add("SERIES_STRUCTURE");
+		if (cbValEmptyDirs.isSelected())       v.add("EMPTY_DIRS");
 
-	private void cbValEpisodesItemStateChanged(ItemEvent e) {
-		ccprops().PROP_CHECKDATABASE_OPT_EPISODES.setValue(cbValEpisodes.isSelected());
-	}
-
-	private void cbValCoverFilesItemStateChanged(ItemEvent e) {
-		ccprops().PROP_CHECKDATABASE_OPT_COVERS.setValue(cbValCoverFiles.isSelected());
-	}
-
-	private void cbValVideoFilesItemStateChanged(ItemEvent e) {
-		ccprops().PROP_CHECKDATABASE_OPT_FILES.setValue(cbValVideoFiles.isSelected());
-	}
-
-	private void cbValAdditionalItemStateChanged(ItemEvent e) {
-		ccprops().PROP_CHECKDATABASE_OPT_EXTRA.setValue(cbValAdditional.isSelected());
+		ccprops().PROP_CHECKDATABASE_OPTIONS.setValue(v);
 	}
 
 	private void autoFix() {
@@ -153,22 +166,26 @@ public class CheckDatabaseFrame extends JCCFrame
 		btnValidate.setEnabled(false);
 		btnAutofix.setEnabled(false);
 
-		DatabaseValidatorOptions opts = new DatabaseValidatorOptions
-		(
-			cbValMovies.isSelected(),
-			cbValSeries.isSelected(),
-			cbValSeasons.isSelected(),
-			cbValEpisodes.isSelected(),
-			cbValAdditional.isSelected(),
-			cbValCoverFiles.isSelected(),
-			cbValVideoFiles.isSelected(),
-			cbValAdditional.isSelected(),
-			cbValAdditional.isSelected(),
-			cbValAdditional.isSelected(),
-			cbValAdditional.isSelected(),
-			ccprops().PROP_VALIDATE_CHECK_SERIES_STRUCTURE.getValue(),
-			ccprops().PROP_VALIDATE_DUP_IGNORE_IFO.getValue()
-		);
+		DatabaseValidatorOptions opts = new DatabaseValidatorOptions();
+
+		opts.ValidateMovies                    = cbValMovies.isSelected();
+		opts.ValidateSeries                    = cbValSeries.isSelected();
+		opts.ValidateSeasons                   = cbValSeasons.isSelected();
+		opts.ValidateEpisodes                  = cbValEpisodes.isSelected();
+
+		opts.ValidateCovers                    = cbValCovers.isSelected();
+		opts.ValidateCoverFiles                = cbValCoverFiles.isSelected();
+		opts.ValidateVideoFiles                = cbValVideoFiles.isSelected();
+		opts.ValidateGroups                    = cbValGroups.isSelected();
+		opts.ValidateOnlineReferences          = cbValOnlineRefs.isSelected();
+
+		opts.ValidateDuplicateFilesByPath      = cbValDuplicates.isSelected();
+		opts.ValidateDuplicateFilesByMediaInfo = cbValDuplicates.isSelected();
+		opts.ValidateDatabaseConsistence       = cbValDatabase.isSelected();
+		opts.ValidateSeriesStructure           = cbValSeriesStructure.isSelected();
+		opts.FindEmptyDirectories              = cbValEmptyDirs.isSelected();
+
+		opts.IgnoreDuplicateIfos               = ccprops().PROP_VALIDATE_DUP_IGNORE_IFO.getValue();
 
 		new Thread(() ->
 		{
@@ -319,12 +336,18 @@ public class CheckDatabaseFrame extends JCCFrame
 		lblProgress2 = new JLabel();
 		panel2 = new JPanel();
 		cbValMovies = new JCheckBox();
+		cbValCovers = new JCheckBox();
 		cbValCoverFiles = new JCheckBox();
+		cbValDatabase = new JCheckBox();
 		cbValSeries = new JCheckBox();
+		cbValGroups = new JCheckBox();
 		cbValVideoFiles = new JCheckBox();
+		cbValDuplicates = new JCheckBox();
 		cbValSeasons = new JCheckBox();
+		cbValOnlineRefs = new JCheckBox();
+		cbValSeriesStructure = new JCheckBox();
 		cbValEpisodes = new JCheckBox();
-		cbValAdditional = new JCheckBox();
+		cbValEmptyDirs = new JCheckBox();
 
 		//======== this ========
 		setTitle(LocaleBundle.getString("CheckDatabaseDialog.this.title")); //$NON-NLS-1$
@@ -428,43 +451,73 @@ public class CheckDatabaseFrame extends JCCFrame
 		//======== panel2 ========
 		{
 			panel2.setLayout(new FormLayout(
-				"0dlu:grow, $lcgap, 1dlu:grow", //$NON-NLS-1$
+				"0dlu:grow, 3*($lcgap, 1dlu:grow)", //$NON-NLS-1$
 				"3*(default, $lgap), default")); //$NON-NLS-1$
 
 			//---- cbValMovies ----
 			cbValMovies.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValMovies")); //$NON-NLS-1$
-			cbValMovies.addItemListener(e -> cbValMoviesItemStateChanged(e));
+			cbValMovies.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValMovies, CC.xy(1, 1));
+
+			//---- cbValCovers ----
+			cbValCovers.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValCovers.text")); //$NON-NLS-1$
+			cbValCovers.addItemListener(e -> cbxAnyItemStateChanged(e));
+			panel2.add(cbValCovers, CC.xy(3, 1));
 
 			//---- cbValCoverFiles ----
 			cbValCoverFiles.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValCoverFiles")); //$NON-NLS-1$
-			cbValCoverFiles.addItemListener(e -> cbValCoverFilesItemStateChanged(e));
-			panel2.add(cbValCoverFiles, CC.xy(3, 1));
+			cbValCoverFiles.addItemListener(e -> cbxAnyItemStateChanged(e));
+			panel2.add(cbValCoverFiles, CC.xy(5, 1));
+
+			//---- cbValDatabase ----
+			cbValDatabase.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValDatabase")); //$NON-NLS-1$
+			cbValDatabase.addItemListener(e -> cbxAnyItemStateChanged(e));
+			panel2.add(cbValDatabase, CC.xy(7, 1));
 
 			//---- cbValSeries ----
 			cbValSeries.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeries")); //$NON-NLS-1$
-			cbValSeries.addItemListener(e -> cbValSeriesItemStateChanged(e));
+			cbValSeries.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValSeries, CC.xy(1, 3));
+
+			//---- cbValGroups ----
+			cbValGroups.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValGroups.text")); //$NON-NLS-1$
+			cbValGroups.addItemListener(e -> cbxAnyItemStateChanged(e));
+			panel2.add(cbValGroups, CC.xy(3, 3));
 
 			//---- cbValVideoFiles ----
 			cbValVideoFiles.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValVideoFiles")); //$NON-NLS-1$
-			cbValVideoFiles.addItemListener(e -> cbValVideoFilesItemStateChanged(e));
-			panel2.add(cbValVideoFiles, CC.xy(3, 3));
+			cbValVideoFiles.addItemListener(e -> cbxAnyItemStateChanged(e));
+			panel2.add(cbValVideoFiles, CC.xy(5, 3));
+
+			//---- cbValDuplicates ----
+			cbValDuplicates.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValDuplicates")); //$NON-NLS-1$
+			cbValDuplicates.addItemListener(e -> cbxAnyItemStateChanged(e));
+			panel2.add(cbValDuplicates, CC.xy(7, 3));
 
 			//---- cbValSeasons ----
 			cbValSeasons.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeasons")); //$NON-NLS-1$
-			cbValSeasons.addItemListener(e -> cbValSeasonsItemStateChanged(e));
+			cbValSeasons.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValSeasons, CC.xy(1, 5));
+
+			//---- cbValOnlineRefs ----
+			cbValOnlineRefs.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValOnlineRefs.text")); //$NON-NLS-1$
+			cbValOnlineRefs.addItemListener(e -> cbxAnyItemStateChanged(e));
+			panel2.add(cbValOnlineRefs, CC.xy(3, 5));
+
+			//---- cbValSeriesStructure ----
+			cbValSeriesStructure.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValSeriesStructure")); //$NON-NLS-1$
+			cbValSeriesStructure.addItemListener(e -> cbxAnyItemStateChanged(e));
+			panel2.add(cbValSeriesStructure, CC.xy(7, 5));
 
 			//---- cbValEpisodes ----
 			cbValEpisodes.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValEpisodes")); //$NON-NLS-1$
-			cbValEpisodes.addItemListener(e -> cbValEpisodesItemStateChanged(e));
+			cbValEpisodes.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValEpisodes, CC.xy(1, 7));
 
-			//---- cbValAdditional ----
-			cbValAdditional.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValAdditional")); //$NON-NLS-1$
-			cbValAdditional.addItemListener(e -> cbValAdditionalItemStateChanged(e));
-			panel2.add(cbValAdditional, CC.xy(3, 7));
+			//---- cbValEmptyDirs ----
+			cbValEmptyDirs.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValEmptyDirs")); //$NON-NLS-1$
+			cbValEmptyDirs.addItemListener(e -> cbxAnyItemStateChanged(e));
+			panel2.add(cbValEmptyDirs, CC.xy(7, 7));
 		}
 		contentPane.add(panel2, CC.xywh(2, 10, 3, 1));
 		setSize(1200, 700);
@@ -492,11 +545,17 @@ public class CheckDatabaseFrame extends JCCFrame
 	private JLabel lblProgress2;
 	private JPanel panel2;
 	private JCheckBox cbValMovies;
+	private JCheckBox cbValCovers;
 	private JCheckBox cbValCoverFiles;
+	private JCheckBox cbValDatabase;
 	private JCheckBox cbValSeries;
+	private JCheckBox cbValGroups;
 	private JCheckBox cbValVideoFiles;
+	private JCheckBox cbValDuplicates;
 	private JCheckBox cbValSeasons;
+	private JCheckBox cbValOnlineRefs;
+	private JCheckBox cbValSeriesStructure;
 	private JCheckBox cbValEpisodes;
-	private JCheckBox cbValAdditional;
+	private JCheckBox cbValEmptyDirs;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

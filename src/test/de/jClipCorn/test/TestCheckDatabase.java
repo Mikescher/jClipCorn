@@ -32,20 +32,29 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 		CCMovieList ml = createExampleDB(dbmode);
 
 		List<DatabaseError> errs = new ArrayList<>();
-		DatabaseValidatorOptions opt = new DatabaseValidatorOptions(
-				true,  // movies
-				true,  // series
-				true,  // seasons
-				true,  // episodes
-				true,  // covers
-				false, // cover files
-				false, // video files
-				true,  // groups
-				true,  // online-refs
-				true,  // internal db
-				true,  // Additional
-				false, // Validate Series Structure
-				true); // Ignore IFO duplicates
+
+
+		var opt = new DatabaseValidatorOptions();
+		{
+			opt.ValidateMovies = true;
+			opt.ValidateSeries = true;
+			opt.ValidateSeasons = true;
+			opt.ValidateEpisodes = true;
+
+			opt.ValidateCovers = true;
+			opt.ValidateCoverFiles = false; // <=
+			opt.ValidateVideoFiles = false; // <=
+			opt.ValidateGroups = true;
+			opt.ValidateOnlineReferences = true;
+
+			opt.ValidateDuplicateFilesByPath = true;
+			opt.ValidateDuplicateFilesByMediaInfo = true;
+			opt.ValidateDatabaseConsistence = true;
+			opt.ValidateSeriesStructure = false; // <=
+			opt.FindEmptyDirectories = false;
+
+			opt.IgnoreDuplicateIfos = true;
+		}
 
 		var validator = new CCDatabaseValidator(ml);
 		validator.validate(errs, opt, DoubleProgressCallbackListener.EMPTY);

@@ -110,20 +110,27 @@ public class TestCompareAndPatchDatabases extends ClipCornBaseTest {
 
 		// =========================================================================================
 
-		DatabaseValidatorOptions opt_val = new DatabaseValidatorOptions(
-				true,  // movies
-				true,  // series
-				true,  // seasons
-				true,  // episodes
-				true,  // covers
-				true,  // cover files
-				true,  // video files
-				true,  // groups
-				true,  // online-refs
-				true,  // internal db
-				true,  // Additional
-				true,  // Validate Series Structure
-				true); // Ignore IFO duplicates
+		var opt_val = new DatabaseValidatorOptions();
+		{
+			opt_val.ValidateMovies = true;
+			opt_val.ValidateSeries = true;
+			opt_val.ValidateSeasons = true;
+			opt_val.ValidateEpisodes = true;
+
+			opt_val.ValidateCovers = true;
+			opt_val.ValidateCoverFiles = true;
+			opt_val.ValidateVideoFiles = true;
+			opt_val.ValidateGroups = true;
+			opt_val.ValidateOnlineReferences = true;
+
+			opt_val.ValidateDuplicateFilesByPath = true;
+			opt_val.ValidateDuplicateFilesByMediaInfo = true;
+			opt_val.ValidateDatabaseConsistence = true;
+			opt_val.ValidateSeriesStructure = true;
+			opt_val.FindEmptyDirectories = false;
+
+			opt_val.IgnoreDuplicateIfos = true;
+		}
 
 		List<DatabaseError> errs = new ArrayList<>();
 

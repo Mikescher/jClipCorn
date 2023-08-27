@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "8.1.0.0.283" Java: "17.0.7" encoding: "UTF-8"
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.8" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -141,64 +141,106 @@ new FormModel {
 				"gridY": 8
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "0dlu:grow, labelcompgap, 1dlu:grow"
+				"$columnSpecs": "0dlu:grow, labelcompgap, 1dlu:grow, labelcompgap, 1dlu:grow, labelcompgap, 1dlu:grow"
 				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default"
 			} ) {
 				name: "panel2"
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "cbValMovies"
 					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValMovies" )
-					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbValMoviesItemStateChanged", true ) )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 1
 					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValCovers"
+					"text": new FormMessage( null, "CheckDatabaseFrame.cbValCovers.text" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "cbValCoverFiles"
 					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValCoverFiles" )
-					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbValCoverFilesItemStateChanged", true ) )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 3
+					"gridX": 5
 					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValDatabase"
+					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValDatabase" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "cbValSeries"
 					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValSeries" )
-					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbValSeriesItemStateChanged", true ) )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 1
 					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValGroups"
+					"text": new FormMessage( null, "CheckDatabaseFrame.cbValGroups.text" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 3
+					"gridX": 3
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "cbValVideoFiles"
 					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValVideoFiles" )
-					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbValVideoFilesItemStateChanged", true ) )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 3
+					"gridX": 5
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValDuplicates"
+					"text": new FormMessage( null, "CheckDatabaseFrame.cbValDuplicates" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
 					"gridY": 3
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "cbValSeasons"
 					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValSeasons" )
-					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbValSeasonsItemStateChanged", true ) )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 1
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValOnlineRefs"
+					"text": new FormMessage( null, "CheckDatabaseFrame.cbValOnlineRefs.text" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridY": 5
+					"gridX": 3
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValSeriesStructure"
+					"text": new FormMessage( null, "CheckDatabaseFrame.cbValSeriesStructure" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
 					"gridY": 5
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "cbValEpisodes"
 					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValEpisodes" )
-					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbValEpisodesItemStateChanged", true ) )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 1
 					"gridY": 7
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
-					name: "cbValAdditional"
-					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValAdditional" )
-					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbValAdditionalItemStateChanged", true ) )
+					name: "cbValEmptyDirs"
+					"text": new FormMessage( null, "CheckDatabaseFrame.cbValEmptyDirs" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 3
+					"gridX": 7
 					"gridY": 7
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {

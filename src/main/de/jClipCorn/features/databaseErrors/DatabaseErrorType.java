@@ -88,6 +88,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_SUBTITLE_MUTED                     = new DatabaseErrorType(81, null);
 	public final static DatabaseErrorType ERROR_INVALID_ONLINESCORE                = new DatabaseErrorType(82, null);
 	public final static DatabaseErrorType ERROR_COMMENT_WITHOUT_RATING             = new DatabaseErrorType(83, null);
+	public final static DatabaseErrorType ERROR_EMPTY_DIRECTORY                    = new DatabaseErrorType(84, DatabaseAutofixer::fixError_EmptyDirectory);
 
 	private final int type;
 

@@ -1,46 +1,24 @@
 package de.jClipCorn.features.databaseErrors;
 
 public class DatabaseValidatorOptions {
-	public final boolean ValidateMovies;
-	public final boolean ValidateSeries;
-	public final boolean ValidateSeasons;
-	public final boolean ValidateEpisodes;
+	public boolean ValidateMovies;
+	public boolean ValidateSeries;
+	public boolean ValidateSeasons;
+	public boolean ValidateEpisodes;
 
-	public final boolean ValidateCovers;
-	public final boolean ValidateCoverFiles;
-	public final boolean ValidateVideoFiles;
-	public final boolean ValidateGroups;
-	public final boolean ValidateOnlineReferences;
-	
-	public final boolean ValidateAdditional;
-	public final boolean ValidateDatabaseConsistence;
+	public boolean ValidateCovers;
+	public boolean ValidateCoverFiles;
+	public boolean ValidateVideoFiles;
+	public boolean ValidateGroups;
+	public boolean ValidateOnlineReferences;
 
+	public boolean ValidateDuplicateFilesByPath;
+	public boolean ValidateDuplicateFilesByMediaInfo;
+	public boolean ValidateDatabaseConsistence;
+	public boolean ValidateSeriesStructure;
+	public boolean FindEmptyDirectories;
 
-	public final boolean ValidateSeriesStructure;
-	public final boolean IgnoreDuplicateIfos;
+	public boolean IgnoreDuplicateIfos;
 
-
-	public DatabaseValidatorOptions(
-			boolean mov, boolean ser, boolean sea, boolean epi,
-			boolean cvrs, boolean cvrFiles, boolean vidFiles, boolean grps, boolean orefs,
-			boolean db, boolean addit,
-			boolean serstruct, boolean ifodups)
-	{
-		ValidateMovies              = mov;
-		ValidateSeries              = ser;
-		ValidateSeasons             = sea;
-		ValidateEpisodes            = epi;
-		ValidateCovers              = cvrs;
-
-		ValidateCoverFiles          = cvrFiles;
-		ValidateVideoFiles          = vidFiles;
-		ValidateGroups              = grps;
-		ValidateOnlineReferences    = orefs;
-
-		ValidateAdditional          = addit;
-		ValidateDatabaseConsistence = db;
-
-		ValidateSeriesStructure     = serstruct;
-		IgnoreDuplicateIfos         = ifodups;
-	}
+	public DatabaseValidatorOptions() { }
 }

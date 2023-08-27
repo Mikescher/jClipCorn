@@ -12,6 +12,7 @@ import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
@@ -2038,6 +2039,69 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 
 			var r2 = db.querySingleStringSQLThrow("PRAGMA quick_check;", 0);
 			if (!r2.equalsIgnoreCase("ok")) throw new Exception("sqlite::pragma::quick_check returned '" + r2 + "'");
+		}
+		catch (Exception ex)
+		{
+			e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
+		}
+
+	}
+
+	@Override
+	@SuppressWarnings("nls")
+	protected void findEmptyDirectories(List<DatabaseError> e, DoubleProgressCallbackListener pcl)
+	{
+		// 2 * +4 for safety, so we don't overshoot pcl.max
+		pcl.stepRootAndResetSub("Find empty directories",
+				movielist.iteratorSeries().count() + 4
+				+ movielist.iteratorMovies().map(CCMovie::getPartcount).sumInt(p->p) + 4
+				+ 2
+		        + 1);
+
+		// ### 1 ###
+		try
+		{
+			pcl.stepSub("Scan movie directory");
+
+			var odir = movielist.getCommonMoviesPath();
+			if (!odir.isEmpty())
+			{
+				var dir = odir.toFSPath(ccprops());
+
+				if (dir.directoryExists())
+				{
+					var res = FilesystemUtils.findEmptyDirectories(dir, 4, true, (v) -> pcl.stepSub("Movie: " + v));
+
+					for (var fse : res) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_EMPTY_DIRECTORY, fse));
+				}
+			}
+
+		}
+		catch (Exception ex)
+		{
+			e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
+		}
+
+
+		// ### 2 ###
+		try
+		{
+			pcl.stepSub("Scan series directory");
+
+			var odir = movielist.getCommonSeriesPath();
+			if (!odir.isEmpty())
+			{
+				var dir = odir.toFSPath(ccprops());
+
+				if (dir.directoryExists())
+				{
+					var res = FilesystemUtils.findEmptyDirectories(dir, 4, true, (v) -> pcl.stepSub("Series: " + v));
+
+					for (var fse : res) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_EMPTY_DIRECTORY, fse));
+				}
+			}
+
+
 		}
 		catch (Exception ex)
 		{

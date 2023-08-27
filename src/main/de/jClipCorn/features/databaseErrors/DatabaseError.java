@@ -131,6 +131,8 @@ public class DatabaseError {
 			return "[" + el + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else if (el instanceof Exception) {
 			return "[" + ((Exception)el).getClass().getSimpleName() + "|" + ((Exception)el).getMessage() + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		} else if (el instanceof FSPath) {
+			return "[" + (((FSPath)el).toAbsolutePathString()) + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			return "[?]"; //$NON-NLS-1$
 		}
@@ -146,6 +148,7 @@ public class DatabaseError {
 		if (el instanceof String) return ((String)el);
 		if (el instanceof Integer) return Integer.toString(((Integer)el));
 		if (el instanceof Exception) return ((Exception)el).getClass().getSimpleName();
+		if (el instanceof FSPath) return ((FSPath)el).toAbsolutePathString();
 
 		return null;
 	}
@@ -170,6 +173,8 @@ public class DatabaseError {
 			esf.setVisible(true);
 		} else if (Element1 instanceof File) {
 			FilesystemUtils.showInExplorer(FSPath.create((File) Element1));
+		} else if (Element1 instanceof FSPath) {
+			FilesystemUtils.showInExplorer((FSPath) Element1);
 		}
 
 		if (Element2 != null)
@@ -188,6 +193,8 @@ public class DatabaseError {
 				esf.setVisible(true);
 			} else if (Element2 instanceof File) {
 				FilesystemUtils.showInExplorer(FSPath.create((File) Element2));
+			} else if (Element2 instanceof FSPath) {
+				FilesystemUtils.showInExplorer((FSPath) Element2);
 			}
 		}
 

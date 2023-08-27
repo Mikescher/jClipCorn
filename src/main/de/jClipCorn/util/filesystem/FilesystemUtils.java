@@ -3,20 +3,21 @@ package de.jClipCorn.util.filesystem;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datatypes.Either3;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
+import de.jClipCorn.util.listener.ProgressCallbackMessageStepListener;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("nls")
 public class FilesystemUtils {
@@ -223,5 +224,181 @@ public class FilesystemUtils {
 
 	public static FSPath getHomePath() {
 		return FSPath.create(System.getProperty("user.home"));
+	}
+
+	public static List<FSPath> findEmptyDirectories(FSPath dir, int maxDepth, boolean returnRecursivelyEmptyDirs, @Nullable ProgressCallbackMessageStepListener pcl)
+	{
+		var content = dir.list().toList();
+
+		var result = new ArrayList<FSPath>();
+
+		for (var fse : content)
+		{
+			if (pcl != null) pcl.step(fse.getFilenameWithExt());
+
+			if (fse.isDirectory())
+			{
+				var r = findEmptyDirectories(fse, 1, maxDepth);
+				if (r.getValueNumber() == 1)
+				{
+					result.addAll(r.get1());
+				}
+				else if (r.getValueNumber() == 2)
+				{
+					result.add(fse);
+				}
+				else if (r.getValueNumber() == 3)
+				{
+					if (returnRecursivelyEmptyDirs) result.add(fse);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	public static boolean isEmptyDirectories(FSPath dir, int maxDepth, boolean returnRecursivelyEmptyDirs)
+	{
+		var r = findEmptyDirectories(dir, 1, maxDepth);
+		if (r.getValueNumber() == 1)
+		{
+			return false;
+		}
+		else if (r.getValueNumber() == 2)
+		{
+			return true;
+		}
+		else if (r.getValueNumber() == 3)
+		{
+			return returnRecursivelyEmptyDirs;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	private static boolean isEmptyIgnorableFile(FSPath fse)
+	{
+		if (fse.getFilenameWithExt().equalsIgnoreCase("desktop.ini")) return true;
+		if (fse.getFilenameWithExt().equalsIgnoreCase("Thumbs.db")) return true;
+		if (fse.getExtension().equalsIgnoreCase("tmp")) return true;
+
+		return false;
+	}
+
+	private static boolean isForceNonEmptyDir(FSPath fse)
+	{
+		if (fse.getDirectoryName().equalsIgnoreCase("@eaDir")) return true;
+
+		return false;
+	}
+
+	private static Either3<List<FSPath>, Boolean, Boolean> findEmptyDirectories(FSPath dir, int depth, int maxDepth)
+	{
+		if (depth > maxDepth) return Either3.V1(new ArrayList<>()); // max depth reached - tread directory as "full"
+
+		if (isForceNonEmptyDir(dir)) return Either3.V1(new ArrayList<>());
+
+		var dirContent = dir.list().toList();
+
+		var subDeletes   = new ArrayList<FSPath>();
+		var emptyDirs    = new ArrayList<FSPath>();
+		var recEmptyDirs = new ArrayList<FSPath>();
+
+		var hasFiles = false;
+		var hasEmptySubDirs = false;
+		var hasNonEmptySubDirs = false;
+
+		for (var fse : dirContent)
+		{
+			if (fse.isFile())
+			{
+				if (isEmptyIgnorableFile(fse)) continue;
+
+				hasFiles = true;
+			}
+			else if (fse.isDirectory())
+			{
+				var d = findEmptyDirectories(fse, depth+1, maxDepth);
+				if (d.getValueNumber() == 1)
+				{
+					subDeletes.addAll(d.get1());
+					hasNonEmptySubDirs = true;
+				}
+				else if (d.getValueNumber() == 2)
+				{
+					emptyDirs.add(fse);
+					hasEmptySubDirs = true;
+				}
+				else if (d.getValueNumber() == 3)
+				{
+					recEmptyDirs.add(fse);
+					hasEmptySubDirs = true;
+				}
+			}
+			else
+			{
+				hasFiles = true;
+			}
+		}
+
+		if (hasFiles)
+		{
+			// $dir has files - return delete-able sub directories
+
+			var result = new ArrayList<FSPath>();
+			result.addAll(subDeletes);
+			result.addAll(emptyDirs);
+			result.addAll(recEmptyDirs);
+			return Either3.V1(result);
+		}
+
+		if (hasNonEmptySubDirs)
+		{
+			// At least one sub-dir contains files - return delete-able sub directories
+
+			var result = new ArrayList<FSPath>();
+			result.addAll(subDeletes);
+			result.addAll(emptyDirs);
+			result.addAll(recEmptyDirs);
+			return Either3.V1(result);
+		}
+
+
+		if (hasEmptySubDirs)
+		{
+			// $dir contains no files (direct or recursive), but contains (empty) directories
+			return Either3.V3(true);
+		}
+
+		// $dir contains no files (direct or recursive), and no directories - it's truely empty
+		return Either3.V2(true);
+	}
+
+	public static boolean deleteEmptyDirectory(FSPath folder) {
+		FSPath[] files = folder.list().toArray(new FSPath[0]);
+
+		for(FSPath fse: files)
+		{
+			if (isForceNonEmptyDir(fse)) return false;
+
+			if(fse.isDirectory())
+			{
+				if (! deleteEmptyDirectory(fse)) return false;
+			}
+			else
+			{
+				if (!isEmptyIgnorableFile(fse)) return false;
+				if (! fse.deleteSafe()) return false;
+			}
+
+			if (fse.exists()) return false;
+		}
+
+		if (! folder.deleteSafe()) return false;
+		if (folder.exists()) return false;
+
+		return true;
 	}
 }

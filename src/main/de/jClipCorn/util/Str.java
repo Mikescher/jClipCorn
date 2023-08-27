@@ -5,10 +5,12 @@ import org.apache.commons.codec.binary.Base64;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("nls")
@@ -219,5 +221,14 @@ public final class Str {
 			prefix = testPrefix;
 		}
 
+	}
+
+	public static byte[] encodeUT8(String v) {
+		var bb = StandardCharsets.UTF_8.encode(v);
+		return Arrays.copyOf(bb.array(), bb.limit());
+	}
+
+	public static String decodeUTF8(byte[] v) {
+		return StandardCharsets.UTF_8.decode(ByteBuffer.wrap(v)).toString();
 	}
 }

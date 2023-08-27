@@ -9,6 +9,7 @@ import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
@@ -504,6 +505,19 @@ public class DatabaseAutofixer {
 			} catch (IOException ex) {
 				return false;
 			}
+		}
+
+		return false;
+	}
+
+	public static boolean fixError_EmptyDirectory(CCMovieList ml, DatabaseError err) {
+		if (err.getElement1() instanceof FSPath) {
+
+			var dir = (FSPath)err.getElement1();
+
+			if (!FilesystemUtils.isEmptyDirectories(dir, 5, true)) return false;
+
+			return FilesystemUtils.deleteEmptyDirectory(dir);
 		}
 
 		return false;

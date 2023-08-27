@@ -54,14 +54,15 @@ public abstract class AbstractDatabaseValidator implements ICCPropertySource {
 		boolean validateElements = vmMovies.size() + vmSeries.size() + vmSeasons.size() + vmEpisode.size() > 0;
 
 		int outerCount = 0;
-		if (validateElements) outerCount++;                // [1]
-		if (opt.ValidateCovers) outerCount++;              // [2]
-		if (opt.ValidateCoverFiles) outerCount++;          // [3]
-		if (opt.ValidateAdditional) outerCount++;          // [4]
-		if (opt.ValidateAdditional) outerCount++;          // [5]
-		if (opt.ValidateGroups) outerCount++;              // [6]
-		if (opt.ValidateOnlineReferences) outerCount++;    // [7]
-		if (opt.ValidateDatabaseConsistence) outerCount++; // [8]
+		if (validateElements) outerCount++;                       // [1]
+		if (opt.ValidateCovers) outerCount++;                     // [2]
+		if (opt.ValidateCoverFiles) outerCount++;                 // [3]
+		if (opt.ValidateDuplicateFilesByPath) outerCount++;       // [4]
+		if (opt.ValidateDuplicateFilesByMediaInfo) outerCount++;  // [5]
+		if (opt.ValidateGroups) outerCount++;                     // [6]
+		if (opt.ValidateOnlineReferences) outerCount++;           // [7]
+		if (opt.ValidateDatabaseConsistence) outerCount++;        // [8]
+		if (opt.FindEmptyDirectories) outerCount++;               // [9]
 
 		pcl.setMaxAndResetValueBoth(outerCount+1, 1);
 
@@ -71,14 +72,17 @@ public abstract class AbstractDatabaseValidator implements ICCPropertySource {
 
 		if (opt.ValidateCoverFiles) findCoverFileErrors(e, pcl); // [3]
 
-		if (opt.ValidateAdditional) findDuplicateFilesByPath(e, pcl);      // [4]
-		if (opt.ValidateAdditional) findDuplicateFilesByMediaInfo(e, pcl); // [5]
+		if (opt.ValidateDuplicateFilesByPath) findDuplicateFilesByPath(e, pcl); // [4]
+
+		if (opt.ValidateDuplicateFilesByMediaInfo) findDuplicateFilesByMediaInfo(e, pcl); // [5]
 
 		if (opt.ValidateGroups) findErrorInGroups(e, pcl); // [6]
 
 		if (opt.ValidateOnlineReferences) findDuplicateOnlineRef(e, pcl); // [7]
 
 		if (opt.ValidateDatabaseConsistence) findInternalDatabaseErrors(e, pcl); // [8]
+
+		if (opt.FindEmptyDirectories) findEmptyDirectories(e, pcl); // [9]
 
 		pcl.reset();
 	}
@@ -218,4 +222,5 @@ public abstract class AbstractDatabaseValidator implements ICCPropertySource {
 	protected abstract void findErrorInGroups(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
 	protected abstract void findDuplicateOnlineRef(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
 	protected abstract void findInternalDatabaseErrors(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
+	protected abstract void findEmptyDirectories(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
 }

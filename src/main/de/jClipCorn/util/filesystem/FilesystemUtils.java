@@ -21,7 +21,7 @@ import java.util.*;
 
 @SuppressWarnings("nls")
 public class FilesystemUtils {
-	private final static FSPath WORKINGDIR = FSPath.createAndNormalize(getWorkingDir());
+	private final static FSPath WORKINGDIR = FSPath.createAndNormalize(getWorkingDirStr());
 
 	private final static ArrayList<Character> VALID_FILENAME_CHARS = new ArrayList<>(Arrays.asList(
 		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Ä', 'Ö', 'Ü',
@@ -42,7 +42,7 @@ public class FilesystemUtils {
     }
 
 
-	private static String getWorkingDir() {
+	private static String getWorkingDirStr() {
 		try {
 			return new File(".").getCanonicalPath();
 		} catch (IOException e) {
@@ -54,6 +54,10 @@ public class FilesystemUtils {
 
 	public static FSPath getRealSelfDirectory() {
 		return WORKINGDIR;
+	}
+
+	public static FSPath getWorkingDirectory() {
+		return FSPath.createAndNormalize(getWorkingDirStr());
 	}
 
 	public static FSPath getAbsoluteSelfDirectory(CCProperties ccprops) {

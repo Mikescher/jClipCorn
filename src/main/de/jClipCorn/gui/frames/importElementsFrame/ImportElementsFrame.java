@@ -210,7 +210,7 @@ public class ImportElementsFrame extends JCCFrame {
 			try {
 				onAdd();
 			} catch (CCFormatException | CCXMLException | SerializationException e) {
-				DialogHelper.showDispatchError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExportf")); //$NON-NLS-1$ //$NON-NLS-2$
+				DialogHelper.showDispatchError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$ //$NON-NLS-2$
 				CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
 			}
 		});

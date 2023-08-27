@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
@@ -20,7 +22,7 @@ public class SimpleFileUtils {
 		
 		try {
 			InputStream is = c.getResourceAsStream(resourcename);
-			if (is == null) throw new IOException();
+			if (is == null) throw new IOException("resource '" + resourcename + "' not found");
 			reader = new BufferedReader(new InputStreamReader(is, Str.UTF8));
 			String s;
 			boolean first = true;
@@ -45,6 +47,36 @@ public class SimpleFileUtils {
 			if (is == null) throw new IOException();
 			return ImageIO.read(is);
 		}
+	}
+
+	public static List<String> listResources(String path, Class<?> c) throws IOException {
+		List<String> filenames = new ArrayList<>();
+
+		try (var in = c.getResourceAsStream(path))
+		{
+			if (in == null) return new ArrayList<>();
+
+			try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+				String resource;
+				while ((resource = br.readLine()) != null)
+				{
+					var subres = c.getResource(path + resource);
+					if (subres == null) continue;
+					if (new File(subres.getPath()).isFile()) //$NON-NLS-1$
+					{
+						filenames.add(path + resource);
+					}
+					else
+					{
+						filenames.add(path + resource + "/");
+						filenames.addAll(listResources(path + resource + "/", c));
+					}
+
+				}
+			}
+		}
+
+		return filenames;
 	}
 
 	public static void writeRawResource(FSPath out, String resourcename, Class<?> c) throws IOException {

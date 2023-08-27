@@ -1,6 +1,7 @@
-jClipCorn [![Build Status](https://api.travis-ci.org/Mikescher/jClipCorn.svg)](https://travis-ci.org/Mikescher/jClipCorn)
+jClipCorn
 ------------------
-*a portable movie and series manager for Windows and Linux*
+*a portable movie and series manager for Windows and Linux*  
+*... mostly for personal use (& friends), but I spent enough time polishing it, that anyone can easily use it*
 
 
 
@@ -8,23 +9,25 @@ jClipCorn [![Build Status](https://api.travis-ci.org/Mikescher/jClipCorn.svg)](h
 > Use this software only in a country which allows for private copies of your bought DVD's.  
 > Use this software only to manage copies of movies which you own.  
 
-![main-view](README-FILES/main-view.png)
+![main-view](README-FILES/main-view_1.10-dark.png)
 
 ### Main Features
 
  - Fully portable - leave the program, the database and the settings on the same *(external)* drive as your movies
  - Multi language (German & English), if you want you can help me translate it into other languages.
- - Parse meta data from the [IMDB](http://www.imdb.com/)
+ - Parse metadata from the [IMDB](http://www.imdb.com/), [TMDB](https://www.themoviedb.org/), [MAL](https://myanimelist.net/) and more
  - Filter your movies by many different criterias (date, genre, name, film series, quality, language, MPAA rating ...)
  - Remember which movies you have watched and where you are in a series
  - Automatically generate nice file names and folder structures for your movies and series
  - Generate statistics from your ClipCorn database
- - Tag and rate your watched movies
+ - Tag, rate and comment your watched movies
  - Works under Windows, Linux *(and probably OS X)*
+ - Compare different databases and create diffs/patches
+ - Keep a full history of all changes
 
 # [> DOWNLOAD](http://www.github.com/Mikescher/jClipCorn/releases)  
 ### [> HOMEPAGE](http://www.mikescher.com/programs/view/jClipCorn)  
-### [> GITHUB WIKI](https://github.com/Mikescher/jClipCorn/wiki)  
+### [> GITHUB WIKI](https://github.com/Mikescher/jClipCorn/wiki)  *(out of date)*
 ### [> CHANGELOG](https://raw.githubusercontent.com/Mikescher/jClipCorn/master/CHANGELOG.txt)  
 
 ### Organization
@@ -60,11 +63,11 @@ First copy the executable (either jClipCorn.jar or jClipCorn.exe) into the folde
 
 On the first start it should create a folder "*ClipCornDB*" where the database is stored.
 
-![main-empty-metal](https://raw.githubusercontent.com/wiki/Mikescher/jClipCorn/FILES/main-empty-metal.png)
+![main-empty-metal](README-FILES/main-view_1.10-light.png)
 
 You can see this in the log view (icon in the bottom status bar, to the right of the progress bar).
 
-![log-recreate](https://raw.githubusercontent.com/wiki/Mikescher/jClipCorn/FILES/log-recreate.png)
+![log-recreate](README-FILES/log-view-1.10-light.png)
 
 At first you should look into the settings and eventually change a few things, important are:
 

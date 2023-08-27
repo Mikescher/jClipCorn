@@ -67,12 +67,8 @@ compileJava.options.encoding = 'UTF-8'
 // 
 // [betaJar]          Used by local - create a new beta version, increment version etc
 // [manualReleaseJar] Used by local - create a new release, based on the latest tag version
-//
-// Other:
-// ======
-//
-// [anyReleaseJar] create release/beta, depending on config in Main.java
-// [changelog]     create changelog
+// [anyReleaseJar]    create release/beta, depending on config in Main.java
+// [changelog]        create changelog
 //
 
 jar {

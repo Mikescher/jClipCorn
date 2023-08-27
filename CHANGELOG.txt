@@ -1,5 +1,231 @@
 
 
+########################################################################
+############ Mon Aug 28 00:49:44 2023 +0200  1.10.0 RELEASE ############
+########################################################################
+
+
+1.10.10 Feature: Added {OpenAllInBrowser} action && group online-refs in menubars
+1.10.10 Bugfix: Fix PreviewMovieLayout with long score-comment
+1.10.10 Task: Added tests for missing/empty/incomplete translations
+1.10.10 Task: Added FSPath (recursive) iterators
+1.10.10 Task: Upgrade gradle to 8.3
+1.10.10 Feature: Find (recursively) empty directories in CheckDatabaseFrame
+1.10.10 Feature: Use `dolphin --select $1` when run under KDE
+1.10.10 Bugfix: Fix initially grayed-out ClipCharSelector buttons under windows
+1.10.10 Feature: Add per-season online-ref button to PreviewSeriesFrame
+1.10.10 Task: Improve ProgressCallbackProgressMonitorHelper performance (for e.g. backups)
+1.10.10 Bugfix: Fix supportedTypes of StatisticsMediaInfoFramerateChart
+1.10.10 Bugfix: Fix tests
+1.10.10 Feature: Added searchfield to keystroke-settings tab
+1.10.10 Feature: Show episode/season user-rating in StatisticsFrame
+1.10.10 Task: [FORMDEV_MIG] Migrate StatisticsFrame to FormDev
+1.10.10 Bugfix: Fix guessNextSeasonTitle not working for single-season series
+1.10.10 Feature: Added BatchEdit method: `METADATA_READALL`
+1.10.10 Bugfix: Fix ClipCharSelector not resetting when clearing filter from other component
+1.10.10 Bugfix: Fix out-of-bounds drawing of longer group names on cover
+1.10.10 Bugfix: Fix backup progressbar
+1.10.10 Task: Remove CCLog printout deduplication code
+1.10.10 Feature: Limit amount of displayed subtitles in table
+1.10.10 Feature: Dynamically de-emphasize CharSelector buttons
+1.10.10 Feature: Autofill season title in AddSeasonFrame
+1.10.10 Feature: Reset sort-order when clicking [All] in ClipSidebar or ClipCharSelector
+1.10.10 Task: Add nicer dialog at success/failure of CSFSFrame
+1.10.10 Task: Prevent opening move-player for non-existant filepaths
+1.10.10 Task: Add cleanup gitea test workflow
+1.10.10 Bugfix: Fix gitea test workflow
+1.10.10 Task: Set EditScoreFrame to lineWrap=true
+1.10.10 Feature: Added filter in UpdateMetadataFrma
+1.10.10 Bugfix: Fix MAL parser (HTML has changed)
+1.10.10 Task: [FORMDEV_MIG] Migrate InputErrorDialog to FormDev
+1.10.10 Task: Disable `ignore` button if InputError cannot be ignore
+1.10.10 Bugfix: Fix languagefile encoding (encode as UTF-8)
+1.10.10 Bugfix: Fix sort-order of CCUserScore
+1.10.10 Task: Remove unused classes (TableSorter)
+1.10.10 Bugfix: Fix duplicate tooltip in language display
+1.10.10 Bugfix: Fix `testDatabaseValidator` test
+1.10.10 Bugfix: Fix MetadataRunner tests
+1.10.10 Bugfix: Fix serialization roundtrip of mediainfo
+1.10.10 Other: Added gitea workflow for tests
+1.10.10 Other: Add _data folder to source control
+1.10.10 Bugfix: Fix PROP_CHECKDATABASE_OPT_SEASONS not being saved
+1.10.10 Task: Hide Tags column in PrevSeriesFrame if its empty
+1.10.10 Feature: Get IMDB ID for  series in TMDB parser
+1.10.10 Feature: Implement wordwrap for language displays in PreviewSeriesFrame
+1.10.10 Feature: Save UserScore and ScoreComment per Movie/Series/Season/Episode
+1.10.10 Task: Delete (unused) table renderer
+1.10.10 Task: [FORMDEV_MIG] Migrate ParseWatchDataFrame to FormDev
+1.10.10 Task: Improve sqlite pragma validation messages
+1.10.10 Bugfix: Fix limited CCDatabaseHistory returning old data
+1.10.10 Task: Improve CCDatabaseHistory performance
+1.10.10 Feature: Change default action in DatabaseHistoryFrame to limt<1024>
+1.10.10 Feature: Warn when OmniParser returns too few/many entries
+1.10.10 Task: [FORMDEV_MIG] Migrate OmniParserFrame to FormDev
+1.10.10 Task Replace CCMediaInfo with PartialMediaInfo
+1.10.10 Bugfix: Fix wrong error ins CSFSFrame
+1.10.10 Bugfix: Fix CCUserScore texts
+1.10.10 Task refactor jClipCorn.features.metadata (MediaQueryRunner & co)
+1.10.10 Task Added tests for MetadataSource.query
+1.10.10 Task: [FORMDEV_MIG] Migrate EditMediaInfoDialog to FormDev
+1.10.10 Bugfix: Fix PreviewSeriesFrame->setTag setting tag on episode instead of series
+1.10.10 Task: [FORMDEV_MIG] Migrate CreateSeriesFolderStructureFrame to FormDev
+1.10.10 Feature: Show ordinal counter in WatchHistoryFrame
+1.10.10 Bugfix: Fix empty language being used in series folder
+1.10.10 Bugfix: Fix ShowInFolder under linux (for single files)
+1.10.10 Bugfix: Fix splitArguments of vlcpath
+1.10.10 Bugfix: Fix ShowInFolder under linux
+1.10.10 Bugfix: Fix languages like 'de-de' not being recognized
+1.10.10 Bugfix: Fix placeholder in AddSeasonFrame title
+1.10.10 Feature: Make various tool-path settings configurable per-host:
+  - PROP_PLAY_VLC_PATH
+  - PROP_PLAY_MEDIAINFO_PATH
+  - PROP_PLAY_FFMPEG_PATH
+  - PROP_PLAY_FFPROBE_PATH
+  - PROP_PLAY_MP4BOX_PATH
+1.10.10 Bugfix: Fix exception when calculating [avg|median|...] length of season without episodes
+1.10.10 Task: Improve speed of DatabaseHistoryFrame (a bit)
+1.10.10 Bugfix: Improve general performance while LogFrame is open (with active CCLogListener)
+1.10.10 Feature: Add setting: SKIP_DEFAULT_LANG_IN_FILENAMES
+1.10.10 Task: [FORMDEV_MIG] Migrate MassMoveSeriesDialog to FormDev
+1.10.10 Task: [FORMDEV_MIG] Migrate MassMoveMoviesDialog to FormDev
+1.10.10 Task: [FORMDEV_MIG] Migrate MoveSeriesFrame to FormDev
+1.10.10 Task: Improve JCCSimpleTable configureColumn interface (use builder pattern)
+1.10.10 Task: Added new Validations: SUBTITLE_MUTED && INVALID_ONLINESCORE
+1.10.10 Task: Add new 'TOOLS' tab in Settingsframe
+1.10.10 Feature: Autom. determine number of digits in episode filename
+1.10.10 Feature: Added option to quickly choose common paths in ScanFolderFrame
+1.10.10 Task: [FORMDEV_MIG] Migrate ScanFolderFrame to FormDev
+1.10.10 Feature: Added config option SeriesViewCountMode
+1.10.10 Task: Rename UserRatings to no longer include "movie"
+1.10.10 Task: Show a messagebox if DB-write fails
+1.10.10 Feature: do not delete movie/episode files in patch if cbNoVideoCopy is set
+1.10.10 Bugfix: Fix ApplyPatch error messages
+1.10.10 Bugfix: Fix unhandled exception under linux in DriveMap
+1.10.10 Task: upgrade flatlaf (and other dependencies)
+1.10.10 Task: change CCPathVar settings layout
+1.10.10 Feature: Added QuickFilter to LanguageSetChooser and LanguaeChooser
+1.10.10 Feature: Added new language `Basque`
+1.10.10 Bugfix: Fix padding of ClipStatusbar
+1.10.10 Feature: Extend CustomCharFilter via Filterbar
+1.10.10 Bugfix: Fix layout of AddMovieFrame
+1.10.10 Bugfix: Fix padding in JCCTimeSpinner, JCCDateSpinner, JCCDateTimeSpinner
+1.10.10 Bugfix: Fix ConcurrentModificationException in CalcCache (on startup)
+1.10.10 Bugfix: Fix number display (year) in ParseOnlineDialog
+1.10.10 Bugfix: Fix padding in YearSpinner
+1.10.10 Bugfix: Fix manually insert in JYearSpinner
+1.10.10 Feature: Show more cache info in LogFrame
+1.10.10 Bugfix: Fix live display in LogFrame
+1.10.10 Bugfix: Fix `Elements` view in statusbar
+1.10.10 Feature: Colors for +1/-1 score icons
+1.10.10 Bugfix: Fix score display in PreviewMovieFrame
+1.10.10 Task: [FORMDEV_MIG] Migrate ShowUpdateFrame to FormDev
+1.10.10 Bugfix: Fix button size in QuickAddMoviesDialog
+1.10.10 Feature: Namespace PathVars by Hostname
+1.10.10 Feature: Add languages [Welsh], [Catalan], [Galician], [Ukrainian]
+1.10.10 Other: Commit commit-msg hook
+1.10.10 Bugfix: Fixed getCommonPath returning broke paths
+1.10.10 Feature: Added more options to Database-patch-generation (no-update-cover, no-update-files, no-mediainfo-recalc)
+1.10.10 Task: Improve window-size of AddMultiEpisodeFrame
+1.10.10 Task: Improve window-size of AddMovieFrame
+1.10.10 Task: More logs when testWritePermissions fails
+1.10.10 Bugfix: Fixed Exception in getCommonPathStart
+1.10.10 Task: Add ISO Date parsing to WatchDataParser
+1.10.10 Task: trying to make it build under Linux/Intellij
+1.10.10 Bugfix: Fixed Onlinescore not being applied from ParseOnlineDialog
+1.10.10 Bugfix: Fixed PreviewSeriesFrame with really long titles
+1.10.10 Feature: Added Sorted-Add-option for AddMultipleEpisodesFrame
+1.10.10 Task: Do not use mangled windows paths
+1.10.10 Task: Do not use mangled windows paths
+1.10.10 Feature: Added ScoreComment field and Score to Episode+Season (No UI for now)
+1.10.10 Bugfix: Fixed OnlineScoreControl not being updated
+1.10.10 Feature: Changed Onlinescore from simple number to X/Y value
+1.10.10 Bugfix: Fix sorting by Zyklus
+1.10.10 Bugfix: Fixed dirty events for some components
+1.10.10 Task: Improve MediaQuery language detection
+1.10.10 Feature: Added more methods to BatchEditFrame (for lang+subs)
+1.10.10 Task: Refactor SerTable (with JCCPrimaryTable)
+1.10.10 Task: Refactor ClipTable
+1.10.10 Bugfix: Fix some corner cases when reading subtitle languages
+1.10.10 Bugfix: Fix CCMediaInfo::isEqual
+1.10.10 Bugfix: Fix CCDBLanguageList::isEqual
+1.10.10 Feature: Save Subtitle Languages in DB (2: UI)
+1.10.10 Feature: Save Subtitle Languages in DB (1: Schema)
+1.10.10 Task: Rename LanguageList to LanguageSet
+1.10.10 Task: Small changes in CCDatabaseValidator
+1.10.10 Task: [FORMDEV_MIG] Migrate CheckDatabaseFrame to FormDev
+1.10.10 Task: [FORMDEV_MIG] Migrate BackupsManagerFrame to FormDev
+1.10.10 Task: Remove beanutils-custombuild hack
+1.10.10 Feature: Option to create backup before applying patch
+1.10.10 Bugfix: Fix unittests
+1.10.10 Task: Remove (very old) gradle hack to fix transitive dependencies resolution
+1.10.10 Task: Update dependencies
+1.10.10 Task: Other (intellig project analysis)
+1.10.10 Task: Refactor WebConnectionLayer from singelton to CCMovielist instance field
+1.10.10 Task: Added Tests for CompareDatabase & PatchDatabase
+1.10.10 Task: New FastVideoHash Version (v2) - support for multiple (up to 9) files in one hash
+1.10.10 Task: Refactor CCProperties away from global-static singleton
+1.10.10 Task: Make (DB)Statements class field of CCDatabase (so UnitTests can load multiple db's in parallel)
+1.10.10 Task: Added Metadata to DBValidator errors (for better display of cause)
+1.10.10 Task: [Integration Test] testDatabaseCheck()
+1.10.10 Task: (integration) tests ... continue [WIP]
+1.10.10 Task: Add (integration) test, by creating actual db with actual data in junit [WIP]
+1.10.10 Task: Refactoring CCMediaInfo. CCMI is now always either fully-empty or fully-set. For everything else there is PartialMediaInfo
+1.10.10 Task: Some more UnitTests
+1.10.10 Feature: Live update HistoryFrame (needed better CCDBUpdateListener impl)
+1.10.10 Task: [FORMDEV_MIG] Migrate PreviewMovieFrame to FormDev
+1.10.10 Task: [FORMDEV_MIG] Migrate PreviewSeriesFrame to FormDev
+1.10.10 Feature: Highlight active Tag/Score in menubar
+1.10.10 Feature: Highlight active Tag/Score in popup menu
+1.10.10 Bugfix: Fixed unittests and bugs from last commit
+1.10.10 Task: Split Elements table into Series+Movies, also refactor DB code
+1.10.10 Task: Remove code for ApacheDerby (-> no longer supported)
+1.10.10 Bugfix: Revert accidentally deleted locale entries in 6fe0f796
+1.10.10 Task: [FORMDEV_MIG] Migrate AboutFrame to FormDev
+1.10.10 Task: Use CCPath and FSPath everywhere [FIN]
+1.10.10 Task: Use CCFileSize everywhere
+1.10.10 Task: Use CCPath and FSPath everywhere [WIP]
+1.10.10 Task: Use CCPath and FSPath everywhere [WIP]
+1.10.10 Task: Use CCPath and FSPath everywhere [WIP]
+1.10.10 Task: Use CCPath and FSPath everywhere [WIP]
+1.10.10 Bugfix: Fix exception in ApplyPatchFrame
+1.10.10 Task: [FORMDEV_MIG] Migrate EditSeriesFrame to FormDev
+1.10.10 Feature: Option to put existing series in ApplyPatchFrame into the existing dir
+1.10.10 Task: [FORMDEV_MIG] Migrate EditMovieFrame to FormDev
+1.10.10 Task: [FORMDEV_MIG] Migrate AddMovieFrame to FormDev
+1.10.10 Bugfix: Allow pasting of non-trimmed strings to JYearSpinner
+1.10.10 Task: [FORMDEV_MIG] Migrate AddSeasonFrame to FormDev
+1.10.10 Feature: Added Genre: 'Seinen'
+1.10.10 Task: [FORMDEV_MIG] Migrate CoverCropDialog to FormDev (+ a few features)
+1.10.10 Bugfix: Change Sidebar from "IMDB-Score" to "Online-Score"
+1.10.10 Bugfix: Fixed error in build gradle
+1.10.10 Bugfix: Fixed UnitTest
+1.10.10 Bugfix: Fixed Exception in setDefaultValues()
+1.10.10 Bugfix: Fixed Bug in CompareDatabaseFrame (NeedUpdateCover was inverted)
+1.10.10 Feature: New CompareDatabaseFrame [FIN]
+1.10.10 Feature: New CompareDatabaseFrame [WIP]
+1.10.10 Feature: New CompareDatabaseFrame [WIP]
+1.10.10 Feature: New CompareDatabaseFrame [WIP]
+1.10.10 Feature: Added DatabaseError: ERROR_DB_TOO_LARGE_COVERID
+1.10.10 Task: Moved all properties into EProp fields (even localid, coverid, groups, ...)
+1.10.10 Feature: New CompareDatabaseFrame [WIP]
+1.10.10 Feature: ZipStream
+1.10.10 Feature: Update MainFrame Toolbar (after settings changed) without full program restart
+1.10.10 Feature: New CompareDatabaseFrame [WIP]
+1.10.10 Task: Cleaned up some deprecated method calls
+1.10.10 Bugfix: Fixed CoverLabel async loading animation not showing
+1.10.10 Task: CCMovieList is no longer a singleton, can be instantiated multiple times
+1.10.10 Feature: New CompareDatabaseFrame [WIP]
+1.10.10 Bugfix: Fixed two errors from previous refactoring
+1.10.10 Task: Refactor codebase to use custom property fields in central model classes
+1.10.10 Task: Auto-select first row in CustomFilterEditDialog
+1.10.10 Task: Specify viewed-times-x colors in code
+1.10.10 Bugfix: Fix slow group re-ordering in GroupManageFrame
+1.10.10 Task: [FORMDEV_MIG] Migrate GroupManageFrame to FormDev
+1.10.10 Bugfix: Select entries in EditCustomFilter Combobox via keypresses
+1.10.10 Task: [FORMDEV_MIG] Migrate CustomFilterEditDialog to FormDev
+1.10.10 Task: [FORMDEV_MIG] Migrate MainFrame to FormDev
+
+
 #######################################################################
 ############ Tue Mar 9 14:31:57 2021 +0100  1.10.9 RELEASE ############
 #######################################################################

@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.7" encoding: "UTF-8"
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.8" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -104,6 +104,7 @@ new FormModel {
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
 						"gridY": 2
+						"gridWidth": 3
 					} )
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.OnlineRefButton" ) {
 						name: "btnOnlineRef"
@@ -129,6 +130,7 @@ new FormModel {
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
 						"gridY": 4
+						"gridWidth": 3
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label3"
@@ -178,6 +180,7 @@ new FormModel {
 						"gridX": 6
 						"gridY": 10
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridWidth": 3
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label7"
@@ -192,6 +195,7 @@ new FormModel {
 						"gridX": 6
 						"gridY": 12
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+						"gridWidth": 3
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label6"
@@ -317,14 +321,21 @@ new FormModel {
 						"gridY": 26
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
 					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "lblScoreComment"
-						"text": "text"
-						"border": new javax.swing.border.LineBorder( new com.jformdesigner.model.SwingColor( "Borders.ContrastBorderColor" ), 1, false )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrlScoreComment"
+						"horizontalScrollBarPolicy": 31
+						add( new FormComponent( "javax.swing.JTextArea" ) {
+							name: "edScoreComment"
+							"lineWrap": true
+							"wrapStyleWord": true
+							"editable": false
+						} )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 8
-						"gridY": 26
+						"gridY": 14
 						"gridWidth": 3
+						"gridHeight": 13
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label13"

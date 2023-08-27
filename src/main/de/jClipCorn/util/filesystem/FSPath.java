@@ -3,6 +3,7 @@ package de.jClipCorn.util.filesystem;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.stream.CCStream;
@@ -138,7 +139,7 @@ public class FSPath implements IPath, Comparable<FSPath> {
 	public String readAsUTF8TextFile() throws IOException
 	{
 		var result = readAsTextFile(Str.UTF8, SimpleFileUtils.LINE_END);
-		if (result.length()>0 && result.charAt(0) == 0xFEFF) result = result.substring(1); // remove BOM
+		if (!result.isEmpty() && result.charAt(0) == 0xFEFF) result = result.substring(1); // remove BOM
 		return result;
 	}
 
@@ -209,6 +210,22 @@ public class FSPath implements IPath, Comparable<FSPath> {
 		return CCStreams.iterate(ls).map(FSPath::create).filter(ff::accept);
 	}
 
+	public CCStream<FSPath> listRecursiveDepthFirst() {
+		return new FSPathDepthFirstIterator(this, Opt.empty());
+	}
+
+	public CCStream<FSPath> listRecursiveDepthFirst(int maxDepth) {
+		return new FSPathDepthFirstIterator(this, Opt.of(maxDepth));
+	}
+
+	public CCStream<FSPath> listRecursiveBreadthFirst() {
+		return new FSPathBreadthFirstIterator(this, Opt.empty());
+	}
+
+	public CCStream<FSPath> listRecursiveBreadthFirst(int maxDepth) {
+		return new FSPathBreadthFirstIterator(this, Opt.of(maxDepth));
+	}
+
 	public String getFilenameWithoutExt() {
 		int liop = _path.lastIndexOf('.');
 		if (liop > 0) {
@@ -252,7 +269,7 @@ public class FSPath implements IPath, Comparable<FSPath> {
 
 	public void mkdirsWithException() throws IOException {
 		var r = toFile().mkdirs();
-		if (!r) throw new IOException("Failed to mkdir Direction '"+_path+"' (returned false)");
+		if (!r) throw new IOException("Failed to mkdir directory '"+_path+"' (returned false)");
 	}
 
 	public boolean renameToSafe(FSPath pnew) {
@@ -464,6 +481,11 @@ public class FSPath implements IPath, Comparable<FSPath> {
 		//this is only a very rudimentary implementation, should later
 
 		args = args.trim();
-		return CCStreams.iterate(args.split(" ")).filter(p -> !p.equals("")).toArray(new String[0]);
+		return CCStreams.iterate(args.split(" ")).filter(p -> !p.isEmpty()).toArray(new String[0]);
+	}
+
+	public void touch() throws IOException {
+		var r = toFile().createNewFile();
+		if (!r) throw new IOException("Failed to touch path '"+_path+"' (returned false)");
 	}
 }

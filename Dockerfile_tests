@@ -1,6 +1,4 @@
-FROM amazoncorretto:17
-
- # needs `amazoncorretto:17`, because settings -> gradle -> "Gradle JVM"
+FROM amazoncorretto:20
 
 COPY . /source
 

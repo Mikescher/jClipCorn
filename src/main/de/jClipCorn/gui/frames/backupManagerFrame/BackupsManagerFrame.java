@@ -322,51 +322,51 @@ public class BackupsManagerFrame extends JCCFrame
 			{
 				panel2.setLayout(new FormLayout(
 					"pref, 12dlu, default:grow", //$NON-NLS-1$
-					"3*(default, $lgap), default")); //$NON-NLS-1$
+					"3*(default, $lgap), 0dlu:grow")); //$NON-NLS-1$
 
 				//---- btnRestore ----
 				btnRestore.setText(LocaleBundle.getString("BackupsManagerFrame.btnRestoreBackup.text")); //$NON-NLS-1$
 				btnRestore.addActionListener(e -> restoreBackup());
-				panel2.add(btnRestore, CC.xy(1, 1, CC.LEFT, CC.DEFAULT));
+				panel2.add(btnRestore, CC.xy(1, 1, CC.FILL, CC.DEFAULT));
 
 				//======== panel3 ========
 				{
 					panel3.setBorder(new EtchedBorder());
 					panel3.setLayout(new FormLayout(
-						"$lcgap, pref:grow, $lcgap", //$NON-NLS-1$
-						"default, $lgap, default, 5dlu, default, $lgap, default, 5dlu, default")); //$NON-NLS-1$
+						"$rgap, pref:grow, $rgap", //$NON-NLS-1$
+						"$rgap, 4*(default, $lgap), default, $rgap")); //$NON-NLS-1$
 
 					//---- lblInfoCreateBackups ----
 					lblInfoCreateBackups.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.CreateBackups")); //$NON-NLS-1$
-					panel3.add(lblInfoCreateBackups, CC.xy(2, 1));
+					panel3.add(lblInfoCreateBackups, CC.xy(2, 2));
 
 					//---- lblInfoCreationTime ----
 					lblInfoCreationTime.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.CreationTime")); //$NON-NLS-1$
-					panel3.add(lblInfoCreationTime, CC.xy(2, 3));
+					panel3.add(lblInfoCreationTime, CC.xy(2, 4));
 
 					//---- lblInfoAutoDelete ----
 					lblInfoAutoDelete.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.AutoDelete")); //$NON-NLS-1$
-					panel3.add(lblInfoAutoDelete, CC.xy(2, 5));
+					panel3.add(lblInfoAutoDelete, CC.xy(2, 6));
 
 					//---- lblInfoAutoDeletAfter ----
 					lblInfoAutoDeletAfter.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.DeletionTime")); //$NON-NLS-1$
-					panel3.add(lblInfoAutoDeletAfter, CC.xy(2, 7));
+					panel3.add(lblInfoAutoDeletAfter, CC.xy(2, 8));
 
 					//---- lblInfoLastBackup ----
 					lblInfoLastBackup.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.LastBackup")); //$NON-NLS-1$
-					panel3.add(lblInfoLastBackup, CC.xy(2, 9));
+					panel3.add(lblInfoLastBackup, CC.xy(2, 10));
 				}
 				panel2.add(panel3, CC.xywh(3, 1, 1, 7));
 
 				//---- btnOpenInExplorer ----
 				btnOpenInExplorer.setText(LocaleBundle.getString("BackupsManagerFrame.btnOpenInExplorer.text")); //$NON-NLS-1$
 				btnOpenInExplorer.addActionListener(e -> openBackupDir());
-				panel2.add(btnOpenInExplorer, CC.xy(1, 3, CC.LEFT, CC.DEFAULT));
+				panel2.add(btnOpenInExplorer, CC.xy(1, 3, CC.FILL, CC.DEFAULT));
 
 				//---- btnDelete ----
 				btnDelete.setText(LocaleBundle.getString("BackupsManagerFrame.btnDelete.text")); //$NON-NLS-1$
 				btnDelete.addActionListener(e -> deleteBackup());
-				panel2.add(btnDelete, CC.xy(1, 5, CC.LEFT, CC.DEFAULT));
+				panel2.add(btnDelete, CC.xy(1, 5, CC.FILL, CC.DEFAULT));
 			}
 			panel1.add(panel2, CC.xywh(1, 21, 5, 1, CC.FILL, CC.FILL));
 		}
@@ -380,7 +380,7 @@ public class BackupsManagerFrame extends JCCFrame
 			scrollPane1.setViewportView(lsBackups);
 		}
 		contentPane.add(scrollPane1, CC.xy(4, 2, CC.FILL, CC.FILL));
-		setSize(800, 500);
+		setSize(800, 575);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}

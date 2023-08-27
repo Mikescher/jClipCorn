@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.4.0.360" Java: "11.0.11" encoding: "UTF-8"
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.8" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -159,7 +159,7 @@ new FormModel {
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "pref, 12dlu, default:grow"
-					"$rowSpecs": "default, linegap, default, linegap, default, linegap, default"
+					"$rowSpecs": "default, linegap, default, linegap, default, linegap, 0dlu:grow"
 				} ) {
 					name: "panel2"
 					add( new FormComponent( "javax.swing.JButton" ) {
@@ -169,11 +169,11 @@ new FormModel {
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 1
 						"gridY": 1
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-						"$columnSpecs": "labelcompgap, pref:grow, labelcompgap"
-						"$rowSpecs": "default, linegap, default, 5dlu, default, linegap, default, 5dlu, default"
+						"$columnSpecs": "relgap, pref:grow, relgap"
+						"$rowSpecs": "relgap, default, linegap, default, linegap, default, linegap, default, linegap, default, relgap"
 					} ) {
 						name: "panel3"
 						"border": new javax.swing.border.EtchedBorder( 1, null, null )
@@ -182,35 +182,35 @@ new FormModel {
 							"text": new FormMessage( null, "BackupsManagerFrame.infoLabels.CreateBackups" )
 						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 							"gridX": 2
-							"gridY": 1
+							"gridY": 2
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "lblInfoCreationTime"
 							"text": new FormMessage( null, "BackupsManagerFrame.infoLabels.CreationTime" )
 						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 							"gridX": 2
-							"gridY": 3
+							"gridY": 4
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "lblInfoAutoDelete"
 							"text": new FormMessage( null, "BackupsManagerFrame.infoLabels.AutoDelete" )
 						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 							"gridX": 2
-							"gridY": 5
+							"gridY": 6
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "lblInfoAutoDeletAfter"
 							"text": new FormMessage( null, "BackupsManagerFrame.infoLabels.DeletionTime" )
 						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 							"gridX": 2
-							"gridY": 7
+							"gridY": 8
 						} )
 						add( new FormComponent( "javax.swing.JLabel" ) {
 							name: "lblInfoLastBackup"
 							"text": new FormMessage( null, "BackupsManagerFrame.infoLabels.LastBackup" )
 						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 							"gridX": 2
-							"gridY": 9
+							"gridY": 10
 						} )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
@@ -223,7 +223,7 @@ new FormModel {
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 1
 						"gridY": 3
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "btnDelete"
@@ -232,7 +232,7 @@ new FormModel {
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 1
 						"gridY": 5
-						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridY": 21
@@ -263,7 +263,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 800, 500 )
+			"size": new java.awt.Dimension( 800, 575 )
 		} )
 	}
 }

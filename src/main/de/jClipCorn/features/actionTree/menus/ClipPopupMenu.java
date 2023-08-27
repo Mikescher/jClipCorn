@@ -14,6 +14,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
 import de.jClipCorn.util.lambda.Func0to0;
@@ -22,6 +23,7 @@ import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -127,14 +129,19 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 	}
 
 	@SuppressWarnings("nls")
-	protected void addOpenInBrowserAction(CCDatabaseElement src, CCOnlineReferenceList ref) {
-		if (!ref.hasAdditional()) {
+	protected void addOpenInBrowserAction(CCDatabaseElement src, CCOnlineReferenceList ref)
+	{
+		// (see also [ClipPopupMenu, ClipMenuBar, OnlineRefButton] for same logic)
+
+		if (!ref.hasAdditional() || !ref.isMainSet())
+		{
 			addAction("ShowInBrowser");
 			return;
 		}
 
 		final CCActionElement el0 = CCActionTree.getInstance().find("ShowInBrowser");
-		if (el0 == null) {
+		if (el0 == null)
+		{
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorActionNotFound", "ShowInBrowser")); //$NON-NLS-1$
 			return;
 		}
@@ -143,40 +150,73 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 		add(menu);
 		menu.setIcon(el0.getSmallIcon());
 
-		if (ref.isMainSet()) {
-			JMenuItem subitem = menu.add(ref.Main.hasDescription() ? ref.Main.description : ref.Main.type.asString());
-			subitem.setIcon(ref.Main.type.getIcon16x16());
-			if (!KeyStrokeUtil.isEmpty(el0.getKeyStroke())) subitem.setAccelerator(el0.getKeyStroke());
-			subitem.addActionListener(arg0 -> ref.Main.openInBrowser(src, ccprops()));
-			menu.add(subitem);
+		if (ref.isMainSet())
+		{
+			menu.add(mitem(
+					ref.Main.hasDescription() ? ref.Main.description : ref.Main.type.asString(),
+					ref.Main.type.getIcon16x16(),
+					el0.getKeyStroke(),
+					e -> ref.Main.openInBrowser(src, ccprops())));
 
-			if (ref.hasAdditional()) menu.addSeparator();
+			menu.addSeparator();
 		}
 
-		if (ref.hasAdditional()) {
-			for (CCSingleOnlineReference soref : CCStreams.iterate(ref.Additional).filter(r -> !r.hasDescription())) {
-				JMenuItem subitem = menu.add(soref.hasDescription() ? soref.description : soref.type.asString());
-				subitem.setIcon(soref.type.getIcon16x16());
-				subitem.addActionListener(arg0 -> soref.openInBrowser(src, ccprops()));
-				menu.add(subitem);
-			}
+		var ungrouped = CCStreams.iterate(ref.Additional).filter(r -> !r.hasDescription()).toList();
+		var grouped = CCStreams.iterate(ref.Additional).filter(CCSingleOnlineReference::hasDescription).groupBy(r -> r.description).autosortByProperty(Map.Entry::getKey).toList();
 
-			if (CCStreams.iterate(ref.Additional).any(r -> !r.hasDescription()) && CCStreams.iterate(ref.Additional).any(r -> r.hasDescription())) menu.addSeparator();
-
-			for (Map.Entry<String, List<CCSingleOnlineReference>> soreflist : CCStreams.iterate(ref.Additional).filter(CCSingleOnlineReference::hasDescription).groupBy(r -> r.description).autosortByProperty(p -> p.getKey())) {
-
-				JMenu submenu = new JMenu(soreflist.getKey());
-
-				for (CCSingleOnlineReference soref : soreflist.getValue()) {
-					JMenuItem subitem = menu.add(soref.type.asString());
-					subitem.setIcon(soref.type.getIcon16x16());
-					subitem.addActionListener(arg0 -> soref.openInBrowser(src, ccprops()));
-					submenu.add(subitem);
-				}
-
-				menu.add(submenu);
-			}
+		for (var soref : ungrouped)
+		{
+			menu.add(mitem(
+					soref.hasDescription() ? soref.description : soref.type.asString(),
+					soref.type.getIcon16x16(),
+					null,
+					e -> soref.openInBrowser(src, ccprops())));
 		}
+
+		if (!grouped.isEmpty() && !ungrouped.isEmpty()) menu.addSeparator();
+
+		for (var soreflist : CCStreams.iterate(grouped))
+		{
+
+			JMenu submenu = new JMenu(soreflist.getKey());
+
+			for (var soref : soreflist.getValue())
+			{
+				submenu.add(mitem(
+						soref.type.asString(),
+						soref.type.getIcon16x16(),
+						null,
+						e -> soref.openInBrowser(src, ccprops())));
+			}
+
+			if (soreflist.getValue().size() > 1)
+			{
+				submenu.addSeparator();
+
+				submenu.add(mitem(
+						LocaleBundle.getString("ClipMenuBar.Other.ShowAllInBrowser"),
+						Resources.ICN_MENUBAR_ONLINEREFERENCE.get16x16(),
+						null,
+						e -> openAllInBrowser(src, soreflist.getValue())));
+			}
+
+			menu.add(submenu);
+		}
+
+		if (ref.totalCount() > 2)
+		{
+			menu.addSeparator();
+
+			menu.add(mitem(
+					LocaleBundle.getString("ClipMenuBar.Other.ShowAllInBrowser"),
+					Resources.ICN_MENUBAR_ONLINEREFERENCE.get16x16(),
+					null,
+					e -> openAllInBrowser(src, ref.ccstream().toList())));
+		}
+	}
+
+	private void openAllInBrowser(CCDatabaseElement src, List<CCSingleOnlineReference> references) {
+		for (var r : references) if (r.isSet() && r.isValid()) r.openInBrowser(src, ccprops());
 	}
 
 	@SuppressWarnings("nls")
@@ -220,5 +260,15 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 	public void implementDirectKeyListener(PreviewSeriesFrame frame, JPanel contentPane)
 	{
 		for (var act : actions) act.implementDirectKeyListener(frame, frame, contentPane);
+	}
+
+	private JMenuItem mitem(String txt, Icon icn, KeyStroke ks, ActionListener act) {
+		var r = new JMenuItem(txt);
+
+		r.setIcon(icn);
+		if (!KeyStrokeUtil.isEmpty(ks)) r.setAccelerator(ks);
+		r.addActionListener(act);
+
+		return r;
 	}
 }

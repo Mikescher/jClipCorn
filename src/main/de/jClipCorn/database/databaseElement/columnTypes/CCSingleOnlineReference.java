@@ -200,7 +200,9 @@ public class CCSingleOnlineReference {
 	
 	public void openInBrowser(CCDatabaseElement src, CCProperties ccprops) {
 		if (isUnset()) {
-			if (src.isMovie()) {
+			if (src == null) {
+				HTTPUtilities.searchInBrowser("?");
+			} else if (src.isMovie()) {
 				HTTPUtilities.searchInBrowser(src.asMovie().getCompleteTitle());
 			} else if (src.isSeries()) {
 				HTTPUtilities.searchInBrowser(src.asSeries().Title.get());

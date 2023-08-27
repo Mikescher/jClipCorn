@@ -443,6 +443,8 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 
 		var seasonOnlineRefs = series.onlineReference().get().ccstream().filter(p -> p.hasDescription() && p.description.equals(season.title().get())).toList();
 
+		if (seasonOnlineRefs.isEmpty()) return;
+
 		if (seasonOnlineRefs.size() == 1) {
 			HTTPUtilities.openInBrowser(seasonOnlineRefs.get(0).getURL(movielist.ccprops()));
 			return;
@@ -455,6 +457,19 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			mi.addActionListener(e1 -> HTTPUtilities.openInBrowser(soref.getURL(movielist.ccprops())));
 			menu.add(mi);
 		}
+
+		menu.addSeparator();
+
+		{
+			JMenuItem mi = new JMenuItem(LocaleBundle.getString("ClipMenuBar.Other.ShowAllInBrowser"));
+			mi.setIcon(Resources.ICN_MENUBAR_ONLINEREFERENCE.get16x16());
+			mi.addActionListener(e1 ->
+			{
+				for (var r : seasonOnlineRefs) if (r.isSet() && r.isValid()) r.openInBrowser(series, ccprops());
+			});
+			menu.add(mi);
+		}
+
 		menu.show(e.getComponent(), e.getX(), e.getY());
 	}
 

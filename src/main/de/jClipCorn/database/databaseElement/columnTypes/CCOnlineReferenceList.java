@@ -5,6 +5,7 @@ import de.jClipCorn.util.helper.ObjectUtils;
 import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +26,7 @@ public class CCOnlineReferenceList implements CCIterable<CCSingleOnlineReference
 	}
 
 	@Override
-	public Iterator<CCSingleOnlineReference> iterator() {
+	public @NotNull Iterator<CCSingleOnlineReference> iterator() {
 		return ccstream();
 	}
 

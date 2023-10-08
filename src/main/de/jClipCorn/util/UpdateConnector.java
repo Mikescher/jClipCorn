@@ -1,5 +1,6 @@
 package de.jClipCorn.util;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.lambda.Func3to0;
 import org.json.JSONObject;
@@ -65,8 +66,10 @@ public class UpdateConnector implements Runnable {
 			updateName = "jClipCorn";
 			updateVersion = tag;
 			updateURL = root.getString("html_url");
-			updateAvailable = !version.equals(updateVersion);
-			
+			updateAvailable = !Main.BETA &&  !versionCompare(version, updateVersion);
+
+			CCLog.addInformation(Str.format("Found version {0} online (local = {1}); updateAvailable := {2}", updateVersion, version, updateAvailable));
+
 		} catch (Exception e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotParseUpdateSite", resultCode));
 			return;
@@ -95,5 +98,12 @@ public class UpdateConnector implements Runnable {
 		if (updateAvailable) {
 			HTTPUtilities.openInBrowser(updateURL);
 		}
+	}
+
+	private static boolean versionCompare(String a, String b) {
+		while(a.endsWith(".0")) a = a.substring(0, a.length()-2);
+		while(b.endsWith(".0")) b = b.substring(0, b.length()-2);
+
+		return a.equalsIgnoreCase(b);
 	}
 }

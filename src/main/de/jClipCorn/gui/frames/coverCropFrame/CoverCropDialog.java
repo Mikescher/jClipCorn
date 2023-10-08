@@ -3,13 +3,12 @@ package de.jClipCorn.gui.frames.coverCropFrame;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.gui.guiComponents.*;
+import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.jCanvasLabel.JCanvasLabel;
 import de.jClipCorn.gui.guiComponents.jCanvasLabel.PaintComponentEvent;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
-import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.ClipboardUtilities;
+import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.listener.ImageCropperResultListener;
 
@@ -43,7 +42,9 @@ public class CoverCropDialog extends JCCFrame
 
 	private final static int CROPSTATE_DRAG 		= 0b10000;
 
-	private ImageCropperResultListener listener;
+	private static Pattern rexCropParams = Pattern.compile("\\s*@CROP_PARAMS\\{(?<w>[0-9]+),(?<h>[0-9]+),(?<tlx>[0-9]+),(?<tly>[0-9]+),(?<brx>[0-9]+),(?<bry>[0-9]+)}\\s*");
+
+	private final ImageCropperResultListener listener;
 
 	private BufferedImage img;
 	private int imgheight, imgwidth;
@@ -801,7 +802,7 @@ public class CoverCropDialog extends JCCFrame
 
 	@SuppressWarnings("nls")
 	private void copyParams(ActionEvent e) {
-		var cb = Str.format("@CROP_PARAMS'{'{0},{1},{2},{3},{4},{5}'}'", imgwidth, imgheight, crop_tl.x, crop_tl.y, crop_br.x, crop_br.y);
+		var cb = String.format("@CROP_PARAMS{%d,%d,%d,%d,%d,%d}", imgwidth, imgheight, crop_tl.x, crop_tl.y, crop_br.x, crop_br.y);
 		ClipboardUtilities.setString(cb);
 	}
 
@@ -810,30 +811,36 @@ public class CoverCropDialog extends JCCFrame
 		var cb = ClipboardUtilities.getString();
 		if (cb == null) return;
 
-		var rex = Pattern.compile("@CROP_PARAMS\\{(?<w>[0-9]+),(?<h>[0-9]+),(?<tlx>[0-9]+),(?<tly>[0-9]+),(?<brx>[0-9]+),(?<bry>[0-9]+)}");
-		var m = rex.matcher(cb);
+		var m = rexCropParams.matcher(cb);
 
-		if (m.matches())
-		{
-			//var w = Integer.parseInt(m.group("w"));
-			//var h = Integer.parseInt(m.group("h"));
-			var tlx = Integer.parseInt(m.group("tlx"));
-			var tly = Integer.parseInt(m.group("tly"));
-			var brx = Integer.parseInt(m.group("brx"));
-			var bry = Integer.parseInt(m.group("bry"));
-
-			crop_tl.x = 0;
-			crop_tl.y = 0;
-			crop_br.x = imgwidth;
-			crop_br.y = imgheight;
-
-			setLeftCropChecked(tlx);
-			setTopCropChecked(tly);
-			setRightCropChecked(brx);
-			setBottomCropChecked(bry);
-
-			repaintAll();
+		if (!m.matches()) {
+			DialogHelper.showLocalError(this, "Dialogs.InvalidCCParams");
+			return;
 		}
+
+		var w = Integer.parseInt(m.group("w"));
+		var h = Integer.parseInt(m.group("h"));
+		var tlx = Integer.parseInt(m.group("tlx"));
+		var tly = Integer.parseInt(m.group("tly"));
+		var brx = Integer.parseInt(m.group("brx"));
+		var bry = Integer.parseInt(m.group("bry"));
+
+		if (w != imgwidth || h != imgheight) {
+			DialogHelper.showLocalTextFormattedError(this, "Dialogs.InvalidCCParamsSize", w, h, imgwidth, imgheight);
+			return;
+		}
+
+		crop_tl.x = 0;
+		crop_tl.y = 0;
+		crop_br.x = imgwidth;
+		crop_br.y = imgheight;
+
+		setLeftCropChecked(tlx);
+		setTopCropChecked(tly);
+		setRightCropChecked(brx);
+		setBottomCropChecked(bry);
+
+		repaintAll();
 	}
 
 	@SuppressWarnings("nls")
@@ -841,35 +848,36 @@ public class CoverCropDialog extends JCCFrame
 		var cb = ClipboardUtilities.getString();
 		if (cb == null) return;
 
-		var rex = Pattern.compile("@CROP_PARAMS\\{(?<w>[0-9]+),(?<h>[0-9]+),(?<tlx>[0-9]+),(?<tly>[0-9]+),(?<brx>[0-9]+),(?<bry>[0-9]+)}");
-		var m = rex.matcher(cb);
+		var m = rexCropParams.matcher(cb);
 
-		if (m.matches())
-		{
-			var w = Integer.parseInt(m.group("w"));
-			var h = Integer.parseInt(m.group("h"));
-			var tlx = Integer.parseInt(m.group("tlx"));
-			var tly = Integer.parseInt(m.group("tly"));
-			var brx = Integer.parseInt(m.group("brx"));
-			var bry = Integer.parseInt(m.group("bry"));
-
-			var r_tlx = (int)((tlx / (w * 1.0)) * imgwidth);
-			var r_tly = (int)((tly / (h * 1.0)) * imgheight);
-			var r_brx = (int)((brx / (w * 1.0)) * imgwidth);
-			var r_bry = (int)((bry / (h * 1.0)) * imgheight);
-
-			crop_tl.x = 0;
-			crop_tl.y = 0;
-			crop_br.x = imgwidth;
-			crop_br.y = imgheight;
-
-			setLeftCropChecked(r_tlx);
-			setTopCropChecked(r_tly);
-			setRightCropChecked(r_brx);
-			setBottomCropChecked(r_bry);
-
-			repaintAll();
+		if (!m.matches()) {
+			DialogHelper.showLocalError(this, "Dialogs.InvalidCCParams");
+			return;
 		}
+
+		var w = Integer.parseInt(m.group("w"));
+		var h = Integer.parseInt(m.group("h"));
+		var tlx = Integer.parseInt(m.group("tlx"));
+		var tly = Integer.parseInt(m.group("tly"));
+		var brx = Integer.parseInt(m.group("brx"));
+		var bry = Integer.parseInt(m.group("bry"));
+
+		var r_tlx = (int)((tlx / (w * 1.0)) * imgwidth);
+		var r_tly = (int)((tly / (h * 1.0)) * imgheight);
+		var r_brx = (int)((brx / (w * 1.0)) * imgwidth);
+		var r_bry = (int)((bry / (h * 1.0)) * imgheight);
+
+		crop_tl.x = 0;
+		crop_tl.y = 0;
+		crop_br.x = imgwidth;
+		crop_br.y = imgheight;
+
+		setLeftCropChecked(r_tlx);
+		setTopCropChecked(r_tly);
+		setRightCropChecked(r_brx);
+		setBottomCropChecked(r_bry);
+
+		repaintAll();
 	}
 
 	private void initComponents() {

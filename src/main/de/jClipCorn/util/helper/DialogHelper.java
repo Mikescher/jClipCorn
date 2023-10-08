@@ -37,9 +37,15 @@ public class DialogHelper {
 	public static boolean showLocaleYesNoDefaultNo(Component frame, String id) {
 		return showYesNoDlgDefaultNo(frame, LocaleBundle.getString(id + "_caption"), LocaleBundle.getString(id)); //$NON-NLS-1$
 	}
-	
+
 	public static void showLocalError(Component frame, String id) {
 		String text = LocaleBundle.getString(id);
+		String caption = LocaleBundle.getString(id + "_caption"); //$NON-NLS-1$
+		SwingUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.ERROR_MESSAGE));
+	}
+
+	public static void showLocalTextFormattedError(Component frame, String id, Object... args) {
+		String text = LocaleBundle.getFormattedString(id, args);
 		String caption = LocaleBundle.getString(id + "_caption"); //$NON-NLS-1$
 		SwingUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.ERROR_MESSAGE));
 	}

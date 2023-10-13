@@ -6,6 +6,7 @@ import de.jClipCorn.gui.mainFrame.MainFrame;
 
 import java.awt.*;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * For Windows/Metal Themes
@@ -65,6 +66,9 @@ public class ClipCharSortSelectorFull extends AbstractClipCharSortSelector {
 
 	@Override
 	protected void updateButtonInactive(Set<Character> chars) {
+
+		chars = chars.stream().map(Character::toUpperCase).collect(Collectors.toSet());
+
 		for (int i = 0; i < BUTTONCOUNT; i++) {
 
 			if (searches[i].isEmpty()) {

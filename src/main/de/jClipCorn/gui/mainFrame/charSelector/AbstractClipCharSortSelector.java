@@ -7,7 +7,7 @@ import de.jClipCorn.properties.CCProperties;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.Objects;
+import java.util.HashSet;
 import java.util.Set;
 
 public abstract class AbstractClipCharSortSelector extends JToolBar {
@@ -29,17 +29,28 @@ public abstract class AbstractClipCharSortSelector extends JToolBar {
 		CustomCharFilter filter;
 
 		if (search == null) {
+
+			// clear filter
 			owner.getClipTable().setRowFilter(filter = null, RowFilterSource.CHARSELECTOR, true);
+
 		} else {
 
 			var oldFilter = owner.getClipTable().getRowFilter();
 
+			var ccf = CustomCharFilter.createSingle(
+					owner.getMovielist(),
+					search,
+					ccprops().PROP_CHARSELECTOR_MATCHMODE.getValue(),
+					ccprops().PROP_CHARSELECTOR_SELMODE.getValue(),
+					ccprops().PROP_CHARSELECTOR_EXCLUSIONS.getValue(),
+					ccprops().PROP_CHARSELECTOR_IGNORENONCHARS.getValue());
+
 			if (oldFilter == null) {
 
 				// simply set filter (no old filter)
-				owner.getClipTable().setRowFilter(filter = CustomCharFilter.createSingle(owner.getMovielist(), search), RowFilterSource.CHARSELECTOR, false);
+				owner.getClipTable().setRowFilter(filter = ccf, RowFilterSource.CHARSELECTOR, false);
 
-			} else if (oldFilter.getFilter() instanceof CustomCharFilter) {
+			} else if (oldFilter.getFilter() instanceof CustomCharFilter && ((CustomCharFilter)oldFilter.getFilter()).sameMetaSettings(ccf)) {
 
 				// append
 				var fltr = (CustomCharFilter)oldFilter.getFilter();
@@ -48,7 +59,7 @@ public abstract class AbstractClipCharSortSelector extends JToolBar {
 			} else {
 
 				//override existing filter
-				owner.getClipTable().setRowFilter(filter = CustomCharFilter.createSingle(owner.getMovielist(), search), RowFilterSource.CHARSELECTOR, false);
+				owner.getClipTable().setRowFilter(filter = ccf, RowFilterSource.CHARSELECTOR, false);
 
 			}
 		}
@@ -56,22 +67,28 @@ public abstract class AbstractClipCharSortSelector extends JToolBar {
 		updateButtonOpacity(filter);
 	}
 
-	private void updateButtonOpacity(@Nullable  CustomCharFilter filter) {
+	private void updateButtonOpacity(@Nullable CustomCharFilter filter) {
 		if (!ccprops().PROP_CHARSELECTOR_DYNAMIC_OPACTITY.getValue()) return;
 
 		if (!owner.getMovielist().isLoaded()) return;
 
-		var chars = owner
-				.getMovielist()
-				.iteratorElements()
-				.filter(elem -> filter == null || filter.includes(elem))
-				.map(p -> CustomCharFilter.getRelevantCharacter(p, filter == null ? 0 : filter.getLength()))
-				.filter(Objects::nonNull)
-				.map(Character::toUpperCase)
-				.unique()
-				.toSet();
+		if (filter == null) {
+			filter = CustomCharFilter.createSingle(
+					owner.getMovielist(),
+					"",
+					ccprops().PROP_CHARSELECTOR_MATCHMODE.getValue(),
+					ccprops().PROP_CHARSELECTOR_SELMODE.getValue(),
+					ccprops().PROP_CHARSELECTOR_EXCLUSIONS.getValue(),
+					ccprops().PROP_CHARSELECTOR_IGNORENONCHARS.getValue());
+		}
 
-		updateButtonInactive(chars);
+		var hs = new HashSet<Character>();
+
+		for (var elem : owner.getMovielist().iteratorElements()) {
+			filter.collectNextChars(elem, hs);
+		}
+
+		updateButtonInactive(hs);
 	}
 
 	protected abstract void updateButtonInactive(Set<Character> chars);

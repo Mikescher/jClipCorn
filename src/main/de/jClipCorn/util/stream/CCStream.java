@@ -411,6 +411,10 @@ public abstract class CCStream<TType> implements Iterator<TType>, Iterable<TType
 		return new MapStream<>(this, selector);
 	}
 
+	public <TAttrType> CCStream<TAttrType> map(Func2to1<Integer, TType, TAttrType> selector) {
+		return this.index().map(p -> selector.invoke(p.Index, p.Value));
+	}
+
 	public CCStream<IndexEntry<TType>> index() {
 		return new IndexStream<TType>(this);
 	}

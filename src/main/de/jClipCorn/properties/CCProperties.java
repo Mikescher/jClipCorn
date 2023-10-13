@@ -16,6 +16,8 @@ import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
+import de.jClipCorn.util.datatypes.CharListMatchType;
+import de.jClipCorn.util.datatypes.ElemFieldMatchType;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTimeFormat;
 import de.jClipCorn.util.filesystem.CCPath;
@@ -212,6 +214,10 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_RESET_SORT_ON_FILTERCLEAR;
 	public CCBoolProperty                                   PROP_CHARSELECTOR_DYNAMIC_OPACTITY;
 	public CCRIntProperty                                   PROP_TABLE_MAX_SUBTITLE_COUNT;
+	public CCEnumProperty<CharListMatchType>                PROP_CHARSELECTOR_MATCHMODE;
+	public CCEnumProperty<ElemFieldMatchType>               PROP_CHARSELECTOR_SELMODE;
+	public CCBoolProperty                                   PROP_CHARSELECTOR_EXCLUSIONS;
+	public CCBoolProperty                                   PROP_CHARSELECTOR_IGNORENONCHARS;
 
 	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public boolean ARG_READONLY = false;
@@ -295,6 +301,10 @@ public class CCProperties implements ICCPropertySource {
 		PROP_MAINFRAME_VISIBLE_COLUMNS          = new CCEnumSetProperty<>(CAT_VIEW,         this,   "PROP_MAINFRAME_VISIBLE_COLUMNS",           getDefColumns(),                   MainFrameColumn.getWrapper());
 		PROP_CHARSELECTOR_DYNAMIC_OPACTITY      = new CCBoolProperty(CAT_VIEW,              this,   "PROP_CHARSELECTOR_DYNAMIC_OPACTITY",       true);
 		PROP_TABLE_MAX_SUBTITLE_COUNT           = new CCRIntProperty(CAT_VIEW,              this,   "PROP_TABLE_MAX_SUBTITLE_COUNT",            8,                                  -1, 16384);
+		PROP_CHARSELECTOR_MATCHMODE             = new CCEnumProperty<>(CAT_VIEW,            this,   "PROP_CHARSELECTOR_MATCHMODE",              CharListMatchType.WORD_START,         CharListMatchType.getWrapper());
+		PROP_CHARSELECTOR_SELMODE               = new CCEnumProperty<>(CAT_VIEW,            this,   "PROP_CHARSELECTOR_SELMODE",                ElemFieldMatchType.TITLE_AND_ZYKLUS,  ElemFieldMatchType.getWrapper());
+		PROP_CHARSELECTOR_EXCLUSIONS            = new CCBoolProperty(CAT_VIEW,              this,   "PROP_CHARSELECTOR_EXCLUSIONS",             true);
+		PROP_CHARSELECTOR_IGNORENONCHARS        = new CCBoolProperty(CAT_VIEW,              this,   "PROP_CHARSELECTOR_IGNORENONCHARS",         true);
 
 		PROP_DATABASE_NAME                      = new CCStringProperty(CAT_DATABASE,        this,   "PROP_DATABASE_NAME",                       "ClipCornDB");
 		PROP_DATABASE_DIR                       = new CCFSPathProperty(CAT_DATABASE,        this,   "PROP_DATABASE_DIR",                        FSPath.Empty,                       "",          CCPathPropertyMode.DIRECTORIES);

@@ -30,6 +30,7 @@ import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.gui.guiComponents.filesize.CCFileSizeSpinner;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button;
+import de.jClipCorn.gui.guiComponents.iconComponents.Icon16RefLink;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 import de.jClipCorn.gui.guiComponents.jYearSpinner.JYearSpinner;
@@ -1686,7 +1687,7 @@ public class EditSeriesFrame extends JCCFrame
 			pnlEditEpisode.add(ctrlEpisodeMediaInfo, CC.xy(4, 8));
 
 			//---- btnEpisodeMediaInfoMain ----
-			btnEpisodeMediaInfoMain.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+			btnEpisodeMediaInfoMain.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 			btnEpisodeMediaInfoMain.setToolTipText("MediaInfo"); //$NON-NLS-1$
 			btnEpisodeMediaInfoMain.addActionListener(e -> parseCodecMetadata_MI());
 			pnlEditEpisode.add(btnEpisodeMediaInfoMain, CC.xy(6, 8));
@@ -1697,7 +1698,7 @@ public class EditSeriesFrame extends JCCFrame
 			pnlEditEpisode.add(ctrlEpisodeLanguage, CC.xy(4, 10));
 
 			//---- btnEpisodeMediaInfoLang ----
-			btnEpisodeMediaInfoLang.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+			btnEpisodeMediaInfoLang.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 			btnEpisodeMediaInfoLang.setToolTipText("MediaInfo"); //$NON-NLS-1$
 			btnEpisodeMediaInfoLang.addActionListener(e -> parseCodecMetadata_Lang());
 			pnlEditEpisode.add(btnEpisodeMediaInfoLang, CC.xy(6, 10));
@@ -1713,7 +1714,7 @@ public class EditSeriesFrame extends JCCFrame
 			pnlEditEpisode.add(ctrlEpisodeSubtitles, CC.xy(4, 12));
 
 			//---- btnEpisodeMediaInfoSubs ----
-			btnEpisodeMediaInfoSubs.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+			btnEpisodeMediaInfoSubs.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 			btnEpisodeMediaInfoSubs.setToolTipText("MediaInfo"); //$NON-NLS-1$
 			btnEpisodeMediaInfoSubs.addActionListener(e -> parseCodecMetadata_Subs());
 			pnlEditEpisode.add(btnEpisodeMediaInfoSubs, CC.xy(6, 12));
@@ -1739,7 +1740,7 @@ public class EditSeriesFrame extends JCCFrame
 			pnlEditEpisode.add(panel1, CC.xy(4, 14));
 
 			//---- btnEpisodeMediaInfoLength ----
-			btnEpisodeMediaInfoLength.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+			btnEpisodeMediaInfoLength.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 			btnEpisodeMediaInfoLength.setToolTipText("MediaInfo"); //$NON-NLS-1$
 			btnEpisodeMediaInfoLength.addActionListener(e -> parseCodecMetadata_Len());
 			pnlEditEpisode.add(btnEpisodeMediaInfoLength, CC.xy(6, 14));

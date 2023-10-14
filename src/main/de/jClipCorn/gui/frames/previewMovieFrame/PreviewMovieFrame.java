@@ -18,10 +18,7 @@ import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.JReadableCCPathTextField;
 import de.jClipCorn.gui.guiComponents.ReadableTextField;
 import de.jClipCorn.gui.guiComponents.cover.CoverLabelFullsize;
-import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button;
-import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon32Button;
-import de.jClipCorn.gui.guiComponents.iconComponents.OnlineRefButton;
-import de.jClipCorn.gui.guiComponents.iconComponents.OnlineScoreDisplay;
+import de.jClipCorn.gui.guiComponents.iconComponents.*;
 import de.jClipCorn.gui.guiComponents.language.LanguageListDisplay;
 import de.jClipCorn.gui.guiComponents.language.LanguageSetDisplay;
 import de.jClipCorn.gui.guiComponents.tags.TagDisplay;
@@ -480,12 +477,12 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 			pnlTop.add(lblHeaderTitle, CC.xy(3, 1));
 
 			//---- btnPlay ----
-			btnPlay.setIconRef(CCIcon32Button.IconRefLink.ICN_MENUBAR_PLAY);
+			btnPlay.setIconRef(Icon32RefLink.ICN_MENUBAR_PLAY);
 			btnPlay.addActionListener(e -> playMovie());
 			pnlTop.add(btnPlay, CC.xy(5, 1, CC.DEFAULT, CC.FILL));
 
 			//---- btnPlayNoHistory ----
-			btnPlayNoHistory.setIconRef(CCIcon32Button.IconRefLink.ICN_MENUBAR_HIDDENPLAY);
+			btnPlayNoHistory.setIconRef(Icon32RefLink.ICN_MENUBAR_HIDDENPLAY);
 			btnPlayNoHistory.addActionListener(e -> playMovieNoHistory());
 			pnlTop.add(btnPlayNoHistory, CC.xy(7, 1, CC.DEFAULT, CC.FILL));
 		}
@@ -785,67 +782,67 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 				pnlTabPaths.add(edPart0, CC.xy(2, 2, CC.DEFAULT, CC.FILL));
 
 				//---- btnMediaInfo0 ----
-				btnMediaInfo0.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+				btnMediaInfo0.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 				btnMediaInfo0.addActionListener(e -> onShowMediaInfo0());
 				pnlTabPaths.add(btnMediaInfo0, CC.xy(4, 2));
 
 				//---- btnOpenDir0 ----
-				btnOpenDir0.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_FOLDER);
+				btnOpenDir0.setIconRef(Icon16RefLink.ICN_MENUBAR_FOLDER);
 				btnOpenDir0.addActionListener(e -> onOpenDir0());
 				pnlTabPaths.add(btnOpenDir0, CC.xy(6, 2));
 				pnlTabPaths.add(edPart1, CC.xy(2, 4, CC.DEFAULT, CC.FILL));
 
 				//---- btnMediaInfo1 ----
-				btnMediaInfo1.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+				btnMediaInfo1.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 				btnMediaInfo1.addActionListener(e -> onShowMediaInfo1());
 				pnlTabPaths.add(btnMediaInfo1, CC.xy(4, 4));
 
 				//---- btnOpenDir1 ----
-				btnOpenDir1.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_FOLDER);
+				btnOpenDir1.setIconRef(Icon16RefLink.ICN_MENUBAR_FOLDER);
 				btnOpenDir1.addActionListener(e -> onOpenDir1());
 				pnlTabPaths.add(btnOpenDir1, CC.xy(6, 4));
 				pnlTabPaths.add(edPart2, CC.xy(2, 6, CC.DEFAULT, CC.FILL));
 
 				//---- btnMediaInfo2 ----
-				btnMediaInfo2.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+				btnMediaInfo2.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 				btnMediaInfo2.addActionListener(e -> onShowMediaInfo2());
 				pnlTabPaths.add(btnMediaInfo2, CC.xy(4, 6));
 
 				//---- btnOpenDir2 ----
-				btnOpenDir2.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_FOLDER);
+				btnOpenDir2.setIconRef(Icon16RefLink.ICN_MENUBAR_FOLDER);
 				btnOpenDir2.addActionListener(e -> onOpenDir2());
 				pnlTabPaths.add(btnOpenDir2, CC.xy(6, 6));
 				pnlTabPaths.add(edPart3, CC.xy(2, 8, CC.DEFAULT, CC.FILL));
 
 				//---- btnMediaInfo3 ----
-				btnMediaInfo3.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+				btnMediaInfo3.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 				btnMediaInfo3.addActionListener(e -> onShowMediaInfo3());
 				pnlTabPaths.add(btnMediaInfo3, CC.xy(4, 8));
 
 				//---- btnOpenDir3 ----
-				btnOpenDir3.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_FOLDER);
+				btnOpenDir3.setIconRef(Icon16RefLink.ICN_MENUBAR_FOLDER);
 				btnOpenDir3.addActionListener(e -> onOpenDir3());
 				pnlTabPaths.add(btnOpenDir3, CC.xy(6, 8));
 				pnlTabPaths.add(edPart4, CC.xy(2, 10, CC.DEFAULT, CC.FILL));
 
 				//---- btnMediaInfo4 ----
-				btnMediaInfo4.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+				btnMediaInfo4.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 				btnMediaInfo4.addActionListener(e -> onShowMediaInfo4());
 				pnlTabPaths.add(btnMediaInfo4, CC.xy(4, 10));
 
 				//---- btnOpenDir4 ----
-				btnOpenDir4.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_FOLDER);
+				btnOpenDir4.setIconRef(Icon16RefLink.ICN_MENUBAR_FOLDER);
 				btnOpenDir4.addActionListener(e -> onOpenDir4());
 				pnlTabPaths.add(btnOpenDir4, CC.xy(6, 10));
 				pnlTabPaths.add(edPart5, CC.xy(2, 12, CC.DEFAULT, CC.FILL));
 
 				//---- btnMediaInfo5 ----
-				btnMediaInfo5.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+				btnMediaInfo5.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 				btnMediaInfo5.addActionListener(e -> onShowMediaInfo5());
 				pnlTabPaths.add(btnMediaInfo5, CC.xy(4, 12));
 
 				//---- btnOpenDir5 ----
-				btnOpenDir5.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_FOLDER);
+				btnOpenDir5.setIconRef(Icon16RefLink.ICN_MENUBAR_FOLDER);
 				btnOpenDir5.addActionListener(e -> onOpenDir5());
 				pnlTabPaths.add(btnOpenDir5, CC.xy(6, 12));
 			}

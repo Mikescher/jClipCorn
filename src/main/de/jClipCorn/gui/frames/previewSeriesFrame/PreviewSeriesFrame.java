@@ -22,6 +22,7 @@ import de.jClipCorn.gui.frames.vlcRobot.VLCRobotFrame;
 import de.jClipCorn.gui.guiComponents.*;
 import de.jClipCorn.gui.guiComponents.cover.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.guiComponents.displaySearchResultsDialog.DisplaySearchResultsDialog;
+import de.jClipCorn.gui.guiComponents.iconComponents.*;
 import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button;
 import de.jClipCorn.gui.guiComponents.iconComponents.OnlineRefButton;
 import de.jClipCorn.gui.guiComponents.iconComponents.OnlineScoreDisplay;
@@ -166,6 +167,8 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		});
 
 		new FileDrop(tabSeason, true, this::onFilesDropped);
+
+		edSearch.requestFocus();
 	}
 
 	public static void show(Component owner, CCSeries data, boolean forceNoSingleton) {
@@ -477,7 +480,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		pnlTop = new JPanel();
 		pnlTopLeft = new JPanel();
-		btnPlayNext = new JButton();
+		btnPlayNext = new CCIcon32CenterButton();
 		btnVLCRobot = new CCIcon16Button();
 		lblTitle = new JLabel();
 		pnlSearch = new JPanel();
@@ -539,16 +542,18 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			{
 				pnlTopLeft.setLayout(new FormLayout(
 					"default:grow", //$NON-NLS-1$
-					"default, $lgap, default")); //$NON-NLS-1$
+					"default:grow, $lgap, default")); //$NON-NLS-1$
 
 				//---- btnPlayNext ----
-				btnPlayNext.setText(LocaleBundle.getString("PreviewSeriesFrame.btnPlayNext.caption")); //$NON-NLS-1$
+				btnPlayNext.setIconRef(Icon32RefLink.ICN_FRAMES_NEXT);
+				btnPlayNext.setRealText(LocaleBundle.getString("PreviewSeriesFrame.btnPlayNext.caption")); //$NON-NLS-1$
+				btnPlayNext.setRealFont(btnPlayNext.getRealFont().deriveFont(btnPlayNext.getRealFont().getStyle() | Font.BOLD));
 				btnPlayNext.addActionListener(e -> onPlayNext());
-				pnlTopLeft.add(btnPlayNext, CC.xy(1, 1));
+				pnlTopLeft.add(btnPlayNext, CC.xy(1, 1, CC.DEFAULT, CC.FILL));
 
 				//---- btnVLCRobot ----
 				btnVLCRobot.setText(LocaleBundle.getString("PreviewSeriesFrame.btnPlayRobot.caption")); //$NON-NLS-1$
-				btnVLCRobot.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_VLCROBOT);
+				btnVLCRobot.setIconRef(Icon16RefLink.ICN_MENUBAR_VLCROBOT);
 				btnVLCRobot.addActionListener(e -> autoPlay());
 				pnlTopLeft.add(btnVLCRobot, CC.xy(1, 3));
 			}
@@ -572,7 +577,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 				pnlSearch.add(edSearch, CC.xy(1, 1, CC.DEFAULT, CC.FILL));
 
 				//---- btnSearch ----
-				btnSearch.setIconRef(CCIcon16Button.IconRefLink.ICN_FRAMES_SEARCH);
+				btnSearch.setIconRef(Icon16RefLink.ICN_FRAMES_SEARCH);
 				btnSearch.addActionListener(e -> startSearch());
 				pnlSearch.add(btnSearch, CC.xy(3, 1, CC.DEFAULT, CC.FILL));
 			}
@@ -753,7 +758,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JPanel pnlTop;
 	private JPanel pnlTopLeft;
-	private JButton btnPlayNext;
+	private CCIcon32CenterButton btnPlayNext;
 	private CCIcon16Button btnVLCRobot;
 	private JLabel lblTitle;
 	private JPanel pnlSearch;

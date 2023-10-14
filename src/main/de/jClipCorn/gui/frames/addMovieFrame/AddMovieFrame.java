@@ -7,7 +7,6 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.MovieDataPack;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
@@ -26,6 +25,7 @@ import de.jClipCorn.gui.guiComponents.filesize.CCFileSizeSpinner;
 import de.jClipCorn.gui.guiComponents.groupListEditor.GroupListEditor;
 import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button;
 import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Label;
+import de.jClipCorn.gui.guiComponents.iconComponents.Icon16RefLink;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 import de.jClipCorn.gui.guiComponents.jYearSpinner.JYearSpinner;
@@ -1252,7 +1252,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				pnlData.add(label29, CC.xy(5, 9));
 
 				//---- btnMediaInfoLen ----
-				btnMediaInfoLen.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+				btnMediaInfoLen.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 				btnMediaInfoLen.setToolTipText("MediaInfo"); //$NON-NLS-1$
 				btnMediaInfoLen.addActionListener(e -> calculateMediaInfoAndSetLength());
 				pnlData.add(btnMediaInfoLen, CC.xy(7, 9));
@@ -1267,7 +1267,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				pnlData.add(cbxLanguage, CC.xywh(3, 11, 3, 1));
 
 				//---- btnMediaInfoLang ----
-				btnMediaInfoLang.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+				btnMediaInfoLang.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 				btnMediaInfoLang.setToolTipText("MediaInfo"); //$NON-NLS-1$
 				btnMediaInfoLang.addActionListener(e -> calculateMediaInfoAndSetLanguage());
 				pnlData.add(btnMediaInfoLang, CC.xy(7, 11));
@@ -1286,13 +1286,13 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				pnlData.add(cbxSubtitles, CC.xywh(3, 13, 3, 1));
 
 				//---- btnMediaInfoSubs ----
-				btnMediaInfoSubs.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+				btnMediaInfoSubs.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 				btnMediaInfoSubs.setToolTipText("MediaInfo"); //$NON-NLS-1$
 				btnMediaInfoSubs.addActionListener(e -> calculateMediaInfoAndSetSubs());
 				pnlData.add(btnMediaInfoSubs, CC.xy(7, 13));
 
 				//---- lblMISubWarning ----
-				lblMISubWarning.setIconRef(CCIcon16Label.IconRefLink.ICN_WARNING_TRIANGLE);
+				lblMISubWarning.setIconRef(Icon16RefLink.ICN_WARNING_TRIANGLE);
 				pnlData.add(lblMISubWarning, CC.xy(9, 13, CC.LEFT, CC.FILL));
 
 				//---- label21 ----
@@ -1304,7 +1304,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				pnlData.add(ctrlMediaInfo, CC.xywh(3, 15, 3, 1, CC.DEFAULT, CC.FILL));
 
 				//---- btnMediaInfoMain ----
-				btnMediaInfoMain.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+				btnMediaInfoMain.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 				btnMediaInfoMain.setToolTipText("MediaInfo"); //$NON-NLS-1$
 				btnMediaInfoMain.addActionListener(e -> calculateAndSetMediaInfo());
 				pnlData.add(btnMediaInfoMain, CC.xy(7, 15));

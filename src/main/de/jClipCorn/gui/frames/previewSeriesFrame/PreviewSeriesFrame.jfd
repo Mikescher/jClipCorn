@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.8" encoding: "UTF-8"
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.8.1" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -23,21 +23,24 @@ new FormModel {
 				name: "pnlTop"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "default:grow"
-					"$rowSpecs": "default, linegap, default"
+					"$rowSpecs": "default:grow, linegap, default"
 				} ) {
 					name: "pnlTopLeft"
-					add( new FormComponent( "javax.swing.JButton" ) {
+					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon32CenterButton" ) {
 						name: "btnPlayNext"
-						"text": new FormMessage( null, "PreviewSeriesFrame.btnPlayNext.caption" )
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.Icon32RefLink ICN_FRAMES_NEXT
+						"realText": new FormMessage( null, "PreviewSeriesFrame.btnPlayNext.caption" )
+						"realFont": new com.jformdesigner.model.SwingDerivedFont( null, 1, 0, false )
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onPlayNext", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 1
 						"gridY": 1
+						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnVLCRobot"
 						"text": new FormMessage( null, "PreviewSeriesFrame.btnPlayRobot.caption" )
-						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_VLCROBOT
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.Icon16RefLink ICN_MENUBAR_VLCROBOT
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "autoPlay", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 1
@@ -72,7 +75,7 @@ new FormModel {
 					} )
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 						name: "btnSearch"
-						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_FRAMES_SEARCH
+						"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.Icon16RefLink ICN_FRAMES_SEARCH
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "startSearch", false ) )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3

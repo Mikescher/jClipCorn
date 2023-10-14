@@ -21,6 +21,7 @@ import de.jClipCorn.gui.guiComponents.dateTimeListEditor.DateTimeListEditor;
 import de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox;
 import de.jClipCorn.gui.guiComponents.filesize.CCFileSizeSpinner;
 import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button;
+import de.jClipCorn.gui.guiComponents.iconComponents.Icon16RefLink;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.guiComponents.jCCDateTimeSpinner.JCCDateTimeSpinner;
 import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
@@ -879,7 +880,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 
 			//---- btnMediaInfo3 ----
 			btnMediaInfo3.setToolTipText("MediaInfo"); //$NON-NLS-1$
-			btnMediaInfo3.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+			btnMediaInfo3.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 			btnMediaInfo3.addActionListener(e -> parseCodecMetadata_MediaInfo());
 			pnlInfo.add(btnMediaInfo3, CC.xy(9, 8));
 
@@ -899,7 +900,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			pnlInfo.add(btnMediaInfoRaw, CC.xy(7, 10));
 
 			//---- btnMediaInfo1 ----
-			btnMediaInfo1.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+			btnMediaInfo1.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 			btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
 			btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
 			pnlInfo.add(btnMediaInfo1, CC.xy(9, 10));
@@ -914,7 +915,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			pnlInfo.add(ctrlSubs, CC.xy(5, 12));
 
 			//---- btnMediaInfo4 ----
-			btnMediaInfo4.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+			btnMediaInfo4.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 			btnMediaInfo4.setToolTipText("MediaInfo"); //$NON-NLS-1$
 			btnMediaInfo4.addActionListener(e -> parseCodecMetadata_Subs());
 			pnlInfo.add(btnMediaInfo4, CC.xy(9, 12));
@@ -929,7 +930,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			pnlInfo.add(spnLength, CC.xy(5, 14));
 
 			//---- btnMediaInfo2 ----
-			btnMediaInfo2.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+			btnMediaInfo2.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 			btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
 			btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
 			pnlInfo.add(btnMediaInfo2, CC.xy(9, 14));

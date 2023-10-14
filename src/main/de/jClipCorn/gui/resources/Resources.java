@@ -383,6 +383,7 @@ public class Resources {
 	
 	// ############################################  <FRAMES>  ##############################################
 	public final static MultiSizeIconRef ICN_FRAMES_SEARCH 		= registerMultisizeIcon("/icons/previewSeriesFrame/magnifier.png");
+	public final static MultiSizeIconRef ICN_FRAMES_NEXT 		= registerMultisizeIcon("/icons/previewSeriesFrame/paper_airplane.png");
 	public final static IconRef ICN_FRAMES_ABOUT 				= registerOtherIcon("/UberDialog.png");
 	public final static MultiSizeIconRef ICN_FRAMES_DELETE 		= registerMultisizeIcon("/icons/common/delete.png");
 	// ############################################  </FRAMES>  #############################################

@@ -8,7 +8,6 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.EpisodeDataPack;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
@@ -20,6 +19,7 @@ import de.jClipCorn.gui.guiComponents.JCCDialog;
 import de.jClipCorn.gui.guiComponents.JCCPathTextField;
 import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
 import de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button;
+import de.jClipCorn.gui.guiComponents.iconComponents.Icon16RefLink;
 import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 import de.jClipCorn.gui.guiComponents.language.LanguageListChooser;
 import de.jClipCorn.gui.guiComponents.language.LanguageSetChooser;
@@ -554,7 +554,7 @@ public class QuickAddEpisodeDialog extends JCCDialog
 			rootpnl.add(ctrlLang, CC.xy(4, 16));
 
 			//---- cCIcon16Button3 ----
-			cCIcon16Button3.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+			cCIcon16Button3.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 			cCIcon16Button3.addActionListener(e -> parseCodecMetadata_Lang());
 			rootpnl.add(cCIcon16Button3, CC.xy(8, 16));
 
@@ -569,7 +569,7 @@ public class QuickAddEpisodeDialog extends JCCDialog
 			rootpnl.add(ctrlSubs, CC.xy(4, 18));
 
 			//---- cCIcon16Button2 ----
-			cCIcon16Button2.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+			cCIcon16Button2.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 			cCIcon16Button2.addActionListener(e -> parseCodecMetadata_Subs());
 			rootpnl.add(cCIcon16Button2, CC.xy(8, 18));
 
@@ -586,7 +586,7 @@ public class QuickAddEpisodeDialog extends JCCDialog
 			rootpnl.add(label9, CC.xy(6, 20));
 
 			//---- cCIcon16Button1 ----
-			cCIcon16Button1.setIconRef(CCIcon16Button.IconRefLink.ICN_MENUBAR_MEDIAINFO);
+			cCIcon16Button1.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 			cCIcon16Button1.addActionListener(e -> parseCodecMetadata_Len());
 			rootpnl.add(cCIcon16Button1, CC.xy(8, 20));
 

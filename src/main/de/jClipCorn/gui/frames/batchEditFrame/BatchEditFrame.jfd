@@ -141,7 +141,7 @@ new FormModel {
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 					name: "btnMediaInfo3"
 					"toolTipText": "MediaInfo"
-					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_MEDIAINFO
+					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.Icon16RefLink ICN_MENUBAR_MEDIAINFO
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "parseCodecMetadata_MediaInfo", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 9
@@ -178,7 +178,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 					name: "btnMediaInfo1"
-					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_MEDIAINFO
+					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.Icon16RefLink ICN_MENUBAR_MEDIAINFO
 					"toolTipText": "MediaInfo"
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "parseCodecMetadata_Lang", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
@@ -207,7 +207,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 					name: "btnMediaInfo4"
-					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_MEDIAINFO
+					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.Icon16RefLink ICN_MENUBAR_MEDIAINFO
 					"toolTipText": "MediaInfo"
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "parseCodecMetadata_Subs", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
@@ -236,7 +236,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 					name: "btnMediaInfo2"
-					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_MEDIAINFO
+					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.Icon16RefLink ICN_MENUBAR_MEDIAINFO
 					"toolTipText": "MediaInfo"
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "parseCodecMetadata_Len", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {

@@ -140,7 +140,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 					name: "cCIcon16Button3"
-					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_MEDIAINFO
+					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.Icon16RefLink ICN_MENUBAR_MEDIAINFO
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "parseCodecMetadata_Lang", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 8
@@ -170,7 +170,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 					name: "cCIcon16Button2"
-					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_MEDIAINFO
+					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.Icon16RefLink ICN_MENUBAR_MEDIAINFO
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "parseCodecMetadata_Subs", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 8
@@ -202,7 +202,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button" ) {
 					name: "cCIcon16Button1"
-					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.CCIcon16Button$IconRefLink ICN_MENUBAR_MEDIAINFO
+					"iconRef": enum de.jClipCorn.gui.guiComponents.iconComponents.Icon16RefLink ICN_MENUBAR_MEDIAINFO
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "parseCodecMetadata_Len", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 8

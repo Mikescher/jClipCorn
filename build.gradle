@@ -98,7 +98,8 @@ tasks.register("anyReleaseJar", Jar) {
 	archiveBaseName      = 'jClipCorn'
 	archiveVersion       = extractProjectVersion()
 	destinationDirectory = file("$rootDir/_mybuilds")
-	archiveFileName      = "jClipCorn "+extractProjectVersion()+".jar"
+	archiveExtension     = 'jar'
+	archiveFileName      = 'jClipCorn' + ' ' + extractProjectVersion() + '.' + 'jar'
 
 	duplicatesStrategy = 'include'
 
@@ -173,8 +174,8 @@ tasks.register("betaJar") {
 
 		project.appversion = extractProjectVersion()
 		version = extractProjectVersion()
-		anyReleaseJar.version = extractProjectVersion()
-		anyReleaseJar.archiveName = "${anyReleaseJar.baseName} ${anyReleaseJar.version}.${anyReleaseJar.extension}"
+		anyReleaseJar.archiveVersion  = extractProjectVersion()
+		anyReleaseJar.archiveFileName = "jClipCorn ${extractProjectVersion()}.jar"
 	}
 }
 betaJar.finalizedBy anyReleaseJar

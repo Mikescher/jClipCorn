@@ -1,48 +1,27 @@
 package de.jClipCorn.gui.guiComponents.tags;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleTag;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.gui.guiComponents.IconRefListDisplay;
+import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class TagDisplay extends JPanel {
+public class TagDisplay extends IconRefListDisplay {
 	private static final long serialVersionUID = 2017286148720080714L;
+
+	private final static int ICON_WIDTH  = 16;
+	private final static int ICON_HEIGHT = 16;
+
+	private final static int GAP_X = 4;
+	private final static int GAP_Y = 1;
 
 	private CCTagList value = CCTagList.EMPTY;
 
 	public TagDisplay() {
-		super();
-		init();
-		update();
-	}
-
-	private void init() {
-		setLayout(new FlowLayout(FlowLayout.LEFT, 0, 1));
-	}
-
-	private void update() {
-		removeAll();
-
-		for (CCSingleTag tag : value.ccstream()) {
-			JLabel l = new JLabel(tag.getOnIcon());
-			l.setToolTipText(value.getAsString());
-			add(l);
-
-			var gap = new JPanel();
-			gap.setPreferredSize(new Dimension(4, 1));
-			gap.setMinimumSize(new Dimension(4, 1));
-			gap.setMaximumSize(new Dimension(4, 1));
-			add(gap);
-		}
-
-		Component parent = getParent();
-		if (parent != null) {
-			validate();
-			getParent().revalidate();
-		}
-
-		setToolTipText(value.getAsString());
+		super(ICON_WIDTH, ICON_HEIGHT, GAP_X, GAP_Y);
 	}
 
 	public CCTagList getValue() {
@@ -50,7 +29,8 @@ public class TagDisplay extends JPanel {
 	}
 
 	public void setValue(CCTagList v) {
-		value = v;
-		update();
+		super.setIcons(CCStreams.iterate(value = v).map(p -> new IconRefListDisplay.Entry(p.IconOn.get16x16(), v.getAsString())).toList());
+
+		setToolTipText(value.getAsString());
 	}
 }

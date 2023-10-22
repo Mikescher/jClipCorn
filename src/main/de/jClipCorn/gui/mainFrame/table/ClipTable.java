@@ -69,7 +69,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 	private static ClipTable designCreate() { return new ClipTable(CCMovieList.createStub(), null); }
 
 	public ClipTable(CCMovieList ml, MainFrame owner) {
-		super(ml);
+		super(ml, ml.ccprops().PROP_MAINTABLE_INSTANTTOOLTIPS.getValue(), ml.ccprops().PROP_MAINTABLE_INFINITETOOLTIPS.getValue());
 		this.owner = owner;
 
 		postInit();

@@ -218,6 +218,10 @@ public class CCProperties implements ICCPropertySource {
 	public CCEnumProperty<ElemFieldMatchType>               PROP_CHARSELECTOR_SELMODE;
 	public CCBoolProperty                                   PROP_CHARSELECTOR_EXCLUSIONS;
 	public CCBoolProperty                                   PROP_CHARSELECTOR_IGNORENONCHARS;
+	public CCBoolProperty                                   PROP_MAINTABLE_INSTANTTOOLTIPS;
+	public CCBoolProperty                                   PROP_MAINTABLE_INFINITETOOLTIPS;
+	public CCBoolProperty                                   PROP_SERIESTABLE_INSTANTTOOLTIPS;
+	public CCBoolProperty                                   PROP_SERIESTABLE_INFINITETOOLTIPS;
 
 	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public boolean ARG_READONLY = false;
@@ -421,6 +425,10 @@ public class CCProperties implements ICCPropertySource {
 		PROP_MAINFRAME_FILTERTREE_RECOLLAPSE    = new CCBoolProperty(NONVISIBLE,            this,   "PROP_MAINFRAME_FILTERTREE_RECOLLAPSE",     false);
 		PROP_PLAY_FAILONMISSINGFILES            = new CCBoolProperty(NONVISIBLE,            this,   "PROP_PLAY_FAILONMISSINGFILES",             true);
 		PROP_RESET_SORT_ON_FILTERCLEAR          = new CCBoolProperty(NONVISIBLE,            this,   "PROP_RESET_SORT_ON_FILTERCLEAR",           true);
+		PROP_MAINTABLE_INSTANTTOOLTIPS          = new CCBoolProperty(NONVISIBLE,            this,   "PROP_MAINTABLE_INSTANTTOOLTIPS",           true);
+		PROP_MAINTABLE_INFINITETOOLTIPS         = new CCBoolProperty(NONVISIBLE,            this,   "PROP_MAINTABLE_INFINITETOOLTIPS",          true);
+		PROP_SERIESTABLE_INSTANTTOOLTIPS        = new CCBoolProperty(NONVISIBLE,            this,   "PROP_SERIESTABLE_INSTANTTOOLTIPS",         true);
+		PROP_SERIESTABLE_INFINITETOOLTIPS       = new CCBoolProperty(NONVISIBLE,            this,   "PROP_SERIESTABLE_INFINITETOOLTIPS",        true);
 
 		PROP_ADD_MOVIE_RELATIVE_AUTO            = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",             true);
 		PROP_PATHSYNTAX_SELF                    = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELF",                     true);

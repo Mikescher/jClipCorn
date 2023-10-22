@@ -23,6 +23,10 @@ public abstract class SFixTable extends JTable {
 
 	protected final CCMovieList movielist;
 
+	private int tooltipInitialDelay = 0;
+	private int tooltipDismissDelay = 0;
+	private int tooltipReshowDelay = 0;
+
 	public SFixTable(CCMovieList ml, TableModel dm) {
 		super(dm);
 		movielist = ml;
@@ -49,17 +53,24 @@ public abstract class SFixTable extends JTable {
 
 	private void initListener() {
 		addMouseListener(new MouseAdapter() {
-			final int defaultTimeout = ToolTipManager.sharedInstance().getInitialDelay();
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				ToolTipManager.sharedInstance().setInitialDelay(defaultTimeout);
-			}
+			final int initialDelayDefault = ToolTipManager.sharedInstance().getInitialDelay();
+			final int dismissDelayDefault = ToolTipManager.sharedInstance().getInitialDelay();
+			final int reshowDelayDefault = ToolTipManager.sharedInstance().getReshowDelay();
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				ToolTipManager.sharedInstance().setInitialDelay(0);
+				if (tooltipInitialDelay >= 0) ToolTipManager.sharedInstance().setInitialDelay(tooltipInitialDelay);
+				if (tooltipDismissDelay >= 0) ToolTipManager.sharedInstance().setDismissDelay(tooltipDismissDelay);
+				if (tooltipReshowDelay >= 0) ToolTipManager.sharedInstance().setReshowDelay(tooltipReshowDelay);
 			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if (tooltipInitialDelay >= 0) ToolTipManager.sharedInstance().setInitialDelay(initialDelayDefault);
+				if (tooltipDismissDelay >= 0) ToolTipManager.sharedInstance().setDismissDelay(dismissDelayDefault);
+				if (tooltipReshowDelay >= 0) ToolTipManager.sharedInstance().setReshowDelay(reshowDelayDefault);
+			}
+
 		});
 	}
 
@@ -70,6 +81,19 @@ public abstract class SFixTable extends JTable {
 			setShowVerticalLines(true);
 		}
 	}
+
+	public void setTooltipDelay(int v) {
+		this.tooltipInitialDelay = v;
+	}
+
+	public void setTooltipReshow(int v) {
+		this.tooltipReshowDelay = v;
+	}
+
+	public void setTooltipDuration(int v) {
+		this.tooltipDismissDelay = v;
+	}
+
 
 	@Override
 	public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {

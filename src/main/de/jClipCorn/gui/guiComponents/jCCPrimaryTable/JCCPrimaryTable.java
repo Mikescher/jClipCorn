@@ -27,18 +27,23 @@ public abstract class JCCPrimaryTable<TData, TEnum> extends JScrollPane
 
 	protected final List<JCCPrimaryColumnPrototype<TData, TEnum>> config;
 
-	public JCCPrimaryTable(@NotNull ICCWindow mlo) {
-		this(mlo.getMovieList());
+	public JCCPrimaryTable(@NotNull ICCWindow mlo, boolean instantTooltip, boolean infiniteTooltips) {
+		this(mlo.getMovieList(), instantTooltip, infiniteTooltips);
 	}
 
-	public JCCPrimaryTable(CCMovieList ml) {
+	public JCCPrimaryTable(CCMovieList ml, boolean instantTooltip, boolean infiniteTooltips) {
 		super();
+
 		this.movielist = ml;
 
 		this.config = configureColumns();
 
 		this.model = new JCCPrimaryTableModel<>(this);
 		this.table = new JCCPrimarySFixTable<>(this);
+
+		if (instantTooltip)   this.table.setTooltipDelay(-1);
+		if (instantTooltip)   this.table.setTooltipReshow(-1);
+		if (infiniteTooltips) this.table.setTooltipDuration(Integer.MAX_VALUE);
 
 		configureTable();
 

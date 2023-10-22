@@ -19,6 +19,8 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.formatter.HTMLFormatter;
 import de.jClipCorn.util.formatter.TimeIntervallFormatter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,8 +39,8 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 	@DesignCreate
 	private static ClipTable designCreate() { return new ClipTable(CCMovieList.createStub(), null); }
 
-	public SerTable(CCMovieList ml, PreviewSeriesFrame owner) {
-		super(ml);
+	public SerTable(@NotNull CCMovieList ml, @Nullable PreviewSeriesFrame owner) {
+		super(ml, ml.ccprops().PROP_SERIESTABLE_INSTANTTOOLTIPS.getValue(), ml.ccprops().PROP_SERIESTABLE_INFINITETOOLTIPS.getValue());
 		this.owner = owner;
 		autoResize();
 	}

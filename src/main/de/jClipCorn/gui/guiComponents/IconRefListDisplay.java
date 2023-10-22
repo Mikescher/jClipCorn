@@ -1,7 +1,5 @@
 package de.jClipCorn.gui.guiComponents;
 
-import de.jClipCorn.gui.resources.reftypes.IconRef;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -75,15 +73,29 @@ public abstract class IconRefListDisplay extends JPanel {
 		removeAll();
 
 		for (var entry : value) {
+
 			JLabel l = new JLabel(entry.Icon);
 			l.setToolTipText(entry.Tooltip);
-			add(l);
 
-			var spacer = new JPanel(null);
-			spacer.setPreferredSize(new Dimension(gapX, iconHeight));
-			spacer.setMinimumSize(new Dimension(gapX, iconHeight));
-			spacer.setMaximumSize(new Dimension(gapX, iconHeight));
-			add(spacer);
+			if (gapX > 0 ) {
+
+				var wrapper = new JPanel(new BorderLayout());
+
+				var spacer = new JPanel(null);
+				spacer.setPreferredSize(new Dimension(gapX, iconHeight));
+				spacer.setMinimumSize(new Dimension(gapX, iconHeight));
+				spacer.setMaximumSize(new Dimension(gapX, iconHeight));
+				add(spacer);
+
+				wrapper.add(l, BorderLayout.CENTER);
+				wrapper.add(spacer, BorderLayout.EAST);
+
+				add(wrapper);
+
+			} else {
+
+				add(l);
+			}
 		}
 
 		Component parent = getParent();

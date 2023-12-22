@@ -351,7 +351,8 @@ public class Resources {
 	public final static IconRef ICN_TABLE_FORMAT_6 			= register16x16Icon("/icons/table/format/ext6.png");
 	public final static IconRef ICN_TABLE_FORMAT_7 			= register16x16Icon("/icons/table/format/ext7.png");
 	public final static IconRef ICN_TABLE_FORMAT_8 			= register16x16Icon("/icons/table/format/ext8.png");
-	
+	public final static IconRef ICN_TABLE_FORMAT_9 			= register16x16Icon("/icons/table/format/ext9.png");
+
 	public final static MultiSizeIconRef ICN_TABLE_TAG_0_0 	= registerMultisizeIcon("/icons/tags/tag_0_off.png");
 	public final static MultiSizeIconRef ICN_TABLE_TAG_0_1 	= registerMultisizeIcon("/icons/tags/tag_0_on.png");
 	public final static MultiSizeIconRef ICN_TABLE_TAG_1_0 	= registerMultisizeIcon("/icons/tags/tag_1_off.png");

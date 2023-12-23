@@ -110,7 +110,7 @@ public class FilenameParser {
 			if (RomanNumberFormatter.isRoman(mRoman)) { // There is a Zyklus with an Roman Number
 				moviename = moviename.substring(moviename.indexOf(" - ") + 3);
 				iRoman = RomanNumberFormatter.romToDec(mRoman);
-				mZyklus = mZyklus.substring(0, mZyklus.lastIndexOf(' '));
+				if (mZyklus.contains(" ")) mZyklus = mZyklus.substring(0, mZyklus.lastIndexOf(' '));
 			} else { //Doch kein Zyklus
 				mZyklus = "";
 				iRoman = -1;

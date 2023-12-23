@@ -882,493 +882,493 @@ public class CoverCropDialog extends JCCFrame
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		panel1 = new JPanel();
-		btnReset = new JButton();
-		panel3 = new JPanel();
-		btnAutoCalc = new JButton();
-		panel4 = new JPanel();
-		btnRotateCW = new JButton();
-		panel10 = new JPanel();
-		btnRotateCCW = new JButton();
-		panel5 = new JPanel();
-		btnFlipX = new JButton();
-		panel11 = new JPanel();
-		btnFlipY = new JButton();
-		panel12 = new JPanel();
-		lblImage = new JCanvasLabel();
-		panel6 = new JPanel();
-		chckbxLockRatio = new JCheckBox();
-		chckbxShowCropOutline = new JCheckBox();
-		chckbxShowImageBorders = new JCheckBox();
-		chckbxShowTransparency = new JCheckBox();
-		chckbxSeriesPreview = new JCheckBox();
-		lblPosition = new JLabel();
-		lblSize = new JLabel();
-		lblRatio = new JLabel();
-		lblRatioState = new JLabel();
-		lblMouse = new JLabel();
-		panel13 = new JPanel();
-		btnCopyParams = new JButton();
-		btnPasteAbs = new JButton();
-		btnPasteRel = new JButton();
-		panel7 = new JPanel();
-		spnZoom = new JSpinner();
-		lblZoom = new JCanvasLabel();
-		panel8 = new JPanel();
-		lblCoverPreviewBig = new JCanvasLabel();
-		lblCoverPreviewSmall = new JCanvasLabel();
-		panel9 = new JPanel();
-		btnResizeTop = new JButton();
-		btnResizeLeft = new JButton();
-		btnResizeCenter = new JButton();
-		btnResizeRight = new JButton();
-		btnResizeVert = new JButton();
-		btnResizeBottom = new JButton();
-		btnResizeHorz = new JButton();
-		panel2 = new JPanel();
-		btnOK = new JButton();
-		btnAbort = new JButton();
+        panel1 = new JPanel();
+        btnReset = new JButton();
+        panel3 = new JPanel();
+        btnAutoCalc = new JButton();
+        panel4 = new JPanel();
+        btnRotateCW = new JButton();
+        panel10 = new JPanel();
+        btnRotateCCW = new JButton();
+        panel5 = new JPanel();
+        btnFlipX = new JButton();
+        panel11 = new JPanel();
+        btnFlipY = new JButton();
+        panel12 = new JPanel();
+        lblImage = new JCanvasLabel();
+        panel6 = new JPanel();
+        chckbxLockRatio = new JCheckBox();
+        chckbxShowCropOutline = new JCheckBox();
+        chckbxShowImageBorders = new JCheckBox();
+        chckbxShowTransparency = new JCheckBox();
+        chckbxSeriesPreview = new JCheckBox();
+        lblPosition = new JLabel();
+        lblSize = new JLabel();
+        lblRatio = new JLabel();
+        lblRatioState = new JLabel();
+        lblMouse = new JLabel();
+        panel13 = new JPanel();
+        btnCopyParams = new JButton();
+        btnPasteAbs = new JButton();
+        btnPasteRel = new JButton();
+        panel7 = new JPanel();
+        spnZoom = new JSpinner();
+        lblZoom = new JCanvasLabel();
+        panel8 = new JPanel();
+        lblCoverPreviewBig = new JCanvasLabel();
+        lblCoverPreviewSmall = new JCanvasLabel();
+        panel9 = new JPanel();
+        btnResizeTop = new JButton();
+        btnResizeLeft = new JButton();
+        btnResizeCenter = new JButton();
+        btnResizeRight = new JButton();
+        btnResizeVert = new JButton();
+        btnResizeBottom = new JButton();
+        btnResizeHorz = new JButton();
+        panel2 = new JPanel();
+        btnOK = new JButton();
+        btnAbort = new JButton();
 
-		//======== this ========
-		setTitle(LocaleBundle.getString("CoverCropFrame.this.title")); //$NON-NLS-1$
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setMinimumSize(new Dimension(800, 600));
-		addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentResized(ComponentEvent e) {
-				onFormResized(e);
-			}
-		});
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowOpened(WindowEvent e) {
-				onWindowOpened(e);
-			}
-		});
-		var contentPane = getContentPane();
-		contentPane.setLayout(new FormLayout(
-			"$ugap, default:grow, $lcgap, [170dlu,pref], $lcgap, 170dlu, $ugap", //$NON-NLS-1$
-			"$ugap, default, $lgap, default:grow, 2*($lgap, default), $ugap")); //$NON-NLS-1$
+        //======== this ========
+        setTitle(LocaleBundle.getString("CoverCropFrame.this.title")); //$NON-NLS-1$
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setMinimumSize(new Dimension(800, 600));
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                onFormResized(e);
+            }
+        });
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                onWindowOpened(e);
+            }
+        });
+        var contentPane = getContentPane();
+        contentPane.setLayout(new FormLayout(
+            "$ugap, default:grow, $lcgap, [170dlu,pref], $lcgap, 170dlu, $ugap", //$NON-NLS-1$
+            "$ugap, default, $lgap, default:grow, 2*($lgap, default), $ugap")); //$NON-NLS-1$
 
-		//======== panel1 ========
-		{
-			panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        //======== panel1 ========
+        {
+            panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
-			//---- btnReset ----
-			btnReset.setText(LocaleBundle.getString("CoverCropFrame.btnReset.text")); //$NON-NLS-1$
-			btnReset.addActionListener(e -> reset(e));
-			panel1.add(btnReset);
+            //---- btnReset ----
+            btnReset.setText(LocaleBundle.getString("CoverCropFrame.btnReset.text")); //$NON-NLS-1$
+            btnReset.addActionListener(e -> reset(e));
+            panel1.add(btnReset);
 
-			//======== panel3 ========
-			{
-				panel3.setMinimumSize(new Dimension(12, 12));
-				panel3.setPreferredSize(new Dimension(12, 12));
-				panel3.setLayout(null);
+            //======== panel3 ========
+            {
+                panel3.setMinimumSize(new Dimension(12, 12));
+                panel3.setPreferredSize(new Dimension(12, 12));
+                panel3.setLayout(null);
 
-				{
-					// compute preferred size
-					Dimension preferredSize = new Dimension();
-					for(int i = 0; i < panel3.getComponentCount(); i++) {
-						Rectangle bounds = panel3.getComponent(i).getBounds();
-						preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-						preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-					}
-					Insets insets = panel3.getInsets();
-					preferredSize.width += insets.right;
-					preferredSize.height += insets.bottom;
-					panel3.setMinimumSize(preferredSize);
-					panel3.setPreferredSize(preferredSize);
-				}
-			}
-			panel1.add(panel3);
+                {
+                    // compute preferred size
+                    Dimension preferredSize = new Dimension();
+                    for(int i = 0; i < panel3.getComponentCount(); i++) {
+                        Rectangle bounds = panel3.getComponent(i).getBounds();
+                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                    }
+                    Insets insets = panel3.getInsets();
+                    preferredSize.width += insets.right;
+                    preferredSize.height += insets.bottom;
+                    panel3.setMinimumSize(preferredSize);
+                    panel3.setPreferredSize(preferredSize);
+                }
+            }
+            panel1.add(panel3);
 
-			//---- btnAutoCalc ----
-			btnAutoCalc.setText(LocaleBundle.getString("CoverCropFrame.btnAutoCalc.text")); //$NON-NLS-1$
-			btnAutoCalc.addActionListener(e -> autoCalc(e));
-			panel1.add(btnAutoCalc);
+            //---- btnAutoCalc ----
+            btnAutoCalc.setText(LocaleBundle.getString("CoverCropFrame.btnAutoCalc.text")); //$NON-NLS-1$
+            btnAutoCalc.addActionListener(e -> autoCalc(e));
+            panel1.add(btnAutoCalc);
 
-			//======== panel4 ========
-			{
-				panel4.setMinimumSize(new Dimension(12, 12));
-				panel4.setPreferredSize(new Dimension(12, 12));
-				panel4.setLayout(null);
+            //======== panel4 ========
+            {
+                panel4.setMinimumSize(new Dimension(12, 12));
+                panel4.setPreferredSize(new Dimension(12, 12));
+                panel4.setLayout(null);
 
-				{
-					// compute preferred size
-					Dimension preferredSize = new Dimension();
-					for(int i = 0; i < panel4.getComponentCount(); i++) {
-						Rectangle bounds = panel4.getComponent(i).getBounds();
-						preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-						preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-					}
-					Insets insets = panel4.getInsets();
-					preferredSize.width += insets.right;
-					preferredSize.height += insets.bottom;
-					panel4.setMinimumSize(preferredSize);
-					panel4.setPreferredSize(preferredSize);
-				}
-			}
-			panel1.add(panel4);
+                {
+                    // compute preferred size
+                    Dimension preferredSize = new Dimension();
+                    for(int i = 0; i < panel4.getComponentCount(); i++) {
+                        Rectangle bounds = panel4.getComponent(i).getBounds();
+                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                    }
+                    Insets insets = panel4.getInsets();
+                    preferredSize.width += insets.right;
+                    preferredSize.height += insets.bottom;
+                    panel4.setMinimumSize(preferredSize);
+                    panel4.setPreferredSize(preferredSize);
+                }
+            }
+            panel1.add(panel4);
 
-			//---- btnRotateCW ----
-			btnRotateCW.setText(LocaleBundle.getString("CoverCropFrame.btnRotateCW.text")); //$NON-NLS-1$
-			btnRotateCW.addActionListener(e -> onRotateCW(e));
-			panel1.add(btnRotateCW);
+            //---- btnRotateCW ----
+            btnRotateCW.setText(LocaleBundle.getString("CoverCropFrame.btnRotateCW.text")); //$NON-NLS-1$
+            btnRotateCW.addActionListener(e -> onRotateCW(e));
+            panel1.add(btnRotateCW);
 
-			//======== panel10 ========
-			{
-				panel10.setMinimumSize(new Dimension(5, 5));
-				panel10.setPreferredSize(new Dimension(5, 5));
-				panel10.setLayout(null);
+            //======== panel10 ========
+            {
+                panel10.setMinimumSize(new Dimension(5, 5));
+                panel10.setPreferredSize(new Dimension(5, 5));
+                panel10.setLayout(null);
 
-				{
-					// compute preferred size
-					Dimension preferredSize = new Dimension();
-					for(int i = 0; i < panel10.getComponentCount(); i++) {
-						Rectangle bounds = panel10.getComponent(i).getBounds();
-						preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-						preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-					}
-					Insets insets = panel10.getInsets();
-					preferredSize.width += insets.right;
-					preferredSize.height += insets.bottom;
-					panel10.setMinimumSize(preferredSize);
-					panel10.setPreferredSize(preferredSize);
-				}
-			}
-			panel1.add(panel10);
+                {
+                    // compute preferred size
+                    Dimension preferredSize = new Dimension();
+                    for(int i = 0; i < panel10.getComponentCount(); i++) {
+                        Rectangle bounds = panel10.getComponent(i).getBounds();
+                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                    }
+                    Insets insets = panel10.getInsets();
+                    preferredSize.width += insets.right;
+                    preferredSize.height += insets.bottom;
+                    panel10.setMinimumSize(preferredSize);
+                    panel10.setPreferredSize(preferredSize);
+                }
+            }
+            panel1.add(panel10);
 
-			//---- btnRotateCCW ----
-			btnRotateCCW.setText(LocaleBundle.getString("CoverCropFrame.btnRotateCCW.text")); //$NON-NLS-1$
-			btnRotateCCW.addActionListener(e -> onRotateCCW(e));
-			panel1.add(btnRotateCCW);
+            //---- btnRotateCCW ----
+            btnRotateCCW.setText(LocaleBundle.getString("CoverCropFrame.btnRotateCCW.text")); //$NON-NLS-1$
+            btnRotateCCW.addActionListener(e -> onRotateCCW(e));
+            panel1.add(btnRotateCCW);
 
-			//======== panel5 ========
-			{
-				panel5.setMinimumSize(new Dimension(12, 12));
-				panel5.setPreferredSize(new Dimension(12, 12));
-				panel5.setLayout(null);
+            //======== panel5 ========
+            {
+                panel5.setMinimumSize(new Dimension(12, 12));
+                panel5.setPreferredSize(new Dimension(12, 12));
+                panel5.setLayout(null);
 
-				{
-					// compute preferred size
-					Dimension preferredSize = new Dimension();
-					for(int i = 0; i < panel5.getComponentCount(); i++) {
-						Rectangle bounds = panel5.getComponent(i).getBounds();
-						preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-						preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-					}
-					Insets insets = panel5.getInsets();
-					preferredSize.width += insets.right;
-					preferredSize.height += insets.bottom;
-					panel5.setMinimumSize(preferredSize);
-					panel5.setPreferredSize(preferredSize);
-				}
-			}
-			panel1.add(panel5);
+                {
+                    // compute preferred size
+                    Dimension preferredSize = new Dimension();
+                    for(int i = 0; i < panel5.getComponentCount(); i++) {
+                        Rectangle bounds = panel5.getComponent(i).getBounds();
+                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                    }
+                    Insets insets = panel5.getInsets();
+                    preferredSize.width += insets.right;
+                    preferredSize.height += insets.bottom;
+                    panel5.setMinimumSize(preferredSize);
+                    panel5.setPreferredSize(preferredSize);
+                }
+            }
+            panel1.add(panel5);
 
-			//---- btnFlipX ----
-			btnFlipX.setText(LocaleBundle.getString("CoverCropFrame.btnFlipX.text")); //$NON-NLS-1$
-			btnFlipX.addActionListener(e -> onFlipX(e));
-			panel1.add(btnFlipX);
+            //---- btnFlipX ----
+            btnFlipX.setText(LocaleBundle.getString("CoverCropFrame.btnFlipX.text")); //$NON-NLS-1$
+            btnFlipX.addActionListener(e -> onFlipX(e));
+            panel1.add(btnFlipX);
 
-			//======== panel11 ========
-			{
-				panel11.setMinimumSize(new Dimension(5, 5));
-				panel11.setPreferredSize(new Dimension(5, 5));
-				panel11.setLayout(null);
+            //======== panel11 ========
+            {
+                panel11.setMinimumSize(new Dimension(5, 5));
+                panel11.setPreferredSize(new Dimension(5, 5));
+                panel11.setLayout(null);
 
-				{
-					// compute preferred size
-					Dimension preferredSize = new Dimension();
-					for(int i = 0; i < panel11.getComponentCount(); i++) {
-						Rectangle bounds = panel11.getComponent(i).getBounds();
-						preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-						preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-					}
-					Insets insets = panel11.getInsets();
-					preferredSize.width += insets.right;
-					preferredSize.height += insets.bottom;
-					panel11.setMinimumSize(preferredSize);
-					panel11.setPreferredSize(preferredSize);
-				}
-			}
-			panel1.add(panel11);
+                {
+                    // compute preferred size
+                    Dimension preferredSize = new Dimension();
+                    for(int i = 0; i < panel11.getComponentCount(); i++) {
+                        Rectangle bounds = panel11.getComponent(i).getBounds();
+                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                    }
+                    Insets insets = panel11.getInsets();
+                    preferredSize.width += insets.right;
+                    preferredSize.height += insets.bottom;
+                    panel11.setMinimumSize(preferredSize);
+                    panel11.setPreferredSize(preferredSize);
+                }
+            }
+            panel1.add(panel11);
 
-			//---- btnFlipY ----
-			btnFlipY.setText(LocaleBundle.getString("CoverCropFrame.btnFlipY.text")); //$NON-NLS-1$
-			btnFlipY.addActionListener(e -> onFlipY(e));
-			panel1.add(btnFlipY);
-		}
-		contentPane.add(panel1, CC.xywh(2, 2, 5, 1, CC.FILL, CC.FILL));
+            //---- btnFlipY ----
+            btnFlipY.setText(LocaleBundle.getString("CoverCropFrame.btnFlipY.text")); //$NON-NLS-1$
+            btnFlipY.addActionListener(e -> onFlipY(e));
+            panel1.add(btnFlipY);
+        }
+        contentPane.add(panel1, CC.xywh(2, 2, 5, 1, CC.FILL, CC.FILL));
 
-		//======== panel12 ========
-		{
-			panel12.setBorder(new EtchedBorder());
-			panel12.setLayout(new FormLayout(
-				"$lcgap, default:grow, $lcgap", //$NON-NLS-1$
-				"$lgap, default:grow, $lgap")); //$NON-NLS-1$
+        //======== panel12 ========
+        {
+            panel12.setBorder(new EtchedBorder());
+            panel12.setLayout(new FormLayout(
+                "$lcgap, default:grow, $lcgap", //$NON-NLS-1$
+                "$lgap, default:grow, $lgap")); //$NON-NLS-1$
 
-			//---- lblImage ----
-			lblImage.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseExited(MouseEvent e) {
-					onImageMouseExited(e);
-				}
-				@Override
-				public void mousePressed(MouseEvent e) {
-					onImageMousePressed(e);
-				}
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					onImageMouseReleased(e);
-				}
-			});
-			lblImage.addMouseMotionListener(new MouseMotionAdapter() {
-				@Override
-				public void mouseDragged(MouseEvent e) {
-					onImageMouseDragged(e);
-				}
-				@Override
-				public void mouseMoved(MouseEvent e) {
-					onImageMouseMoved(e);
-				}
-			});
-			lblImage.addPaintComponentListener(e -> onMainImagePaint(e));
-			panel12.add(lblImage, CC.xy(2, 2, CC.FILL, CC.FILL));
-		}
-		contentPane.add(panel12, CC.xywh(2, 4, 1, 3));
+            //---- lblImage ----
+            lblImage.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    onImageMouseExited(e);
+                }
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    onImageMousePressed(e);
+                }
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    onImageMouseReleased(e);
+                }
+            });
+            lblImage.addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseDragged(MouseEvent e) {
+                    onImageMouseDragged(e);
+                }
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    onImageMouseMoved(e);
+                }
+            });
+            lblImage.addPaintComponentListener(e -> onMainImagePaint(e));
+            panel12.add(lblImage, CC.xy(2, 2, CC.FILL, CC.FILL));
+        }
+        contentPane.add(panel12, CC.xywh(2, 4, 1, 3));
 
-		//======== panel6 ========
-		{
-			panel6.setBorder(new EtchedBorder());
-			panel6.setLayout(new FormLayout(
-				"$lcgap, default:grow, $lcgap, [30dlu,default], $lcgap", //$NON-NLS-1$
-				"9*($lgap, default), $lgap, default:grow, $lgap, default, $lgap")); //$NON-NLS-1$
+        //======== panel6 ========
+        {
+            panel6.setBorder(new EtchedBorder());
+            panel6.setLayout(new FormLayout(
+                "$lcgap, default:grow, $lcgap, [30dlu,default], $lcgap", //$NON-NLS-1$
+                "9*($lgap, default), $lgap, default:grow, $lgap, default, $lgap")); //$NON-NLS-1$
 
-			//---- chckbxLockRatio ----
-			chckbxLockRatio.setText(LocaleBundle.getString("CoverCropFrame.btnLockRatio.text")); //$NON-NLS-1$
-			chckbxLockRatio.addItemListener(e -> repaintAll());
-			panel6.add(chckbxLockRatio, CC.xywh(2, 2, 3, 1));
+            //---- chckbxLockRatio ----
+            chckbxLockRatio.setText(LocaleBundle.getString("CoverCropFrame.btnLockRatio.text")); //$NON-NLS-1$
+            chckbxLockRatio.addItemListener(e -> repaintAll());
+            panel6.add(chckbxLockRatio, CC.xywh(2, 2, 3, 1));
 
-			//---- chckbxShowCropOutline ----
-			chckbxShowCropOutline.setText(LocaleBundle.getString("CoverCropFrame.btnShowCropOutline.text")); //$NON-NLS-1$
-			chckbxShowCropOutline.setSelected(true);
-			chckbxShowCropOutline.addItemListener(e -> repaintAll());
-			panel6.add(chckbxShowCropOutline, CC.xywh(2, 4, 3, 1));
+            //---- chckbxShowCropOutline ----
+            chckbxShowCropOutline.setText(LocaleBundle.getString("CoverCropFrame.btnShowCropOutline.text")); //$NON-NLS-1$
+            chckbxShowCropOutline.setSelected(true);
+            chckbxShowCropOutline.addItemListener(e -> repaintAll());
+            panel6.add(chckbxShowCropOutline, CC.xywh(2, 4, 3, 1));
 
-			//---- chckbxShowImageBorders ----
-			chckbxShowImageBorders.setText(LocaleBundle.getString("CoverCropFrame.btnShowImageBorders.text")); //$NON-NLS-1$
-			chckbxShowImageBorders.addItemListener(e -> repaintAll());
-			panel6.add(chckbxShowImageBorders, CC.xywh(2, 6, 3, 1));
+            //---- chckbxShowImageBorders ----
+            chckbxShowImageBorders.setText(LocaleBundle.getString("CoverCropFrame.btnShowImageBorders.text")); //$NON-NLS-1$
+            chckbxShowImageBorders.addItemListener(e -> repaintAll());
+            panel6.add(chckbxShowImageBorders, CC.xywh(2, 6, 3, 1));
 
-			//---- chckbxShowTransparency ----
-			chckbxShowTransparency.setText(LocaleBundle.getString("CoverCropFrame.btnShowTransparency.text")); //$NON-NLS-1$
-			chckbxShowTransparency.setSelected(true);
-			chckbxShowTransparency.addItemListener(e -> repaintAll());
-			panel6.add(chckbxShowTransparency, CC.xywh(2, 8, 3, 1));
+            //---- chckbxShowTransparency ----
+            chckbxShowTransparency.setText(LocaleBundle.getString("CoverCropFrame.btnShowTransparency.text")); //$NON-NLS-1$
+            chckbxShowTransparency.setSelected(true);
+            chckbxShowTransparency.addItemListener(e -> repaintAll());
+            panel6.add(chckbxShowTransparency, CC.xywh(2, 8, 3, 1));
 
-			//---- chckbxSeriesPreview ----
-			chckbxSeriesPreview.setText(LocaleBundle.getString("CoverCropFrame.btnShowSeriesPreview.text")); //$NON-NLS-1$
-			chckbxSeriesPreview.addItemListener(e -> repaintAll());
-			panel6.add(chckbxSeriesPreview, CC.xywh(2, 10, 3, 1));
+            //---- chckbxSeriesPreview ----
+            chckbxSeriesPreview.setText(LocaleBundle.getString("CoverCropFrame.btnShowSeriesPreview.text")); //$NON-NLS-1$
+            chckbxSeriesPreview.addItemListener(e -> repaintAll());
+            panel6.add(chckbxSeriesPreview, CC.xywh(2, 10, 3, 1));
 
-			//---- lblPosition ----
-			lblPosition.setText(LocaleBundle.getString("CoverCropFrame.lblPosition.text")); //$NON-NLS-1$
-			panel6.add(lblPosition, CC.xy(2, 12));
+            //---- lblPosition ----
+            lblPosition.setText(LocaleBundle.getString("CoverCropFrame.lblPosition.text")); //$NON-NLS-1$
+            panel6.add(lblPosition, CC.xy(2, 12));
 
-			//---- lblSize ----
-			lblSize.setText(LocaleBundle.getString("CoverCropFrame.lblSize.text")); //$NON-NLS-1$
-			panel6.add(lblSize, CC.xy(2, 14));
+            //---- lblSize ----
+            lblSize.setText(LocaleBundle.getString("CoverCropFrame.lblSize.text")); //$NON-NLS-1$
+            panel6.add(lblSize, CC.xy(2, 14));
 
-			//---- lblRatio ----
-			lblRatio.setText(LocaleBundle.getString("CoverCropFrame.lblRatio.text")); //$NON-NLS-1$
-			panel6.add(lblRatio, CC.xy(2, 16));
+            //---- lblRatio ----
+            lblRatio.setText(LocaleBundle.getString("CoverCropFrame.lblRatio.text")); //$NON-NLS-1$
+            panel6.add(lblRatio, CC.xy(2, 16));
 
-			//---- lblRatioState ----
-			lblRatioState.setText(LocaleBundle.getString("CoverCropFrame.lblOK.textOK")); //$NON-NLS-1$
-			lblRatioState.setHorizontalAlignment(SwingConstants.TRAILING);
-			lblRatioState.setFont(lblRatioState.getFont().deriveFont(lblRatioState.getFont().getStyle() | Font.BOLD));
-			panel6.add(lblRatioState, CC.xy(4, 16));
+            //---- lblRatioState ----
+            lblRatioState.setText(LocaleBundle.getString("CoverCropFrame.lblOK.textOK")); //$NON-NLS-1$
+            lblRatioState.setHorizontalAlignment(SwingConstants.TRAILING);
+            lblRatioState.setFont(lblRatioState.getFont().deriveFont(lblRatioState.getFont().getStyle() | Font.BOLD));
+            panel6.add(lblRatioState, CC.xy(4, 16));
 
-			//---- lblMouse ----
-			lblMouse.setText(LocaleBundle.getString("CoverCropFrame.lblMouse.text")); //$NON-NLS-1$
-			panel6.add(lblMouse, CC.xy(2, 18));
+            //---- lblMouse ----
+            lblMouse.setText(LocaleBundle.getString("CoverCropFrame.lblMouse.text")); //$NON-NLS-1$
+            panel6.add(lblMouse, CC.xy(2, 18));
 
-			//======== panel13 ========
-			{
-				panel13.setLayout(new FlowLayout(FlowLayout.LEFT));
+            //======== panel13 ========
+            {
+                panel13.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-				//---- btnCopyParams ----
-				btnCopyParams.setText(LocaleBundle.getString("UIGeneric.copy")); //$NON-NLS-1$
-				btnCopyParams.addActionListener(e -> copyParams(e));
-				panel13.add(btnCopyParams);
+                //---- btnCopyParams ----
+                btnCopyParams.setText(LocaleBundle.getString("UIGeneric.copy")); //$NON-NLS-1$
+                btnCopyParams.addActionListener(e -> copyParams(e));
+                panel13.add(btnCopyParams);
 
-				//---- btnPasteAbs ----
-				btnPasteAbs.setText(LocaleBundle.getString("UIGeneric.Paste")); //$NON-NLS-1$
-				btnPasteAbs.addActionListener(e -> pasteParams(e));
-				panel13.add(btnPasteAbs);
+                //---- btnPasteAbs ----
+                btnPasteAbs.setText(LocaleBundle.getString("UIGeneric.Paste")); //$NON-NLS-1$
+                btnPasteAbs.addActionListener(e -> pasteParams(e));
+                panel13.add(btnPasteAbs);
 
-				//---- btnPasteRel ----
-				btnPasteRel.setText(LocaleBundle.getString("CoverCropFrame.PasteRel")); //$NON-NLS-1$
-				btnPasteRel.addActionListener(e -> pasteParamsPerc(e));
-				panel13.add(btnPasteRel);
-			}
-			panel6.add(panel13, CC.xywh(2, 22, 3, 1));
-		}
-		contentPane.add(panel6, CC.xy(4, 4, CC.FILL, CC.FILL));
+                //---- btnPasteRel ----
+                btnPasteRel.setText(LocaleBundle.getString("CoverCropFrame.PasteRel")); //$NON-NLS-1$
+                btnPasteRel.addActionListener(e -> pasteParamsPerc(e));
+                panel13.add(btnPasteRel);
+            }
+            panel6.add(panel13, CC.xywh(2, 22, 3, 1));
+        }
+        contentPane.add(panel6, CC.xy(4, 4, CC.FILL, CC.FILL));
 
-		//======== panel7 ========
-		{
-			panel7.setBorder(new EtchedBorder());
-			panel7.setLayout(new FormLayout(
-				"$lcgap, default:grow, $lcgap", //$NON-NLS-1$
-				"$lgap, default, $lgap, default:grow, $lgap")); //$NON-NLS-1$
+        //======== panel7 ========
+        {
+            panel7.setBorder(new EtchedBorder());
+            panel7.setLayout(new FormLayout(
+                "$lcgap, default:grow, $lcgap", //$NON-NLS-1$
+                "$lgap, default, $lgap, default:grow, $lgap")); //$NON-NLS-1$
 
-			//---- spnZoom ----
-			spnZoom.setModel(new SpinnerNumberModel(2, 1, 10, 1));
-			spnZoom.addChangeListener(e -> onZoomChanged());
-			panel7.add(spnZoom, CC.xy(2, 2));
+            //---- spnZoom ----
+            spnZoom.setModel(new SpinnerNumberModel(2, 1, 10, 1));
+            spnZoom.addChangeListener(e -> onZoomChanged());
+            panel7.add(spnZoom, CC.xy(2, 2));
 
-			//---- lblZoom ----
-			lblZoom.addPaintComponentListener(e -> onZoomImagePaint(e));
-			panel7.add(lblZoom, CC.xy(2, 4, CC.FILL, CC.FILL));
-		}
-		contentPane.add(panel7, CC.xy(6, 4, CC.FILL, CC.FILL));
+            //---- lblZoom ----
+            lblZoom.addPaintComponentListener(e -> onZoomImagePaint(e));
+            panel7.add(lblZoom, CC.xy(2, 4, CC.FILL, CC.FILL));
+        }
+        contentPane.add(panel7, CC.xy(6, 4, CC.FILL, CC.FILL));
 
-		//======== panel8 ========
-		{
-			panel8.setBorder(new EtchedBorder());
-			panel8.setLayout(new FormLayout(
-				"2dlu, 2*(default, $lcgap), default:grow, $lcgap, default, 1dlu", //$NON-NLS-1$
-				"$nlgap, default:grow, $lgap, default, $nlgap")); //$NON-NLS-1$
+        //======== panel8 ========
+        {
+            panel8.setBorder(new EtchedBorder());
+            panel8.setLayout(new FormLayout(
+                "2dlu, 2*(default, $lcgap), default:grow, $lcgap, default, 1dlu", //$NON-NLS-1$
+                "$nlgap, default:grow, $lgap, default, $nlgap")); //$NON-NLS-1$
 
-			//---- lblCoverPreviewBig ----
-			lblCoverPreviewBig.setMinimumSize(new Dimension(182, 254));
-			lblCoverPreviewBig.setMaximumSize(new Dimension(182, 254));
-			lblCoverPreviewBig.setPreferredSize(new Dimension(182, 254));
-			lblCoverPreviewBig.addPaintComponentListener(e -> onBigCoverPaint(e));
-			panel8.add(lblCoverPreviewBig, CC.xywh(2, 2, 1, 3, CC.DEFAULT, CC.BOTTOM));
+            //---- lblCoverPreviewBig ----
+            lblCoverPreviewBig.setMinimumSize(new Dimension(182, 254));
+            lblCoverPreviewBig.setMaximumSize(new Dimension(182, 254));
+            lblCoverPreviewBig.setPreferredSize(new Dimension(182, 254));
+            lblCoverPreviewBig.addPaintComponentListener(e -> onBigCoverPaint(e));
+            panel8.add(lblCoverPreviewBig, CC.xywh(2, 2, 1, 3, CC.DEFAULT, CC.BOTTOM));
 
-			//---- lblCoverPreviewSmall ----
-			lblCoverPreviewSmall.setMaximumSize(new Dimension(91, 127));
-			lblCoverPreviewSmall.setMinimumSize(new Dimension(91, 127));
-			lblCoverPreviewSmall.setPreferredSize(new Dimension(91, 127));
-			lblCoverPreviewSmall.addPaintComponentListener(e -> onSmallCoverPaint(e));
-			panel8.add(lblCoverPreviewSmall, CC.xywh(4, 2, 1, 3, CC.DEFAULT, CC.BOTTOM));
+            //---- lblCoverPreviewSmall ----
+            lblCoverPreviewSmall.setMaximumSize(new Dimension(91, 127));
+            lblCoverPreviewSmall.setMinimumSize(new Dimension(91, 127));
+            lblCoverPreviewSmall.setPreferredSize(new Dimension(91, 127));
+            lblCoverPreviewSmall.addPaintComponentListener(e -> onSmallCoverPaint(e));
+            panel8.add(lblCoverPreviewSmall, CC.xywh(4, 2, 1, 3, CC.DEFAULT, CC.BOTTOM));
 
-			//======== panel9 ========
-			{
-				panel9.setLayout(new FormLayout(
-					"[18dlu,pref], 2dlu, pref, 2dlu, [18dlu,pref], 4dlu, [18dlu,pref]", //$NON-NLS-1$
-					"2*([18dlu,pref], 2dlu), [18dlu,pref], 4dlu, 18dlu")); //$NON-NLS-1$
+            //======== panel9 ========
+            {
+                panel9.setLayout(new FormLayout(
+                    "[18dlu,pref], 2dlu, pref, 2dlu, [18dlu,pref], 4dlu, [18dlu,pref]", //$NON-NLS-1$
+                    "2*([18dlu,pref], 2dlu), [18dlu,pref], 4dlu, 18dlu")); //$NON-NLS-1$
 
-				//---- btnResizeTop ----
-				btnResizeTop.setText("\u25b2"); //$NON-NLS-1$
-				btnResizeTop.addActionListener(e -> onCropTop(e));
-				panel9.add(btnResizeTop, CC.xy(3, 1, CC.FILL, CC.FILL));
+                //---- btnResizeTop ----
+                btnResizeTop.setText("\u25b2"); //$NON-NLS-1$
+                btnResizeTop.addActionListener(e -> onCropTop(e));
+                panel9.add(btnResizeTop, CC.xy(3, 1, CC.FILL, CC.FILL));
 
-				//---- btnResizeLeft ----
-				btnResizeLeft.setText("\u25c0"); //$NON-NLS-1$
-				btnResizeLeft.addActionListener(e -> onCropLeft(e));
-				panel9.add(btnResizeLeft, CC.xy(1, 3, CC.FILL, CC.FILL));
+                //---- btnResizeLeft ----
+                btnResizeLeft.setText("\u25c0"); //$NON-NLS-1$
+                btnResizeLeft.addActionListener(e -> onCropLeft(e));
+                panel9.add(btnResizeLeft, CC.xy(1, 3, CC.FILL, CC.FILL));
 
-				//---- btnResizeCenter ----
-				btnResizeCenter.setText("\u2716"); //$NON-NLS-1$
-				btnResizeCenter.addActionListener(e -> onCropCenter(e));
-				panel9.add(btnResizeCenter, CC.xy(3, 3, CC.FILL, CC.FILL));
+                //---- btnResizeCenter ----
+                btnResizeCenter.setText("\u2716"); //$NON-NLS-1$
+                btnResizeCenter.addActionListener(e -> onCropCenter(e));
+                panel9.add(btnResizeCenter, CC.xy(3, 3, CC.FILL, CC.FILL));
 
-				//---- btnResizeRight ----
-				btnResizeRight.setText("\u25b6"); //$NON-NLS-1$
-				btnResizeRight.addActionListener(e -> onCropRight(e));
-				panel9.add(btnResizeRight, CC.xy(5, 3, CC.FILL, CC.FILL));
+                //---- btnResizeRight ----
+                btnResizeRight.setText("\u25b6"); //$NON-NLS-1$
+                btnResizeRight.addActionListener(e -> onCropRight(e));
+                panel9.add(btnResizeRight, CC.xy(5, 3, CC.FILL, CC.FILL));
 
-				//---- btnResizeVert ----
-				btnResizeVert.setText("\u2b0d"); //$NON-NLS-1$
-				btnResizeVert.setFont(btnResizeVert.getFont().deriveFont(btnResizeVert.getFont().getSize() + 8f));
-				btnResizeVert.addActionListener(e -> onCropVertical(e));
-				panel9.add(btnResizeVert, CC.xywh(7, 1, 1, 5, CC.FILL, CC.FILL));
+                //---- btnResizeVert ----
+                btnResizeVert.setText("\u2b0d"); //$NON-NLS-1$
+                btnResizeVert.setFont(btnResizeVert.getFont().deriveFont(btnResizeVert.getFont().getSize() + 8f));
+                btnResizeVert.addActionListener(e -> onCropVertical(e));
+                panel9.add(btnResizeVert, CC.xywh(7, 1, 1, 5, CC.FILL, CC.FILL));
 
-				//---- btnResizeBottom ----
-				btnResizeBottom.setText("\u25bc"); //$NON-NLS-1$
-				btnResizeBottom.addActionListener(e -> onCropBottom(e));
-				panel9.add(btnResizeBottom, CC.xy(3, 5, CC.FILL, CC.FILL));
+                //---- btnResizeBottom ----
+                btnResizeBottom.setText("\u25bc"); //$NON-NLS-1$
+                btnResizeBottom.addActionListener(e -> onCropBottom(e));
+                panel9.add(btnResizeBottom, CC.xy(3, 5, CC.FILL, CC.FILL));
 
-				//---- btnResizeHorz ----
-				btnResizeHorz.setText("\u2b0c"); //$NON-NLS-1$
-				btnResizeHorz.setFont(btnResizeHorz.getFont().deriveFont(btnResizeHorz.getFont().getSize() + 8f));
-				btnResizeHorz.addActionListener(e -> onCropHorizontal(e));
-				panel9.add(btnResizeHorz, CC.xywh(1, 7, 5, 1, CC.FILL, CC.FILL));
-			}
-			panel8.add(panel9, CC.xy(8, 4));
-		}
-		contentPane.add(panel8, CC.xywh(4, 6, 3, 1, CC.FILL, CC.FILL));
+                //---- btnResizeHorz ----
+                btnResizeHorz.setText("\u2b0c"); //$NON-NLS-1$
+                btnResizeHorz.setFont(btnResizeHorz.getFont().deriveFont(btnResizeHorz.getFont().getSize() + 8f));
+                btnResizeHorz.addActionListener(e -> onCropHorizontal(e));
+                panel9.add(btnResizeHorz, CC.xywh(1, 7, 5, 1, CC.FILL, CC.FILL));
+            }
+            panel8.add(panel9, CC.xy(8, 4));
+        }
+        contentPane.add(panel8, CC.xywh(4, 6, 3, 1, CC.FILL, CC.FILL));
 
-		//======== panel2 ========
-		{
-			panel2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
+        //======== panel2 ========
+        {
+            panel2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
 
-			//---- btnOK ----
-			btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-			btnOK.addActionListener(e -> onOkay(e));
-			panel2.add(btnOK);
+            //---- btnOK ----
+            btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+            btnOK.addActionListener(e -> onOkay(e));
+            panel2.add(btnOK);
 
-			//---- btnAbort ----
-			btnAbort.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
-			btnAbort.addActionListener(e -> onCancel(e));
-			panel2.add(btnAbort);
-		}
-		contentPane.add(panel2, CC.xywh(2, 8, 5, 1));
-		setSize(1125, 695);
-		setLocationRelativeTo(getOwner());
+            //---- btnAbort ----
+            btnAbort.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+            btnAbort.addActionListener(e -> onCancel(e));
+            panel2.add(btnAbort);
+        }
+        contentPane.add(panel2, CC.xywh(2, 8, 5, 1));
+        setSize(1125, 835);
+        setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	private JPanel panel1;
-	private JButton btnReset;
-	private JPanel panel3;
-	private JButton btnAutoCalc;
-	private JPanel panel4;
-	private JButton btnRotateCW;
-	private JPanel panel10;
-	private JButton btnRotateCCW;
-	private JPanel panel5;
-	private JButton btnFlipX;
-	private JPanel panel11;
-	private JButton btnFlipY;
-	private JPanel panel12;
-	private JCanvasLabel lblImage;
-	private JPanel panel6;
-	private JCheckBox chckbxLockRatio;
-	private JCheckBox chckbxShowCropOutline;
-	private JCheckBox chckbxShowImageBorders;
-	private JCheckBox chckbxShowTransparency;
-	private JCheckBox chckbxSeriesPreview;
-	private JLabel lblPosition;
-	private JLabel lblSize;
-	private JLabel lblRatio;
-	private JLabel lblRatioState;
-	private JLabel lblMouse;
-	private JPanel panel13;
-	private JButton btnCopyParams;
-	private JButton btnPasteAbs;
-	private JButton btnPasteRel;
-	private JPanel panel7;
-	private JSpinner spnZoom;
-	private JCanvasLabel lblZoom;
-	private JPanel panel8;
-	private JCanvasLabel lblCoverPreviewBig;
-	private JCanvasLabel lblCoverPreviewSmall;
-	private JPanel panel9;
-	private JButton btnResizeTop;
-	private JButton btnResizeLeft;
-	private JButton btnResizeCenter;
-	private JButton btnResizeRight;
-	private JButton btnResizeVert;
-	private JButton btnResizeBottom;
-	private JButton btnResizeHorz;
-	private JPanel panel2;
-	private JButton btnOK;
-	private JButton btnAbort;
+    private JPanel panel1;
+    private JButton btnReset;
+    private JPanel panel3;
+    private JButton btnAutoCalc;
+    private JPanel panel4;
+    private JButton btnRotateCW;
+    private JPanel panel10;
+    private JButton btnRotateCCW;
+    private JPanel panel5;
+    private JButton btnFlipX;
+    private JPanel panel11;
+    private JButton btnFlipY;
+    private JPanel panel12;
+    private JCanvasLabel lblImage;
+    private JPanel panel6;
+    private JCheckBox chckbxLockRatio;
+    private JCheckBox chckbxShowCropOutline;
+    private JCheckBox chckbxShowImageBorders;
+    private JCheckBox chckbxShowTransparency;
+    private JCheckBox chckbxSeriesPreview;
+    private JLabel lblPosition;
+    private JLabel lblSize;
+    private JLabel lblRatio;
+    private JLabel lblRatioState;
+    private JLabel lblMouse;
+    private JPanel panel13;
+    private JButton btnCopyParams;
+    private JButton btnPasteAbs;
+    private JButton btnPasteRel;
+    private JPanel panel7;
+    private JSpinner spnZoom;
+    private JCanvasLabel lblZoom;
+    private JPanel panel8;
+    private JCanvasLabel lblCoverPreviewBig;
+    private JCanvasLabel lblCoverPreviewSmall;
+    private JPanel panel9;
+    private JButton btnResizeTop;
+    private JButton btnResizeLeft;
+    private JButton btnResizeCenter;
+    private JButton btnResizeRight;
+    private JButton btnResizeVert;
+    private JButton btnResizeBottom;
+    private JButton btnResizeHorz;
+    private JPanel panel2;
+    private JButton btnOK;
+    private JButton btnAbort;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

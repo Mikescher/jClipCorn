@@ -15,6 +15,7 @@ import java.io.*;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -45,7 +46,11 @@ public class FSPath implements IPath, Comparable<FSPath> {
 
 	public static FSPath createAndNormalize(@NotNull String v) {
 		if (Str.isNullOrWhitespace(v)) return Empty;
-		v = Path.of(v).normalize().toAbsolutePath().toString();
+		try {
+			v = Path.of(v).normalize().toAbsolutePath().toString();
+		} catch (InvalidPathException e) {
+			// do nothing, the path probably still contained ccpath-placeholder, just skip normalization
+		}
 		if (v.endsWith(SEPERATOR) && !(!ApplicationHelper.isWindows() && Str.equals(v, "/"))) v = v.substring(0, v.length() - SEPERATOR.length());
 		return new FSPath(v);
 	}

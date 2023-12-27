@@ -4,6 +4,7 @@ import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.serialization.xmlimport.IDatabaseXMLImporterImpl;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.helper.ByteUtilies;
@@ -30,6 +31,7 @@ public class DatabaseXMLImportImpl_V9 implements IDatabaseXMLImporterImpl
 		if (s.ResetTags) o.Tags.set(CCTagList.EMPTY);
 
 		if (s.ResetScore) o.Score.set(CCUserScore.RATING_NO);
+		if (s.ResetScore) o.ScoreComment.set(Str.Empty);
 
 		if (!s.IgnoreCoverData && e.hasAttribute("coverdata")) {
 			o.setCover(-1); //Damit er nicht probiert was zu löschen
@@ -119,8 +121,12 @@ public class DatabaseXMLImportImpl_V9 implements IDatabaseXMLImporterImpl
 		{
 			e.execIfAttrExists("title", o.Title::set);
 			e.execIfIntAttrExists("year", o.Year::set);
+
 			e.execIfIntAttrExists("score", o.Score::set);
 			e.execIfAttrExists("comment", o.ScoreComment::set);
+
+			if (s.ResetScore) o.Score.set(CCUserScore.RATING_NO);
+			if (s.ResetScore) o.ScoreComment.set(Str.Empty);
 
 			for (CCXMLElement xchild : e.getAllChildren("episode"))
 			{
@@ -162,10 +168,13 @@ public class DatabaseXMLImportImpl_V9 implements IDatabaseXMLImporterImpl
 			e.execIfAttrExists("part", o.Part::set);
 			e.execIfAttrExists("tags", v -> o.Tags.set(CCTagList.deserialize(v)));
 
+			if (s.ResetTags) o.Tags.set(CCTagList.EMPTY);
+
 			e.execIfIntAttrExists("score", o.Score::set);
 			e.execIfAttrExists("comment", o.ScoreComment::set);
 
-			if (s.ResetTags) o.Tags.set(CCTagList.EMPTY);
+			if (s.ResetScore) o.Score.set(CCUserScore.RATING_NO);
+			if (s.ResetScore) o.ScoreComment.set(Str.Empty);
 
 			e.execIfAttrExists("languages", v -> o.Language.set(CCDBLanguageSet.parseFromString(v)));
 			e.execIfAttrExists("subtitles", v -> o.Subtitles.set(CCDBLanguageList.parseFromLongString(v)));

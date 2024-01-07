@@ -26,7 +26,8 @@ import java.util.List;
 public class JCoverChooser extends JComponent implements MouseListener {
 	private static final long serialVersionUID = 4981485357566897454L;
 
-	private final static int MAX_EXTRACOVERCOUNT = 4;
+	private final static int MAX_EXTRACOVERCOUNT_3D   = 4;
+	private final static int MAX_EXTRACOVERCOUNT_FLAT = 16;
 
 	private final HashMap<Integer, TransformRectangle> rectangles = new HashMap<>();
 	
@@ -173,7 +174,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		if (mode3d) {
 			return circleRadius * 2 + 16;
 		} else {
-			return (MAX_EXTRACOVERCOUNT*2 + 1) * (getCoverWidth() + coverGap);
+			return (MAX_EXTRACOVERCOUNT_FLAT*2 + 1) * (getCoverWidth() + coverGap);
 		}
 	}
 
@@ -264,20 +265,40 @@ public class JCoverChooser extends JComponent implements MouseListener {
 
 	private int getExtraCoverCount()
 	{
-		int right = getWidth() / 2;
+		if (mode3d) {
 
-		if (rectangles.size() == 0) return MAX_EXTRACOVERCOUNT;
+			int right = getWidth() / 2;
 
-		for (int i=1; i<=MAX_EXTRACOVERCOUNT; i++)
-		{
-			if (!rectangles.containsKey(i)) return i-1;
+			if (rectangles.size() == 0) return MAX_EXTRACOVERCOUNT_3D;
 
-			TransformRectangle tr = rectangles.get(i);
+			for (int i=1; i<=MAX_EXTRACOVERCOUNT_3D; i++)
+			{
+				if (!rectangles.containsKey(i)) return i-1;
 
-			if (tr.topRight.x > right) return i-1;
-			if (tr.bottomRight.x > right) return i-1;
+				TransformRectangle tr = rectangles.get(i);
+
+				if (tr.topRight.x > right) return i-1;
+				if (tr.bottomRight.x > right) return i-1;
+			}
+			return MAX_EXTRACOVERCOUNT_3D;
+		} else {
+
+			int right = getWidth() / 2;
+
+			if (rectangles.size() == 0) return MAX_EXTRACOVERCOUNT_FLAT;
+
+			for (int i=1; i<=MAX_EXTRACOVERCOUNT_FLAT; i++)
+			{
+				if (!rectangles.containsKey(i)) return i-1;
+
+				TransformRectangle tr = rectangles.get(i);
+
+				if (tr.topRight.x > right) return i-1;
+				if (tr.bottomRight.x > right) return i-1;
+			}
+			return MAX_EXTRACOVERCOUNT_FLAT;
 		}
-		return MAX_EXTRACOVERCOUNT;
+
 	}
 
 	private void paintCover(Graphics g)

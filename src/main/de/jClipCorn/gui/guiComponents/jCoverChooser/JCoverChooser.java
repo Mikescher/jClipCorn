@@ -245,11 +245,17 @@ public class JCoverChooser extends JComponent implements MouseListener {
 		paintCover(g);
 	}
 
-	private int getCoverX(int cCount) {
-		int cw = getCoverWidth();
+	private int getCoverX(int cCount, int cw, int cwSmall) {
 		int mid = -cw / 2;
 
-		return mid + cCount * (cw + coverGap);
+		if (cCount > 0) {
+
+			return mid + cw + coverGap + (cCount-1) * (cwSmall + coverGap);
+
+		} else {
+			return mid + cCount * (cwSmall + coverGap);
+		}
+
 	}
 	
 	private boolean coverIsSet(int id) {
@@ -313,23 +319,47 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	}
 
 	private void update(boolean rp) {
+
 		int cw = getCoverWidth();
 		int ch = getCoverHeight();
 
-		int y1 = -ch / 2;
-		int y2 = ch / 2;
+		int y1 = (-ch / 2);
+		int y2 = (+ch / 2);
 
 		int ecc = getExtraCoverCount();
 
 		var props = designmode ? CCProperties.createInMemory() : movielist.ccprops();
 
+		var sideScaleDown = props.PROP_PREVSERIES_SMALLERCOVER_FACTOR.getValue();
+		var sideScaleEnabled = props.PROP_PREVSERIES_SMALLER_COVER.getValue();
+
+		int cw_small = cw;
+		int y1_small = y1;
+		int y2_small = y2;
+
+		if (sideScaleEnabled && sideScaleDown != 1.0) {
+			y1_small = -(int)((ch*sideScaleDown) / 2.0);
+			y2_small = +(int)((ch*sideScaleDown) / 2.0);
+			cw_small = (int)(cw * sideScaleDown);
+		}
+
 		for (int i = -ecc; i <= ecc; i++) {
 			TransformRectangle tr;
 
+			var ucw = cw;
+			var uy1 = y1;
+			var uy2 = y2;
+
+			if (i != 0 && sideScaleDown != 1.0) {
+				ucw = cw_small;
+				uy1 = y1_small;
+				uy2 = y2_small;
+			}
+
 			if (mode3d) {
-				tr = new TransformRectangle3D(props, new Point(getCoverX(i), y1), new Point(getCoverX(i) + cw, y2));
+				tr = new TransformRectangle3D(props, new Point(getCoverX(i, cw, cw_small), uy1), new Point(getCoverX(i, cw, cw_small) + ucw, uy2));
 			} else {
-				tr = new TransformRectangle2D(props, new Point(getCoverX(i), y1), new Point(getCoverX(i) + cw, y2));
+				tr = new TransformRectangle2D(props, new Point(getCoverX(i, cw, cw_small), uy1), new Point(getCoverX(i, cw, cw_small) + ucw, uy2));
 			}
 				
 			

@@ -10,13 +10,13 @@ import java.awt.*;
 import java.util.Objects;
 
 public class CCDoubleProperty extends CCProperty<Double> {
-	CCDoubleProperty(CCPropertyCategory cat, CCProperties prop, String ident, Double standard) {
+	public CCDoubleProperty(CCPropertyCategory cat, CCProperties prop, String ident, Double standard) {
 		super(cat, Double.class, prop, ident, standard);
 	}
 
 	@Override
 	public Component getComponent() {
-		return new JSpinner(new SpinnerNumberModel(0.0, Double.MIN_VALUE, Double.MAX_VALUE, 1.0));
+		return new JSpinner(new SpinnerNumberModel(0.0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1.0));
 	}
 
 	@Override

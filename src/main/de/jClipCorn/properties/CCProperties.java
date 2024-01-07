@@ -113,6 +113,8 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_OTHER_DEBUGMODE;
 	public CCBoolProperty                                   PROP_VALIDATE_DUP_IGNORE_IFO;
 	public CCBoolProperty                                   PROP_PREVSERIES_3DCOVER;
+	public CCBoolProperty                                   PROP_PREVSERIES_SMALLERCOVER;
+	public CCDoubleProperty                                 PROP_PREVSERIES_SMALLERCOVER_FACTOR;
 	public CCBoolProperty                                   PROP_PREVSERIES_COVERBORDER;
 	public CCBoolProperty                                   PROP_MASSCHANGESCORE_SKIPRATED;
 	public CCBoolProperty                                   PROP_MASSCHANGESCORE_ONLYVIEWED;
@@ -222,6 +224,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_MAINTABLE_INFINITETOOLTIPS;
 	public CCBoolProperty                                   PROP_SERIESTABLE_INSTANTTOOLTIPS;
 	public CCBoolProperty                                   PROP_SERIESTABLE_INFINITETOOLTIPS;
+	public CCBoolProperty                                   PROP_PREVSERIES_SMALLER_COVER;
 
 	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public boolean ARG_READONLY = false;
@@ -336,6 +339,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_STATUSBAR_CALC_SERIES_IN_SIZE      = new CCBoolProperty(CAT_SERIES,            this,   "PROP_STATUSBAR_CALC_SERIES_IN_SIZE",       false);
 		PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT      = new CCBoolProperty(CAT_SERIES,            this,   "PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT",       false);
 		PROP_PREVSERIES_3DCOVER                 = new CCBoolProperty(CAT_SERIES,            this,   "PROP_PREVSERIES_3DCOVER",                  true);
+		PROP_PREVSERIES_SMALLER_COVER           = new CCBoolProperty(CAT_SERIES,            this,   "PROP_PREVSERIES_SMALLERCOVER",             true);
 		PROP_PREVSERIES_COVERBORDER             = new CCBoolProperty(CAT_SERIES,            this,   "PROP_PREVSERIES_COVERBORDER",              true);
 		PROP_SERIES_ADDDATECALCULATION          = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_ADDDATECALCULATION",           AddDateAlgorithm.NEWEST_DATE,       AddDateAlgorithm.getWrapper());
 		PROP_SERIES_DISPLAYED_DATE              = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_DISPLAYED_DATE",               DisplayDateAlgorithm.LAST_VIEWED,   DisplayDateAlgorithm.getWrapper());
@@ -429,6 +433,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_MAINTABLE_INFINITETOOLTIPS         = new CCBoolProperty(NONVISIBLE,            this,   "PROP_MAINTABLE_INFINITETOOLTIPS",          true);
 		PROP_SERIESTABLE_INSTANTTOOLTIPS        = new CCBoolProperty(NONVISIBLE,            this,   "PROP_SERIESTABLE_INSTANTTOOLTIPS",         true);
 		PROP_SERIESTABLE_INFINITETOOLTIPS       = new CCBoolProperty(NONVISIBLE,            this,   "PROP_SERIESTABLE_INFINITETOOLTIPS",        true);
+		PROP_PREVSERIES_SMALLERCOVER_FACTOR     = new CCDoubleProperty(NONVISIBLE,          this,   "PROP_PREVSERIES_SMALLERCOVER_FACTOR",      0.95);
 
 		PROP_ADD_MOVIE_RELATIVE_AUTO            = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",             true);
 		PROP_PATHSYNTAX_SELF                    = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELF",                     true);

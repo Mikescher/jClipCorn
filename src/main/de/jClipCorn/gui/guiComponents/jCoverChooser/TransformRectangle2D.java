@@ -16,18 +16,26 @@ public class TransformRectangle2D extends TransformRectangle{
 	}
 
 	private BufferedImage transformImg(BufferedImage oi, boolean focused) {
-		BufferedImage i = new BufferedImage(oi.getWidth(), oi.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		i.getGraphics().drawImage(oi, 0, 0, null);
-		
+
+		double dw = topRight.getX() - topLeft.getX();
+		double dh = bottomLeft.getY() - topLeft.getY();
+
+		int iw = (int)dw;
+		int ih = (int)dh;
+
+		BufferedImage rimg = new BufferedImage(iw, ih, BufferedImage.TYPE_INT_ARGB);
+
+		rimg.getGraphics().drawImage(oi, 0, 0, iw, ih, 0, 0, oi.getWidth(), oi.getHeight(), null);
+
 		if (ccprops.PROP_PREVSERIES_COVERBORDER.getValue()) {
 			if (focused) {
-				ImageUtilities.drawActualBorder(i, FOCUSBORDERCOLOR, FOCUSBORDERWIDTH);
+				ImageUtilities.drawActualBorder(rimg, FOCUSBORDERCOLOR, FOCUSBORDERWIDTH);
 			} else {
-				ImageUtilities.drawActualBorder(i, BORDERCOLOR, BORDERWIDTH);
+				ImageUtilities.drawActualBorder(rimg, BORDERCOLOR, BORDERWIDTH);
 			}
 		}
-		
-		return i;
+
+		return rimg;
 	}
 
 	@Override

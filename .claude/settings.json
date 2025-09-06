@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make:*)",
+
+      "Bash(mkdir:*)",
+
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(rg:*)",
+      "Bash(base64:*)",
+      "Bash(sed:*)",
+      "Bash(ls:*)",
+
+      "Bash(./gradlew:*)",
+      "Bash(java:*)",
+      "Bash(cat:*)",
+
+      "Bash(curl:*)",
+      "Bash(curl *)",
+      "Bash(curl * | jq*)",
+      "Bash(curl * | grep*)",
+      "Bash(curl * | head*)",
+      "Bash(curl * | tail*)",
+
+      "Bash(done)",
+      "Bash(awk:*)",
+
+      "WebFetch(domain:platform.openai.com)"
+    ],
+    "deny": [
+    ],
+    "defaultMode": "acceptEdits",
+    "ignorePatterns": []
+  },
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
+    "DISABLE_ERROR_REPORTING": "1",
+    "DISABLE_TELEMETRY": "1"
+  }
+}

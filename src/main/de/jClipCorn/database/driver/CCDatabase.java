@@ -7,6 +7,7 @@ import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCHexColor;
+import de.jClipCorn.database.databaseElement.columnTypes.CCStringList;
 import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.database.migration.DatabaseMigration;
 import de.jClipCorn.features.log.CCLog;
@@ -335,6 +336,9 @@ public class CCDatabase {
 
 		ser.setCover(rs.getInt(DatabaseStructure.COL_SER_COVERID));
 		ser.Groups.set(rs.getString(DatabaseStructure.COL_SER_GROUPS));
+		ser.SpecialVersion.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_SPECIALVERSION)));
+		ser.AnimeSeason.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_ANIMESEASON)));
+		ser.AnimeStudio.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_ANIMESTUDIO)));
 	}
 
 	private void updateMovieFromResultSet(CCSQLResultSet rs, CCMovie mov) throws SQLException, CCFormatException, SQLWrapperException {
@@ -384,6 +388,9 @@ public class CCDatabase {
 
 		mov.setCover(rs.getInt(DatabaseStructure.COL_MOV_COVERID));
 		mov.Groups.set(rs.getString(DatabaseStructure.COL_MOV_GROUPS));
+		mov.SpecialVersion.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_SPECIALVERSION)));
+		mov.AnimeSeason.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_ANIMESEASON)));
+		mov.AnimeStudio.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_ANIMESTUDIO)));
 	}
 
 	private int getNewID() {
@@ -621,6 +628,9 @@ public class CCDatabase {
 			stmt.setStr(DatabaseStructure.COL_MOV_SCORECOMMENT,      mov.ScoreComment.get());
 
 			stmt.setStr(DatabaseStructure.COL_MOV_GROUPS,            mov.getGroups().toSerializationString());
+			stmt.setStr(DatabaseStructure.COL_MOV_SPECIALVERSION,    mov.SpecialVersion.serializeToString());
+			stmt.setStr(DatabaseStructure.COL_MOV_ANIMESEASON,       mov.AnimeSeason.serializeToString());
+			stmt.setStr(DatabaseStructure.COL_MOV_ANIMESTUDIO,       mov.AnimeStudio.serializeToString());
 			stmt.setInt(DatabaseStructure.COL_MOV_COVERID,           mov.getCoverID());
 
 			var mi = mov.MediaInfo.get();
@@ -673,6 +683,9 @@ public class CCDatabase {
 
 			stmt.setInt(DatabaseStructure.COL_SER_COVERID,           ser.getCoverID());
 			stmt.setStr(DatabaseStructure.COL_SER_GROUPS,            ser.getGroups().toSerializationString());
+			stmt.setStr(DatabaseStructure.COL_SER_SPECIALVERSION,    ser.SpecialVersion.serializeToString());
+			stmt.setStr(DatabaseStructure.COL_SER_ANIMESEASON,       ser.AnimeSeason.serializeToString());
+			stmt.setStr(DatabaseStructure.COL_SER_ANIMESTUDIO,       ser.AnimeStudio.serializeToString());
 
 			stmt.setInt(DatabaseStructure.COL_SER_LOCALID,           ser.getLocalID());
 

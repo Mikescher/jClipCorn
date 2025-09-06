@@ -400,26 +400,29 @@ public class Resources {
 	
 	
 	// #############################################  <SIDEBAR>  ############################################
-	public final static IconRef ICN_SIDEBAR_ALL	 			= register16x16Icon("/icons/sidebar/jar_empty.png");
-	public final static IconRef ICN_SIDEBAR_ZYKLUS 			= register16x16Icon("/icons/sidebar/asterisk_orange.png");
-	public final static IconRef ICN_SIDEBAR_GROUPS 			= register16x16Icon("/icons/sidebar/function_recently_used.png");
-	public final static IconRef ICN_SIDEBAR_GENRE 			= register16x16Icon("/icons/sidebar/book_spelling.png");
-	public final static IconRef ICN_SIDEBAR_ONLINESCORE		= register16x16Icon("/icons/sidebar/star.png");
-	public final static MultiSizeIconRef ICN_SIDEBAR_SCORE 	= registerMultisizeIcon("/icons/sidebar/to_do_list.png");
-	public final static IconRef ICN_SIDEBAR_YEAR	 		= register16x16Icon("/icons/sidebar/calendar.png");
-	public final static IconRef ICN_SIDEBAR_FORMAT 			= register16x16Icon("/icons/sidebar/file_extension_txt.png");
-	public final static IconRef ICN_SIDEBAR_QUALITY 		= register16x16Icon("/icons/sidebar/server_components.png");
-	public final static IconRef ICN_SIDEBAR_TAGS 			= register16x16Icon("/icons/sidebar/tags_cloud.png");
-	public final static IconRef ICN_SIDEBAR_LANGUAGE		= register16x16Icon("/icons/sidebar/flag_red.png");
-	public final static IconRef ICN_SIDEBAR_SUBTITLES		= register16x16Icon("/icons/sidebar/text_allcaps.png");
-	public final static IconRef ICN_SIDEBAR_TYP	 			= register16x16Icon("/icons/sidebar/color_swatch.png");
-	public final static IconRef ICN_SIDEBAR_VIEWED 			= register16x16Icon("/icons/sidebar/viewed.png");
-	public final static IconRef ICN_SIDEBAR_UNVIEWED		= register16x16Icon("/icons/sidebar/unviewed.png");
-	public final static IconRef ICN_SIDEBAR_LATER			= register16x16Icon("/icons/sidebar/later.png");
-	public final static IconRef ICN_SIDEBAR_NEVER			= register16x16Icon("/icons/sidebar/never.png");
-	public final static IconRef ICN_SIDEBAR_PARTIALLY		= register16x16Icon("/icons/sidebar/partially.png");
-	public final static IconRef ICN_SIDEBAR_AGAIN			= register16x16Icon("/icons/sidebar/again.png");
-	public final static IconRef ICN_SIDEBAR_CUSTOM			= register16x16Icon("/icons/sidebar/tag.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_ALL            = registerMultisizeIcon("/icons/sidebar/jar_empty.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_ZYKLUS         = registerMultisizeIcon("/icons/sidebar/asterisk_orange.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_GROUPS         = registerMultisizeIcon("/icons/sidebar/function_recently_used.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_GENRE          = registerMultisizeIcon("/icons/sidebar/book_spelling.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_ONLINESCORE    = registerMultisizeIcon("/icons/sidebar/star.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_SCORE          = registerMultisizeIcon("/icons/sidebar/to_do_list.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_YEAR           = registerMultisizeIcon("/icons/sidebar/calendar.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_FORMAT         = registerMultisizeIcon("/icons/sidebar/file_extension_txt.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_QUALITY        = registerMultisizeIcon("/icons/sidebar/server_components.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_TAGS           = registerMultisizeIcon("/icons/sidebar/tags_cloud.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_LANGUAGE       = registerMultisizeIcon("/icons/sidebar/flag_red.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_SUBTITLES      = registerMultisizeIcon("/icons/sidebar/text_allcaps.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_TYP            = registerMultisizeIcon("/icons/sidebar/color_swatch.png");
+	public final static IconRef ICN_SIDEBAR_VIEWED                  = register16x16Icon("/icons/sidebar/viewed.png");
+	public final static IconRef ICN_SIDEBAR_UNVIEWED                = register16x16Icon("/icons/sidebar/unviewed.png");
+	public final static IconRef ICN_SIDEBAR_LATER                   = register16x16Icon("/icons/sidebar/later.png");
+	public final static IconRef ICN_SIDEBAR_NEVER                   = register16x16Icon("/icons/sidebar/never.png");
+	public final static IconRef ICN_SIDEBAR_PARTIALLY               = register16x16Icon("/icons/sidebar/partially.png");
+	public final static IconRef ICN_SIDEBAR_AGAIN                   = register16x16Icon("/icons/sidebar/again.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_CUSTOM         = registerMultisizeIcon("/icons/sidebar/tag.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_ANIMESEASON    = registerMultisizeIcon("/icons/sidebar/calendar_view_month.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_ANIMESTUDIO    = registerMultisizeIcon("/icons/sidebar/cpanel_branding.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_SPECIALVERSION = registerMultisizeIcon("/icons/sidebar/global_telecom.png");
 	// #############################################  </SIDEBAR>  ###########################################
 
 	

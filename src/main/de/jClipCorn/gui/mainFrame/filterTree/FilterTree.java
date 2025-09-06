@@ -20,11 +20,11 @@ import de.jClipCorn.gui.mainFrame.table.RowFilterSource;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.lambda.Func0to1;
-import de.jClipCorn.util.listener.FinishListener;
 import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.util.*;
 
@@ -61,10 +61,22 @@ public class FilterTree extends AbstractFilterTree {
 		
 		initZyklus(addNode(null, Resources.ICN_SIDEBAR_ZYKLUS, LocaleBundle.getString("FilterTree.Zyklus"), this::parentClicked)); //$NON-NLS-1$
 		
-		if (movielist.getGroupList().size() > 0) {
+		if (!movielist.getGroupList().isEmpty()) {
 			initGroups(addNode(null, Resources.ICN_SIDEBAR_GROUPS, LocaleBundle.getString("FilterTree.Groups"), this::parentClicked)); //$NON-NLS-1$
 		}
-		
+
+		if (!movielist.getSpecialVersionList().isEmpty()) {
+			initSpecialVersion(addNode(null, Resources.ICN_SIDEBAR_SPECIALVERSION, LocaleBundle.getString("FilterTree.SpecialVersion"), this::parentClicked)); //$NON-NLS-1$
+		}
+
+		if (!movielist.getAnimeSeasonList().isEmpty()) {
+			initAnimeSeason(addNode(null, Resources.ICN_SIDEBAR_ANIMESEASON, LocaleBundle.getString("FilterTree.AnimeSeason"), this::parentClicked)); //$NON-NLS-1$
+		}
+
+		if (!movielist.getAnimeStudioList().isEmpty()) {
+			initAnimeStudio(addNode(null, Resources.ICN_SIDEBAR_ANIMESTUDIO, LocaleBundle.getString("FilterTree.AnimeStudio"), this::parentClicked)); //$NON-NLS-1$
+		}
+
 		initGenre(addNode(null, Resources.ICN_SIDEBAR_GENRE, LocaleBundle.getString("FilterTree.Genre"), this::parentClicked)); //$NON-NLS-1$
 		
 		initOnlineScore(addNode(null, Resources.ICN_SIDEBAR_ONLINESCORE, LocaleBundle.getString("FilterTree.IMDB"), this::parentClicked)); //$NON-NLS-1$
@@ -105,14 +117,13 @@ public class FilterTree extends AbstractFilterTree {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void expand(SimpleTreeEvent evt) {
 		tree.expandPath(evt.path);
 		
 		if (evt.path.getLastPathComponent() instanceof DefaultMutableTreeNode) {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode)evt.path.getLastPathComponent();
 			
-			for (Object o : CCStreams.iterate(node.depthFirstEnumeration())) {
+			for (TreeNode o : CCStreams.iterate(node.depthFirstEnumeration())) {
 				
 				if (o == node) continue;
 				
@@ -130,7 +141,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initAll(DefaultMutableTreeNode parent) {
-		parent.setUserObject(new SimpleTreeObject(Resources.ICN_SIDEBAR_ALL.get(), LocaleBundle.getString("FilterTree.All"), e ->  //$NON-NLS-1$
+		parent.setUserObject(new SimpleTreeObject(Resources.ICN_SIDEBAR_ALL.get16x16(), LocaleBundle.getString("FilterTree.All"), e ->  //$NON-NLS-1$
 		{
 			table.setRowFilter(null, RowFilterSource.SIDEBAR, true);
 			collapseAll();
@@ -220,19 +231,19 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initGroups(DefaultMutableTreeNode parent) {
-		List<CCGroup> groups_list = CCStreams.iterate(movielist.getGroupList()).autosortByProperty(p -> p.Order).enumerate();
-		Map<String, DefaultMutableTreeNode> groups_done = new HashMap<>();
-		groups_done.put("", parent); //$NON-NLS-1$
+		List<CCGroup> groupsList = CCStreams.iterate(movielist.getGroupList()).autosortByProperty(p -> p.Order).enumerate();
+		Map<String, DefaultMutableTreeNode> groupsDone = new HashMap<>();
+		groupsDone.put("", parent); //$NON-NLS-1$
 		
 		for(int i = 0; i < 12; i++) {
 			
-			for (final CCGroup group : new ArrayList<>(groups_list)) {
-				DefaultMutableTreeNode pp = groups_done.get(group.Parent);
+			for (final CCGroup group : new ArrayList<>(groupsList)) {
+				DefaultMutableTreeNode pp = groupsDone.get(group.Parent);
 				if (pp == null) continue;
 				
-				groups_list.remove(group);
+				groupsList.remove(group);
 				DefaultMutableTreeNode n = addNodeF(pp, (Icon)null, group.Name, () -> CustomGroupFilter.create(movielist, group, true));
-				groups_done.put(group.Name, n);
+				groupsDone.put(group.Name, n);
 			}
 			
 		}
@@ -258,10 +269,27 @@ public class FilterTree extends AbstractFilterTree {
 		}
 	}
 	
+	private void initSpecialVersion(DefaultMutableTreeNode parent) {
+		for (final String version : movielist.getSpecialVersionList()) {
+			addNodeF(parent, (Icon)null, version, () -> CustomSpecialVersionFilter.create(movielist, version));
+		}
+	}
+	
+	private void initAnimeSeason(DefaultMutableTreeNode parent) {
+		for (final String season : movielist.getAnimeSeasonList()) {
+			addNodeF(parent, (Icon)null, season, () -> CustomAnimeSeasonFilter.create(movielist, season));
+		}
+	}
+	
+	private void initAnimeStudio(DefaultMutableTreeNode parent) {
+		for (final String studio : movielist.getAnimeStudioList()) {
+			addNodeF(parent, (Icon)null, studio, () -> CustomAnimeStudioFilter.create(movielist, studio));
+		}
+	}
+
 	private void initCustom(DefaultMutableTreeNode parent) {
-		for (int i = 0; i < customFilterList.size(); i++) {
-			final CustomFilterObject fo = customFilterList.get(i);
-			addNodeF(parent, Resources.ICN_SIDEBAR_CUSTOM, fo.getName(), fo::getFilter);
+		for (final CustomFilterObject fo : customFilterList) {
+			addNodeF(parent, Resources.ICN_SIDEBAR_CUSTOM.get16x16(), fo.getName(), fo::getFilter);
 		}
 		
 		addNode(parent, Resources.ICN_SIDEBAR_CUSTOM, LocaleBundle.getString("FilterTree.Custom.OrganizeFilter"), e -> onOrganizeCustomFilterClicked()); //$NON-NLS-1$
@@ -270,13 +298,10 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void onOrganizeCustomFilterClicked() {
-		new OrganizeFilterDialog(movielist, table.getMainFrame(), customFilterList, new FinishListener() {
-			@Override
-			public void finish() {
-				updateTree();
-				
-				customFilterList.save();
-			}
+		new OrganizeFilterDialog(movielist, table.getMainFrame(), customFilterList, () -> {
+			updateTree();
+
+			customFilterList.save();
 		}).setVisible(true);
 	}
 	

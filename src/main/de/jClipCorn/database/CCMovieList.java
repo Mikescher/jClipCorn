@@ -26,6 +26,7 @@ import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.DriveMap;
 import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
+import de.jClipCorn.util.comparator.CCAnimeSeasonComparator;
 import de.jClipCorn.util.comparator.CCDatabaseElementComparator;
 import de.jClipCorn.util.comparator.CCMovieComparator;
 import de.jClipCorn.util.comparator.CCSeriesComparator;
@@ -49,8 +50,8 @@ import org.jdom2.Element;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 public class CCMovieList implements ICCPropertySource {
 	private final List<CCDatabaseElement> list;
@@ -755,6 +756,63 @@ public class CCMovieList implements ICCPropertySource {
 				for (int j = 0; j < el.Genres.get().getGenreCount(); j++) {
 					if (!result.contains(el.Genres.get().getGenre(j))) {
 						result.add(el.Genres.get().getGenre(j));
+					}
+				}
+			}
+
+			Collections.sort(result);
+
+			return result;
+		});
+	}
+
+	public List<String> getSpecialVersionList() {
+		return _cache.get(MovieListCache.SPECIAL_VERSION_LIST, null, ml->
+		{
+			List<String> result = new ArrayList<>();
+
+			for (CCDatabaseElement el : list) {
+				for (String specialVersion : el.SpecialVersion.get()) {
+					if (!result.contains(specialVersion) && !specialVersion.isEmpty()) {
+						result.add(specialVersion);
+					}
+				}
+			}
+
+			Collections.sort(result);
+
+			return result;
+		});
+	}
+
+	public List<String> getAnimeSeasonList() {
+		return _cache.get(MovieListCache.ANIME_SEASON_LIST, null, ml->
+		{
+			List<String> result = new ArrayList<>();
+
+			for (CCDatabaseElement el : list) {
+				for (String season : el.AnimeSeason.get()) {
+					if (!result.contains(season) && !season.isEmpty()) {
+						result.add(season);
+					}
+				}
+			}
+
+			Collections.sort(result, new CCAnimeSeasonComparator());
+
+			return result;
+		});
+	}
+
+	public List<String> getAnimeStudioList() {
+		return _cache.get(MovieListCache.ANIME_STUDIO_LIST, null, ml->
+		{
+			List<String> result = new ArrayList<>();
+
+			for (CCDatabaseElement el : list) {
+				for (String studio : el.AnimeStudio.get()) {
+					if (!result.contains(studio) && !studio.isEmpty()) {
+						result.add(studio);
 					}
 				}
 			}

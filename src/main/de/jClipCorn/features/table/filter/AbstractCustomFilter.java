@@ -60,6 +60,9 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_MI_VALUE         = 37;
 	public final static int CUSTOMFILTERID_SUBTITLE         = 38;
 	public final static int CUSTOMFILTERID_USERSCORECOMMENT = 39;
+	public final static int CUSTOMFILTERID_SPECIALVERSION   = 40;
+	public final static int CUSTOMFILTERID_ANIMESEASON      = 41;
+	public final static int CUSTOMFILTERID_ANIMESTUDIO      = 42;
 		
 	public abstract String getName();
 	public abstract String getPrecreateName();
@@ -199,6 +202,9 @@ public abstract class AbstractCustomFilter {
 			new CustomEpisodecountFilter(ml),
 			new CustomCoverDimensionFilter(ml),
 			new CustomRelativeHistoryFilter(ml),
+			new CustomSpecialVersionFilter(ml),
+			new CustomAnimeSeasonFilter(ml),
+			new CustomAnimeStudioFilter(ml),
 		};
 	}
 	

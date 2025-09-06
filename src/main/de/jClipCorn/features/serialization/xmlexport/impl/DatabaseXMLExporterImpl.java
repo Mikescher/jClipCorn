@@ -28,15 +28,18 @@ public class DatabaseXMLExporterImpl {
 	public static void exportDatabaseElement(Element e, CCDatabaseElement o, ExportOptions s) {
 		if (s.ExportLocalID) e.setAttribute("localid",      o.getLocalID() + "");
 
-		e.setAttribute("title",        o.getTitle());
-		e.setAttribute("genres",       o.getGenres().serialize());
-		e.setAttribute("onlinescore",  String.valueOf(o.getOnlinescore().toSerializationString()));
-		e.setAttribute("fsk",          String.valueOf(o.getFSK().asInt()));
-		e.setAttribute("score",        String.valueOf(o.Score.get().asInt()));
-		e.setAttribute("comment",      o.ScoreComment.get());
-		e.setAttribute("groups",       o.getGroups().toSerializationString());
-		e.setAttribute("onlinreref",   o.getOnlineReference().toSerializationString());
-		e.setAttribute("tags",         o.getTags().serialize());
+		e.setAttribute("title",          o.getTitle());
+		e.setAttribute("genres",         o.getGenres().serialize());
+		e.setAttribute("onlinescore",    String.valueOf(o.getOnlinescore().toSerializationString()));
+		e.setAttribute("fsk",            String.valueOf(o.getFSK().asInt()));
+		e.setAttribute("score",          String.valueOf(o.Score.get().asInt()));
+		e.setAttribute("comment",        o.ScoreComment.get());
+		e.setAttribute("groups",         o.getGroups().toSerializationString());
+		e.setAttribute("onlinreref",     o.getOnlineReference().toSerializationString());
+		e.setAttribute("tags",           o.getTags().serialize());
+		e.setAttribute("specialversion", o.SpecialVersion.serializeToString());
+		e.setAttribute("animeseason",    o.AnimeSeason.serializeToString());
+		e.setAttribute("animestudio",    o.AnimeStudio.serializeToString());
 
 		if (! s.CoverData) e.setAttribute("covername", o.getCoverInfo().Filename);
 		if (! s.CoverData) e.setAttribute("coverid", o.getCoverInfo().ID + "");

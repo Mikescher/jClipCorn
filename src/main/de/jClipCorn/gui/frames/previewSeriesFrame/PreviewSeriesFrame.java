@@ -278,6 +278,18 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 
 		lblGenres.setText(series.Genres.get().iterate().stringjoin(CCGenre::asString, "\n"));
 
+		lblSpecialVersion.setText(series.SpecialVersion.get().ccstream().stringjoin("\n"));
+		lblSpecialVersion.setVisible(!series.SpecialVersion.get().isEmpty());
+		labelSpecialVersion.setVisible(!series.SpecialVersion.get().isEmpty());
+
+		lblAnimeSeason.setText(series.AnimeSeason.get().ccstream().stringjoin("\n"));
+		lblAnimeSeason.setVisible(!series.AnimeSeason.get().isEmpty());
+		labelAnimeSeason.setVisible(!series.AnimeSeason.get().isEmpty());
+
+		lblAnimeStudio.setText(series.AnimeStudio.get().ccstream().stringjoin("\n"));
+		lblAnimeStudio.setVisible(!series.AnimeStudio.get().isEmpty());
+		labelAnimeStudio.setVisible(!series.AnimeStudio.get().isEmpty());
+
 		ThreadUtils.delay(50, () -> { pnlInfo.revalidate(); });
 	}
 
@@ -510,6 +522,12 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
         lblGroups = new MultiLineTextLabel();
         label8 = new JLabel();
         lblGenres = new MultiLineTextLabel();
+        labelSpecialVersion = new JLabel();
+        lblSpecialVersion = new MultiLineTextLabel();
+        labelAnimeSeason = new JLabel();
+        lblAnimeSeason = new MultiLineTextLabel();
+        labelAnimeStudio = new JLabel();
+        lblAnimeStudio = new MultiLineTextLabel();
         btnOnline = new OnlineRefButton(movielist);
         pnlMain = new JPanel();
         lblSeasonScore = new JLabel();
@@ -597,7 +615,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
         {
             pnlInfo.setLayout(new FormLayout(
                 "default, $lcgap, 0dlu:grow", //$NON-NLS-1$
-                "default, $lgap, default, $ugap, 4*(default, $lgap), 2*(pref, $lgap), 2*(default, $lgap), 2*(pref, $lgap), default:grow, $lgap, pref")); //$NON-NLS-1$
+                "default, $lgap, default, $ugap, 4*(default, $lgap), 2*(pref, $lgap), 2*(default, $lgap), 5*(pref, $lgap), default:grow, $lgap, pref")); //$NON-NLS-1$
 
             //---- lblCover ----
             lblCover.setNoOverlay(true);
@@ -720,7 +738,40 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
             //---- lblGenres ----
             lblGenres.setLabelFont(lblGenres.getLabelFont().deriveFont(12f));
             pnlInfo.add(lblGenres, CC.xy(3, 23, CC.FILL, CC.FILL));
-            pnlInfo.add(btnOnline, CC.xywh(1, 27, 3, 1, CC.RIGHT, CC.DEFAULT));
+
+            //---- labelSpecialVersion ----
+            labelSpecialVersion.setText(LocaleBundle.getString("PreviewSeriesFrame.labelSpecialVersion.text")); //$NON-NLS-1$
+            labelSpecialVersion.setVerticalAlignment(SwingConstants.TOP);
+            labelSpecialVersion.setVerticalTextPosition(SwingConstants.TOP);
+            labelSpecialVersion.setFont(labelSpecialVersion.getFont().deriveFont(12f));
+            pnlInfo.add(labelSpecialVersion, CC.xy(1, 25, CC.DEFAULT, CC.TOP));
+
+            //---- lblSpecialVersion ----
+            lblSpecialVersion.setLabelFont(lblSpecialVersion.getLabelFont().deriveFont(12f));
+            pnlInfo.add(lblSpecialVersion, CC.xy(3, 25, CC.FILL, CC.FILL));
+
+            //---- labelAnimeSeason ----
+            labelAnimeSeason.setText(LocaleBundle.getString("PreviewSeriesFrame.labelAnimeSeason.text")); //$NON-NLS-1$
+            labelAnimeSeason.setVerticalAlignment(SwingConstants.TOP);
+            labelAnimeSeason.setVerticalTextPosition(SwingConstants.TOP);
+            labelAnimeSeason.setFont(labelAnimeSeason.getFont().deriveFont(12f));
+            pnlInfo.add(labelAnimeSeason, CC.xy(1, 27, CC.DEFAULT, CC.TOP));
+
+            //---- lblAnimeSeason ----
+            lblAnimeSeason.setLabelFont(lblAnimeSeason.getLabelFont().deriveFont(12f));
+            pnlInfo.add(lblAnimeSeason, CC.xy(3, 27, CC.FILL, CC.FILL));
+
+            //---- labelAnimeStudio ----
+            labelAnimeStudio.setText(LocaleBundle.getString("PreviewSeriesFrame.labelAnimeStudio.text")); //$NON-NLS-1$
+            labelAnimeStudio.setVerticalAlignment(SwingConstants.TOP);
+            labelAnimeStudio.setVerticalTextPosition(SwingConstants.TOP);
+            labelAnimeStudio.setFont(labelAnimeStudio.getFont().deriveFont(12f));
+            pnlInfo.add(labelAnimeStudio, CC.xy(1, 29, CC.DEFAULT, CC.TOP));
+
+            //---- lblAnimeStudio ----
+            lblAnimeStudio.setLabelFont(lblAnimeStudio.getLabelFont().deriveFont(12f));
+            pnlInfo.add(lblAnimeStudio, CC.xy(3, 29, CC.FILL, CC.FILL));
+            pnlInfo.add(btnOnline, CC.xywh(1, 33, 3, 1, CC.RIGHT, CC.DEFAULT));
         }
         contentPane.add(pnlInfo, CC.xy(2, 4, CC.FILL, CC.FILL));
 
@@ -750,7 +801,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
             pnlMain.add(tabSeason, CC.xywh(2, 4, 5, 1, CC.FILL, CC.FILL));
         }
         contentPane.add(pnlMain, CC.xy(4, 4, CC.FILL, CC.FILL));
-        setSize(1000, 950);
+        setSize(1250, 1187);
         setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -788,6 +839,12 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
     private MultiLineTextLabel lblGroups;
     private JLabel label8;
     private MultiLineTextLabel lblGenres;
+    private JLabel labelSpecialVersion;
+    private MultiLineTextLabel lblSpecialVersion;
+    private JLabel labelAnimeSeason;
+    private MultiLineTextLabel lblAnimeSeason;
+    private JLabel labelAnimeStudio;
+    private MultiLineTextLabel lblAnimeStudio;
     private OnlineRefButton btnOnline;
     private JPanel pnlMain;
     private JLabel lblSeasonScore;

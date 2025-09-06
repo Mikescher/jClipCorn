@@ -17,6 +17,7 @@ import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
+import de.jClipCorn.gui.guiComponents.JAutoCompleteTextField;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.JReadableCCPathTextField;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
@@ -213,6 +214,10 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		newM.OnlineReference.set(edReference.getValue());
 		newM.Groups.set(edGroups.getValue());
 
+		newM.SpecialVersion.set(CCStringList.create(edSpecialVersion.getValues()));
+		newM.AnimeSeason.set(CCStringList.create(edAnimeSeason.getValues()));
+		newM.AnimeStudio.set(CCStringList.create(edAnimeStudio.getValues()));
+
 		newM.setCover(edCvrControl.getResizedImageForStorage());
 
 		newM.endUpdating();
@@ -288,6 +293,9 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		btnMediaInfoLen.setEnabled(e);
 		ctrlMediaInfo.setEnabled(e);
 		btnQueryMediaInfo.setEnabled(e);
+		edSpecialVersion.setEnabled(e);
+		edAnimeSeason.setEnabled(e);
+		edAnimeStudio.setEnabled(e);
 	}
 
 	private void onBtnChooseClicked(int cNmbr) {
@@ -1012,518 +1020,545 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		pnlLeft = new JPanel();
-		pnlParts = new JPanel();
-		label1 = new JLabel();
-		edPart0 = new JReadableCCPathTextField();
-		btnChoose0 = new JButton();
-		label2 = new JLabel();
-		edPart1 = new JReadableCCPathTextField();
-		btnChoose1 = new JButton();
-		btnClear1 = new JButton();
-		label3 = new JLabel();
-		edPart2 = new JReadableCCPathTextField();
-		btnChoose2 = new JButton();
-		btnClear2 = new JButton();
-		label5 = new JLabel();
-		edPart3 = new JReadableCCPathTextField();
-		btnChoose3 = new JButton();
-		btnClear3 = new JButton();
-		label6 = new JLabel();
-		edPart4 = new JReadableCCPathTextField();
-		btnChoose4 = new JButton();
-		btnClear4 = new JButton();
-		label4 = new JLabel();
-		edPart5 = new JReadableCCPathTextField();
-		btnChoose5 = new JButton();
-		btnClear5 = new JButton();
-		pnlData = new JPanel();
-		label15 = new JLabel();
-		edTitle = new JTextField();
-		label16 = new JLabel();
-		edReference = new JReferenceChooser(movielist);
-		label17 = new JLabel();
-		edZyklus = new JTextField();
-		spnZyklus = new JSpinner();
-		label18 = new JLabel();
-		edGroups = new GroupListEditor(movielist);
-		label19 = new JLabel();
-		spnLength = new JSpinner();
-		label29 = new JLabel();
-		btnMediaInfoLen = new CCIcon16Button();
-		lblLenAuto = new JLabel();
-		label20 = new JLabel();
-		cbxLanguage = new LanguageSetChooser();
-		btnMediaInfoLang = new CCIcon16Button();
-		btnQueryMediaInfo = new JButton();
-		label31 = new JLabel();
-		cbxSubtitles = new LanguageListChooser();
-		btnMediaInfoSubs = new CCIcon16Button();
-		lblMISubWarning = new CCIcon16Label();
-		label21 = new JLabel();
-		ctrlMediaInfo = new JMediaInfoControl(movielist, () -> edPart0.getPath().toFSPath(this));
-		btnMediaInfoMain = new CCIcon16Button();
-		pbLanguageLoad = new JProgressBar();
-		label22 = new JLabel();
-		spnAddDate = new JCCDateSpinner(CCDate.getMinimumDate(), CCDate.getMinimumDate(), null);
-		label23 = new JLabel();
-		spnOnlineScore = new OnlineScoreControl();
-		label24 = new JLabel();
-		cbxFSK = new CCEnumComboBox<CCOptionalFSK>(CCOptionalFSK.getWrapper());
-		label25 = new JLabel();
-		cbxFormat = new CCEnumComboBox<CCFileFormat>(CCFileFormat.getWrapper());
-		label26 = new JLabel();
-		spnYear = new JYearSpinner();
-		label27 = new JLabel();
-		spnSize = new CCFileSizeSpinner();
-		label28 = new JLabel();
-		cbxScore = new CCEnumComboBox<CCUserScore>(CCUserScore.getWrapper());
-		pnlRight = new JPanel();
-		pnlGenres = new JPanel();
-		label7 = new JLabel();
-		cbxGenre0 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		label8 = new JLabel();
-		cbxGenre1 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		label9 = new JLabel();
-		cbxGenre2 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		label10 = new JLabel();
-		cbxGenre3 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		label11 = new JLabel();
-		cbxGenre4 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		label12 = new JLabel();
-		cbxGenre5 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		label13 = new JLabel();
-		cbxGenre6 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		label14 = new JLabel();
-		cbxGenre7 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		btnParseIMDB = new JButton();
-		edCvrControl = new EditCoverControl(this, this);
-		pnlBottom = new JPanel();
-		btnOK = new JButton();
-		btnCancel = new JButton();
+        pnlLeft = new JPanel();
+        pnlParts = new JPanel();
+        label1 = new JLabel();
+        edPart0 = new JReadableCCPathTextField();
+        btnChoose0 = new JButton();
+        label2 = new JLabel();
+        edPart1 = new JReadableCCPathTextField();
+        btnChoose1 = new JButton();
+        btnClear1 = new JButton();
+        label3 = new JLabel();
+        edPart2 = new JReadableCCPathTextField();
+        btnChoose2 = new JButton();
+        btnClear2 = new JButton();
+        label5 = new JLabel();
+        edPart3 = new JReadableCCPathTextField();
+        btnChoose3 = new JButton();
+        btnClear3 = new JButton();
+        label6 = new JLabel();
+        edPart4 = new JReadableCCPathTextField();
+        btnChoose4 = new JButton();
+        btnClear4 = new JButton();
+        label4 = new JLabel();
+        edPart5 = new JReadableCCPathTextField();
+        btnChoose5 = new JButton();
+        btnClear5 = new JButton();
+        pnlData = new JPanel();
+        label15 = new JLabel();
+        edTitle = new JTextField();
+        label16 = new JLabel();
+        edReference = new JReferenceChooser(movielist);
+        label17 = new JLabel();
+        edZyklus = new JTextField();
+        spnZyklus = new JSpinner();
+        label18 = new JLabel();
+        edGroups = new GroupListEditor(movielist);
+        label19 = new JLabel();
+        spnLength = new JSpinner();
+        label29 = new JLabel();
+        btnMediaInfoLen = new CCIcon16Button();
+        lblLenAuto = new JLabel();
+        label20 = new JLabel();
+        cbxLanguage = new LanguageSetChooser();
+        btnMediaInfoLang = new CCIcon16Button();
+        btnQueryMediaInfo = new JButton();
+        label31 = new JLabel();
+        cbxSubtitles = new LanguageListChooser();
+        btnMediaInfoSubs = new CCIcon16Button();
+        lblMISubWarning = new CCIcon16Label();
+        label21 = new JLabel();
+        ctrlMediaInfo = new JMediaInfoControl(movielist, () -> edPart0.getPath().toFSPath(this));
+        btnMediaInfoMain = new CCIcon16Button();
+        pbLanguageLoad = new JProgressBar();
+        label22 = new JLabel();
+        spnAddDate = new JCCDateSpinner(CCDate.getMinimumDate(), CCDate.getMinimumDate(), null);
+        label23 = new JLabel();
+        spnOnlineScore = new OnlineScoreControl();
+        label24 = new JLabel();
+        cbxFSK = new CCEnumComboBox<CCOptionalFSK>(CCOptionalFSK.getWrapper());
+        label25 = new JLabel();
+        cbxFormat = new CCEnumComboBox<CCFileFormat>(CCFileFormat.getWrapper());
+        label26 = new JLabel();
+        spnYear = new JYearSpinner();
+        label27 = new JLabel();
+        spnSize = new CCFileSizeSpinner();
+        label28 = new JLabel();
+        cbxScore = new CCEnumComboBox<CCUserScore>(CCUserScore.getWrapper());
+        lblSpecialVersion = new JLabel();
+        edSpecialVersion = new JAutoCompleteTextField(() -> movielist.getSpecialVersionList());
+        lblAnimeSeason = new JLabel();
+        edAnimeSeason = new JAutoCompleteTextField(() -> movielist.getAnimeSeasonList(), true);
+        lblAnimeStudio = new JLabel();
+        edAnimeStudio = new JAutoCompleteTextField(() -> movielist.getAnimeStudioList(), true);
+        pnlRight = new JPanel();
+        pnlGenres = new JPanel();
+        label7 = new JLabel();
+        cbxGenre0 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        label8 = new JLabel();
+        cbxGenre1 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        label9 = new JLabel();
+        cbxGenre2 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        label10 = new JLabel();
+        cbxGenre3 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        label11 = new JLabel();
+        cbxGenre4 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        label12 = new JLabel();
+        cbxGenre5 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        label13 = new JLabel();
+        cbxGenre6 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        label14 = new JLabel();
+        cbxGenre7 = new CCEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        btnParseIMDB = new JButton();
+        edCvrControl = new EditCoverControl(this, this);
+        pnlBottom = new JPanel();
+        btnOK = new JButton();
+        btnCancel = new JButton();
 
-		//======== this ========
-		setTitle(LocaleBundle.getString("AddMovieFrame.this.title")); //$NON-NLS-1$
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		var contentPane = getContentPane();
-		contentPane.setLayout(new FormLayout(
-			"$ugap, 0dlu:grow, 10dlu, 130dlu, $ugap", //$NON-NLS-1$
-			"$ugap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
+        //======== this ========
+        setTitle(LocaleBundle.getString("AddMovieFrame.this.title")); //$NON-NLS-1$
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        var contentPane = getContentPane();
+        contentPane.setLayout(new FormLayout(
+            "$ugap, 0dlu:grow, 10dlu, 130dlu, $ugap", //$NON-NLS-1$
+            "$ugap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
 
-		//======== pnlLeft ========
-		{
-			pnlLeft.setLayout(new FormLayout(
-				"0dlu:grow", //$NON-NLS-1$
-				"default, 10dlu, default:grow, default")); //$NON-NLS-1$
+        //======== pnlLeft ========
+        {
+            pnlLeft.setLayout(new FormLayout(
+                "0dlu:grow", //$NON-NLS-1$
+                "default, 10dlu, default:grow, default")); //$NON-NLS-1$
 
-			//======== pnlParts ========
-			{
-				pnlParts.setLayout(new FormLayout(
-					"default, $lcgap, 0dlu:grow, 2*($lcgap, default)", //$NON-NLS-1$
-					"5*(default, $lgap), default")); //$NON-NLS-1$
+            //======== pnlParts ========
+            {
+                pnlParts.setLayout(new FormLayout(
+                    "default, $lcgap, 0dlu:grow, 2*($lcgap, default)", //$NON-NLS-1$
+                    "5*(default, $lgap), default")); //$NON-NLS-1$
 
-				//---- label1 ----
-				label1.setText(LocaleBundle.getString("AddMovieFrame.lblPart.text")); //$NON-NLS-1$
-				pnlParts.add(label1, CC.xy(1, 1));
-				pnlParts.add(edPart0, CC.xywh(3, 1, 3, 1));
+                //---- label1 ----
+                label1.setText(LocaleBundle.getString("AddMovieFrame.lblPart.text")); //$NON-NLS-1$
+                pnlParts.add(label1, CC.xy(1, 1));
+                pnlParts.add(edPart0, CC.xywh(3, 1, 3, 1));
 
-				//---- btnChoose0 ----
-				btnChoose0.setText("..."); //$NON-NLS-1$
-				btnChoose0.addActionListener(e -> onChoose0(e));
-				pnlParts.add(btnChoose0, CC.xy(7, 1));
+                //---- btnChoose0 ----
+                btnChoose0.setText("..."); //$NON-NLS-1$
+                btnChoose0.addActionListener(e -> onChoose0(e));
+                pnlParts.add(btnChoose0, CC.xy(7, 1));
 
-				//---- label2 ----
-				label2.setText(LocaleBundle.getString("AddMovieFrame.lblPart_1.text")); //$NON-NLS-1$
-				pnlParts.add(label2, CC.xy(1, 3));
-				pnlParts.add(edPart1, CC.xy(3, 3));
+                //---- label2 ----
+                label2.setText(LocaleBundle.getString("AddMovieFrame.lblPart_1.text")); //$NON-NLS-1$
+                pnlParts.add(label2, CC.xy(1, 3));
+                pnlParts.add(edPart1, CC.xy(3, 3));
 
-				//---- btnChoose1 ----
-				btnChoose1.setText("..."); //$NON-NLS-1$
-				btnChoose1.addActionListener(e -> onChoose1(e));
-				pnlParts.add(btnChoose1, CC.xy(5, 3));
+                //---- btnChoose1 ----
+                btnChoose1.setText("..."); //$NON-NLS-1$
+                btnChoose1.addActionListener(e -> onChoose1(e));
+                pnlParts.add(btnChoose1, CC.xy(5, 3));
 
-				//---- btnClear1 ----
-				btnClear1.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-				btnClear1.addActionListener(e -> onClear1(e));
-				pnlParts.add(btnClear1, CC.xy(7, 3));
+                //---- btnClear1 ----
+                btnClear1.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
+                btnClear1.addActionListener(e -> onClear1(e));
+                pnlParts.add(btnClear1, CC.xy(7, 3));
 
-				//---- label3 ----
-				label3.setText(LocaleBundle.getString("AddMovieFrame.lblPart_2.text")); //$NON-NLS-1$
-				pnlParts.add(label3, CC.xy(1, 5));
-				pnlParts.add(edPart2, CC.xy(3, 5));
+                //---- label3 ----
+                label3.setText(LocaleBundle.getString("AddMovieFrame.lblPart_2.text")); //$NON-NLS-1$
+                pnlParts.add(label3, CC.xy(1, 5));
+                pnlParts.add(edPart2, CC.xy(3, 5));
 
-				//---- btnChoose2 ----
-				btnChoose2.setText("..."); //$NON-NLS-1$
-				btnChoose2.addActionListener(e -> onChoose2(e));
-				pnlParts.add(btnChoose2, CC.xy(5, 5));
+                //---- btnChoose2 ----
+                btnChoose2.setText("..."); //$NON-NLS-1$
+                btnChoose2.addActionListener(e -> onChoose2(e));
+                pnlParts.add(btnChoose2, CC.xy(5, 5));
 
-				//---- btnClear2 ----
-				btnClear2.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-				btnClear2.addActionListener(e -> onClear2(e));
-				pnlParts.add(btnClear2, CC.xy(7, 5));
+                //---- btnClear2 ----
+                btnClear2.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
+                btnClear2.addActionListener(e -> onClear2(e));
+                pnlParts.add(btnClear2, CC.xy(7, 5));
 
-				//---- label5 ----
-				label5.setText(LocaleBundle.getString("AddMovieFrame.lblPart_3.text")); //$NON-NLS-1$
-				pnlParts.add(label5, CC.xy(1, 7));
-				pnlParts.add(edPart3, CC.xy(3, 7));
+                //---- label5 ----
+                label5.setText(LocaleBundle.getString("AddMovieFrame.lblPart_3.text")); //$NON-NLS-1$
+                pnlParts.add(label5, CC.xy(1, 7));
+                pnlParts.add(edPart3, CC.xy(3, 7));
 
-				//---- btnChoose3 ----
-				btnChoose3.setText("..."); //$NON-NLS-1$
-				btnChoose3.addActionListener(e -> onChoose3(e));
-				pnlParts.add(btnChoose3, CC.xy(5, 7));
+                //---- btnChoose3 ----
+                btnChoose3.setText("..."); //$NON-NLS-1$
+                btnChoose3.addActionListener(e -> onChoose3(e));
+                pnlParts.add(btnChoose3, CC.xy(5, 7));
 
-				//---- btnClear3 ----
-				btnClear3.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-				btnClear3.addActionListener(e -> onClear3(e));
-				pnlParts.add(btnClear3, CC.xy(7, 7));
+                //---- btnClear3 ----
+                btnClear3.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
+                btnClear3.addActionListener(e -> onClear3(e));
+                pnlParts.add(btnClear3, CC.xy(7, 7));
 
-				//---- label6 ----
-				label6.setText(LocaleBundle.getString("AddMovieFrame.lblPart_4.text")); //$NON-NLS-1$
-				pnlParts.add(label6, CC.xy(1, 9));
-				pnlParts.add(edPart4, CC.xy(3, 9));
+                //---- label6 ----
+                label6.setText(LocaleBundle.getString("AddMovieFrame.lblPart_4.text")); //$NON-NLS-1$
+                pnlParts.add(label6, CC.xy(1, 9));
+                pnlParts.add(edPart4, CC.xy(3, 9));
 
-				//---- btnChoose4 ----
-				btnChoose4.setText("..."); //$NON-NLS-1$
-				btnChoose4.addActionListener(e -> onChoose4(e));
-				pnlParts.add(btnChoose4, CC.xy(5, 9));
+                //---- btnChoose4 ----
+                btnChoose4.setText("..."); //$NON-NLS-1$
+                btnChoose4.addActionListener(e -> onChoose4(e));
+                pnlParts.add(btnChoose4, CC.xy(5, 9));
 
-				//---- btnClear4 ----
-				btnClear4.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-				btnClear4.addActionListener(e -> onClear4(e));
-				pnlParts.add(btnClear4, CC.xy(7, 9));
+                //---- btnClear4 ----
+                btnClear4.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
+                btnClear4.addActionListener(e -> onClear4(e));
+                pnlParts.add(btnClear4, CC.xy(7, 9));
 
-				//---- label4 ----
-				label4.setText(LocaleBundle.getString("AddMovieFrame.lblPart_5.text")); //$NON-NLS-1$
-				pnlParts.add(label4, CC.xy(1, 11));
-				pnlParts.add(edPart5, CC.xy(3, 11));
+                //---- label4 ----
+                label4.setText(LocaleBundle.getString("AddMovieFrame.lblPart_5.text")); //$NON-NLS-1$
+                pnlParts.add(label4, CC.xy(1, 11));
+                pnlParts.add(edPart5, CC.xy(3, 11));
 
-				//---- btnChoose5 ----
-				btnChoose5.setText("..."); //$NON-NLS-1$
-				btnChoose5.addActionListener(e -> onChoose5(e));
-				pnlParts.add(btnChoose5, CC.xy(5, 11));
+                //---- btnChoose5 ----
+                btnChoose5.setText("..."); //$NON-NLS-1$
+                btnChoose5.addActionListener(e -> onChoose5(e));
+                pnlParts.add(btnChoose5, CC.xy(5, 11));
 
-				//---- btnClear5 ----
-				btnClear5.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
-				btnClear5.addActionListener(e -> onClear5(e));
-				pnlParts.add(btnClear5, CC.xy(7, 11));
-			}
-			pnlLeft.add(pnlParts, CC.xy(1, 1, CC.FILL, CC.FILL));
+                //---- btnClear5 ----
+                btnClear5.setText(LocaleBundle.getString("AddMovieFrame.btnClear.text")); //$NON-NLS-1$
+                btnClear5.addActionListener(e -> onClear5(e));
+                pnlParts.add(btnClear5, CC.xy(7, 11));
+            }
+            pnlLeft.add(pnlParts, CC.xy(1, 1, CC.FILL, CC.FILL));
 
-			//======== pnlData ========
-			{
-				pnlData.setLayout(new FormLayout(
-					"default, $lcgap, 0dlu:grow, $lcgap, [40dlu,default], $lcgap, 16dlu, $lcgap, 25dlu, $lcgap, [30dlu,default]", //$NON-NLS-1$
-					"14*(default, $lgap), default")); //$NON-NLS-1$
+            //======== pnlData ========
+            {
+                pnlData.setLayout(new FormLayout(
+                    "default, $lcgap, 0dlu:grow, $lcgap, [40dlu,default], $lcgap, 16dlu, $lcgap, 25dlu, $lcgap, [30dlu,default]", //$NON-NLS-1$
+                    "17*(default, $lgap), default")); //$NON-NLS-1$
 
-				//---- label15 ----
-				label15.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
-				pnlData.add(label15, CC.xy(1, 1));
-				pnlData.add(edTitle, CC.xywh(3, 1, 3, 1));
+                //---- label15 ----
+                label15.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
+                pnlData.add(label15, CC.xy(1, 1));
+                pnlData.add(edTitle, CC.xywh(3, 1, 3, 1));
 
-				//---- label16 ----
-				label16.setText(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
-				pnlData.add(label16, CC.xy(1, 3));
-				pnlData.add(edReference, CC.xywh(3, 3, 3, 1));
+                //---- label16 ----
+                label16.setText(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
+                pnlData.add(label16, CC.xy(1, 3));
+                pnlData.add(edReference, CC.xywh(3, 3, 3, 1));
 
-				//---- label17 ----
-				label17.setText(LocaleBundle.getString("AddMovieFrame.lblZyklus.text")); //$NON-NLS-1$
-				pnlData.add(label17, CC.xy(1, 5));
-				pnlData.add(edZyklus, CC.xy(3, 5));
+                //---- label17 ----
+                label17.setText(LocaleBundle.getString("AddMovieFrame.lblZyklus.text")); //$NON-NLS-1$
+                pnlData.add(label17, CC.xy(1, 5));
+                pnlData.add(edZyklus, CC.xy(3, 5));
 
-				//---- spnZyklus ----
-				spnZyklus.setModel(new SpinnerNumberModel(-1, -1, null, 1));
-				pnlData.add(spnZyklus, CC.xy(5, 5));
+                //---- spnZyklus ----
+                spnZyklus.setModel(new SpinnerNumberModel(-1, -1, null, 1));
+                pnlData.add(spnZyklus, CC.xy(5, 5));
 
-				//---- label18 ----
-				label18.setText(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
-				pnlData.add(label18, CC.xy(1, 7));
-				pnlData.add(edGroups, CC.xywh(3, 7, 3, 1, CC.DEFAULT, CC.FILL));
+                //---- label18 ----
+                label18.setText(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
+                pnlData.add(label18, CC.xy(1, 7));
+                pnlData.add(edGroups, CC.xywh(3, 7, 3, 1, CC.DEFAULT, CC.FILL));
 
-				//---- label19 ----
-				label19.setText(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
-				pnlData.add(label19, CC.xy(1, 9));
+                //---- label19 ----
+                label19.setText(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
+                pnlData.add(label19, CC.xy(1, 9));
 
-				//---- spnLength ----
-				spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
-				pnlData.add(spnLength, CC.xy(3, 9));
+                //---- spnLength ----
+                spnLength.setModel(new SpinnerNumberModel(0, 0, null, 1));
+                pnlData.add(spnLength, CC.xy(3, 9));
 
-				//---- label29 ----
-				label29.setText("min."); //$NON-NLS-1$
-				pnlData.add(label29, CC.xy(5, 9));
+                //---- label29 ----
+                label29.setText("min."); //$NON-NLS-1$
+                pnlData.add(label29, CC.xy(5, 9));
 
-				//---- btnMediaInfoLen ----
-				btnMediaInfoLen.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
-				btnMediaInfoLen.setToolTipText("MediaInfo"); //$NON-NLS-1$
-				btnMediaInfoLen.addActionListener(e -> calculateMediaInfoAndSetLength());
-				pnlData.add(btnMediaInfoLen, CC.xy(7, 9));
-				pnlData.add(lblLenAuto, CC.xywh(9, 9, 3, 1, CC.FILL, CC.FILL));
+                //---- btnMediaInfoLen ----
+                btnMediaInfoLen.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
+                btnMediaInfoLen.setToolTipText("MediaInfo"); //$NON-NLS-1$
+                btnMediaInfoLen.addActionListener(e -> calculateMediaInfoAndSetLength());
+                pnlData.add(btnMediaInfoLen, CC.xy(7, 9));
+                pnlData.add(lblLenAuto, CC.xywh(9, 9, 3, 1, CC.FILL, CC.FILL));
 
-				//---- label20 ----
-				label20.setText(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
-				pnlData.add(label20, CC.xy(1, 11));
+                //---- label20 ----
+                label20.setText(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
+                pnlData.add(label20, CC.xy(1, 11));
 
-				//---- cbxLanguage ----
-				cbxLanguage.addLanguageChangedListener(e -> onLanguageChanged());
-				pnlData.add(cbxLanguage, CC.xywh(3, 11, 3, 1));
+                //---- cbxLanguage ----
+                cbxLanguage.addLanguageChangedListener(e -> onLanguageChanged());
+                pnlData.add(cbxLanguage, CC.xywh(3, 11, 3, 1));
 
-				//---- btnMediaInfoLang ----
-				btnMediaInfoLang.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
-				btnMediaInfoLang.setToolTipText("MediaInfo"); //$NON-NLS-1$
-				btnMediaInfoLang.addActionListener(e -> calculateMediaInfoAndSetLanguage());
-				pnlData.add(btnMediaInfoLang, CC.xy(7, 11));
+                //---- btnMediaInfoLang ----
+                btnMediaInfoLang.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
+                btnMediaInfoLang.setToolTipText("MediaInfo"); //$NON-NLS-1$
+                btnMediaInfoLang.addActionListener(e -> calculateMediaInfoAndSetLanguage());
+                pnlData.add(btnMediaInfoLang, CC.xy(7, 11));
 
-				//---- btnQueryMediaInfo ----
-				btnQueryMediaInfo.setText("..."); //$NON-NLS-1$
-				btnQueryMediaInfo.addActionListener(e -> calculateAndShowMediaInfo());
-				pnlData.add(btnQueryMediaInfo, CC.xy(9, 11));
+                //---- btnQueryMediaInfo ----
+                btnQueryMediaInfo.setText("..."); //$NON-NLS-1$
+                btnQueryMediaInfo.addActionListener(e -> calculateAndShowMediaInfo());
+                pnlData.add(btnQueryMediaInfo, CC.xy(9, 11));
 
-				//---- label31 ----
-				label31.setText(LocaleBundle.getString("AddMovieFrame.lblSubtitles")); //$NON-NLS-1$
-				pnlData.add(label31, CC.xy(1, 13));
+                //---- label31 ----
+                label31.setText(LocaleBundle.getString("AddMovieFrame.lblSubtitles")); //$NON-NLS-1$
+                pnlData.add(label31, CC.xy(1, 13));
 
-				//---- cbxSubtitles ----
-				cbxSubtitles.addLanguageChangedListener(e -> subtitleChanged());
-				pnlData.add(cbxSubtitles, CC.xywh(3, 13, 3, 1));
+                //---- cbxSubtitles ----
+                cbxSubtitles.addLanguageChangedListener(e -> subtitleChanged());
+                pnlData.add(cbxSubtitles, CC.xywh(3, 13, 3, 1));
 
-				//---- btnMediaInfoSubs ----
-				btnMediaInfoSubs.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
-				btnMediaInfoSubs.setToolTipText("MediaInfo"); //$NON-NLS-1$
-				btnMediaInfoSubs.addActionListener(e -> calculateMediaInfoAndSetSubs());
-				pnlData.add(btnMediaInfoSubs, CC.xy(7, 13));
+                //---- btnMediaInfoSubs ----
+                btnMediaInfoSubs.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
+                btnMediaInfoSubs.setToolTipText("MediaInfo"); //$NON-NLS-1$
+                btnMediaInfoSubs.addActionListener(e -> calculateMediaInfoAndSetSubs());
+                pnlData.add(btnMediaInfoSubs, CC.xy(7, 13));
 
-				//---- lblMISubWarning ----
-				lblMISubWarning.setIconRef(Icon16RefLink.ICN_WARNING_TRIANGLE);
-				pnlData.add(lblMISubWarning, CC.xy(9, 13, CC.LEFT, CC.FILL));
+                //---- lblMISubWarning ----
+                lblMISubWarning.setIconRef(Icon16RefLink.ICN_WARNING_TRIANGLE);
+                pnlData.add(lblMISubWarning, CC.xy(9, 13, CC.LEFT, CC.FILL));
 
-				//---- label21 ----
-				label21.setText(LocaleBundle.getString("AddMovieFrame.lblMediaInfo")); //$NON-NLS-1$
-				pnlData.add(label21, CC.xy(1, 15));
+                //---- label21 ----
+                label21.setText(LocaleBundle.getString("AddMovieFrame.lblMediaInfo")); //$NON-NLS-1$
+                pnlData.add(label21, CC.xy(1, 15));
 
-				//---- ctrlMediaInfo ----
-				ctrlMediaInfo.addMediaInfoChangedListener(e -> onMediaInfoChanged());
-				pnlData.add(ctrlMediaInfo, CC.xywh(3, 15, 3, 1, CC.DEFAULT, CC.FILL));
+                //---- ctrlMediaInfo ----
+                ctrlMediaInfo.addMediaInfoChangedListener(e -> onMediaInfoChanged());
+                pnlData.add(ctrlMediaInfo, CC.xywh(3, 15, 3, 1, CC.DEFAULT, CC.FILL));
 
-				//---- btnMediaInfoMain ----
-				btnMediaInfoMain.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
-				btnMediaInfoMain.setToolTipText("MediaInfo"); //$NON-NLS-1$
-				btnMediaInfoMain.addActionListener(e -> calculateAndSetMediaInfo());
-				pnlData.add(btnMediaInfoMain, CC.xy(7, 15));
+                //---- btnMediaInfoMain ----
+                btnMediaInfoMain.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
+                btnMediaInfoMain.setToolTipText("MediaInfo"); //$NON-NLS-1$
+                btnMediaInfoMain.addActionListener(e -> calculateAndSetMediaInfo());
+                pnlData.add(btnMediaInfoMain, CC.xy(7, 15));
 
-				//---- pbLanguageLoad ----
-				pbLanguageLoad.setIndeterminate(true);
-				pnlData.add(pbLanguageLoad, CC.xy(9, 15));
+                //---- pbLanguageLoad ----
+                pbLanguageLoad.setIndeterminate(true);
+                pnlData.add(pbLanguageLoad, CC.xy(9, 15));
 
-				//---- label22 ----
-				label22.setText(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
-				pnlData.add(label22, CC.xy(1, 17));
-				pnlData.add(spnAddDate, CC.xywh(3, 17, 3, 1));
+                //---- label22 ----
+                label22.setText(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
+                pnlData.add(label22, CC.xy(1, 17));
+                pnlData.add(spnAddDate, CC.xywh(3, 17, 3, 1));
 
-				//---- label23 ----
-				label23.setText(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
-				pnlData.add(label23, CC.xy(1, 19));
-				pnlData.add(spnOnlineScore, CC.xywh(3, 19, 3, 1));
+                //---- label23 ----
+                label23.setText(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
+                pnlData.add(label23, CC.xy(1, 19));
+                pnlData.add(spnOnlineScore, CC.xywh(3, 19, 3, 1));
 
-				//---- label24 ----
-				label24.setText(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
-				pnlData.add(label24, CC.xy(1, 21));
-				pnlData.add(cbxFSK, CC.xywh(3, 21, 3, 1));
+                //---- label24 ----
+                label24.setText(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
+                pnlData.add(label24, CC.xy(1, 21));
+                pnlData.add(cbxFSK, CC.xywh(3, 21, 3, 1));
 
-				//---- label25 ----
-				label25.setText(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
-				pnlData.add(label25, CC.xy(1, 23));
-				pnlData.add(cbxFormat, CC.xywh(3, 23, 3, 1));
+                //---- label25 ----
+                label25.setText(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
+                pnlData.add(label25, CC.xy(1, 23));
+                pnlData.add(cbxFormat, CC.xywh(3, 23, 3, 1));
 
-				//---- label26 ----
-				label26.setText(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
-				pnlData.add(label26, CC.xy(1, 25));
-				pnlData.add(spnYear, CC.xywh(3, 25, 3, 1));
+                //---- label26 ----
+                label26.setText(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
+                pnlData.add(label26, CC.xy(1, 25));
+                pnlData.add(spnYear, CC.xywh(3, 25, 3, 1));
 
-				//---- label27 ----
-				label27.setText(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
-				pnlData.add(label27, CC.xy(1, 27));
-				pnlData.add(spnSize, CC.xywh(3, 27, 3, 1));
+                //---- label27 ----
+                label27.setText(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
+                pnlData.add(label27, CC.xy(1, 27));
+                pnlData.add(spnSize, CC.xywh(3, 27, 3, 1));
 
-				//---- label28 ----
-				label28.setText(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
-				pnlData.add(label28, CC.xy(1, 29));
-				pnlData.add(cbxScore, CC.xywh(3, 29, 3, 1));
-			}
-			pnlLeft.add(pnlData, CC.xy(1, 3, CC.FILL, CC.FILL));
-		}
-		contentPane.add(pnlLeft, CC.xy(2, 2, CC.FILL, CC.FILL));
+                //---- label28 ----
+                label28.setText(LocaleBundle.getString("EditSeriesFrame.lblScore.text")); //$NON-NLS-1$
+                pnlData.add(label28, CC.xy(1, 29));
+                pnlData.add(cbxScore, CC.xywh(3, 29, 3, 1));
 
-		//======== pnlRight ========
-		{
-			pnlRight.setLayout(new FormLayout(
-				"default:grow", //$NON-NLS-1$
-				"default:grow, 10dlu, default:grow")); //$NON-NLS-1$
+                //---- lblSpecialVersion ----
+                lblSpecialVersion.setText(LocaleBundle.getString("AddMovieFrame.lblSpecialVersion.text")); //$NON-NLS-1$
+                pnlData.add(lblSpecialVersion, CC.xy(1, 31));
+                pnlData.add(edSpecialVersion, CC.xywh(3, 31, 3, 1));
 
-			//======== pnlGenres ========
-			{
-				pnlGenres.setLayout(new FormLayout(
-					"default, $lcgap, default:grow", //$NON-NLS-1$
-					"8*(default, $lgap), [50dlu,default]")); //$NON-NLS-1$
+                //---- lblAnimeSeason ----
+                lblAnimeSeason.setText(LocaleBundle.getString("AddMovieFrame.lblAnimeSeason.text")); //$NON-NLS-1$
+                pnlData.add(lblAnimeSeason, CC.xy(1, 33));
+                pnlData.add(edAnimeSeason, CC.xywh(3, 33, 3, 1));
 
-				//---- label7 ----
-				label7.setText(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
-				pnlGenres.add(label7, CC.xy(1, 1));
-				pnlGenres.add(cbxGenre0, CC.xy(3, 1));
+                //---- lblAnimeStudio ----
+                lblAnimeStudio.setText(LocaleBundle.getString("AddMovieFrame.lblAnimeStudio.text")); //$NON-NLS-1$
+                pnlData.add(lblAnimeStudio, CC.xy(1, 35));
+                pnlData.add(edAnimeStudio, CC.xywh(3, 35, 3, 1));
+            }
+            pnlLeft.add(pnlData, CC.xy(1, 3, CC.FILL, CC.FILL));
+        }
+        contentPane.add(pnlLeft, CC.xy(2, 2, CC.FILL, CC.FILL));
 
-				//---- label8 ----
-				label8.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
-				pnlGenres.add(label8, CC.xy(1, 3));
-				pnlGenres.add(cbxGenre1, CC.xy(3, 3));
+        //======== pnlRight ========
+        {
+            pnlRight.setLayout(new FormLayout(
+                "default:grow", //$NON-NLS-1$
+                "default:grow, 10dlu, default:grow")); //$NON-NLS-1$
 
-				//---- label9 ----
-				label9.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
-				pnlGenres.add(label9, CC.xy(1, 5));
-				pnlGenres.add(cbxGenre2, CC.xy(3, 5));
+            //======== pnlGenres ========
+            {
+                pnlGenres.setLayout(new FormLayout(
+                    "default, $lcgap, default:grow", //$NON-NLS-1$
+                    "8*(default, $lgap), [50dlu,default]")); //$NON-NLS-1$
 
-				//---- label10 ----
-				label10.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
-				pnlGenres.add(label10, CC.xy(1, 7));
-				pnlGenres.add(cbxGenre3, CC.xy(3, 7));
+                //---- label7 ----
+                label7.setText(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
+                pnlGenres.add(label7, CC.xy(1, 1));
+                pnlGenres.add(cbxGenre0, CC.xy(3, 1));
 
-				//---- label11 ----
-				label11.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
-				pnlGenres.add(label11, CC.xy(1, 9));
-				pnlGenres.add(cbxGenre4, CC.xy(3, 9));
+                //---- label8 ----
+                label8.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
+                pnlGenres.add(label8, CC.xy(1, 3));
+                pnlGenres.add(cbxGenre1, CC.xy(3, 3));
 
-				//---- label12 ----
-				label12.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
-				pnlGenres.add(label12, CC.xy(1, 11));
-				pnlGenres.add(cbxGenre5, CC.xy(3, 11));
+                //---- label9 ----
+                label9.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
+                pnlGenres.add(label9, CC.xy(1, 5));
+                pnlGenres.add(cbxGenre2, CC.xy(3, 5));
 
-				//---- label13 ----
-				label13.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
-				pnlGenres.add(label13, CC.xy(1, 13));
-				pnlGenres.add(cbxGenre6, CC.xy(3, 13));
+                //---- label10 ----
+                label10.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
+                pnlGenres.add(label10, CC.xy(1, 7));
+                pnlGenres.add(cbxGenre3, CC.xy(3, 7));
 
-				//---- label14 ----
-				label14.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
-				pnlGenres.add(label14, CC.xy(1, 15));
-				pnlGenres.add(cbxGenre7, CC.xy(3, 15));
+                //---- label11 ----
+                label11.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
+                pnlGenres.add(label11, CC.xy(1, 9));
+                pnlGenres.add(cbxGenre4, CC.xy(3, 9));
 
-				//---- btnParseIMDB ----
-				btnParseIMDB.setText(LocaleBundle.getString("AddMovieFrame.btnParseIMDB.text")); //$NON-NLS-1$
-				btnParseIMDB.setFont(btnParseIMDB.getFont().deriveFont(btnParseIMDB.getFont().getStyle() | Font.BOLD, btnParseIMDB.getFont().getSize() + 4f));
-				btnParseIMDB.addActionListener(e -> showOnlineParser());
-				pnlGenres.add(btnParseIMDB, CC.xywh(1, 17, 3, 1, CC.FILL, CC.FILL));
-			}
-			pnlRight.add(pnlGenres, CC.xy(1, 1, CC.FILL, CC.FILL));
-			pnlRight.add(edCvrControl, CC.xy(1, 3, CC.RIGHT, CC.BOTTOM));
-		}
-		contentPane.add(pnlRight, CC.xy(4, 2, CC.FILL, CC.FILL));
+                //---- label12 ----
+                label12.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
+                pnlGenres.add(label12, CC.xy(1, 11));
+                pnlGenres.add(cbxGenre5, CC.xy(3, 11));
 
-		//======== pnlBottom ========
-		{
-			pnlBottom.setLayout(new FlowLayout());
+                //---- label13 ----
+                label13.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
+                pnlGenres.add(label13, CC.xy(1, 13));
+                pnlGenres.add(cbxGenre6, CC.xy(3, 13));
 
-			//---- btnOK ----
-			btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-			btnOK.addActionListener(e -> onOkay());
-			pnlBottom.add(btnOK);
+                //---- label14 ----
+                label14.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
+                pnlGenres.add(label14, CC.xy(1, 15));
+                pnlGenres.add(cbxGenre7, CC.xy(3, 15));
 
-			//---- btnCancel ----
-			btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
-			btnCancel.addActionListener(e -> cancel());
-			pnlBottom.add(btnCancel);
-		}
-		contentPane.add(pnlBottom, CC.xywh(2, 4, 3, 1));
-		setSize(775, 810);
-		setLocationRelativeTo(getOwner());
+                //---- btnParseIMDB ----
+                btnParseIMDB.setText(LocaleBundle.getString("AddMovieFrame.btnParseIMDB.text")); //$NON-NLS-1$
+                btnParseIMDB.setFont(btnParseIMDB.getFont().deriveFont(btnParseIMDB.getFont().getStyle() | Font.BOLD, btnParseIMDB.getFont().getSize() + 4f));
+                btnParseIMDB.addActionListener(e -> showOnlineParser());
+                pnlGenres.add(btnParseIMDB, CC.xywh(1, 17, 3, 1, CC.FILL, CC.FILL));
+            }
+            pnlRight.add(pnlGenres, CC.xy(1, 1, CC.FILL, CC.FILL));
+            pnlRight.add(edCvrControl, CC.xy(1, 3, CC.RIGHT, CC.BOTTOM));
+        }
+        contentPane.add(pnlRight, CC.xy(4, 2, CC.FILL, CC.FILL));
+
+        //======== pnlBottom ========
+        {
+            pnlBottom.setLayout(new FlowLayout());
+
+            //---- btnOK ----
+            btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+            btnOK.addActionListener(e -> onOkay());
+            pnlBottom.add(btnOK);
+
+            //---- btnCancel ----
+            btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+            btnCancel.addActionListener(e -> cancel());
+            pnlBottom.add(btnCancel);
+        }
+        contentPane.add(pnlBottom, CC.xywh(2, 4, 3, 1));
+        setSize(969, 1012);
+        setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	private JPanel pnlLeft;
-	private JPanel pnlParts;
-	private JLabel label1;
-	private JReadableCCPathTextField edPart0;
-	private JButton btnChoose0;
-	private JLabel label2;
-	private JReadableCCPathTextField edPart1;
-	private JButton btnChoose1;
-	private JButton btnClear1;
-	private JLabel label3;
-	private JReadableCCPathTextField edPart2;
-	private JButton btnChoose2;
-	private JButton btnClear2;
-	private JLabel label5;
-	private JReadableCCPathTextField edPart3;
-	private JButton btnChoose3;
-	private JButton btnClear3;
-	private JLabel label6;
-	private JReadableCCPathTextField edPart4;
-	private JButton btnChoose4;
-	private JButton btnClear4;
-	private JLabel label4;
-	private JReadableCCPathTextField edPart5;
-	private JButton btnChoose5;
-	private JButton btnClear5;
-	private JPanel pnlData;
-	private JLabel label15;
-	private JTextField edTitle;
-	private JLabel label16;
-	private JReferenceChooser edReference;
-	private JLabel label17;
-	private JTextField edZyklus;
-	private JSpinner spnZyklus;
-	private JLabel label18;
-	private GroupListEditor edGroups;
-	private JLabel label19;
-	private JSpinner spnLength;
-	private JLabel label29;
-	private CCIcon16Button btnMediaInfoLen;
-	private JLabel lblLenAuto;
-	private JLabel label20;
-	private LanguageSetChooser cbxLanguage;
-	private CCIcon16Button btnMediaInfoLang;
-	private JButton btnQueryMediaInfo;
-	private JLabel label31;
-	private LanguageListChooser cbxSubtitles;
-	private CCIcon16Button btnMediaInfoSubs;
-	private CCIcon16Label lblMISubWarning;
-	private JLabel label21;
-	private JMediaInfoControl ctrlMediaInfo;
-	private CCIcon16Button btnMediaInfoMain;
-	private JProgressBar pbLanguageLoad;
-	private JLabel label22;
-	private JCCDateSpinner spnAddDate;
-	private JLabel label23;
-	private OnlineScoreControl spnOnlineScore;
-	private JLabel label24;
-	private CCEnumComboBox<CCOptionalFSK> cbxFSK;
-	private JLabel label25;
-	private CCEnumComboBox<CCFileFormat> cbxFormat;
-	private JLabel label26;
-	private JYearSpinner spnYear;
-	private JLabel label27;
-	private CCFileSizeSpinner spnSize;
-	private JLabel label28;
-	private CCEnumComboBox<CCUserScore> cbxScore;
-	private JPanel pnlRight;
-	private JPanel pnlGenres;
-	private JLabel label7;
-	private CCEnumComboBox<CCGenre> cbxGenre0;
-	private JLabel label8;
-	private CCEnumComboBox<CCGenre> cbxGenre1;
-	private JLabel label9;
-	private CCEnumComboBox<CCGenre> cbxGenre2;
-	private JLabel label10;
-	private CCEnumComboBox<CCGenre> cbxGenre3;
-	private JLabel label11;
-	private CCEnumComboBox<CCGenre> cbxGenre4;
-	private JLabel label12;
-	private CCEnumComboBox<CCGenre> cbxGenre5;
-	private JLabel label13;
-	private CCEnumComboBox<CCGenre> cbxGenre6;
-	private JLabel label14;
-	private CCEnumComboBox<CCGenre> cbxGenre7;
-	private JButton btnParseIMDB;
-	private EditCoverControl edCvrControl;
-	private JPanel pnlBottom;
-	private JButton btnOK;
-	private JButton btnCancel;
+    private JPanel pnlLeft;
+    private JPanel pnlParts;
+    private JLabel label1;
+    private JReadableCCPathTextField edPart0;
+    private JButton btnChoose0;
+    private JLabel label2;
+    private JReadableCCPathTextField edPart1;
+    private JButton btnChoose1;
+    private JButton btnClear1;
+    private JLabel label3;
+    private JReadableCCPathTextField edPart2;
+    private JButton btnChoose2;
+    private JButton btnClear2;
+    private JLabel label5;
+    private JReadableCCPathTextField edPart3;
+    private JButton btnChoose3;
+    private JButton btnClear3;
+    private JLabel label6;
+    private JReadableCCPathTextField edPart4;
+    private JButton btnChoose4;
+    private JButton btnClear4;
+    private JLabel label4;
+    private JReadableCCPathTextField edPart5;
+    private JButton btnChoose5;
+    private JButton btnClear5;
+    private JPanel pnlData;
+    private JLabel label15;
+    private JTextField edTitle;
+    private JLabel label16;
+    private JReferenceChooser edReference;
+    private JLabel label17;
+    private JTextField edZyklus;
+    private JSpinner spnZyklus;
+    private JLabel label18;
+    private GroupListEditor edGroups;
+    private JLabel label19;
+    private JSpinner spnLength;
+    private JLabel label29;
+    private CCIcon16Button btnMediaInfoLen;
+    private JLabel lblLenAuto;
+    private JLabel label20;
+    private LanguageSetChooser cbxLanguage;
+    private CCIcon16Button btnMediaInfoLang;
+    private JButton btnQueryMediaInfo;
+    private JLabel label31;
+    private LanguageListChooser cbxSubtitles;
+    private CCIcon16Button btnMediaInfoSubs;
+    private CCIcon16Label lblMISubWarning;
+    private JLabel label21;
+    private JMediaInfoControl ctrlMediaInfo;
+    private CCIcon16Button btnMediaInfoMain;
+    private JProgressBar pbLanguageLoad;
+    private JLabel label22;
+    private JCCDateSpinner spnAddDate;
+    private JLabel label23;
+    private OnlineScoreControl spnOnlineScore;
+    private JLabel label24;
+    private CCEnumComboBox<CCOptionalFSK> cbxFSK;
+    private JLabel label25;
+    private CCEnumComboBox<CCFileFormat> cbxFormat;
+    private JLabel label26;
+    private JYearSpinner spnYear;
+    private JLabel label27;
+    private CCFileSizeSpinner spnSize;
+    private JLabel label28;
+    private CCEnumComboBox<CCUserScore> cbxScore;
+    private JLabel lblSpecialVersion;
+    private JAutoCompleteTextField edSpecialVersion;
+    private JLabel lblAnimeSeason;
+    private JAutoCompleteTextField edAnimeSeason;
+    private JLabel lblAnimeStudio;
+    private JAutoCompleteTextField edAnimeStudio;
+    private JPanel pnlRight;
+    private JPanel pnlGenres;
+    private JLabel label7;
+    private CCEnumComboBox<CCGenre> cbxGenre0;
+    private JLabel label8;
+    private CCEnumComboBox<CCGenre> cbxGenre1;
+    private JLabel label9;
+    private CCEnumComboBox<CCGenre> cbxGenre2;
+    private JLabel label10;
+    private CCEnumComboBox<CCGenre> cbxGenre3;
+    private JLabel label11;
+    private CCEnumComboBox<CCGenre> cbxGenre4;
+    private JLabel label12;
+    private CCEnumComboBox<CCGenre> cbxGenre5;
+    private JLabel label13;
+    private CCEnumComboBox<CCGenre> cbxGenre6;
+    private JLabel label14;
+    private CCEnumComboBox<CCGenre> cbxGenre7;
+    private JButton btnParseIMDB;
+    private EditCoverControl edCvrControl;
+    private JPanel pnlBottom;
+    private JButton btnOK;
+    private JButton btnCancel;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

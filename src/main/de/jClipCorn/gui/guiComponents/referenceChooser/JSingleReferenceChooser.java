@@ -43,7 +43,7 @@ public class JSingleReferenceChooser extends JPanel {
 		setLayout(new BorderLayout(0, 0));
 
 		cbxType = new WideComboBox<>();
-		cbxType.setPreferredSize(new Dimension(46, 20));
+		cbxType.setPreferredSize(new Dimension(56, 20));
 		add(cbxType, BorderLayout.EAST);
 		cbxModel = new DefaultComboBoxModel<>(CCOnlineRefType.values());
 		cbxType.setModel(cbxModel);
@@ -98,14 +98,14 @@ public class JSingleReferenceChooser extends JPanel {
 
 		panel = new JPanel();
 		panel.setBackground(new Color(0, 0, 0, 0));
-		panel.setBorder(new EmptyBorder(2, 2, 2, 2));
+		panel.setBorder(new EmptyBorder(3, 2, 3, 2));
 		add(panel, BorderLayout.WEST);
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		panel_1 = new JPanel();
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_1.setPreferredSize(new Dimension(16, 16));
-		panel_1.setMinimumSize(new Dimension(16, 16));
+		panel_1.setPreferredSize(new Dimension(22, 22));
+		panel_1.setMinimumSize(new Dimension(22, 22));
 		panel.add(panel_1, BorderLayout.NORTH);
 		panel_1.setLayout(new BorderLayout(0, 0));
 

@@ -619,6 +619,31 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateMovies,
 				mov -> mov.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(mov.getScoreComment()),
 				mov -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING, mov));
+
+		// SpecialVersion contains untrimmed values
+		addMovieValidation(
+				DatabaseErrorType.ERROR_NOT_TRIMMED,
+				o -> o.ValidateMovies,
+				mov -> {
+					for (String sv : mov.SpecialVersion.get()) {
+						if (Str.isUntrimmed(sv)) return true;
+					}
+					return false;
+				},
+				mov -> {
+					StringBuilder untrimmed = new StringBuilder();
+					for (String sv : mov.SpecialVersion.get()) {
+						if (Str.isUntrimmed(sv)) {
+							if (untrimmed.length() > 0) untrimmed.append(", ");
+							untrimmed.append("'").append(sv).append("'");
+						}
+					}
+					return DatabaseError.createSingle(
+						movielist,
+						DatabaseErrorType.ERROR_NOT_TRIMMED, mov,
+						"SpecialVersion", untrimmed.toString()
+					);
+				});
 	}
 
 	@SuppressWarnings({"Convert2MethodRef", "nls"})
@@ -822,6 +847,85 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateSeries,
 				series -> series.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(series.getScoreComment()),
 				series -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING, series));
+
+		// SpecialVersion contains untrimmed values
+		addSeriesValidation(
+				DatabaseErrorType.ERROR_NOT_TRIMMED,
+				o -> o.ValidateSeries,
+				series -> {
+					for (String sv : series.SpecialVersion.get()) {
+						if (Str.isUntrimmed(sv)) return true;
+					}
+					return false;
+				},
+				series -> {
+					StringBuilder untrimmed = new StringBuilder();
+					for (String sv : series.SpecialVersion.get()) {
+						if (Str.isUntrimmed(sv)) {
+							if (untrimmed.length() > 0) untrimmed.append(", ");
+							untrimmed.append("'").append(sv).append("'");
+						}
+					}
+					return DatabaseError.createSingle(
+						movielist,
+						DatabaseErrorType.ERROR_NOT_TRIMMED, series,
+						"SpecialVersion", untrimmed.toString()
+					);
+				});
+
+		// AnimeSeason invalid values (untrimmed, wrong format, or duplicates within series)
+		addSeriesValidation(
+				DatabaseErrorType.ERROR_INVALID_GROUPLIST,
+				o -> o.ValidateSeries,
+				(series, movielist, e) -> {
+					for (String animeSeason : series.AnimeSeason.get()) {
+						// Check for untrimmed
+						if (Str.isUntrimmed(animeSeason)) {
+							e.add(DatabaseError.createSingle(
+								movielist,
+								DatabaseErrorType.ERROR_NOT_TRIMMED, series,
+								"AnimeSeason", "'" + animeSeason + "'"
+							));
+							return;
+						}
+						
+						// Check regex pattern
+						if (!CCDatabaseElement.REGEX_ANIMESEASON.matcher(animeSeason).matches()) {
+							e.add(DatabaseError.createSingle(
+								movielist,
+								DatabaseErrorType.ERROR_INVALID_GROUPLIST, series,
+								"Problem", "Invalid AnimeSeason format (must match: (Spring|Summer|Fall|Winter) YYYY)",
+								"AnimeSeason", "'" + animeSeason + "'"
+							));
+							return;
+						}
+					}
+				});
+
+		// AnimeStudio contains untrimmed values
+		addSeriesValidation(
+				DatabaseErrorType.ERROR_NOT_TRIMMED,
+				o -> o.ValidateSeries,
+				series -> {
+					for (String ast : series.AnimeStudio.get()) {
+						if (Str.isUntrimmed(ast)) return true;
+					}
+					return false;
+				},
+				series -> {
+					StringBuilder untrimmed = new StringBuilder();
+					for (String ast : series.AnimeStudio.get()) {
+						if (Str.isUntrimmed(ast)) {
+							if (untrimmed.length() > 0) untrimmed.append(", ");
+							untrimmed.append("'").append(ast).append("'");
+						}
+					}
+					return DatabaseError.createSingle(
+						movielist,
+						DatabaseErrorType.ERROR_NOT_TRIMMED, series,
+						"AnimeStudio", untrimmed.toString()
+					);
+				});
 	}
 
 	@SuppressWarnings({"nls"})

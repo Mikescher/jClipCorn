@@ -17,6 +17,9 @@ public class MovieListCache extends CalculationCache<CCMovieList>
 	public static final String ZYKLUS_LIST                  = "ZYKLUS_LIST";
 	public static final String YEAR_LIST                    = "YEAR_LIST";
 	public static final String GENRE_LIST                   = "GENRE_LIST";
+	public static final String SPECIAL_VERSION_LIST         = "SPECIAL_VERSION_LIST";
+	public static final String ANIME_SEASON_LIST            = "ANIME_SEASON_LIST";
+	public static final String ANIME_STUDIO_LIST            = "ANIME_STUDIO_LIST";
 	public static final String COMMON_SERIES_PATH           = "COMMON_SERIES_PATH";
 	public static final String GUESS_SERIES_ROOT_PATH       = "GUESS_SERIES_ROOT_PATH";
 	public static final String COMMON_MOVIES_PATH           = "COMMON_MOVIES_PATH";

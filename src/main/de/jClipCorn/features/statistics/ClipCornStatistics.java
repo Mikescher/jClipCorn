@@ -31,6 +31,9 @@ public final class ClipCornStatistics {
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsProviderMainChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsProviderAnyChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsGroupChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsSpecialVersionChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsAnimeSeasonChart(ml, s)));
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsAnimeStudioChart(ml, s)));
 
 		// ======== SPECIAL PROPERTIES =========
 

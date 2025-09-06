@@ -113,7 +113,7 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "default, labelcompgap, 0dlu:grow"
-				"$rowSpecs": "default, linegap, default, unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, pref, linegap, pref, linegap, default, linegap, default, linegap, pref, linegap, pref, linegap, default:grow, linegap, pref"
+				"$rowSpecs": "default, linegap, default, unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, pref, linegap, pref, linegap, default, linegap, default, linegap, pref, linegap, pref, linegap, pref, linegap, pref, linegap, pref, linegap, default:grow, linegap, pref"
 			} ) {
 				name: "pnlInfo"
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.cover.DatabaseElementPreviewLabel" ) {
@@ -326,13 +326,73 @@ new FormModel {
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "labelSpecialVersion"
+					"text": new FormMessage( null, "PreviewSeriesFrame.labelSpecialVersion.text" )
+					"verticalAlignment": 1
+					"verticalTextPosition": 1
+					"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, true )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 25
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.MultiLineTextLabel" ) {
+					name: "lblSpecialVersion"
+					"labelFont": new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, true )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 25
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "labelAnimeSeason"
+					"text": new FormMessage( null, "PreviewSeriesFrame.labelAnimeSeason.text" )
+					"verticalAlignment": 1
+					"verticalTextPosition": 1
+					"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, true )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 27
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.MultiLineTextLabel" ) {
+					name: "lblAnimeSeason"
+					"labelFont": new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, true )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 27
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "labelAnimeStudio"
+					"text": new FormMessage( null, "PreviewSeriesFrame.labelAnimeStudio.text" )
+					"verticalAlignment": 1
+					"verticalTextPosition": 1
+					"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, true )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 29
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.MultiLineTextLabel" ) {
+					name: "lblAnimeStudio"
+					"labelFont": new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, true )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 29
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
 				add( new FormComponent( "de.jClipCorn.gui.guiComponents.iconComponents.OnlineRefButton" ) {
 					name: "btnOnline"
 					auxiliary() {
 						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
 					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridY": 27
+					"gridY": 33
 					"gridWidth": 3
 					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
 				} )

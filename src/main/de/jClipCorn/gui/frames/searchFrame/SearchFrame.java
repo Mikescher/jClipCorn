@@ -183,6 +183,21 @@ public class SearchFrame extends JCCFrame
 			if (mov.mediaInfo().get().AudioCodec  .map(p -> p.equalsIgnoreCase(searchString)).orElse(false)) { result.add(mov); continue; }
 			if (mov.mediaInfo().get().AudioFormat .map(p -> p.equalsIgnoreCase(searchString)).orElse(false)) { result.add(mov); continue; }
 
+			for (String season : mov.SpecialVersion.get()) {
+				if (season.equalsIgnoreCase(searchString)) { result.add(mov); movFound = true; break; }
+			}
+			if (movFound) continue;
+
+			for (String season : mov.AnimeSeason.get()) {
+				if (season.equalsIgnoreCase(searchString)) { result.add(mov); movFound = true; break; }
+			}
+			if (movFound) continue;
+
+			for (String studio : mov.AnimeStudio.get()) {
+				if (studio.equalsIgnoreCase(searchString)) { result.add(mov); movFound = true; break; }
+			}
+			if (movFound) continue;
+
 		}
 
 		for (CCSeries ser : movielist.iteratorSeries())
@@ -233,6 +248,22 @@ public class SearchFrame extends JCCFrame
 			}
 
 			if (ser.getGroups().containsIgnoreCase(searchString)) { result.add(ser); continue; }
+
+			boolean serFound = false;
+			for (String season : ser.SpecialVersion.get()) {
+				if (season.equalsIgnoreCase(searchString)) { result.add(ser); serFound = true; break; }
+			}
+			if (serFound) continue;
+
+			for (String season : ser.AnimeSeason.get()) {
+				if (season.equalsIgnoreCase(searchString)) { result.add(ser); serFound = true; break; }
+			}
+			if (serFound) continue;
+
+			for (String studio : ser.AnimeStudio.get()) {
+				if (studio.equalsIgnoreCase(searchString)) { result.add(ser); serFound = true; break; }
+			}
+			if (serFound) continue;
 		}
 
 		intellisort(result);

@@ -53,6 +53,31 @@ jClipCorn is a portable movie and series manager application written in Java (Sw
 ### Testing
 Tests are located in `src/test/de/jClipCorn/test/` and use Docker for CI/CD testing (see Dockerfile_tests).
 
+### UI Development - CRITICAL
+**NEVER EDIT JAVA UI FILES DIRECTLY IF THERE IS A CORRESPONDING .jfd FILE**
+
+- UI forms are designed using JFormDesigner (.jfd files)
+- The Java files (like AddMovieFrame.java, EditMovieFrame.java, etc.) contain generated code marked with `// JFormDesigner - DO NOT MODIFY`
+- **Always edit the .jfd files instead of the Java files for UI changes**
+- If UI changes are needed:
+  1. Edit the .jfd file with the form designer
+  2. Ask the user to regenerate the Java code from the .jfd file
+  3. Never directly modify the generated Java UI code
+
+This prevents UI changes from being lost when forms are regenerated.
+
+### UI Text Localization - CRITICAL
+**NEVER HARDCODE UI TEXT IN CODE OR JFD FILES**
+
+- All UI-facing text must be translated via locale files in `res/de/jClipCorn/gui/localization/`
+- Available locale files: `locale.properties` (default), `locale_en_US.properties`, `locale_de_DE.properties`, `locale_dl_DL.properties`
+- **In Java files:** Use `LocaleBundle.getString("key")` or similar localization methods
+- **In JFD files:** Use `new FormMessage( null, "FrameName.componentName.text" )` instead of hardcoded strings like `"text": "Hardcoded Text"`
+- All UI text keys should follow the pattern: `FrameName.componentName.text` (e.g., `AddMovieFrame.lblTitle.text`)
+- When adding new UI components, always add corresponding locale keys to ALL locale files
+
+This ensures the application can be properly localized for different languages.
+
 ### Dependencies
 Key libraries include:
 - SQLite JDBC for database

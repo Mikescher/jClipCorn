@@ -1,6 +1,8 @@
 package de.jClipCorn.gui.guiComponents.tags;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.util.Str;
 
 import javax.swing.*;
@@ -12,17 +14,30 @@ import java.awt.event.MouseListener;
 public class TagPanel extends JPanel {
 	private static final long serialVersionUID = -6093081428307402687L;
 
+	private final boolean designmode;
+
 	private CCTagList value = CCTagList.EMPTY;
 	private boolean readOnly = false;
 
+	@DesignCreate
+	private static TagPanel designCreate()
+	{
+		return new TagPanel(true);
+	}
+
 	public TagPanel() {
+		this(false);
+	}
+
+	public TagPanel(boolean designmode) {
 		super();
+		this.designmode = designmode;
 		init();
 		update();
 	}
 
 	private void init() {
-		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 2));
+		setLayout(new GridBagLayout());
 		setBackground(UIManager.getColor("TextField.background")); //$NON-NLS-1$
 		setBorder(UIManager.getBorder("TextField.border")); //$NON-NLS-1$
 	}
@@ -34,10 +49,28 @@ public class TagPanel extends JPanel {
 		listenerList.add(TagsChangedListener.class, l);
 	}
 
+	@Override
+	public Dimension getPreferredSize() {
+		if (designmode || LookAndFeelManager.isFlatLaf()) {
+			return new Dimension(80, 30);
+		}
+		return new Dimension(80, 20);
+	}
+
 	private void update() {
 		removeAll();
 
 		for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
+
+			GridBagConstraints gbc = new GridBagConstraints();
+			gbc.gridy = 0;
+			gbc.gridx = i;
+			gbc.anchor = GridBagConstraints.WEST;
+			gbc.insets = new Insets(0, 5, 0, 1);
+			gbc.fill = GridBagConstraints.NONE;
+			gbc.weightx = 0;
+			gbc.weighty = 1.0;
+
 			JLabel l = new JLabel(value.getTagIcon(i));
 			l.setToolTipText(CCTagList.getName(i));
 
@@ -69,8 +102,16 @@ public class TagPanel extends JPanel {
 				}
 			});
 
-			add(l);
+			add(l, gbc);
 		}
+
+		GridBagConstraints filler = new GridBagConstraints();
+		filler.gridx = CCTagList.ACTIVETAGS;
+		filler.gridy = 0;
+		filler.weightx = 1.0;                 // take up remaining horizontal space
+		filler.weighty = 1.0;
+		filler.fill = GridBagConstraints.BOTH;
+		add(Box.createGlue(), filler);
 
 		Component parent = getParent();
 		if (parent != null) {

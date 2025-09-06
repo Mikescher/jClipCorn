@@ -3,6 +3,7 @@ package de.jClipCorn.database.databaseElement;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.elementProps.impl.EStringListProp;
 import de.jClipCorn.database.databaseElement.datapacks.IDatabaseElementData;
 import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.IPropertyParent;
@@ -20,20 +21,26 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.awt.image.BufferedImage;
+import java.util.regex.Pattern;
 
 public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, ICCTaggedElement, IDatabaseElementData, IPropertyParent, ICCPropertySource {
 
-	public final EIntProp                  LocalID         = new EIntProp(            "LocalID",         -1,                          this, EPropertyType.DATABASE_PRIMARY_ID);
-	public final EIntProp                  CoverID         = new EIntProp(            "CoverID",         -1,                          this, EPropertyType.DATABASE_REF);
-	public final EGroupListProp            Groups          = new EGroupListProp(      "Groups",          CCGroupList.EMPTY,           this, EPropertyType.USER_METADATA, this::onGroupsChanging);
-	public final EStringProp               Title           = new EStringProp(         "Title",           Str.Empty,                   this, EPropertyType.OBJECTIVE_METADATA);
-	public final EGenreListProp            Genres          = new EGenreListProp(      "Genres",          CCGenreList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
-	public final EOnlineScorePropPack      OnlineScore     = new EOnlineScorePropPack("OnlineScore",     CCOnlineScore.ZERO_OF_TEN,   this, EPropertyType.OBJECTIVE_METADATA);
-	public final EEnumProp<CCFSK>          FSK             = new EEnumProp<>(         "FSK",             CCFSK.RATING_0,              this, EPropertyType.OBJECTIVE_METADATA);
-	public final EEnumProp<CCUserScore>    Score           = new EEnumProp<>(         "Score",           CCUserScore.RATING_NO,       this, EPropertyType.USER_METADATA);
-	public final EStringProp               ScoreComment    = new EStringProp(         "ScoreComment",    Str.Empty,                   this, EPropertyType.USER_METADATA);
-	public final EOnlineRefListProp        OnlineReference = new EOnlineRefListProp(  "OnlineReference", CCOnlineReferenceList.EMPTY, this, EPropertyType.OBJECTIVE_METADATA);
-	public final ETagListProp              Tags            = new ETagListProp(        "Tags",            CCTagList.EMPTY,             this, EPropertyType.USER_METADATA);
+	public static final Pattern REGEX_ANIMESEASON = Pattern.compile("^(Spring|Summer|Fall|Winter) (2[0-9]{3})$");
+
+	public final EIntProp                 LocalID         = new EIntProp(            "LocalID",         -1,                          this, EPropertyType.DATABASE_PRIMARY_ID);
+	public final EIntProp                 CoverID         = new EIntProp(            "CoverID",         -1,                          this, EPropertyType.DATABASE_REF);
+	public final EGroupListProp           Groups          = new EGroupListProp(      "Groups",          CCGroupList.EMPTY,           this, EPropertyType.USER_METADATA, this::onGroupsChanging);
+	public final EStringProp              Title           = new EStringProp(         "Title",           Str.Empty,                   this, EPropertyType.OBJECTIVE_METADATA);
+	public final EGenreListProp           Genres          = new EGenreListProp(      "Genres",          CCGenreList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
+	public final EOnlineScorePropPack     OnlineScore     = new EOnlineScorePropPack("OnlineScore",     CCOnlineScore.ZERO_OF_TEN,   this, EPropertyType.OBJECTIVE_METADATA);
+	public final EEnumProp<CCFSK>         FSK             = new EEnumProp<>(         "FSK",             CCFSK.RATING_0,              this, EPropertyType.OBJECTIVE_METADATA);
+	public final EEnumProp<CCUserScore>   Score           = new EEnumProp<>(         "Score",           CCUserScore.RATING_NO,       this, EPropertyType.USER_METADATA);
+	public final EStringProp              ScoreComment    = new EStringProp(         "ScoreComment",    Str.Empty,                   this, EPropertyType.USER_METADATA);
+	public final EOnlineRefListProp       OnlineReference = new EOnlineRefListProp(  "OnlineReference", CCOnlineReferenceList.EMPTY, this, EPropertyType.OBJECTIVE_METADATA);
+	public final ETagListProp             Tags            = new ETagListProp(        "Tags",            CCTagList.EMPTY,             this, EPropertyType.USER_METADATA);
+	public final EStringListProp          SpecialVersion  = new EStringListProp(     "SpecialVersion",  CCStringList.EMPTY,          this, EPropertyType.OBJECTIVE_METADATA);
+	public final EStringListProp          AnimeSeason     = new EStringListProp(     "AnimeSeason",     CCStringList.EMPTY,          this, EPropertyType.OBJECTIVE_METADATA);
+	public final EStringListProp          AnimeStudio     = new EStringListProp(     "AnimeStudio",     CCStringList.EMPTY,          this, EPropertyType.OBJECTIVE_METADATA);
 
 	private IEProperty[] _properties = null;
 
@@ -72,6 +79,9 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 					ScoreComment,
 					OnlineReference,
 					Tags,
+					SpecialVersion,
+					AnimeSeason,
+					AnimeStudio,
 				})
 				.append(OnlineScore.getProperties())
 				.toArray(new IEProperty[0]);
@@ -85,6 +95,9 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public EStringProp              scoreComment()    { return ScoreComment;    }
 	public EOnlineRefListProp       onlineReference() { return OnlineReference; }
 	public ETagListProp             tags()            { return Tags;            }
+	public EStringListProp          specialVersion()  { return SpecialVersion;  }
+	public EStringListProp          animeSeason()     { return AnimeSeason;     }
+	public EStringListProp          animeStudio()     { return AnimeStudio;     }
 
 	public void setDefaultValues(boolean updateDB) {
 		beginUpdating();

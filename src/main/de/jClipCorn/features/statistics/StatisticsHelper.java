@@ -596,4 +596,46 @@ public class StatisticsHelper {
 		return result;
 	}
 
+	public static HashMap<String, Integer> getCountForAllSpecialVersions(CCStream<CCDatabaseElement> it) {
+		HashMap<String, Integer> result = new HashMap<>();
+
+		for (CCDatabaseElement e : it) {
+			for (String sv : e.SpecialVersion.get()) {
+				if (sv != null && !sv.trim().isEmpty()) {
+					result.put(sv, result.getOrDefault(sv, 0) + 1);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	public static HashMap<String, Integer> getCountForAllAnimeSeasons(CCStream<CCSeries> it) {
+		HashMap<String, Integer> result = new HashMap<>();
+
+		for (CCSeries e : it) {
+			for (String as : e.AnimeSeason.get()) {
+				if (as != null && !as.trim().isEmpty()) {
+					result.put(as, result.getOrDefault(as, 0) + 1);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	public static HashMap<String, Integer> getCountForAllAnimeStudios(CCStream<CCSeries> it) {
+		HashMap<String, Integer> result = new HashMap<>();
+
+		for (CCSeries e : it) {
+			for (String ast : e.AnimeStudio.get()) {
+				if (ast != null && !ast.trim().isEmpty()) {
+					result.put(ast, result.getOrDefault(ast, 0) + 1);
+				}
+			}
+		}
+
+		return result;
+	}
+
 }

@@ -4,6 +4,7 @@ import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.gui.guiComponents.language.LanguageChangedListener;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.stream.CCStreams;
@@ -17,6 +18,8 @@ import java.util.List;
 public class JReferenceChooser extends JPanel {
 	private static final long serialVersionUID = 2696192041815168280L;
 
+	private final boolean designmode;
+
 	private JButton btnAdditional;
 	private JSingleReferenceChooser mainChooser;
 
@@ -25,11 +28,16 @@ public class JReferenceChooser extends JPanel {
 	private final CCMovieList movielist;
 
 	@DesignCreate
-	private static JReferenceChooser designCreate() { return new JReferenceChooser(CCMovieList.createStub()); }
+	private static JReferenceChooser designCreate() { return new JReferenceChooser(CCMovieList.createStub(), true); }
 
 	public JReferenceChooser(CCMovieList ml) {
+		this(ml, false);
+	}
+
+	private JReferenceChooser(CCMovieList ml, boolean designmode) {
 		super();
-		movielist = ml;
+		this.movielist = ml;
+		this.designmode = designmode;
 		initGUI();
 	}
 
@@ -64,6 +72,9 @@ public class JReferenceChooser extends JPanel {
 
 	@Override
 	public Dimension getPreferredSize() {
+		if (designmode || LookAndFeelManager.isFlatLaf()) {
+			return new Dimension(80, 30);
+		}
 		return new Dimension(80, 20);
 	}
 

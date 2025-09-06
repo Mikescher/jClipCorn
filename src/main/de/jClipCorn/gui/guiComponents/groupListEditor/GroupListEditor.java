@@ -16,6 +16,8 @@ public class GroupListEditor extends JPanel
 {
 	private static final long serialVersionUID = -2532456454735632414L;
 
+	private final boolean designmode;
+
 	private final CCMovieList db;
 	
 	private CCGroupList value = CCGroupList.EMPTY;
@@ -24,17 +26,20 @@ public class GroupListEditor extends JPanel
 	private JButton btnDropDown;
 
 	@DesignCreate
-	private static GroupListEditor designCreate()
-	{
-		return new GroupListEditor(null);
+	private static GroupListEditor designCreate() {
+		return new GroupListEditor(CCMovieList.createStub(), true);
 	}
 
-	public GroupListEditor(CCMovieList movielist)
-	{
+	public GroupListEditor(CCMovieList movielist) {
+		this(movielist, false);
+	}
+
+	private GroupListEditor(CCMovieList movielist, boolean designmode) {
 		super();
-		
-		db = movielist;
-		
+
+		this.db = movielist;
+		this.designmode = designmode;
+
 		initGUI();
 		
 		updateEditor();
@@ -81,6 +86,9 @@ public class GroupListEditor extends JPanel
 
 	@Override
 	public Dimension getPreferredSize() {
+		if (designmode || LookAndFeelManager.isFlatLaf()) {
+			return new Dimension(80, 30);
+		}
 		return new Dimension(80, 20);
 	}
 

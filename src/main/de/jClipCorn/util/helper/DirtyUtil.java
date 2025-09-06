@@ -1,5 +1,6 @@
 package de.jClipCorn.util.helper;
 
+import de.jClipCorn.gui.guiComponents.JAutoCompleteTextField;
 import de.jClipCorn.gui.guiComponents.filesize.CCFileSizeSpinner;
 import de.jClipCorn.gui.guiComponents.onlinescore.OnlineScoreControl;
 import de.jClipCorn.gui.guiComponents.tags.TagPanel;
@@ -64,6 +65,7 @@ public class DirtyUtil
 	private static void addDirtyListener(Func0to0 lstr, Component c)
 	{
 		if (c instanceof JTextField) ((JTextField)c).getDocument().addDocumentListener(new DocumentLambdaAdapter(lstr));
+		else if (c instanceof JAutoCompleteTextField) ((JAutoCompleteTextField)c).addChangeListener(e -> lstr.invoke());
 		else if (c instanceof JReferenceChooser) ((JReferenceChooser)c).addReferenceChangedListener(e -> lstr.invoke());
 		else if (c instanceof LanguageSetChooser) ((LanguageSetChooser)c).addLanguageChangedListener(e -> lstr.invoke());
 		else if (c instanceof LanguageListChooser) ((LanguageListChooser)c).addLanguageChangedListener(e -> lstr.invoke());

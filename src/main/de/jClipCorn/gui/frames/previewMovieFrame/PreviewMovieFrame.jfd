@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.8" encoding: "UTF-8"
+JFDML JFormDesigner: "8.2.4.0.393" Java: "21.0.8" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -88,7 +88,7 @@ new FormModel {
 				"tabPlacement": 3
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, 0dlu:grow, labelcompgap, 80dlu, labelcompgap"
-					"$rowSpecs": "linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default:grow"
+					"$rowSpecs": "linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default:grow"
 				} ) {
 					name: "pnlTabMain"
 					add( new FormComponent( "javax.swing.JLabel" ) {
@@ -351,6 +351,48 @@ new FormModel {
 						"gridY": 28
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label33"
+						"text": new FormMessage( null, "PreviewMovieFrame.labelSpecialVersion.text" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 30
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "lblSpecialVersion"
+						"text": "<dynamic>"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 30
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label34"
+						"text": new FormMessage( null, "PreviewMovieFrame.labelAnimeSeason.text" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 32
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "lblAnimeSeason"
+						"text": "<dynamic>"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 32
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label35"
+						"text": new FormMessage( null, "PreviewMovieFrame.labelAnimeStudio.text" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 2
+						"gridY": 34
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "lblAnimeStudio"
+						"text": "<dynamic>"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 6
+						"gridY": 34
+					} )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 						"$columnSpecs": "0dlu:grow, labelcompgap, 1dlu:grow, labelcompgap, 1dlu:grow"
 						"$rowSpecs": "default, linegap, default:grow"
@@ -421,7 +463,7 @@ new FormModel {
 						} )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 2
-						"gridY": 30
+						"gridY": 36
 						"gridWidth": 9
 						"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 						"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
@@ -857,7 +899,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 750, 615 )
+			"size": new java.awt.Dimension( 750, 720 )
 		} )
 	}
 }

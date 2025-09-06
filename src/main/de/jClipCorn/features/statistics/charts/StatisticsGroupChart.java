@@ -40,7 +40,7 @@ public class StatisticsGroupChart extends StatisticsChart {
 		@Override
 		public Paint getItemPaint(final int row, final int column) {
 			if (groups == null || column < 0 || column >= groups.length) return super.getItemPaint(row, column);
-			return groups[column].Color;
+			return groups[column].HexColor.toColorWithAlpha(CCGroup.COLOR_TAG_ALPHA);
 		}
 	}
 

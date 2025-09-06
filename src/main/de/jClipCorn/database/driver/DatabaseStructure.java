@@ -124,7 +124,7 @@ public class DatabaseStructure
 
 	public final static CCSQLColDef COL_GRPS_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_GRPS_ORDER            = new CCSQLColDef("ORDERING",             CCSQLType.INTEGER,     NON_NULLABLE);
-	public final static CCSQLColDef COL_GRPS_COLOR            = new CCSQLColDef("COLOR",                CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_GRPS_COLOR            = new CCSQLColDef("COLOR",                CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_GRPS_SERIALIZE        = new CCSQLColDef("SERIALIZE",            CCSQLType.BIT,         NON_NULLABLE);
 	public final static CCSQLColDef COL_GRPS_PARENT           = new CCSQLColDef("PARENTGROUP",          CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_GRPS_VISIBLE          = new CCSQLColDef("VISIBLE",              CCSQLType.BIT,         NON_NULLABLE);

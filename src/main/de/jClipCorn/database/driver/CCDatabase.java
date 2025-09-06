@@ -6,6 +6,7 @@ import de.jClipCorn.database.covertab.*;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
+import de.jClipCorn.database.databaseElement.columnTypes.CCHexColor;
 import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.database.migration.DatabaseMigration;
 import de.jClipCorn.features.log.CCLog;
@@ -999,7 +1000,7 @@ public class CCDatabase {
 
 				String gn  = rs.getString(DatabaseStructure.COL_GRPS_NAME);
 				int go     = rs.getInt(DatabaseStructure.COL_GRPS_ORDER);
-				int gc     = rs.getInt(DatabaseStructure.COL_GRPS_COLOR);
+				String gc  = rs.getString(DatabaseStructure.COL_GRPS_COLOR);
 				boolean gs = rs.getBoolean(DatabaseStructure.COL_GRPS_SERIALIZE);
 				String gp  = rs.getString(DatabaseStructure.COL_GRPS_PARENT);
 				boolean gv = rs.getBoolean(DatabaseStructure.COL_GRPS_VISIBLE);
@@ -1245,14 +1246,14 @@ public class CCDatabase {
 		}
 	}
 
-	public void addGroup(String name, int order, Color color, boolean doSerialize, String parent, boolean visible) {
+	public void addGroup(String name, int order, CCHexColor color, boolean doSerialize, String parent, boolean visible) {
 		try {
 			CCSQLStatement stmt = stmts.insertGroupStatement;
 			stmt.clearParameters();
 
 			stmt.setStr(DatabaseStructure.COL_GRPS_NAME,      name);
 			stmt.setInt(DatabaseStructure.COL_GRPS_ORDER,     order);
-			stmt.setInt(DatabaseStructure.COL_GRPS_COLOR,     color.getRGB());
+			stmt.setStr(DatabaseStructure.COL_GRPS_COLOR,     color.getHex());
 			stmt.setBoo(DatabaseStructure.COL_GRPS_SERIALIZE, doSerialize);
 			stmt.setStr(DatabaseStructure.COL_GRPS_PARENT,    parent);
 			stmt.setBoo(DatabaseStructure.COL_GRPS_VISIBLE,   visible);
@@ -1263,13 +1264,13 @@ public class CCDatabase {
 		}
 	}
 
-	public void updateGroup(String name, int order, Color color, boolean doSerialize, String parent, boolean visible) {
+	public void updateGroup(String name, int order, CCHexColor color, boolean doSerialize, String parent, boolean visible) {
 		try {
 			CCSQLStatement stmt = stmts.updateGroupStatement;
 			stmt.clearParameters();
 
 			stmt.setInt(DatabaseStructure.COL_GRPS_ORDER,     order);
-			stmt.setInt(DatabaseStructure.COL_GRPS_COLOR,     color.getRGB());
+			stmt.setStr(DatabaseStructure.COL_GRPS_COLOR,     color.getHex());
 			stmt.setBoo(DatabaseStructure.COL_GRPS_SERIALIZE, doSerialize);
 			stmt.setStr(DatabaseStructure.COL_GRPS_PARENT,    parent);
 			stmt.setBoo(DatabaseStructure.COL_GRPS_VISIBLE,   visible);

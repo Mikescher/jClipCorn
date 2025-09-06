@@ -2,10 +2,8 @@ package de.jClipCorn.gui.frames.groupManageFrame;
 
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.history.CCCombinedHistoryEntry;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
-import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -13,8 +11,6 @@ import de.jClipCorn.util.datatypes.Tuple;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GroupManageTable extends JCCSimpleTable<Tuple<CCGroup, Integer>> {
 
@@ -32,7 +28,7 @@ public class GroupManageTable extends JCCSimpleTable<Tuple<CCGroup, Integer>> {
 
 		r.add("GroupManagerFrame.colColor")
 				.withSize("auto")
-				.withTooltip(e -> e.Item1.getHexColor())
+				.withTooltip(e -> e.Item1.HexColor.getHex())
 				.withRenderer(this::renderColor);
 
 		r.add("GroupManagerFrame.colName")
@@ -65,7 +61,7 @@ public class GroupManageTable extends JCCSimpleTable<Tuple<CCGroup, Integer>> {
 	private Component renderColor(Tuple<CCGroup, Integer> value, Component component) {
 		JPanel pnl = new JPanel();
 
-		pnl.setBackground(value.Item1.Color);
+		pnl.setBackground(value.Item1.HexColor.toColorWithAlpha(CCGroup.COLOR_TAG_ALPHA));
 
 		JPanel pnl2 = new JPanel(new BorderLayout());
 		pnl2.setBorder(new EmptyBorder(2, 2, 2, 2));

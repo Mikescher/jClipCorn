@@ -134,3 +134,5 @@ jClipCorn Wiki/*
 .do_publish_release
 
 launch4j/launch4j.cfg.xml
+
+.idea/checkstyle-idea.xml

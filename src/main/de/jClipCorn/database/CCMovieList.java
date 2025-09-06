@@ -947,7 +947,7 @@ public class CCMovieList implements ICCPropertySource {
 			Element g = new Element("group");
 			g.setAttribute("name", el.Name);
 			g.setAttribute("ordering", Integer.toString(el.Order));
-			g.setAttribute("color", el.getHexColor());
+			g.setAttribute("color", el.HexColor.getHex());
 			g.setAttribute("serialize", el.DoSerialize ? "true" : "false");
 			g.setAttribute("parent", el.Parent);
 			relg.addContent(g);
@@ -1142,7 +1142,7 @@ public class CCMovieList implements ICCPropertySource {
 		databaseGroups.add(g);
 		_cache.bust();
 		
-		database.addGroup(g.Name, g.Order, g.Color, g.DoSerialize, g.Parent, g.Visible);
+		database.addGroup(g.Name, g.Order, g.HexColor, g.DoSerialize, g.Parent, g.Visible);
 	}
 
 	public void addGroupInternal(CCGroup g) {
@@ -1173,7 +1173,7 @@ public class CCMovieList implements ICCPropertySource {
 				el.Groups.setFromMovieListWithoutDBUpdateOrCallback(el.getGroups().getRemove(gOld).getAdd(gNew));
 			}
 
-			database.updateGroup(gNew.Name, gNew.Order, gNew.Color, gNew.DoSerialize, gNew.Parent, gNew.Visible);
+			database.updateGroup(gNew.Name, gNew.Order, gNew.HexColor, gNew.DoSerialize, gNew.Parent, gNew.Visible);
 		} else {
 
 			for (CCDatabaseElement el : new ArrayList<>(getDatabaseElementsbyGroup(gOld))) {
@@ -1181,7 +1181,7 @@ public class CCMovieList implements ICCPropertySource {
 			}
 
 			database.removeGroup(gOld.Name);
-			database.addGroup(gNew.Name, gNew.Order, gNew.Color, gNew.DoSerialize, gNew.Parent, gNew.Visible);
+			database.addGroup(gNew.Name, gNew.Order, gNew.HexColor, gNew.DoSerialize, gNew.Parent, gNew.Visible);
 		}
 
 		_cache.bust();

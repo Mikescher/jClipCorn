@@ -123,7 +123,7 @@ public class GroupManageFrame extends JCCFrame {
 
 			if (g.Order == (100 + i*10)) continue;
 
-			movielist.updateGroup(g, CCGroup.create(g.Name, 100 + i*10, g.Color, g.DoSerialize, g.Parent, g.Visible));
+			movielist.updateGroup(g, CCGroup.create(g.Name, 100 + i*10, g.HexColor, g.DoSerialize, g.Parent, g.Visible));
 		}
 
 		reinitData();
@@ -161,7 +161,7 @@ public class GroupManageFrame extends JCCFrame {
 
 			if (gOld != null && DialogHelper.showLocaleYesNo(this, "Dialogs.RenameGroup")) { //$NON-NLS-1$
 
-				movielist.updateGroup(gOld, CCGroup.create(edDataName.getText(), gOld.Order, gOld.Color, gOld.DoSerialize, gOld.Parent, gOld.Visible));
+				movielist.updateGroup(gOld, CCGroup.create(edDataName.getText(), gOld.Order, gOld.HexColor, gOld.DoSerialize, gOld.Parent, gOld.Visible));
 
 				for (CCDatabaseElement el : new ArrayList<>(movielist.getDatabaseElementsbyGroup(group))) {
 					el.Groups.set(el.getGroups().getRemove(group).getAdd(movielist, edDataName.getText()));
@@ -169,7 +169,7 @@ public class GroupManageFrame extends JCCFrame {
 
 				for (CCGroup og : movielist.getGroupList()) {
 					if (og.Parent.equals(gOld.Name)) {
-						movielist.updateGroup(og, CCGroup.create(og.Name, og.Order, og.Color, og.DoSerialize, edDataName.getText(), og.Visible));
+						movielist.updateGroup(og, CCGroup.create(og.Name, og.Order, og.HexColor, og.DoSerialize, edDataName.getText(), og.Visible));
 					}
 				}
 			}
@@ -220,7 +220,7 @@ public class GroupManageFrame extends JCCFrame {
 			listElements.repaint();
 
 			edDataName.setText(g.Name);
-			pnlDataColor.setBackground(g.Color);
+			pnlDataColor.setBackground(g.HexColor.toColorWithAlpha(CCGroup.COLOR_TAG_ALPHA));
 			cbDataSerialization.setSelected(g.DoSerialize);
 			List<String> cbxdata = CCStreams.iterate(movielist.getSortedGroupList()).map(p -> p.Name).prepend(g.Parent).autosort().prepend("").unique().enumerate(); //$NON-NLS-1$
 			cbxDataParent.setModel(new DefaultComboBoxModel<>(cbxdata.toArray(new String[0])));
@@ -264,7 +264,7 @@ public class GroupManageFrame extends JCCFrame {
 		CCGroup group = getSelectedGroup();
 		if (group == null) return;
 
-		Color newColor = JColorChooser.showDialog(null, LocaleBundle.getString("GroupManagerFrame.ChooseColorDialog"), group.Color); //$NON-NLS-1$
+		Color newColor = JColorChooser.showDialog(null, LocaleBundle.getString("GroupManagerFrame.ChooseColorDialog"), group.HexColor.toColorWithAlpha(CCGroup.COLOR_TAG_ALPHA)); //$NON-NLS-1$
 		if (newColor == null) return;
 
 		pnlDataColor.setBackground(newColor);

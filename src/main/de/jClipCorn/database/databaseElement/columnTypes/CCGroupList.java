@@ -209,9 +209,9 @@ public class CCGroupList implements CCIterable<CCGroup> {
 			if (limited) group = group + "...";
 			
 			if (alpha)
-				g.setColor(groupsSorted.get(ii).Color);
+				g.setColor(groupsSorted.get(ii).HexColor.toColorWithAlpha(CCGroup.COLOR_TAG_ALPHA));
 			else
-				g.setColor(new Color(groupsSorted.get(ii).Color.getRed(), groupsSorted.get(ii).Color.getGreen(), groupsSorted.get(ii).Color.getBlue()));
+				g.setColor(groupsSorted.get(ii).HexColor.toColor());
 			
 			g.fillRoundRect(
 					right - MARGIN - PADDING_X - width - PADDING_X, 

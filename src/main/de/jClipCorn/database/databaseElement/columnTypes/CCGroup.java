@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.regex.Pattern;
 
 public class CCGroup implements Comparable<CCGroup> {
-	private final static int COLOR_TAG_ALPHA = 224;
+	public final static int COLOR_TAG_ALPHA = 224;
 
 	public final static Pattern REGEX_GROUP_SYNTAX = Pattern.compile("\\[\\[[A-Za-z0-9\\-_ ]+\\]\\]"); //$NON-NLS-1$
 	private final static Pattern REGEX_GROUP_NAME = Pattern.compile("^[A-Za-z0-9\\-_ ]+$"); //$NON-NLS-1$
@@ -29,48 +29,62 @@ public class CCGroup implements Comparable<CCGroup> {
 	
 	public final String Name;
 	public final int Order;
-	public final Color Color;
+	public final CCHexColor HexColor;
 	public final boolean DoSerialize;
 	public final String Parent;
 	public final boolean Visible;
 	
-	private CCGroup(String n, int o, Color c, boolean s, String p, boolean v) {
+	private CCGroup(String n, int o, CCHexColor c, boolean s, String p, boolean v) {
 		Name = n;
 		Order = o;
-		Color = new Color(c.getRed(), c.getGreen(), c.getBlue(), COLOR_TAG_ALPHA);
+		HexColor = c;
 		DoSerialize = s;
 		Parent = p;
 		Visible = v;
 	}
 	
 	public static CCGroup create(String name) {
-		CCGroup g = new CCGroup(name, staticGroupCounter, TAG_COLORS[staticGroupCounter % TAG_COLORS.length], true, "", true); //$NON-NLS-1$
+		CCGroup g = new CCGroup(name, staticGroupCounter, CCHexColor.fromColor(TAG_COLORS[staticGroupCounter % TAG_COLORS.length]), true, "", true); //$NON-NLS-1$
 		staticGroupCounter++;
 		
 		return g;
 	}
 
 	public static CCGroup create(String name, boolean ser, String parent, boolean visible) {
-		CCGroup g = new CCGroup(name, staticGroupCounter, TAG_COLORS[staticGroupCounter % TAG_COLORS.length], ser, parent, visible);
+		CCGroup g = new CCGroup(name, staticGroupCounter, CCHexColor.fromColor(TAG_COLORS[staticGroupCounter % TAG_COLORS.length]), ser, parent, visible);
 		staticGroupCounter++;
 
 		return g;
 	}
 	
 	public static CCGroup create(String name, int order, int color, boolean ser, String parent, boolean visible) {
-		CCGroup g = new CCGroup(name, order, new Color(color), ser, parent, visible);
+		CCGroup g = new CCGroup(name, order, CCHexColor.fromRGB(color), ser, parent, visible);
 		staticGroupCounter++;
 		
 		return g;
 	}
 	
 	public static CCGroup create(String name, int order, Color color, boolean ser, String parent, boolean visible) {
-		CCGroup g = new CCGroup(name, order, color, ser, parent, visible);
+		CCGroup g = new CCGroup(name, order, CCHexColor.fromColor(color), ser, parent, visible);
 		staticGroupCounter++;
 		
 		return g;
 	}
-	
+
+	public static CCGroup create(String name, int order, String hexColor, boolean ser, String parent, boolean visible) {
+		CCGroup g = new CCGroup(name, order, CCHexColor.create(hexColor), ser, parent, visible);
+		staticGroupCounter++;
+
+		return g;
+	}
+
+	public static CCGroup create(String name, int order, CCHexColor hexColor, boolean ser, String parent, boolean visible) {
+		CCGroup g = new CCGroup(name, order, hexColor, ser, parent, visible);
+		staticGroupCounter++;
+
+		return g;
+	}
+
 	public static boolean isValidGroupName(String name) {
 		if (name == null) return false;
 		
@@ -97,9 +111,5 @@ public class CCGroup implements Comparable<CCGroup> {
 	@Override
 	public int hashCode() {
 		return Name.hashCode();
-	}
-
-	public String getHexColor() {
-		return String.format("#%02X%02X%02X", Color.getRed(), Color.getGreen(), Color.getBlue()); //$NON-NLS-1$
 	}
 }

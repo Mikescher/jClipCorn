@@ -32,7 +32,7 @@ public final class CCOnlineRefTypeHelper {
 	public static final Pattern REGEX_PASTE_PROX = Pattern.compile("^(https?://)?(www\\.)?proxer\\.(me|net)/info/(?<id>[0-9]+)(/.*)?(\\?.*)?(#.*)?$");                                              //$NON-NLS-1$
 	public static final Pattern REGEX_PASTE_ANIL = Pattern.compile("^(https?://)?(www\\.)?anilist\\.co/anime/(?<id>[0-9]+)(/.*)?(\\?.*)?(#.*)?$");                                                  //$NON-NLS-1$
 	public static final Pattern REGEX_PASTE_ANPL = Pattern.compile("^(https?://)?(www\\.)?anime-planet\\.com/anime/(?<id>[0-9A-Za-z\\-]+)(/.*)?(\\?.*)?(#.*)?$");                                   //$NON-NLS-1$
-	public static final Pattern REGEX_PASTE_KISU = Pattern.compile("^(https?://)?(www\\.)?kitsu\\.io/anime/(?<id>[0-9A-Za-z\\-]+)(/.*)?(\\?.*)?(#.*)?$");                                           //$NON-NLS-1$
+	public static final Pattern REGEX_PASTE_KISU = Pattern.compile("^(https?://)?(www\\.)?kitsu\\.(io|app)/anime/(?<id>[0-9A-Za-z\\-]+)(/.*)?(\\?.*)?(#.*)?$");                                     //$NON-NLS-1$
 	public static final Pattern REGEX_PASTE_ANDB = Pattern.compile("^(https?://)?(www\\.)?anidb\\.net/((anime/)|(a)|(perl-bin/animedb\\.pl\\?show=anime&aid=))(?<id>[0-9]+)(/.*)?(\\?.*)?(#.*)?$"); //$NON-NLS-1$
 	public static final Pattern REGEX_PASTE_TVDB = Pattern.compile("^(https?://)?(www\\.)?thetvdb\\.com/series/(?<id>[0-9A-Za-z\\-]+)(/.*)?(\\?.*)?(#.*)?$");                                       //$NON-NLS-1$
 	public static final Pattern REGEX_PASTE_MAZE = Pattern.compile("^(https?://)?(www\\.)?tvmaze\\.com/shows/(?<id>[0-9]+)(/.*)?(\\?.*)?(#.*)?$");                                                  //$NON-NLS-1$

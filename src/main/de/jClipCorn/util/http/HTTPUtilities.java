@@ -7,15 +7,18 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.HTTPErrorCodeException;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.ApplicationHelper;
+import de.jClipCorn.util.helper.DialogHelper;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -133,6 +136,12 @@ public class HTTPUtilities {
 			try {
 				java.net.URI uri = new java.net.URI(url);
 				desktop.browse(uri);
+			} catch (UnsupportedOperationException e) {
+				DialogHelper.showDispatchError(MainFrame.getInstance(),
+						LocaleBundle.getString("Dialogs.GenericCaption.Error"),
+						LocaleBundle.getString("LogMessage.UnsupportedOpenInBrowser"));
+				CCLog.addWarning(LocaleBundle.getString("LogMessage.UnsupportedOpenInBrowser"), e);
+				return false;
 			} catch (URISyntaxException e) {
 				CCLog.addError(LocaleBundle.getString("LogMessage.WrongFormattedURI"), e);
 				return false;

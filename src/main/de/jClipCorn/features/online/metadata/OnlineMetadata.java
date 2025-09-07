@@ -8,6 +8,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCStringList;
 
 public class OnlineMetadata {
 
@@ -23,6 +24,8 @@ public class OnlineMetadata {
 	public Map<String, Integer> FSKList = null;
 	public CCFSK FSK = null;
 	public CCSingleOnlineReference AltRef = null;
+	public CCStringList AnimeSeason = null;
+	public CCStringList AnimeStudio = null;
 	
 	public OnlineMetadata(CCSingleOnlineReference source) {
 		super();
@@ -39,6 +42,8 @@ public class OnlineMetadata {
 		if (this.Cover == null) {this.Cover = base.Cover; this.CoverURL = base.CoverURL; }
 		if (this.FSK == null) {this.FSK = base.FSK; this.FSKList = base.FSKList;}		
 		if (this.AltRef == null || this.AltRef.isUnset()) this.AltRef = base.AltRef;
+		if (this.AnimeSeason == null || this.AnimeSeason.isEmpty()) this.AnimeSeason = base.AnimeSeason;
+		if (this.AnimeStudio == null || this.AnimeStudio.isEmpty()) this.AnimeStudio = base.AnimeStudio;
 	}
 
 	public CCOnlineReferenceList getFullReference() {

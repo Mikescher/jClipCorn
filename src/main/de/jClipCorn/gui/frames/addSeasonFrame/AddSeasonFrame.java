@@ -194,6 +194,16 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 	}
 
 	@Override
+	public void setAnimeSeason(CCStringList animeSeason) {
+		// NOP
+	}
+
+	@Override
+	public void setAnimeStudio(CCStringList animeStudio) {
+		// NOP
+	}
+
+	@Override
 	public void onFinishInserting() {
 		// NOP
 	}

@@ -70,7 +70,7 @@ public class ParseOnlineDialog extends JCCDialog
 		lsDBList.setModel(mdlLsDBList = new DefaultListModel<>());
 		edSearchName.setText(owner.getFullTitle());
 
-		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnParse, btnExtendedParse, lsDBList, cbTitle, cbYear, cbScore, cbLength, cbFSK, cbCover, cbGenre0, cbGenre1, cbGenre2, cbGenre3, cbGenre4, cbGenre5, cbGenre6, cbGenre7, btnRef, btnFSKAll, btnApply}));
+		setFocusTraversalPolicy(new ExtendedFocusTraversalOnArray(new Component[]{btnParse, btnExtendedParse, lsDBList, cbTitle, cbYear, cbScore, cbLength, cbFSK, cbCover, cbGenre0, cbGenre1, cbGenre2, cbGenre3, cbGenre4, cbGenre5, cbGenre6, cbGenre7, cbAnimeSeason, cbAnimeStudio, btnRef, btnFSKAll, btnApply}));
 
 
 		resetAll();
@@ -134,6 +134,9 @@ public class ParseOnlineDialog extends JCCDialog
 		cbxGenre6.clearSelectedEnum();
 		cbxGenre7.clearSelectedEnum();
 
+		edAnimeSeason.setText(Str.Empty);
+		edAnimeStudio.setText(Str.Empty);
+
 		btnRef.setIcon(Resources.ICN_REF_00_BUTTON.get());
 	}
 
@@ -153,6 +156,9 @@ public class ParseOnlineDialog extends JCCDialog
 		cbGenre5.setSelected(false);
 		cbGenre6.setSelected(false);
 		cbGenre7.setSelected(false);
+
+		cbAnimeSeason.setSelected(false);
+		cbAnimeStudio.setSelected(false);
 	}
 
 	private void updateCheckBoxes() {
@@ -171,6 +177,9 @@ public class ParseOnlineDialog extends JCCDialog
 		cbGenre5.setSelected(cbxGenre5.hasSelection());
 		cbGenre6.setSelected(cbxGenre6.hasSelection());
 		cbGenre7.setSelected(cbxGenre7.hasSelection());
+
+		cbAnimeSeason.setSelected(!edAnimeSeason.getText().isEmpty());
+		cbAnimeStudio.setSelected(!edAnimeStudio.getText().isEmpty());
 	}
 
 	private void runSearchAsync(boolean parseAll) {
@@ -292,6 +301,9 @@ public class ParseOnlineDialog extends JCCDialog
 				if (md.Genres != null) cbxGenre6.setSelectedEnum(md.Genres.getGenre(6));
 				if (md.Genres != null) cbxGenre7.setSelectedEnum(md.Genres.getGenre(7));
 
+				if (md.AnimeSeason != null && !md.AnimeSeason.isEmpty()) edAnimeSeason.setText(md.AnimeSeason.ccstream().stringjoin(", "));
+				if (md.AnimeStudio != null && !md.AnimeStudio.isEmpty()) edAnimeStudio.setText(md.AnimeStudio.ccstream().stringjoin(", "));
+
 				btnRef.setIcon(selectedReference.getIconButton());
 				if (md.AltRef != null) ctrlAltRef.setValue(md.AltRef); else ctrlAltRef.setValue(CCSingleOnlineReference.EMPTY);
 
@@ -341,334 +353,377 @@ public class ParseOnlineDialog extends JCCDialog
 		if (cbGenre6.isSelected()) owner.setGenre(6, cbxGenre6.getSelectedEnum());
 		if (cbGenre7.isSelected()) owner.setGenre(7, cbxGenre7.getSelectedEnum());
 
+		if (cbAnimeSeason.isSelected()) {
+			String[] parts = edAnimeSeason.getText().split(",");
+			for (int i = 0; i < parts.length; i++) parts[i] = parts[i].trim();
+			CCStringList animeSeason = CCStringList.create(parts);
+			owner.setAnimeSeason(animeSeason);
+		}
+		if (cbAnimeStudio.isSelected()) {
+			String[] parts = edAnimeStudio.getText().split(",");
+			for (int i = 0; i < parts.length; i++) parts[i] = parts[i].trim();
+			CCStringList animeStudio = CCStringList.create(parts);
+			owner.setAnimeStudio(animeStudio);
+		}
+
 		owner.onFinishInserting();
 	}
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		panel1 = new JPanel();
-		edSearchName = new JTextField();
-		btnParse = new JButton();
-		btnExtendedParse = new JButton();
-		panel2 = new JPanel();
-		scrollPane1 = new JScrollPane();
-		lsDBList = new JList<>();
-		panel3 = new JPanel();
-		cbTitle = new JCheckBox();
-		label1 = new JLabel();
-		edTitle = new ReadableTextField();
-		cbGenre0 = new JCheckBox();
-		label7 = new JLabel();
-		cbxGenre0 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		cbYear = new JCheckBox();
-		label2 = new JLabel();
-		spnYear = new JYearSpinner();
-		cbGenre1 = new JCheckBox();
-		label8 = new JLabel();
-		cbxGenre1 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		cbScore = new JCheckBox();
-		label3 = new JLabel();
-		ctrlScore = new OnlineScoreControl();
-		cbGenre2 = new JCheckBox();
-		label9 = new JLabel();
-		cbxGenre2 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		cbLength = new JCheckBox();
-		label4 = new JLabel();
-		spnLength = new ReadableSpinner();
-		cbGenre3 = new JCheckBox();
-		label10 = new JLabel();
-		cbxGenre3 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		cbFSK = new JCheckBox();
-		label5 = new JLabel();
-		cbxFSK = new CCReadableEnumComboBox<CCFSK>(CCFSK.getWrapper());
-		cbGenre4 = new JCheckBox();
-		label11 = new JLabel();
-		cbxGenre4 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		cbCover = new JCheckBox();
-		label6 = new JLabel();
-		imgCover = new CoverLabelFullsize(movielist);
-		cbGenre5 = new JCheckBox();
-		label12 = new JLabel();
-		cbxGenre5 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		cbGenre6 = new JCheckBox();
-		label13 = new JLabel();
-		cbxGenre6 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		cbGenre7 = new JCheckBox();
-		label14 = new JLabel();
-		cbxGenre7 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
-		btnRef = new JButton();
-		ctrlAltRef = new JSingleReferenceChooser(movielist);
-		btnFSKAll = new JButton();
-		btnApply = new JButton();
-		pbarSearch = new JProgressBar();
+        panel1 = new JPanel();
+        edSearchName = new JTextField();
+        btnParse = new JButton();
+        btnExtendedParse = new JButton();
+        panel2 = new JPanel();
+        scrollPane1 = new JScrollPane();
+        lsDBList = new JList<>();
+        panel3 = new JPanel();
+        cbTitle = new JCheckBox();
+        label1 = new JLabel();
+        edTitle = new ReadableTextField();
+        cbGenre0 = new JCheckBox();
+        label7 = new JLabel();
+        cbxGenre0 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        cbYear = new JCheckBox();
+        label2 = new JLabel();
+        spnYear = new JYearSpinner();
+        cbGenre1 = new JCheckBox();
+        label8 = new JLabel();
+        cbxGenre1 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        cbScore = new JCheckBox();
+        label3 = new JLabel();
+        ctrlScore = new OnlineScoreControl();
+        cbGenre2 = new JCheckBox();
+        label9 = new JLabel();
+        cbxGenre2 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        cbLength = new JCheckBox();
+        label4 = new JLabel();
+        spnLength = new ReadableSpinner();
+        cbGenre3 = new JCheckBox();
+        label10 = new JLabel();
+        cbxGenre3 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        cbFSK = new JCheckBox();
+        label5 = new JLabel();
+        cbxFSK = new CCReadableEnumComboBox<CCFSK>(CCFSK.getWrapper());
+        cbGenre4 = new JCheckBox();
+        label11 = new JLabel();
+        cbxGenre4 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        cbCover = new JCheckBox();
+        label6 = new JLabel();
+        imgCover = new CoverLabelFullsize(movielist);
+        cbGenre5 = new JCheckBox();
+        label12 = new JLabel();
+        cbxGenre5 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        cbGenre6 = new JCheckBox();
+        label13 = new JLabel();
+        cbxGenre6 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        cbGenre7 = new JCheckBox();
+        label14 = new JLabel();
+        cbxGenre7 = new CCReadableEnumComboBox<CCGenre>(CCGenre.getWrapper());
+        cbAnimeSeason = new JCheckBox();
+        label15 = new JLabel();
+        edAnimeSeason = new ReadableTextField();
+        cbAnimeStudio = new JCheckBox();
+        label16 = new JLabel();
+        edAnimeStudio = new ReadableTextField();
+        btnRef = new JButton();
+        ctrlAltRef = new JSingleReferenceChooser(movielist);
+        btnFSKAll = new JButton();
+        btnApply = new JButton();
+        pbarSearch = new JProgressBar();
 
-		//======== this ========
-		setTitle(LocaleBundle.getString("parseImDBFrame.this.title")); //$NON-NLS-1$
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setMinimumSize(new Dimension(900, 525));
-		setModal(true);
-		var contentPane = getContentPane();
-		contentPane.setLayout(new FormLayout(
-			"$ugap, default:grow, $ugap", //$NON-NLS-1$
-			"$ugap, default, $lgap, default:grow, $ugap")); //$NON-NLS-1$
+        //======== this ========
+        setTitle(LocaleBundle.getString("parseImDBFrame.this.title")); //$NON-NLS-1$
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setMinimumSize(new Dimension(900, 525));
+        setModal(true);
+        var contentPane = getContentPane();
+        contentPane.setLayout(new FormLayout(
+            "$ugap, default:grow, $ugap", //$NON-NLS-1$
+            "$ugap, default, $lgap, default:grow, $ugap")); //$NON-NLS-1$
 
-		//======== panel1 ========
-		{
-			panel1.setLayout(new FormLayout(
-				"default:grow, $ugap, default, $lcgap, default", //$NON-NLS-1$
-				"default")); //$NON-NLS-1$
+        //======== panel1 ========
+        {
+            panel1.setLayout(new FormLayout(
+                "default:grow, $ugap, default, $lcgap, default", //$NON-NLS-1$
+                "default")); //$NON-NLS-1$
 
-			//---- edSearchName ----
-			edSearchName.addKeyListener(new KeyAdapter() {
-				@Override
-				public void keyPressed(KeyEvent e) {
-					onSearchKeyPressed(e);
-				}
-			});
-			panel1.add(edSearchName, CC.xy(1, 1));
+            //---- edSearchName ----
+            edSearchName.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    onSearchKeyPressed(e);
+                }
+            });
+            panel1.add(edSearchName, CC.xy(1, 1));
 
-			//---- btnParse ----
-			btnParse.setText(LocaleBundle.getString("parseImDBFrame.btnParse.text")); //$NON-NLS-1$
-			btnParse.addActionListener(e -> startParse());
-			panel1.add(btnParse, CC.xy(3, 1));
+            //---- btnParse ----
+            btnParse.setText(LocaleBundle.getString("parseImDBFrame.btnParse.text")); //$NON-NLS-1$
+            btnParse.addActionListener(e -> startParse());
+            panel1.add(btnParse, CC.xy(3, 1));
 
-			//---- btnExtendedParse ----
-			btnExtendedParse.setText(LocaleBundle.getString("parseImDBFrame.btnParseExtended.text")); //$NON-NLS-1$
-			btnExtendedParse.addActionListener(e -> startExtendedParse());
-			panel1.add(btnExtendedParse, CC.xy(5, 1));
-		}
-		contentPane.add(panel1, CC.xy(2, 2, CC.FILL, CC.FILL));
+            //---- btnExtendedParse ----
+            btnExtendedParse.setText(LocaleBundle.getString("parseImDBFrame.btnParseExtended.text")); //$NON-NLS-1$
+            btnExtendedParse.addActionListener(e -> startExtendedParse());
+            panel1.add(btnExtendedParse, CC.xy(5, 1));
+        }
+        contentPane.add(panel1, CC.xy(2, 2, CC.FILL, CC.FILL));
 
-		//======== panel2 ========
-		{
-			panel2.setBorder(new BevelBorder(BevelBorder.LOWERED));
-			panel2.setLayout(new FormLayout(
-				"$lcgap, 175dlu, $lcgap, 0dlu:grow, $lcgap", //$NON-NLS-1$
-				"$lgap, default:grow, $lgap, default, $lgap")); //$NON-NLS-1$
+        //======== panel2 ========
+        {
+            panel2.setBorder(new BevelBorder(BevelBorder.LOWERED));
+            panel2.setLayout(new FormLayout(
+                "$lcgap, 175dlu, $lcgap, 0dlu:grow, $lcgap", //$NON-NLS-1$
+                "$lgap, default:grow, $lgap, default, $lgap")); //$NON-NLS-1$
 
-			//======== scrollPane1 ========
-			{
+            //======== scrollPane1 ========
+            {
 
-				//---- lsDBList ----
-				lsDBList.addListSelectionListener(e -> onRefSelected(e));
-				scrollPane1.setViewportView(lsDBList);
-			}
-			panel2.add(scrollPane1, CC.xy(2, 2, CC.FILL, CC.FILL));
+                //---- lsDBList ----
+                lsDBList.addListSelectionListener(e -> onRefSelected(e));
+                scrollPane1.setViewportView(lsDBList);
+            }
+            panel2.add(scrollPane1, CC.xy(2, 2, CC.FILL, CC.FILL));
 
-			//======== panel3 ========
-			{
-				panel3.setBorder(new EtchedBorder());
-				panel3.setLayout(new FormLayout(
-					"2*($lcgap, default), $lcgap, 240px, 3*($lcgap, default), $lcgap, 0dlu:grow, $lcgap", //$NON-NLS-1$
-					"8*($lgap, default), $lgap, default:grow, 3*($lgap, default), $lgap, $pgap, $lgap, default, $lgap")); //$NON-NLS-1$
-				panel3.add(cbTitle, CC.xy(2, 2));
+            //======== panel3 ========
+            {
+                panel3.setBorder(new EtchedBorder());
+                panel3.setLayout(new FormLayout(
+                    "2*($lcgap, default), $lcgap, 240px, 3*($lcgap, default), $lcgap, 0dlu:grow, $lcgap", //$NON-NLS-1$
+                    "10*($lgap, default), $lgap, default:grow, 3*($lgap, default), $lgap, $pgap, $lgap, default, $lgap")); //$NON-NLS-1$
+                panel3.add(cbTitle, CC.xy(2, 2));
 
-				//---- label1 ----
-				label1.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
-				panel3.add(label1, CC.xy(4, 2));
-				panel3.add(edTitle, CC.xy(6, 2));
-				panel3.add(cbGenre0, CC.xy(10, 2));
+                //---- label1 ----
+                label1.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
+                panel3.add(label1, CC.xy(4, 2));
+                panel3.add(edTitle, CC.xy(6, 2));
+                panel3.add(cbGenre0, CC.xy(10, 2));
 
-				//---- label7 ----
-				label7.setText(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
-				panel3.add(label7, CC.xy(12, 2));
+                //---- label7 ----
+                label7.setText(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
+                panel3.add(label7, CC.xy(12, 2));
 
-				//---- cbxGenre0 ----
-				cbxGenre0.setEnabled(false);
-				panel3.add(cbxGenre0, CC.xy(14, 2));
-				panel3.add(cbYear, CC.xy(2, 4));
+                //---- cbxGenre0 ----
+                cbxGenre0.setEnabled(false);
+                panel3.add(cbxGenre0, CC.xy(14, 2));
+                panel3.add(cbYear, CC.xy(2, 4));
 
-				//---- label2 ----
-				label2.setText(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
-				panel3.add(label2, CC.xy(4, 4));
+                //---- label2 ----
+                label2.setText(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
+                panel3.add(label2, CC.xy(4, 4));
 
-				//---- spnYear ----
-				spnYear.setEnabled(false);
-				panel3.add(spnYear, CC.xy(6, 4));
-				panel3.add(cbGenre1, CC.xy(10, 4));
+                //---- spnYear ----
+                spnYear.setEnabled(false);
+                panel3.add(spnYear, CC.xy(6, 4));
+                panel3.add(cbGenre1, CC.xy(10, 4));
 
-				//---- label8 ----
-				label8.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
-				panel3.add(label8, CC.xy(12, 4));
+                //---- label8 ----
+                label8.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
+                panel3.add(label8, CC.xy(12, 4));
 
-				//---- cbxGenre1 ----
-				cbxGenre1.setEnabled(false);
-				panel3.add(cbxGenre1, CC.xy(14, 4));
-				panel3.add(cbScore, CC.xy(2, 6));
+                //---- cbxGenre1 ----
+                cbxGenre1.setEnabled(false);
+                panel3.add(cbxGenre1, CC.xy(14, 4));
+                panel3.add(cbScore, CC.xy(2, 6));
 
-				//---- label3 ----
-				label3.setText(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
-				panel3.add(label3, CC.xy(4, 6));
+                //---- label3 ----
+                label3.setText(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
+                panel3.add(label3, CC.xy(4, 6));
 
-				//---- ctrlScore ----
-				ctrlScore.setReadOnly(true);
-				panel3.add(ctrlScore, CC.xy(6, 6));
-				panel3.add(cbGenre2, CC.xy(10, 6));
+                //---- ctrlScore ----
+                ctrlScore.setReadOnly(true);
+                panel3.add(ctrlScore, CC.xy(6, 6));
+                panel3.add(cbGenre2, CC.xy(10, 6));
 
-				//---- label9 ----
-				label9.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
-				panel3.add(label9, CC.xy(12, 6));
+                //---- label9 ----
+                label9.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
+                panel3.add(label9, CC.xy(12, 6));
 
-				//---- cbxGenre2 ----
-				cbxGenre2.setEnabled(false);
-				panel3.add(cbxGenre2, CC.xy(14, 6));
-				panel3.add(cbLength, CC.xy(2, 8));
+                //---- cbxGenre2 ----
+                cbxGenre2.setEnabled(false);
+                panel3.add(cbxGenre2, CC.xy(14, 6));
+                panel3.add(cbLength, CC.xy(2, 8));
 
-				//---- label4 ----
-				label4.setText(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
-				panel3.add(label4, CC.xy(4, 8));
+                //---- label4 ----
+                label4.setText(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
+                panel3.add(label4, CC.xy(4, 8));
 
-				//---- spnLength ----
-				spnLength.setEnabled(true);
-				panel3.add(spnLength, CC.xy(6, 8));
-				panel3.add(cbGenre3, CC.xy(10, 8));
+                //---- spnLength ----
+                spnLength.setEnabled(true);
+                panel3.add(spnLength, CC.xy(6, 8));
+                panel3.add(cbGenre3, CC.xy(10, 8));
 
-				//---- label10 ----
-				label10.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
-				panel3.add(label10, CC.xy(12, 8));
+                //---- label10 ----
+                label10.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
+                panel3.add(label10, CC.xy(12, 8));
 
-				//---- cbxGenre3 ----
-				cbxGenre3.setEnabled(false);
-				panel3.add(cbxGenre3, CC.xy(14, 8));
-				panel3.add(cbFSK, CC.xy(2, 10));
+                //---- cbxGenre3 ----
+                cbxGenre3.setEnabled(false);
+                panel3.add(cbxGenre3, CC.xy(14, 8));
+                panel3.add(cbFSK, CC.xy(2, 10));
 
-				//---- label5 ----
-				label5.setText(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
-				panel3.add(label5, CC.xy(4, 10));
+                //---- label5 ----
+                label5.setText(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
+                panel3.add(label5, CC.xy(4, 10));
 
-				//---- cbxFSK ----
-				cbxFSK.setEnabled(false);
-				panel3.add(cbxFSK, CC.xy(6, 10));
-				panel3.add(cbGenre4, CC.xy(10, 10));
+                //---- cbxFSK ----
+                cbxFSK.setEnabled(false);
+                panel3.add(cbxFSK, CC.xy(6, 10));
+                panel3.add(cbGenre4, CC.xy(10, 10));
 
-				//---- label11 ----
-				label11.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
-				panel3.add(label11, CC.xy(12, 10));
+                //---- label11 ----
+                label11.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
+                panel3.add(label11, CC.xy(12, 10));
 
-				//---- cbxGenre4 ----
-				cbxGenre4.setEnabled(false);
-				panel3.add(cbxGenre4, CC.xy(14, 10));
-				panel3.add(cbCover, CC.xy(2, 12));
+                //---- cbxGenre4 ----
+                cbxGenre4.setEnabled(false);
+                panel3.add(cbxGenre4, CC.xy(14, 10));
+                panel3.add(cbCover, CC.xy(2, 12));
 
-				//---- label6 ----
-				label6.setText(LocaleBundle.getString("AddMovieFrame.lblCover.text")); //$NON-NLS-1$
-				panel3.add(label6, CC.xy(4, 12));
+                //---- label6 ----
+                label6.setText(LocaleBundle.getString("AddMovieFrame.lblCover.text")); //$NON-NLS-1$
+                panel3.add(label6, CC.xy(4, 12));
 
-				//---- imgCover ----
-				imgCover.setText("text"); //$NON-NLS-1$
-				panel3.add(imgCover, CC.xywh(6, 12, 1, 17, CC.FILL, CC.TOP));
-				panel3.add(cbGenre5, CC.xy(10, 12));
+                //---- imgCover ----
+                imgCover.setText("text"); //$NON-NLS-1$
+                panel3.add(imgCover, CC.xywh(6, 12, 1, 18, CC.FILL, CC.TOP));
+                panel3.add(cbGenre5, CC.xy(10, 12));
 
-				//---- label12 ----
-				label12.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
-				panel3.add(label12, CC.xy(12, 12));
+                //---- label12 ----
+                label12.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
+                panel3.add(label12, CC.xy(12, 12));
 
-				//---- cbxGenre5 ----
-				cbxGenre5.setEnabled(false);
-				panel3.add(cbxGenre5, CC.xy(14, 12));
-				panel3.add(cbGenre6, CC.xy(10, 14));
+                //---- cbxGenre5 ----
+                cbxGenre5.setEnabled(false);
+                panel3.add(cbxGenre5, CC.xy(14, 12));
+                panel3.add(cbGenre6, CC.xy(10, 14));
 
-				//---- label13 ----
-				label13.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
-				panel3.add(label13, CC.xy(12, 14));
+                //---- label13 ----
+                label13.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
+                panel3.add(label13, CC.xy(12, 14));
 
-				//---- cbxGenre6 ----
-				cbxGenre6.setEnabled(false);
-				panel3.add(cbxGenre6, CC.xy(14, 14));
-				panel3.add(cbGenre7, CC.xy(10, 16));
+                //---- cbxGenre6 ----
+                cbxGenre6.setEnabled(false);
+                panel3.add(cbxGenre6, CC.xy(14, 14));
+                panel3.add(cbGenre7, CC.xy(10, 16));
 
-				//---- label14 ----
-				label14.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
-				panel3.add(label14, CC.xy(12, 16));
+                //---- label14 ----
+                label14.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
+                panel3.add(label14, CC.xy(12, 16));
 
-				//---- cbxGenre7 ----
-				cbxGenre7.setEnabled(false);
-				panel3.add(cbxGenre7, CC.xy(14, 16));
+                //---- cbxGenre7 ----
+                cbxGenre7.setEnabled(false);
+                panel3.add(cbxGenre7, CC.xy(14, 16));
+                panel3.add(cbAnimeSeason, CC.xy(10, 18));
 
-				//---- btnRef ----
-				btnRef.setText(" "); //$NON-NLS-1$
-				btnRef.addActionListener(e -> openRefInBrowser());
-				panel3.add(btnRef, CC.xy(14, 20));
+                //---- label15 ----
+                label15.setText(LocaleBundle.getString("ParseOnlineDialog.lblAnimeSeason.text")); //$NON-NLS-1$
+                panel3.add(label15, CC.xy(12, 18));
 
-				//---- ctrlAltRef ----
-				ctrlAltRef.setEnabled(false);
-				panel3.add(ctrlAltRef, CC.xy(14, 22));
+                //---- edAnimeSeason ----
+                edAnimeSeason.setEnabled(false);
+                panel3.add(edAnimeSeason, CC.xy(14, 18));
+                panel3.add(cbAnimeStudio, CC.xy(10, 20));
 
-				//---- btnFSKAll ----
-				btnFSKAll.setText(LocaleBundle.getString("parseImDBFrame.btnFSKAll.text")); //$NON-NLS-1$
-				btnFSKAll.addActionListener(e -> showAllRatingsDialog());
-				panel3.add(btnFSKAll, CC.xy(14, 24));
+                //---- label16 ----
+                label16.setText(LocaleBundle.getString("ParseOnlineDialog.lblAnimeStudio.text")); //$NON-NLS-1$
+                panel3.add(label16, CC.xy(12, 20));
 
-				//---- btnApply ----
-				btnApply.setText(LocaleBundle.getString("UIGeneric.btnApply.text")); //$NON-NLS-1$
-				btnApply.setFont(btnApply.getFont().deriveFont(btnApply.getFont().getStyle() | Font.BOLD));
-				btnApply.addActionListener(e -> onApply());
-				panel3.add(btnApply, CC.xy(14, 28));
-			}
-			panel2.add(panel3, CC.xywh(4, 2, 1, 3, CC.FILL, CC.FILL));
-			panel2.add(pbarSearch, CC.xy(2, 4));
-		}
-		contentPane.add(panel2, CC.xy(2, 4, CC.FILL, CC.FILL));
-		setSize(1100, 595);
-		setLocationRelativeTo(getOwner());
+                //---- edAnimeStudio ----
+                edAnimeStudio.setEnabled(false);
+                panel3.add(edAnimeStudio, CC.xy(14, 20));
+
+                //---- btnRef ----
+                btnRef.setText(" "); //$NON-NLS-1$
+                btnRef.addActionListener(e -> openRefInBrowser());
+                panel3.add(btnRef, CC.xy(14, 24));
+
+                //---- ctrlAltRef ----
+                ctrlAltRef.setEnabled(false);
+                panel3.add(ctrlAltRef, CC.xy(14, 26));
+
+                //---- btnFSKAll ----
+                btnFSKAll.setText(LocaleBundle.getString("parseImDBFrame.btnFSKAll.text")); //$NON-NLS-1$
+                btnFSKAll.addActionListener(e -> showAllRatingsDialog());
+                panel3.add(btnFSKAll, CC.xy(14, 28));
+
+                //---- btnApply ----
+                btnApply.setText(LocaleBundle.getString("UIGeneric.btnApply.text")); //$NON-NLS-1$
+                btnApply.setFont(btnApply.getFont().deriveFont(btnApply.getFont().getStyle() | Font.BOLD));
+                btnApply.addActionListener(e -> onApply());
+                panel3.add(btnApply, CC.xy(14, 32));
+            }
+            panel2.add(panel3, CC.xywh(4, 2, 1, 3, CC.FILL, CC.FILL));
+            panel2.add(pbarSearch, CC.xy(2, 4));
+        }
+        contentPane.add(panel2, CC.xy(2, 4, CC.FILL, CC.FILL));
+        setSize(1375, 850);
+        setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	private JPanel panel1;
-	private JTextField edSearchName;
-	private JButton btnParse;
-	private JButton btnExtendedParse;
-	private JPanel panel2;
-	private JScrollPane scrollPane1;
-	private JList<ParseOnlineDialogElement> lsDBList;
-	private JPanel panel3;
-	private JCheckBox cbTitle;
-	private JLabel label1;
-	private ReadableTextField edTitle;
-	private JCheckBox cbGenre0;
-	private JLabel label7;
-	private CCReadableEnumComboBox<CCGenre> cbxGenre0;
-	private JCheckBox cbYear;
-	private JLabel label2;
-	private JYearSpinner spnYear;
-	private JCheckBox cbGenre1;
-	private JLabel label8;
-	private CCReadableEnumComboBox<CCGenre> cbxGenre1;
-	private JCheckBox cbScore;
-	private JLabel label3;
-	private OnlineScoreControl ctrlScore;
-	private JCheckBox cbGenre2;
-	private JLabel label9;
-	private CCReadableEnumComboBox<CCGenre> cbxGenre2;
-	private JCheckBox cbLength;
-	private JLabel label4;
-	private ReadableSpinner spnLength;
-	private JCheckBox cbGenre3;
-	private JLabel label10;
-	private CCReadableEnumComboBox<CCGenre> cbxGenre3;
-	private JCheckBox cbFSK;
-	private JLabel label5;
-	private CCReadableEnumComboBox<CCFSK> cbxFSK;
-	private JCheckBox cbGenre4;
-	private JLabel label11;
-	private CCReadableEnumComboBox<CCGenre> cbxGenre4;
-	private JCheckBox cbCover;
-	private JLabel label6;
-	private CoverLabelFullsize imgCover;
-	private JCheckBox cbGenre5;
-	private JLabel label12;
-	private CCReadableEnumComboBox<CCGenre> cbxGenre5;
-	private JCheckBox cbGenre6;
-	private JLabel label13;
-	private CCReadableEnumComboBox<CCGenre> cbxGenre6;
-	private JCheckBox cbGenre7;
-	private JLabel label14;
-	private CCReadableEnumComboBox<CCGenre> cbxGenre7;
-	private JButton btnRef;
-	private JSingleReferenceChooser ctrlAltRef;
-	private JButton btnFSKAll;
-	private JButton btnApply;
-	private JProgressBar pbarSearch;
+    private JPanel panel1;
+    private JTextField edSearchName;
+    private JButton btnParse;
+    private JButton btnExtendedParse;
+    private JPanel panel2;
+    private JScrollPane scrollPane1;
+    private JList<ParseOnlineDialogElement> lsDBList;
+    private JPanel panel3;
+    private JCheckBox cbTitle;
+    private JLabel label1;
+    private ReadableTextField edTitle;
+    private JCheckBox cbGenre0;
+    private JLabel label7;
+    private CCReadableEnumComboBox<CCGenre> cbxGenre0;
+    private JCheckBox cbYear;
+    private JLabel label2;
+    private JYearSpinner spnYear;
+    private JCheckBox cbGenre1;
+    private JLabel label8;
+    private CCReadableEnumComboBox<CCGenre> cbxGenre1;
+    private JCheckBox cbScore;
+    private JLabel label3;
+    private OnlineScoreControl ctrlScore;
+    private JCheckBox cbGenre2;
+    private JLabel label9;
+    private CCReadableEnumComboBox<CCGenre> cbxGenre2;
+    private JCheckBox cbLength;
+    private JLabel label4;
+    private ReadableSpinner spnLength;
+    private JCheckBox cbGenre3;
+    private JLabel label10;
+    private CCReadableEnumComboBox<CCGenre> cbxGenre3;
+    private JCheckBox cbFSK;
+    private JLabel label5;
+    private CCReadableEnumComboBox<CCFSK> cbxFSK;
+    private JCheckBox cbGenre4;
+    private JLabel label11;
+    private CCReadableEnumComboBox<CCGenre> cbxGenre4;
+    private JCheckBox cbCover;
+    private JLabel label6;
+    private CoverLabelFullsize imgCover;
+    private JCheckBox cbGenre5;
+    private JLabel label12;
+    private CCReadableEnumComboBox<CCGenre> cbxGenre5;
+    private JCheckBox cbGenre6;
+    private JLabel label13;
+    private CCReadableEnumComboBox<CCGenre> cbxGenre6;
+    private JCheckBox cbGenre7;
+    private JLabel label14;
+    private CCReadableEnumComboBox<CCGenre> cbxGenre7;
+    private JCheckBox cbAnimeSeason;
+    private JLabel label15;
+    private ReadableTextField edAnimeSeason;
+    private JCheckBox cbAnimeStudio;
+    private JLabel label16;
+    private ReadableTextField edAnimeStudio;
+    private JButton btnRef;
+    private JSingleReferenceChooser ctrlAltRef;
+    private JButton btnFSKAll;
+    private JButton btnApply;
+    private JProgressBar pbarSearch;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

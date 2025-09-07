@@ -527,6 +527,14 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 	public void setOnlineReference(CCOnlineReferenceList ref) {
 		edReference.setValue(ref);
 	}
+	@Override
+	public void setAnimeSeason(CCStringList animeSeason) {
+		edAnimeSeason.setValues(animeSeason.ccstream().toList());
+	}
+	@Override
+	public void setAnimeStudio(CCStringList animeStudio) {
+		edAnimeStudio.setValues(animeStudio.ccstream().toList());
+	}
 
 	public void setGroups(CCGroupList gl) {
 		edGroups.setValue(gl);

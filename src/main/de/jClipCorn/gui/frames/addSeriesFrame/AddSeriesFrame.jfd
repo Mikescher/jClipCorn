@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "8.1.0.0.283" Java: "17.0.7" encoding: "UTF-8"
+JFDML JFormDesigner: "8.2.4.0.393" Java: "21.0.8" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -8,7 +8,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "relgap, default, unrelgap, default:grow, labelcompgap, 13dlu, default, labelcompgap, default, labelcompgap, default:grow, labelcompgap"
-			"$rowSpecs": "relgap, default, relgap, default, linegap, default, 30dlu, unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, pref, linegap, default, linegap, default, linegap, default, linegap, pref:grow, default, linegap"
+			"$rowSpecs": "relgap, default, relgap, default, linegap, default, 30dlu, unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 10dlu, linegap, default, linegap, default, linegap, 0dlu:grow, default, linegap"
 		} ) {
 			name: "this"
 			"title": new FormMessage( null, "AddSeriesFrame.this.title" )
@@ -254,22 +254,6 @@ new FormModel {
 				"gridX": 4
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "lblSpecialVersion"
-				"text": new FormMessage( null, "AddSeriesFrame.lblSpecialVersion.text" )
-			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 2
-				"gridY": 25
-			} )
-			add( new FormComponent( "de.jClipCorn.gui.guiComponents.JAutoCompleteTextField" ) {
-				name: "edSpecialVersion"
-				auxiliary() {
-					"JavaCodeGenerator.customCreateCode": "new ${field_type}(() -> movielist.getSpecialVersionList());"
-				}
-			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 4
-				"gridY": 25
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "lblAnimeSeason"
 				"text": new FormMessage( null, "AddSeriesFrame.lblAnimeSeason.text" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
@@ -315,12 +299,12 @@ new FormModel {
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 34
+				"gridY": 32
 				"gridWidth": 10
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 700, 600 )
+			"size": new java.awt.Dimension( 700, 640 )
 		} )
 	}
 }

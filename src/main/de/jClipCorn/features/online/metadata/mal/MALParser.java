@@ -4,6 +4,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
+import de.jClipCorn.database.databaseElement.columnTypes.CCStringList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.cover.imdb.AgeRatingParser;
@@ -30,7 +31,7 @@ public class MALParser extends Metadataparser {
 	private static final Pattern REGEX_MYAL = Pattern.compile("^(http://|https://)?(www\\.)?myanimelist\\.net/anime/(?<id>[0-9]+)(/.*)?$"); //$NON-NLS-1$
 	private static final Pattern REGEX_BORDER = Pattern.compile("^(?<ident>[A-Za-z]+):(?<content>.+)$"); //$NON-NLS-1$
 	private static final Pattern REGEX_AIRED = Pattern.compile("^\\s*[A-Za-z]{3}\\s+[0-9]{1,2},\\s+(?<year>[12][0-9]{3})(?:(?:\\s+to\\s+[A-Za-z]{3}\\s+[0-9]{1,2},\\s+[12][0-9]{3})|(?:\\s+to\\s+\\?))?\\s*$"); //$NON-NLS-1$
-	private static final Pattern REGEX_PREMIERED = Pattern.compile("^\\s*(Summer|Fall|Winter|Spring)\\s*(?<year>[12][0-9]{3})\\s*$"); //$NON-NLS-1$
+	private static final Pattern REGEX_PREMIERED = Pattern.compile("^\\s*(?<season>Summer|Fall|Winter|Spring)\\s*(?<year>[12][0-9]{3})\\s*$"); //$NON-NLS-1$
 	private static final Pattern REGEX_RATING = Pattern.compile("^\\s*(?<rating>[A-Z0-9\\-]+) - .*$"); //$NON-NLS-1$
 	private static final Pattern REGEX_DURATION = Pattern.compile("^\\s*(?:(?<h>[0-9]+)\\s+hr\\.\\s+)?\\s*(?<m>[0-9]+)\\s+min\\.\\s*(per ep\\.)\\s*$"); //$NON-NLS-1$
 
@@ -104,6 +105,15 @@ public class MALParser extends Metadataparser {
 				String y = RegExHelper.getGroup(REGEX_PREMIERED, content, "year");
 				if (y != null) result.Year = Integer.parseInt(y);
 				
+				String season = RegExHelper.getGroup(REGEX_PREMIERED, content, "season");
+				if (season != null && y != null) {
+					result.AnimeSeason = CCStringList.create(season + " " + y);
+				}
+
+			} else if (ident.equalsIgnoreCase("Studios")) {
+
+				result.AnimeStudio = CCStringList.create(content);
+
 			} else if (ident.equalsIgnoreCase("Rating")) {
 				
 				String r = RegExHelper.getGroup(REGEX_RATING, content, "rating");

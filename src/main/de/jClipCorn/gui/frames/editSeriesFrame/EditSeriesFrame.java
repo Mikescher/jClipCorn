@@ -226,6 +226,16 @@ public class EditSeriesFrame extends JCCFrame
 			}
 
 			@Override
+			public void setAnimeSeason(CCStringList animeSeason) {
+				// NOP
+			}
+
+			@Override
+			public void setAnimeStudio(CCStringList animeStudio) {
+				// NOP
+			}
+
+			@Override
 			public void onFinishInserting() {
 				// nothing
 			}
@@ -308,6 +318,16 @@ public class EditSeriesFrame extends JCCFrame
 			@Override
 			public void setOnlineReference(CCOnlineReferenceList ref) {
 				// nothing
+			}
+
+			@Override
+			public void setAnimeSeason(CCStringList animeSeason) {
+				// NOP
+			}
+
+			@Override
+			public void setAnimeStudio(CCStringList animeStudio) {
+				// NOP
 			}
 
 			@Override
@@ -403,6 +423,16 @@ public class EditSeriesFrame extends JCCFrame
 			@Override
 			public void setOnlineReference(CCOnlineReferenceList ref) {
 				edSeriesReference.setValue(ref);
+			}
+
+			@Override
+			public void setAnimeSeason(CCStringList animeSeason) {
+				edAnimeSeason.setValues(animeSeason.ccstream().toList());
+			}
+
+			@Override
+			public void setAnimeStudio(CCStringList animeStudio) {
+				edAnimeStudio.setValues(animeStudio.ccstream().toList());
 			}
 
 			@Override

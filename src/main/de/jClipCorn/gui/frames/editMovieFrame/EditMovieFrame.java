@@ -202,6 +202,14 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	public void setOnlineReference(CCOnlineReferenceList ref) {
 		edReference.setValue(ref);
 	}
+	@Override
+	public void setAnimeSeason(CCStringList animeSeason) {
+		edAnimeSeason.setValues(animeSeason.ccstream().toList());
+	}
+	@Override
+	public void setAnimeStudio(CCStringList animeStudio) {
+		edAnimeStudio.setValues(animeStudio.ccstream().toList());
+	}
 
 	@Override
 	public void onAMIEDIgnoreClicked() {

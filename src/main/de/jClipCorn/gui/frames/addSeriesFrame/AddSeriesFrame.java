@@ -120,7 +120,6 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 
 		newS.Groups.set(edGroups.getValue());
 
-		newS.SpecialVersion.set(CCStringList.create(edSpecialVersion.getValues()));
 		newS.AnimeSeason.set(CCStringList.create(edAnimeSeason.getValues()));
 		newS.AnimeStudio.set(CCStringList.create(edAnimeStudio.getValues()));
 
@@ -246,6 +245,16 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 	}
 
 	@Override
+	public void setAnimeSeason(CCStringList animeSeason) {
+		edAnimeSeason.setValues(animeSeason.ccstream().toList());
+	}
+
+	@Override
+	public void setAnimeStudio(CCStringList animeStudio) {
+		edAnimeStudio.setValues(animeStudio.ccstream().toList());
+	}
+
+	@Override
 	public void onFinishInserting() {
 		// nothing
 	}
@@ -285,8 +294,6 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
         cbxGenre6 = new CCEnumComboBox<>(CCGenre.getWrapper());
         label11 = new JLabel();
         cbxGenre7 = new CCEnumComboBox<>(CCGenre.getWrapper());
-        lblSpecialVersion = new JLabel();
-        edSpecialVersion = new JAutoCompleteTextField(() -> movielist.getSpecialVersionList());
         lblAnimeSeason = new JLabel();
         edAnimeSeason = new JAutoCompleteTextField(() -> movielist.getAnimeSeasonList(), true);
         lblAnimeStudio = new JLabel();
@@ -302,7 +309,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
         var contentPane = getContentPane();
         contentPane.setLayout(new FormLayout(
             "$rgap, default, $ugap, default:grow, $lcgap, 13dlu, 2*(default, $lcgap), default:grow, $lcgap", //$NON-NLS-1$
-            "2*($rgap, default), $lgap, default, 30dlu, $ugap, 8*(default, $lgap), pref, 3*($lgap, default), $lgap, pref:grow, default, $lgap")); //$NON-NLS-1$
+            "2*($rgap, default), $lgap, default, 30dlu, $ugap, 8*(default, $lgap), 10dlu, 2*($lgap, default), $lgap, 0dlu:grow, default, $lgap")); //$NON-NLS-1$
 
         //---- label1 ----
         label1.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
@@ -376,11 +383,6 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
         contentPane.add(label11, CC.xy(2, 23));
         contentPane.add(cbxGenre7, CC.xy(4, 23));
 
-        //---- lblSpecialVersion ----
-        lblSpecialVersion.setText(LocaleBundle.getString("AddSeriesFrame.lblSpecialVersion.text")); //$NON-NLS-1$
-        contentPane.add(lblSpecialVersion, CC.xy(2, 25));
-        contentPane.add(edSpecialVersion, CC.xy(4, 25));
-
         //---- lblAnimeSeason ----
         lblAnimeSeason.setText(LocaleBundle.getString("AddSeriesFrame.lblAnimeSeason.text")); //$NON-NLS-1$
         contentPane.add(lblAnimeSeason, CC.xy(2, 27));
@@ -405,7 +407,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
             button2.addActionListener(e -> onCancel(e));
             panel1.add(button2);
         }
-        contentPane.add(panel1, CC.xywh(2, 34, 10, 1));
+        contentPane.add(panel1, CC.xywh(2, 32, 10, 1));
         pack();
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -439,8 +441,6 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
     private CCEnumComboBox<CCGenre> cbxGenre6;
     private JLabel label11;
     private CCEnumComboBox<CCGenre> cbxGenre7;
-    private JLabel lblSpecialVersion;
-    private JAutoCompleteTextField edSpecialVersion;
     private JLabel lblAnimeSeason;
     private JAutoCompleteTextField edAnimeSeason;
     private JLabel lblAnimeStudio;

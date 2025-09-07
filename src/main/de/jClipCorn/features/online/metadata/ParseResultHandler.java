@@ -21,6 +21,8 @@ public interface ParseResultHandler {
 	void setScore(CCOnlineScore s);
 	void setCover(BufferedImage nci);
 	void setOnlineReference(CCOnlineReferenceList ref);
+	void setAnimeSeason(CCStringList animeSeason);
+	void setAnimeStudio(CCStringList animeStudio);
 	
 	void onFinishInserting();
 }

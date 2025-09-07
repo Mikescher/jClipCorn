@@ -7,7 +7,6 @@ import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class CalculationCache<TOwner> implements ICalculationCache
@@ -94,7 +93,7 @@ public abstract class CalculationCache<TOwner> implements ICalculationCache
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({"deprecation", "removal"})
 	protected void finalize() throws Throwable {
 		CacheSizeTotal -= map.size();
 		super.finalize();

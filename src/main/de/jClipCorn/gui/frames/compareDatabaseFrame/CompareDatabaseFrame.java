@@ -230,7 +230,7 @@ public class CompareDatabaseFrame extends JCCFrame
 		updateUI();
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({"deprecation", "removal"})
 	private void cancelThread(ActionEvent ae)
 	{
 		if (activeThread == null) { updateUI(); return; }

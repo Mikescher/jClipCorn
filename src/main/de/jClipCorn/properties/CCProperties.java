@@ -225,6 +225,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_SERIESTABLE_INSTANTTOOLTIPS;
 	public CCBoolProperty                                   PROP_SERIESTABLE_INFINITETOOLTIPS;
 	public CCBoolProperty                                   PROP_PREVSERIES_SMALLER_COVER;
+	public CCPIntProperty                                   PROP_PREVIEWSERIESFRAME_WIDTH;
 
 	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public boolean ARG_READONLY = false;
@@ -434,6 +435,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_SERIESTABLE_INSTANTTOOLTIPS        = new CCBoolProperty(NONVISIBLE,            this,   "PROP_SERIESTABLE_INSTANTTOOLTIPS",         true);
 		PROP_SERIESTABLE_INFINITETOOLTIPS       = new CCBoolProperty(NONVISIBLE,            this,   "PROP_SERIESTABLE_INFINITETOOLTIPS",        true);
 		PROP_PREVSERIES_SMALLERCOVER_FACTOR     = new CCDoubleProperty(NONVISIBLE,          this,   "PROP_PREVSERIES_SMALLERCOVER_FACTOR",      0.95);
+		PROP_PREVIEWSERIESFRAME_WIDTH           = new CCPIntProperty(NONVISIBLE,            this,   "PROP_PREVIEWSERIESFRAME_WIDTH",            1300);
 
 		PROP_ADD_MOVIE_RELATIVE_AUTO            = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",             true);
 		PROP_PATHSYNTAX_SELF                    = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELF",                     true);

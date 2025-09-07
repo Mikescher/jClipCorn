@@ -334,7 +334,7 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({"deprecation", "removal"})
 	protected void finalize() throws Throwable {
 		if (timer != null) timer.cancel();
 		super.finalize();

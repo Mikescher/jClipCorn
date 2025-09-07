@@ -202,7 +202,7 @@ public class ApplyPatchFrame extends JCCFrame
 		updateUI();
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({"deprecation", "removal"})
 	private void cancelThread(ActionEvent e) {
 		if (activeThread == null) { updateUI(); return; }
 

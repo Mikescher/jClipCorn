@@ -9,7 +9,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCHexColor;
 import de.jClipCorn.database.databaseElement.columnTypes.CCStringList;
 import de.jClipCorn.database.history.CCDatabaseHistory;
-import de.jClipCorn.database.migration.DatabaseMigration;
+import de.jClipCorn.database.migration.DatabaseMigrator;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
@@ -42,7 +42,7 @@ public class CCDatabase {
 	private final String databaseName;      // = the PROP_DATABASE_NAME
 
 	private final GenericDatabase db;
-	public  final DatabaseMigration upgrader;
+	public  final DatabaseMigrator upgrader;
 	private final ICoverCache coverCache;
 	private final Statements stmts;
 	private final CCDatabaseHistory _history;
@@ -83,7 +83,7 @@ public class CCDatabase {
 		
 		_history = new CCDatabaseHistory(this);
 		
-		upgrader = new DatabaseMigration(ccprops, db, databaseDirectory, databaseName, readonly);
+		upgrader = new DatabaseMigrator(ccprops, db, databaseDirectory, databaseName, readonly);
 
 		stmts = new Statements();
 	}

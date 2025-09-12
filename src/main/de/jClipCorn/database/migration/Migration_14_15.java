@@ -4,7 +4,6 @@ import de.jClipCorn.database.driver.GenericDatabase;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.filesystem.FSPath;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class Migration_14_15 extends DBMigration {
 
 	@Override
 	@SuppressWarnings("nls")
-	public List<UpgradeAction> migrate() throws Exception {
+	protected List<UpgradeAction> run() throws Exception {
 		// nothing to do
 
 		return new ArrayList<>();

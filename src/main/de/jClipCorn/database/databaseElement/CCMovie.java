@@ -394,7 +394,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		if (Str.equals(e.getName(), "SetMovRating4")   && Score.get() == CCUserScore.RATING_IV)   return true;
 		if (Str.equals(e.getName(), "SetMovRating5")   && Score.get() == CCUserScore.RATING_V)    return true;
 
-		for (final CCSingleTag tag : CCTagList.TAGS) {
+		for (final CCSingleTag tag : CCSingleTag.values()) {
 			if (Str.equals(e.getName(), String.format("SwitchTag_Movie_%02d", tag.Index)) && Tags.get(tag)) return true;
 		}
 

@@ -28,7 +28,7 @@ public class Migration_07_08 extends DBMigration {
 
 	@Override
 	@SuppressWarnings("nls")
-	public List<UpgradeAction> migrate() throws Exception {
+	protected List<UpgradeAction> run() throws Exception {
 		CCLog.addInformation("[UPGRADE 1.6 -> 1.7] Add Info Table");
 
 		String date = CCDate.getCurrentDate().toStringSQL();

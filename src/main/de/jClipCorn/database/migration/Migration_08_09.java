@@ -26,7 +26,7 @@ public class Migration_08_09 extends DBMigration {
 
 	@Override
 	@SuppressWarnings("nls")
-	public List<UpgradeAction> migrate() throws Exception {
+	protected List<UpgradeAction> run() throws Exception {
 		CCLog.addInformation("[UPGRADE 1.7 -> 1.8] Added Groups to movies and series");
 		CCLog.addInformation("[UPGRADE 1.7 -> 1.8] Added viewed-history to movies and series (and removed LastViewed)");
 		CCLog.addInformation("[UPGRADE 1.7 -> 1.8] Added OnlineReference to Movies and series");

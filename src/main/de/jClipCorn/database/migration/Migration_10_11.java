@@ -30,7 +30,7 @@ public class Migration_10_11 extends DBMigration {
 
 	@Override
 	@SuppressWarnings("nls")
-	public List<UpgradeAction> migrate() throws Exception {
+	protected List<UpgradeAction> run() throws Exception {
 		CCLog.addInformation("[UPGRADE 1.9 -> v11] Added ParentGroup identifier to groups");
 
 		db.executeSQLThrow("ALTER TABLE GROUPS ADD COLUMN PARENTGROUP VARCHAR(256)");

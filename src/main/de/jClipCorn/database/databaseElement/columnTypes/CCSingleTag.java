@@ -90,7 +90,7 @@ public enum CCSingleTag implements ContinoousEnum<CCSingleTag>
 	}
 
 	public static CCSingleTag find(int v) throws TagNotFoundException {
-		for (CCSingleTag t : CCTagList.TAGS) {
+		for (CCSingleTag t : values()) {
 		    if (t.Index == v) return t;
 		}
 		throw new TagNotFoundException(v);
@@ -115,5 +115,9 @@ public enum CCSingleTag implements ContinoousEnum<CCSingleTag>
 	@Override
 	public CCSingleTag[] evalues() {
 		return CCSingleTag.values();
+	}
+
+	public static int count() {
+		return values().length;
 	}
 }

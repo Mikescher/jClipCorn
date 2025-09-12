@@ -40,7 +40,8 @@ public class DatabaseMigrator {
 			Migration_20_21::new,
 			Migration_21_22::new,
 			Migration_22_23::new,
-			Migration_23_24::new
+			Migration_23_24::new,
+			Migration_24_25::new
 	);
 
 	private final List<DBMigration> migrations;
@@ -49,7 +50,6 @@ public class DatabaseMigrator {
 	private final boolean readonly;
 
 	private final List<UpgradeAction> afterConnectActions = new ArrayList<>();
-
 
 	public DatabaseMigrator(CCProperties ccprops, GenericDatabase db, FSPath dbpath, String dbName, boolean readonly) {
 		super();

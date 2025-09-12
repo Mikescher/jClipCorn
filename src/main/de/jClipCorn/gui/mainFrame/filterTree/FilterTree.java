@@ -194,7 +194,7 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initTags(DefaultMutableTreeNode parent) {
-		for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
+		for (int i = 0; i < CCSingleTag.count(); i++) {
 			final int curr = i;
 			addNodeF(parent, CCTagList.getOnIcon(i), CCTagList.getName(i), () -> CustomTagFilter.create(movielist, curr));
 		}

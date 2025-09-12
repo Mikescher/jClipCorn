@@ -221,7 +221,7 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 
 					CCActionElement elemTagsMov = add(movieExtra, "SetTags_Movies", null, "ClipMenuBar.Other.MovieExtra.SetTags", Resources.ICN_MENUBAR_TAGS);
 					{
-						for (final CCSingleTag tag : CCTagList.TAGS) {
+						for (final CCSingleTag tag : CCSingleTag.values()) {
 							if (!tag.IsMovieTag) continue;
 							add(elemTagsMov, String.format("SwitchTag_Movie_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(e, tag));
 						}
@@ -270,7 +270,7 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 
 					CCActionElement elemTagsSer = add(seriesExtra, "SetTags_Series", null, "ClipMenuBar.Other.SeriesExtra.SetTags", Resources.ICN_MENUBAR_TAGS);
 					{
-						for (final CCSingleTag tag : CCTagList.TAGS) {
+						for (final CCSingleTag tag : CCSingleTag.values()) {
 							if (!tag.IsSeriesTag) continue;
 							add(elemTagsSer, String.format("SwitchTag_Series_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(e, tag));
 						}
@@ -315,7 +315,7 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 
 					CCActionElement elemTagsEpi = add(episode, "SetTags_Episode", null, "ClipMenuBar.Other.Episode.SetTags", Resources.ICN_MENUBAR_TAGS);
 					{
-						for (final CCSingleTag tag : CCTagList.TAGS) {
+						for (final CCSingleTag tag : CCSingleTag.values()) {
 							if (!tag.IsEpisodeTag) continue;
 							add(elemTagsEpi, String.format("SwitchTag_Episode_%02d", tag.Index), null, String.format("CCMovieTags.TAG_%02d", tag.Index), tag.IconOn, true, (e) -> onClickSwitchTag(e, tag));
 						}

@@ -29,7 +29,7 @@ public class Migration_11_12 extends DBMigration {
 
 	@Override
 	@SuppressWarnings("nls")
-	public List<UpgradeAction> migrate() throws Exception {
+	protected List<UpgradeAction> run() throws Exception {
 		CCLog.addInformation("[UPGRADE v11 -> v12] Extend language column size in elements table");
 		CCLog.addInformation("[UPGRADE v11 -> v12] Convert language column in elements table");
 		CCLog.addInformation("[UPGRADE v11 -> v12] Add language column to episodes");

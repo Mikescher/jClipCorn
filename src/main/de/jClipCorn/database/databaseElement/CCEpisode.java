@@ -478,7 +478,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	@SuppressWarnings("nls")
 	public boolean shouldHighlightAction(CCActionElement e) {
 
-		for (final CCSingleTag tag : CCTagList.TAGS) {
+		for (final CCSingleTag tag : CCSingleTag.values()) {
 			if (Str.equals(e.getName(), String.format("SwitchTag_Episode_%02d", tag.Index)) && Tags.get(tag)) return true;
 		}
 

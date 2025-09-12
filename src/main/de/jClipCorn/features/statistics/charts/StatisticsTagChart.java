@@ -1,5 +1,6 @@
 package de.jClipCorn.features.statistics.charts;
 
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleTag;
 import de.jClipCorn.features.statistics.StatisticsChart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -75,7 +76,7 @@ public class StatisticsTagChart extends StatisticsChart {
 		
 		int[] values = StatisticsHelper.getCountForAllTags(it);
 		
-		for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
+		for (int i = 0; i < CCSingleTag.count(); i++) {
 			dataset.addValue(values[i], "Series0", CCTagList.getName(i)); //$NON-NLS-1$
 		}
 		

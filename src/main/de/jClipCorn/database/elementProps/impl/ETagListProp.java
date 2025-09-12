@@ -5,18 +5,32 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
+import de.jClipCorn.util.exceptions.TagNotFoundException;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class ETagListProp extends EProperty<CCTagList> {
 	public ETagListProp(String name, CCTagList defValue, IPropertyParent p, EPropertyType t) {
 		super(name, defValue, p, t);
 	}
 
-	public void set(short v) {
-		set(CCTagList.fromShort(v));
+	public void set(String jsonString) {
+		set(CCTagList.fromJSONArray(jsonString));
 	}
 
-	public void switchTag(int v) {
-		set(get().getSwitchTag(v));
+	public void set(short v) {
+		Set<CCSingleTag> tagSet = new HashSet<>();
+		for (int i = 0; i < 16; i++) {
+			if ((v & (1 << i)) != 0) {
+				try {
+					tagSet.add(CCSingleTag.find(i));
+				} catch (TagNotFoundException e) {
+					// Skip invalid tags
+				}
+			}
+		}
+		set(CCTagList.create(tagSet.toArray(new CCSingleTag[0])));
 	}
 
 	public void switchTag(CCSingleTag v) {
@@ -50,7 +64,7 @@ public class ETagListProp extends EProperty<CCTagList> {
 
 	@Override
 	public Object serializeToDatabaseValue() {
-		return get().asShort();
+		return get().asJSONArray();
 	}
 
 	@Override
@@ -60,7 +74,7 @@ public class ETagListProp extends EProperty<CCTagList> {
 
 	@Override
 	public void deserializeFromDatabaseValue(Object v) {
-		set(CCTagList.fromShort((short)v));
+		set(CCTagList.fromJSONArray((String)v));
 	}
 
 	@Override

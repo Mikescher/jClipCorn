@@ -28,7 +28,6 @@ import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.sqlwrapper.*;
 
-import java.awt.*;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -290,7 +289,7 @@ public class CCDatabase {
 		ep.FileSize.set(rs.getLong(DatabaseStructure.COL_EPIS_FILESIZE));
 		ep.Part.set(CCPath.create(rs.getString(DatabaseStructure.COL_EPIS_PART_1)));
 		ep.AddDate.set(rs.getDate(DatabaseStructure.COL_EPIS_ADDDATE));
-		ep.Tags.set(rs.getShort(DatabaseStructure.COL_EPIS_TAGS));
+		ep.Tags.set(rs.getString(DatabaseStructure.COL_EPIS_TAGS));
 		ep.Language.set(rs.getLong(DatabaseStructure.COL_EPIS_LANGUAGE));
 		ep.Subtitles.set(rs.getString(DatabaseStructure.COL_EPIS_SUBTITLES));
 		ep.Score.set(rs.getInt(DatabaseStructure.COL_EPIS_SCORE));
@@ -332,7 +331,7 @@ public class CCDatabase {
 		ser.Score.set(rs.getInt(DatabaseStructure.COL_SER_SCORE));
 		ser.ScoreComment.set(rs.getString(DatabaseStructure.COL_SER_SCORECOMMENT));
 		ser.OnlineReference.set(rs.getString(DatabaseStructure.COL_SER_ONLINEREF));
-		ser.Tags.set(rs.getShort(DatabaseStructure.COL_SER_TAGS));
+		ser.Tags.set(rs.getString(DatabaseStructure.COL_SER_TAGS));
 
 		ser.setCover(rs.getInt(DatabaseStructure.COL_SER_COVERID));
 		ser.Groups.set(rs.getString(DatabaseStructure.COL_SER_GROUPS));
@@ -356,7 +355,7 @@ public class CCDatabase {
 		mov.Year.set(rs.getInt(DatabaseStructure.COL_MOV_MOVIEYEAR));
 		mov.OnlineReference.set(rs.getString(DatabaseStructure.COL_MOV_ONLINEREF));
 		mov.FileSize.set(rs.getLong(DatabaseStructure.COL_MOV_FILESIZE));
-		mov.Tags.set(rs.getShort(DatabaseStructure.COL_MOV_TAGS));
+		mov.Tags.set(rs.getString(DatabaseStructure.COL_MOV_TAGS));
 
 		mov.Parts.Part0.set(rs.getString(DatabaseStructure.COL_MOV_PART_1));
 		mov.Parts.Part1.set(rs.getString(DatabaseStructure.COL_MOV_PART_2));
@@ -617,7 +616,7 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_MOV_MOVIEYEAR,         mov.Year.get());
 			stmt.setStr(DatabaseStructure.COL_MOV_ONLINEREF,         mov.OnlineReference.get().toSerializationString());
 			stmt.setLng(DatabaseStructure.COL_MOV_FILESIZE,          mov.FileSize.get().getBytes());
-			stmt.setSht(DatabaseStructure.COL_MOV_TAGS,              mov.Tags.get().asShort());
+			stmt.setStr(DatabaseStructure.COL_MOV_TAGS,              mov.Tags.get().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_MOV_PART_1,            mov.Parts.get(0).toString());
 			stmt.setStr(DatabaseStructure.COL_MOV_PART_2,            mov.Parts.get(1).toString());
 			stmt.setStr(DatabaseStructure.COL_MOV_PART_3,            mov.Parts.get(2).toString());
@@ -679,7 +678,7 @@ public class CCDatabase {
 			stmt.setStr(DatabaseStructure.COL_SER_ONLINEREF,         ser.OnlineReference.get().toSerializationString());
 			stmt.setInt(DatabaseStructure.COL_SER_SCORE,             ser.Score.get().asInt());
 			stmt.setStr(DatabaseStructure.COL_SER_SCORECOMMENT,      ser.ScoreComment.get());
-			stmt.setSht(DatabaseStructure.COL_SER_TAGS,              ser.Tags.get().asShort());
+			stmt.setStr(DatabaseStructure.COL_SER_TAGS,              ser.Tags.get().asJSONArray());
 
 			stmt.setInt(DatabaseStructure.COL_SER_COVERID,           ser.getCoverID());
 			stmt.setStr(DatabaseStructure.COL_SER_GROUPS,            ser.getGroups().toSerializationString());
@@ -745,7 +744,7 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_EPIS_FORMAT,        ep.Format.get().asInt());
 			stmt.setLng(DatabaseStructure.COL_EPIS_FILESIZE,      ep.FileSize.get().getBytes());
 			stmt.setStr(DatabaseStructure.COL_EPIS_PART_1,        ep.Part.get().toString());
-			stmt.setSht(DatabaseStructure.COL_EPIS_TAGS,          ep.Tags.get().asShort());
+			stmt.setStr(DatabaseStructure.COL_EPIS_TAGS,          ep.Tags.get().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_EPIS_ADDDATE,       ep.AddDate.get().toStringSQL());
 			stmt.setLng(DatabaseStructure.COL_EPIS_LANGUAGE,      ep.Language.get().serializeToLong());
 			stmt.setStr(DatabaseStructure.COL_EPIS_SUBTITLES,     ep.Subtitles.get().serializeToString());

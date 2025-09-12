@@ -292,9 +292,9 @@ public class StatisticsHelper {
 	}
 	
 	public static int[] getCountForAllTags(CCStream<ICCPlayableElement> it) {
-		int[] result = new int[CCTagList.ACTIVETAGS];
+		int[] result = new int[CCSingleTag.count()];
 		
-		for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
+		for (int i = 0; i < CCSingleTag.count(); i++) {
 			final int tag = i;
 			result[tag] = it.filter(p -> p.tags().get(tag)).count();
 		}

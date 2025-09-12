@@ -27,7 +27,7 @@ public class Migration_13_14 extends DBMigration {
 
 	@Override
 	@SuppressWarnings("nls")
-	public List<UpgradeAction> migrate() throws Exception {
+	protected List<UpgradeAction> run() throws Exception {
 		CCLog.addInformation("[UPGRADE v13 -> v14] Remove existing [LOGTRIGGER_*] trigger");
 		CCLog.addInformation("[UPGRADE v13 -> v14] Remove column 'quality' in main table");
 		CCLog.addInformation("[UPGRADE v13 -> v14] Remove column 'quality' in episodes table");

@@ -1031,7 +1031,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		if (Str.equals(e.getName(), "SetSerRating4")   && Score.get() == CCUserScore.RATING_IV)   return true;
 		if (Str.equals(e.getName(), "SetSerRating5")   && Score.get() == CCUserScore.RATING_V)    return true;
 
-		for (final CCSingleTag tag : CCTagList.TAGS) {
+		for (final CCSingleTag tag : CCSingleTag.values()) {
 			if (Str.equals(e.getName(), String.format("SwitchTag_Series_%02d", tag.Index)) && Tags.get(tag)) return true;
 		}
 

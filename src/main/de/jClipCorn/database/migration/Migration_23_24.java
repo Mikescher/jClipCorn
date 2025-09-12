@@ -27,8 +27,13 @@ public class Migration_23_24 extends DBMigration {
 	}
 
 	@Override
+	protected boolean backupAndRestoreTrigger() {
+		return true;
+	}
+
+	@Override
 	@SuppressWarnings("nls")
-	public List<UpgradeAction> migrate() throws Exception {
+	protected List<UpgradeAction> run() throws Exception {
 		CCLog.addInformation("[UPGRADE v23 -> v24] Migrate groups to individual fields (SpecialVersion, AnimeSeason, AnimeStudio)");
 
 		// First, add the new columns to the database
@@ -93,8 +98,6 @@ public class Migration_23_24 extends DBMigration {
 		db.executeSQLThrow("DELETE FROM GROUPS WHERE NAME = 'Anime Seasons' AND NOT EXISTS (SELECT 1 FROM GROUPS WHERE PARENTGROUP = 'Anime Seasons')");
 		db.executeSQLThrow("DELETE FROM GROUPS WHERE NAME = 'Animation Studios' AND NOT EXISTS (SELECT 1 FROM GROUPS WHERE PARENTGROUP = 'Animation Studios')");
 		db.executeSQLThrow("DELETE FROM GROUPS WHERE NAME = 'Special Version' AND NOT EXISTS (SELECT 1 FROM GROUPS WHERE PARENTGROUP = 'Special Version')");
-
-		CCLog.addInformation("[MIGRATION] Successfully migrated groups to individual fields");
 
 		return new ArrayList<>();
 	}

@@ -1,6 +1,7 @@
 package de.jClipCorn.gui.guiComponents.tags;
 
 import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.database.databaseElement.columnTypes.CCSingleTag;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.gui.LookAndFeelManager;
 import de.jClipCorn.util.Str;
@@ -60,7 +61,7 @@ public class TagPanel extends JPanel {
 	private void update() {
 		removeAll();
 
-		for (int i = 0; i < CCTagList.ACTIVETAGS; i++) {
+		for (int i = 0; i < CCSingleTag.count(); i++) {
 
 			GridBagConstraints gbc = new GridBagConstraints();
 			gbc.gridy = 0;
@@ -106,7 +107,7 @@ public class TagPanel extends JPanel {
 		}
 
 		GridBagConstraints filler = new GridBagConstraints();
-		filler.gridx = CCTagList.ACTIVETAGS;
+		filler.gridx = CCSingleTag.count();
 		filler.gridy = 0;
 		filler.weightx = 1.0;                 // take up remaining horizontal space
 		filler.weighty = 1.0;

@@ -76,6 +76,8 @@ fabric.properties
 
 .idea/sonarlint
 
+.idea/copilot*
+
 ############
 ## Windows
 ############

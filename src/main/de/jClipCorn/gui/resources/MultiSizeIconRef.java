@@ -1,15 +1,15 @@
 package de.jClipCorn.gui.resources;
 
-import de.jClipCorn.gui.resources.reftypes.SingleIconRef;
+import de.jClipCorn.gui.resources.reftypes.IconRef;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 
 public final class MultiSizeIconRef {
-	private final SingleIconRef icon16x16;
-	private final SingleIconRef icon32x32;
+	private final IconRef icon16x16;
+	private final IconRef icon32x32;
 	
-	public MultiSizeIconRef(SingleIconRef i16, SingleIconRef i32) {
+	public MultiSizeIconRef(IconRef i16, IconRef i32) {
 		icon16x16 = i16;
 		icon32x32 = i32;
 	}
@@ -23,10 +23,10 @@ public final class MultiSizeIconRef {
 	}
 
 	public BufferedImage getImage16x16() {
-		return icon16x16.img.get();
+		return icon16x16.getImage();
 	}
 
 	public BufferedImage getImage32x32() {
-		return icon32x32.img.get();
+		return icon32x32.getImage();
 	}
 }

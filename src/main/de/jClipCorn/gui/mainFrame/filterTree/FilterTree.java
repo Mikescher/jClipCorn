@@ -149,18 +149,22 @@ public class FilterTree extends AbstractFilterTree {
 	}
 	
 	private void initViewed(DefaultMutableTreeNode parent) {
-		addNodeF(parent, Resources.ICN_SIDEBAR_VIEWED, LocaleBundle.getString("FilterTree.Viewed.Viewed"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.VIEWED)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_VIEWED.get16x16(), LocaleBundle.getString("FilterTree.Viewed.Viewed"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.VIEWED)); //$NON-NLS-1$
 
 		if (movielist.ccprops().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue()) 
-			addNodeF(parent, Resources.ICN_SIDEBAR_PARTIALLY, LocaleBundle.getString("FilterTree.Viewed.Partial"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.PARTIAL_VIEWED)); //$NON-NLS-1$
+			addNodeF(parent, Resources.ICN_SIDEBAR_PARTIALLY.get16x16(), LocaleBundle.getString("FilterTree.Viewed.Partial"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.PARTIAL_VIEWED)); //$NON-NLS-1$
 		
-		addNodeF(parent, Resources.ICN_SIDEBAR_UNVIEWED, LocaleBundle.getString("FilterTree.Viewed.Unviewed"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.NOT_VIEWED)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_UNVIEWED.get16x16(), LocaleBundle.getString("FilterTree.Viewed.Unviewed"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.NOT_VIEWED)); //$NON-NLS-1$
 
-		addNodeF(parent, Resources.ICN_SIDEBAR_LATER, LocaleBundle.getString("FilterTree.Viewed.Later"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.MARKED_FOR_LATER)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_LATER.get16x16(), LocaleBundle.getString("FilterTree.Viewed.Later"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.MARKED_FOR_LATER)); //$NON-NLS-1$
 
-		addNodeF(parent, Resources.ICN_SIDEBAR_AGAIN, LocaleBundle.getString("FilterTree.Viewed.Again"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.MARKED_FOR_AGAIN)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_AGAIN.get16x16(), LocaleBundle.getString("FilterTree.Viewed.Again"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.MARKED_FOR_AGAIN)); //$NON-NLS-1$
 
-		addNodeF(parent, Resources.ICN_SIDEBAR_NEVER, LocaleBundle.getString("FilterTree.Viewed.Never"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.MARKED_FOR_NEVER)); //$NON-NLS-1$
+		addNodeF(parent, Resources.ICN_SIDEBAR_CONTINUE.get16x16(), LocaleBundle.getString("FilterTree.Viewed.Continue"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.MARKED_FOR_CONTINUE)); //$NON-NLS-1$
+
+		addNodeF(parent, Resources.ICN_SIDEBAR_ABORTED.get16x16(), LocaleBundle.getString("FilterTree.Viewed.Aborted"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.MARKED_ABORTED)); //$NON-NLS-1$
+
+		addNodeF(parent, Resources.ICN_SIDEBAR_NEVER.get16x16(), LocaleBundle.getString("FilterTree.Viewed.Never"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.MARKED_FOR_NEVER)); //$NON-NLS-1$
 	}
 	
 	private void initFSK(DefaultMutableTreeNode parent) {

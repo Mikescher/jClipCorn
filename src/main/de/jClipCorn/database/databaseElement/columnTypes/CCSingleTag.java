@@ -13,6 +13,19 @@ import java.awt.image.BufferedImage;
 
 public enum CCSingleTag implements ContinoousEnum<CCSingleTag>
 {
+	//
+	// [BAD_QUALITY]     := (videofile property)
+	// [MISSING_TIME]    := (videofile property)
+	// [FILE_CORRUPTED]  := (videofile property)
+	// [WRONG_LANGUAGE]  := (videofile property)
+	// [WATCH_CAMRIP]    := (videofile property)
+	// [WATCH_MICDUBBED] := (videofile property)
+	//
+ 	// [WATCH_LATER]     := "watch later" or "watch again" or "continue watching" (depending on view state)
+ 	// [WATCH_NEVER]     := "watch never", should only be on not-watched items
+	// [WATCH_CANCELLED] := "watched but cancelled", should only be on partially-watched series
+	//
+
 	TAG_BAD_QUALITY 	(0, "CCMovieTags.TAG_00", Resources.ICN_TABLE_TAG_0_0, Resources.ICN_TABLE_TAG_0_1, Resources.ICN_MENUBAR_TAG_0, true,  true,  true),  //$NON-NLS-1$
 	TAG_MISSING_TIME 	(1, "CCMovieTags.TAG_01", Resources.ICN_TABLE_TAG_1_0, Resources.ICN_TABLE_TAG_1_1, Resources.ICN_MENUBAR_TAG_1, true,  false, true),  //$NON-NLS-1$
 	TAG_FILE_CORRUPTED 	(2, "CCMovieTags.TAG_02", Resources.ICN_TABLE_TAG_2_0, Resources.ICN_TABLE_TAG_2_1, Resources.ICN_MENUBAR_TAG_2, true,  false, true),  //$NON-NLS-1$

@@ -2,29 +2,47 @@ package de.jClipCorn.database.util;
 
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.enumextension.ContinoousEnum;
 import de.jClipCorn.util.enumextension.EnumWrapper;
 import de.jClipCorn.util.enumextension.IEnumWrapper;
 
-import javax.swing.*;
-
 public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStateType>  {
+
+	// VIEWED                => Fully viewed (no tags)
+	// MARKED_FOR_AGAIN      => Fully viewed with [LATER] tag
+	// MARKED_ABORTED        => Fully viewed with [CANCELLED] tag
+	//
+	// PARTIAL_VIEWED        => Partially viewed (no tags)
+	// MARKED_FOR_CONTINUE   => Partially viewed with [LATER] tag
+	//
+	// NOT_VIEWED            => Not viewed (no tags)
+	// MARKED_FOR_LATER      => Not viewed with [LATER] tag
+	// MARKED_FOR_NEVER      => Not viewed with [NEVER] tag
+
+	// --------------------------------------------------------------------
+
+	// [CANCELLED] and [LATER] tags kinda work as synonyms, but the DB check should validate that they are set correctly
+
+
 	VIEWED(0), 
-	NOT_VIEWED(1), 
+	NOT_VIEWED(1),
 	MARKED_FOR_LATER(2), 
 	MARKED_FOR_NEVER(3),
 	PARTIAL_VIEWED(4),
-	MARKED_FOR_AGAIN(5);
+	MARKED_FOR_AGAIN(5),
+	MARKED_FOR_CONTINUE(6),
+	MARKED_ABORTED(7);
 	
 	private final static String[] NAMES =
 	{
-		LocaleBundle.getString("FilterTree.Viewed.Viewed"), 	//$NON-NLS-1$
-		LocaleBundle.getString("FilterTree.Viewed.Unviewed"), 	//$NON-NLS-1$
-		LocaleBundle.getString("FilterTree.Viewed.Later"), 		//$NON-NLS-1$
-		LocaleBundle.getString("FilterTree.Viewed.Never"), 		//$NON-NLS-1$
-		LocaleBundle.getString("FilterTree.Viewed.Partial"),	//$NON-NLS-1$
-		LocaleBundle.getString("FilterTree.Viewed.Again"),		//$NON-NLS-1$
+		LocaleBundle.getString("FilterTree.Viewed.Viewed"),    //$NON-NLS-1$
+		LocaleBundle.getString("FilterTree.Viewed.Unviewed"),  //$NON-NLS-1$
+		LocaleBundle.getString("FilterTree.Viewed.Later"),     //$NON-NLS-1$
+		LocaleBundle.getString("FilterTree.Viewed.Never"),     //$NON-NLS-1$
+		LocaleBundle.getString("FilterTree.Viewed.Partial"),   //$NON-NLS-1$
+		LocaleBundle.getString("FilterTree.Viewed.Again"),     //$NON-NLS-1$
+		LocaleBundle.getString("FilterTree.Viewed.Continue"),  //$NON-NLS-1$
+		LocaleBundle.getString("FilterTree.Viewed.Aborted"),   //$NON-NLS-1$
 	};
 
 	private final int id;
@@ -50,13 +68,19 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 	}
 
 	public int getTriStateInt() {
+
+		// used for sorting
+		// [VIEWED] -> [PARTIAL] -> [NOT_VIEWED]
+
 		switch (this) {
-			case VIEWED:           return 2;
-			case NOT_VIEWED:       return 0;
-			case MARKED_FOR_LATER: return 0;
-			case MARKED_FOR_NEVER: return 0;
-			case PARTIAL_VIEWED:   return 1;
-			case MARKED_FOR_AGAIN: return 2;
+			case VIEWED:              return 2;
+			case NOT_VIEWED:          return 0;
+			case MARKED_FOR_LATER:    return 0;
+			case MARKED_FOR_NEVER:    return 0;
+			case PARTIAL_VIEWED:      return 1;
+			case MARKED_FOR_AGAIN:    return 2;
+			case MARKED_FOR_CONTINUE: return 1;
+			case MARKED_ABORTED:      return 2;
 		}
 
 		return -1;
@@ -75,25 +99,6 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 		return Integer.compare(o1.asInt(), o2.asInt());
 	}
 
-	public ImageIcon getIconSidebar() {
-		switch (this) {
-		case VIEWED:
-			return Resources.ICN_SIDEBAR_VIEWED.get();
-		case NOT_VIEWED:
-			return Resources.ICN_SIDEBAR_UNVIEWED.get();
-		case MARKED_FOR_LATER:
-			return Resources.ICN_SIDEBAR_LATER.get();
-		case MARKED_FOR_NEVER:
-			return Resources.ICN_SIDEBAR_NEVER.get();
-		case PARTIAL_VIEWED:
-			return Resources.ICN_SIDEBAR_PARTIALLY.get();
-		case MARKED_FOR_AGAIN:
-			return Resources.ICN_SIDEBAR_AGAIN.get();
-		}
-		
-		return null;
-	}
-
 	@Override
 	public ExtendedViewedStateType[] evalues() {
 		return ExtendedViewedStateType.values();
@@ -101,12 +106,14 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 
 	public boolean toBool() {
 		switch (this) {
-			case VIEWED: return true;
-			case NOT_VIEWED: return false;
-			case MARKED_FOR_LATER: return false;
-			case MARKED_FOR_NEVER: return false;
-			case PARTIAL_VIEWED: return false;
-			case MARKED_FOR_AGAIN: return true;
+			case VIEWED:              return true;
+			case NOT_VIEWED:          return false;
+			case MARKED_FOR_LATER:    return false;
+			case MARKED_FOR_NEVER:    return false;
+			case PARTIAL_VIEWED:      return false;
+			case MARKED_FOR_AGAIN:    return true;
+			case MARKED_FOR_CONTINUE: return true;
+			case MARKED_ABORTED:      return false;
 		}
 		
 		CCLog.addError(new Exception());

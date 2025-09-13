@@ -11,10 +11,8 @@ import de.jClipCorn.database.elementProps.packs.EMediaInfoPropPack;
 import de.jClipCorn.database.elementProps.packs.EZyklusPropPack;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
-import de.jClipCorn.database.util.ExtendedViewedStateType;
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.util.MoviePlayer;
@@ -101,6 +99,11 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	@Override
 	public CCDBElementTyp getType() {
 		return CCDBElementTyp.MOVIE;
+	}
+
+	@Override
+	public CCDBStructureElementTyp getStructureType() {
+		return CCDBStructureElementTyp.MOVIE;
 	}
 
 	public void updateDBWithException() throws DatabaseUpdateException {
@@ -351,19 +354,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
-		if (!isViewed() && Tags.get(CCSingleTag.TAG_WATCH_LATER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, ViewedHistory.get(), null);
-
-		if (isViewed() && Tags.get(CCSingleTag.TAG_WATCH_LATER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, ViewedHistory.get(), null);
-
-		if (isViewed())
-			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, ViewedHistory.get(), null);
-
-		if (Tags.get(CCSingleTag.TAG_WATCH_NEVER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, ViewedHistory.get(), null);
-
-		return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, ViewedHistory.get(), null);
+		return ExtendedViewedState.create(this);
 	}
 
 	@Override

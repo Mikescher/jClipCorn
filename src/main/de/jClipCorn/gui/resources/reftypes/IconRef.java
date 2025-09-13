@@ -1,16 +1,37 @@
 package de.jClipCorn.gui.resources.reftypes;
 
-import de.jClipCorn.gui.resources.ResourceRefType;
+import de.jClipCorn.gui.resources.CachedResourceLoader;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
+import java.util.Collections;
+import java.util.List;
 
-public abstract class IconRef extends ResourceRef {
-	public IconRef(String id, ResourceRefType type, boolean preload) {
-		super(id, type, preload);
+public class IconRef extends ResourceRef {
+	public final ImageRef img;
+
+	public IconRef(ImageRef iref, boolean preload) {
+		super("icon://{" + iref.ident + "}", ResourceCategory.ICON, preload); //$NON-NLS-1$
+		img = iref;
 	}
 
-	public abstract ImageIcon get();
+	@Override
+	public void preload() {
+		img.preload();
+		CachedResourceLoader.getOrLoad(this);
+	}
 
-	public abstract BufferedImage getImage();
+	@Override
+	public List<ResourceRef> getDirectDependencies() {
+		return Collections.singletonList(img);
+	}
+
+	public ImageIcon get() {
+		return CachedResourceLoader.getOrLoad(this);
+	}
+
+	@Override
+	public BufferedImage getImage() {
+		return img.get();
+	}
 }

@@ -44,10 +44,18 @@ public class CCDateTimeList implements CCIterable<CCDateTime> {
 	public boolean isEmpty() {
 		return list.isEmpty();
 	}
-	
+
 	public boolean isEmptyOrOnlyUnspecified() {
 		for (CCDateTime dt : list) if (! dt.isUnspecifiedDateTime()) return false;
-		
+
+		return true;
+	}
+
+	public boolean isOnlyUnspecified() {
+		if (isEmpty()) return false;
+
+		for (CCDateTime dt : list) if (! dt.isUnspecifiedDateTime()) return false;
+
 		return true;
 	}
 

@@ -87,6 +87,11 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		return getMovieList().ccprops();
 	}
 
+	@Override
+	public CCDBStructureElementTyp getStructureType() {
+		return CCDBStructureElementTyp.SEASON;
+	}
+
 	public void setDefaultValues(boolean updateDB) {
 		beginUpdating();
 
@@ -631,15 +636,10 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
-		if (isViewed())
-			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
-		else if (getMovieList().ccprops().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue() && isPartialViewed())
-			return new ExtendedViewedState(ExtendedViewedStateType.PARTIAL_VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
-		else
-			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
+		return ExtendedViewedState.create(this);
 	}
 
-	private int getFullViewCount() {
+	public int getFullViewCount() {
 		return _cache.get(SeasonCache.FULL_VIEW_COUNT, null, sea->
 		{
 			int vc = Integer.MAX_VALUE;

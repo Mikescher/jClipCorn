@@ -1,8 +1,0 @@
-counter_xx.png:
-===============
-  Program:  Paint.Net
-  Font:     Nachlieli CLM
-  Size:     8 (metric font size mode)
-  Render:   Sharp
-  Modifier: Bold
-  Color:    8000FF

@@ -1,0 +1,1453 @@
+{
+    "plug-in-batch-export-layers": [
+        {
+            "settings": [
+                {
+                    "settings": [
+                        {
+                            "name": "file_extension",
+                            "default_value": "png",
+                            "display_name": "File extension",
+                            "adjust_value": true,
+                            "auto_update_gui_to_setting": false,
+                            "gui_type": null,
+                            "value": "png",
+                            "type": "file_extension"
+                        },
+                        {
+                            "name": "output_directory",
+                            "default_value": "file:///home/mike/Pictures",
+                            "action": 2,
+                            "display_name": "Output folder",
+                            "set_default_if_not_exists": true,
+                            "gui_type_kwargs": {
+                                "show_clear_button": false
+                            },
+                            "value": "file:///home/mike/Code/private/jClipCorn/res/icons/viewed",
+                            "type": "file"
+                        },
+                        {
+                            "name": "name_pattern",
+                            "default_value": "[layer name]",
+                            "display_name": "Layer filename pattern",
+                            "description": "Layer filename pattern (empty string = layer name)",
+                            "gui_type": null,
+                            "value": "[layer name]",
+                            "type": "name_pattern"
+                        },
+                        {
+                            "name": "overwrite_mode",
+                            "default_value": "rename_new",
+                            "items": [
+                                [
+                                    "replace",
+                                    "Replace"
+                                ],
+                                [
+                                    "skip",
+                                    "Skip"
+                                ],
+                                [
+                                    "rename_new",
+                                    "Rename new file"
+                                ],
+                                [
+                                    "rename_existing",
+                                    "Rename existing file"
+                                ]
+                            ],
+                            "display_name": "How to handle conflicting files (non-interactive run mode only)",
+                            "gui_type": null,
+                            "value": "rename_new",
+                            "type": "choice"
+                        },
+                        {
+                            "name": "continue_on_error",
+                            "default_value": false,
+                            "display_name": "Continue on Error",
+                            "description": "Continue processing on error",
+                            "gui_type": "check_menu_item",
+                            "value": false,
+                            "type": "bool"
+                        },
+                        {
+                            "name": "plugin_version",
+                            "default_value": "1.1.1",
+                            "pdb_type": null,
+                            "gui_type": null,
+                            "value": "1.1.1",
+                            "type": "string"
+                        },
+                        {
+                            "settings": [
+                                {
+                                    "name": "file_format_mode",
+                                    "default_value": "use_explicit_values",
+                                    "items": [
+                                        [
+                                            "use_native_plugin_values",
+                                            "Interactively"
+                                        ],
+                                        [
+                                            "use_explicit_values",
+                                            "Use options below"
+                                        ]
+                                    ],
+                                    "display_name": "How to adjust file format options:",
+                                    "description": "Native dialogs usually allow you to adjust more options such as image metadata, while adjusting options in place is more convenient as no extra dialog is displayed before the export.",
+                                    "gui_type": "radio_button_box",
+                                    "pdb_type": null,
+                                    "value": "use_explicit_values",
+                                    "type": "choice"
+                                },
+                                {
+                                    "name": "file_format_export_options",
+                                    "import_or_export": "export",
+                                    "gui_type": "file_format_options",
+                                    "display_name": "File format options",
+                                    "pdb_type": null,
+                                    "value": {
+                                        "_active": [
+                                            "png"
+                                        ],
+                                        "png": [
+                                            {
+                                                "name": "interlaced",
+                                                "display_name": "Use Adam7 interlacing",
+                                                "pdb_type": "gboolean",
+                                                "default_value": false,
+                                                "gui_type": "check_button",
+                                                "value": false,
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "name": "compression",
+                                                "display_name": "Deflate Compression factor (0..9)",
+                                                "pdb_type": "gint",
+                                                "default_value": 9,
+                                                "min_value": 0,
+                                                "max_value": 9,
+                                                "value": 9,
+                                                "type": "int"
+                                            },
+                                            {
+                                                "name": "bkgd",
+                                                "display_name": "Write bKGD chunk (PNG metadata)",
+                                                "pdb_type": "gboolean",
+                                                "default_value": true,
+                                                "gui_type": "check_button",
+                                                "value": true,
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "name": "offs",
+                                                "display_name": "Write oFFs chunk (PNG metadata)",
+                                                "pdb_type": "gboolean",
+                                                "default_value": false,
+                                                "gui_type": "check_button",
+                                                "value": false,
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "name": "phys",
+                                                "display_name": "Write pHYs chunk (PNG metadata)",
+                                                "pdb_type": "gboolean",
+                                                "default_value": true,
+                                                "gui_type": "check_button",
+                                                "value": true,
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "name": "time",
+                                                "display_name": "Write tIME chunk (PNG metadata)",
+                                                "pdb_type": "gboolean",
+                                                "default_value": true,
+                                                "gui_type": "check_button",
+                                                "value": true,
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "name": "save-transparent",
+                                                "display_name": "Preserve color of completely transparent pixels",
+                                                "pdb_type": "gboolean",
+                                                "default_value": false,
+                                                "gui_type": "check_button",
+                                                "value": false,
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "name": "optimize-palette",
+                                                "display_name": "When checked, save as 1, 2, 4, or 8-bit depending on number of colors used. When unchecked, always save as 8-bit",
+                                                "pdb_type": "gboolean",
+                                                "default_value": false,
+                                                "gui_type": "check_button",
+                                                "value": false,
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "name": "format",
+                                                "display_name": "PNG export format",
+                                                "default_value": "auto",
+                                                "items": [
+                                                    [
+                                                        "auto",
+                                                        "Automatic",
+                                                        0,
+                                                        ""
+                                                    ],
+                                                    [
+                                                        "rgb8",
+                                                        "8 bpc RGB",
+                                                        1,
+                                                        ""
+                                                    ],
+                                                    [
+                                                        "gray8",
+                                                        "8 bpc GRAY",
+                                                        2,
+                                                        ""
+                                                    ],
+                                                    [
+                                                        "rgba8",
+                                                        "8 bpc RGBA",
+                                                        3,
+                                                        ""
+                                                    ],
+                                                    [
+                                                        "graya8",
+                                                        "8 bpc GRAYA",
+                                                        4,
+                                                        ""
+                                                    ],
+                                                    [
+                                                        "rgb16",
+                                                        "16 bpc RGB",
+                                                        5,
+                                                        ""
+                                                    ],
+                                                    [
+                                                        "gray16",
+                                                        "16 bpc GRAY",
+                                                        6,
+                                                        ""
+                                                    ],
+                                                    [
+                                                        "rgba16",
+                                                        "16 bpc RGBA",
+                                                        7,
+                                                        ""
+                                                    ],
+                                                    [
+                                                        "graya16",
+                                                        "16 bpc GRAYA",
+                                                        8,
+                                                        ""
+                                                    ]
+                                                ],
+                                                "value": "auto",
+                                                "type": "choice"
+                                            },
+                                            {
+                                                "name": "include-exif",
+                                                "display_name": "Save Exif (Exchangeable image file format) metadata",
+                                                "pdb_type": "gboolean",
+                                                "default_value": false,
+                                                "gui_type": "check_button",
+                                                "value": false,
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "name": "include-iptc",
+                                                "display_name": "Save IPTC (International Press Telecommunications Council) metadata",
+                                                "pdb_type": "gboolean",
+                                                "default_value": false,
+                                                "gui_type": "check_button",
+                                                "value": false,
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "name": "include-xmp",
+                                                "display_name": "Save XMP (Extensible Metadata Platform) metadata",
+                                                "pdb_type": "gboolean",
+                                                "default_value": false,
+                                                "gui_type": "check_button",
+                                                "value": false,
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "name": "include-color-profile",
+                                                "display_name": "Save the ICC color profile as metadata",
+                                                "pdb_type": "gboolean",
+                                                "default_value": false,
+                                                "gui_type": "check_button",
+                                                "value": false,
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "name": "include-thumbnail",
+                                                "display_name": "Save a smaller representation of the image as metadata",
+                                                "pdb_type": "gboolean",
+                                                "default_value": true,
+                                                "gui_type": "check_button",
+                                                "value": false,
+                                                "type": "bool"
+                                            },
+                                            {
+                                                "name": "include-comment",
+                                                "display_name": "Save a comment as metadata",
+                                                "pdb_type": "gboolean",
+                                                "default_value": false,
+                                                "gui_type": "check_button",
+                                                "value": false,
+                                                "type": "bool"
+                                            }
+                                        ],
+                                        "_expanded": {}
+                                    },
+                                    "type": "file_format_options"
+                                },
+                                {
+                                    "name": "overwrite_mode",
+                                    "default_value": "ask",
+                                    "items": [
+                                        [
+                                            "ask",
+                                            "Ask"
+                                        ],
+                                        [
+                                            "replace",
+                                            "Replace"
+                                        ],
+                                        [
+                                            "skip",
+                                            "Skip"
+                                        ],
+                                        [
+                                            "rename_new",
+                                            "Rename new file"
+                                        ],
+                                        [
+                                            "rename_existing",
+                                            "Rename existing file"
+                                        ]
+                                    ],
+                                    "display_name": "If a file already exists:",
+                                    "pdb_type": null,
+                                    "value": "replace",
+                                    "type": "choice"
+                                },
+                                {
+                                    "name": "export_mode",
+                                    "default_value": "each_item",
+                                    "items": [
+                                        [
+                                            "each_item",
+                                            "For each layer"
+                                        ],
+                                        [
+                                            "each_top_level_item_or_folder",
+                                            "For each top-level layer or group"
+                                        ],
+                                        [
+                                            "single_image",
+                                            "As a single image"
+                                        ]
+                                    ],
+                                    "display_name": "Perform export:",
+                                    "pdb_type": null,
+                                    "value": "each_item",
+                                    "type": "choice"
+                                },
+                                {
+                                    "name": "single_image_name_pattern",
+                                    "default_value": "[image name]",
+                                    "display_name": "Image filename pattern",
+                                    "gui_type": "name_pattern_entry",
+                                    "pdb_type": null,
+                                    "value": "[image name]",
+                                    "type": "name_pattern"
+                                },
+                                {
+                                    "name": "use_file_extension_in_item_name",
+                                    "default_value": false,
+                                    "display_name": "Use file extension in layer name",
+                                    "pdb_type": null,
+                                    "value": false,
+                                    "type": "bool"
+                                },
+                                {
+                                    "name": "convert_file_extension_to_lowercase",
+                                    "default_value": false,
+                                    "display_name": "Convert file extension to lowercase",
+                                    "pdb_type": null,
+                                    "value": false,
+                                    "type": "bool"
+                                },
+                                {
+                                    "name": "rotate_flip_image_based_on_exif_metadata",
+                                    "default_value": true,
+                                    "display_name": "Rotate or flip image based on Exif metadata",
+                                    "pdb_type": null,
+                                    "value": true,
+                                    "type": "bool"
+                                }
+                            ],
+                            "name": "export",
+                            "setting_attributes": {
+                                "pdb_type": null
+                            }
+                        },
+                        {
+                            "settings": [
+                                {
+                                    "settings": [
+                                        {
+                                            "name": "function",
+                                            "default_value": "",
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": "",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "origin",
+                                            "default_value": "builtin",
+                                            "items": [
+                                                [
+                                                    "builtin",
+                                                    "Built-in"
+                                                ],
+                                                [
+                                                    "gimp_pdb",
+                                                    "GIMP PDB procedure"
+                                                ],
+                                                [
+                                                    "gegl",
+                                                    "GEGL operation"
+                                                ]
+                                            ],
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": "builtin",
+                                            "type": "choice"
+                                        },
+                                        {
+                                            "settings": [],
+                                            "name": "arguments",
+                                            "setting_attributes": {
+                                                "pdb_type": null
+                                            }
+                                        },
+                                        {
+                                            "name": "enabled",
+                                            "default_value": true,
+                                            "pdb_type": null,
+                                            "value": true,
+                                            "type": "bool"
+                                        },
+                                        {
+                                            "name": "display_name",
+                                            "default_value": "Remove folder structure",
+                                            "gui_type": null,
+                                            "tags": [
+                                                "ignore_initialize_gui"
+                                            ],
+                                            "pdb_type": null,
+                                            "value": "Remove folder structure",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "menu_path",
+                                            "default_value": null,
+                                            "gui_type": null,
+                                            "tags": [
+                                                "ignore_initialize_gui"
+                                            ],
+                                            "pdb_type": null,
+                                            "value": null,
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "description",
+                                            "default_value": null,
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": null,
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "command_groups",
+                                            "default_value": [
+                                                "default_actions"
+                                            ],
+                                            "nullable": true,
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": [
+                                                "default_actions"
+                                            ],
+                                            "type": "list"
+                                        },
+                                        {
+                                            "name": "display_options_on_create",
+                                            "default_value": false,
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": false,
+                                            "type": "bool"
+                                        },
+                                        {
+                                            "settings": [
+                                                {
+                                                    "name": "enabled_for_previews",
+                                                    "default_value": true,
+                                                    "display_name": "Enable for previews",
+                                                    "pdb_type": null,
+                                                    "value": true,
+                                                    "type": "bool"
+                                                }
+                                            ],
+                                            "name": "more_options",
+                                            "setting_attributes": {
+                                                "pdb_type": null
+                                            }
+                                        },
+                                        {
+                                            "name": "more_options_expanded",
+                                            "default_value": false,
+                                            "display_name": "_More options",
+                                            "gui_type": "expander",
+                                            "pdb_type": null,
+                                            "value": false,
+                                            "type": "bool"
+                                        },
+                                        {
+                                            "name": "orig_name",
+                                            "default_value": "remove_folder_structure",
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": "remove_folder_structure",
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "name": "remove_folder_structure",
+                                    "tags": [
+                                        "command",
+                                        "action",
+                                        "name",
+                                        "plug-in-batch-convert",
+                                        "plug-in-batch-export-layers"
+                                    ],
+                                    "setting_attributes": {
+                                        "pdb_type": null
+                                    }
+                                },
+                                {
+                                    "settings": [
+                                        {
+                                            "name": "function",
+                                            "default_value": "",
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": "",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "origin",
+                                            "default_value": "builtin",
+                                            "items": [
+                                                [
+                                                    "builtin",
+                                                    "Built-in"
+                                                ],
+                                                [
+                                                    "gimp_pdb",
+                                                    "GIMP PDB procedure"
+                                                ],
+                                                [
+                                                    "gegl",
+                                                    "GEGL operation"
+                                                ]
+                                            ],
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": "builtin",
+                                            "type": "choice"
+                                        },
+                                        {
+                                            "settings": [
+                                                {
+                                                    "name": "object_to_scale",
+                                                    "default_value": "current_layer",
+                                                    "display_name": "Apply to (image or layer):",
+                                                    "pdb_type": null,
+                                                    "value": "current_image",
+                                                    "type": "placeholder_image_or_layer"
+                                                },
+                                                {
+                                                    "name": "new_width",
+                                                    "default_value": {
+                                                        "pixel_value": 100.0,
+                                                        "percent_value": 100.0,
+                                                        "other_value": 1.0,
+                                                        "unit": "percent",
+                                                        "percent_object": "current_layer",
+                                                        "percent_property": {
+                                                            "current_image": "width",
+                                                            "current_layer,background_layer,foreground_layer": "width"
+                                                        }
+                                                    },
+                                                    "min_value": 0.0,
+                                                    "percent_placeholder_names": [
+                                                        "current_image",
+                                                        "current_layer",
+                                                        "background_layer",
+                                                        "foreground_layer"
+                                                    ],
+                                                    "display_name": "New width",
+                                                    "pdb_type": null,
+                                                    "value": {
+                                                        "pixel_value": 68.0,
+                                                        "percent_value": 100.0,
+                                                        "other_value": 1.0,
+                                                        "unit": "pixel",
+                                                        "percent_object": "current_layer",
+                                                        "percent_property": {
+                                                            "current_image": "width",
+                                                            "current_layer,background_layer,foreground_layer": "width"
+                                                        }
+                                                    },
+                                                    "type": "dimension"
+                                                },
+                                                {
+                                                    "name": "new_height",
+                                                    "default_value": {
+                                                        "pixel_value": 100.0,
+                                                        "percent_value": 100.0,
+                                                        "other_value": 1.0,
+                                                        "unit": "percent",
+                                                        "percent_object": "current_layer",
+                                                        "percent_property": {
+                                                            "current_image": "height",
+                                                            "current_layer,background_layer,foreground_layer": "height"
+                                                        }
+                                                    },
+                                                    "min_value": 0.0,
+                                                    "percent_placeholder_names": [
+                                                        "current_image",
+                                                        "current_layer",
+                                                        "background_layer",
+                                                        "foreground_layer"
+                                                    ],
+                                                    "display_name": "New height",
+                                                    "pdb_type": null,
+                                                    "value": {
+                                                        "pixel_value": 32.0,
+                                                        "percent_value": 100.0,
+                                                        "other_value": 1.0,
+                                                        "unit": "pixel",
+                                                        "percent_object": "current_layer",
+                                                        "percent_property": {
+                                                            "current_image": "height",
+                                                            "current_layer,background_layer,foreground_layer": "height"
+                                                        }
+                                                    },
+                                                    "type": "dimension"
+                                                },
+                                                {
+                                                    "name": "aspect_ratio",
+                                                    "default_value": "stretch",
+                                                    "items": [
+                                                        [
+                                                            "stretch",
+                                                            "None (Stretch)"
+                                                        ],
+                                                        [
+                                                            "keep_adjust_width",
+                                                            "Keep, adjust width"
+                                                        ],
+                                                        [
+                                                            "keep_adjust_height",
+                                                            "Keep, adjust height"
+                                                        ],
+                                                        [
+                                                            "fit",
+                                                            "Fit"
+                                                        ],
+                                                        [
+                                                            "fit_with_padding",
+                                                            "Fit with padding"
+                                                        ]
+                                                    ],
+                                                    "display_name": "Aspect ratio",
+                                                    "pdb_type": null,
+                                                    "value": "stretch",
+                                                    "type": "choice"
+                                                },
+                                                {
+                                                    "enum_type": "GimpInterpolationType",
+                                                    "name": "interpolation",
+                                                    "default_value": 0,
+                                                    "display_name": "Interpolation",
+                                                    "pdb_type": null,
+                                                    "value": 2,
+                                                    "type": "enum"
+                                                },
+                                                {
+                                                    "name": "local_origin",
+                                                    "default_value": false,
+                                                    "display_name": "Use local origin",
+                                                    "pdb_type": null,
+                                                    "value": false,
+                                                    "type": "bool"
+                                                },
+                                                {
+                                                    "name": "set_image_resolution",
+                                                    "default_value": false,
+                                                    "display_name": "Set image resolution in DPI",
+                                                    "pdb_type": null,
+                                                    "value": false,
+                                                    "type": "bool"
+                                                },
+                                                {
+                                                    "name": "image_resolution",
+                                                    "default_value": {
+                                                        "x": 72.0,
+                                                        "y": 72.0
+                                                    },
+                                                    "min_x": 0.0,
+                                                    "min_y": 0.0,
+                                                    "gui_kwargs": {
+                                                        "show_display_name": false
+                                                    },
+                                                    "gui_type_kwargs": {
+                                                        "label_x": "X",
+                                                        "label_y": "Y"
+                                                    },
+                                                    "pdb_type": null,
+                                                    "value": {
+                                                        "x": 72.0,
+                                                        "y": 72.0
+                                                    },
+                                                    "type": "coordinates"
+                                                },
+                                                {
+                                                    "name": "padding_color",
+                                                    "default_value": [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ],
+                                                    "display_name": "Padding color",
+                                                    "pdb_type": null,
+                                                    "value": [
+                                                        0.0,
+                                                        0.0,
+                                                        0.0,
+                                                        0.0
+                                                    ],
+                                                    "type": "color"
+                                                },
+                                                {
+                                                    "name": "padding_position",
+                                                    "default_value": "center",
+                                                    "items": [
+                                                        [
+                                                            "start",
+                                                            "Start"
+                                                        ],
+                                                        [
+                                                            "center",
+                                                            "Center"
+                                                        ],
+                                                        [
+                                                            "end",
+                                                            "End"
+                                                        ],
+                                                        [
+                                                            "custom",
+                                                            "Custom"
+                                                        ]
+                                                    ],
+                                                    "display_name": "Position",
+                                                    "pdb_type": null,
+                                                    "value": "center",
+                                                    "type": "choice"
+                                                },
+                                                {
+                                                    "name": "padding_position_custom",
+                                                    "default_value": {
+                                                        "pixel_value": 0.0,
+                                                        "percent_value": 0.0,
+                                                        "other_value": 0.0,
+                                                        "unit": "pixel",
+                                                        "percent_object": "current_layer",
+                                                        "percent_property": {
+                                                            "current_image": "width",
+                                                            "current_layer,background_layer,foreground_layer": "width"
+                                                        }
+                                                    },
+                                                    "min_value": 0.0,
+                                                    "percent_placeholder_names": [
+                                                        "current_image",
+                                                        "current_layer",
+                                                        "background_layer",
+                                                        "foreground_layer"
+                                                    ],
+                                                    "display_name": "Custom start position",
+                                                    "pdb_type": null,
+                                                    "value": {
+                                                        "pixel_value": 0.0,
+                                                        "percent_value": 0.0,
+                                                        "other_value": 0.0,
+                                                        "unit": "pixel",
+                                                        "percent_object": "current_layer",
+                                                        "percent_property": {
+                                                            "current_image": "width",
+                                                            "current_layer,background_layer,foreground_layer": "width"
+                                                        }
+                                                    },
+                                                    "type": "dimension"
+                                                }
+                                            ],
+                                            "name": "arguments",
+                                            "setting_attributes": {
+                                                "pdb_type": null
+                                            }
+                                        },
+                                        {
+                                            "name": "enabled",
+                                            "default_value": true,
+                                            "pdb_type": null,
+                                            "value": true,
+                                            "type": "bool"
+                                        },
+                                        {
+                                            "name": "display_name",
+                                            "default_value": "Scale",
+                                            "gui_type": null,
+                                            "tags": [
+                                                "ignore_initialize_gui"
+                                            ],
+                                            "pdb_type": null,
+                                            "value": "Scale",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "menu_path",
+                                            "default_value": null,
+                                            "gui_type": null,
+                                            "tags": [
+                                                "ignore_initialize_gui"
+                                            ],
+                                            "pdb_type": null,
+                                            "value": null,
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "description",
+                                            "default_value": null,
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": null,
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "command_groups",
+                                            "default_value": [
+                                                "default_actions"
+                                            ],
+                                            "nullable": true,
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": [
+                                                "default_actions"
+                                            ],
+                                            "type": "list"
+                                        },
+                                        {
+                                            "name": "display_options_on_create",
+                                            "default_value": true,
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": false,
+                                            "type": "bool"
+                                        },
+                                        {
+                                            "settings": [
+                                                {
+                                                    "name": "enabled_for_previews",
+                                                    "default_value": true,
+                                                    "display_name": "Enable for previews",
+                                                    "pdb_type": null,
+                                                    "value": true,
+                                                    "type": "bool"
+                                                }
+                                            ],
+                                            "name": "more_options",
+                                            "setting_attributes": {
+                                                "pdb_type": null
+                                            }
+                                        },
+                                        {
+                                            "name": "more_options_expanded",
+                                            "default_value": false,
+                                            "display_name": "_More options",
+                                            "gui_type": "expander",
+                                            "pdb_type": null,
+                                            "value": false,
+                                            "type": "bool"
+                                        },
+                                        {
+                                            "name": "orig_name",
+                                            "default_value": "scale_for_layers",
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": "scale_for_layers",
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "name": "scale_for_layers",
+                                    "tags": [
+                                        "command",
+                                        "action",
+                                        "plug-in-batch-export-layers",
+                                        "plug-in-batch-edit-layers"
+                                    ],
+                                    "setting_attributes": {
+                                        "pdb_type": null
+                                    }
+                                }
+                            ],
+                            "name": "actions",
+                            "setting_attributes": {
+                                "pdb_type": null
+                            }
+                        },
+                        {
+                            "settings": [
+                                {
+                                    "settings": [
+                                        {
+                                            "name": "function",
+                                            "default_value": "",
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": "",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "origin",
+                                            "default_value": "builtin",
+                                            "items": [
+                                                [
+                                                    "builtin",
+                                                    "Built-in"
+                                                ],
+                                                [
+                                                    "gimp_pdb",
+                                                    "GIMP PDB procedure"
+                                                ],
+                                                [
+                                                    "gegl",
+                                                    "GEGL operation"
+                                                ]
+                                            ],
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": "builtin",
+                                            "type": "choice"
+                                        },
+                                        {
+                                            "settings": [],
+                                            "name": "arguments",
+                                            "setting_attributes": {
+                                                "pdb_type": null
+                                            }
+                                        },
+                                        {
+                                            "name": "enabled",
+                                            "default_value": true,
+                                            "pdb_type": null,
+                                            "value": true,
+                                            "type": "bool"
+                                        },
+                                        {
+                                            "name": "display_name",
+                                            "default_value": "Top-level",
+                                            "gui_type": null,
+                                            "tags": [
+                                                "ignore_initialize_gui"
+                                            ],
+                                            "pdb_type": null,
+                                            "value": "Top-level",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "menu_path",
+                                            "default_value": null,
+                                            "gui_type": null,
+                                            "tags": [
+                                                "ignore_initialize_gui"
+                                            ],
+                                            "pdb_type": null,
+                                            "value": null,
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "description",
+                                            "default_value": null,
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": null,
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "command_groups",
+                                            "default_value": [
+                                                "default_conditions"
+                                            ],
+                                            "nullable": true,
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": [
+                                                "default_conditions"
+                                            ],
+                                            "type": "list"
+                                        },
+                                        {
+                                            "name": "display_options_on_create",
+                                            "default_value": false,
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": false,
+                                            "type": "bool"
+                                        },
+                                        {
+                                            "settings": [
+                                                {
+                                                    "name": "enabled_for_previews",
+                                                    "default_value": true,
+                                                    "display_name": "Enable for previews",
+                                                    "pdb_type": null,
+                                                    "value": true,
+                                                    "type": "bool"
+                                                },
+                                                {
+                                                    "name": "also_apply_to_parent_folders",
+                                                    "default_value": false,
+                                                    "display_name": "Also apply to parent folders",
+                                                    "pdb_type": null,
+                                                    "value": false,
+                                                    "type": "bool"
+                                                }
+                                            ],
+                                            "name": "more_options",
+                                            "setting_attributes": {
+                                                "pdb_type": null
+                                            }
+                                        },
+                                        {
+                                            "name": "more_options_expanded",
+                                            "default_value": false,
+                                            "display_name": "_More options",
+                                            "gui_type": "expander",
+                                            "pdb_type": null,
+                                            "value": false,
+                                            "type": "bool"
+                                        },
+                                        {
+                                            "name": "orig_name",
+                                            "default_value": "top_level",
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": "top_level",
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "name": "top_level",
+                                    "tags": [
+                                        "command",
+                                        "condition",
+                                        "plug-in-batch-convert",
+                                        "plug-in-batch-edit-layers",
+                                        "plug-in-batch-export-layers"
+                                    ],
+                                    "setting_attributes": {
+                                        "pdb_type": null
+                                    }
+                                },
+                                {
+                                    "settings": [
+                                        {
+                                            "name": "function",
+                                            "default_value": "",
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": "",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "origin",
+                                            "default_value": "builtin",
+                                            "items": [
+                                                [
+                                                    "builtin",
+                                                    "Built-in"
+                                                ],
+                                                [
+                                                    "gimp_pdb",
+                                                    "GIMP PDB procedure"
+                                                ],
+                                                [
+                                                    "gegl",
+                                                    "GEGL operation"
+                                                ]
+                                            ],
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": "builtin",
+                                            "type": "choice"
+                                        },
+                                        {
+                                            "settings": [
+                                                {
+                                                    "name": "match_mode",
+                                                    "default_value": "contains",
+                                                    "items": [
+                                                        [
+                                                            "starts_with",
+                                                            "Starts with text"
+                                                        ],
+                                                        [
+                                                            "does_not_start_with",
+                                                            "Does not start with text"
+                                                        ],
+                                                        [
+                                                            "contains",
+                                                            "Contains text"
+                                                        ],
+                                                        [
+                                                            "does_not_contain",
+                                                            "Does not contain text"
+                                                        ],
+                                                        [
+                                                            "ends_with",
+                                                            "Ends with text"
+                                                        ],
+                                                        [
+                                                            "does_not_end_with",
+                                                            "Does not end with text"
+                                                        ],
+                                                        [
+                                                            "regex",
+                                                            "Matches regular expression"
+                                                        ]
+                                                    ],
+                                                    "display_name": "How to perform matching",
+                                                    "pdb_type": null,
+                                                    "value": "does_not_contain",
+                                                    "type": "choice"
+                                                },
+                                                {
+                                                    "name": "text",
+                                                    "default_value": "image",
+                                                    "display_name": "Text to match",
+                                                    "pdb_type": null,
+                                                    "value": "background",
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "name": "ignore_case_sensitivity",
+                                                    "default_value": false,
+                                                    "display_name": "Ignore case sensitivity",
+                                                    "pdb_type": null,
+                                                    "value": false,
+                                                    "type": "bool"
+                                                }
+                                            ],
+                                            "name": "arguments",
+                                            "setting_attributes": {
+                                                "pdb_type": null
+                                            }
+                                        },
+                                        {
+                                            "name": "enabled",
+                                            "default_value": true,
+                                            "pdb_type": null,
+                                            "value": true,
+                                            "type": "bool"
+                                        },
+                                        {
+                                            "name": "display_name",
+                                            "default_value": "Matching text...",
+                                            "gui_type": null,
+                                            "tags": [
+                                                "ignore_initialize_gui"
+                                            ],
+                                            "pdb_type": null,
+                                            "value": "Not containing \"background\"",
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "menu_path",
+                                            "default_value": null,
+                                            "gui_type": null,
+                                            "tags": [
+                                                "ignore_initialize_gui"
+                                            ],
+                                            "pdb_type": null,
+                                            "value": null,
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "description",
+                                            "default_value": null,
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": null,
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "command_groups",
+                                            "default_value": [
+                                                "default_conditions"
+                                            ],
+                                            "nullable": true,
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": [
+                                                "default_conditions"
+                                            ],
+                                            "type": "list"
+                                        },
+                                        {
+                                            "name": "display_options_on_create",
+                                            "default_value": true,
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": false,
+                                            "type": "bool"
+                                        },
+                                        {
+                                            "settings": [
+                                                {
+                                                    "name": "enabled_for_previews",
+                                                    "default_value": true,
+                                                    "display_name": "Enable for previews",
+                                                    "pdb_type": null,
+                                                    "value": true,
+                                                    "type": "bool"
+                                                },
+                                                {
+                                                    "name": "also_apply_to_parent_folders",
+                                                    "default_value": false,
+                                                    "display_name": "Also apply to parent folders",
+                                                    "pdb_type": null,
+                                                    "value": false,
+                                                    "type": "bool"
+                                                }
+                                            ],
+                                            "name": "more_options",
+                                            "setting_attributes": {
+                                                "pdb_type": null
+                                            }
+                                        },
+                                        {
+                                            "name": "more_options_expanded",
+                                            "default_value": false,
+                                            "display_name": "_More options",
+                                            "gui_type": "expander",
+                                            "pdb_type": null,
+                                            "value": false,
+                                            "type": "bool"
+                                        },
+                                        {
+                                            "name": "orig_name",
+                                            "default_value": "matching_text",
+                                            "gui_type": null,
+                                            "pdb_type": null,
+                                            "value": "matching_text",
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "name": "matching_text",
+                                    "tags": [
+                                        "command",
+                                        "condition",
+                                        "plug-in-batch-convert",
+                                        "plug-in-batch-export-images",
+                                        "plug-in-batch-edit-and-save-images",
+                                        "plug-in-batch-export-layers",
+                                        "plug-in-batch-edit-layers"
+                                    ],
+                                    "setting_attributes": {
+                                        "pdb_type": null
+                                    }
+                                }
+                            ],
+                            "name": "conditions",
+                            "setting_attributes": {
+                                "pdb_type": null
+                            }
+                        }
+                    ],
+                    "name": "main"
+                },
+                {
+                    "settings": [
+                        {
+                            "name": "show_original_item_names",
+                            "default_value": false,
+                            "display_name": "Show Original Names",
+                            "gui_type": "check_menu_item",
+                            "value": false,
+                            "type": "bool"
+                        },
+                        {
+                            "name": "name_preview_sensitive",
+                            "default_value": true,
+                            "gui_type": null,
+                            "value": true,
+                            "type": "bool"
+                        },
+                        {
+                            "name": "image_preview_sensitive",
+                            "default_value": true,
+                            "gui_type": null,
+                            "value": true,
+                            "type": "bool"
+                        },
+                        {
+                            "name": "image_preview_automatic_update",
+                            "default_value": true,
+                            "gui_type": null,
+                            "value": true,
+                            "type": "bool"
+                        },
+                        {
+                            "name": "image_preview_automatic_update_if_below_maximum_duration",
+                            "default_value": true,
+                            "gui_type": null,
+                            "value": true,
+                            "type": "bool"
+                        },
+                        {
+                            "name": "selected_items",
+                            "value": [],
+                            "type": "gimp_item_tree_items"
+                        },
+                        {
+                            "name": "name_preview_items_collapsed_state",
+                            "value": [],
+                            "type": "gimp_item_tree_items"
+                        },
+                        {
+                            "name": "image_preview_displayed_items",
+                            "value": [],
+                            "type": "gimp_item_tree_items"
+                        },
+                        {
+                            "settings": [
+                                {
+                                    "name": "paned_position",
+                                    "default_value": 325,
+                                    "gui_type": null,
+                                    "value": 325,
+                                    "type": "int"
+                                },
+                                {
+                                    "name": "dialog_position",
+                                    "default_value": [],
+                                    "value": [
+                                        0,
+                                        0
+                                    ],
+                                    "type": "tuple"
+                                },
+                                {
+                                    "name": "dialog_size",
+                                    "default_value": [
+                                        890,
+                                        450
+                                    ],
+                                    "value": [
+                                        890,
+                                        450
+                                    ],
+                                    "type": "tuple"
+                                }
+                            ],
+                            "name": "action_browser"
+                        },
+                        {
+                            "name": "auto_close",
+                            "default_value": true,
+                            "display_name": "Close when Done",
+                            "gui_type": "check_menu_item",
+                            "value": true,
+                            "type": "bool"
+                        },
+                        {
+                            "name": "show_quick_settings",
+                            "default_value": true,
+                            "gui_type": null,
+                            "value": true,
+                            "type": "bool"
+                        },
+                        {
+                            "name": "images_and_directories",
+                            "value": {
+                                "/home/mike/Code/private/jClipCorn/_data/view_eye.xcf": "/home/mike/Code/private/jClipCorn/res/icons/viewed"
+                            },
+                            "type": "images_and_directories"
+                        },
+                        {
+                            "settings": [
+                                {
+                                    "name": "dialog_position",
+                                    "default_value": [],
+                                    "value": [
+                                        0,
+                                        0
+                                    ],
+                                    "type": "tuple"
+                                },
+                                {
+                                    "name": "dialog_size",
+                                    "default_value": [
+                                        710,
+                                        580
+                                    ],
+                                    "value": [
+                                        1377,
+                                        1042
+                                    ],
+                                    "type": "tuple"
+                                },
+                                {
+                                    "name": "paned_outside_previews_position",
+                                    "default_value": 350,
+                                    "gui_type": null,
+                                    "value": 691,
+                                    "type": "int"
+                                },
+                                {
+                                    "name": "paned_between_previews_position",
+                                    "default_value": 230,
+                                    "gui_type": null,
+                                    "value": 451,
+                                    "type": "int"
+                                }
+                            ],
+                            "name": "size"
+                        }
+                    ],
+                    "name": "gui"
+                }
+            ],
+            "name": "all_settings"
+        }
+    ]
+}

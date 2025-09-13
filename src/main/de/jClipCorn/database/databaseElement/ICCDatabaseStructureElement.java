@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBStructureElementTyp;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
@@ -39,4 +40,6 @@ public interface ICCDatabaseStructureElement {
 	String[]               getDirty();
 
 	BufferedImage getSelfOrParentCover();
+
+	CCDBStructureElementTyp getStructureType();
 }

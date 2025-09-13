@@ -68,6 +68,11 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		return CCDBElementTyp.SERIES;
 	}
 
+	@Override
+	public CCDBStructureElementTyp getStructureType() {
+		return CCDBStructureElementTyp.SERIES;
+	}
+
 	public void updateDBWithException() throws DatabaseUpdateException {
 		var ok = updateDB();
 		if (!ok) throw new DatabaseUpdateException("updateDB() failed"); //$NON-NLS-1$
@@ -511,29 +516,10 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
-
-		if (isEmpty())
-			return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty(), 0);
-
-		if (isUnviewed() && Tags.get(CCSingleTag.TAG_WATCH_LATER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_LATER, CCDateTimeList.createEmpty(), getFullViewCount());
-
-		if (!isUnviewed() && Tags.get(CCSingleTag.TAG_WATCH_LATER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_AGAIN, CCDateTimeList.createEmpty(), getFullViewCount());
-
-		if (isViewed())
-			return new ExtendedViewedState(ExtendedViewedStateType.VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
-
-		if (Tags.get(CCSingleTag.TAG_WATCH_NEVER))
-			return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, CCDateTimeList.createEmpty(), getFullViewCount());
-
-		if (getMovieList().ccprops().PROP_SHOW_PARTIAL_VIEWED_STATE.getValue() && isPartialViewed())
-			return new ExtendedViewedState(ExtendedViewedStateType.PARTIAL_VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
-
-		return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, CCDateTimeList.createEmpty(), getFullViewCount());
+		return ExtendedViewedState.create(this);
 	}
 
-	private int getFullViewCount() {
+	public int getFullViewCount() {
 		return _cache.getInt(SeriesCache.FULL_VIEW_COUNT,  Tuple1.Create(getMovieList().ccprops().PROP_SERIES_VIEWCOUNT_MODE.getValue()), ser->
 		{
 			var vcmode = getMovieList().ccprops().PROP_SERIES_VIEWCOUNT_MODE.getValue();

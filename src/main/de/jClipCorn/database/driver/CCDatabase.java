@@ -7,6 +7,7 @@ import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.databaseElement.columnTypes.CCHexColor;
+import de.jClipCorn.database.databaseElement.columnTypes.CCPathList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCStringList;
 import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.database.migration.DatabaseMigrator;
@@ -357,12 +358,7 @@ public class CCDatabase {
 		mov.FileSize.set(rs.getLong(DatabaseStructure.COL_MOV_FILESIZE));
 		mov.Tags.set(rs.getString(DatabaseStructure.COL_MOV_TAGS));
 
-		mov.Parts.Part0.set(rs.getString(DatabaseStructure.COL_MOV_PART_1));
-		mov.Parts.Part1.set(rs.getString(DatabaseStructure.COL_MOV_PART_2));
-		mov.Parts.Part2.set(rs.getString(DatabaseStructure.COL_MOV_PART_3));
-		mov.Parts.Part3.set(rs.getString(DatabaseStructure.COL_MOV_PART_4));
-		mov.Parts.Part4.set(rs.getString(DatabaseStructure.COL_MOV_PART_5));
-		mov.Parts.Part5.set(rs.getString(DatabaseStructure.COL_MOV_PART_6));
+		mov.Parts.set(CCPathList.createFromJSON(rs.getString(DatabaseStructure.COL_MOV_PARTS)));
 
 		mov.Score.set(rs.getInt(DatabaseStructure.COL_MOV_SCORE));
 		mov.ScoreComment.set(rs.getString(DatabaseStructure.COL_MOV_SCORECOMMENT));
@@ -617,12 +613,7 @@ public class CCDatabase {
 			stmt.setStr(DatabaseStructure.COL_MOV_ONLINEREF,         mov.OnlineReference.get().toSerializationString());
 			stmt.setLng(DatabaseStructure.COL_MOV_FILESIZE,          mov.FileSize.get().getBytes());
 			stmt.setStr(DatabaseStructure.COL_MOV_TAGS,              mov.Tags.get().asJSONArray());
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_1,            mov.Parts.get(0).toString());
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_2,            mov.Parts.get(1).toString());
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_3,            mov.Parts.get(2).toString());
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_4,            mov.Parts.get(3).toString());
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_5,            mov.Parts.get(4).toString());
-			stmt.setStr(DatabaseStructure.COL_MOV_PART_6,            mov.Parts.get(5).toString());
+			stmt.setStr(DatabaseStructure.COL_MOV_PARTS,             mov.Parts.get().asJSONArray());
 			stmt.setInt(DatabaseStructure.COL_MOV_SCORE,             mov.Score.get().asInt());
 			stmt.setStr(DatabaseStructure.COL_MOV_SCORECOMMENT,      mov.ScoreComment.get());
 

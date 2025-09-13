@@ -110,12 +110,7 @@ public class DatabaseSeeder {
 				e.Tags.set(CCTagList.EMPTY);
 				e.setCover(cvr("000"));
 
-				e.Parts.Part0.set(CCPath.createFromFSPath(f, ml));
-				e.Parts.Part1.set(CCPath.Empty);
-				e.Parts.Part2.set(CCPath.Empty);
-				e.Parts.Part3.set(CCPath.Empty);
-				e.Parts.Part4.set(CCPath.Empty);
-				e.Parts.Part5.set(CCPath.Empty);
+				e.Parts.set(CCPathList.create(CCPath.createFromFSPath(f, ml)));
 			}
 			e.endUpdating();
 		}
@@ -148,12 +143,7 @@ public class DatabaseSeeder {
 				e.Tags.set(CCTagList.create(CCSingleTag.TAG_WATCH_LATER));
 				e.setCover(cvr("001"));
 
-				e.Parts.Part0.set(CCPath.createFromFSPath(f, ml));
-				e.Parts.Part1.set(CCPath.Empty);
-				e.Parts.Part2.set(CCPath.Empty);
-				e.Parts.Part3.set(CCPath.Empty);
-				e.Parts.Part4.set(CCPath.Empty);
-				e.Parts.Part5.set(CCPath.Empty);
+				e.Parts.set(CCPathList.create(CCPath.createFromFSPath(f, ml)));
 			}
 			e.endUpdating();
 		}
@@ -187,12 +177,7 @@ public class DatabaseSeeder {
 				e.Tags.set(CCTagList.create(CCSingleTag.TAG_BAD_QUALITY));
 				e.setCover(cvr("002"));
 
-				e.Parts.Part0.set(CCPath.createFromFSPath(f1, ml));
-				e.Parts.Part1.set(CCPath.createFromFSPath(f2, ml));
-				e.Parts.Part2.set(CCPath.Empty);
-				e.Parts.Part3.set(CCPath.Empty);
-				e.Parts.Part4.set(CCPath.Empty);
-				e.Parts.Part5.set(CCPath.Empty);
+				e.Parts.set(CCPathList.create(CCPath.createFromFSPath(f1, ml), CCPath.createFromFSPath(f2, ml)));
 			}
 			e.endUpdating();
 		}

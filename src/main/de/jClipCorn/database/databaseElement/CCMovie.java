@@ -8,7 +8,6 @@ import de.jClipCorn.database.databaseElement.datapacks.IMovieData;
 import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.impl.*;
 import de.jClipCorn.database.elementProps.packs.EMediaInfoPropPack;
-import de.jClipCorn.database.elementProps.packs.EPartArrayPropPack;
 import de.jClipCorn.database.elementProps.packs.EZyklusPropPack;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
@@ -37,12 +36,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, ICCDatedElement, IMovieData {
-	public final static int PARTCOUNT_MAX = EPartArrayPropPack.PARTCOUNT_MAX;
+	public final static int PARTCOUNT_MAX = CCPathList.PARTCOUNT_MAX;
 
 	private final MovieCache _cache = new MovieCache(this);
 
 	public final EZyklusPropPack         Zyklus        = new EZyklusPropPack(   "Zyklus",        CCMovieZyklus.EMPTY,          this, EPropertyType.OBJECTIVE_METADATA);
-	public final EPartArrayPropPack      Parts         = new EPartArrayPropPack("Parts",         CCPath.Empty,                 this, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
+	public final ECCPathListProp         Parts         = new ECCPathListProp(   "Parts",         CCPathList.EMPTY,             this, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
 	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,       this);
 	public final EIntProp                Length        = new EIntProp(          "Length",        0,                            this, EPropertyType.OBJECTIVE_METADATA);
 	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
@@ -65,6 +64,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 				.append(Zyklus.getProperties())
 				.append(new IEProperty[]
 				{
+					Parts,
 					Length,
 					AddDate,
 					Format,
@@ -74,7 +74,6 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 					Language,
 					Subtitles,
 				})
-				.append(Parts.getProperties())
 				.append(MediaInfo.getProperties())
 				.toArray(new IEProperty[0]);
 	}
@@ -86,7 +85,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public EEnumProp<CCFileFormat> format()        { return Format;        }
 	public EIntProp                year()          { return Year;          }
 	public EFileSizeProp           fileSize()      { return FileSize;      }
-	public EPartArrayPropPack      parts()         { return Parts;         }
+	public ECCPathListProp         parts()         { return Parts;         }
 	public EDateTimeListProp       viewedHistory() { return ViewedHistory; }
 	public ELanguageSetProp        language()      { return Language;      }
 	public ELanguageListProp       subtitles()     { return Subtitles;     }

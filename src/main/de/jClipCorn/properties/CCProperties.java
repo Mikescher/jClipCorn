@@ -179,6 +179,11 @@ public class CCProperties implements ICCPropertySource {
 	public CCPathVarProperty                                PROP_PATHSYNTAX_VAR3;
 	public CCPathVarProperty                                PROP_PATHSYNTAX_VAR4;
 	public CCPathVarProperty                                PROP_PATHSYNTAX_VAR5;
+	public CCPathVarProperty                                PROP_PATHSYNTAX_VAR6;
+	public CCPathVarProperty                                PROP_PATHSYNTAX_VAR7;
+	public CCPathVarProperty                                PROP_PATHSYNTAX_VAR8;
+	public CCPathVarProperty                                PROP_PATHSYNTAX_VAR9;
+	public CCPathVarProperty                                PROP_PATHSYNTAX_VAR10;
 	public CCPIntProperty                                   PROP_MIN_DRIVEMAP_RESCAN_TIME;
 	public CCBoolProperty                                   PROP_STATBAR_DRIVESCAN;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_VIEWCOUNT;
@@ -447,6 +452,11 @@ public class CCProperties implements ICCPropertySource {
 		PROP_PATHSYNTAX_VAR3                    = new CCPathVarProperty(CAT_PATHSYNTAX,     this,   "PROP_PATHSYNTAX_VAR3",                     PathSyntaxVar.EMPTY);
 		PROP_PATHSYNTAX_VAR4                    = new CCPathVarProperty(CAT_PATHSYNTAX,     this,   "PROP_PATHSYNTAX_VAR4",                     PathSyntaxVar.EMPTY);
 		PROP_PATHSYNTAX_VAR5                    = new CCPathVarProperty(CAT_PATHSYNTAX,     this,   "PROP_PATHSYNTAX_VAR5",                     PathSyntaxVar.EMPTY);
+		PROP_PATHSYNTAX_VAR6                    = new CCPathVarProperty(CAT_PATHSYNTAX,     this,   "PROP_PATHSYNTAX_VAR6",                     PathSyntaxVar.EMPTY);
+		PROP_PATHSYNTAX_VAR7                    = new CCPathVarProperty(CAT_PATHSYNTAX,     this,   "PROP_PATHSYNTAX_VAR7",                     PathSyntaxVar.EMPTY);
+		PROP_PATHSYNTAX_VAR8                    = new CCPathVarProperty(CAT_PATHSYNTAX,     this,   "PROP_PATHSYNTAX_VAR8",                     PathSyntaxVar.EMPTY);
+		PROP_PATHSYNTAX_VAR9                    = new CCPathVarProperty(CAT_PATHSYNTAX,     this,   "PROP_PATHSYNTAX_VAR9",                     PathSyntaxVar.EMPTY);
+		PROP_PATHSYNTAX_VAR10                   = new CCPathVarProperty(CAT_PATHSYNTAX,     this,   "PROP_PATHSYNTAX_VAR10",                    PathSyntaxVar.EMPTY);
 	}
 
 	private FSPath getDefHttpCachePath() {
@@ -632,6 +642,21 @@ public class CCProperties implements ICCPropertySource {
 
 		PathSyntaxVar v5 = PROP_PATHSYNTAX_VAR5.getValue();
 		if (!Str.isNullOrWhitespace(v5.Key) && (Str.isNullOrWhitespace(v5.Hostname) || v5.Hostname.equalsIgnoreCase(hostname))) r.add(v5);
+
+		PathSyntaxVar v6  = PROP_PATHSYNTAX_VAR6.getValue();
+		if (!Str.isNullOrWhitespace(v6.Key) && (Str.isNullOrWhitespace(v6.Hostname) || v6.Hostname.equalsIgnoreCase(hostname))) r.add(v6);
+
+		PathSyntaxVar v7  = PROP_PATHSYNTAX_VAR7.getValue();
+		if (!Str.isNullOrWhitespace(v7.Key) && (Str.isNullOrWhitespace(v7.Hostname) || v7.Hostname.equalsIgnoreCase(hostname))) r.add(v7);
+
+		PathSyntaxVar v8  = PROP_PATHSYNTAX_VAR8.getValue();
+		if (!Str.isNullOrWhitespace(v8.Key) && (Str.isNullOrWhitespace(v8.Hostname) || v8.Hostname.equalsIgnoreCase(hostname))) r.add(v8);
+
+		PathSyntaxVar v9  = PROP_PATHSYNTAX_VAR9.getValue();
+		if (!Str.isNullOrWhitespace(v9.Key) && (Str.isNullOrWhitespace(v9.Hostname) || v9.Hostname.equalsIgnoreCase(hostname))) r.add(v9);
+
+		PathSyntaxVar v10 = PROP_PATHSYNTAX_VAR10.getValue();
+		if (!Str.isNullOrWhitespace(v10.Key) && (Str.isNullOrWhitespace(v10.Hostname) || v10.Hostname.equalsIgnoreCase(hostname))) r.add(v10);
 
 		return r;
 	}

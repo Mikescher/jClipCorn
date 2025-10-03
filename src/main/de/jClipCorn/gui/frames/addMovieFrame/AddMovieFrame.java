@@ -1469,7 +1469,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
             pnlBottom.add(btnCancel);
         }
         contentPane.add(pnlBottom, CC.xywh(2, 4, 3, 1));
-        setSize(969, 1012);
+        setSize(969, 1150);
         setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}

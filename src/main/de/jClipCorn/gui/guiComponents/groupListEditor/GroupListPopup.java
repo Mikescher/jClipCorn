@@ -1,30 +1,18 @@
 package de.jClipCorn.gui.guiComponents.groupListEditor;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-
-import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
-import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 
 public class GroupListPopup extends JDialog implements WindowFocusListener {
 	private static final long serialVersionUID = 5984142965004380779L;
@@ -50,24 +38,37 @@ public class GroupListPopup extends JDialog implements WindowFocusListener {
 		instance = this;
 		
 		this.parent = parent;
-				
-		setAlwaysOnTop(true);
+
 		initGUI(parent);
 		initData(db, initial);
 		
 		updateHeight();
 		
 		setLocation((int) parent.getLocationOnScreen().getX(), (int) (parent.getLocationOnScreen().getY() + parent.getSize().getHeight() + 2));
-		
+
 		addWindowFocusListener(this);
 	}
 
-	private void initGUI(GroupListEditor parent) { 
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if (visible) {
+			// Request focus for the textfield after the dialog is shown (important for Linux)
+			SwingUtilities.invokeLater(() -> {
+				edNewGroup.requestFocusInWindow();
+			});
+		}
+	}
+
+	private void initGUI(GroupListEditor parent) {
 		setSize(Math.max(200, parent.getWidth()), 25);
-		
+
 		setUndecorated(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setType(Type.POPUP);
+		// setType(Type.POPUP); // Commented out - Type.POPUP can prevent focus on Linux
+		setFocusableWindowState(true);
+		setFocusable(true);
+		setAutoRequestFocus(true);
 		setResizable(false);
 		getContentPane().setLayout(new BorderLayout());
 		
@@ -81,6 +82,14 @@ public class GroupListPopup extends JDialog implements WindowFocusListener {
 		pnllTop.setLayout(new BorderLayout(0, 0));
 		
 		edNewGroup = new JTextField();
+		edNewGroup.setFocusable(true);
+		edNewGroup.setEditable(true);
+		edNewGroup.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				edNewGroup.requestFocusInWindow();
+			}
+		});
 		edNewGroup.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -197,7 +206,14 @@ public class GroupListPopup extends JDialog implements WindowFocusListener {
 
 	@Override
 	public void windowLostFocus(WindowEvent e) {
-		dispose();
+		// Don't dispose if focus is still within this window's components (e.g., textfield or button)
+		// This prevents the dialog from closing when clicking on the textfield (especially on Linux)
+		SwingUtilities.invokeLater(() -> {
+			Window focusedWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
+			if (focusedWindow != this) {
+				dispose();
+			}
+		});
 	}
 
 	private void onAdd() {

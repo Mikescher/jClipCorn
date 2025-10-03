@@ -55,8 +55,8 @@ project.ext {
 }
 
 version = project.appversion
-sourceCompatibility = 12
-targetCompatibility = 12
+sourceCompatibility = 16
+targetCompatibility = 16
 mainClassName = project.appmain
 
 compileJava.options.encoding = 'UTF-8'

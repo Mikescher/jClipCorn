@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ClientPropertiesManager">
     <properties class="javax.swing.AbstractButton">
@@ -44,7 +45,7 @@
   <component name="PWA">
     <option name="wasEnabledAtLeastOnce" value="true" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_12" project-jdk-name="openjdk-18" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_16" project-jdk-name="openjdk-18" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

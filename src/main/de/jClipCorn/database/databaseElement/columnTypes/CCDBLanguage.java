@@ -63,7 +63,15 @@ public enum CCDBLanguage implements ContinoousEnum<CCDBLanguage> {
 	GALICIAN  (45, "GLG", "Galician",   "CCMovieLanguage.Galician",   Resources.ICN_TABLE_LANGUAGE_45),
 	UKRAINIAN (46, "UKR", "Ukrainian",  "CCMovieLanguage.Ukrainian",  Resources.ICN_TABLE_LANGUAGE_46),
 	BASQUE    (47, "BAQ", "Basque",     "CCMovieLanguage.Basque",     Resources.ICN_TABLE_LANGUAGE_47),
-	KANNADA   (48, "KAN", "Basque",     "CCMovieLanguage.Kannada",    Resources.ICN_TABLE_LANGUAGE_48);
+	KANNADA   (48, "KAN", "Basque",     "CCMovieLanguage.Kannada",    Resources.ICN_TABLE_LANGUAGE_48),
+	BENGALI   (49, "BEN", "Bengali",    "CCMovieLanguage.Bengali",    Resources.ICN_TABLE_LANGUAGE_49),
+	KHMER     (50, "KHM", "Khmer",      "CCMovieLanguage.Khmer",      Resources.ICN_TABLE_LANGUAGE_50),
+	LATIN     (51, "LAT", "Latin",      "CCMovieLanguage.Latin",      Resources.ICN_TABLE_LANGUAGE_51),
+	LAO       (52, "LAO", "Lao",        "CCMovieLanguage.Lao",        Resources.ICN_TABLE_LANGUAGE_52),
+	BURMESE   (53, "MYA", "Burmese",    "CCMovieLanguage.Burmese",    Resources.ICN_TABLE_LANGUAGE_53),
+	NEPALI    (54, "NEP", "Nepali",     "CCMovieLanguage.Nepali",     Resources.ICN_TABLE_LANGUAGE_54),
+	SINHALESE (55, "SIN", "Sinhalese",  "CCMovieLanguage.Sinhalese",  Resources.ICN_TABLE_LANGUAGE_55),
+	URDU      (56, "URD", "Urdu",       "CCMovieLanguage.Urdu",       Resources.ICN_TABLE_LANGUAGE_56);
 
 
 	private static final EnumWrapper<CCDBLanguage> wrapper = new EnumWrapper<>(GERMAN);

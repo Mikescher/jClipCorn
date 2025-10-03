@@ -330,6 +330,46 @@ public abstract class MetadataRunner {
 		if (langval.equalsIgnoreCase("Kanaresisch"))                     return CCDBLanguage.KANNADA;
 		if (langval.equalsIgnoreCase("Kannada"))                         return CCDBLanguage.KANNADA;
 
+		if (langval.equalsIgnoreCase("bn"))                              return CCDBLanguage.BENGALI;
+		if (langval.equalsIgnoreCase("ben"))                             return CCDBLanguage.BENGALI;
+		if (langval.equalsIgnoreCase("bengali"))                         return CCDBLanguage.BENGALI;
+
+		if (langval.equalsIgnoreCase("km"))                              return CCDBLanguage.KHMER;
+		if (langval.equalsIgnoreCase("khm"))                             return CCDBLanguage.KHMER;
+		if (langval.equalsIgnoreCase("khmer"))                           return CCDBLanguage.KHMER;
+
+		if (langval.equalsIgnoreCase("la"))                              return CCDBLanguage.LATIN;
+		if (langval.equalsIgnoreCase("lat"))                             return CCDBLanguage.LATIN;
+		if (langval.equalsIgnoreCase("latin"))                           return CCDBLanguage.LATIN;
+
+		if (langval.equalsIgnoreCase("lo"))                              return CCDBLanguage.LAO;
+		if (langval.equalsIgnoreCase("lao"))                             return CCDBLanguage.LAO;
+		if (langval.equalsIgnoreCase("tts"))                             return CCDBLanguage.LAO;
+
+		if (langval.equalsIgnoreCase("my"))                              return CCDBLanguage.BURMESE;
+		if (langval.equalsIgnoreCase("bur"))                             return CCDBLanguage.BURMESE;
+		if (langval.equalsIgnoreCase("mya"))                             return CCDBLanguage.BURMESE;
+		if (langval.equalsIgnoreCase("int"))                             return CCDBLanguage.BURMESE;
+		if (langval.equalsIgnoreCase("tco"))                             return CCDBLanguage.BURMESE;
+		if (langval.equalsIgnoreCase("rki"))                             return CCDBLanguage.BURMESE;
+		if (langval.equalsIgnoreCase("rmz"))                             return CCDBLanguage.BURMESE;
+		if (langval.equalsIgnoreCase("tvn"))                             return CCDBLanguage.BURMESE;
+		if (langval.equalsIgnoreCase("burmese"))                         return CCDBLanguage.BURMESE;
+
+		if (langval.equalsIgnoreCase("ne"))                              return CCDBLanguage.NEPALI;
+		if (langval.equalsIgnoreCase("nep"))                             return CCDBLanguage.NEPALI;
+		if (langval.equalsIgnoreCase("nepali"))                          return CCDBLanguage.NEPALI;
+
+		if (langval.equalsIgnoreCase("si"))                              return CCDBLanguage.SINHALESE;
+		if (langval.equalsIgnoreCase("sin"))                             return CCDBLanguage.SINHALESE;
+		if (langval.equalsIgnoreCase("sinhala"))                         return CCDBLanguage.SINHALESE;
+		if (langval.equalsIgnoreCase("sinhalese"))                       return CCDBLanguage.SINHALESE;
+		if (langval.equalsIgnoreCase("singhalesisch"))                   return CCDBLanguage.SINHALESE;
+
+		if (langval.equalsIgnoreCase("ur"))                              return CCDBLanguage.URDU;
+		if (langval.equalsIgnoreCase("urd"))                             return CCDBLanguage.URDU;
+		if (langval.equalsIgnoreCase("urdu"))                            return CCDBLanguage.URDU;
+
 		return null;
 	}
 

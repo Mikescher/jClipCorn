@@ -333,6 +333,14 @@ public class Resources {
 	public final static IconRef ICN_TABLE_LANGUAGE_46 		= register16x16Icon("/icons/table/language/language_46.png");
 	public final static IconRef ICN_TABLE_LANGUAGE_47 		= register16x16Icon("/icons/table/language/language_47.png");
 	public final static IconRef ICN_TABLE_LANGUAGE_48 		= register16x16Icon("/icons/table/language/language_48.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_49 		= register16x16Icon("/icons/table/language/language_49.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_50 		= register16x16Icon("/icons/table/language/language_50.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_51 		= register16x16Icon("/icons/table/language/language_51.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_52 		= register16x16Icon("/icons/table/language/language_52.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_53 		= register16x16Icon("/icons/table/language/language_53.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_54 		= register16x16Icon("/icons/table/language/language_54.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_55 		= register16x16Icon("/icons/table/language/language_55.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_56 		= register16x16Icon("/icons/table/language/language_56.png");
 
 	public final static IconRef[] ICN_TABLE_LANGUAGE = new IconRef[]
 	{
@@ -345,7 +353,9 @@ public class Resources {
 		ICN_TABLE_LANGUAGE_30, ICN_TABLE_LANGUAGE_31, ICN_TABLE_LANGUAGE_32, ICN_TABLE_LANGUAGE_33, ICN_TABLE_LANGUAGE_34,
 		ICN_TABLE_LANGUAGE_35, ICN_TABLE_LANGUAGE_36, ICN_TABLE_LANGUAGE_37, ICN_TABLE_LANGUAGE_38, ICN_TABLE_LANGUAGE_39,
 		ICN_TABLE_LANGUAGE_40, ICN_TABLE_LANGUAGE_41, ICN_TABLE_LANGUAGE_42, ICN_TABLE_LANGUAGE_43, ICN_TABLE_LANGUAGE_44,
-		ICN_TABLE_LANGUAGE_45, ICN_TABLE_LANGUAGE_46, ICN_TABLE_LANGUAGE_47, ICN_TABLE_LANGUAGE_48
+		ICN_TABLE_LANGUAGE_45, ICN_TABLE_LANGUAGE_46, ICN_TABLE_LANGUAGE_47, ICN_TABLE_LANGUAGE_48, ICN_TABLE_LANGUAGE_49,
+		ICN_TABLE_LANGUAGE_50, ICN_TABLE_LANGUAGE_51, ICN_TABLE_LANGUAGE_52, ICN_TABLE_LANGUAGE_53, ICN_TABLE_LANGUAGE_54,
+		ICN_TABLE_LANGUAGE_55, ICN_TABLE_LANGUAGE_56,
 	};
 
 	public static HashMap<Tuple<Integer, Integer>, IconRef> ICN_TABLE_LANGUAGE_COMBINED = createCombinedlanguageIcons(ICN_TABLE_LANGUAGE);

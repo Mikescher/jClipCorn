@@ -926,6 +926,20 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						"AnimeStudio", untrimmed.toString()
 					);
 				});
+
+		// Watch cancelled on unviewed or fully-viewed series
+		addSeriesValidation(
+				DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_CANCELLED,
+				o -> o.ValidateSeries,
+				series -> series.Tags.get(CCSingleTag.TAG_WATCH_CANCELLED) && (series.isUnviewed() || series.isViewed()),
+				series -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_CANCELLED, series));
+
+		// Watch never <> ViewedState
+		addSeriesValidation(
+				DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER,
+				o -> o.ValidateSeries,
+				series -> series.Tags.get(CCSingleTag.TAG_WATCH_NEVER) && !series.isUnviewed(),
+				series -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER, series));
 	}
 
 	@SuppressWarnings({"nls"})

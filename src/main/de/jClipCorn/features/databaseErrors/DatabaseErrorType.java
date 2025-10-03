@@ -89,6 +89,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_INVALID_ONLINESCORE                = new DatabaseErrorType(82, null);
 	public final static DatabaseErrorType ERROR_COMMENT_WITHOUT_RATING             = new DatabaseErrorType(83, null);
 	public final static DatabaseErrorType ERROR_EMPTY_DIRECTORY                    = new DatabaseErrorType(84, DatabaseAutofixer::fixError_EmptyDirectory);
+	public final static DatabaseErrorType ERROR_IMPOSSIBLE_WATCH_CANCELLED         = new DatabaseErrorType(85, DatabaseAutofixer::fixError_Impossible_WatchCancelled);
 
 	private final int type;
 

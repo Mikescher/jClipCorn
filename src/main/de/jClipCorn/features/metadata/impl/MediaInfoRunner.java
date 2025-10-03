@@ -133,6 +133,7 @@ public class MediaInfoRunner extends MetadataRunner {
 						break;
 					case "Menu":
 					case "Other":
+					case "Image":
 						// Ignored
 						break;
 					default:

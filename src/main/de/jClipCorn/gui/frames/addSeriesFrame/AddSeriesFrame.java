@@ -55,6 +55,19 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		(new ParseOnlineDialog(this, movielist, this, CCDBElementTyp.SERIES)).setVisible(true);
 	}
 
+	private void onSearchInBrowser(ActionEvent e)
+	{
+		String title = edTitle.getText();
+		if (title == null || title.trim().isEmpty()) {
+			return;
+		}
+
+		for (CCOnlineRefType refType : CCOnlineRefType.values()) {
+			String searchURL = refType.getSearchURL(title);
+			if (searchURL != null) de.jClipCorn.util.http.HTTPUtilities.openInBrowser(searchURL);
+		}
+	}
+
 	private void onOK(ActionEvent e)
 	{
 		try
@@ -281,6 +294,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
         label4 = new JLabel();
         cbxGenre0 = new CCEnumComboBox<>(CCGenre.getWrapper());
         button3 = new JButton();
+        btnSearchInBrowser = new JButton();
         edCvrControl = new EditCoverControl(this, this);
         label5 = new JLabel();
         cbxGenre1 = new CCEnumComboBox<>(CCGenre.getWrapper());
@@ -311,7 +325,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
         var contentPane = getContentPane();
         contentPane.setLayout(new FormLayout(
             "$rgap, default, $ugap, default:grow, $lcgap, 13dlu, 2*(default, $lcgap), default:grow, $lcgap", //$NON-NLS-1$
-            "2*($rgap, default), $lgap, default, 30dlu, $ugap, 8*(default, $lgap), 10dlu, 2*($lgap, default), $lgap, 0dlu:grow, default, $lgap")); //$NON-NLS-1$
+            "2*($rgap, default), $lgap, default, 20dlu, 1dlu, 20dlu, $ugap, 8*(default, $lgap), 10dlu, 2*($lgap, default), $lgap, 0dlu:grow, default, $lgap")); //$NON-NLS-1$
 
         //---- label1 ----
         label1.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
@@ -340,60 +354,65 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 
         //---- label4 ----
         label4.setText(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
-        contentPane.add(label4, CC.xy(2, 9));
-        contentPane.add(cbxGenre0, CC.xy(4, 9));
+        contentPane.add(label4, CC.xy(2, 11));
+        contentPane.add(cbxGenre0, CC.xy(4, 11));
 
         //---- button3 ----
         button3.setText(LocaleBundle.getString("AddSeriesFrame.btnParse.text")); //$NON-NLS-1$
         button3.setFont(button3.getFont().deriveFont(button3.getFont().getStyle() | Font.BOLD, button3.getFont().getSize() + 3f));
         button3.addActionListener(e -> onParseOnline(e));
         contentPane.add(button3, CC.xywh(9, 7, 3, 1, CC.DEFAULT, CC.FILL));
-        contentPane.add(edCvrControl, CC.xywh(11, 9, 1, 19, CC.RIGHT, CC.TOP));
+
+        //---- btnSearchInBrowser ----
+        btnSearchInBrowser.setText(LocaleBundle.getString("AddSeriesFrame.btnSearchInBrowser.text")); //$NON-NLS-1$
+        btnSearchInBrowser.addActionListener(e -> onSearchInBrowser(e));
+        contentPane.add(btnSearchInBrowser, CC.xywh(9, 9, 3, 1, CC.DEFAULT, CC.FILL));
+        contentPane.add(edCvrControl, CC.xywh(11, 11, 1, 19, CC.RIGHT, CC.TOP));
 
         //---- label5 ----
         label5.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
-        contentPane.add(label5, CC.xy(2, 11));
-        contentPane.add(cbxGenre1, CC.xy(4, 11));
+        contentPane.add(label5, CC.xy(2, 13));
+        contentPane.add(cbxGenre1, CC.xy(4, 13));
 
         //---- label6 ----
         label6.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
-        contentPane.add(label6, CC.xy(2, 13));
-        contentPane.add(cbxGenre2, CC.xy(4, 13));
+        contentPane.add(label6, CC.xy(2, 15));
+        contentPane.add(cbxGenre2, CC.xy(4, 15));
 
         //---- label7 ----
         label7.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
-        contentPane.add(label7, CC.xy(2, 15));
-        contentPane.add(cbxGenre3, CC.xy(4, 15));
+        contentPane.add(label7, CC.xy(2, 17));
+        contentPane.add(cbxGenre3, CC.xy(4, 17));
 
         //---- label8 ----
         label8.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
-        contentPane.add(label8, CC.xy(2, 17));
-        contentPane.add(cbxGenre4, CC.xy(4, 17));
+        contentPane.add(label8, CC.xy(2, 19));
+        contentPane.add(cbxGenre4, CC.xy(4, 19));
 
         //---- label9 ----
         label9.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
-        contentPane.add(label9, CC.xy(2, 19));
-        contentPane.add(cbxGenre5, CC.xy(4, 19));
+        contentPane.add(label9, CC.xy(2, 21));
+        contentPane.add(cbxGenre5, CC.xy(4, 21));
 
         //---- label10 ----
         label10.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
-        contentPane.add(label10, CC.xy(2, 21));
-        contentPane.add(cbxGenre6, CC.xy(4, 21));
+        contentPane.add(label10, CC.xy(2, 23));
+        contentPane.add(cbxGenre6, CC.xy(4, 23));
 
         //---- label11 ----
         label11.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
-        contentPane.add(label11, CC.xy(2, 23));
-        contentPane.add(cbxGenre7, CC.xy(4, 23));
+        contentPane.add(label11, CC.xy(2, 25));
+        contentPane.add(cbxGenre7, CC.xy(4, 25));
 
         //---- lblAnimeSeason ----
         lblAnimeSeason.setText(LocaleBundle.getString("AddSeriesFrame.lblAnimeSeason.text")); //$NON-NLS-1$
-        contentPane.add(lblAnimeSeason, CC.xy(2, 27));
-        contentPane.add(edAnimeSeason, CC.xy(4, 27));
+        contentPane.add(lblAnimeSeason, CC.xy(2, 29));
+        contentPane.add(edAnimeSeason, CC.xy(4, 29));
 
         //---- lblAnimeStudio ----
         lblAnimeStudio.setText(LocaleBundle.getString("AddSeriesFrame.lblAnimeStudio.text")); //$NON-NLS-1$
-        contentPane.add(lblAnimeStudio, CC.xy(2, 29));
-        contentPane.add(edAnimeStudio, CC.xy(4, 29));
+        contentPane.add(lblAnimeStudio, CC.xy(2, 31));
+        contentPane.add(edAnimeStudio, CC.xy(4, 31));
 
         //======== panel1 ========
         {
@@ -409,8 +428,8 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
             button2.addActionListener(e -> onCancel(e));
             panel1.add(button2);
         }
-        contentPane.add(panel1, CC.xywh(2, 32, 10, 1));
-        pack();
+        contentPane.add(panel1, CC.xywh(2, 34, 10, 1));
+        setSize(875, 800);
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
@@ -428,6 +447,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
     private JLabel label4;
     private CCEnumComboBox<CCGenre> cbxGenre0;
     private JButton button3;
+    private JButton btnSearchInBrowser;
     private EditCoverControl edCvrControl;
     private JLabel label5;
     private CCEnumComboBox<CCGenre> cbxGenre1;

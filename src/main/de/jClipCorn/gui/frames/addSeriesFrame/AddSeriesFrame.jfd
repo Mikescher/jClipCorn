@@ -8,13 +8,14 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "relgap, default, unrelgap, default:grow, labelcompgap, 13dlu, default, labelcompgap, default, labelcompgap, default:grow, labelcompgap"
-			"$rowSpecs": "relgap, default, relgap, default, linegap, default, 30dlu, unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 10dlu, linegap, default, linegap, default, linegap, 0dlu:grow, default, linegap"
+			"$rowSpecs": "relgap, default, relgap, default, linegap, default, 20dlu, 1dlu, 20dlu, unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 10dlu, linegap, default, linegap, default, linegap, 0dlu:grow, default, linegap"
 		} ) {
 			name: "this"
 			"title": new FormMessage( null, "AddSeriesFrame.this.title" )
 			"defaultCloseOperation": 2
 			"minimumSize": sfield com.jformdesigner.model.FormObject NULL_VALUE
 			"$locationPolicy": 2
+			"$sizePolicy": 1
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label1"
 				"text": new FormMessage( null, "AddMovieFrame.label_1.text" )
@@ -99,7 +100,7 @@ new FormModel {
 				"text": new FormMessage( null, "AddMovieFrame.lblGenre.text" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 9
+				"gridY": 11
 			} )
 			add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
 				name: "cbxGenre0"
@@ -109,7 +110,7 @@ new FormModel {
 				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 4
-				"gridY": 9
+				"gridY": 11
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "button3"
@@ -122,6 +123,16 @@ new FormModel {
 				"gridWidth": 3
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnSearchInBrowser"
+				"text": new FormMessage( null, "AddSeriesFrame.btnSearchInBrowser.text" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onSearchInBrowser", true ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 9
+				"gridY": 9
+				"gridWidth": 3
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
 			add( new FormContainer( "de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl", new FormLayoutManager( class javax.swing.JLayeredPane ) ) {
 				name: "edCvrControl"
 				auxiliary() {
@@ -129,7 +140,7 @@ new FormModel {
 				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 11
-				"gridY": 9
+				"gridY": 11
 				"gridHeight": 19
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
@@ -139,7 +150,7 @@ new FormModel {
 				"text": new FormMessage( null, "AddMovieFrame.lblGenre_1.text" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 11
+				"gridY": 13
 			} )
 			add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
 				name: "cbxGenre1"
@@ -148,7 +159,7 @@ new FormModel {
 					"JavaCodeGenerator.customCreateCode": "new CCEnumComboBox<>(CCGenre.getWrapper());"
 				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridY": 11
+				"gridY": 13
 				"gridX": 4
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -156,7 +167,7 @@ new FormModel {
 				"text": new FormMessage( null, "AddMovieFrame.lblGenre_2.text" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 13
+				"gridY": 15
 			} )
 			add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
 				name: "cbxGenre2"
@@ -165,7 +176,7 @@ new FormModel {
 					"JavaCodeGenerator.customCreateCode": "new CCEnumComboBox<>(CCGenre.getWrapper());"
 				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridY": 13
+				"gridY": 15
 				"gridX": 4
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -173,7 +184,7 @@ new FormModel {
 				"text": new FormMessage( null, "AddMovieFrame.lblGenre_3.text" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 15
+				"gridY": 17
 			} )
 			add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
 				name: "cbxGenre3"
@@ -182,7 +193,7 @@ new FormModel {
 					"JavaCodeGenerator.customCreateCode": "new CCEnumComboBox<>(CCGenre.getWrapper());"
 				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridY": 15
+				"gridY": 17
 				"gridX": 4
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -190,7 +201,7 @@ new FormModel {
 				"text": new FormMessage( null, "AddMovieFrame.lblGenre_4.text" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 17
+				"gridY": 19
 			} )
 			add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
 				name: "cbxGenre4"
@@ -199,7 +210,7 @@ new FormModel {
 					"JavaCodeGenerator.customCreateCode": "new CCEnumComboBox<>(CCGenre.getWrapper());"
 				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridY": 17
+				"gridY": 19
 				"gridX": 4
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -207,7 +218,7 @@ new FormModel {
 				"text": new FormMessage( null, "AddMovieFrame.lblGenre_5.text" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 19
+				"gridY": 21
 			} )
 			add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
 				name: "cbxGenre5"
@@ -216,7 +227,7 @@ new FormModel {
 					"JavaCodeGenerator.customCreateCode": "new CCEnumComboBox<>(CCGenre.getWrapper());"
 				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridY": 19
+				"gridY": 21
 				"gridX": 4
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -224,7 +235,7 @@ new FormModel {
 				"text": new FormMessage( null, "AddMovieFrame.lblGenre_6.text" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 21
+				"gridY": 23
 			} )
 			add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
 				name: "cbxGenre6"
@@ -233,7 +244,7 @@ new FormModel {
 					"JavaCodeGenerator.customCreateCode": "new CCEnumComboBox<>(CCGenre.getWrapper());"
 				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridY": 21
+				"gridY": 23
 				"gridX": 4
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -241,7 +252,7 @@ new FormModel {
 				"text": new FormMessage( null, "AddMovieFrame.lblGenre_7.text" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 23
+				"gridY": 25
 			} )
 			add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
 				name: "cbxGenre7"
@@ -250,7 +261,7 @@ new FormModel {
 					"JavaCodeGenerator.customCreateCode": "new CCEnumComboBox<>(CCGenre.getWrapper());"
 				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridY": 23
+				"gridY": 25
 				"gridX": 4
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -258,7 +269,7 @@ new FormModel {
 				"text": new FormMessage( null, "AddSeriesFrame.lblAnimeSeason.text" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 27
+				"gridY": 29
 			} )
 			add( new FormComponent( "de.jClipCorn.gui.guiComponents.JAutoCompleteTextField" ) {
 				name: "edAnimeSeason"
@@ -267,14 +278,14 @@ new FormModel {
 				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 4
-				"gridY": 27
+				"gridY": 29
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "lblAnimeStudio"
 				"text": new FormMessage( null, "AddSeriesFrame.lblAnimeStudio.text" )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 29
+				"gridY": 31
 			} )
 			add( new FormComponent( "de.jClipCorn.gui.guiComponents.JAutoCompleteTextField" ) {
 				name: "edAnimeStudio"
@@ -283,7 +294,7 @@ new FormModel {
 				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 4
-				"gridY": 29
+				"gridY": 31
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
 				name: "panel1"
@@ -299,7 +310,7 @@ new FormModel {
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 32
+				"gridY": 34
 				"gridWidth": 10
 			} )
 		}, new FormLayoutConstraints( null ) {

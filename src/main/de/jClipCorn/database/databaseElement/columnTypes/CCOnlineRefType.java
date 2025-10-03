@@ -1,10 +1,5 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.Icon;
-
 import de.jClipCorn.database.util.CCOnlineRefTypeHelper;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
@@ -17,24 +12,29 @@ import de.jClipCorn.util.enumextension.IEnumWrapper;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.stream.CCStreams;
 
+import javax.swing.*;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @SuppressWarnings("nls")
 public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
-	NONE       (0,  "",     "CCOnlineRefType.NONE",        CCOnlineRefTypeHelper.REGEX_NONE, null,                                   Resources.ICN_REF_00, Resources.ICN_REF_00_BUTTON),
-	IMDB       (1,  "imdb", "CCOnlineRefType.IMDB",        CCOnlineRefTypeHelper.REGEX_IMDB, CCOnlineRefTypeHelper.REGEX_PASTE_IMDB, Resources.ICN_REF_01, Resources.ICN_REF_01_BUTTON),
-	AMAZON     (2,  "amzn", "CCOnlineRefType.AMAZON",      CCOnlineRefTypeHelper.REGEX_AMZN, null,                                   Resources.ICN_REF_02, Resources.ICN_REF_02_BUTTON),
-	MOVIEPILOT (3,  "mvpt", "CCOnlineRefType.MOVIEPILOT",  CCOnlineRefTypeHelper.REGEX_MVPT, CCOnlineRefTypeHelper.REGEX_PASTE_MVPT, Resources.ICN_REF_03, Resources.ICN_REF_03_BUTTON),
-	THEMOVIEDB (4,  "tmdb", "CCOnlineRefType.THEMOVIEDB",  CCOnlineRefTypeHelper.REGEX_TMDB, CCOnlineRefTypeHelper.REGEX_PASTE_TMDB, Resources.ICN_REF_04, Resources.ICN_REF_04_BUTTON),
-	PROXERME   (5,  "prox", "CCOnlineRefType.PROXERME",    CCOnlineRefTypeHelper.REGEX_PROX, CCOnlineRefTypeHelper.REGEX_PASTE_PROX, Resources.ICN_REF_05, Resources.ICN_REF_05_BUTTON),
-	MYANIMELIST(6,  "myal", "CCOnlineRefType.MYANIMELIST", CCOnlineRefTypeHelper.REGEX_MYAL, CCOnlineRefTypeHelper.REGEX_PASTE_MYAL, Resources.ICN_REF_06, Resources.ICN_REF_06_BUTTON),
-	ANILIST    (7,  "anil", "CCOnlineRefType.ANILIST",     CCOnlineRefTypeHelper.REGEX_ANIL, CCOnlineRefTypeHelper.REGEX_PASTE_ANIL, Resources.ICN_REF_07, Resources.ICN_REF_07_BUTTON),
-	ANIMEPLANET(8,  "anpl", "CCOnlineRefType.ANIMEPLANET", CCOnlineRefTypeHelper.REGEX_ANPL, CCOnlineRefTypeHelper.REGEX_PASTE_ANPL, Resources.ICN_REF_08, Resources.ICN_REF_08_BUTTON),
-	KITSU      (9,  "kisu", "CCOnlineRefType.KITSU",       CCOnlineRefTypeHelper.REGEX_KISU, CCOnlineRefTypeHelper.REGEX_PASTE_KISU, Resources.ICN_REF_09, Resources.ICN_REF_09_BUTTON),
-	ANIDB      (10, "andb", "CCOnlineRefType.ANIDB",       CCOnlineRefTypeHelper.REGEX_ANDB, CCOnlineRefTypeHelper.REGEX_PASTE_ANDB, Resources.ICN_REF_10, Resources.ICN_REF_10_BUTTON),
-	THETVDB    (11, "tvdb", "CCOnlineRefType.THETVDB",     CCOnlineRefTypeHelper.REGEX_TVDB, CCOnlineRefTypeHelper.REGEX_PASTE_TVDB, Resources.ICN_REF_11, Resources.ICN_REF_11_BUTTON),
-	TVMAZE     (12, "maze", "CCOnlineRefType.TVMAZE",      CCOnlineRefTypeHelper.REGEX_MAZE, CCOnlineRefTypeHelper.REGEX_PASTE_MAZE, Resources.ICN_REF_12, Resources.ICN_REF_12_BUTTON),
-	WIKIDE     (13, "wkde", "CCOnlineRefType.WIKIDE",      CCOnlineRefTypeHelper.REGEX_WKDE, CCOnlineRefTypeHelper.REGEX_PASTE_WKDE, Resources.ICN_REF_13, Resources.ICN_REF_13_BUTTON),
-	WIKIEN     (14, "wken", "CCOnlineRefType.WIKIEN",      CCOnlineRefTypeHelper.REGEX_WKEN, CCOnlineRefTypeHelper.REGEX_PASTE_WKEN, Resources.ICN_REF_14, Resources.ICN_REF_14_BUTTON),
-	OFDB       (15, "ofdb", "CCOnlineRefType.OFDB",        CCOnlineRefTypeHelper.REGEX_OFDB, CCOnlineRefTypeHelper.REGEX_PASTE_OFDB, Resources.ICN_REF_15, Resources.ICN_REF_15_BUTTON);
+	NONE       (0,  "",     "CCOnlineRefType.NONE",        CCOnlineRefTypeHelper.REGEX_NONE, null,                                   Resources.ICN_REF_00, Resources.ICN_REF_00_BUTTON, null),
+	IMDB       (1,  "imdb", "CCOnlineRefType.IMDB",        CCOnlineRefTypeHelper.REGEX_IMDB, CCOnlineRefTypeHelper.REGEX_PASTE_IMDB, Resources.ICN_REF_01, Resources.ICN_REF_01_BUTTON, "https://www.imdb.com/find/?q={{title}}"),
+	AMAZON     (2,  "amzn", "CCOnlineRefType.AMAZON",      CCOnlineRefTypeHelper.REGEX_AMZN, null,                                   Resources.ICN_REF_02, Resources.ICN_REF_02_BUTTON, null),
+	MOVIEPILOT (3,  "mvpt", "CCOnlineRefType.MOVIEPILOT",  CCOnlineRefTypeHelper.REGEX_MVPT, CCOnlineRefTypeHelper.REGEX_PASTE_MVPT, Resources.ICN_REF_03, Resources.ICN_REF_03_BUTTON, null),
+	THEMOVIEDB (4,  "tmdb", "CCOnlineRefType.THEMOVIEDB",  CCOnlineRefTypeHelper.REGEX_TMDB, CCOnlineRefTypeHelper.REGEX_PASTE_TMDB, Resources.ICN_REF_04, Resources.ICN_REF_04_BUTTON, "https://www.themoviedb.org/search?query={{title}}"),
+	PROXERME   (5,  "prox", "CCOnlineRefType.PROXERME",    CCOnlineRefTypeHelper.REGEX_PROX, CCOnlineRefTypeHelper.REGEX_PASTE_PROX, Resources.ICN_REF_05, Resources.ICN_REF_05_BUTTON, "https://proxer.me/search?name={{title}}"),
+	MYANIMELIST(6,  "myal", "CCOnlineRefType.MYANIMELIST", CCOnlineRefTypeHelper.REGEX_MYAL, CCOnlineRefTypeHelper.REGEX_PASTE_MYAL, Resources.ICN_REF_06, Resources.ICN_REF_06_BUTTON, "https://myanimelist.net/anime.php?q={{title}}"),
+	ANILIST    (7,  "anil", "CCOnlineRefType.ANILIST",     CCOnlineRefTypeHelper.REGEX_ANIL, CCOnlineRefTypeHelper.REGEX_PASTE_ANIL, Resources.ICN_REF_07, Resources.ICN_REF_07_BUTTON, "https://anilist.co/search/anime?search={{title}}"),
+	ANIMEPLANET(8,  "anpl", "CCOnlineRefType.ANIMEPLANET", CCOnlineRefTypeHelper.REGEX_ANPL, CCOnlineRefTypeHelper.REGEX_PASTE_ANPL, Resources.ICN_REF_08, Resources.ICN_REF_08_BUTTON, "https://www.anime-planet.com/anime/all?name={{title}}"),
+	KITSU      (9,  "kisu", "CCOnlineRefType.KITSU",       CCOnlineRefTypeHelper.REGEX_KISU, CCOnlineRefTypeHelper.REGEX_PASTE_KISU, Resources.ICN_REF_09, Resources.ICN_REF_09_BUTTON, "https://kitsu.io/anime?text={{title}}"),
+	ANIDB      (10, "andb", "CCOnlineRefType.ANIDB",       CCOnlineRefTypeHelper.REGEX_ANDB, CCOnlineRefTypeHelper.REGEX_PASTE_ANDB, Resources.ICN_REF_10, Resources.ICN_REF_10_BUTTON, "https://anidb.net/perl-bin/animedb.pl?adb.search={{title}}&do.search=1"),
+	THETVDB    (11, "tvdb", "CCOnlineRefType.THETVDB",     CCOnlineRefTypeHelper.REGEX_TVDB, CCOnlineRefTypeHelper.REGEX_PASTE_TVDB, Resources.ICN_REF_11, Resources.ICN_REF_11_BUTTON, null),
+	TVMAZE     (12, "maze", "CCOnlineRefType.TVMAZE",      CCOnlineRefTypeHelper.REGEX_MAZE, CCOnlineRefTypeHelper.REGEX_PASTE_MAZE, Resources.ICN_REF_12, Resources.ICN_REF_12_BUTTON, null),
+	WIKIDE     (13, "wkde", "CCOnlineRefType.WIKIDE",      CCOnlineRefTypeHelper.REGEX_WKDE, CCOnlineRefTypeHelper.REGEX_PASTE_WKDE, Resources.ICN_REF_13, Resources.ICN_REF_13_BUTTON, null),
+	WIKIEN     (14, "wken", "CCOnlineRefType.WIKIEN",      CCOnlineRefTypeHelper.REGEX_WKEN, CCOnlineRefTypeHelper.REGEX_PASTE_WKEN, Resources.ICN_REF_14, Resources.ICN_REF_14_BUTTON, null),
+	OFDB       (15, "ofdb", "CCOnlineRefType.OFDB",        CCOnlineRefTypeHelper.REGEX_OFDB, CCOnlineRefTypeHelper.REGEX_PASTE_OFDB, Resources.ICN_REF_15, Resources.ICN_REF_15_BUTTON, null);
 
 	private final int id;
 	private final String identifier;
@@ -43,10 +43,11 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	private final Pattern regexPaste;
 	private final MultiSizeIconRef icon;
 	private final IconRef iconButton;
+	private final String searchURL;
 
 	private static final EnumWrapper<CCOnlineRefType> wrapper = new EnumWrapper<>(NONE);
 
-	CCOnlineRefType(int refid, String strid, String bundleid, Pattern regex_value, Pattern regex_paste, MultiSizeIconRef icnSquare, IconRef icnButton) {
+	CCOnlineRefType(int refid, String strid, String bundleid, Pattern regex_value, Pattern regex_paste, MultiSizeIconRef icnSquare, IconRef icnButton, String searchurl) {
 		id                = refid;
 		identifier        = strid;
 		name              = LocaleBundle.getString(bundleid);
@@ -54,6 +55,7 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 		regexPaste        = regex_paste;
 		icon              = icnSquare;
 		iconButton        = icnButton;
+		searchURL         = searchurl;
 	}
 	
 	public static EnumWrapper<CCOnlineRefType> getWrapper() {
@@ -140,5 +142,10 @@ public enum CCOnlineRefType implements ContinoousEnum<CCOnlineRefType> {
 	@Override
 	public CCOnlineRefType[] evalues() {
 		return CCOnlineRefType.values();
+	}
+
+	public String getSearchURL(String title) {
+		if (searchURL == null) return null;
+		return searchURL.replace("{{title}}", java.net.URLEncoder.encode(title, StandardCharsets.UTF_8));
 	}
 }

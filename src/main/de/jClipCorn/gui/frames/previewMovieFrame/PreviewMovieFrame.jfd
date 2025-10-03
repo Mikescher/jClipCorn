@@ -176,6 +176,8 @@ new FormModel {
 					} )
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageSetDisplay" ) {
 						name: "lblLanguage"
+						"doCalculatePrefSize": true
+						"maxIconsPerRow": 16
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
 						"gridY": 10
@@ -191,6 +193,8 @@ new FormModel {
 					} )
 					add( new FormComponent( "de.jClipCorn.gui.guiComponents.language.LanguageListDisplay" ) {
 						name: "lblSubtitles"
+						"doCalculatePrefSize": true
+						"maxIconsPerRow": 16
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 6
 						"gridY": 12

@@ -684,7 +684,8 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
             pnlInfo.add(label7, CC.xy(1, 13, CC.DEFAULT, CC.TOP));
 
             //---- ctrlLang ----
-            ctrlLang.setDoCalculatePrefSize(true);
+			ctrlLang.setDoCalculatePrefSize(true);
+			ctrlLang.setMaxIconsPerRow(16);
             pnlInfo.add(ctrlLang, CC.xy(3, 13, CC.FILL, CC.FILL));
 
             //---- label10 ----

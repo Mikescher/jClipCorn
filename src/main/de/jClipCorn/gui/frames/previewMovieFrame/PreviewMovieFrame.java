@@ -555,11 +555,19 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
                 //---- label5 ----
                 label5.setText(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
                 pnlTabMain.add(label5, CC.xy(2, 10));
+
+                //---- lblLanguage ----
+                lblLanguage.setDoCalculatePrefSize(true);
+                lblLanguage.setMaxIconsPerRow(16);
                 pnlTabMain.add(lblLanguage, CC.xywh(6, 10, 3, 1, CC.DEFAULT, CC.FILL));
 
                 //---- label7 ----
                 label7.setText(LocaleBundle.getString("PreviewMovieFrame.lblSubs")); //$NON-NLS-1$
                 pnlTabMain.add(label7, CC.xy(2, 12));
+
+                //---- lblSubtitles ----
+                lblSubtitles.setDoCalculatePrefSize(true);
+                lblSubtitles.setMaxIconsPerRow(16);
                 pnlTabMain.add(lblSubtitles, CC.xywh(6, 12, 3, 1, CC.DEFAULT, CC.FILL));
 
                 //---- label6 ----

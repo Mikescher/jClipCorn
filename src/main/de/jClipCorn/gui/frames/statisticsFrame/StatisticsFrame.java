@@ -46,6 +46,8 @@ public class StatisticsFrame extends JCCFrame
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_STATISTICSFRAME.applyOrSkip(this);
+
 		DefaultListModel<SeriesCheckBoxList.SeriesCheckBoxListElement> seriesListModel = new DefaultListModel<>();
 		seriesListModel.addElement(new SeriesCheckBoxList.SeriesCheckBoxListElement());
 		for (CCSeries ser : movielist.iteratorSeriesSorted()) {

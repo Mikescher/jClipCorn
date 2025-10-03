@@ -72,6 +72,8 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 	{
 		_activeFrames.add(Tuple.Create(movie, this));
 
+		ccprops().PROP_FSIZE_PREVIEWMOVIEFRAME.applyOrSkip(this);
+
 		setJMenuBar(new PreviewMovieMenuBar(this, movie, this::updateData));
 
 		updateData();

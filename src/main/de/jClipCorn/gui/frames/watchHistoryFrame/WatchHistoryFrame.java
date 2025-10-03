@@ -64,6 +64,8 @@ public class WatchHistoryFrame extends JCCFrame {
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_WATCHHISTORYFRAME.applyOrSkip(this);
+
 		listHistory.setCellRenderer(new WatchHistoryListCellRenderer());
 
 		treeTimespanRoot = new SimpleTreeNode();

@@ -1,13 +1,12 @@
 package de.jClipCorn.gui.frames.scanFolderFrame;
 
-import java.awt.event.*;
-import com.jgoodies.forms.factories.*;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
-import de.jClipCorn.gui.guiComponents.jSplitButton.*;
+import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -18,6 +17,9 @@ import de.jClipCorn.util.helper.SwingUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class ScanFolderFrame extends JCCFrame
@@ -44,6 +46,8 @@ public class ScanFolderFrame extends JCCFrame
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_SCANFOLDERFRAME.applyOrSkip(this);
+
 		cbIncludeSeries.setSelected(ccprops().PROP_SCANFOLDER_INCLUDESERIES.getValue());
 		cbExcludeIfo.setSelected(ccprops().PROP_SCANFOLDER_EXCLUDEIFOS.getValue());
 

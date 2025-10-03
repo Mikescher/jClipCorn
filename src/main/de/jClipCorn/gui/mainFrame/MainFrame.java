@@ -83,7 +83,7 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 
 		if (CCLog.hasErrors()) coverImage.setModeError();
 
-		setSize(ccprops().PROP_MAINFRAME_WIDTH.getValue(), ccprops().PROP_MAINFRAME_HEIGHT.getValue());
+		ccprops().PROP_FSIZE_MAINFRAME.applyOrPack(this);
 
 		clipTable.configureColumnVisibility(ccprops().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), true);
 

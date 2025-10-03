@@ -50,6 +50,8 @@ public abstract class AutomaticSettingsFrame extends JCCFrame {
 		initGUI();
 		
 		setLocationRelativeTo(owner);
+
+		ccprops().PROP_FSIZE_SETTINGSFRAME.applyOrSkip(this);
 		
 		setValues();
 	}

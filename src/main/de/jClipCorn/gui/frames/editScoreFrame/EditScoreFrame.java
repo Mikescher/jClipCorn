@@ -31,6 +31,8 @@ public class EditScoreFrame extends JCCFrame
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_EDITSCOREFRAME.applyOrSkip(this);
+
 		this.cbxScore.setSelectedEnum(element.score().get());
 		this.memoComment.setText(element.scoreComment().get());
 		this.lblScoreIcon.setIcon(cbxScore.getSelectedEnum().getIcon(false));

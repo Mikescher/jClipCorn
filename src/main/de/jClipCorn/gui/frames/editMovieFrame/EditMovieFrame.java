@@ -88,6 +88,8 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_EDITMOVIEFRAME.applyOrSkip(this);
+
 		setDefaultValues();
 		initFileChooser();
 		initFields();

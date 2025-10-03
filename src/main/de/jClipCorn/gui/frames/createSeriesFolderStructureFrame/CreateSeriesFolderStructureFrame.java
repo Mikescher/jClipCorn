@@ -43,6 +43,8 @@ public class CreateSeriesFolderStructureFrame extends JCCFrame
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_CREATESERIESFOLDERSTRUCTUREFRAME.applyOrSkip(this);
+
 		lblCover.setAndResizeCover(series.getCover());
 		lblTitle.setText(series.getTitle());
 		edCommonPath.setText(series.getCommonPathStart(false).toFSPath(this).toString());

@@ -45,6 +45,8 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_ADDSERIESFRAME.applyOrSkip(this);
+
 		cbxFSK.setSelectedEnum(CCOptionalFSK.NULL);
 	}
 

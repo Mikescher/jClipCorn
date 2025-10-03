@@ -64,7 +64,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 
 	private void postInit()
 	{
-		//
+		ccprops().PROP_FSIZE_DATABASEHISTORYFRAME.applyOrSkip(this);
 	}
 
 	private void updateUI(boolean updateCount)

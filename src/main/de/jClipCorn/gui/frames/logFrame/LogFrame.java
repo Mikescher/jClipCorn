@@ -49,6 +49,8 @@ public class LogFrame extends JCCFrame implements CCLogChangedListener
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_LOGFRAME.applyOrSkip(this);
+
 		updateTabHeader();
 
 		var modError = new LogListModel(lsErrors, CCLogType.LOG_ELEM_ERROR, memoErrorsText, memoErrorsTrace);

@@ -113,6 +113,8 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_PREVIEWSERIESFRAME.applyOrSkip(this);
+
 		_activeFrames.add(Tuple.Create(series, this));
 
 		setJMenuBar(new PreviewSeriesMenuBar(this, this.series, () -> onUpdate(null)));
@@ -801,7 +803,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
             pnlMain.add(tabSeason, CC.xywh(2, 4, 5, 1, CC.FILL, CC.FILL));
         }
         contentPane.add(pnlMain, CC.xy(4, 4, CC.FILL, CC.FILL));
-        setSize(movielist.ccprops().PROP_PREVIEWSERIESFRAME_WIDTH.getValue(), 1187);
+
         setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}

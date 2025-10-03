@@ -95,6 +95,8 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_ADDMOVIEFRAME.applyOrSkip(this);
+
 		initFileChooser();
 		setDefaultValues();
 

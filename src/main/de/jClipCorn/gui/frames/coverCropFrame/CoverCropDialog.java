@@ -86,6 +86,8 @@ public class CoverCropDialog extends JCCFrame
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_COVERCROPFRAME.applyOrSkip(this);
+
 		var dBig = new Dimension(ImageUtilities.BASE_COVER_WIDTH, ImageUtilities.BASE_COVER_HEIGHT);
 		lblCoverPreviewBig.setPreferredSize(dBig);
 		lblCoverPreviewBig.setMinimumSize(dBig);

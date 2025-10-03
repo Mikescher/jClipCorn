@@ -11,6 +11,7 @@ import de.jClipCorn.properties.impl.*;
 import de.jClipCorn.properties.property.*;
 import de.jClipCorn.properties.property.CCEnumSetProperty.EnumSetValue;
 import de.jClipCorn.properties.property.CCFSPathProperty.CCPathPropertyMode;
+import de.jClipCorn.properties.types.FrameSizeVar;
 import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.properties.types.PathSyntaxVar;
 import de.jClipCorn.util.DriveMap;
@@ -33,20 +34,21 @@ import java.util.*;
 public class CCProperties implements ICCPropertySource {
 	private final static String HEADER = "jClipCorn Configuration File"; //$NON-NLS-1$
 	
-	public final static CCPropertyCategory NONVISIBLE			= new CCPropertyCategory();
-	public final static CCPropertyCategory CAT_COMMON 			= new CCPropertyCategory(0,  "COMMON");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_VIEW 			= new CCPropertyCategory(1,  "VIEW");         //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_DATABASE 		= new CCPropertyCategory(2,  "DATABASE");     //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_PARSER	 		= new CCPropertyCategory(3,  "PARSER");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_MOVIES	 		= new CCPropertyCategory(4,  "MOVIES");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_SERIES 			= new CCPropertyCategory(5,  "SERIES");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_PLAY 			= new CCPropertyCategory(6,  "PLAY");         //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_TOOLS 			= new CCPropertyCategory(7,  "TOOLS");        //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_BACKUP 			= new CCPropertyCategory(8,  "BACKUP");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_STATUSBAR		= new CCPropertyCategory(9,  "STATUSBAR");    //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_PATHSYNTAX 		= new CCPropertyCategory(10, "PATHSYNTAX");   //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_OTHERFRAMES 		= new CCPropertyCategory(11, "OTHERFRAMES");  //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_KEYSTROKES 		= new CCPropertyCategory(12, "KEYSTROKES");   //$NON-NLS-1$
+	public final static CCPropertyCategory NONVISIBLE        = new CCPropertyCategory();
+	public final static CCPropertyCategory CAT_COMMON        = new CCPropertyCategory(0,  "COMMON");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_VIEW          = new CCPropertyCategory(1,  "VIEW");         //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_DATABASE      = new CCPropertyCategory(2,  "DATABASE");     //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_PARSER        = new CCPropertyCategory(3,  "PARSER");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_MOVIES        = new CCPropertyCategory(4,  "MOVIES");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_SERIES        = new CCPropertyCategory(5,  "SERIES");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_PLAY          = new CCPropertyCategory(6,  "PLAY");         //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_TOOLS         = new CCPropertyCategory(7,  "TOOLS");        //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_BACKUP        = new CCPropertyCategory(8,  "BACKUP");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_STATUSBAR     = new CCPropertyCategory(9,  "STATUSBAR");    //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_PATHSYNTAX    = new CCPropertyCategory(10, "PATHSYNTAX");   //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_OTHERFRAMES   = new CCPropertyCategory(11, "OTHERFRAMES");  //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_FRAMESIZES    = new CCPropertyCategory(12, "FRAMESIZES");  //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_KEYSTROKES    = new CCPropertyCategory(13, "KEYSTROKES");   //$NON-NLS-1$
 	
 	public final static CCPropertyCategory[] CATEGORIES = {
 		CAT_COMMON,
@@ -61,7 +63,8 @@ public class CCProperties implements ICCPropertySource {
 		CAT_STATUSBAR,
 		CAT_PATHSYNTAX,
 		CAT_OTHERFRAMES,
-		CAT_KEYSTROKES 	
+		CAT_FRAMESIZES,
+		CAT_KEYSTROKES
 	};
 	
 	@SuppressWarnings("nls")
@@ -148,8 +151,6 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_VALIDATE_CHECK_SERIES_STRUCTURE;
 	public CCBoolProperty                                   PROP_MAINFRAME_DONT_FILTER_WATCHNEVER;
 	public CCBoolProperty                                   PROP_SHOW_PARTIAL_VIEWED_STATE;
-	public CCPIntProperty                                   PROP_MAINFRAME_WIDTH;
-	public CCPIntProperty                                   PROP_MAINFRAME_HEIGHT;
 	public CCSeasonRegexListProperty                        PROP_SEASON_INDEX_REGEXPRESSIONS;
 	public CCPIntProperty                                   PROP_STATISTICS_TIMELINEGRAVITY;
 	public CCEnumProperty<CCDatabaseDriver>                 PROP_DATABASE_DRIVER;
@@ -230,7 +231,27 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_SERIESTABLE_INSTANTTOOLTIPS;
 	public CCBoolProperty                                   PROP_SERIESTABLE_INFINITETOOLTIPS;
 	public CCBoolProperty                                   PROP_PREVSERIES_SMALLER_COVER;
-	public CCPIntProperty                                   PROP_PREVIEWSERIESFRAME_WIDTH;
+	public CCBoolProperty                                   PROP_FSIZE_DEBUG;
+	public CCFrameSizeProperty                              PROP_FSIZE_MAINFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_ADDMOVIEFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_ADDSEASONFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_ADDSERIESFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_BATCHEDITFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_COVERCROPFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_CREATESERIESFOLDERSTRUCTUREFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_DATABASEHISTORYFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_EDITMOVIEFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_EDITSCOREFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_EDITSERIESFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_LOGFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_MOVESERIESFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_PARSEONLINEFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_PREVIEWSERIESFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_PREVIEWMOVIEFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_SCANFOLDERFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_SETTINGSFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_STATISTICSFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_WATCHHISTORYFRAME;
 
 	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public boolean ARG_READONLY = false;
@@ -411,8 +432,6 @@ public class CCProperties implements ICCPropertySource {
 		PROP_IMPORT_RESETTAGS                   = new CCBoolProperty(NONVISIBLE,            this,   "PROP_IMPORT_RESETTAGS",                    true);
 		PROP_PARSEIMDB_LANGUAGE                 = new CCRIntProperty(NONVISIBLE,            this,   "PROP_PARSEIMDB_LANGUAGE",                  1,                                  2);
 		PROP_STATISTICS_INTERACTIVECHARTS       = new CCBoolProperty(NONVISIBLE,            this,   "PROP_STATISTICS_INTERACTIVECHARTS",        false);
-		PROP_MAINFRAME_WIDTH                    = new CCPIntProperty(NONVISIBLE,            this,   "PROP_MAINFRAME_WIDTH",                     875);
-		PROP_MAINFRAME_HEIGHT                   = new CCPIntProperty(NONVISIBLE,            this,   "PROP_MAINFRAME_HEIGHT",                    getDefMFHeight());
 		PROP_DATABASE_DRIVER                    = new CCEnumProperty<>(NONVISIBLE,          this,   "PROP_DATABASE_DRIVER",                     CCDatabaseDriver.SQLITE,            CCDatabaseDriver.getWrapper());
 		PROP_SHOW_EXTENDED_FEATURES             = new CCBoolProperty(NONVISIBLE,            this,   "PROP_SHOW_EXTENDED_FEATURES",              true);
 		PROP_DEBUG_USE_HTTPCACHE                = new CCBoolProperty(NONVISIBLE,            this,   "PROP_DEBUG_USE_HTTPCACHE",                 false);
@@ -440,7 +459,28 @@ public class CCProperties implements ICCPropertySource {
 		PROP_SERIESTABLE_INSTANTTOOLTIPS        = new CCBoolProperty(NONVISIBLE,            this,   "PROP_SERIESTABLE_INSTANTTOOLTIPS",         true);
 		PROP_SERIESTABLE_INFINITETOOLTIPS       = new CCBoolProperty(NONVISIBLE,            this,   "PROP_SERIESTABLE_INFINITETOOLTIPS",        true);
 		PROP_PREVSERIES_SMALLERCOVER_FACTOR     = new CCDoubleProperty(NONVISIBLE,          this,   "PROP_PREVSERIES_SMALLERCOVER_FACTOR",      0.95);
-		PROP_PREVIEWSERIESFRAME_WIDTH           = new CCPIntProperty(NONVISIBLE,            this,   "PROP_PREVIEWSERIESFRAME_WIDTH",            1300);
+
+		PROP_FSIZE_DEBUG                            = new CCBoolProperty(CAT_FRAMESIZES,        this,   "PROP_FSIZE_DEBUG",                            false);
+		PROP_FSIZE_MAINFRAME                        = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_MAINFRAME",                        new FrameSizeVar(1400, 1000));
+		PROP_FSIZE_ADDMOVIEFRAME                    = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_ADDMOVIEFRAME",                    new FrameSizeVar(1000, 1050));
+		PROP_FSIZE_ADDSEASONFRAME                   = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_ADDSEASONFRAME",                   new FrameSizeVar(600, 410));
+		PROP_FSIZE_ADDSERIESFRAME                   = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_ADDSERIESFRAME",                   new FrameSizeVar(900, 725));
+		PROP_FSIZE_BATCHEDITFRAME                   = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_BATCHEDITFRAME",                   new FrameSizeVar(1250, 850));
+		PROP_FSIZE_COVERCROPFRAME                   = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_COVERCROPFRAME",                   new FrameSizeVar(1500, 1000));
+		PROP_FSIZE_CREATESERIESFOLDERSTRUCTUREFRAME = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_CREATESERIESFOLDERSTRUCTUREFRAME", new FrameSizeVar(1200, 1000));
+		PROP_FSIZE_DATABASEHISTORYFRAME             = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_DATABASEHISTORYFRAME",             new FrameSizeVar(1400, 1000));
+		PROP_FSIZE_EDITMOVIEFRAME                   = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_EDITMOVIEFRAME",                   new FrameSizeVar(1150, 1250));
+		PROP_FSIZE_EDITSCOREFRAME                   = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_EDITSCOREFRAME",                   new FrameSizeVar(1200, 800));
+		PROP_FSIZE_EDITSERIESFRAME                  = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_EDITSERIESFRAME",                  new FrameSizeVar(1800, 1200));
+		PROP_FSIZE_LOGFRAME                         = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_LOGFRAME",                         new FrameSizeVar(1300, 900));
+		PROP_FSIZE_MOVESERIESFRAME                  = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_MOVESERIESFRAME",                  new FrameSizeVar(1500, 1200));
+		PROP_FSIZE_PARSEONLINEFRAME                 = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_PARSEONLINEFRAME",                 new FrameSizeVar(1350, 800));
+		PROP_FSIZE_PREVIEWSERIESFRAME               = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_PREVIEWSERIESFRAME",               new FrameSizeVar(1300, 1187));
+		PROP_FSIZE_PREVIEWMOVIEFRAME                = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_PREVIEWMOVIEFRAME",                new FrameSizeVar(1050, 900));
+		PROP_FSIZE_SCANFOLDERFRAME                  = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_SCANFOLDERFRAME",                  new FrameSizeVar(1000, 800));
+		PROP_FSIZE_SETTINGSFRAME                    = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_SETTINGSFRAME",                    new FrameSizeVar(1550, 1000));
+		PROP_FSIZE_STATISTICSFRAME                  = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_STATISTICSFRAME",                  new FrameSizeVar(1600, 1000));
+		PROP_FSIZE_WATCHHISTORYFRAME                = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_WATCHHISTORYFRAME",                new FrameSizeVar(1400, 1000));
 
 		PROP_ADD_MOVIE_RELATIVE_AUTO            = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",             true);
 		PROP_PATHSYNTAX_SELF                    = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELF",                     true);
@@ -529,10 +569,6 @@ public class CCProperties implements ICCPropertySource {
 	
 	private boolean getDefStatbarLength() {
 		return getDefTheme() != AppTheme.WINDOWS;
-	}
-	
-	private int getDefMFHeight() {
-			return (getDefTheme() == AppTheme.METAL) ? 670 : 660;
 	}
 
 	public void load(FSPath path) {

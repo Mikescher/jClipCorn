@@ -88,6 +88,8 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_BATCHEDITFRAME.applyOrSkip(this);
+
 		setTitle(LocaleBundle.getFormattedString("AddEpisodeFrame.this.title", target.getSeries().getTitle())); //$NON-NLS-1$
 		lblSeason.setText(target.title().get());
 	}

@@ -119,6 +119,8 @@ public class EditSeriesFrame extends JCCFrame
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_EDITSERIESFRAME.applyOrSkip(this);
+
 		setTitle(LocaleBundle.getFormattedString("EditSeriesFrame.this.title", series.getTitle())); //$NON-NLS-1$
 
 		lsSeasons.setCellRenderer(new HFixListCellRenderer());

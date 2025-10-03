@@ -66,6 +66,8 @@ public class ParseOnlineDialog extends JCCDialog
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_PARSEONLINEFRAME.applyOrSkip(this);
+
 		lsDBList.setCellRenderer(new ParseOnlineDialogRenderer());
 		lsDBList.setModel(mdlLsDBList = new DefaultListModel<>());
 		edSearchName.setText(owner.getFullTitle());

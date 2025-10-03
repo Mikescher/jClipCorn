@@ -45,13 +45,6 @@ public class CCMemoryCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public int getNewCoverID() {
-		int i = 0;
-		while(_elements.containsKey(i)) i++;
-		return i;
-	}
-
-	@Override
 	public void getBackupExclusions(List<String> excludedFolders, List<String> excludedFiles) {
 		// do nothing
 	}
@@ -89,7 +82,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 	@Override
 	public int addCover(BufferedImage newCover) {
 		try {
-			int cid = getNewCoverID();
+			int cid = _db.getNewCoverID();
 
 			String fname = ccprops().PROP_COVER_PREFIX.getValue() + StringUtils.leftPad(Integer.toString(cid), 5, '0') + '.' + ccprops().PROP_COVER_TYPE.getValue();
 

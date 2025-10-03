@@ -1305,8 +1305,6 @@ public class CCDatabase {
 				stmt.executeUpdate();
 			}
 
-			writeInformationToDB(DatabaseStructure.INFOKEY_LASTCOVERID, Integer.toString(cce.ID));
-
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
 			CCLog.addError(e);
@@ -1465,5 +1463,13 @@ public class CCDatabase {
 		}
 
 		return true;
+	}
+
+	public int getNewCoverID() throws SQLException {
+		// increment
+		stmts.newDatabaseCoverIDStatement1.execute();
+
+		// read back
+		return stmts.newDatabaseCoverIDStatement2.executeQueryInt(this);
 	}
 }

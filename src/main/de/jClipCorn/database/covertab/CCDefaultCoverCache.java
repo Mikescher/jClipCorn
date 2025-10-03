@@ -23,6 +23,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 
 public class CCDefaultCoverCache implements ICoverCache {
@@ -161,13 +162,14 @@ public class CCDefaultCoverCache implements ICoverCache {
 
 	@Override
 	public int addCover(BufferedImage newCover) {
-		int cid = getNewCoverID();
-
-		String fname = ccprops().PROP_COVER_PREFIX.getValue() + StringUtils.leftPad(Integer.toString(cid), 5, '0') + '.' + ccprops().PROP_COVER_TYPE.getValue();
-
-		CCLog.addDebug("addingCoverToFolder: " + fname); //$NON-NLS-1$
 
 		try {
+			int cid = _db.getNewCoverID();
+
+			String fname = ccprops().PROP_COVER_PREFIX.getValue() + StringUtils.leftPad(Integer.toString(cid), 5, '0') + '.' + ccprops().PROP_COVER_TYPE.getValue();
+
+			CCLog.addDebug("addingCoverToFolder: " + fname); //$NON-NLS-1$
+
 			var f = _coverPath.append(fname);
 			if (! f.exists()) {
 				ImageIO.write(newCover, ccprops().PROP_COVER_TYPE.getValue(), f.toFile());
@@ -196,7 +198,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 			}
 
 			return cid;
-		} catch (IOException | ColorQuantizerException | SQLWrapperException e) {
+		} catch (IOException | ColorQuantizerException | SQLWrapperException | SQLException e) {
 			CCLog.addError("LogMessage.ErrorCreatingCoverFile"); //$NON-NLS-1$
 			return -1;
 		}
@@ -247,13 +249,6 @@ public class CCDefaultCoverCache implements ICoverCache {
 	@Override
 	public boolean isCached(int cid) {
 		return _cache.containsKey(cid);
-	}
-
-	@Override
-	public int getNewCoverID() {
-		int i = 0;
-		while(_elements.containsKey(i)) i++;
-		return i;
 	}
 
 	@Override

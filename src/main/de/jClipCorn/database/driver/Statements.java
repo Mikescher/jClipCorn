@@ -25,6 +25,9 @@ public class Statements {
 	public CCSQLStatement newDatabaseIDStatement1;
 	public CCSQLStatement newDatabaseIDStatement2;
 
+	public CCSQLStatement newDatabaseCoverIDStatement1;
+	public CCSQLStatement newDatabaseCoverIDStatement2;
+
 	public CCSQLStatement updateMovieTabStatement;
 	public CCSQLStatement updateSeriesTabStatement;
 	public CCSQLStatement updateSeasonTabStatement;
@@ -116,6 +119,16 @@ public class Statements {
 			newDatabaseIDStatement2 = SQLBuilder
 					.createCustom(TAB_INFO)
 					.setSQL("SELECT CAST([{1}] AS INTEGER) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, INFOKEY_LASTID.Key)
+					.build(d, statements);
+
+			newDatabaseCoverIDStatement1 = SQLBuilder
+					.createCustom(TAB_INFO)
+					.setSQL("REPLACE INTO [{TAB}] SELECT '{2}', (CAST([{1}] AS INTEGER)+1) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, INFOKEY_LASTCOVERID.Key)
+					.build(d, statements);
+
+			newDatabaseCoverIDStatement2 = SQLBuilder
+					.createCustom(TAB_INFO)
+					.setSQL("SELECT CAST([{1}] AS INTEGER) FROM [{TAB}] WHERE [{0}]='{2}'", COL_INFO_KEY.Name, COL_INFO_VALUE.Name, INFOKEY_LASTCOVERID.Key)
 					.build(d, statements);
 
 			selectSingleMovieTabStatement   = SQLBuilder.createSelectSingle(TAB_MOVIES,   COL_MOV_LOCALID).build(d, statements);

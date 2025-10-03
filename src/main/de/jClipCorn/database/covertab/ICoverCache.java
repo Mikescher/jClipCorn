@@ -11,7 +11,6 @@ public interface ICoverCache {
 	void init();
 
 	void addInternal(CCCoverData elem);
-	int getNewCoverID();
 	void getBackupExclusions(List<String> excludedFolders, List<String> excludedFiles);
 
 	BufferedImage getCover(int cid);

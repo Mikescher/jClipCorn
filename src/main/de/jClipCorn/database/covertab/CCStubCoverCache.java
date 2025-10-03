@@ -29,11 +29,6 @@ public class CCStubCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public int getNewCoverID() {
-		return 0;
-	}
-
-	@Override
 	public void getBackupExclusions(List<String> excludedFolders, List<String> excludedFiles) {
 		//
 	}

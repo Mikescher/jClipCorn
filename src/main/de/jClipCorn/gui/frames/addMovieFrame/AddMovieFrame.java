@@ -220,6 +220,12 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		newM.AnimeSeason.set(CCStringList.create(edAnimeSeason.getValues()));
 		newM.AnimeStudio.set(CCStringList.create(edAnimeStudio.getValues()));
 
+		// Set tags
+		var tags = CCTagList.EMPTY;
+		tags = tags.getSetTag(CCSingleTag.TAG_WATCH_LATER, cbWatchLater.isSelected());
+		tags = tags.getSetTag(CCSingleTag.TAG_WATCH_NEVER, cbWatchNever.isSelected());
+		newM.Tags.set(tags);
+
 		newM.setCover(edCvrControl.getResizedImageForStorage());
 
 		newM.endUpdating();
@@ -298,6 +304,8 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		edSpecialVersion.setEnabled(e);
 		edAnimeSeason.setEnabled(e);
 		edAnimeStudio.setEnabled(e);
+		cbWatchLater.setEnabled(e);
+		cbWatchNever.setEnabled(e);
 	}
 
 	private void onBtnChooseClicked(int cNmbr) {
@@ -1102,6 +1110,10 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
         edAnimeSeason = new JAutoCompleteTextField(() -> movielist.getAnimeSeasonList(), true);
         lblAnimeStudio = new JLabel();
         edAnimeStudio = new JAutoCompleteTextField(() -> movielist.getAnimeStudioList(), true);
+        lblWatchLater = new JLabel();
+        cbWatchLater = new JCheckBox();
+        lblWatchNever = new JLabel();
+        cbWatchNever = new JCheckBox();
         pnlRight = new JPanel();
         pnlGenres = new JPanel();
         label7 = new JLabel();
@@ -1237,7 +1249,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
             {
                 pnlData.setLayout(new FormLayout(
                     "default, $lcgap, 0dlu:grow, $lcgap, [40dlu,default], $lcgap, 16dlu, $lcgap, 25dlu, $lcgap, [30dlu,default]", //$NON-NLS-1$
-                    "17*(default, $lgap), default")); //$NON-NLS-1$
+                    "19*(default, $lgap), default")); //$NON-NLS-1$
 
                 //---- label15 ----
                 label15.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
@@ -1386,6 +1398,16 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
                 lblAnimeStudio.setText(LocaleBundle.getString("AddMovieFrame.lblAnimeStudio.text")); //$NON-NLS-1$
                 pnlData.add(lblAnimeStudio, CC.xy(1, 35));
                 pnlData.add(edAnimeStudio, CC.xywh(3, 35, 3, 1));
+
+                //---- lblWatchLater ----
+                lblWatchLater.setText(LocaleBundle.getString("AddMovieFrame.lblWatchLater.text")); //$NON-NLS-1$
+                pnlData.add(lblWatchLater, CC.xy(1, 37));
+                pnlData.add(cbWatchLater, CC.xywh(3, 37, 3, 1));
+
+                //---- lblWatchNever ----
+                lblWatchNever.setText(LocaleBundle.getString("AddMovieFrame.lblWatchNever.text")); //$NON-NLS-1$
+                pnlData.add(lblWatchNever, CC.xy(1, 39));
+                pnlData.add(cbWatchNever, CC.xywh(3, 39, 3, 1));
             }
             pnlLeft.add(pnlData, CC.xy(1, 3, CC.FILL, CC.FILL));
         }
@@ -1547,6 +1569,10 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
     private JAutoCompleteTextField edAnimeSeason;
     private JLabel lblAnimeStudio;
     private JAutoCompleteTextField edAnimeStudio;
+    private JLabel lblWatchLater;
+    private JCheckBox cbWatchLater;
+    private JLabel lblWatchNever;
+    private JCheckBox cbWatchNever;
     private JPanel pnlRight;
     private JPanel pnlGenres;
     private JLabel label7;

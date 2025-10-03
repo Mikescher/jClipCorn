@@ -194,7 +194,7 @@ new FormModel {
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "default, labelcompgap, 0dlu:grow, labelcompgap, max(default;40dlu), labelcompgap, 16dlu, labelcompgap, 25dlu, labelcompgap, max(default;30dlu)"
-					"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default"
+					"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default"
 				} ) {
 					name: "pnlData"
 					add( new FormComponent( "javax.swing.JLabel" ) {
@@ -570,6 +570,34 @@ new FormModel {
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 						"gridX": 3
 						"gridY": 35
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "lblWatchLater"
+						"text": new FormMessage( null, "AddMovieFrame.lblWatchLater.text" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 37
+					} )
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "cbWatchLater"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 3
+						"gridY": 37
+						"gridWidth": 3
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "lblWatchNever"
+						"text": new FormMessage( null, "AddMovieFrame.lblWatchNever.text" )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 39
+					} )
+					add( new FormComponent( "javax.swing.JCheckBox" ) {
+						name: "cbWatchNever"
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 3
+						"gridY": 39
 						"gridWidth": 3
 					} )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {

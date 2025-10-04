@@ -1,6 +1,60 @@
 
 
 ########################################################################
+############ Sat Oct 4 02:17:40 2025 +0200  1.10.11 RELEASE ############
+########################################################################
+
+
+1.10.11 Bugfix: Fix PARTIAL_VIEWED state not working
+1.10.11 Feature: Add SearchInBrowser button to AddSeriesFrame
+1.10.11 Feature: Set WatchLater and WatchNever tags from AddMovieFrame
+1.10.11 Bugfix: Fix GroupListEditor AddNewGroup functionality
+1.10.11 Bugfix: Fix broken PreviewMovieFrame with too many subtitles
+1.10.11 Bugfix: Fix OmniParser resetting on checkbox hover
+1.10.11 Feature: Add new DB-Checks: `IMPOSSIBLE_WATCH_CANCELLED` + `WATCH_NEVER_ON_VIEWED`
+1.10.11 Task: Upgrade to java language level 16
+1.10.11 Task: Make CoverIDs strictly increasing (like other IDs)
+1.10.11 Feature: Add 8 new languages
+1.10.11 Bugfix: Ignore `Image` tracks in mkv
+1.10.11 Feature: Add FrameSize properties for (most) frames
+1.10.11 Feature: Add more PROP_PATHSYNTAX configs
+1.10.11 Task: Add SonarLint exclusions
+1.10.11 Feature: New viewed icons and new ExtendedViewedStates
+1.10.11 Feature: Save parts as json-arrays in DB
+1.10.11 Feature: Save tags as json-arrays in DB
+1.10.11 Task: Refactor DatabaseMigrator
+1.10.11 Feature: Add `PREVIEWSERIESFRAME_WIDTH` property
+1.10.11 Feature: Autom. parse AnimeStudio and AnimeSeason from MAL
+1.10.11 Feature: Add new columns `AnimeSeason`, `AnimeStudio`, `SpecialVersion`
+1.10.11 Feature: Add explicit error message on missing gvfs
+1.10.11 Feature: Fix kitsu regex
+1.10.11 Feature: Save group colors as HEX in db
+1.10.11 Task: Added CLAUDE.md
+1.10.11 Feature: Show more covers in flat cover chooser
+1.10.11 Bugfix: Fix PROP_PREVSERIES_SMALLERCOVER_FACTOR with non-3d cover
+1.10.11 Feature: Draw inactive seasons CoverChooser smaller (95%)
+1.10.11 Feature: Center CoverChooser in PreviewSeriesFrame
+1.10.11 Bugfix: Reset ScoreComment on import if `ResetScore == true`
+1.10.11 Bugfix: Fix exception when CCPath contains unresolvable var reference
+1.10.11 Bugfix: Fix WatchHistory counter not counting UNSPEC history entries
+1.10.11 Task: Increase height of CoverCropFrame to 835
+1.10.11 Bugfix: Fix exception in FilenameParser::parse
+1.10.11 Feature Added CCMovieFormat: webm
+1.10.11 Bugfix: Fix IconRefListDisplay paddings under windows (?)
+1.10.0 Feature: Added new language `Kannada`
+1.10.11 Task: Remove dismiss-delay from MainTable/SeriesTable tooltips
+1.10.11 Bugfix: Fix alignment of Languages and Subtitles in PreviewSeriesFrame
+1.10.11 Bugfix: Fix gradle betaJar task
+1.10.11 Bugfix: Fixed missing +n text-color in VIEWED_AGAIN icons
+1.10.11 Feature: Increase Seize of next-episode button
+1.10.11 Feature: Allow CharSelector to search anywhere (title/zyklus) in CCDatabaseElement's
+1.10.11 Bugfix: Fix CoverCrop params copy/paste
+1.10.11 Bugfix: Fix version comparison to ignore trailing `.0`
+1.10.11 Task: Update README
+1.10.11 Bugfix: Fix minor layout problems in BackupsManagerFrame
+
+
+########################################################################
 ############ Mon Aug 28 00:49:44 2023 +0200  1.10.0 RELEASE ############
 ########################################################################
 

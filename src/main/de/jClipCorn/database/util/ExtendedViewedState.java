@@ -134,7 +134,7 @@ public class ExtendedViewedState {
 		if (isCancelled && isViewedTooMany) return new ExtendedViewedState(ExtendedViewedStateType.MARKED_ABORTED, null, count, Resources.ICN_TABLE_VIEWED_ABORTED_CTR_MORE);
 		if (isCancelled && isViewed)        return new ExtendedViewedState(ExtendedViewedStateType.MARKED_ABORTED, null, count, Resources.ICN_TABLE_VIEWED_ABORTED_CTR[count]);
 
-		if (isNoTag     && isPartial) return new ExtendedViewedState(ExtendedViewedStateType.VIEWED,              null, count, Resources.ICN_TABLE_VIEWED_PARTIAL);
+		if (isNoTag     && isPartial) return new ExtendedViewedState(ExtendedViewedStateType.PARTIAL_VIEWED,      null, count, Resources.ICN_TABLE_VIEWED_PARTIAL);
 		if (isLater     && isPartial) return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_CONTINUE, null, count, Resources.ICN_TABLE_VIEWED_CONTINUE);
 		if (isNever     && isPartial) return new ExtendedViewedState(ExtendedViewedStateType.MARKED_ABORTED,      null, count, Resources.ICN_TABLE_VIEWED_PARTIAL_ABORTED);
 		if (isCancelled && isPartial) return new ExtendedViewedState(ExtendedViewedStateType.MARKED_ABORTED,      null, count, Resources.ICN_TABLE_VIEWED_PARTIAL_ABORTED);
@@ -163,11 +163,11 @@ public class ExtendedViewedState {
 			isViewedSingle  = true;
 		}
 
-		if (isViewedSingle)  return new ExtendedViewedState(ExtendedViewedStateType.VIEWED,     null, count, Resources.ICN_TABLE_VIEWED_TRUE);
-		if (isViewedTooMany) return new ExtendedViewedState(ExtendedViewedStateType.VIEWED,     null, count, Resources.ICN_TABLE_VIEWED_TRUE_CTR_MORE);
-		if (isViewed)        return new ExtendedViewedState(ExtendedViewedStateType.VIEWED,     null, count, Resources.ICN_TABLE_VIEWED_TRUE_CTR[count]);
-		if (isPartial)       return new ExtendedViewedState(ExtendedViewedStateType.VIEWED,     null, count, Resources.ICN_TABLE_VIEWED_PARTIAL);
-		if (isNotViewed)     return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED, null, count, Resources.ICN_TABLE_VIEWED_FALSE);
+		if (isViewedSingle)  return new ExtendedViewedState(ExtendedViewedStateType.VIEWED,         null, count, Resources.ICN_TABLE_VIEWED_TRUE);
+		if (isViewedTooMany) return new ExtendedViewedState(ExtendedViewedStateType.VIEWED,         null, count, Resources.ICN_TABLE_VIEWED_TRUE_CTR_MORE);
+		if (isViewed)        return new ExtendedViewedState(ExtendedViewedStateType.VIEWED,         null, count, Resources.ICN_TABLE_VIEWED_TRUE_CTR[count]);
+		if (isPartial)       return new ExtendedViewedState(ExtendedViewedStateType.PARTIAL_VIEWED, null, count, Resources.ICN_TABLE_VIEWED_PARTIAL);
+		if (isNotViewed)     return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED,     null, count, Resources.ICN_TABLE_VIEWED_FALSE);
 
 		CCLog.addUndefinied("Invalid ExtendedViewedState error for season " + elem.getLocalID()); //$NON-NLS-1$
 		return null;

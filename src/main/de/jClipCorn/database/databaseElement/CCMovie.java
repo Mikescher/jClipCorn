@@ -292,7 +292,25 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		for (CCGroup group : getGroups()) {
 			if (group.DoSerialize) filename.append(" [[").append(group.Name).append("]]");
 		}
-				
+
+		if (ccprops().PROP_SERIALIZE_ANIMESTUDIO_IN_FILENAMES.getValue()) {
+			for (var studio : getAnimeStudio()) {
+				filename.append(" [[").append(studio).append("]]");
+			}
+		}
+
+		if (ccprops().PROP_SERIALIZE_ANIMESEASON_IN_FILENAMES.getValue()) {
+			for (var season : getAnimeSeason()) {
+				filename.append(" [[").append(season).append("]]");
+			}
+		}
+
+		if (ccprops().PROP_SERIALIZE_SPECIALVERSION_IN_FILENAMES.getValue()) {
+			for (var vers : getSpecialVersion()) {
+				filename.append(" [[").append(vers).append("]]");
+			}
+		}
+
 		if (!(Language.get().isExact(ccprops().PROP_DATABASE_DEFAULTPARSERLANG.getValue()) && ccprops().PROP_SKIP_DEFAULT_LANG_IN_FILENAMES.getValue())) {
 			filename.append(" [").append(Language.get().serializeToFilenameString()).append("]");
 		}

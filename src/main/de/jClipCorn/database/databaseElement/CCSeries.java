@@ -723,6 +723,24 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 				if (group.DoSerialize) seriesfoldername.append(" [[").append(group.Name).append("]]");
 			}
 
+			if (ccprops().PROP_SERIALIZE_ANIMESTUDIO_IN_FILENAMES.getValue()) {
+				for (var studio : getAnimeStudio()) {
+					seriesfoldername.append(" [[").append(studio).append("]]");
+				}
+			}
+
+			if (ccprops().PROP_SERIALIZE_ANIMESEASON_IN_FILENAMES.getValue()) {
+				for (var season : getAnimeSeason()) {
+					seriesfoldername.append(" [[").append(season).append("]]");
+				}
+			}
+
+			if (ccprops().PROP_SERIALIZE_SPECIALVERSION_IN_FILENAMES.getValue()) {
+				for (var studio : getSpecialVersion()) {
+					seriesfoldername.append(" [[").append(studio).append("]]");
+				}
+			}
+
 			CCDBLanguageSet lang = getSemiCommonLanguages();
 			if (getEpisodeCount() == 0 && fallbackLanguage != null) lang = fallbackLanguage;
 

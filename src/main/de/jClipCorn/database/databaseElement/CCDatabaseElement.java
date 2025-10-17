@@ -227,6 +227,18 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		return Groups.get();
 	}
 
+	public CCStringList getAnimeStudio() {
+		return AnimeStudio.get();
+	}
+
+	public CCStringList getAnimeSeason() {
+		return AnimeSeason.get();
+	}
+
+	public CCStringList getSpecialVersion() {
+		return SpecialVersion.get();
+	}
+
 	public boolean hasGroups() {
 		return ! Groups.isEmpty();
 	}

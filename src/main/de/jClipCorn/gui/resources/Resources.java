@@ -341,6 +341,8 @@ public class Resources {
 	public final static IconRef ICN_TABLE_LANGUAGE_54 		= register16x16Icon("/icons/table/language/language_54.png");
 	public final static IconRef ICN_TABLE_LANGUAGE_55 		= register16x16Icon("/icons/table/language/language_55.png");
 	public final static IconRef ICN_TABLE_LANGUAGE_56 		= register16x16Icon("/icons/table/language/language_56.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_57 		= register16x16Icon("/icons/table/language/language_57.png");
+	public final static IconRef ICN_TABLE_LANGUAGE_58 		= register16x16Icon("/icons/table/language/language_58.png");
 
 	public final static IconRef[] ICN_TABLE_LANGUAGE = new IconRef[]
 	{
@@ -355,7 +357,7 @@ public class Resources {
 		ICN_TABLE_LANGUAGE_40, ICN_TABLE_LANGUAGE_41, ICN_TABLE_LANGUAGE_42, ICN_TABLE_LANGUAGE_43, ICN_TABLE_LANGUAGE_44,
 		ICN_TABLE_LANGUAGE_45, ICN_TABLE_LANGUAGE_46, ICN_TABLE_LANGUAGE_47, ICN_TABLE_LANGUAGE_48, ICN_TABLE_LANGUAGE_49,
 		ICN_TABLE_LANGUAGE_50, ICN_TABLE_LANGUAGE_51, ICN_TABLE_LANGUAGE_52, ICN_TABLE_LANGUAGE_53, ICN_TABLE_LANGUAGE_54,
-		ICN_TABLE_LANGUAGE_55, ICN_TABLE_LANGUAGE_56,
+		ICN_TABLE_LANGUAGE_55, ICN_TABLE_LANGUAGE_56, ICN_TABLE_LANGUAGE_57, ICN_TABLE_LANGUAGE_58,
 	};
 
 	public static HashMap<Tuple<Integer, Integer>, IconRef> ICN_TABLE_LANGUAGE_COMBINED = createCombinedlanguageIcons(ICN_TABLE_LANGUAGE);

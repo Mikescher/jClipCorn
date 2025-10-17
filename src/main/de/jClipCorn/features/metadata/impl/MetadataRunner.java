@@ -370,6 +370,16 @@ public abstract class MetadataRunner {
 		if (langval.equalsIgnoreCase("urd"))                             return CCDBLanguage.URDU;
 		if (langval.equalsIgnoreCase("urdu"))                            return CCDBLanguage.URDU;
 
+		if (langval.equalsIgnoreCase("mk"))                              return CCDBLanguage.MACEDONIAN;
+		if (langval.equalsIgnoreCase("mac"))                             return CCDBLanguage.MACEDONIAN;
+		if (langval.equalsIgnoreCase("mkd"))                             return CCDBLanguage.MACEDONIAN;
+		if (langval.equalsIgnoreCase("Macedonian"))                      return CCDBLanguage.MACEDONIAN;
+
+		if (langval.equalsIgnoreCase("sr"))                              return CCDBLanguage.SERBIAN;
+		if (langval.equalsIgnoreCase("srp"))                             return CCDBLanguage.SERBIAN;
+		if (langval.equalsIgnoreCase("Latin, Serbian"))                  return CCDBLanguage.SERBIAN;
+		if (langval.equalsIgnoreCase("Serbian"))                         return CCDBLanguage.SERBIAN;
+
 		return null;
 	}
 

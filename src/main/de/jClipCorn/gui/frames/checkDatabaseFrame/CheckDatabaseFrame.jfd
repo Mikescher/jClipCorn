@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.8" encoding: "UTF-8"
+JFDML JFormDesigner: "8.3" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
@@ -219,6 +219,14 @@ new FormModel {
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridY": 5
 					"gridX": 3
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValNfoFiles"
+					"text": new FormMessage( null, "CheckDatabaseFrame.cbValNfoFiles.text" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 5
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "cbValSeriesStructure"

@@ -134,6 +134,7 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_MENUBAR_WATCHHISTORY			= registerMultisizeIcon("/icons/toolbar/radiolocator.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_DATABASEHISTORY		= registerMultisizeIcon("/icons/toolbar/drawer.png");
 	public final static MultiSizeIconRef ICN_MENUBAR_VLCROBOT				= registerMultisizeIcon("/icons/toolbar/pci.png");
+	public final static MultiSizeIconRef ICN_MENUBAR_NFO					= registerMultisizeIcon("/icons/toolbar/infocard.png");
 	// #############################################  </MENUBAR>  ############################################
 
 

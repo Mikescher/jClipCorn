@@ -90,6 +90,9 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_COMMENT_WITHOUT_RATING             = new DatabaseErrorType(83, null);
 	public final static DatabaseErrorType ERROR_EMPTY_DIRECTORY                    = new DatabaseErrorType(84, DatabaseAutofixer::fixError_EmptyDirectory);
 	public final static DatabaseErrorType ERROR_IMPOSSIBLE_WATCH_CANCELLED         = new DatabaseErrorType(85, DatabaseAutofixer::fixError_Impossible_WatchCancelled);
+	public final static DatabaseErrorType ERROR_NFO_MISSING                         = new DatabaseErrorType(86, null);
+	public final static DatabaseErrorType ERROR_NFO_ORPHANED                        = new DatabaseErrorType(87, null);
+	public final static DatabaseErrorType ERROR_NFO_CONTENT_MISMATCH                = new DatabaseErrorType(88, null);
 
 	private final int type;
 

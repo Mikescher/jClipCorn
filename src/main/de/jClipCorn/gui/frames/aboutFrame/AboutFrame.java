@@ -68,14 +68,14 @@ public class AboutFrame extends JCCFrame
 		memoLibs = new JList<>();
 
 		//======== this ========
-		setTitle("<dynamic>"); //$NON-NLS-1$
+		setTitle("<dynamic>");
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setResizable(false);
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
 		//---- lblImg ----
-		lblImg.setIcon(new ImageIcon(getClass().getResource("/UberDialog.png"))); //$NON-NLS-1$
+		lblImg.setIcon(new ImageIcon(getClass().getResource("/UberDialog.png")));
 		lblImg.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {

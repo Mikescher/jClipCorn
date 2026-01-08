@@ -236,7 +236,7 @@ public class WatchHistoryFrame extends JCCFrame {
 		lblCover = new CoverLabelFullsize(movielist);
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("WatchHistoryFrame.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("WatchHistoryFrame.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(600, 415));
 		addWindowListener(new WindowAdapter() {
@@ -245,10 +245,10 @@ public class WatchHistoryFrame extends JCCFrame {
 				onWindowClosed();
 			}
 		});
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default, $rgap, default:grow, $ugap", //$NON-NLS-1$
-			"$ugap, default:grow, $rgap, default, $ugap")); //$NON-NLS-1$
+			"$ugap, default, $rgap, default:grow, $ugap",
+			"$ugap, default:grow, $rgap, default, $ugap"));
 
 		//======== scrollPane2 ========
 		{
@@ -271,25 +271,25 @@ public class WatchHistoryFrame extends JCCFrame {
 		//======== pnlRight ========
 		{
 			pnlRight.setLayout(new FormLayout(
-				"default:grow", //$NON-NLS-1$
-				"default:grow, $lgap, default")); //$NON-NLS-1$
+				"default:grow",
+				"default:grow, $lgap, default"));
 			pnlRight.add(tableMain, CC.xy(1, 1, CC.FILL, CC.FILL));
 
 			//======== panel1 ========
 			{
 				panel1.setLayout(new FormLayout(
-					"default, $ugap, 2*(default:grow, $rgap), default:grow", //$NON-NLS-1$
-					"default, $lgap, default")); //$NON-NLS-1$
+					"default, $ugap, 2*(default:grow, $rgap), default:grow",
+					"default, $lgap, default"));
 
 				//---- label1 ----
-				label1.setText(LocaleBundle.getString("WatchHistoryFrame.lblName")); //$NON-NLS-1$
+				label1.setText(LocaleBundle.getString("WatchHistoryFrame.lblName"));
 				panel1.add(label1, CC.xy(1, 1, CC.RIGHT, CC.DEFAULT));
 				panel1.add(edName1, CC.xy(3, 1));
 				panel1.add(edName2, CC.xy(5, 1));
 				panel1.add(edName3, CC.xy(7, 1));
 
 				//---- label2 ----
-				label2.setText(LocaleBundle.getString("WatchHistoryFrame.title")); //$NON-NLS-1$
+				label2.setText(LocaleBundle.getString("WatchHistoryFrame.title"));
 				panel1.add(label2, CC.xy(1, 3, CC.RIGHT, CC.TOP));
 
 				//======== scrollPane1 ========

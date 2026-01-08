@@ -48,21 +48,21 @@ public class ShowUpdateFrame extends JCCFrame
 		btnDownload = new JButton();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("ShowUpdateFrame.this.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("ShowUpdateFrame.this.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default:grow, $ugap", //$NON-NLS-1$
-			"$ugap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
+			"$ugap, default:grow, $ugap",
+			"$ugap, default:grow, $lgap, default, $ugap"));
 
 		//---- lblText ----
-		lblText.setText("<dynamic>"); //$NON-NLS-1$
+		lblText.setText("<dynamic>");
 		lblText.setHorizontalAlignment(SwingConstants.CENTER);
 		lblText.setFont(lblText.getFont().deriveFont(lblText.getFont().getStyle() | Font.BOLD, 32f));
 		contentPane.add(lblText, CC.xy(2, 2, CC.FILL, CC.FILL));
 
 		//---- btnDownload ----
-		btnDownload.setText(LocaleBundle.getString("ShowUpdateFrame.btnDownload.caption")); //$NON-NLS-1$
+		btnDownload.setText(LocaleBundle.getString("ShowUpdateFrame.btnDownload.caption"));
 		btnDownload.addActionListener(e -> download(e));
 		contentPane.add(btnDownload, CC.xy(2, 4, CC.CENTER, CC.DEFAULT));
 		setSize(650, 260);

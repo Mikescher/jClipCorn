@@ -281,194 +281,194 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        label1 = new JLabel();
-        edTitle = new JTextField();
-        label13 = new JLabel();
-        edReference = new JReferenceChooser(movielist);
-        label2 = new JLabel();
-        spnOnlinescore = new OnlineScoreControl();
-        label14 = new JLabel();
-        edGroups = new GroupListEditor(movielist);
-        label3 = new JLabel();
-        cbxFSK = new CCEnumComboBox<>(CCOptionalFSK.getWrapper());
-        label4 = new JLabel();
-        cbxGenre0 = new CCEnumComboBox<>(CCGenre.getWrapper());
-        button3 = new JButton();
-        btnSearchInBrowser = new JButton();
-        edCvrControl = new EditCoverControl(this, this);
-        label5 = new JLabel();
-        cbxGenre1 = new CCEnumComboBox<>(CCGenre.getWrapper());
-        label6 = new JLabel();
-        cbxGenre2 = new CCEnumComboBox<>(CCGenre.getWrapper());
-        label7 = new JLabel();
-        cbxGenre3 = new CCEnumComboBox<>(CCGenre.getWrapper());
-        label8 = new JLabel();
-        cbxGenre4 = new CCEnumComboBox<>(CCGenre.getWrapper());
-        label9 = new JLabel();
-        cbxGenre5 = new CCEnumComboBox<>(CCGenre.getWrapper());
-        label10 = new JLabel();
-        cbxGenre6 = new CCEnumComboBox<>(CCGenre.getWrapper());
-        label11 = new JLabel();
-        cbxGenre7 = new CCEnumComboBox<>(CCGenre.getWrapper());
-        lblAnimeSeason = new JLabel();
-        edAnimeSeason = new JAutoCompleteTextField(() -> movielist.getAnimeSeasonList(), true);
-        lblAnimeStudio = new JLabel();
-        edAnimeStudio = new JAutoCompleteTextField(() -> movielist.getAnimeStudioList(), true);
-        panel1 = new JPanel();
-        button1 = new JButton();
-        button2 = new JButton();
+		label1 = new JLabel();
+		edTitle = new JTextField();
+		label13 = new JLabel();
+		edReference = new JReferenceChooser(movielist);
+		label2 = new JLabel();
+		spnOnlinescore = new OnlineScoreControl();
+		label14 = new JLabel();
+		edGroups = new GroupListEditor(movielist);
+		label3 = new JLabel();
+		cbxFSK = new CCEnumComboBox<>(CCOptionalFSK.getWrapper());
+		label4 = new JLabel();
+		cbxGenre0 = new CCEnumComboBox<>(CCGenre.getWrapper());
+		button3 = new JButton();
+		btnSearchInBrowser = new JButton();
+		edCvrControl = new EditCoverControl(this, this);
+		label5 = new JLabel();
+		cbxGenre1 = new CCEnumComboBox<>(CCGenre.getWrapper());
+		label6 = new JLabel();
+		cbxGenre2 = new CCEnumComboBox<>(CCGenre.getWrapper());
+		label7 = new JLabel();
+		cbxGenre3 = new CCEnumComboBox<>(CCGenre.getWrapper());
+		label8 = new JLabel();
+		cbxGenre4 = new CCEnumComboBox<>(CCGenre.getWrapper());
+		label9 = new JLabel();
+		cbxGenre5 = new CCEnumComboBox<>(CCGenre.getWrapper());
+		label10 = new JLabel();
+		cbxGenre6 = new CCEnumComboBox<>(CCGenre.getWrapper());
+		label11 = new JLabel();
+		cbxGenre7 = new CCEnumComboBox<>(CCGenre.getWrapper());
+		lblAnimeSeason = new JLabel();
+		edAnimeSeason = new JAutoCompleteTextField(() -> movielist.getAnimeSeasonList(), true);
+		lblAnimeStudio = new JLabel();
+		edAnimeStudio = new JAutoCompleteTextField(() -> movielist.getAnimeStudioList(), true);
+		panel1 = new JPanel();
+		button1 = new JButton();
+		button2 = new JButton();
 
-        //======== this ========
-        setTitle(LocaleBundle.getString("AddSeriesFrame.this.title")); //$NON-NLS-1$
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setMinimumSize(null);
-        var contentPane = getContentPane();
-        contentPane.setLayout(new FormLayout(
-            "$rgap, default, $ugap, default:grow, $lcgap, 13dlu, 2*(default, $lcgap), default:grow, $lcgap", //$NON-NLS-1$
-            "2*($rgap, default), $lgap, default, 20dlu, 1dlu, 20dlu, $ugap, 8*(default, $lgap), 10dlu, 2*($lgap, default), $lgap, 0dlu:grow, default, $lgap")); //$NON-NLS-1$
+		//======== this ========
+		setTitle(LocaleBundle.getString("AddSeriesFrame.this.title"));
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setMinimumSize(null);
+		Container contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$rgap, default, $ugap, default:grow, $lcgap, 13dlu, 2*(default, $lcgap), default:grow, $lcgap",
+			"2*($rgap, default), $lgap, default, 20dlu, 1dlu, 20dlu, $ugap, 8*(default, $lgap), 10dlu, 2*($lgap, default), $lgap, 0dlu:grow, default, $lgap"));
 
-        //---- label1 ----
-        label1.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
-        contentPane.add(label1, CC.xy(2, 2));
-        contentPane.add(edTitle, CC.xy(4, 2));
+		//---- label1 ----
+		label1.setText(LocaleBundle.getString("AddMovieFrame.label_1.text"));
+		contentPane.add(label1, CC.xy(2, 2));
+		contentPane.add(edTitle, CC.xy(4, 2));
 
-        //---- label13 ----
-        label13.setText(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
-        contentPane.add(label13, CC.xy(7, 2));
-        contentPane.add(edReference, CC.xywh(9, 2, 3, 1, CC.DEFAULT, CC.CENTER));
+		//---- label13 ----
+		label13.setText(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text"));
+		contentPane.add(label13, CC.xy(7, 2));
+		contentPane.add(edReference, CC.xywh(9, 2, 3, 1, CC.DEFAULT, CC.CENTER));
 
-        //---- label2 ----
-        label2.setText(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text")); //$NON-NLS-1$
-        contentPane.add(label2, CC.xy(2, 4));
-        contentPane.add(spnOnlinescore, CC.xy(4, 4));
+		//---- label2 ----
+		label2.setText(LocaleBundle.getString("AddMovieFrame.lblOnlinescore.text"));
+		contentPane.add(label2, CC.xy(2, 4));
+		contentPane.add(spnOnlinescore, CC.xy(4, 4));
 
-        //---- label14 ----
-        label14.setText(LocaleBundle.getString("EditSeriesFrame.lblGroups.text")); //$NON-NLS-1$
-        contentPane.add(label14, CC.xy(7, 4));
-        contentPane.add(edGroups, CC.xywh(9, 4, 3, 1, CC.DEFAULT, CC.CENTER));
+		//---- label14 ----
+		label14.setText(LocaleBundle.getString("EditSeriesFrame.lblGroups.text"));
+		contentPane.add(label14, CC.xy(7, 4));
+		contentPane.add(edGroups, CC.xywh(9, 4, 3, 1, CC.DEFAULT, CC.CENTER));
 
-        //---- label3 ----
-        label3.setText(LocaleBundle.getString("AddMovieFrame.lblFsk.text")); //$NON-NLS-1$
-        contentPane.add(label3, CC.xy(2, 6));
-        contentPane.add(cbxFSK, CC.xy(4, 6));
+		//---- label3 ----
+		label3.setText(LocaleBundle.getString("AddMovieFrame.lblFsk.text"));
+		contentPane.add(label3, CC.xy(2, 6));
+		contentPane.add(cbxFSK, CC.xy(4, 6));
 
-        //---- label4 ----
-        label4.setText(LocaleBundle.getString("AddMovieFrame.lblGenre.text")); //$NON-NLS-1$
-        contentPane.add(label4, CC.xy(2, 11));
-        contentPane.add(cbxGenre0, CC.xy(4, 11));
+		//---- label4 ----
+		label4.setText(LocaleBundle.getString("AddMovieFrame.lblGenre.text"));
+		contentPane.add(label4, CC.xy(2, 11));
+		contentPane.add(cbxGenre0, CC.xy(4, 11));
 
-        //---- button3 ----
-        button3.setText(LocaleBundle.getString("AddSeriesFrame.btnParse.text")); //$NON-NLS-1$
-        button3.setFont(button3.getFont().deriveFont(button3.getFont().getStyle() | Font.BOLD, button3.getFont().getSize() + 3f));
-        button3.addActionListener(e -> onParseOnline(e));
-        contentPane.add(button3, CC.xywh(9, 7, 3, 1, CC.DEFAULT, CC.FILL));
+		//---- button3 ----
+		button3.setText(LocaleBundle.getString("AddSeriesFrame.btnParse.text"));
+		button3.setFont(button3.getFont().deriveFont(button3.getFont().getStyle() | Font.BOLD, button3.getFont().getSize() + 3f));
+		button3.addActionListener(e -> onParseOnline(e));
+		contentPane.add(button3, CC.xywh(9, 7, 3, 1, CC.DEFAULT, CC.FILL));
 
-        //---- btnSearchInBrowser ----
-        btnSearchInBrowser.setText(LocaleBundle.getString("AddSeriesFrame.btnSearchInBrowser.text")); //$NON-NLS-1$
-        btnSearchInBrowser.addActionListener(e -> onSearchInBrowser(e));
-        contentPane.add(btnSearchInBrowser, CC.xywh(9, 9, 3, 1, CC.DEFAULT, CC.FILL));
-        contentPane.add(edCvrControl, CC.xywh(11, 11, 1, 19, CC.RIGHT, CC.TOP));
+		//---- btnSearchInBrowser ----
+		btnSearchInBrowser.setText(LocaleBundle.getString("AddSeriesFrame.btnSearchInBrowser.text"));
+		btnSearchInBrowser.addActionListener(e -> onSearchInBrowser(e));
+		contentPane.add(btnSearchInBrowser, CC.xywh(9, 9, 3, 1, CC.DEFAULT, CC.FILL));
+		contentPane.add(edCvrControl, CC.xywh(11, 11, 1, 19, CC.RIGHT, CC.TOP));
 
-        //---- label5 ----
-        label5.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text")); //$NON-NLS-1$
-        contentPane.add(label5, CC.xy(2, 13));
-        contentPane.add(cbxGenre1, CC.xy(4, 13));
+		//---- label5 ----
+		label5.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_1.text"));
+		contentPane.add(label5, CC.xy(2, 13));
+		contentPane.add(cbxGenre1, CC.xy(4, 13));
 
-        //---- label6 ----
-        label6.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text")); //$NON-NLS-1$
-        contentPane.add(label6, CC.xy(2, 15));
-        contentPane.add(cbxGenre2, CC.xy(4, 15));
+		//---- label6 ----
+		label6.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_2.text"));
+		contentPane.add(label6, CC.xy(2, 15));
+		contentPane.add(cbxGenre2, CC.xy(4, 15));
 
-        //---- label7 ----
-        label7.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text")); //$NON-NLS-1$
-        contentPane.add(label7, CC.xy(2, 17));
-        contentPane.add(cbxGenre3, CC.xy(4, 17));
+		//---- label7 ----
+		label7.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_3.text"));
+		contentPane.add(label7, CC.xy(2, 17));
+		contentPane.add(cbxGenre3, CC.xy(4, 17));
 
-        //---- label8 ----
-        label8.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text")); //$NON-NLS-1$
-        contentPane.add(label8, CC.xy(2, 19));
-        contentPane.add(cbxGenre4, CC.xy(4, 19));
+		//---- label8 ----
+		label8.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_4.text"));
+		contentPane.add(label8, CC.xy(2, 19));
+		contentPane.add(cbxGenre4, CC.xy(4, 19));
 
-        //---- label9 ----
-        label9.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text")); //$NON-NLS-1$
-        contentPane.add(label9, CC.xy(2, 21));
-        contentPane.add(cbxGenre5, CC.xy(4, 21));
+		//---- label9 ----
+		label9.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_5.text"));
+		contentPane.add(label9, CC.xy(2, 21));
+		contentPane.add(cbxGenre5, CC.xy(4, 21));
 
-        //---- label10 ----
-        label10.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text")); //$NON-NLS-1$
-        contentPane.add(label10, CC.xy(2, 23));
-        contentPane.add(cbxGenre6, CC.xy(4, 23));
+		//---- label10 ----
+		label10.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_6.text"));
+		contentPane.add(label10, CC.xy(2, 23));
+		contentPane.add(cbxGenre6, CC.xy(4, 23));
 
-        //---- label11 ----
-        label11.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text")); //$NON-NLS-1$
-        contentPane.add(label11, CC.xy(2, 25));
-        contentPane.add(cbxGenre7, CC.xy(4, 25));
+		//---- label11 ----
+		label11.setText(LocaleBundle.getString("AddMovieFrame.lblGenre_7.text"));
+		contentPane.add(label11, CC.xy(2, 25));
+		contentPane.add(cbxGenre7, CC.xy(4, 25));
 
-        //---- lblAnimeSeason ----
-        lblAnimeSeason.setText(LocaleBundle.getString("AddSeriesFrame.lblAnimeSeason.text")); //$NON-NLS-1$
-        contentPane.add(lblAnimeSeason, CC.xy(2, 29));
-        contentPane.add(edAnimeSeason, CC.xy(4, 29));
+		//---- lblAnimeSeason ----
+		lblAnimeSeason.setText(LocaleBundle.getString("AddSeriesFrame.lblAnimeSeason.text"));
+		contentPane.add(lblAnimeSeason, CC.xy(2, 29));
+		contentPane.add(edAnimeSeason, CC.xy(4, 29));
 
-        //---- lblAnimeStudio ----
-        lblAnimeStudio.setText(LocaleBundle.getString("AddSeriesFrame.lblAnimeStudio.text")); //$NON-NLS-1$
-        contentPane.add(lblAnimeStudio, CC.xy(2, 31));
-        contentPane.add(edAnimeStudio, CC.xy(4, 31));
+		//---- lblAnimeStudio ----
+		lblAnimeStudio.setText(LocaleBundle.getString("AddSeriesFrame.lblAnimeStudio.text"));
+		contentPane.add(lblAnimeStudio, CC.xy(2, 31));
+		contentPane.add(edAnimeStudio, CC.xy(4, 31));
 
-        //======== panel1 ========
-        {
-            panel1.setLayout(new FlowLayout());
+		//======== panel1 ========
+		{
+			panel1.setLayout(new FlowLayout());
 
-            //---- button1 ----
-            button1.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-            button1.addActionListener(e -> onOK(e));
-            panel1.add(button1);
+			//---- button1 ----
+			button1.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
+			button1.addActionListener(e -> onOK(e));
+			panel1.add(button1);
 
-            //---- button2 ----
-            button2.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
-            button2.addActionListener(e -> onCancel(e));
-            panel1.add(button2);
-        }
-        contentPane.add(panel1, CC.xywh(2, 34, 10, 1));
-        setSize(875, 800);
+			//---- button2 ----
+			button2.setText(LocaleBundle.getString("UIGeneric.btnCancel.text"));
+			button2.addActionListener(e -> onCancel(e));
+			panel1.add(button2);
+		}
+		contentPane.add(panel1, CC.xywh(2, 34, 10, 1));
+		setSize(700, 640);
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    private JLabel label1;
-    private JTextField edTitle;
-    private JLabel label13;
-    private JReferenceChooser edReference;
-    private JLabel label2;
-    private OnlineScoreControl spnOnlinescore;
-    private JLabel label14;
-    private GroupListEditor edGroups;
-    private JLabel label3;
-    private CCEnumComboBox<CCOptionalFSK> cbxFSK;
-    private JLabel label4;
-    private CCEnumComboBox<CCGenre> cbxGenre0;
-    private JButton button3;
-    private JButton btnSearchInBrowser;
-    private EditCoverControl edCvrControl;
-    private JLabel label5;
-    private CCEnumComboBox<CCGenre> cbxGenre1;
-    private JLabel label6;
-    private CCEnumComboBox<CCGenre> cbxGenre2;
-    private JLabel label7;
-    private CCEnumComboBox<CCGenre> cbxGenre3;
-    private JLabel label8;
-    private CCEnumComboBox<CCGenre> cbxGenre4;
-    private JLabel label9;
-    private CCEnumComboBox<CCGenre> cbxGenre5;
-    private JLabel label10;
-    private CCEnumComboBox<CCGenre> cbxGenre6;
-    private JLabel label11;
-    private CCEnumComboBox<CCGenre> cbxGenre7;
-    private JLabel lblAnimeSeason;
-    private JAutoCompleteTextField edAnimeSeason;
-    private JLabel lblAnimeStudio;
-    private JAutoCompleteTextField edAnimeStudio;
-    private JPanel panel1;
-    private JButton button1;
-    private JButton button2;
+	private JLabel label1;
+	private JTextField edTitle;
+	private JLabel label13;
+	private JReferenceChooser edReference;
+	private JLabel label2;
+	private OnlineScoreControl spnOnlinescore;
+	private JLabel label14;
+	private GroupListEditor edGroups;
+	private JLabel label3;
+	private CCEnumComboBox<CCOptionalFSK> cbxFSK;
+	private JLabel label4;
+	private CCEnumComboBox<CCGenre> cbxGenre0;
+	private JButton button3;
+	private JButton btnSearchInBrowser;
+	private EditCoverControl edCvrControl;
+	private JLabel label5;
+	private CCEnumComboBox<CCGenre> cbxGenre1;
+	private JLabel label6;
+	private CCEnumComboBox<CCGenre> cbxGenre2;
+	private JLabel label7;
+	private CCEnumComboBox<CCGenre> cbxGenre3;
+	private JLabel label8;
+	private CCEnumComboBox<CCGenre> cbxGenre4;
+	private JLabel label9;
+	private CCEnumComboBox<CCGenre> cbxGenre5;
+	private JLabel label10;
+	private CCEnumComboBox<CCGenre> cbxGenre6;
+	private JLabel label11;
+	private CCEnumComboBox<CCGenre> cbxGenre7;
+	private JLabel lblAnimeSeason;
+	private JAutoCompleteTextField edAnimeSeason;
+	private JLabel lblAnimeStudio;
+	private JAutoCompleteTextField edAnimeStudio;
+	private JPanel panel1;
+	private JButton button1;
+	private JButton button2;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

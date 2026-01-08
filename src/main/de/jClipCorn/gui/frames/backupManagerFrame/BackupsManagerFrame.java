@@ -248,84 +248,84 @@ public class BackupsManagerFrame extends JCCFrame
 		lsBackups = new JList<>();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("BackupsManagerFrame.this.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("BackupsManagerFrame.this.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(620, 450));
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default:grow, $lcgap, default:grow, $ugap", //$NON-NLS-1$
-			"$ugap, default:grow, $ugap")); //$NON-NLS-1$
+			"$ugap, default:grow, $lcgap, default:grow, $ugap",
+			"$ugap, default:grow, $ugap"));
 
 		//======== panel1 ========
 		{
 			panel1.setLayout(new FormLayout(
-				"pref, $rgap, 0dlu:grow, $lcgap, default", //$NON-NLS-1$
-				"9*(default, $lgap), default:grow, $lgap, default")); //$NON-NLS-1$
+				"pref, $rgap, 0dlu:grow, $lcgap, default",
+				"9*(default, $lgap), default:grow, $lgap, default"));
 			((FormLayout)panel1.getLayout()).setRowGroups(new int[][] {{5, 7, 9, 11, 13, 15, 17}});
 
 			//---- btnCreateBackup ----
-			btnCreateBackup.setText(LocaleBundle.getString("BackupsManagerFrame.btnCreateBackup.text")); //$NON-NLS-1$
+			btnCreateBackup.setText(LocaleBundle.getString("BackupsManagerFrame.btnCreateBackup.text"));
 			btnCreateBackup.addActionListener(e -> createNormalBackup());
 			panel1.add(btnCreateBackup, CC.xywh(1, 1, 5, 1));
 
 			//---- btnCreatePersistentBackup ----
-			btnCreatePersistentBackup.setText(LocaleBundle.getString("BackupsManagerFrame.btnCreatePersistentBackup.text")); //$NON-NLS-1$
+			btnCreatePersistentBackup.setText(LocaleBundle.getString("BackupsManagerFrame.btnCreatePersistentBackup.text"));
 			btnCreatePersistentBackup.addActionListener(e -> createPersistentBackup());
 			panel1.add(btnCreatePersistentBackup, CC.xywh(1, 3, 5, 1));
 
 			//---- label1 ----
-			label1.setText(LocaleBundle.getString("BackupsManagerFrame.lblName.text")); //$NON-NLS-1$
+			label1.setText(LocaleBundle.getString("BackupsManagerFrame.lblName.text"));
 			panel1.add(label1, CC.xy(1, 5));
 			panel1.add(lblName, CC.xy(3, 5, CC.FILL, CC.FILL));
 
 			//---- btnChangeName ----
-			btnChangeName.setText("..."); //$NON-NLS-1$
+			btnChangeName.setText("...");
 			btnChangeName.addActionListener(e -> editBackupName());
 			panel1.add(btnChangeName, CC.xy(5, 5));
 
 			//---- label2 ----
-			label2.setText(LocaleBundle.getString("BackupsManagerFrame.lblDate.text")); //$NON-NLS-1$
+			label2.setText(LocaleBundle.getString("BackupsManagerFrame.lblDate.text"));
 			panel1.add(label2, CC.xy(1, 7));
 			panel1.add(lblDate, CC.xy(3, 7, CC.FILL, CC.FILL));
 
 			//---- label3 ----
-			label3.setText(LocaleBundle.getString("BackupsManagerFrame.lblSize.text")); //$NON-NLS-1$
+			label3.setText(LocaleBundle.getString("BackupsManagerFrame.lblSize.text"));
 			panel1.add(label3, CC.xy(1, 9));
 			panel1.add(lblSize, CC.xy(3, 9, CC.FILL, CC.FILL));
 
 			//---- label4 ----
-			label4.setText(LocaleBundle.getString("BackupsManagerFrame.lblPersistent.text")); //$NON-NLS-1$
+			label4.setText(LocaleBundle.getString("BackupsManagerFrame.lblPersistent.text"));
 			panel1.add(label4, CC.xy(1, 11));
 			panel1.add(lblPermanent, CC.xy(3, 11, CC.FILL, CC.FILL));
 
 			//---- btnMakePersistent ----
-			btnMakePersistent.setText(LocaleBundle.getString("BackupsManagerFrame.btnSwitchPersistent.text")); //$NON-NLS-1$
+			btnMakePersistent.setText(LocaleBundle.getString("BackupsManagerFrame.btnSwitchPersistent.text"));
 			btnMakePersistent.addActionListener(e -> toggleBackupPersistent());
 			panel1.add(btnMakePersistent, CC.xy(5, 11));
 
 			//---- label5 ----
-			label5.setText(LocaleBundle.getString("BackupsManagerFrame.lblVersion.text")); //$NON-NLS-1$
+			label5.setText(LocaleBundle.getString("BackupsManagerFrame.lblVersion.text"));
 			panel1.add(label5, CC.xy(1, 13));
 			panel1.add(lblVersion, CC.xy(3, 13, CC.FILL, CC.FILL));
 
 			//---- label6 ----
-			label6.setText(LocaleBundle.getString("BackupsManagerFrame.lblDBVersion.textEmpty")); //$NON-NLS-1$
+			label6.setText(LocaleBundle.getString("BackupsManagerFrame.lblDBVersion.textEmpty"));
 			panel1.add(label6, CC.xy(1, 15));
 			panel1.add(lblDBVersion, CC.xy(3, 15, CC.FILL, CC.FILL));
 
 			//---- label7 ----
-			label7.setText(LocaleBundle.getString("BackupsManagerFrame.lblDeletion.textEmpty")); //$NON-NLS-1$
+			label7.setText(LocaleBundle.getString("BackupsManagerFrame.lblDeletion.textEmpty"));
 			panel1.add(label7, CC.xy(1, 17));
 			panel1.add(lblDeletion, CC.xy(3, 17, CC.FILL, CC.FILL));
 
 			//======== panel2 ========
 			{
 				panel2.setLayout(new FormLayout(
-					"pref, 12dlu, default:grow", //$NON-NLS-1$
-					"3*(default, $lgap), 0dlu:grow")); //$NON-NLS-1$
+					"pref, 12dlu, default:grow",
+					"3*(default, $lgap), 0dlu:grow"));
 
 				//---- btnRestore ----
-				btnRestore.setText(LocaleBundle.getString("BackupsManagerFrame.btnRestoreBackup.text")); //$NON-NLS-1$
+				btnRestore.setText(LocaleBundle.getString("BackupsManagerFrame.btnRestoreBackup.text"));
 				btnRestore.addActionListener(e -> restoreBackup());
 				panel2.add(btnRestore, CC.xy(1, 1, CC.FILL, CC.DEFAULT));
 
@@ -333,38 +333,38 @@ public class BackupsManagerFrame extends JCCFrame
 				{
 					panel3.setBorder(new EtchedBorder());
 					panel3.setLayout(new FormLayout(
-						"$rgap, pref:grow, $rgap", //$NON-NLS-1$
-						"$rgap, 4*(default, $lgap), default, $rgap")); //$NON-NLS-1$
+						"$rgap, pref:grow, $rgap",
+						"$rgap, 4*(default, $lgap), default, $rgap"));
 
 					//---- lblInfoCreateBackups ----
-					lblInfoCreateBackups.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.CreateBackups")); //$NON-NLS-1$
+					lblInfoCreateBackups.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.CreateBackups"));
 					panel3.add(lblInfoCreateBackups, CC.xy(2, 2));
 
 					//---- lblInfoCreationTime ----
-					lblInfoCreationTime.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.CreationTime")); //$NON-NLS-1$
+					lblInfoCreationTime.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.CreationTime"));
 					panel3.add(lblInfoCreationTime, CC.xy(2, 4));
 
 					//---- lblInfoAutoDelete ----
-					lblInfoAutoDelete.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.AutoDelete")); //$NON-NLS-1$
+					lblInfoAutoDelete.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.AutoDelete"));
 					panel3.add(lblInfoAutoDelete, CC.xy(2, 6));
 
 					//---- lblInfoAutoDeletAfter ----
-					lblInfoAutoDeletAfter.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.DeletionTime")); //$NON-NLS-1$
+					lblInfoAutoDeletAfter.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.DeletionTime"));
 					panel3.add(lblInfoAutoDeletAfter, CC.xy(2, 8));
 
 					//---- lblInfoLastBackup ----
-					lblInfoLastBackup.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.LastBackup")); //$NON-NLS-1$
+					lblInfoLastBackup.setText(LocaleBundle.getString("BackupsManagerFrame.infoLabels.LastBackup"));
 					panel3.add(lblInfoLastBackup, CC.xy(2, 10));
 				}
 				panel2.add(panel3, CC.xywh(3, 1, 1, 7));
 
 				//---- btnOpenInExplorer ----
-				btnOpenInExplorer.setText(LocaleBundle.getString("BackupsManagerFrame.btnOpenInExplorer.text")); //$NON-NLS-1$
+				btnOpenInExplorer.setText(LocaleBundle.getString("BackupsManagerFrame.btnOpenInExplorer.text"));
 				btnOpenInExplorer.addActionListener(e -> openBackupDir());
 				panel2.add(btnOpenInExplorer, CC.xy(1, 3, CC.FILL, CC.DEFAULT));
 
 				//---- btnDelete ----
-				btnDelete.setText(LocaleBundle.getString("BackupsManagerFrame.btnDelete.text")); //$NON-NLS-1$
+				btnDelete.setText(LocaleBundle.getString("BackupsManagerFrame.btnDelete.text"));
 				btnDelete.addActionListener(e -> deleteBackup());
 				panel2.add(btnDelete, CC.xy(1, 5, CC.FILL, CC.DEFAULT));
 			}

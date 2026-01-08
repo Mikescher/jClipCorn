@@ -496,40 +496,40 @@ public class QuickAddEpisodeDialog extends JCCDialog
 		button3 = new JButton();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("QuickAddEpisodeDialog.title")); //$NON-NLS-1$
-		var contentPane = getContentPane();
+		setTitle(LocaleBundle.getString("QuickAddEpisodeDialog.title"));
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"default:grow", //$NON-NLS-1$
-			"3dlu:grow")); //$NON-NLS-1$
+			"default:grow",
+			"3dlu:grow"));
 
 		//======== rootpnl ========
 		{
 			rootpnl.setLayout(new FormLayout(
-				"$ugap, default, $rgap, default:grow, $lcgap, default, $lcgap, 16dlu, $lcgap, default, $ugap", //$NON-NLS-1$
-				"$ugap, 10*(default, $lgap), default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
+				"$ugap, default, $rgap, default:grow, $lcgap, default, $lcgap, 16dlu, $lcgap, default, $ugap",
+				"$ugap, 10*(default, $lgap), default:grow, $lgap, default, $ugap"));
 
 			//---- label1 ----
-			label1.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblSource")); //$NON-NLS-1$
+			label1.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblSource"));
 			rootpnl.add(label1, CC.xy(2, 2, CC.RIGHT, CC.DEFAULT));
 			rootpnl.add(edSource, CC.xywh(4, 2, 3, 1));
 
 			//---- label2 ----
-			label2.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblTarget")); //$NON-NLS-1$
+			label2.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblTarget"));
 			rootpnl.add(label2, CC.xy(2, 4, CC.RIGHT, CC.DEFAULT));
 			rootpnl.add(edTarget, CC.xywh(4, 4, 3, 1));
 
 			//---- cbCopy ----
-			cbCopy.setText(LocaleBundle.getString("QuickAddEpisodeDialog.cbCopy")); //$NON-NLS-1$
+			cbCopy.setText(LocaleBundle.getString("QuickAddEpisodeDialog.cbCopy"));
 			cbCopy.addActionListener(e -> copyFileChanged());
 			rootpnl.add(cbCopy, CC.xywh(4, 6, 3, 1));
 
 			//---- cbRename ----
-			cbRename.setText(LocaleBundle.getString("QuickAddEpisodeDialog.cbRename")); //$NON-NLS-1$
+			cbRename.setText(LocaleBundle.getString("QuickAddEpisodeDialog.cbRename"));
 			cbRename.addActionListener(e -> renameFileChanged());
 			rootpnl.add(cbRename, CC.xywh(4, 8, 3, 1));
 
 			//---- label3 ----
-			label3.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblEpisode")); //$NON-NLS-1$
+			label3.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblEpisode"));
 			rootpnl.add(label3, CC.xy(2, 10, CC.RIGHT, CC.DEFAULT));
 
 			//---- spnEpisode ----
@@ -538,18 +538,18 @@ public class QuickAddEpisodeDialog extends JCCDialog
 			rootpnl.add(spnEpisode, CC.xy(4, 10));
 
 			//---- label4 ----
-			label4.setText(LocaleBundle.getString("AddMovieFrame.lblMediaInfo")); //$NON-NLS-1$
+			label4.setText(LocaleBundle.getString("AddMovieFrame.lblMediaInfo"));
 			rootpnl.add(label4, CC.xy(2, 12, CC.RIGHT, CC.DEFAULT));
 			rootpnl.add(edMediaInfo, CC.xy(4, 12));
 			rootpnl.add(pbarMediaInfo, CC.xywh(6, 12, 5, 1, CC.FILL, CC.FILL));
 
 			//---- label5 ----
-			label5.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblTitle")); //$NON-NLS-1$
+			label5.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblTitle"));
 			rootpnl.add(label5, CC.xy(2, 14, CC.RIGHT, CC.DEFAULT));
 			rootpnl.add(edTitle, CC.xy(4, 14));
 
 			//---- label6 ----
-			label6.setText(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
+			label6.setText(LocaleBundle.getString("AddMovieFrame.lblSprache.text"));
 			rootpnl.add(label6, CC.xy(2, 16, CC.RIGHT, CC.DEFAULT));
 			rootpnl.add(ctrlLang, CC.xy(4, 16));
 
@@ -559,12 +559,12 @@ public class QuickAddEpisodeDialog extends JCCDialog
 			rootpnl.add(cCIcon16Button3, CC.xy(8, 16));
 
 			//---- button1 ----
-			button1.setText("..."); //$NON-NLS-1$
+			button1.setText("...");
 			button1.addActionListener(e -> showCodecMetadata());
 			rootpnl.add(button1, CC.xy(10, 16));
 
 			//---- label8 ----
-			label8.setText(LocaleBundle.getString("AddMovieFrame.lblSubtitles")); //$NON-NLS-1$
+			label8.setText(LocaleBundle.getString("AddMovieFrame.lblSubtitles"));
 			rootpnl.add(label8, CC.xy(2, 18, CC.RIGHT, CC.DEFAULT));
 			rootpnl.add(ctrlSubs, CC.xy(4, 18));
 
@@ -574,7 +574,7 @@ public class QuickAddEpisodeDialog extends JCCDialog
 			rootpnl.add(cCIcon16Button2, CC.xy(8, 18));
 
 			//---- label7 ----
-			label7.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblLength")); //$NON-NLS-1$
+			label7.setText(LocaleBundle.getString("QuickAddEpisodeDialog.lblLength"));
 			rootpnl.add(label7, CC.xy(2, 20, CC.RIGHT, CC.DEFAULT));
 
 			//---- spnLength ----
@@ -582,7 +582,7 @@ public class QuickAddEpisodeDialog extends JCCDialog
 			rootpnl.add(spnLength, CC.xy(4, 20));
 
 			//---- label9 ----
-			label9.setText("min."); //$NON-NLS-1$
+			label9.setText("min.");
 			rootpnl.add(label9, CC.xy(6, 20));
 
 			//---- cCIcon16Button1 ----
@@ -593,17 +593,17 @@ public class QuickAddEpisodeDialog extends JCCDialog
 			//======== panel1 ========
 			{
 				panel1.setLayout(new FormLayout(
-					"default:grow, 2*($lcgap, default)", //$NON-NLS-1$
-					"default")); //$NON-NLS-1$
+					"default:grow, 2*($lcgap, default)",
+					"default"));
 				panel1.add(progressBar, CC.xy(1, 1, CC.FILL, CC.FILL));
 
 				//---- button2 ----
-				button2.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+				button2.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
 				button2.addActionListener(e -> onOkay());
 				panel1.add(button2, CC.xy(3, 1));
 
 				//---- button3 ----
-				button3.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+				button3.setText(LocaleBundle.getString("UIGeneric.btnCancel.text"));
 				button3.addActionListener(e -> onCancel());
 				panel1.add(button3, CC.xy(5, 1));
 			}

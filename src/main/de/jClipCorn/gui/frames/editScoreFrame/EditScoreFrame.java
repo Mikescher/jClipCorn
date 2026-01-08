@@ -68,15 +68,15 @@ public class EditScoreFrame extends JCCFrame
 		btnOK = new JButton();
 
 		//======== this ========
-		setTitle("<dynamic>"); //$NON-NLS-1$
+		setTitle("<dynamic>");
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default, $ugap, 12dlu, $lcgap, 0dlu:grow, $ugap", //$NON-NLS-1$
-			"$ugap, default, $lgap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
+			"$ugap, default, $ugap, 12dlu, $lcgap, 0dlu:grow, $ugap",
+			"$ugap, default, $lgap, default:grow, $lgap, default, $ugap"));
 
 		//---- ctrlCover ----
-		ctrlCover.setText("text"); //$NON-NLS-1$
+		ctrlCover.setText("text");
 		contentPane.add(ctrlCover, CC.xywh(2, 2, 1, 5));
 		contentPane.add(lblScoreIcon, CC.xy(4, 2, CC.FILL, CC.FILL));
 
@@ -96,7 +96,7 @@ public class EditScoreFrame extends JCCFrame
 		contentPane.add(scrollPane1, CC.xywh(4, 4, 3, 1, CC.DEFAULT, CC.FILL));
 
 		//---- btnOK ----
-		btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+		btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
 		btnOK.addActionListener(e -> onOkay());
 		contentPane.add(btnOK, CC.xywh(4, 6, 3, 1));
 		setSize(650, 320);

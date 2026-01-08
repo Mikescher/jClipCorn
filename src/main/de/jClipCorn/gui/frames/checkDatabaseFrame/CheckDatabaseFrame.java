@@ -350,37 +350,37 @@ public class CheckDatabaseFrame extends JCCFrame
 		cbValEmptyDirs = new JCheckBox();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("CheckDatabaseDialog.this.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("CheckDatabaseDialog.this.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(650, 400));
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default:grow, $lcgap, 226dlu, $ugap", //$NON-NLS-1$
-			"$ugap, default, $lgap, default:grow, 3*($lgap, default), $ugap")); //$NON-NLS-1$
+			"$ugap, default:grow, $lcgap, 226dlu, $ugap",
+			"$ugap, default, $lgap, default:grow, 3*($lgap, default), $ugap"));
 
 		//======== panel1 ========
 		{
 			panel1.setLayout(new FormLayout(
-				"2*(default, $lcgap), default:grow, 2*($lcgap, default)", //$NON-NLS-1$
-				"default")); //$NON-NLS-1$
+				"2*(default, $lcgap), default:grow, 2*($lcgap, default)",
+				"default"));
 
 			//---- btnValidate ----
-			btnValidate.setText(LocaleBundle.getString("CheckDatabaseDialog.btnValidate.text")); //$NON-NLS-1$
+			btnValidate.setText(LocaleBundle.getString("CheckDatabaseDialog.btnValidate.text"));
 			btnValidate.setFont(btnValidate.getFont().deriveFont(btnValidate.getFont().getStyle() | Font.BOLD));
 			btnValidate.addActionListener(e -> startValidate());
 			panel1.add(btnValidate, CC.xy(1, 1));
 
 			//---- lblInfo ----
-			lblInfo.setText(LocaleBundle.getString("CheckDatabaseDialog.lblInfo.text")); //$NON-NLS-1$
+			lblInfo.setText(LocaleBundle.getString("CheckDatabaseDialog.lblInfo.text"));
 			panel1.add(lblInfo, CC.xy(3, 1));
 
 			//---- btnAutofix ----
-			btnAutofix.setText(LocaleBundle.getString("CheckDatabaseDialog.btnAutofix.text")); //$NON-NLS-1$
+			btnAutofix.setText(LocaleBundle.getString("CheckDatabaseDialog.btnAutofix.text"));
 			btnAutofix.addActionListener(e -> autoFix());
 			panel1.add(btnAutofix, CC.xy(7, 1));
 
 			//---- btnFixSelected ----
-			btnFixSelected.setText(LocaleBundle.getString("CheckDatabaseDialog.btnFixSelected.text")); //$NON-NLS-1$
+			btnFixSelected.setText(LocaleBundle.getString("CheckDatabaseDialog.btnFixSelected.text"));
 			btnFixSelected.addActionListener(e -> fixSelected());
 			panel1.add(btnFixSelected, CC.xy(9, 1));
 		}
@@ -429,7 +429,7 @@ public class CheckDatabaseFrame extends JCCFrame
 
 					//---- edMetadata ----
 					edMetadata.setEditable(false);
-					edMetadata.setFont(new Font("Noto Mono", Font.PLAIN, 13)); //$NON-NLS-1$
+					edMetadata.setFont(new Font("Noto Mono", Font.PLAIN, 13));
 					scrollPane3.setViewportView(edMetadata);
 				}
 				splitPane2.setBottomComponent(scrollPane3);
@@ -440,82 +440,82 @@ public class CheckDatabaseFrame extends JCCFrame
 		contentPane.add(pbProgress1, CC.xy(2, 6));
 
 		//---- lblProgress1 ----
-		lblProgress1.setText("<dynamic>"); //$NON-NLS-1$
+		lblProgress1.setText("<dynamic>");
 		contentPane.add(lblProgress1, CC.xy(4, 6));
 		contentPane.add(pbProgress2, CC.xy(2, 8));
 
 		//---- lblProgress2 ----
-		lblProgress2.setText("<dynamic>"); //$NON-NLS-1$
+		lblProgress2.setText("<dynamic>");
 		contentPane.add(lblProgress2, CC.xy(4, 8));
 
 		//======== panel2 ========
 		{
 			panel2.setLayout(new FormLayout(
-				"0dlu:grow, 3*($lcgap, 1dlu:grow)", //$NON-NLS-1$
-				"3*(default, $lgap), default")); //$NON-NLS-1$
+				"0dlu:grow, 3*($lcgap, 1dlu:grow)",
+				"3*(default, $lgap), default"));
 
 			//---- cbValMovies ----
-			cbValMovies.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValMovies")); //$NON-NLS-1$
+			cbValMovies.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValMovies"));
 			cbValMovies.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValMovies, CC.xy(1, 1));
 
 			//---- cbValCovers ----
-			cbValCovers.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValCovers.text")); //$NON-NLS-1$
+			cbValCovers.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValCovers.text"));
 			cbValCovers.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValCovers, CC.xy(3, 1));
 
 			//---- cbValCoverFiles ----
-			cbValCoverFiles.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValCoverFiles")); //$NON-NLS-1$
+			cbValCoverFiles.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValCoverFiles"));
 			cbValCoverFiles.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValCoverFiles, CC.xy(5, 1));
 
 			//---- cbValDatabase ----
-			cbValDatabase.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValDatabase")); //$NON-NLS-1$
+			cbValDatabase.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValDatabase"));
 			cbValDatabase.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValDatabase, CC.xy(7, 1));
 
 			//---- cbValSeries ----
-			cbValSeries.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeries")); //$NON-NLS-1$
+			cbValSeries.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeries"));
 			cbValSeries.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValSeries, CC.xy(1, 3));
 
 			//---- cbValGroups ----
-			cbValGroups.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValGroups.text")); //$NON-NLS-1$
+			cbValGroups.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValGroups.text"));
 			cbValGroups.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValGroups, CC.xy(3, 3));
 
 			//---- cbValVideoFiles ----
-			cbValVideoFiles.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValVideoFiles")); //$NON-NLS-1$
+			cbValVideoFiles.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValVideoFiles"));
 			cbValVideoFiles.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValVideoFiles, CC.xy(5, 3));
 
 			//---- cbValDuplicates ----
-			cbValDuplicates.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValDuplicates")); //$NON-NLS-1$
+			cbValDuplicates.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValDuplicates"));
 			cbValDuplicates.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValDuplicates, CC.xy(7, 3));
 
 			//---- cbValSeasons ----
-			cbValSeasons.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeasons")); //$NON-NLS-1$
+			cbValSeasons.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeasons"));
 			cbValSeasons.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValSeasons, CC.xy(1, 5));
 
 			//---- cbValOnlineRefs ----
-			cbValOnlineRefs.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValOnlineRefs.text")); //$NON-NLS-1$
+			cbValOnlineRefs.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValOnlineRefs.text"));
 			cbValOnlineRefs.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValOnlineRefs, CC.xy(3, 5));
 
 			//---- cbValSeriesStructure ----
-			cbValSeriesStructure.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValSeriesStructure")); //$NON-NLS-1$
+			cbValSeriesStructure.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValSeriesStructure"));
 			cbValSeriesStructure.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValSeriesStructure, CC.xy(7, 5));
 
 			//---- cbValEpisodes ----
-			cbValEpisodes.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValEpisodes")); //$NON-NLS-1$
+			cbValEpisodes.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValEpisodes"));
 			cbValEpisodes.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValEpisodes, CC.xy(1, 7));
 
 			//---- cbValEmptyDirs ----
-			cbValEmptyDirs.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValEmptyDirs")); //$NON-NLS-1$
+			cbValEmptyDirs.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValEmptyDirs"));
 			cbValEmptyDirs.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValEmptyDirs, CC.xy(7, 7));
 		}

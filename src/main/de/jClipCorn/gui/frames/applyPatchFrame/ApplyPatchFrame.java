@@ -237,77 +237,77 @@ public class ApplyPatchFrame extends JCCFrame
 		lblProgress2 = new JLabel();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("ApplyPatchFrame.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("ApplyPatchFrame.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default, $lcgap, default:grow, $lcgap, default, $lcgap, 80dlu, $ugap", //$NON-NLS-1$
-			"$ugap, 6*(default, $lgap), default:grow, 3*($lgap, default), $ugap")); //$NON-NLS-1$
+			"$ugap, default, $lcgap, default:grow, $lcgap, default, $lcgap, 80dlu, $ugap",
+			"$ugap, 6*(default, $lgap), default:grow, 3*($lgap, default), $ugap"));
 
 		//---- label1 ----
-		label1.setText(LocaleBundle.getString("ApplyPatchFrame.lblInput")); //$NON-NLS-1$
+		label1.setText(LocaleBundle.getString("ApplyPatchFrame.lblInput"));
 		contentPane.add(label1, CC.xy(2, 2));
 		contentPane.add(edPathPatchfile, CC.xywh(4, 2, 3, 1, CC.DEFAULT, CC.FILL));
 
 		//---- btnChoose ----
-		btnChoose.setText("..."); //$NON-NLS-1$
+		btnChoose.setText("...");
 		btnChoose.addActionListener(e -> choosePatchfile(e));
 		contentPane.add(btnChoose, CC.xy(8, 2));
 
 		//---- label2 ----
-		label2.setText(LocaleBundle.getString("ApplyPatchFrame.labelMovDest")); //$NON-NLS-1$
+		label2.setText(LocaleBundle.getString("ApplyPatchFrame.labelMovDest"));
 		contentPane.add(label2, CC.xy(2, 4));
 		contentPane.add(edPathDestMovies, CC.xywh(4, 4, 5, 1, CC.DEFAULT, CC.FILL));
 
 		//---- label3 ----
-		label3.setText(LocaleBundle.getString("ApplyPatchFrame.labelDestSeries")); //$NON-NLS-1$
+		label3.setText(LocaleBundle.getString("ApplyPatchFrame.labelDestSeries"));
 		contentPane.add(label3, CC.xy(2, 6));
 		contentPane.add(edPathDestSeries, CC.xy(4, 6, CC.DEFAULT, CC.FILL));
 
 		//---- chkbxSeriesAutoPath ----
-		chkbxSeriesAutoPath.setText(LocaleBundle.getString("ApplyPatchFrame.chkbxSeriesAutoPath")); //$NON-NLS-1$
+		chkbxSeriesAutoPath.setText(LocaleBundle.getString("ApplyPatchFrame.chkbxSeriesAutoPath"));
 		chkbxSeriesAutoPath.setSelected(true);
 		contentPane.add(chkbxSeriesAutoPath, CC.xywh(6, 6, 3, 1));
 
 		//---- label4 ----
-		label4.setText(LocaleBundle.getString("ApplyPatchFrame.labelDestTrashMov")); //$NON-NLS-1$
+		label4.setText(LocaleBundle.getString("ApplyPatchFrame.labelDestTrashMov"));
 		contentPane.add(label4, CC.xy(2, 8));
 		contentPane.add(edPathDestTrashMov, CC.xywh(4, 8, 5, 1));
 
 		//---- label5 ----
-		label5.setText(LocaleBundle.getString("ApplyPatchFrame.labelDestTrashSer")); //$NON-NLS-1$
+		label5.setText(LocaleBundle.getString("ApplyPatchFrame.labelDestTrashSer"));
 		contentPane.add(label5, CC.xy(2, 10));
 		contentPane.add(edPathDestTrashSer, CC.xywh(4, 10, 5, 1));
 
 		//---- btnLoad ----
-		btnLoad.setText(LocaleBundle.getString("ApplyPatchFrame.btnLoad")); //$NON-NLS-1$
+		btnLoad.setText(LocaleBundle.getString("ApplyPatchFrame.btnLoad"));
 		btnLoad.addActionListener(e -> readPatch(e));
 		contentPane.add(btnLoad, CC.xywh(2, 12, 7, 1));
 		contentPane.add(tableMain, CC.xywh(2, 14, 7, 1, CC.FILL, CC.FILL));
 
 		//---- btnApply ----
-		btnApply.setText(LocaleBundle.getString("ApplyPatchFrame.btnApply")); //$NON-NLS-1$
+		btnApply.setText(LocaleBundle.getString("ApplyPatchFrame.btnApply"));
 		btnApply.setFont(btnApply.getFont().deriveFont(btnApply.getFont().getStyle() | Font.BOLD));
 		btnApply.addActionListener(e -> applyPatch(e));
 		contentPane.add(btnApply, CC.xywh(2, 16, 3, 1, CC.DEFAULT, CC.FILL));
 
 		//---- btnCancel ----
-		btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+		btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text"));
 		btnCancel.addActionListener(e -> cancelThread(e));
 		contentPane.add(btnCancel, CC.xy(6, 16, CC.DEFAULT, CC.FILL));
 
 		//======== panel1 ========
 		{
 			panel1.setLayout(new FormLayout(
-				"80dlu", //$NON-NLS-1$
-				"2*(default)")); //$NON-NLS-1$
+				"80dlu",
+				"2*(default)"));
 
 			//---- cbPorcelain ----
-			cbPorcelain.setText(LocaleBundle.getString("BatchEditFrame.cbPorcelain")); //$NON-NLS-1$
+			cbPorcelain.setText(LocaleBundle.getString("BatchEditFrame.cbPorcelain"));
 			panel1.add(cbPorcelain, CC.xy(1, 1));
 
 			//---- cbCreateBackup ----
-			cbCreateBackup.setText(LocaleBundle.getString("ApplyPatchFrame.chkbxCreateBackup")); //$NON-NLS-1$
+			cbCreateBackup.setText(LocaleBundle.getString("ApplyPatchFrame.chkbxCreateBackup"));
 			cbCreateBackup.setSelected(true);
 			panel1.add(cbCreateBackup, CC.xy(1, 2));
 		}

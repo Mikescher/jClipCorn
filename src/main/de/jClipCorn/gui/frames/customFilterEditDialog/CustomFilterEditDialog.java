@@ -394,15 +394,15 @@ public class CustomFilterEditDialog extends JCCDialog {
 		btnImport = new JButton();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("CustomFilterEditDialog.Title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("CustomFilterEditDialog.Title"));
 		setMinimumSize(new Dimension(600, 400));
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$lcgap, default:grow, $lcgap", //$NON-NLS-1$
-			"$lgap, default, $lgap, default:grow, $lgap, default, $lgap")); //$NON-NLS-1$
+			"$lcgap, default:grow, $lcgap",
+			"$lgap, default, $lgap, default:grow, $lgap, default, $lgap"));
 
 		//---- edName ----
-		edName.setText("{name}"); //$NON-NLS-1$
+		edName.setText("{name}");
 		contentPane.add(edName, CC.xy(2, 2));
 
 		//======== splitPane1 ========
@@ -423,11 +423,11 @@ public class CustomFilterEditDialog extends JCCDialog {
 			//======== panel2 ========
 			{
 				panel2.setLayout(new FormLayout(
-					"$lcgap, default:grow, $lcgap", //$NON-NLS-1$
-					"$lgap, default, $lgap, default:grow, $lgap, default, $lgap")); //$NON-NLS-1$
+					"$lcgap, default:grow, $lcgap",
+					"$lgap, default, $lgap, default:grow, $lgap, default, $lgap"));
 
 				//---- lblCaption ----
-				lblCaption.setText("{TITLE}"); //$NON-NLS-1$
+				lblCaption.setText("{TITLE}");
 				lblCaption.setFont(lblCaption.getFont().deriveFont(lblCaption.getFont().getStyle() | Font.BOLD, lblCaption.getFont().getSize() + 4f));
 				lblCaption.setHorizontalAlignment(SwingConstants.CENTER);
 				panel2.add(lblCaption, CC.xy(2, 2));
@@ -439,7 +439,7 @@ public class CustomFilterEditDialog extends JCCDialog {
 				panel2.add(pnlRight, CC.xy(2, 4, CC.FILL, CC.FILL));
 
 				//---- btnRemove ----
-				btnRemove.setText(LocaleBundle.getString("CustomFilterEditDialog.Remove")); //$NON-NLS-1$
+				btnRemove.setText(LocaleBundle.getString("CustomFilterEditDialog.Remove"));
 				btnRemove.addActionListener(e -> RemoveSelectedFilter());
 				panel2.add(btnRemove, CC.xy(2, 6, CC.RIGHT, CC.DEFAULT));
 			}
@@ -450,31 +450,31 @@ public class CustomFilterEditDialog extends JCCDialog {
 		//======== panel1 ========
 		{
 			panel1.setLayout(new FormLayout(
-				"default, $lcgap, default:grow, 2*($lcgap, default), $lcgap, default:grow, 2*($lcgap, default)", //$NON-NLS-1$
-				"default")); //$NON-NLS-1$
+				"default, $lcgap, default:grow, 2*($lcgap, default), $lcgap, default:grow, 2*($lcgap, default)",
+				"default"));
 
 			//---- btnClear ----
-			btnClear.setText(LocaleBundle.getString("UIGeneric.btnClear.text")); //$NON-NLS-1$
+			btnClear.setText(LocaleBundle.getString("UIGeneric.btnClear.text"));
 			btnClear.addActionListener(e -> onClear());
 			panel1.add(btnClear, CC.xy(1, 1));
 
 			//---- btnCancel ----
-			btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+			btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text"));
 			btnCancel.addActionListener(e -> onCancel());
 			panel1.add(btnCancel, CC.xy(5, 1));
 
 			//---- btnOK ----
-			btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+			btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
 			btnOK.addActionListener(e -> onOkay());
 			panel1.add(btnOK, CC.xy(7, 1));
 
 			//---- btnExport ----
-			btnExport.setText(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnExport.text")); //$NON-NLS-1$
+			btnExport.setText(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnExport.text"));
 			btnExport.addActionListener(e -> onExport());
 			panel1.add(btnExport, CC.xy(11, 1));
 
 			//---- btnImport ----
-			btnImport.setText(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnImport.text")); //$NON-NLS-1$
+			btnImport.setText(LocaleBundle.getString("FilterTree.Custom.CustomOperatorFilterDialog.btnImport.text"));
 			btnImport.addActionListener(e -> onImport());
 			panel1.add(btnImport, CC.xy(13, 1));
 		}

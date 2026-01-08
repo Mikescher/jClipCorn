@@ -28,12 +28,12 @@ public class Template extends JCCFrame
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 
 		//======== this ========
-		setTitle("<dynamic>"); //$NON-NLS-1$
+		setTitle("<dynamic>");
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default:grow, $ugap", //$NON-NLS-1$
-			"$ugap, default:grow, $ugap")); //$NON-NLS-1$
+			"$ugap, default:grow, $ugap",
+			"$ugap, default:grow, $ugap"));
 		setSize(650, 500);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents

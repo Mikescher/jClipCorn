@@ -388,69 +388,69 @@ public class UpdateCodecFrame extends JCCFrame
 		button6 = new JButton();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("UpdateCodecFrame.Title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("UpdateCodecFrame.Title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(750, 450));
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default:grow, $ugap", //$NON-NLS-1$
-			"$ugap, default, $lgap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
+			"$ugap, default:grow, $ugap",
+			"$ugap, default, $lgap, default:grow, $lgap, default, $ugap"));
 
 		//======== panel2 ========
 		{
 			panel2.setLayout(new FormLayout(
-				"default, $ugap, default:grow, 2*($ugap, default), default, $ugap, default", //$NON-NLS-1$
-				"3*(default, $lgap), default")); //$NON-NLS-1$
+				"default, $ugap, default:grow, 2*($ugap, default), default, $ugap, default",
+				"3*(default, $lgap), default"));
 
 			//---- btnStartCollectingData ----
-			btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect1")); //$NON-NLS-1$
+			btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect1"));
 			btnStartCollectingData.addActionListener(e -> queryMetadata());
 			panel2.add(btnStartCollectingData, CC.xy(1, 1));
 			panel2.add(progressBar, CC.xy(3, 1, CC.FILL, CC.FILL));
 
 			//---- btnShowAll ----
-			btnShowAll.setText(LocaleBundle.getString("UpdateMetadataFrame.SwitchFilter1")); //$NON-NLS-1$
+			btnShowAll.setText(LocaleBundle.getString("UpdateMetadataFrame.SwitchFilter1"));
 			btnShowAll.setSelected(true);
 			btnShowAll.addActionListener(e -> setFilterAll());
 			panel2.add(btnShowAll, CC.xy(5, 1));
 
 			//---- btnShowFilteredLen ----
-			btnShowFilteredLen.setText(LocaleBundle.getString("UpdateCodecFrame.Filter3")); //$NON-NLS-1$
+			btnShowFilteredLen.setText(LocaleBundle.getString("UpdateCodecFrame.Filter3"));
 			btnShowFilteredLen.addActionListener(e -> setFilterLen());
 			panel2.add(btnShowFilteredLen, CC.xy(7, 1));
 
 			//---- btnShowFilteredDynLen ----
-			btnShowFilteredDynLen.setText(LocaleBundle.getString("UpdateCodecFrame.Filter4")); //$NON-NLS-1$
+			btnShowFilteredDynLen.setText(LocaleBundle.getString("UpdateCodecFrame.Filter4"));
 			btnShowFilteredDynLen.addActionListener(e -> setFilterDynLen());
 			panel2.add(btnShowFilteredDynLen, CC.xy(8, 1));
 
 			//---- btnShowFilteredErr ----
-			btnShowFilteredErr.setText(LocaleBundle.getString("UpdateCodecFrame.Filter5")); //$NON-NLS-1$
+			btnShowFilteredErr.setText(LocaleBundle.getString("UpdateCodecFrame.Filter5"));
 			btnShowFilteredErr.addActionListener(e -> setFilterError());
 			panel2.add(btnShowFilteredErr, CC.xy(10, 1));
 
 			//---- btnShowFiltered ----
-			btnShowFiltered.setText(LocaleBundle.getString("UpdateCodecFrame.Filter1")); //$NON-NLS-1$
+			btnShowFiltered.setText(LocaleBundle.getString("UpdateCodecFrame.Filter1"));
 			btnShowFiltered.addActionListener(e -> setFilterChanged());
 			panel2.add(btnShowFiltered, CC.xy(5, 3));
 
 			//---- btnShowFilteredLang ----
-			btnShowFilteredLang.setText(LocaleBundle.getString("UpdateCodecFrame.Filter2")); //$NON-NLS-1$
+			btnShowFilteredLang.setText(LocaleBundle.getString("UpdateCodecFrame.Filter2"));
 			btnShowFilteredLang.addActionListener(e -> setFilterLang());
 			panel2.add(btnShowFilteredLang, CC.xy(7, 3));
 
 			//---- btnShowFilteredWarn ----
-			btnShowFilteredWarn.setText(LocaleBundle.getString("UpdateCodecFrame.Filter6")); //$NON-NLS-1$
+			btnShowFilteredWarn.setText(LocaleBundle.getString("UpdateCodecFrame.Filter6"));
 			btnShowFilteredWarn.addActionListener(e -> setFilterWarn());
 			panel2.add(btnShowFilteredWarn, CC.xy(10, 3));
 
 			//---- btnShowFilteredSubs ----
-			btnShowFilteredSubs.setText(LocaleBundle.getString("UpdateCodecFrame.Filter8")); //$NON-NLS-1$
+			btnShowFilteredSubs.setText(LocaleBundle.getString("UpdateCodecFrame.Filter8"));
 			btnShowFilteredSubs.addActionListener(e -> setFilterSubs());
 			panel2.add(btnShowFilteredSubs, CC.xy(7, 5));
 
 			//---- btnShowFilteredMediaInfo ----
-			btnShowFilteredMediaInfo.setText(LocaleBundle.getString("UpdateCodecFrame.Filter7")); //$NON-NLS-1$
+			btnShowFilteredMediaInfo.setText(LocaleBundle.getString("UpdateCodecFrame.Filter7"));
 			btnShowFilteredMediaInfo.addActionListener(e -> setFilterMediaInfo());
 			panel2.add(btnShowFilteredMediaInfo, CC.xy(7, 7));
 		}
@@ -460,11 +460,11 @@ public class UpdateCodecFrame extends JCCFrame
 		//======== panel1 ========
 		{
 			panel1.setLayout(new FormLayout(
-				"default, $lcgap, [100dlu,default], $lcgap, default:grow, $lcgap, default", //$NON-NLS-1$
-				"5*(default, $lgap), default")); //$NON-NLS-1$
+				"default, $lcgap, [100dlu,default], $lcgap, default:grow, $lcgap, default",
+				"5*(default, $lgap), default"));
 
 			//---- btnUpdateSelectedLang ----
-			btnUpdateSelectedLang.setText(LocaleBundle.getString("UpdateCodecFrame.Button1")); //$NON-NLS-1$
+			btnUpdateSelectedLang.setText(LocaleBundle.getString("UpdateCodecFrame.Button1"));
 			btnUpdateSelectedLang.setEnabled(false);
 			btnUpdateSelectedLang.addActionListener(e -> updateSelectedLanguages());
 			panel1.add(btnUpdateSelectedLang, CC.xywh(1, 1, 3, 1));
@@ -479,25 +479,25 @@ public class UpdateCodecFrame extends JCCFrame
 			panel1.add(scrollPane, CC.xywh(5, 1, 1, 11));
 
 			//---- btnUpdateSelectedSubs ----
-			btnUpdateSelectedSubs.setText(LocaleBundle.getString("UpdateCodecFrame.btnUpdateSelectedSubs.text")); //$NON-NLS-1$
+			btnUpdateSelectedSubs.setText(LocaleBundle.getString("UpdateCodecFrame.btnUpdateSelectedSubs.text"));
 			btnUpdateSelectedSubs.setEnabled(false);
 			btnUpdateSelectedSubs.addActionListener(e -> updateSelectedSubtitles());
 			panel1.add(btnUpdateSelectedSubs, CC.xywh(1, 3, 3, 1));
 
 			//---- btnUpdateSelectedLen ----
-			btnUpdateSelectedLen.setText(LocaleBundle.getString("UpdateCodecFrame.Button2")); //$NON-NLS-1$
+			btnUpdateSelectedLen.setText(LocaleBundle.getString("UpdateCodecFrame.Button2"));
 			btnUpdateSelectedLen.setEnabled(false);
 			btnUpdateSelectedLen.addActionListener(e -> updateSelectedLengths());
 			panel1.add(btnUpdateSelectedLen, CC.xywh(1, 5, 3, 1));
 
 			//---- btnUpdateSelectedMediaInfo ----
-			btnUpdateSelectedMediaInfo.setText(LocaleBundle.getString("UpdateCodecFrame.Button3")); //$NON-NLS-1$
+			btnUpdateSelectedMediaInfo.setText(LocaleBundle.getString("UpdateCodecFrame.Button3"));
 			btnUpdateSelectedMediaInfo.setEnabled(false);
 			btnUpdateSelectedMediaInfo.addActionListener(e -> updateSelectedMediaInfos());
 			panel1.add(btnUpdateSelectedMediaInfo, CC.xywh(1, 7, 3, 1));
 
 			//---- label1 ----
-			label1.setText(LocaleBundle.getString("UpdateCodecFrame.Label1")); //$NON-NLS-1$
+			label1.setText(LocaleBundle.getString("UpdateCodecFrame.Label1"));
 			panel1.add(label1, CC.xy(1, 9));
 
 			//---- spinnerDynLen ----
@@ -506,11 +506,11 @@ public class UpdateCodecFrame extends JCCFrame
 			panel1.add(spinnerDynLen, CC.xy(3, 9));
 
 			//---- cbAutoScroll ----
-			cbAutoScroll.setText(LocaleBundle.getString("UpdateCodecFrame.CBScroll")); //$NON-NLS-1$
+			cbAutoScroll.setText(LocaleBundle.getString("UpdateCodecFrame.CBScroll"));
 			panel1.add(cbAutoScroll, CC.xywh(1, 11, 3, 1));
 
 			//---- button6 ----
-			button6.setText("..."); //$NON-NLS-1$
+			button6.setText("...");
 			button6.addActionListener(e -> showMediaInfo());
 			panel1.add(button6, CC.xy(7, 11));
 		}

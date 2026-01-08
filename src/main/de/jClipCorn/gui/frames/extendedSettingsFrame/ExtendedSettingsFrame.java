@@ -212,13 +212,13 @@ public class ExtendedSettingsFrame extends JCCFrame
 		button2 = new JButton();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("extendedSettingsFrame.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("extendedSettingsFrame.title"));
 		setMinimumSize(null);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$rgap, default, 2*($lcgap, 0dlu:grow), $lcgap, 0dlu:grow(0.5), $lcgap, default, $lcgap", //$NON-NLS-1$
-			"$lgap, default, $rgap, default:grow, 8*($lgap, default), $lgap")); //$NON-NLS-1$
+			"$rgap, default, 2*($lcgap, 0dlu:grow), $lcgap, 0dlu:grow(0.5), $lcgap, default, $lcgap",
+			"$lgap, default, $rgap, default:grow, 8*($lgap, default), $lgap"));
 		contentPane.add(edFilter, CC.xywh(2, 2, 9, 1));
 
 		//======== pnlScroll ========
@@ -232,7 +232,7 @@ public class ExtendedSettingsFrame extends JCCFrame
 		contentPane.add(pnlScroll, CC.xywh(2, 4, 9, 1, CC.FILL, CC.FILL));
 
 		//---- label1 ----
-		label1.setText("Kategorie:"); //$NON-NLS-1$
+		label1.setText("Kategorie:");
 		contentPane.add(label1, CC.xy(2, 6));
 
 		//---- edCategory ----
@@ -240,7 +240,7 @@ public class ExtendedSettingsFrame extends JCCFrame
 		contentPane.add(edCategory, CC.xywh(4, 6, 7, 1));
 
 		//---- label5 ----
-		label5.setText("Schl\u00fcssel:"); //$NON-NLS-1$
+		label5.setText("Schl\u00fcssel:");
 		contentPane.add(label5, CC.xy(2, 8));
 
 		//---- edKey ----
@@ -249,7 +249,7 @@ public class ExtendedSettingsFrame extends JCCFrame
 		contentPane.add(edKey, CC.xywh(4, 8, 7, 1));
 
 		//---- label6 ----
-		label6.setText("Typ:"); //$NON-NLS-1$
+		label6.setText("Typ:");
 		contentPane.add(label6, CC.xy(2, 10));
 
 		//---- edTyp ----
@@ -257,7 +257,7 @@ public class ExtendedSettingsFrame extends JCCFrame
 		contentPane.add(edTyp, CC.xywh(4, 10, 7, 1));
 
 		//---- label2 ----
-		label2.setText("Beschreibung:"); //$NON-NLS-1$
+		label2.setText("Beschreibung:");
 		contentPane.add(label2, CC.xy(2, 12));
 
 		//---- edDescription ----
@@ -265,7 +265,7 @@ public class ExtendedSettingsFrame extends JCCFrame
 		contentPane.add(edDescription, CC.xywh(4, 12, 7, 1));
 
 		//---- label3 ----
-		label3.setText("Standardwert:"); //$NON-NLS-1$
+		label3.setText("Standardwert:");
 		contentPane.add(label3, CC.xy(2, 14));
 
 		//---- edDefaultValue ----
@@ -273,12 +273,12 @@ public class ExtendedSettingsFrame extends JCCFrame
 		contentPane.add(edDefaultValue, CC.xywh(4, 14, 5, 1));
 
 		//---- btnReset ----
-		btnReset.setText(LocaleBundle.getString("extendedSettingsFrame.btnReset.title")); //$NON-NLS-1$
+		btnReset.setText(LocaleBundle.getString("extendedSettingsFrame.btnReset.title"));
 		btnReset.addActionListener(e -> onReset(e));
 		contentPane.add(btnReset, CC.xy(10, 14));
 
 		//---- label4 ----
-		label4.setText("Aktueller Wert:"); //$NON-NLS-1$
+		label4.setText("Aktueller Wert:");
 		contentPane.add(label4, CC.xy(2, 16));
 
 		//---- edCurrentValue ----
@@ -292,17 +292,17 @@ public class ExtendedSettingsFrame extends JCCFrame
 		contentPane.add(pnlEditComponent, CC.xywh(2, 18, 7, 1, CC.FILL, CC.FILL));
 
 		//---- btnValueSet ----
-		btnValueSet.setText(LocaleBundle.getString("extendedSettingsFrame.btnValueSet.title")); //$NON-NLS-1$
+		btnValueSet.setText(LocaleBundle.getString("extendedSettingsFrame.btnValueSet.title"));
 		btnValueSet.addActionListener(e -> onSetValue(e));
 		contentPane.add(btnValueSet, CC.xy(10, 18));
 
 		//---- btnOK ----
-		btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+		btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
 		btnOK.addActionListener(e -> onOK(e));
 		contentPane.add(btnOK, CC.xy(4, 20, CC.RIGHT, CC.DEFAULT));
 
 		//---- button2 ----
-		button2.setText(LocaleBundle.getString("extendedSettingsFrame.btnResetAll.title")); //$NON-NLS-1$
+		button2.setText(LocaleBundle.getString("extendedSettingsFrame.btnResetAll.title"));
 		button2.addActionListener(e -> onResetAll(e));
 		contentPane.add(button2, CC.xy(6, 20, CC.LEFT, CC.DEFAULT));
 		pack();

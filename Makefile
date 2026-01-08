@@ -30,7 +30,7 @@ jformdesigner:
 	@echo ''
 	@java -classpath "./_utils/jfd-8.3.1-b470/lib/JFormDesigner.jar" \
 	     "com.jformdesigner.application.CommandLineMain"             \
-		 --generate --recursive                                      \
+		 --generate --recursive --verbose                            \
 	     "./jClipCorn.jfdproj"                                       \
 		 "./src/main/de/jClipCorn/gui/frames/"
 

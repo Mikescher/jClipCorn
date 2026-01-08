@@ -475,7 +475,7 @@ public class SearchFrame extends JCCFrame
 		lsMain = new JList<>();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("SearchFrame.this.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("SearchFrame.this.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		addFocusListener(new FocusAdapter() {
 			@Override
@@ -483,10 +483,10 @@ public class SearchFrame extends JCCFrame
 				onFocusLost();
 			}
 		});
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default:grow, $ugap", //$NON-NLS-1$
-			"$ugap, default, $pgap, 0dlu:grow, $ugap")); //$NON-NLS-1$
+			"$ugap, default:grow, $ugap",
+			"$ugap, default, $pgap, 0dlu:grow, $ugap"));
 
 		//---- edSearch ----
 		edSearch.addActionListener(e -> onSearchFieldEnter());

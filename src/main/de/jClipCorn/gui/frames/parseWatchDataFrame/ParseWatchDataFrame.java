@@ -94,18 +94,18 @@ public class ParseWatchDataFrame extends JCCFrame
 		btnShowExample = new JButton();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("ParseWatchDataFrame.this.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("ParseWatchDataFrame.this.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, 0dlu:grow, $lcgap, 0dlu:grow, $ugap", //$NON-NLS-1$
-			"$ugap, 0dlu:grow, $lgap, 0dlu:grow, $ugap, default, $ugap")); //$NON-NLS-1$
+			"$ugap, 0dlu:grow, $lcgap, 0dlu:grow, $ugap",
+			"$ugap, 0dlu:grow, $lgap, 0dlu:grow, $ugap, default, $ugap"));
 
 		//======== scrollPane1 ========
 		{
 
 			//---- memoData ----
-			memoData.setFont(new Font("Courier New", memoData.getFont().getStyle(), memoData.getFont().getSize())); //$NON-NLS-1$
+			memoData.setFont(new Font("Courier New", memoData.getFont().getStyle(), memoData.getFont().getSize()));
 			scrollPane1.setViewportView(memoData);
 		}
 		contentPane.add(scrollPane1, CC.xywh(2, 2, 1, 3, CC.FILL, CC.FILL));
@@ -126,17 +126,17 @@ public class ParseWatchDataFrame extends JCCFrame
 			pnlBottom.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
 
 			//---- btnExecute ----
-			btnExecute.setText(LocaleBundle.getString("UIGeneric.btnApply.text")); //$NON-NLS-1$
+			btnExecute.setText(LocaleBundle.getString("UIGeneric.btnApply.text"));
 			btnExecute.addActionListener(e -> onExecute());
 			pnlBottom.add(btnExecute);
 
 			//---- btnCancel ----
-			btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+			btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text"));
 			btnCancel.addActionListener(e -> onCancel());
 			pnlBottom.add(btnCancel);
 
 			//---- btnShowExample ----
-			btnShowExample.setText(LocaleBundle.getString("ParseWatchDataFrame.btnExamples.text")); //$NON-NLS-1$
+			btnShowExample.setText(LocaleBundle.getString("ParseWatchDataFrame.btnExamples.text"));
 			btnShowExample.addActionListener(e -> onShowExample());
 			pnlBottom.add(btnShowExample);
 		}

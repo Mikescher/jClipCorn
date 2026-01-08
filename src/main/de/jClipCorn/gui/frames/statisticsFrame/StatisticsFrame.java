@@ -324,19 +324,19 @@ public class StatisticsFrame extends JCCFrame
 		pnlCenter = new JPanel();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("StatisticsFrame.this.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("StatisticsFrame.this.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(925, 485));
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, 185dlu, $lcgap, default:grow, $ugap", //$NON-NLS-1$
-			"$ugap, default, $lgap, default:grow, $ugap")); //$NON-NLS-1$
+			"$ugap, 185dlu, $lcgap, default:grow, $ugap",
+			"$ugap, default, $lgap, default:grow, $ugap"));
 
 		//======== pnlTop ========
 		{
 			pnlTop.setLayout(new FormLayout(
-				"100dlu, $lcgap, 82dlu, $lcgap, pref, $lcgap, 300px, $lcgap, pref, $lcgap, default:grow", //$NON-NLS-1$
-				"default")); //$NON-NLS-1$
+				"100dlu, $lcgap, 82dlu, $lcgap, pref, $lcgap, 300px, $lcgap, pref, $lcgap, default:grow",
+				"default"));
 
 			//---- cbxChooseChart ----
 			cbxChooseChart.setMaximumRowCount(32);
@@ -344,18 +344,18 @@ public class StatisticsFrame extends JCCFrame
 			pnlTop.add(cbxChooseChart, CC.xy(1, 1));
 
 			//---- btnPrevChart ----
-			btnPrevChart.setText("<"); //$NON-NLS-1$
+			btnPrevChart.setText("<");
 			btnPrevChart.addActionListener(e -> onPrevChart());
 			pnlTop.add(btnPrevChart, CC.xy(5, 1));
 
 			//---- lblChartCaption ----
-			lblChartCaption.setText(LocaleBundle.getString("StatisticsFrame.this.title")); //$NON-NLS-1$
+			lblChartCaption.setText(LocaleBundle.getString("StatisticsFrame.this.title"));
 			lblChartCaption.setHorizontalAlignment(SwingConstants.CENTER);
 			lblChartCaption.setFont(lblChartCaption.getFont().deriveFont(lblChartCaption.getFont().getStyle() | Font.BOLD));
 			pnlTop.add(lblChartCaption, CC.xy(7, 1));
 
 			//---- btnNextChart ----
-			btnNextChart.setText(">"); //$NON-NLS-1$
+			btnNextChart.setText(">");
 			btnNextChart.addActionListener(e -> onNextChart());
 			pnlTop.add(btnNextChart, CC.xy(9, 1));
 
@@ -364,42 +364,42 @@ public class StatisticsFrame extends JCCFrame
 				pnlFilter.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
 
 				//---- btnFilterMovies ----
-				btnFilterMovies.setText(LocaleBundle.getString("StatisticsFrame.this.toggleMovies")); //$NON-NLS-1$
+				btnFilterMovies.setText(LocaleBundle.getString("StatisticsFrame.this.toggleMovies"));
 				btnFilterMovies.addActionListener(e -> onFilterMovies());
 				pnlFilter.add(btnFilterMovies);
 
 				//---- btnFilterSeries ----
-				btnFilterSeries.setText(LocaleBundle.getString("StatisticsFrame.this.toggleSeries")); //$NON-NLS-1$
+				btnFilterSeries.setText(LocaleBundle.getString("StatisticsFrame.this.toggleSeries"));
 				btnFilterSeries.addActionListener(e -> onFilterSeries());
 				pnlFilter.add(btnFilterSeries);
 
 				//---- btnFilterSeasons ----
-				btnFilterSeasons.setText(LocaleBundle.getString("StatisticsFrame.this.toggleSeasons")); //$NON-NLS-1$
+				btnFilterSeasons.setText(LocaleBundle.getString("StatisticsFrame.this.toggleSeasons"));
 				btnFilterSeasons.addActionListener(e -> onFilterSeasons());
 				pnlFilter.add(btnFilterSeasons);
 
 				//---- btnFilterEpisodes ----
-				btnFilterEpisodes.setText(LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes")); //$NON-NLS-1$
+				btnFilterEpisodes.setText(LocaleBundle.getString("StatisticsFrame.this.toggleEpisodes"));
 				btnFilterEpisodes.addActionListener(e -> onFilterEpisodes());
 				pnlFilter.add(btnFilterEpisodes);
 
 				//---- btnFilterMovesAndSeries ----
-				btnFilterMovesAndSeries.setText(LocaleBundle.getString("StatisticsFrame.this.toggleBoth")); //$NON-NLS-1$
+				btnFilterMovesAndSeries.setText(LocaleBundle.getString("StatisticsFrame.this.toggleBoth"));
 				btnFilterMovesAndSeries.addActionListener(e -> onFilterMovesAndSeries());
 				pnlFilter.add(btnFilterMovesAndSeries);
 
 				//---- btnFilterMovesAndSeasons ----
-				btnFilterMovesAndSeasons.setText(LocaleBundle.getString("StatisticsFrame.this.toggleBoth")); //$NON-NLS-1$
+				btnFilterMovesAndSeasons.setText(LocaleBundle.getString("StatisticsFrame.this.toggleBoth"));
 				btnFilterMovesAndSeasons.addActionListener(e -> onFilterMovesAndSeasons());
 				pnlFilter.add(btnFilterMovesAndSeasons);
 
 				//---- btnFilterMovesAndEpisodes ----
-				btnFilterMovesAndEpisodes.setText(LocaleBundle.getString("StatisticsFrame.this.toggleBoth")); //$NON-NLS-1$
+				btnFilterMovesAndEpisodes.setText(LocaleBundle.getString("StatisticsFrame.this.toggleBoth"));
 				btnFilterMovesAndEpisodes.addActionListener(e -> onFilterMovesAndEpisodes());
 				pnlFilter.add(btnFilterMovesAndEpisodes);
 
 				//---- btnFilterAll ----
-				btnFilterAll.setText(LocaleBundle.getString("StatisticsFrame.this.toggleAll")); //$NON-NLS-1$
+				btnFilterAll.setText(LocaleBundle.getString("StatisticsFrame.this.toggleAll"));
 				btnFilterAll.addActionListener(e -> onFilterAll());
 				pnlFilter.add(btnFilterAll);
 			}
@@ -414,8 +414,8 @@ public class StatisticsFrame extends JCCFrame
 			//======== pnlLeftTop ========
 			{
 				pnlLeftTop.setLayout(new FormLayout(
-					"default:grow", //$NON-NLS-1$
-					"fill:0dlu:grow, 0dlu:grow")); //$NON-NLS-1$
+					"default:grow",
+					"fill:0dlu:grow, 0dlu:grow"));
 
 				//======== sclSidebarDataLeft ========
 				{
@@ -438,28 +438,28 @@ public class StatisticsFrame extends JCCFrame
 			//======== pnlLeftBottom ========
 			{
 				pnlLeftBottom.setLayout(new FormLayout(
-					"0dlu:grow", //$NON-NLS-1$
-					"$lgap, fill:default:grow, $lgap, [0dlu,pref]")); //$NON-NLS-1$
+					"0dlu:grow",
+					"$lgap, fill:default:grow, $lgap, [0dlu,pref]"));
 
 				//======== pnlYearRange ========
 				{
 					pnlYearRange.setLayout(new FormLayout(
-						"default, $lcgap, default:grow, $lcgap, default", //$NON-NLS-1$
-						"fill:default:grow")); //$NON-NLS-1$
+						"default, $lcgap, default:grow, $lcgap, default",
+						"fill:default:grow"));
 
 					//---- button1 ----
-					button1.setText("<"); //$NON-NLS-1$
+					button1.setText("<");
 					button1.addActionListener(e -> onPrevYear());
 					pnlYearRange.add(button1, CC.xy(1, 1));
 
 					//---- lblYear ----
-					lblYear.setText(LocaleBundle.getString("StatisticsFrame.this.allTime")); //$NON-NLS-1$
+					lblYear.setText(LocaleBundle.getString("StatisticsFrame.this.allTime"));
 					lblYear.setHorizontalAlignment(SwingConstants.CENTER);
-					lblYear.setFont(new Font("Courier New", lblYear.getFont().getStyle() | Font.BOLD, 16)); //$NON-NLS-1$
+					lblYear.setFont(new Font("Courier New", lblYear.getFont().getStyle() | Font.BOLD, 16));
 					pnlYearRange.add(lblYear, CC.xy(3, 1));
 
 					//---- button2 ----
-					button2.setText(">"); //$NON-NLS-1$
+					button2.setText(">");
 					button2.addActionListener(e -> onNextYear());
 					pnlYearRange.add(button2, CC.xy(5, 1));
 				}

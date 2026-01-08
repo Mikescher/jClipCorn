@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <entry key="classpath1" value="out/production/classes" />
-  <entry key="classpath2" value="lib-jformdesigner/commons-lang3-3.9.jar" />
-  <entry key="classpath3" value="lib-jformdesigner/jsplitbutton-1.2.jar" />
+
+  <entry key="classpath1" value="build/classes/java/main/" />
+  <entry key="classpath2" value="build/resources/main/" />
+  <entry key="classpath3" value="lib-jformdesigner/commons-lang3-3.9.jar" />
+  <entry key="classpath4" value="lib-jformdesigner/jsplitbutton-1.2.jar" />
+  <entry key="classpath5" value="lib-jformdesigner/org-json-20230618.jar" />
+
   <entry key="sourcefolders1" value="res" />
   <entry key="sourcefolders2" value="src/main" />
+
   <node name="designer">
     <entry key="_i18nJavaSettingsEnabled" value="true" />
     <entry key="i18n.javagetbundleformat" value="LocaleBundle" />
     <entry key="i18n.javagetstringformat" value="LocaleBundle.getString(${key})" />
   </node>
+  
 </project>
 

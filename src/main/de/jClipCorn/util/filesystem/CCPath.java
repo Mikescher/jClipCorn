@@ -9,6 +9,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.RegExHelper;
+import de.jClipCorn.util.stream.CCStreams;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -417,5 +418,18 @@ public class CCPath implements IPath, Comparable<CCPath> {
 
 	public static boolean isNullOrEmpty(CCPath p) {
 		return p == null || p.isEmpty();
+	}
+
+	public String toRelativeStringFromRoot() {
+		if (isEmpty()) return Str.Empty;
+
+		var comps = getComponents();
+		if (comps.isEmpty()) return Str.Empty;
+
+		if (comps.get(0).startsWith("<?")) {
+			return CCStreams.iterate(comps).skip(1).stringjoin(SEPERATOR);
+		}
+
+		return _path;
 	}
 }

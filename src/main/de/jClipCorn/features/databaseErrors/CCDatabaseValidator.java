@@ -14,11 +14,15 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
+import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.lambda.Func0to1WithIOException;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
+import de.jClipCorn.features.nfo.EpisodeNFOWriter;
+import de.jClipCorn.features.nfo.MovieNFOWriter;
+import de.jClipCorn.features.nfo.SeriesNFOWriter;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -233,25 +237,35 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					}
 				});
 
-		// Wrong filename
+		// Wrong filename / folder structure
 		addMovieValidation(
 				DatabaseErrorType.ERROR_WRONG_FILENAME,
 				o -> o.ValidateMovies,
 				(mov, movielist, e) ->
 				{
 					var md = new ArrayList<Tuple<String, String>>();
-					boolean wrongfn = false;
+					boolean wrongpath = false;
 					for (int i = 0; i < mov.getPartcount(); i++) {
-						var should = mov.generateFilename(i);
-						var actual = mov.Parts.get(i).toFSPath(this).getFilenameWithExt();
-						if (!Str.equals(actual, should))
+						var should = mov.generateRelativePath(i);
+						var abspath = mov.Parts.get(i).toFSPath(this).toString();
+						if (ApplicationHelper.isWindows()) {
+							abspath = abspath.toLowerCase();
+							should = should.toLowerCase();
+						}
+						if (!abspath.endsWith(should))
 						{
-							wrongfn = true;
-							md.add(Tuple.Create("Part["+i+"].Filename.Should", should));
-							md.add(Tuple.Create("Part["+i+"].Filename.Actual", actual));
+							wrongpath = true;
+							md.add(Tuple.Create("Part["+i+"].Path.Should (relative)", mov.generateRelativePath(i)));
+							md.add(Tuple.Create("Part["+i+"].Path.Actual (relative)", mov.Parts.get(i).toRelativeStringFromRoot()));
+
+							md.add(Tuple.Create("Part["+i+"].FSPath.Should", mov.generateGuessedAbsolutePath(i).toString()));
+							md.add(Tuple.Create("Part["+i+"].FSPath.Actual", mov.Parts.get(i).toFSPath(this).toString()));
+
+							md.add(Tuple.Create("Part["+i+"].CCPath.Should", CCPath.createFromFSPath(mov.generateGuessedAbsolutePath(i), movielist).toString()));
+							md.add(Tuple.Create("Part["+i+"].CCPath.Actual", mov.Parts.get(i).toString()));
 						}
 					}
-					if (wrongfn) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_WRONG_FILENAME, mov, md));
+					if (wrongpath) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_WRONG_FILENAME, mov, md));
 				});
 
 		// Watch never <> ViewedState
@@ -644,6 +658,39 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						"SpecialVersion", untrimmed.toString()
 					);
 				});
+
+		// NFO file missing
+		addMovieValidation(
+				DatabaseErrorType.ERROR_NFO_MISSING,
+				o -> o.ValidateNfoFiles,
+				mov -> ccprops().PROP_NFO_CREATE_MOVIES.getValue() && mov.getPartcount() > 0 && !MovieNFOWriter.getNFOPath(mov).exists(),
+				mov -> DatabaseError.createSingle(
+						movielist,
+						DatabaseErrorType.ERROR_NFO_MISSING, mov,
+						"Path", MovieNFOWriter.getNFOPath(mov).toString()
+				));
+
+		// NFO content mismatch
+		addMovieValidation(
+				DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH,
+				o -> o.ValidateNfoFiles,
+				(mov, e) -> {
+					if (!ccprops().PROP_NFO_CREATE_MOVIES.getValue()) return;
+					if (mov.getPartcount() <= 0) return;
+					var nfoPath = MovieNFOWriter.getNFOPath(mov);
+					if (!nfoPath.exists()) return;
+					try {
+						var existing = nfoPath.readAsUTF8TextFile();
+						var generated = MovieNFOWriter.generateNFO(mov);
+						if (!existing.equals(generated)) {
+							e.add(DatabaseError.createSingle(
+									movielist,
+									DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, mov,
+									"Path", nfoPath.toString()
+							));
+						}
+					} catch (Exception ignored) { }
+				});
 	}
 
 	@SuppressWarnings({"Convert2MethodRef", "nls"})
@@ -940,6 +987,38 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateSeries,
 				series -> series.Tags.get(CCSingleTag.TAG_WATCH_NEVER) && !series.isUnviewed(),
 				series -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_IMPOSSIBLE_WATCH_NEVER, series));
+
+		// NFO file missing (tvshow.nfo)
+		addSeriesValidation(
+				DatabaseErrorType.ERROR_NFO_MISSING,
+				o -> o.ValidateNfoFiles,
+				series -> ccprops().PROP_NFO_CREATE_SERIES.getValue() && !SeriesNFOWriter.getNFOPath(series).exists(),
+				series -> DatabaseError.createSingle(
+						movielist,
+						DatabaseErrorType.ERROR_NFO_MISSING, series,
+						"Path", SeriesNFOWriter.getNFOPath(series).toString()
+				));
+
+		// NFO content mismatch (tvshow.nfo)
+		addSeriesValidation(
+				DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH,
+				o -> o.ValidateNfoFiles,
+				(series, e) -> {
+					if (!ccprops().PROP_NFO_CREATE_SERIES.getValue()) return;
+					var nfoPath = SeriesNFOWriter.getNFOPath(series);
+					if (!nfoPath.exists()) return;
+					try {
+						var existing = nfoPath.readAsUTF8TextFile();
+						var generated = SeriesNFOWriter.generateNFO(series);
+						if (!existing.equals(generated)) {
+							e.add(DatabaseError.createSingle(
+									movielist,
+									DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, series,
+									"Path", nfoPath.toString()
+							));
+						}
+					} catch (Exception ignored) { }
+				});
 	}
 
 	@SuppressWarnings({"nls"})
@@ -1386,6 +1465,38 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateEpisodes,
 				episode -> episode.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(episode.getScoreComment()),
 				episode -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING, episode));
+
+		// NFO file missing (episode.nfo)
+		addEpisodeValidation(
+				DatabaseErrorType.ERROR_NFO_MISSING,
+				o -> o.ValidateNfoFiles,
+				episode -> ccprops().PROP_NFO_CREATE_SERIES.getValue() && !EpisodeNFOWriter.getNFOPath(episode).exists(),
+				episode -> DatabaseError.createSingle(
+						movielist,
+						DatabaseErrorType.ERROR_NFO_MISSING, episode,
+						"Path", EpisodeNFOWriter.getNFOPath(episode).toString()
+				));
+
+		// NFO content mismatch (episode.nfo)
+		addEpisodeValidation(
+				DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH,
+				o -> o.ValidateNfoFiles,
+				(episode, e) -> {
+					if (!ccprops().PROP_NFO_CREATE_SERIES.getValue()) return;
+					var nfoPath = EpisodeNFOWriter.getNFOPath(episode);
+					if (!nfoPath.exists()) return;
+					try {
+						var existing = nfoPath.readAsUTF8TextFile();
+						var generated = EpisodeNFOWriter.generateNFO(episode);
+						if (!existing.equals(generated)) {
+							e.add(DatabaseError.createSingle(
+									movielist,
+									DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, episode,
+									"Path", nfoPath.toString()
+							));
+						}
+					} catch (Exception ignored) { }
+				});
 	}
 
 	@Override

@@ -255,6 +255,10 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_SERIALIZE_ANIMESTUDIO_IN_FILENAMES;
 	public CCBoolProperty                                   PROP_SERIALIZE_ANIMESEASON_IN_FILENAMES;
 	public CCBoolProperty                                   PROP_SERIALIZE_SPECIALVERSION_IN_FILENAMES;
+	public CCBoolProperty                                   PROP_NFO_CREATE_MOVIES;
+	public CCBoolProperty                                   PROP_NFO_AUTO_CREATE_MOVIES;
+	public CCBoolProperty                                   PROP_NFO_CREATE_SERIES;
+	public CCBoolProperty                                   PROP_NFO_AUTO_CREATE_SERIES;
 
 	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public boolean ARG_READONLY = false;
@@ -425,6 +429,10 @@ public class CCProperties implements ICCPropertySource {
 		PROP_SERIALIZE_ANIMESTUDIO_IN_FILENAMES     = new CCBoolProperty(CAT_OTHERFRAMES,       this,   "PROP_SERIALIZE_ANIMESTUDIO_IN_FILENAMES",     false);
 		PROP_SERIALIZE_ANIMESEASON_IN_FILENAMES     = new CCBoolProperty(CAT_OTHERFRAMES,       this,   "PROP_SERIALIZE_ANIMESEASON_IN_FILENAMES",     false);
 		PROP_SERIALIZE_SPECIALVERSION_IN_FILENAMES  = new CCBoolProperty(CAT_OTHERFRAMES,       this,   "PROP_SERIALIZE_SPECIALVERSION_IN_FILENAMES",  true);
+		PROP_NFO_CREATE_MOVIES                      = new CCBoolProperty(CAT_OTHERFRAMES,       this,   "PROP_NFO_CREATE_MOVIES",                      false);
+		PROP_NFO_AUTO_CREATE_MOVIES                 = new CCBoolProperty(CAT_OTHERFRAMES,       this,   "PROP_NFO_AUTO_CREATE_MOVIES",                 false);
+		PROP_NFO_CREATE_SERIES                      = new CCBoolProperty(CAT_OTHERFRAMES,       this,   "PROP_NFO_CREATE_SERIES",                      false);
+		PROP_NFO_AUTO_CREATE_SERIES                 = new CCBoolProperty(CAT_OTHERFRAMES,       this,   "PROP_NFO_AUTO_CREATE_SERIES",                 false);
 
 		PROP_BACKUP_LASTBACKUP                      = new CCDateProperty(NONVISIBLE,            this,   "PROP_BACKUP_LASTBACKUP",                      CCDate.getMinimumDate());
 		PROP_OTHER_DEBUGMODE                        = new CCBoolProperty(NONVISIBLE,            this,   "PROP_OTHER_DEBUGMODE",                        false);

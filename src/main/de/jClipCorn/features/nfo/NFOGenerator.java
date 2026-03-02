@@ -1,0 +1,173 @@
+package de.jClipCorn.features.nfo;
+
+import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.util.filesystem.FSPath;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+@SuppressWarnings("nls")
+public class NFOGenerator {
+
+	@FunctionalInterface
+	public interface ProgressCallback {
+		void onProgress(int current, int max, String message);
+	}
+
+	public static List<NFOEntry> generateEntries(CCMovieList movielist) {
+		return generateEntries(movielist, null);
+	}
+
+	public static List<NFOEntry> generateEntries(CCMovieList movielist, ProgressCallback callback) {
+		List<NFOEntry> entries = new ArrayList<>();
+
+		boolean createMovieNfos = movielist.ccprops().PROP_NFO_CREATE_MOVIES.getValue();
+		boolean createSeriesNfos = movielist.ccprops().PROP_NFO_CREATE_SERIES.getValue();
+
+		// Count total items for progress
+		int totalMovies = movielist.getMovieCount();
+		int totalEpisodes = 0;
+		for (CCSeries series : movielist.iteratorSeries()) {
+			totalEpisodes++; // for tvshow.nfo
+			totalEpisodes += series.getEpisodeCount();
+		}
+		int total = totalMovies + totalEpisodes;
+		int current = 0;
+
+		// Process movies
+		for (CCMovie movie : movielist.iteratorMovies()) {
+			if (callback != null) {
+				callback.onProgress(current, total, movie.getTitle());
+			}
+
+			FSPath nfoPath = MovieNFOWriter.getNFOPath(movie);
+			if (nfoPath.isEmpty()) {
+				entries.add(NFOEntry.forMovie(nfoPath, NFOStatus.ERROR, "", movie));
+			} else if (!movie.getParts().get(0).toFSPath(movielist.ccprops()).fileExists()) {
+				entries.add(NFOEntry.forMovie(nfoPath, NFOStatus.ERROR, "", movie));
+			} else {
+				String newContent = MovieNFOWriter.generateNFO(movie);
+				NFOStatus status = determineStatus(nfoPath, newContent, createMovieNfos);
+				entries.add(NFOEntry.forMovie(nfoPath, status, newContent, movie));
+			}
+			current++;
+		}
+
+		// Process series
+		for (CCSeries series : movielist.iteratorSeries()) {
+			if (callback != null) {
+				callback.onProgress(current, total, series.getTitle());
+			}
+
+			// Series tvshow.nfo
+			FSPath seriesNfoPath = SeriesNFOWriter.getNFOPath(series);
+			if (seriesNfoPath.isEmpty()) {
+				entries.add(NFOEntry.forSeries(seriesNfoPath, NFOStatus.ERROR, "", series));
+			} else if (series.guessSeriesRootPath().isEmpty() || !series.guessSeriesRootPath().directoryExists()) {
+				entries.add(NFOEntry.forSeries(seriesNfoPath, NFOStatus.ERROR, "", series));
+			} else {
+				String newContent = SeriesNFOWriter.generateNFO(series);
+				NFOStatus status = determineStatus(seriesNfoPath, newContent, createSeriesNfos);
+				entries.add(NFOEntry.forSeries(seriesNfoPath, status, newContent, series));
+			}
+			current++;
+
+			// Episode NFOs
+			for (int si = 0; si < series.getSeasonCount(); si++) {
+				CCSeason season = series.getSeasonByArrayIndex(si);
+				for (int ei = 0; ei < season.getEpisodeCount(); ei++) {
+					CCEpisode episode = season.getEpisodeByArrayIndex(ei);
+
+					if (callback != null) {
+						callback.onProgress(current, total, series.getTitle() + " - " + episode.getTitle());
+					}
+
+					FSPath episodeNfoPath = EpisodeNFOWriter.getNFOPath(episode);
+					if (episodeNfoPath.isEmpty()) {
+						entries.add(NFOEntry.forEpisode(episodeNfoPath, NFOStatus.ERROR, "", episode));
+					} else if (!episode.getParts().get(0).toFSPath(movielist.ccprops()).fileExists()) {
+						entries.add(NFOEntry.forEpisode(episodeNfoPath, NFOStatus.ERROR, "", episode));
+					} else {
+						String newContent = EpisodeNFOWriter.generateNFO(episode);
+						NFOStatus status = determineStatus(episodeNfoPath, newContent, createSeriesNfos);
+
+						entries.add(NFOEntry.forEpisode(episodeNfoPath, status, newContent, episode));
+					}
+					current++;
+				}
+			}
+		}
+
+		return entries;
+	}
+
+	private static NFOStatus determineStatus(FSPath nfoPath, String newContent, boolean createEnabled) {
+		boolean exists = nfoPath.exists();
+
+		if (!createEnabled) {
+			// Setting is off - if file exists, mark for deletion
+			return exists ? NFOStatus.DELETE : NFOStatus.UNCHANGED;
+		}
+
+		if (!exists) {
+			return NFOStatus.CREATE;
+		}
+
+		// File exists, compare content
+		try {
+			String existingContent = nfoPath.readAsUTF8TextFile();
+			if (contentMatches(existingContent, newContent)) {
+				return NFOStatus.UNCHANGED;
+			} else {
+				return NFOStatus.CHANGED;
+			}
+		} catch (IOException e) {
+			// Can't read existing file, assume it needs updating
+			return NFOStatus.CHANGED;
+		}
+	}
+
+	private static boolean contentMatches(String existing, String newContent) {
+		// Normalize whitespace for comparison
+		String normalizedExisting = normalizeXml(existing);
+		String normalizedNew = normalizeXml(newContent);
+		return normalizedExisting.equals(normalizedNew);
+	}
+
+	private static String normalizeXml(String xml) {
+		// Remove XML declaration differences and normalize whitespace
+		return xml.replaceAll("\\s+", " ").trim();
+	}
+
+	public static void applyEntry(NFOEntry entry) throws IOException {
+		switch (entry.getStatus()) {
+			case CREATE:
+			case CHANGED:
+				writeNfoFile(entry.getFilePath(), entry.getContent());
+				break;
+			case DELETE:
+				deleteNfoFile(entry.getFilePath());
+				break;
+			case UNCHANGED:
+				// Do nothing
+			case ERROR:
+				// Do nothing
+				break;
+		}
+	}
+
+	private static void writeNfoFile(FSPath path, String content) throws IOException {
+		path.writeAsUTF8TextFile(content);
+	}
+
+	private static void deleteNfoFile(FSPath path) throws IOException {
+		if (path.exists()) {
+			path.deleteWithException();
+		}
+	}
+}

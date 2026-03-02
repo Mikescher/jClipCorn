@@ -24,6 +24,24 @@ public class TestGeneratedFilenames extends ClipCornBaseTest {
 	}
 
 	@Test
+	public void testMovieRelativePath() throws Exception {
+		CCMovieList ml = createExampleDB();
+
+		// Super 8 - year 2011, no zyklus
+		assertEquals(loc("2011/Super 8/Super 8.avi"), ml.findDatabaseMovie(5).generateRelativePath(0));
+
+		// Forrest Gump - year 1994, no zyklus
+		assertEquals(loc("1994/Forrest Gump/Forrest Gump [ENG].mpeg"), ml.findDatabaseMovie(101).generateRelativePath(0));
+
+		// Kill Bill I - Volume I - year 2003, zyklus "Kill Bill"
+		assertEquals(loc("2003/Kill Bill/Kill Bill I - Volume I (Part 1).avi"), ml.findDatabaseMovie(8).generateRelativePath(0));
+		assertEquals(loc("2003/Kill Bill/Kill Bill I - Volume I (Part 2).avi"), ml.findDatabaseMovie(8).generateRelativePath(1));
+
+		// Der Herr der Ringe III - year 2003, zyklus "Der Herr der Ringe"
+		assertEquals(loc("2003/Der Herr der Ringe/Der Herr der Ringe III - Die Rückkehr des Königs [GER+ENG].mkv"), ml.findDatabaseMovie(10).generateRelativePath(0));
+	}
+
+	@Test
 	public void testSeriesFilename() throws Exception {
 		CCMovieList ml = createExampleDB();
 		

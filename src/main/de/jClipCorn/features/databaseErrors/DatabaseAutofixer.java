@@ -236,13 +236,17 @@ public class DatabaseAutofixer {
 		if (err.getElement1() instanceof CCMovie mov) {
 
 			for (int i = 0; i < mov.getPartcount(); i++) {
-				FSPath opath = mov.Parts.get(i).toFSPath(ml);
-				if (! opath.exists()) return false;
-				FSPath npath = opath.replaceFilename(mov.generateFilename(i));
+				var actulalPath = mov.Parts.get(i).toFSPath(ml);
+				if (! actulalPath.exists()) return false;
 
-				boolean succ = opath.renameToSafe(npath);
-				mov.Parts.set(i, CCPath.createFromFSPath(npath, ml));
-				
+				var expectedPath = mov.generateGuessedAbsolutePath(i);
+
+				// Create parent directories if needed
+				expectedPath.getParent().mkdirsSafe();
+
+				boolean succ = actulalPath.renameToSafe(expectedPath);
+				mov.Parts.set(i, CCPath.createFromFSPath(expectedPath, ml));
+
 				if (! succ) return false;
 			}
 
@@ -254,7 +258,7 @@ public class DatabaseAutofixer {
 		} else if (err.getElement1() instanceof CCEpisode) {
 			return false;
 		}
-		
+
 		return false;
 	}
 	

@@ -22,6 +22,7 @@ import de.jClipCorn.gui.frames.changeViewedFrame.ChangeViewedFrame;
 import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseFrame;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseFrame;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
+import de.jClipCorn.gui.frames.createNFOFrame.CreateNFOFrame;
 import de.jClipCorn.gui.frames.createSeriesFolderStructureFrame.CreateSeriesFolderStructureFrame;
 import de.jClipCorn.gui.frames.databaseHistoryFrame.DatabaseHistoryFrame;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
@@ -169,6 +170,7 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 				add(extras, "UpdateMetadata",           null,      "ClipMenuBar.Extras.UpdateMetadata",           Resources.ICN_MENUBAR_UPDATEMETADATA,       false, this::onClickExtrasUpdateMetadata);
 				add(extras, "UpdateCodecData",          null,      "ClipMenuBar.Extras.UpdateCodecData",          Resources.ICN_MENUBAR_MEDIAINFO,            false, this::onClickExtrasUpdateCodecData);
 				add(extras, "ShowVLCRobot",             null,      "ClipMenuBar.Extras.ShowVLCRobot",             Resources.ICN_MENUBAR_VLCROBOT,             false, this::onClickExtrasShowVLCRobot);
+				add(extras, "CreateNFO",                null,      "ClipMenuBar.Extras.CreateNFO",                Resources.ICN_MENUBAR_NFO,                  true,  this::onClickExtrasCreateNFO);
 				add(extras, "ShowSettings",             null,      "ClipMenuBar.Extras.Settings",                 Resources.ICN_MENUBAR_SETTINGS,             false, this::onClickExtrasSettings);
 			}
 			
@@ -505,7 +507,11 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 	private void onClickExtrasShowVLCRobot(CCTreeActionEvent e) {
 		VLCRobotFrame.show(e.SwingOwner, movielist);
 	}
-	
+
+	private void onClickExtrasCreateNFO(CCTreeActionEvent e) {
+		new CreateNFOFrame(e.SwingOwner, movielist).setVisible(true);
+	}
+
 	private void onClickMaintenanceMassChangeViewed(CCTreeActionEvent e) {
 		new ChangeViewedFrame(e.SwingOwner, movielist).setVisible(true);
 	}

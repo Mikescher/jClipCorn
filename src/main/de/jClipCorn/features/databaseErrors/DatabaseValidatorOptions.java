@@ -17,6 +17,7 @@ public class DatabaseValidatorOptions {
 	public boolean ValidateDatabaseConsistence;
 	public boolean ValidateSeriesStructure;
 	public boolean FindEmptyDirectories;
+	public boolean ValidateNfoFiles;
 
 	public boolean IgnoreDuplicateIfos;
 

@@ -90,7 +90,7 @@ public class CCPathList {
 		List<CCPath> newPaths = new ArrayList<>();
 		
 		// Ensure list has enough elements
-		for (int i = 0; i <= index; i++) {
+		for (int i = 0; i <= Math.max(index, paths.size()-1); i++) {
 			if (i < paths.size()) {
 				newPaths.add(paths.get(i));
 			} else {

@@ -773,95 +773,95 @@ public class AddMultiEpisodesFrame extends JCCFrame
 
 		//======== this ========
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setTitle(LocaleBundle.getString("AddMultiEpisodesFrame.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("AddMultiEpisodesFrame.title"));
 		setMinimumSize(new Dimension(1000, 500));
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$rgap, default:grow, $rgap", //$NON-NLS-1$
-			"$rgap, default:grow, $lgap, 2*(default, $rgap)")); //$NON-NLS-1$
+			"$rgap, default:grow, $rgap",
+			"$rgap, default:grow, $lgap, 2*(default, $rgap)"));
 		contentPane.add(lsData, CC.xy(2, 2, CC.DEFAULT, CC.FILL));
 
 		//======== panel1 ========
 		{
 			panel1.setLayout(new FormLayout(
-				"6*(default, $lcgap), [50dlu,default], $lcgap, 0dlu:grow, 2*($lcgap, default)", //$NON-NLS-1$
-				"3*(default, $lgap), default")); //$NON-NLS-1$
+				"6*(default, $lcgap), [50dlu,default], $lcgap, 0dlu:grow, 2*($lcgap, default)",
+				"3*(default, $lgap), default"));
 
 			//---- btnAddFiles ----
-			btnAddFiles.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_11")); //$NON-NLS-1$
+			btnAddFiles.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_11"));
 			btnAddFiles.addActionListener(e -> onAddFiles());
 			panel1.add(btnAddFiles, CC.xy(1, 1));
 
 			//---- btnInsertTitles ----
-			btnInsertTitles.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_2")); //$NON-NLS-1$
+			btnInsertTitles.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_2"));
 			btnInsertTitles.addActionListener(e -> onInsertTitles());
 			panel1.add(btnInsertTitles, CC.xy(3, 1));
 
 			//---- btnGetLength ----
-			btnGetLength.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_31")); //$NON-NLS-1$
+			btnGetLength.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_31"));
 			btnGetLength.addActionListener(e -> onGetLength());
 			panel1.add(btnGetLength, CC.xy(5, 1));
 
 			//---- btnSetDestination ----
-			btnSetDestination.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_51")); //$NON-NLS-1$
+			btnSetDestination.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_51"));
 			btnSetDestination.addActionListener(e -> onSetDestination());
 			panel1.add(btnSetDestination, CC.xy(9, 1));
 
 			//---- btnAddMoreFiles ----
-			btnAddMoreFiles.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_12")); //$NON-NLS-1$
+			btnAddMoreFiles.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_12"));
 			btnAddMoreFiles.addActionListener(e -> onAddMoreFiles());
 			panel1.add(btnAddMoreFiles, CC.xy(1, 3));
 
 			//---- btnGetLanguages ----
-			btnGetLanguages.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_32")); //$NON-NLS-1$
+			btnGetLanguages.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_32"));
 			btnGetLanguages.addActionListener(e -> onGetLanguages());
 			panel1.add(btnGetLanguages, CC.xy(5, 3));
 
 			//---- btnKeepDestination ----
-			btnKeepDestination.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_52")); //$NON-NLS-1$
+			btnKeepDestination.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_52"));
 			btnKeepDestination.addActionListener(e -> onKeepDestination());
 			panel1.add(btnKeepDestination, CC.xy(9, 3));
 
 			//---- btnOkayKeep ----
-			btnOkayKeep.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_64")); //$NON-NLS-1$
+			btnOkayKeep.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_64"));
 			btnOkayKeep.addActionListener(e -> onOkayKeep());
 			panel1.add(btnOkayKeep, CC.xy(17, 3));
 
 			//---- btnOkayCopy ----
-			btnOkayCopy.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_61")); //$NON-NLS-1$
+			btnOkayCopy.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_61"));
 			btnOkayCopy.addActionListener(e -> onOkayCopy());
 			panel1.add(btnOkayCopy, CC.xy(19, 3));
 
 			//---- cbSortedAdd ----
-			cbSortedAdd.setText(LocaleBundle.getString("AddMultiEpisodesFrame.cbSort")); //$NON-NLS-1$
+			cbSortedAdd.setText(LocaleBundle.getString("AddMultiEpisodesFrame.cbSort"));
 			panel1.add(cbSortedAdd, CC.xy(1, 5));
 
 			//---- btnGetMediainfo ----
-			btnGetMediainfo.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_33")); //$NON-NLS-1$
+			btnGetMediainfo.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_33"));
 			btnGetMediainfo.addActionListener(e -> onGetMediaInfo());
 			panel1.add(btnGetMediainfo, CC.xy(5, 5));
 
 			//---- cbxIgnoreProblems ----
-			cbxIgnoreProblems.setText(LocaleBundle.getString("AddMultiEpisodesFrame.ChkbxIgnoreProblems")); //$NON-NLS-1$
+			cbxIgnoreProblems.setText(LocaleBundle.getString("AddMultiEpisodesFrame.ChkbxIgnoreProblems"));
 			cbxIgnoreProblems.addActionListener(e -> onIgnoreProblemsChanged());
 			panel1.add(cbxIgnoreProblems, CC.xywh(11, 5, 3, 1));
 
 			//---- btnOkayRename ----
-			btnOkayRename.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_63")); //$NON-NLS-1$
+			btnOkayRename.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_63"));
 			btnOkayRename.addActionListener(e -> onOkayRename());
 			panel1.add(btnOkayRename, CC.xy(17, 5));
 
 			//---- btnOkayMove ----
-			btnOkayMove.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_62")); //$NON-NLS-1$
+			btnOkayMove.setText(LocaleBundle.getString("AddMultiEpisodesFrame.Button_62"));
 			btnOkayMove.addActionListener(e -> onOkayMove());
 			panel1.add(btnOkayMove, CC.xy(19, 5));
 
 			//---- cbxIgnoreInvalidLanguages ----
-			cbxIgnoreInvalidLanguages.setText(LocaleBundle.getString("AddMultiEpisodesFrame.cbxIgnoreInvalidLanguages")); //$NON-NLS-1$
+			cbxIgnoreInvalidLanguages.setText(LocaleBundle.getString("AddMultiEpisodesFrame.cbxIgnoreInvalidLanguages"));
 			panel1.add(cbxIgnoreInvalidLanguages, CC.xywh(5, 7, 5, 1));
 
 			//---- lblFirstEpNumber ----
-			lblFirstEpNumber.setText(LocaleBundle.getString("AddMultiEpisodesFrame.NumberSpinnerLabel")); //$NON-NLS-1$
+			lblFirstEpNumber.setText(LocaleBundle.getString("AddMultiEpisodesFrame.NumberSpinnerLabel"));
 			panel1.add(lblFirstEpNumber, CC.xy(11, 7));
 
 			//---- spnFirstEpNumber ----
@@ -874,8 +874,8 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		//======== panel2 ========
 		{
 			panel2.setLayout(new FormLayout(
-				"default:grow, $lcgap, default:grow", //$NON-NLS-1$
-				"default")); //$NON-NLS-1$
+				"default:grow, $lcgap, default:grow",
+				"default"));
 			panel2.add(progressBar, CC.xy(1, 1));
 			panel2.add(progressBar2, CC.xy(3, 1));
 		}

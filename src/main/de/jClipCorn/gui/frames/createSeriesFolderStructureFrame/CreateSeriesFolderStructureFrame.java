@@ -280,22 +280,22 @@ public class CreateSeriesFolderStructureFrame extends JCCFrame
 		lsTest = new CSFSTable(this);
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("CreateSeriesFolderStructureFrame.this.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("CreateSeriesFolderStructureFrame.this.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default, $lcgap, default:grow, $ugap", //$NON-NLS-1$
-			"$ugap, default, $lgap, default:grow, $ugap")); //$NON-NLS-1$
+			"$ugap, default, $lcgap, default:grow, $ugap",
+			"$ugap, default, $lgap, default:grow, $ugap"));
 		contentPane.add(lblCover, CC.xy(2, 2));
 
 		//======== pnlTop ========
 		{
 			pnlTop.setLayout(new FormLayout(
-				"default:grow, $lcgap, default", //$NON-NLS-1$
-				"3*(default, $lgap), default:grow, 2*($lgap, default)")); //$NON-NLS-1$
+				"default:grow, $lcgap, default",
+				"3*(default, $lgap), default:grow, 2*($lgap, default)"));
 
 			//---- lblTitle ----
-			lblTitle.setText("<dynamic>"); //$NON-NLS-1$
+			lblTitle.setText("<dynamic>");
 			lblTitle.setFont(lblTitle.getFont().deriveFont(lblTitle.getFont().getStyle() | Font.BOLD));
 			lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 			pnlTop.add(lblTitle, CC.xywh(1, 1, 3, 1));
@@ -303,24 +303,24 @@ public class CreateSeriesFolderStructureFrame extends JCCFrame
 			pnlTop.add(edPath, CC.xy(1, 5));
 
 			//---- btnChoose ----
-			btnChoose.setText("..."); //$NON-NLS-1$
+			btnChoose.setText("...");
 			btnChoose.addActionListener(e -> onBtnChoose(e));
 			pnlTop.add(btnChoose, CC.xy(3, 5));
 
 			//======== panel2 ========
 			{
 				panel2.setLayout(new FormLayout(
-					"default:grow, $lcgap, default:grow", //$NON-NLS-1$
-					"default")); //$NON-NLS-1$
+					"default:grow, $lcgap, default:grow",
+					"default"));
 
 				//---- btnOk ----
-				btnOk.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+				btnOk.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
 				btnOk.setEnabled(false);
 				btnOk.addActionListener(e -> startMoving(e));
 				panel2.add(btnOk, CC.xy(1, 1, CC.FILL, CC.DEFAULT));
 
 				//---- btnTest ----
-				btnTest.setText(LocaleBundle.getString("MassMoveMoviesFrame.btnTest.text")); //$NON-NLS-1$
+				btnTest.setText(LocaleBundle.getString("MassMoveMoviesFrame.btnTest.text"));
 				btnTest.addActionListener(e -> startTest(e));
 				panel2.add(btnTest, CC.xy(3, 1, CC.FILL, CC.DEFAULT));
 			}

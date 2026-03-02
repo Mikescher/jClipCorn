@@ -810,15 +810,15 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 		btnOK = new JButton();
 
 		//======== this ========
-		setTitle("<dynamic>"); //$NON-NLS-1$
+		setTitle("<dynamic>");
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, 225px, $ugap, 0dlu:grow, $ugap, 550px, $ugap", //$NON-NLS-1$
-			"$pgap, pref, $ugap, default:grow, 2*($lgap, default), $lgap")); //$NON-NLS-1$
+			"$ugap, 225px, $ugap, 0dlu:grow, $ugap, 550px, $ugap",
+			"$pgap, pref, $ugap, default:grow, 2*($lgap, default), $lgap"));
 
 		//---- lblSeason ----
-		lblSeason.setText("<dynamic>"); //$NON-NLS-1$
+		lblSeason.setText("<dynamic>");
 		lblSeason.setFont(lblSeason.getFont().deriveFont(lblSeason.getFont().getStyle() & ~Font.BOLD, lblSeason.getFont().getSize() + 5f));
 		lblSeason.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblSeason, CC.xy(2, 2));
@@ -838,24 +838,24 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 		{
 			pnlInfo.setBorder(LineBorder.createBlackLineBorder());
 			pnlInfo.setLayout(new FormLayout(
-				"$rgap, 5dlu, default, $rgap, 1dlu:grow, $rgap, 50px, $rgap, 22px, $rgap", //$NON-NLS-1$
-				"$rgap, 5*(default, $ugap), default, $lgap, default, $ugap, 2*(default, $rgap), default, $lgap, 32dlu, $lgap, 3*(default, $ugap), 90dlu, $lgap, 0dlu:grow, $lgap, default, $lgap")); //$NON-NLS-1$
+				"$rgap, 5dlu, default, $rgap, 1dlu:grow, $rgap, 50px, $rgap, 22px, $rgap",
+				"$rgap, 5*(default, $ugap), default, $lgap, default, $ugap, 2*(default, $rgap), default, $lgap, 32dlu, $lgap, 3*(default, $ugap), 90dlu, $lgap, 0dlu:grow, $lgap, default, $lgap"));
 
 			//---- lblDirtyTitle ----
-			lblDirtyTitle.setText("*"); //$NON-NLS-1$
+			lblDirtyTitle.setText("*");
 			pnlInfo.add(lblDirtyTitle, CC.xy(2, 2));
 
 			//---- label2 ----
-			label2.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
+			label2.setText(LocaleBundle.getString("AddMovieFrame.label_1.text"));
 			pnlInfo.add(label2, CC.xy(3, 2));
 			pnlInfo.add(edTitle, CC.xywh(5, 2, 5, 1));
 
 			//---- lblDirtyEpisodeNumber ----
-			lblDirtyEpisodeNumber.setText("*"); //$NON-NLS-1$
+			lblDirtyEpisodeNumber.setText("*");
 			pnlInfo.add(lblDirtyEpisodeNumber, CC.xy(2, 4));
 
 			//---- label3 ----
-			label3.setText(LocaleBundle.getString("AddEpisodeFrame.lblEpisode.text")); //$NON-NLS-1$
+			label3.setText(LocaleBundle.getString("AddEpisodeFrame.lblEpisode.text"));
 			pnlInfo.add(label3, CC.xy(3, 4));
 
 			//---- spnEpisode ----
@@ -863,109 +863,109 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			pnlInfo.add(spnEpisode, CC.xy(5, 4));
 
 			//---- lblDirtyFormat ----
-			lblDirtyFormat.setText("*"); //$NON-NLS-1$
+			lblDirtyFormat.setText("*");
 			pnlInfo.add(lblDirtyFormat, CC.xy(2, 6));
 
 			//---- label1 ----
-			label1.setText(LocaleBundle.getString("AddMovieFrame.lblFormat.text")); //$NON-NLS-1$
+			label1.setText(LocaleBundle.getString("AddMovieFrame.lblFormat.text"));
 			pnlInfo.add(label1, CC.xy(3, 6));
 			pnlInfo.add(cbxFormat, CC.xy(5, 6));
 
 			//---- lblDirtyMediaInfo ----
-			lblDirtyMediaInfo.setText("*"); //$NON-NLS-1$
+			lblDirtyMediaInfo.setText("*");
 			pnlInfo.add(lblDirtyMediaInfo, CC.xy(2, 8));
 
 			//---- label4 ----
-			label4.setText(LocaleBundle.getString("PreviewMovieFrame.TabMediaInfo")); //$NON-NLS-1$
+			label4.setText(LocaleBundle.getString("PreviewMovieFrame.TabMediaInfo"));
 			pnlInfo.add(label4, CC.xy(3, 8));
 			pnlInfo.add(ctrlMediaInfo, CC.xy(5, 8));
 
 			//---- btnMediaInfo3 ----
-			btnMediaInfo3.setToolTipText("MediaInfo"); //$NON-NLS-1$
+			btnMediaInfo3.setToolTipText("MediaInfo");
 			btnMediaInfo3.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
 			btnMediaInfo3.addActionListener(e -> parseCodecMetadata_MediaInfo());
 			pnlInfo.add(btnMediaInfo3, CC.xy(9, 8));
 
 			//---- lblDirtyLanguage ----
-			lblDirtyLanguage.setText("*"); //$NON-NLS-1$
+			lblDirtyLanguage.setText("*");
 			pnlInfo.add(lblDirtyLanguage, CC.xy(2, 10));
 
 			//---- label5 ----
-			label5.setText(LocaleBundle.getString("AddMovieFrame.lblSprache.text")); //$NON-NLS-1$
+			label5.setText(LocaleBundle.getString("AddMovieFrame.lblSprache.text"));
 			pnlInfo.add(label5, CC.xy(3, 10));
 			pnlInfo.add(ctrlLang, CC.xy(5, 10));
 
 			//---- btnMediaInfoRaw ----
-			btnMediaInfoRaw.setText("..."); //$NON-NLS-1$
-			btnMediaInfoRaw.setToolTipText(LocaleBundle.getString("PreviewMovieFrame.TabMediaInfo")); //$NON-NLS-1$
+			btnMediaInfoRaw.setText("...");
+			btnMediaInfoRaw.setToolTipText(LocaleBundle.getString("PreviewMovieFrame.TabMediaInfo"));
 			btnMediaInfoRaw.addActionListener(e -> showCodecMetadata());
 			pnlInfo.add(btnMediaInfoRaw, CC.xy(7, 10));
 
 			//---- btnMediaInfo1 ----
 			btnMediaInfo1.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
-			btnMediaInfo1.setToolTipText("MediaInfo"); //$NON-NLS-1$
+			btnMediaInfo1.setToolTipText("MediaInfo");
 			btnMediaInfo1.addActionListener(e -> parseCodecMetadata_Lang());
 			pnlInfo.add(btnMediaInfo1, CC.xy(9, 10));
 
 			//---- lblDirtySubtitles ----
-			lblDirtySubtitles.setText("*"); //$NON-NLS-1$
+			lblDirtySubtitles.setText("*");
 			pnlInfo.add(lblDirtySubtitles, CC.xy(2, 12));
 
 			//---- label13 ----
-			label13.setText(LocaleBundle.getString("AddMovieFrame.lblSubtitles")); //$NON-NLS-1$
+			label13.setText(LocaleBundle.getString("AddMovieFrame.lblSubtitles"));
 			pnlInfo.add(label13, CC.xy(3, 12));
 			pnlInfo.add(ctrlSubs, CC.xy(5, 12));
 
 			//---- btnMediaInfo4 ----
 			btnMediaInfo4.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
-			btnMediaInfo4.setToolTipText("MediaInfo"); //$NON-NLS-1$
+			btnMediaInfo4.setToolTipText("MediaInfo");
 			btnMediaInfo4.addActionListener(e -> parseCodecMetadata_Subs());
 			pnlInfo.add(btnMediaInfo4, CC.xy(9, 12));
 
 			//---- lblDirtyLength ----
-			lblDirtyLength.setText("*"); //$NON-NLS-1$
+			lblDirtyLength.setText("*");
 			pnlInfo.add(lblDirtyLength, CC.xy(2, 14));
 
 			//---- label6 ----
-			label6.setText(LocaleBundle.getString("AddMovieFrame.lblLength.text")); //$NON-NLS-1$
+			label6.setText(LocaleBundle.getString("AddMovieFrame.lblLength.text"));
 			pnlInfo.add(label6, CC.xy(3, 14));
 			pnlInfo.add(spnLength, CC.xy(5, 14));
 
 			//---- btnMediaInfo2 ----
 			btnMediaInfo2.setIconRef(Icon16RefLink.ICN_MENUBAR_MEDIAINFO);
-			btnMediaInfo2.setToolTipText("MediaInfo"); //$NON-NLS-1$
+			btnMediaInfo2.setToolTipText("MediaInfo");
 			btnMediaInfo2.addActionListener(e -> parseCodecMetadata_Len());
 			pnlInfo.add(btnMediaInfo2, CC.xy(9, 14));
 
 			//---- lblDirtySize ----
-			lblDirtySize.setText("*"); //$NON-NLS-1$
+			lblDirtySize.setText("*");
 			pnlInfo.add(lblDirtySize, CC.xy(2, 16));
 
 			//---- label7 ----
-			label7.setText(LocaleBundle.getString("AddMovieFrame.lblGre.text")); //$NON-NLS-1$
+			label7.setText(LocaleBundle.getString("AddMovieFrame.lblGre.text"));
 			pnlInfo.add(label7, CC.xy(3, 16));
 			pnlInfo.add(spnSize, CC.xy(5, 16));
 
 			//---- btnRecalcSize ----
-			btnRecalcSize.setText(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text")); //$NON-NLS-1$
+			btnRecalcSize.setText(LocaleBundle.getString("AddEpisodeFrame.btnRecalcSizes.text"));
 			btnRecalcSize.addActionListener(e -> recalcFilesize());
 			pnlInfo.add(btnRecalcSize, CC.xy(5, 18));
 
 			//---- lblDirtyScore ----
-			lblDirtyScore.setText("*"); //$NON-NLS-1$
+			lblDirtyScore.setText("*");
 			pnlInfo.add(lblDirtyScore, CC.xy(2, 20));
 
 			//---- label8 ----
-			label8.setText(LocaleBundle.getString("CCMovieScore.Score")); //$NON-NLS-1$
+			label8.setText(LocaleBundle.getString("CCMovieScore.Score"));
 			pnlInfo.add(label8, CC.xy(3, 20));
 			pnlInfo.add(ctrlScore, CC.xy(5, 20));
 
 			//---- lblDirtyComment ----
-			lblDirtyComment.setText("*"); //$NON-NLS-1$
+			lblDirtyComment.setText("*");
 			pnlInfo.add(lblDirtyComment, CC.xy(2, 22));
 
 			//---- label14 ----
-			label14.setText(LocaleBundle.getString("EditMovieFrame.lblScoreComment")); //$NON-NLS-1$
+			label14.setText(LocaleBundle.getString("EditMovieFrame.lblScoreComment"));
 			pnlInfo.add(label14, CC.xy(3, 22));
 
 			//======== scrollPane2 ========
@@ -975,73 +975,73 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			pnlInfo.add(scrollPane2, CC.xy(5, 22, CC.DEFAULT, CC.FILL));
 
 			//---- lblDirtyTags ----
-			lblDirtyTags.setText("*"); //$NON-NLS-1$
+			lblDirtyTags.setText("*");
 			pnlInfo.add(lblDirtyTags, CC.xy(2, 24));
 
 			//---- label12 ----
-			label12.setText(LocaleBundle.getString("EditSeriesFrame.lblTags.text")); //$NON-NLS-1$
+			label12.setText(LocaleBundle.getString("EditSeriesFrame.lblTags.text"));
 			pnlInfo.add(label12, CC.xy(3, 24));
 			pnlInfo.add(ctrlTags, CC.xy(5, 24));
 
 			//---- lblDirtyAddDate ----
-			lblDirtyAddDate.setText("*"); //$NON-NLS-1$
+			lblDirtyAddDate.setText("*");
 			pnlInfo.add(lblDirtyAddDate, CC.xy(2, 26));
 
 			//---- label9 ----
-			label9.setText(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text")); //$NON-NLS-1$
+			label9.setText(LocaleBundle.getString("AddMovieFrame.lblEinfgDatum.text"));
 			pnlInfo.add(label9, CC.xy(3, 26));
 			pnlInfo.add(spnAddDate, CC.xy(5, 26, CC.DEFAULT, CC.FILL));
 
 			//---- btnToday ----
-			btnToday.setText(LocaleBundle.getString("AddEpisodeFrame.btnToday.text")); //$NON-NLS-1$
+			btnToday.setText(LocaleBundle.getString("AddEpisodeFrame.btnToday.text"));
 			btnToday.addActionListener(e -> setToday());
 			pnlInfo.add(btnToday, CC.xywh(7, 26, 3, 1));
 
 			//---- lblDirtyPath ----
-			lblDirtyPath.setText("*"); //$NON-NLS-1$
+			lblDirtyPath.setText("*");
 			pnlInfo.add(lblDirtyPath, CC.xy(2, 28));
 
 			//---- label10 ----
-			label10.setText(LocaleBundle.getString("AddEpisodeFrame.lblPart.text")); //$NON-NLS-1$
+			label10.setText(LocaleBundle.getString("AddEpisodeFrame.lblPart.text"));
 			pnlInfo.add(label10, CC.xy(3, 28));
 			pnlInfo.add(edPart, CC.xy(5, 28));
 
 			//---- btnOpen ----
-			btnOpen.setText("..."); //$NON-NLS-1$
+			btnOpen.setText("...");
 			btnOpen.addActionListener(e -> openPart());
 			pnlInfo.add(btnOpen, CC.xywh(7, 28, 3, 1));
 
 			//---- lblDirtyHistory ----
-			lblDirtyHistory.setText("*"); //$NON-NLS-1$
+			lblDirtyHistory.setText("*");
 			pnlInfo.add(lblDirtyHistory, CC.xy(2, 30, CC.DEFAULT, CC.TOP));
 
 			//---- label11 ----
-			label11.setText(LocaleBundle.getString("EditSeriesFrame.lblHistory.text")); //$NON-NLS-1$
+			label11.setText(LocaleBundle.getString("EditSeriesFrame.lblHistory.text"));
 			pnlInfo.add(label11, CC.xy(3, 30, CC.DEFAULT, CC.TOP));
 			pnlInfo.add(ctrlHistory, CC.xywh(5, 30, 5, 1, CC.DEFAULT, CC.FILL));
 
 			//======== panel1 ========
 			{
 				panel1.setLayout(new FormLayout(
-					"default, $lcgap, default, 1dlu:grow, default", //$NON-NLS-1$
-					"default")); //$NON-NLS-1$
+					"default, $lcgap, default, 1dlu:grow, default",
+					"default"));
 
 				//---- btnEpCancel ----
-				btnEpCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+				btnEpCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text"));
 				btnEpCancel.addActionListener(e -> cancelInfoDisplay());
 				panel1.add(btnEpCancel, CC.xy(1, 1));
 
 				//---- btnEpOk ----
-				btnEpOk.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+				btnEpOk.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
 				btnEpOk.addActionListener(e -> okayInfoDisplay());
 				panel1.add(btnEpOk, CC.xy(3, 1));
 
 				//---- chckbxIgnoreUserDataErrors ----
-				chckbxIgnoreUserDataErrors.setText(LocaleBundle.getString("BatchEditFrame.CbxIgnoreUserDataErrors")); //$NON-NLS-1$
+				chckbxIgnoreUserDataErrors.setText(LocaleBundle.getString("BatchEditFrame.CbxIgnoreUserDataErrors"));
 				panel1.add(chckbxIgnoreUserDataErrors, CC.xy(4, 1));
 
 				//---- btnEpNext ----
-				btnEpNext.setText(LocaleBundle.getString("AddEpisodeFrame.btnNext.text")); //$NON-NLS-1$
+				btnEpNext.setText(LocaleBundle.getString("AddEpisodeFrame.btnNext.text"));
 				btnEpNext.setFont(btnEpNext.getFont().deriveFont(Font.BOLD|Font.ITALIC));
 				btnEpNext.addActionListener(e -> onBtnNext());
 				panel1.add(btnEpNext, CC.xy(5, 1));
@@ -1059,11 +1059,11 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 			//======== pnlTitleEdit ========
 			{
 				pnlTitleEdit.setLayout(new FormLayout(
-					"$lcgap, 0dlu:grow, 4*($lcgap, 0dlu:grow(0.5)), $lcgap", //$NON-NLS-1$
-					"2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, 3*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default")); //$NON-NLS-1$
+					"$lcgap, 0dlu:grow, 4*($lcgap, 0dlu:grow(0.5)), $lcgap",
+					"2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, 3*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default"));
 
 				//---- button5 ----
-				button5.setText(LocaleBundle.getString("AddEpisodeFrame.btnDeleteFirst.text")); //$NON-NLS-1$
+				button5.setText(LocaleBundle.getString("AddEpisodeFrame.btnDeleteFirst.text"));
 				pnlTitleEdit.add(button5, CC.xywh(2, 2, 5, 1));
 
 				//---- spnSide_01 ----
@@ -1071,7 +1071,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 				pnlTitleEdit.add(spnSide_01, CC.xywh(8, 2, 3, 1));
 
 				//---- button1 ----
-				button1.setText(LocaleBundle.getString("AddEpisodeFrame.btnDeleteLast.text")); //$NON-NLS-1$
+				button1.setText(LocaleBundle.getString("AddEpisodeFrame.btnDeleteLast.text"));
 				pnlTitleEdit.add(button1, CC.xywh(2, 4, 5, 1));
 
 				//---- spnSide_02 ----
@@ -1080,32 +1080,32 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 				pnlTitleEdit.add(edSide_01, CC.xy(2, 8));
 
 				//---- button2 ----
-				button2.setText(LocaleBundle.getString("AddEpisodeFrame.btnReplace.text")); //$NON-NLS-1$
+				button2.setText(LocaleBundle.getString("AddEpisodeFrame.btnReplace.text"));
 				pnlTitleEdit.add(button2, CC.xywh(4, 8, 3, 1));
 				pnlTitleEdit.add(edSide_02, CC.xywh(8, 8, 3, 1));
 				pnlTitleEdit.add(edSide_R1, CC.xy(2, 10));
 
 				//---- button3 ----
-				button3.setText(LocaleBundle.getString("BatchEditFrame.ReplaceRegex")); //$NON-NLS-1$
+				button3.setText(LocaleBundle.getString("BatchEditFrame.ReplaceRegex"));
 				pnlTitleEdit.add(button3, CC.xywh(4, 10, 3, 1));
 				pnlTitleEdit.add(edSide_R2, CC.xywh(8, 10, 3, 1));
 
 				//---- button4 ----
-				button4.setText(LocaleBundle.getString("AddEpisodeFrame.btnTrim.text")); //$NON-NLS-1$
+				button4.setText(LocaleBundle.getString("AddEpisodeFrame.btnTrim.text"));
 				pnlTitleEdit.add(button4, CC.xywh(2, 14, 9, 1));
 				pnlTitleEdit.add(edSide_03, CC.xy(2, 16));
 
 				//---- button6 ----
-				button6.setText(LocaleBundle.getString("AddEpisodeFrame.btnConcatStart.text")); //$NON-NLS-1$
+				button6.setText(LocaleBundle.getString("AddEpisodeFrame.btnConcatStart.text"));
 				pnlTitleEdit.add(button6, CC.xywh(4, 16, 7, 1));
 				pnlTitleEdit.add(edSide_04, CC.xy(2, 18));
 
 				//---- button7 ----
-				button7.setText(LocaleBundle.getString("AddEpisodeFrame.btnConcatEnd.text")); //$NON-NLS-1$
+				button7.setText(LocaleBundle.getString("AddEpisodeFrame.btnConcatEnd.text"));
 				pnlTitleEdit.add(button7, CC.xywh(4, 18, 7, 1));
 
 				//---- button8 ----
-				button8.setText(LocaleBundle.getString("AddEpisodeFrame.btnDelete.text")); //$NON-NLS-1$
+				button8.setText(LocaleBundle.getString("AddEpisodeFrame.btnDelete.text"));
 				pnlTitleEdit.add(button8, CC.xywh(2, 22, 5, 1));
 
 				//---- spnSide_03 ----
@@ -1118,43 +1118,43 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 				pnlTitleEdit.add(edSide_05, CC.xy(2, 26));
 
 				//---- button9 ----
-				button9.setText(LocaleBundle.getString("AddEpisodeFrame.btnSearchAndDel.text")); //$NON-NLS-1$
+				button9.setText(LocaleBundle.getString("AddEpisodeFrame.btnSearchAndDel.text"));
 				pnlTitleEdit.add(button9, CC.xywh(4, 26, 7, 1));
 			}
-			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabTitle"), pnlTitleEdit); //$NON-NLS-1$
+			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabTitle"), pnlTitleEdit);
 
 			//======== pnlPartEdit ========
 			{
 				pnlPartEdit.setLayout(new FormLayout(
-					"$lcgap, 0dlu:grow, 4*($lcgap, 0dlu:grow(0.5)), $lcgap", //$NON-NLS-1$
-					"$lgap, default, $lgap, 7dlu, 4*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, 6*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default")); //$NON-NLS-1$
+					"$lcgap, 0dlu:grow, 4*($lcgap, 0dlu:grow(0.5)), $lcgap",
+					"$lgap, default, $lgap, 7dlu, 4*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, 6*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default"));
 
 				//---- button10 ----
-				button10.setText(LocaleBundle.getString("BatchEditFrame.ConverToCC")); //$NON-NLS-1$
+				button10.setText(LocaleBundle.getString("BatchEditFrame.ConverToCC"));
 				pnlPartEdit.add(button10, CC.xywh(2, 2, 3, 1));
 
 				//---- button11 ----
-				button11.setText(LocaleBundle.getString("BatchEditFrame.ConvertFromCC")); //$NON-NLS-1$
+				button11.setText(LocaleBundle.getString("BatchEditFrame.ConvertFromCC"));
 				pnlPartEdit.add(button11, CC.xywh(6, 2, 5, 1));
 
 				//---- button12 ----
-				button12.setText(LocaleBundle.getString("BatchEditFrame.DeleteFilename")); //$NON-NLS-1$
+				button12.setText(LocaleBundle.getString("BatchEditFrame.DeleteFilename"));
 				pnlPartEdit.add(button12, CC.xywh(2, 6, 5, 1));
 
 				//---- button13 ----
-				button13.setText(LocaleBundle.getString("BatchEditFrame.DeleteFileNameWithoutExt")); //$NON-NLS-1$
+				button13.setText(LocaleBundle.getString("BatchEditFrame.DeleteFileNameWithoutExt"));
 				pnlPartEdit.add(button13, CC.xywh(2, 8, 5, 1));
 
 				//---- button14 ----
-				button14.setText(LocaleBundle.getString("BatchEditFrame.DeletePath")); //$NON-NLS-1$
+				button14.setText(LocaleBundle.getString("BatchEditFrame.DeletePath"));
 				pnlPartEdit.add(button14, CC.xywh(2, 10, 5, 1));
 
 				//---- button15 ----
-				button15.setText(LocaleBundle.getString("BatchEditFrame.DeleteExt")); //$NON-NLS-1$
+				button15.setText(LocaleBundle.getString("BatchEditFrame.DeleteExt"));
 				pnlPartEdit.add(button15, CC.xywh(2, 12, 5, 1));
 
 				//---- button16 ----
-				button16.setText(LocaleBundle.getString("AddEpisodeFrame.btnDeleteFirst.text")); //$NON-NLS-1$
+				button16.setText(LocaleBundle.getString("AddEpisodeFrame.btnDeleteFirst.text"));
 				pnlPartEdit.add(button16, CC.xywh(2, 16, 5, 1));
 
 				//---- spnSidePart_01 ----
@@ -1162,7 +1162,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 				pnlPartEdit.add(spnSidePart_01, CC.xywh(8, 16, 3, 1));
 
 				//---- button17 ----
-				button17.setText(LocaleBundle.getString("AddEpisodeFrame.btnDeleteLast.text")); //$NON-NLS-1$
+				button17.setText(LocaleBundle.getString("AddEpisodeFrame.btnDeleteLast.text"));
 				pnlPartEdit.add(button17, CC.xywh(2, 18, 5, 1));
 
 				//---- spnSidePart_02 ----
@@ -1171,32 +1171,32 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 				pnlPartEdit.add(edSidePart_01, CC.xy(2, 22));
 
 				//---- button18 ----
-				button18.setText(LocaleBundle.getString("AddEpisodeFrame.btnReplace.text")); //$NON-NLS-1$
+				button18.setText(LocaleBundle.getString("AddEpisodeFrame.btnReplace.text"));
 				pnlPartEdit.add(button18, CC.xywh(4, 22, 3, 1));
 				pnlPartEdit.add(edSidePart_02, CC.xywh(8, 22, 3, 1));
 				pnlPartEdit.add(edSidePart_R1, CC.xy(2, 24));
 
 				//---- button19 ----
-				button19.setText(LocaleBundle.getString("BatchEditFrame.ReplaceRegex")); //$NON-NLS-1$
+				button19.setText(LocaleBundle.getString("BatchEditFrame.ReplaceRegex"));
 				pnlPartEdit.add(button19, CC.xywh(4, 24, 3, 1));
 				pnlPartEdit.add(edSidePart_R2, CC.xywh(8, 24, 3, 1));
 
 				//---- button20 ----
-				button20.setText(LocaleBundle.getString("AddEpisodeFrame.btnTrim.text")); //$NON-NLS-1$
+				button20.setText(LocaleBundle.getString("AddEpisodeFrame.btnTrim.text"));
 				pnlPartEdit.add(button20, CC.xywh(2, 28, 9, 1));
 				pnlPartEdit.add(edSidePart_03, CC.xy(2, 30));
 
 				//---- button21 ----
-				button21.setText(LocaleBundle.getString("AddEpisodeFrame.btnConcatStart.text")); //$NON-NLS-1$
+				button21.setText(LocaleBundle.getString("AddEpisodeFrame.btnConcatStart.text"));
 				pnlPartEdit.add(button21, CC.xywh(4, 30, 7, 1));
 				pnlPartEdit.add(edSidePart_04, CC.xy(2, 32));
 
 				//---- button22 ----
-				button22.setText(LocaleBundle.getString("AddEpisodeFrame.btnConcatEnd.text")); //$NON-NLS-1$
+				button22.setText(LocaleBundle.getString("AddEpisodeFrame.btnConcatEnd.text"));
 				pnlPartEdit.add(button22, CC.xywh(4, 32, 7, 1));
 
 				//---- button23 ----
-				button23.setText(LocaleBundle.getString("AddEpisodeFrame.btnDelete.text")); //$NON-NLS-1$
+				button23.setText(LocaleBundle.getString("AddEpisodeFrame.btnDelete.text"));
 				pnlPartEdit.add(button23, CC.xywh(2, 36, 5, 1));
 
 				//---- spnSidePart_03 ----
@@ -1209,40 +1209,40 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 				pnlPartEdit.add(edSidePart_05, CC.xy(2, 40));
 
 				//---- button24 ----
-				button24.setText(LocaleBundle.getString("AddEpisodeFrame.btnSearchAndDel.text")); //$NON-NLS-1$
+				button24.setText(LocaleBundle.getString("AddEpisodeFrame.btnSearchAndDel.text"));
 				pnlPartEdit.add(button24, CC.xywh(4, 40, 7, 1));
 			}
-			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabPath"), pnlPartEdit); //$NON-NLS-1$
+			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabPath"), pnlPartEdit);
 
 			//======== pnlProperties ========
 			{
 				pnlProperties.setLayout(new FormLayout(
-					"$lcgap, 0dlu:grow, $lcgap, pref, $lcgap", //$NON-NLS-1$
-					"2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, $ugap, $lgap, default, $lgap, 64dlu, $lgap, $ugap, $lgap, default, $lgap, 7dlu, $lgap, default")); //$NON-NLS-1$
+					"$lcgap, 0dlu:grow, $lcgap, pref, $lcgap",
+					"2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, $ugap, $lgap, default, $lgap, 64dlu, $lgap, $ugap, $lgap, default, $lgap, 7dlu, $lgap, default"));
 				pnlProperties.add(spnSideLength, CC.xy(2, 2));
 
 				//---- button31 ----
-				button31.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetEpLength.text")); //$NON-NLS-1$
+				button31.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetEpLength.text"));
 				pnlProperties.add(button31, CC.xy(4, 2));
 				pnlProperties.add(cbxSideFormat, CC.xy(2, 4));
 
 				//---- button32 ----
-				button32.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetEpFormat.text")); //$NON-NLS-1$
+				button32.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetEpFormat.text"));
 				pnlProperties.add(button32, CC.xy(4, 4));
 				pnlProperties.add(ctrlSideLanguage, CC.xy(2, 8));
 
 				//---- button58 ----
-				button58.setText(LocaleBundle.getString("BatchEditFrame.btnSetLanguage")); //$NON-NLS-1$
+				button58.setText(LocaleBundle.getString("BatchEditFrame.btnSetLanguage"));
 				pnlProperties.add(button58, CC.xy(4, 8));
 				pnlProperties.add(ctrlSideSubtitles, CC.xy(2, 10));
 
 				//---- button59 ----
-				button59.setText(LocaleBundle.getString("BatchEditFrame.btnSetSubtitles")); //$NON-NLS-1$
+				button59.setText(LocaleBundle.getString("BatchEditFrame.btnSetSubtitles"));
 				pnlProperties.add(button59, CC.xy(4, 10));
 				pnlProperties.add(ctrlSideScore, CC.xy(2, 14));
 
 				//---- button65 ----
-				button65.setText(LocaleBundle.getString("BatchEditFrame.SetScore")); //$NON-NLS-1$
+				button65.setText(LocaleBundle.getString("BatchEditFrame.SetScore"));
 				pnlProperties.add(button65, CC.xy(4, 14));
 
 				//======== scrollPane1 ========
@@ -1252,208 +1252,208 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 				pnlProperties.add(scrollPane1, CC.xy(2, 16, CC.DEFAULT, CC.FILL));
 
 				//---- button66 ----
-				button66.setText(LocaleBundle.getString("BatchEditFrame.SetComment")); //$NON-NLS-1$
+				button66.setText(LocaleBundle.getString("BatchEditFrame.SetComment"));
 				pnlProperties.add(button66, CC.xy(4, 16, CC.DEFAULT, CC.TOP));
 				pnlProperties.add(ctrlSideTags, CC.xy(2, 20));
 
 				//---- button61 ----
-				button61.setText(LocaleBundle.getString("BatchEditFrame.btnSetTags")); //$NON-NLS-1$
+				button61.setText(LocaleBundle.getString("BatchEditFrame.btnSetTags"));
 				pnlProperties.add(button61, CC.xy(4, 20));
 				pnlProperties.add(spnSideAddDate, CC.xy(2, 24, CC.DEFAULT, CC.FILL));
 
 				//---- button60 ----
-				button60.setText(LocaleBundle.getString("BatchEditFrame.btnSetAddDate")); //$NON-NLS-1$
+				button60.setText(LocaleBundle.getString("BatchEditFrame.btnSetAddDate"));
 				pnlProperties.add(button60, CC.xy(4, 24));
 			}
-			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabProps"), pnlProperties); //$NON-NLS-1$
+			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabProps"), pnlProperties);
 
 			//======== pnlMiscEdit ========
 			{
 				pnlMiscEdit.setLayout(new FormLayout(
-					"$rgap, 0dlu:grow, 4*($lcgap, 0dlu:grow(0.5)), $lcgap", //$NON-NLS-1$
-					"$lgap, default, $lgap, 7dlu, 3*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, 2*($lgap, default)")); //$NON-NLS-1$
+					"$rgap, 0dlu:grow, 4*($lcgap, 0dlu:grow(0.5)), $lcgap",
+					"$lgap, default, $lgap, 7dlu, 3*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, 2*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, 2*($lgap, default)"));
 				pnlMiscEdit.add(spnSide_05, CC.xy(2, 2));
 
 				//---- button25 ----
-				button25.setText(LocaleBundle.getString("AddEpisodeFrame.btnIncEpisodeNumbers.text")); //$NON-NLS-1$
+				button25.setText(LocaleBundle.getString("AddEpisodeFrame.btnIncEpisodeNumbers.text"));
 				pnlMiscEdit.add(button25, CC.xywh(4, 2, 7, 1));
 
 				//---- button28 ----
-				button28.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetUnviewed.text")); //$NON-NLS-1$
+				button28.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetUnviewed.text"));
 				pnlMiscEdit.add(button28, CC.xywh(2, 6, 9, 1));
 
 				//---- button29 ----
-				button29.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetViewedNow.text")); //$NON-NLS-1$
+				button29.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetViewedNow.text"));
 				pnlMiscEdit.add(button29, CC.xywh(2, 8, 9, 1));
 
 				//---- button30 ----
-				button30.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetViewedUndef.text")); //$NON-NLS-1$
+				button30.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetViewedUndef.text"));
 				pnlMiscEdit.add(button30, CC.xywh(2, 10, 9, 1));
 				pnlMiscEdit.add(ctrlSideHistoryVal, CC.xywh(2, 14, 3, 1));
 
 				//---- button33 ----
-				button33.setText(LocaleBundle.getString("AddEpisodeFrame.btnAddToHistory.text")); //$NON-NLS-1$
+				button33.setText(LocaleBundle.getString("AddEpisodeFrame.btnAddToHistory.text"));
 				pnlMiscEdit.add(button33, CC.xywh(6, 14, 5, 1));
 
 				//---- button34 ----
-				button34.setText(LocaleBundle.getString("AddEpisodeFrame.btnClearHistory.text")); //$NON-NLS-1$
+				button34.setText(LocaleBundle.getString("AddEpisodeFrame.btnClearHistory.text"));
 				pnlMiscEdit.add(button34, CC.xywh(6, 16, 5, 1));
 
 				//---- button36 ----
-				button36.setText(LocaleBundle.getString("BatchEditFrame.ReadPathFromDialogFull")); //$NON-NLS-1$
+				button36.setText(LocaleBundle.getString("BatchEditFrame.ReadPathFromDialogFull"));
 				pnlMiscEdit.add(button36, CC.xywh(2, 20, 7, 1));
 
 				//---- button37 ----
-				button37.setText(LocaleBundle.getString("BatchEditFrame.ReadPathFromDialogPartial")); //$NON-NLS-1$
+				button37.setText(LocaleBundle.getString("BatchEditFrame.ReadPathFromDialogPartial"));
 				pnlMiscEdit.add(button37, CC.xywh(2, 22, 7, 1));
 				pnlMiscEdit.add(spnPathOpenOffset, CC.xy(10, 22));
 				pnlMiscEdit.add(cbxSideTag1, CC.xy(2, 26));
 
 				//---- button54 ----
-				button54.setText(LocaleBundle.getString("BatchEditFrame.AddTag")); //$NON-NLS-1$
+				button54.setText(LocaleBundle.getString("BatchEditFrame.AddTag"));
 				pnlMiscEdit.add(button54, CC.xywh(4, 26, 3, 1));
 
 				//---- button55 ----
-				button55.setText(LocaleBundle.getString("BatchEditFrame.DelTag")); //$NON-NLS-1$
+				button55.setText(LocaleBundle.getString("BatchEditFrame.DelTag"));
 				pnlMiscEdit.add(button55, CC.xywh(8, 26, 3, 1));
 				pnlMiscEdit.add(cbxSideModLang, CC.xy(2, 30));
 
 				//---- button26 ----
-				button26.setText(LocaleBundle.getString("BatchEditFrame.btnLangAdd")); //$NON-NLS-1$
+				button26.setText(LocaleBundle.getString("BatchEditFrame.btnLangAdd"));
 				pnlMiscEdit.add(button26, CC.xywh(4, 30, 3, 1));
 
 				//---- button63 ----
-				button63.setText(LocaleBundle.getString("BatchEditFrame.btnLangRem")); //$NON-NLS-1$
+				button63.setText(LocaleBundle.getString("BatchEditFrame.btnLangRem"));
 				pnlMiscEdit.add(button63, CC.xywh(8, 30, 3, 1));
 				pnlMiscEdit.add(cbxSideModSub, CC.xy(2, 32));
 
 				//---- button62 ----
-				button62.setText(LocaleBundle.getString("BatchEditFrame.SubAdd")); //$NON-NLS-1$
+				button62.setText(LocaleBundle.getString("BatchEditFrame.SubAdd"));
 				pnlMiscEdit.add(button62, CC.xywh(4, 32, 3, 1));
 
 				//---- button64 ----
-				button64.setText(LocaleBundle.getString("BatchEditFrame.SubRem")); //$NON-NLS-1$
+				button64.setText(LocaleBundle.getString("BatchEditFrame.SubRem"));
 				pnlMiscEdit.add(button64, CC.xywh(8, 32, 3, 1));
 			}
-			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabMisc"), pnlMiscEdit); //$NON-NLS-1$
+			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabMisc"), pnlMiscEdit);
 
 			//======== pnlMetadata ========
 			{
 				pnlMetadata.setLayout(new FormLayout(
-					"$rgap, 0dlu:grow, $lcgap, 0dlu:grow(0.75), $rgap", //$NON-NLS-1$
-					"$lgap, default, $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default, $lgap, 7dlu, 3*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default, $lgap, 14dlu, 2*($lgap, default)")); //$NON-NLS-1$
+					"$rgap, 0dlu:grow, $lcgap, 0dlu:grow(0.75), $rgap",
+					"$lgap, default, $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default, $lgap, 7dlu, 3*($lgap, default), $lgap, 7dlu, $lgap, default, $lgap, 7dlu, $lgap, default, $lgap, 14dlu, 2*($lgap, default)"));
 
 				//---- button27 ----
-				button27.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetEpSize.text")); //$NON-NLS-1$
+				button27.setText(LocaleBundle.getString("AddEpisodeFrame.btnSetEpSize.text"));
 				pnlMetadata.add(button27, CC.xywh(2, 2, 3, 1));
 
 				//---- button35 ----
-				button35.setText(LocaleBundle.getString("BatchEditFrame.ClearMediaInfo")); //$NON-NLS-1$
+				button35.setText(LocaleBundle.getString("BatchEditFrame.ClearMediaInfo"));
 				pnlMetadata.add(button35, CC.xywh(2, 6, 3, 1));
 
 				//---- button67 ----
-				button67.setText(LocaleBundle.getString("BatchEditFrame.ReadMultipleMetadata")); //$NON-NLS-1$
+				button67.setText(LocaleBundle.getString("BatchEditFrame.ReadMultipleMetadata"));
 				pnlMetadata.add(button67, CC.xywh(2, 10, 3, 1));
 
 				//---- button38 ----
-				button38.setText(LocaleBundle.getString("BatchEditFrame.btnFormatFromPath")); //$NON-NLS-1$
+				button38.setText(LocaleBundle.getString("BatchEditFrame.btnFormatFromPath"));
 				pnlMetadata.add(button38, CC.xywh(2, 14, 3, 1));
 
 				//---- button39 ----
-				button39.setText(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLang.title")); //$NON-NLS-1$
+				button39.setText(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLang.title"));
 				pnlMetadata.add(button39, CC.xywh(2, 16, 3, 1));
 
 				//---- button56 ----
-				button56.setText(LocaleBundle.getString("BatchEditFrame.btnMassSetSubs.title")); //$NON-NLS-1$
+				button56.setText(LocaleBundle.getString("BatchEditFrame.btnMassSetSubs.title"));
 				pnlMetadata.add(button56, CC.xywh(2, 18, 3, 1));
 
 				//---- button41 ----
-				button41.setText(LocaleBundle.getString("AddEpisodeFrame.btnMassSetMediaInfo.title")); //$NON-NLS-1$
+				button41.setText(LocaleBundle.getString("AddEpisodeFrame.btnMassSetMediaInfo.title"));
 				pnlMetadata.add(button41, CC.xy(2, 22));
 
 				//---- button42 ----
-				button42.setText(LocaleBundle.getString("BatchEditFrame.HashCalc")); //$NON-NLS-1$
+				button42.setText(LocaleBundle.getString("BatchEditFrame.HashCalc"));
 				pnlMetadata.add(button42, CC.xy(4, 22));
 
 				//---- button40 ----
-				button40.setText(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLen.title")); //$NON-NLS-1$
+				button40.setText(LocaleBundle.getString("AddEpisodeFrame.btnMassSetLen.title"));
 				pnlMetadata.add(button40, CC.xywh(2, 26, 3, 1));
 
 				//---- cbxSkipInvalidAudioLanguages ----
-				cbxSkipInvalidAudioLanguages.setText(LocaleBundle.getString("BatchEditFrame.cbxSkipInvalidAudioLanguages")); //$NON-NLS-1$
+				cbxSkipInvalidAudioLanguages.setText(LocaleBundle.getString("BatchEditFrame.cbxSkipInvalidAudioLanguages"));
 				pnlMetadata.add(cbxSkipInvalidAudioLanguages, CC.xywh(2, 30, 3, 1));
 
 				//---- cbxSkipInvalidSubLanguages ----
-				cbxSkipInvalidSubLanguages.setText(LocaleBundle.getString("BatchEditFrame.cbxSkipInvalidSubtitleLanguages")); //$NON-NLS-1$
+				cbxSkipInvalidSubLanguages.setText(LocaleBundle.getString("BatchEditFrame.cbxSkipInvalidSubtitleLanguages"));
 				pnlMetadata.add(cbxSkipInvalidSubLanguages, CC.xywh(2, 32, 3, 1));
 			}
-			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabMetadata"), pnlMetadata); //$NON-NLS-1$
+			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabMetadata"), pnlMetadata);
 
 			//======== pnlReset ========
 			{
 				pnlReset.setLayout(new FormLayout(
-					"$rgap, 0dlu:grow, $rgap", //$NON-NLS-1$
-					"8*($lgap, default), $lgap, 7dlu, 4*($lgap, default)")); //$NON-NLS-1$
+					"$rgap, 0dlu:grow, $rgap",
+					"8*($lgap, default), $lgap, 7dlu, 4*($lgap, default)"));
 
 				//---- button43 ----
-				button43.setText(LocaleBundle.getString("BatchEditFrame.ResetTitle")); //$NON-NLS-1$
+				button43.setText(LocaleBundle.getString("BatchEditFrame.ResetTitle"));
 				pnlReset.add(button43, CC.xy(2, 2));
 
 				//---- button44 ----
-				button44.setText(LocaleBundle.getString("BatchEditFrame.ResetEpisodenumber")); //$NON-NLS-1$
+				button44.setText(LocaleBundle.getString("BatchEditFrame.ResetEpisodenumber"));
 				pnlReset.add(button44, CC.xy(2, 4));
 
 				//---- button45 ----
-				button45.setText(LocaleBundle.getString("BatchEditFrame.ResetFormat")); //$NON-NLS-1$
+				button45.setText(LocaleBundle.getString("BatchEditFrame.ResetFormat"));
 				pnlReset.add(button45, CC.xy(2, 6));
 
 				//---- button46 ----
-				button46.setText(LocaleBundle.getString("BatchEditFrame.ResetMediaInfo")); //$NON-NLS-1$
+				button46.setText(LocaleBundle.getString("BatchEditFrame.ResetMediaInfo"));
 				pnlReset.add(button46, CC.xy(2, 8));
 
 				//---- button47 ----
-				button47.setText(LocaleBundle.getString("BatchEditFrame.ResetLanguage")); //$NON-NLS-1$
+				button47.setText(LocaleBundle.getString("BatchEditFrame.ResetLanguage"));
 				pnlReset.add(button47, CC.xy(2, 10));
 
 				//---- button57 ----
-				button57.setText(LocaleBundle.getString("BatchEditFrame.ResetSubtitles")); //$NON-NLS-1$
+				button57.setText(LocaleBundle.getString("BatchEditFrame.ResetSubtitles"));
 				pnlReset.add(button57, CC.xy(2, 12));
 
 				//---- button48 ----
-				button48.setText(LocaleBundle.getString("BatchEditFrame.ResetLength")); //$NON-NLS-1$
+				button48.setText(LocaleBundle.getString("BatchEditFrame.ResetLength"));
 				pnlReset.add(button48, CC.xy(2, 14));
 
 				//---- button49 ----
-				button49.setText(LocaleBundle.getString("BatchEditFrame.ResetFilesize")); //$NON-NLS-1$
+				button49.setText(LocaleBundle.getString("BatchEditFrame.ResetFilesize"));
 				pnlReset.add(button49, CC.xy(2, 16));
 
 				//---- button53 ----
-				button53.setText(LocaleBundle.getString("BatchEditFrame.ResetTags")); //$NON-NLS-1$
+				button53.setText(LocaleBundle.getString("BatchEditFrame.ResetTags"));
 				pnlReset.add(button53, CC.xy(2, 20));
 
 				//---- button50 ----
-				button50.setText(LocaleBundle.getString("BatchEditFrame.ResetAddDate")); //$NON-NLS-1$
+				button50.setText(LocaleBundle.getString("BatchEditFrame.ResetAddDate"));
 				pnlReset.add(button50, CC.xy(2, 22));
 
 				//---- button51 ----
-				button51.setText(LocaleBundle.getString("BatchEditFrame.ResetPart")); //$NON-NLS-1$
+				button51.setText(LocaleBundle.getString("BatchEditFrame.ResetPart"));
 				pnlReset.add(button51, CC.xy(2, 24));
 
 				//---- button52 ----
-				button52.setText(LocaleBundle.getString("BatchEditFrame.ResetViewedHistory")); //$NON-NLS-1$
+				button52.setText(LocaleBundle.getString("BatchEditFrame.ResetViewedHistory"));
 				pnlReset.add(button52, CC.xy(2, 26));
 			}
-			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabReset"), pnlReset); //$NON-NLS-1$
+			tabbedPane1.addTab(LocaleBundle.getString("BatchEditFrame.TabReset"), pnlReset);
 		}
 		contentPane.add(tabbedPane1, CC.xywh(6, 4, 1, 5, CC.FILL, CC.FILL));
 
 		//---- btnOmniparser ----
-		btnOmniparser.setText(LocaleBundle.getString("AddEpisodeFrame.btnOmniParser.text")); //$NON-NLS-1$
+		btnOmniparser.setText(LocaleBundle.getString("AddEpisodeFrame.btnOmniParser.text"));
 		btnOmniparser.addActionListener(e -> showOmniParser());
 		contentPane.add(btnOmniparser, CC.xy(2, 6));
 
 		//---- btnOK ----
-		btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+		btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
 		btnOK.addActionListener(e -> onOKClicked());
 		contentPane.add(btnOK, CC.xy(4, 8, CC.CENTER, CC.FILL));
 		setSize(1250, 850);

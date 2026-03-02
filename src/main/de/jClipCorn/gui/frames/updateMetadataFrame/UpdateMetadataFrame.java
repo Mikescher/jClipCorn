@@ -375,19 +375,19 @@ public class UpdateMetadataFrame extends JCCFrame
 		btnUpdateAllReferences = new JButton();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("UpdateMetadataFrame.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("UpdateMetadataFrame.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(700, 400));
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default, $lcgap, default:grow, 2*($lcgap, [75dlu,default]), $ugap", //$NON-NLS-1$
-			"$ugap, 2*(default, $lgap), default:grow, 3*($lgap, default), $ugap")); //$NON-NLS-1$
+			"$ugap, default, $lcgap, default:grow, 2*($lcgap, [75dlu,default]), $ugap",
+			"$ugap, 2*(default, $lgap), default:grow, 3*($lgap, default), $ugap"));
 
 		//======== statusInputFilter ========
 		{
 			statusInputFilter.setLayout(new FormLayout(
-				"14dlu, $lcgap, default:grow", //$NON-NLS-1$
-				"default")); //$NON-NLS-1$
+				"14dlu, $lcgap, default:grow",
+				"default"));
 
 			//======== panel2 ========
 			{
@@ -411,76 +411,76 @@ public class UpdateMetadataFrame extends JCCFrame
 			statusInputFilter.add(panel2, CC.xy(1, 1));
 
 			//---- edInputFilter ----
-			edInputFilter.setText("[0]"); //$NON-NLS-1$
+			edInputFilter.setText("[0]");
 			statusInputFilter.add(edInputFilter, CC.xy(3, 1));
 		}
 		contentPane.add(statusInputFilter, CC.xywh(2, 2, 3, 1, CC.FILL, CC.FILL));
 
 		//---- btnInputFilter ----
-		btnInputFilter.setText(LocaleBundle.getString("UpdateMetadataFrame.filterBtn")); //$NON-NLS-1$
+		btnInputFilter.setText(LocaleBundle.getString("UpdateMetadataFrame.filterBtn"));
 		btnInputFilter.addActionListener(e -> filterInput());
 		contentPane.add(btnInputFilter, CC.xywh(6, 2, 3, 1));
 
 		//---- btnStartCollectingData ----
-		btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect1")); //$NON-NLS-1$
+		btnStartCollectingData.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnCollect1"));
 		btnStartCollectingData.addActionListener(e -> queryOnline());
 		contentPane.add(btnStartCollectingData, CC.xy(2, 4));
 		contentPane.add(progressBar, CC.xy(4, 4, CC.FILL, CC.FILL));
 
 		//---- btnShowAll ----
-		btnShowAll.setText(LocaleBundle.getString("UpdateMetadataFrame.SwitchFilter1")); //$NON-NLS-1$
+		btnShowAll.setText(LocaleBundle.getString("UpdateMetadataFrame.SwitchFilter1"));
 		btnShowAll.setSelected(true);
 		btnShowAll.addActionListener(e -> showAll());
 		contentPane.add(btnShowAll, CC.xy(6, 4));
 
 		//---- btnShowFiltered ----
-		btnShowFiltered.setText(LocaleBundle.getString("UpdateMetadataFrame.SwitchFilter2")); //$NON-NLS-1$
+		btnShowFiltered.setText(LocaleBundle.getString("UpdateMetadataFrame.SwitchFilter2"));
 		btnShowFiltered.addActionListener(e -> showFiltered());
 		contentPane.add(btnShowFiltered, CC.xy(8, 4));
 		contentPane.add(tableMain, CC.xywh(2, 6, 7, 1, CC.FILL, CC.FILL));
 
 		//---- btnUpdateSelectedOnlineScore ----
-		btnUpdateSelectedOnlineScore.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate3")); //$NON-NLS-1$
+		btnUpdateSelectedOnlineScore.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate3"));
 		btnUpdateSelectedOnlineScore.setEnabled(false);
 		btnUpdateSelectedOnlineScore.addActionListener(e -> updateSelectedOnlineScore());
 		contentPane.add(btnUpdateSelectedOnlineScore, CC.xy(2, 8));
 
 		//---- btnUpdateAllOnlinescore ----
-		btnUpdateAllOnlinescore.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate1")); //$NON-NLS-1$
+		btnUpdateAllOnlinescore.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate1"));
 		btnUpdateAllOnlinescore.setEnabled(false);
 		btnUpdateAllOnlinescore.addActionListener(e -> updateAllOnlineScore());
 		contentPane.add(btnUpdateAllOnlinescore, CC.xy(8, 8));
 
 		//---- btnUpdateSelectedGenres ----
-		btnUpdateSelectedGenres.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate4")); //$NON-NLS-1$
+		btnUpdateSelectedGenres.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate4"));
 		btnUpdateSelectedGenres.setEnabled(false);
 		btnUpdateSelectedGenres.addActionListener(e -> updateSelectedGenres());
 		contentPane.add(btnUpdateSelectedGenres, CC.xy(2, 10));
 
 		//---- cbAllowDeleteGenres ----
-		cbAllowDeleteGenres.setText(LocaleBundle.getString("UpdateMetadataFrame.CBDelGenres")); //$NON-NLS-1$
+		cbAllowDeleteGenres.setText(LocaleBundle.getString("UpdateMetadataFrame.CBDelGenres"));
 		cbAllowDeleteGenres.addActionListener(e -> onChangeAllowGenreDelete());
 		contentPane.add(cbAllowDeleteGenres, CC.xy(4, 10));
 
 		//---- btnUpdateAllGenres ----
-		btnUpdateAllGenres.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate2")); //$NON-NLS-1$
+		btnUpdateAllGenres.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate2"));
 		btnUpdateAllGenres.setEnabled(false);
 		btnUpdateAllGenres.addActionListener(e -> updateAllGenres());
 		contentPane.add(btnUpdateAllGenres, CC.xy(8, 10));
 
 		//---- btnUpdateSelectedRefs ----
-		btnUpdateSelectedRefs.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate5")); //$NON-NLS-1$
+		btnUpdateSelectedRefs.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate5"));
 		btnUpdateSelectedRefs.setEnabled(false);
 		btnUpdateSelectedRefs.addActionListener(e -> updatSelectedOnlineReferences());
 		contentPane.add(btnUpdateSelectedRefs, CC.xy(2, 12));
 
 		//---- cbAllowDeleteReferences ----
-		cbAllowDeleteReferences.setText(LocaleBundle.getString("UpdateMetadataFrame.CBDelReferences")); //$NON-NLS-1$
+		cbAllowDeleteReferences.setText(LocaleBundle.getString("UpdateMetadataFrame.CBDelReferences"));
 		cbAllowDeleteReferences.addActionListener(e -> onChangeAllowRefDelete());
 		contentPane.add(cbAllowDeleteReferences, CC.xy(4, 12));
 
 		//---- btnUpdateAllReferences ----
-		btnUpdateAllReferences.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate6")); //$NON-NLS-1$
+		btnUpdateAllReferences.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate6"));
 		btnUpdateAllReferences.setEnabled(false);
 		btnUpdateAllReferences.addActionListener(e -> updateAllOnlineReferences());
 		contentPane.add(btnUpdateAllReferences, CC.xy(8, 12));

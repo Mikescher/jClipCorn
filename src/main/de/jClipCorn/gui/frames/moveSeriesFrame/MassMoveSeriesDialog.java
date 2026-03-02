@@ -165,43 +165,43 @@ public class MassMoveSeriesDialog extends JCCDialog
 		tabTest = new MassMoveTable(this, false, true);
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("MassMoveMoviesFrame.this.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("MassMoveMoviesFrame.this.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setModal(true);
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default, $lcgap, default:grow, $ugap", //$NON-NLS-1$
-			"$ugap, default, $lgap, default:grow, $ugap")); //$NON-NLS-1$
+			"$ugap, default, $lcgap, default:grow, $ugap",
+			"$ugap, default, $lgap, default:grow, $ugap"));
 		contentPane.add(lblCover, CC.xy(2, 2));
 
 		//======== panel1 ========
 		{
 			panel1.setLayout(new FormLayout(
-				"0dlu:grow, $lcgap, 0dlu:grow", //$NON-NLS-1$
-				"5*(default, $lgap), 0dlu:grow, 2*($lgap, default), $lgap")); //$NON-NLS-1$
+				"0dlu:grow, $lcgap, 0dlu:grow",
+				"5*(default, $lgap), 0dlu:grow, 2*($lgap, default), $lgap"));
 
 			//---- label1 ----
-			label1.setText(LocaleBundle.getString("MoveSeriesFrame.lblReplace.text")); //$NON-NLS-1$
+			label1.setText(LocaleBundle.getString("MoveSeriesFrame.lblReplace.text"));
 			panel1.add(label1, CC.xy(1, 1));
 			panel1.add(edSearch, CC.xywh(1, 3, 3, 1));
 
 			//---- label2 ----
-			label2.setText(LocaleBundle.getString("MoveSeriesFrame.lblWith.text")); //$NON-NLS-1$
+			label2.setText(LocaleBundle.getString("MoveSeriesFrame.lblWith.text"));
 			panel1.add(label2, CC.xy(1, 5));
 			panel1.add(edReplace, CC.xywh(1, 7, 3, 1));
 
 			//---- cbxRegex ----
-			cbxRegex.setText(LocaleBundle.getString("MoveSeriesFrame.cbxRegex")); //$NON-NLS-1$
+			cbxRegex.setText(LocaleBundle.getString("MoveSeriesFrame.cbxRegex"));
 			panel1.add(cbxRegex, CC.xy(1, 9));
 
 			//---- btnOK ----
-			btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+			btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
 			btnOK.setEnabled(false);
 			btnOK.addActionListener(e -> startReplace(e));
 			panel1.add(btnOK, CC.xy(1, 13));
 
 			//---- btnTest ----
-			btnTest.setText(LocaleBundle.getString("MoveSeriesFrame.btnTest.text")); //$NON-NLS-1$
+			btnTest.setText(LocaleBundle.getString("MoveSeriesFrame.btnTest.text"));
 			btnTest.addActionListener(e -> startTest(e));
 			panel1.add(btnTest, CC.xy(3, 13));
 			panel1.add(progress, CC.xywh(1, 15, 3, 1, CC.DEFAULT, CC.FILL));

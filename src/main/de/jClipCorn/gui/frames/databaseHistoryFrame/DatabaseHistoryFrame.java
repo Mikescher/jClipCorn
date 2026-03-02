@@ -315,70 +315,70 @@ public class DatabaseHistoryFrame extends JCCFrame
 
 		//======== this ========
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setTitle(LocaleBundle.getString("DatabaseHistoryFrame.title")); //$NON-NLS-1$
-		var contentPane = getContentPane();
+		setTitle(LocaleBundle.getString("DatabaseHistoryFrame.title"));
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$rgap, default, $lcgap, 100dlu:grow, 3*($lcgap, default), $lcgap, [70dlu,default], $rgap", //$NON-NLS-1$
-			"$rgap, 7*(default, $lgap), 15dlu, $lgap, default:grow, 2*($lgap, default), $rgap")); //$NON-NLS-1$
+			"$rgap, default, $lcgap, 100dlu:grow, 3*($lcgap, default), $lcgap, [70dlu,default], $rgap",
+			"$rgap, 7*(default, $lgap), 15dlu, $lgap, default:grow, 2*($lgap, default), $rgap"));
 
 		//---- label1 ----
-		label1.setText(LocaleBundle.getString("DatabaseHistoryFrame.lblStatus")); //$NON-NLS-1$
+		label1.setText(LocaleBundle.getString("DatabaseHistoryFrame.lblStatus"));
 		contentPane.add(label1, CC.xy(2, 2));
 		contentPane.add(edStatus, CC.xy(4, 2, CC.DEFAULT, CC.CENTER));
 
 		//---- btnEnableTrigger ----
-		btnEnableTrigger.setText(LocaleBundle.getString("DatabaseHistoryFrame.btnAktivieren")); //$NON-NLS-1$
+		btnEnableTrigger.setText(LocaleBundle.getString("DatabaseHistoryFrame.btnAktivieren"));
 		btnEnableTrigger.addActionListener(e -> enableTrigger());
 		contentPane.add(btnEnableTrigger, CC.xy(6, 2));
 
 		//---- btnDisableTrigger ----
-		btnDisableTrigger.setText(LocaleBundle.getString("DatabaseHistoryFrame.btnDeaktivieren")); //$NON-NLS-1$
+		btnDisableTrigger.setText(LocaleBundle.getString("DatabaseHistoryFrame.btnDeaktivieren"));
 		btnDisableTrigger.addActionListener(e -> disableTrigger());
 		contentPane.add(btnDisableTrigger, CC.xy(8, 2));
 
 		//---- label2 ----
-		label2.setText(LocaleBundle.getString("DatabaseHistoryFrame.lblTrigger")); //$NON-NLS-1$
+		label2.setText(LocaleBundle.getString("DatabaseHistoryFrame.lblTrigger"));
 		contentPane.add(label2, CC.xy(2, 4));
 		contentPane.add(edTrigger, CC.xy(4, 4, CC.DEFAULT, CC.CENTER));
 
 		//---- btnTriggerMore ----
-		btnTriggerMore.setText("..."); //$NON-NLS-1$
+		btnTriggerMore.setText("...");
 		btnTriggerMore.addActionListener(e -> showTrigger());
 		contentPane.add(btnTriggerMore, CC.xy(6, 4));
 
 		//---- label3 ----
-		label3.setText(LocaleBundle.getString("DatabaseHistoryFrame.lblTablesize")); //$NON-NLS-1$
+		label3.setText(LocaleBundle.getString("DatabaseHistoryFrame.lblTablesize"));
 		contentPane.add(label3, CC.xy(2, 6));
 		contentPane.add(edTableSize, CC.xy(4, 6, CC.DEFAULT, CC.CENTER));
 
 		//---- btnGetHistory ----
-		btnGetHistory.setText(LocaleBundle.getString("DatabaseHistoryFrame.btnGetter")); //$NON-NLS-1$
+		btnGetHistory.setText(LocaleBundle.getString("DatabaseHistoryFrame.btnGetter"));
 		btnGetHistory.addButtonClickedActionListener(e -> queryHistory());
 		btnGetHistory.setPopupMenu(getQueryPopupMenu());
 		contentPane.add(btnGetHistory, CC.xywh(12, 6, 1, 3));
 
 		//---- cbxIgnoreTrivial ----
-		cbxIgnoreTrivial.setText(LocaleBundle.getString("DatabaseHistoryFrame.IgnoreTrivial")); //$NON-NLS-1$
+		cbxIgnoreTrivial.setText(LocaleBundle.getString("DatabaseHistoryFrame.IgnoreTrivial"));
 		cbxIgnoreTrivial.setSelected(true);
 		contentPane.add(cbxIgnoreTrivial, CC.xywh(2, 8, 7, 1));
 
 		//---- cbxIgnoreIDChanges ----
-		cbxIgnoreIDChanges.setText(LocaleBundle.getString("DatabaseHistoryFrame.IgnoreTrivial2")); //$NON-NLS-1$
+		cbxIgnoreIDChanges.setText(LocaleBundle.getString("DatabaseHistoryFrame.IgnoreTrivial2"));
 		cbxIgnoreIDChanges.setSelected(true);
 		contentPane.add(cbxIgnoreIDChanges, CC.xywh(2, 10, 7, 1));
 
 		//---- label4 ----
-		label4.setText(LocaleBundle.getString("DatabaseHistoryFrame.Filter")); //$NON-NLS-1$
+		label4.setText(LocaleBundle.getString("DatabaseHistoryFrame.Filter"));
 		contentPane.add(label4, CC.xy(12, 10));
 
 		//---- cbxDoAgressiveMerges ----
-		cbxDoAgressiveMerges.setText(LocaleBundle.getString("DatabaseHistoryFrame.MergeAggressive")); //$NON-NLS-1$
+		cbxDoAgressiveMerges.setText(LocaleBundle.getString("DatabaseHistoryFrame.MergeAggressive"));
 		cbxDoAgressiveMerges.setSelected(true);
 		contentPane.add(cbxDoAgressiveMerges, CC.xywh(2, 12, 7, 1));
 		contentPane.add(edFilter, CC.xy(12, 12));
 
 		//---- cbxUpdatesOnly ----
-		cbxUpdatesOnly.setText(LocaleBundle.getString("DatabaseHistoryFrame.cbxUpdatesOnly")); //$NON-NLS-1$
+		cbxUpdatesOnly.setText(LocaleBundle.getString("DatabaseHistoryFrame.cbxUpdatesOnly"));
 		contentPane.add(cbxUpdatesOnly, CC.xywh(2, 14, 7, 1));
 		contentPane.add(progressBar, CC.xywh(2, 16, 11, 1, CC.DEFAULT, CC.FILL));
 
@@ -404,13 +404,13 @@ public class DatabaseHistoryFrame extends JCCFrame
 		contentPane.add(splitPane1, CC.xywh(2, 18, 11, 1, CC.DEFAULT, CC.FILL));
 
 		//---- label5 ----
-		label5.setText(LocaleBundle.getString("DatabaseHistoryFrame.Table.ColumnOld")); //$NON-NLS-1$
+		label5.setText(LocaleBundle.getString("DatabaseHistoryFrame.Table.ColumnOld"));
 		label5.setHorizontalAlignment(SwingConstants.TRAILING);
 		contentPane.add(label5, CC.xy(2, 20));
 		contentPane.add(tfOldValue, CC.xywh(4, 20, 9, 1));
 
 		//---- label6 ----
-		label6.setText(LocaleBundle.getString("DatabaseHistoryFrame.Table.ColumnNew")); //$NON-NLS-1$
+		label6.setText(LocaleBundle.getString("DatabaseHistoryFrame.Table.ColumnNew"));
 		label6.setHorizontalAlignment(SwingConstants.TRAILING);
 		contentPane.add(label6, CC.xy(2, 22));
 		contentPane.add(tfNewValue, CC.xywh(4, 22, 9, 1));

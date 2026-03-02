@@ -280,31 +280,31 @@ public class CompareDatabaseFrame extends JCCFrame
 		lblProgress2 = new JLabel();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("CompareDatabaseFrame.this.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("CompareDatabaseFrame.this.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(500, 675));
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default, $lcgap, 0dlu:grow, $lcgap, default, $lcgap, 70dlu, $ugap", //$NON-NLS-1$
-			"$ugap, 3*(default, $lgap), 80dlu, $lgap, 20dlu, $lgap, default:grow, $lgap, 80dlu, 2*($lgap, default), 2*($lgap, [12dlu,default]), $ugap")); //$NON-NLS-1$
+			"$ugap, default, $lcgap, 0dlu:grow, $lcgap, default, $lcgap, 70dlu, $ugap",
+			"$ugap, 3*(default, $lgap), 80dlu, $lgap, 20dlu, $lgap, default:grow, $lgap, 80dlu, 2*($lgap, default), 2*($lgap, [12dlu,default]), $ugap"));
 		contentPane.add(edDatabasePath, CC.xywh(2, 2, 5, 1, CC.FILL, CC.FILL));
 
 		//---- btnOpenDatabase ----
-		btnOpenDatabase.setText("..."); //$NON-NLS-1$
+		btnOpenDatabase.setText("...");
 		btnOpenDatabase.addActionListener(e -> openDatabase(e));
 		contentPane.add(btnOpenDatabase, CC.xy(8, 2));
 
 		//---- label2 ----
-		label2.setText(LocaleBundle.getString("BatchEditFrame.lblDBName")); //$NON-NLS-1$
+		label2.setText(LocaleBundle.getString("BatchEditFrame.lblDBName"));
 		contentPane.add(label2, CC.xy(2, 4));
 		contentPane.add(edDatabaseName, CC.xywh(4, 4, 3, 1));
 
 		//---- label1 ----
-		label1.setText(LocaleBundle.getString("BatchEditFrame.lblRules")); //$NON-NLS-1$
+		label1.setText(LocaleBundle.getString("BatchEditFrame.lblRules"));
 		contentPane.add(label1, CC.xywh(2, 6, 5, 1));
 
 		//---- btnShowRules ----
-		btnShowRules.setText("->"); //$NON-NLS-1$
+		btnShowRules.setText("->");
 		btnShowRules.addActionListener(e -> showRules(e));
 		contentPane.add(btnShowRules, CC.xy(8, 6, CC.RIGHT, CC.DEFAULT));
 
@@ -312,13 +312,13 @@ public class CompareDatabaseFrame extends JCCFrame
 		{
 
 			//---- edRules ----
-			edRules.setText("[from_ressources]"); //$NON-NLS-1$
+			edRules.setText("[from_ressources]");
 			scrollPane1.setViewportView(edRules);
 		}
 		contentPane.add(scrollPane1, CC.xywh(2, 8, 7, 1, CC.FILL, CC.FILL));
 
 		//---- btnCompare ----
-		btnCompare.setText(LocaleBundle.getString("BatchEditFrame.btnCompare")); //$NON-NLS-1$
+		btnCompare.setText(LocaleBundle.getString("BatchEditFrame.btnCompare"));
 		btnCompare.addActionListener(e -> startComparison(e));
 		contentPane.add(btnCompare, CC.xywh(2, 10, 7, 1));
 
@@ -330,49 +330,49 @@ public class CompareDatabaseFrame extends JCCFrame
 				tabDeletedEntries.setLayout(new BorderLayout());
 				tabDeletedEntries.add(tableDeletedEntries, BorderLayout.CENTER);
 			}
-			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabDelete"), tabDeletedEntries); //$NON-NLS-1$
+			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabDelete"), tabDeletedEntries);
 
 			//======== tabDeletedRecursiveEntries ========
 			{
 				tabDeletedRecursiveEntries.setLayout(new BorderLayout());
 				tabDeletedRecursiveEntries.add(tableDeletedRecursiveEntries, BorderLayout.CENTER);
 			}
-			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabDeleteRecursive"), tabDeletedRecursiveEntries); //$NON-NLS-1$
+			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabDeleteRecursive"), tabDeletedRecursiveEntries);
 
 			//======== tabUpdateMetadata ========
 			{
 				tabUpdateMetadata.setLayout(new BorderLayout());
 				tabUpdateMetadata.add(tableUpdateMetadata, BorderLayout.CENTER);
 			}
-			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabUpdateMeta"), tabUpdateMetadata); //$NON-NLS-1$
+			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabUpdateMeta"), tabUpdateMetadata);
 
 			//======== tabUpdateCover ========
 			{
 				tabUpdateCover.setLayout(new BorderLayout());
 				tabUpdateCover.add(tableUpdateCover, BorderLayout.CENTER);
 			}
-			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabUpdateCover"), tabUpdateCover); //$NON-NLS-1$
+			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabUpdateCover"), tabUpdateCover);
 
 			//======== tabUpdateFile ========
 			{
 				tabUpdateFile.setLayout(new BorderLayout());
 				tabUpdateFile.add(tableUpdateFile, BorderLayout.CENTER);
 			}
-			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabUpdateFile"), tabUpdateFile); //$NON-NLS-1$
+			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabUpdateFile"), tabUpdateFile);
 
 			//======== tabAddedEntry ========
 			{
 				tabAddedEntry.setLayout(new BorderLayout());
 				tabAddedEntry.add(tableAddedEntry, BorderLayout.CENTER);
 			}
-			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabAddedEntries"), tabAddedEntry); //$NON-NLS-1$
+			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabAddedEntries"), tabAddedEntry);
 
 			//======== tabUnchangedEntry ========
 			{
 				tabUnchangedEntry.setLayout(new BorderLayout());
 				tabUnchangedEntry.add(tableUnchangedEntry, BorderLayout.CENTER);
 			}
-			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabUnchangedEntries"), tabUnchangedEntry); //$NON-NLS-1$
+			pnlTabs.addTab(LocaleBundle.getString("BatchEditFrame.tabUnchangedEntries"), tabUnchangedEntry);
 		}
 		contentPane.add(pnlTabs, CC.xywh(2, 12, 7, 1, CC.FILL, CC.FILL));
 
@@ -391,30 +391,30 @@ public class CompareDatabaseFrame extends JCCFrame
 			panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
 			//---- cbPorcelain ----
-			cbPorcelain.setText(LocaleBundle.getString("BatchEditFrame.cbPorcelain")); //$NON-NLS-1$
+			cbPorcelain.setText(LocaleBundle.getString("BatchEditFrame.cbPorcelain"));
 			panel1.add(cbPorcelain);
 
 			//---- cbNoVideoCopy ----
-			cbNoVideoCopy.setText(LocaleBundle.getString("BatchEditFrame.cbNoVideoCopy")); //$NON-NLS-1$
+			cbNoVideoCopy.setText(LocaleBundle.getString("BatchEditFrame.cbNoVideoCopy"));
 			panel1.add(cbNoVideoCopy);
 
 			//---- cbNoCoverCopy ----
-			cbNoCoverCopy.setText(LocaleBundle.getString("BatchEditFrame.cbNoCoverCopy")); //$NON-NLS-1$
+			cbNoCoverCopy.setText(LocaleBundle.getString("BatchEditFrame.cbNoCoverCopy"));
 			panel1.add(cbNoCoverCopy);
 
 			//---- cbNoRecalcMI ----
-			cbNoRecalcMI.setText(LocaleBundle.getString("BatchEditFrame.cbNoRecalcMI")); //$NON-NLS-1$
+			cbNoRecalcMI.setText(LocaleBundle.getString("BatchEditFrame.cbNoRecalcMI"));
 			panel1.add(cbNoRecalcMI);
 		}
 		contentPane.add(panel1, CC.xywh(2, 16, 3, 1, CC.FILL, CC.FILL));
 
 		//---- btnCreatePatch ----
-		btnCreatePatch.setText(LocaleBundle.getString("BatchEditFrame.btnCreatePatch")); //$NON-NLS-1$
+		btnCreatePatch.setText(LocaleBundle.getString("BatchEditFrame.btnCreatePatch"));
 		btnCreatePatch.addActionListener(e -> startCreatingPatch(e));
 		contentPane.add(btnCreatePatch, CC.xywh(2, 18, 5, 1));
 
 		//---- btnCancel ----
-		btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+		btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text"));
 		btnCancel.addActionListener(e -> cancelThread(e));
 		contentPane.add(btnCancel, CC.xy(8, 18));
 		contentPane.add(progressBar1, CC.xywh(2, 20, 5, 1, CC.DEFAULT, CC.FILL));

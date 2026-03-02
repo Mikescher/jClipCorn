@@ -190,31 +190,31 @@ public class QuickAddMoviesDialog extends JCCDialog
 		progressBar2 = new JProgressBar();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("QuickAddMoviesDialog.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("QuickAddMoviesDialog.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setModal(true);
 		setMinimumSize(new Dimension(300, 300));
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"default:grow", //$NON-NLS-1$
-			"default:grow")); //$NON-NLS-1$
+			"default:grow",
+			"default:grow"));
 
 		//======== rootpnl ========
 		{
 			rootpnl.setLayout(new FormLayout(
-				"$ugap, default:grow, 2*($lcgap, default), $ugap", //$NON-NLS-1$
-				"$ugap, default, $lgap, 3dlu:grow, $ugap, [12dlu,default], $lgap, [12dlu,default], $ugap")); //$NON-NLS-1$
+				"$ugap, default:grow, 2*($lcgap, default), $ugap",
+				"$ugap, default, $lgap, 3dlu:grow, $ugap, [12dlu,default], $lgap, [12dlu,default], $ugap"));
 			rootpnl.add(edRoot, CC.xywh(2, 2, 5, 1));
 			rootpnl.add(lstData, CC.xywh(2, 4, 5, 1, CC.FILL, CC.FILL));
 			rootpnl.add(progressBar1, CC.xy(2, 6, CC.DEFAULT, CC.FILL));
 
 			//---- button1 ----
-			button1.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+			button1.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
 			button1.addActionListener(e -> onOkay());
 			rootpnl.add(button1, CC.xywh(4, 6, 1, 3));
 
 			//---- button2 ----
-			button2.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+			button2.setText(LocaleBundle.getString("UIGeneric.btnCancel.text"));
 			button2.addActionListener(e -> onCancel());
 			rootpnl.add(button2, CC.xywh(6, 6, 1, 3));
 			rootpnl.add(progressBar2, CC.xy(2, 8, CC.DEFAULT, CC.FILL));

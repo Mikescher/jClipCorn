@@ -441,18 +441,18 @@ public class EditMediaInfoDialog extends JCCDialog
 		btnOK = new JButton();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("EditMediaInfoDialog.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("EditMediaInfoDialog.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, 2*(0dlu:grow, $lcgap), 0dlu:grow, $ugap", //$NON-NLS-1$
-			"$ugap, default, 2*($lgap, default:grow), $lgap, default, $ugap")); //$NON-NLS-1$
+			"$ugap, 2*(0dlu:grow, $lcgap), 0dlu:grow, $ugap",
+			"$ugap, default, 2*($lgap, default:grow), $lgap, default, $ugap"));
 
 		//======== pnlTop ========
 		{
 			pnlTop.setLayout(new FormLayout(
-				"default:grow, 4*($lcgap, default)", //$NON-NLS-1$
-				"3*(default, $lgap), default")); //$NON-NLS-1$
+				"default:grow, 4*($lcgap, default)",
+				"3*(default, $lgap), default"));
 			pnlTop.add(edFilepath, CC.xy(1, 1));
 
 			//---- btnRunMediaInfo ----
@@ -460,15 +460,15 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlTop.add(btnRunMediaInfo, CC.xy(3, 1));
 
 			//---- btnShowMediaInfo ----
-			btnShowMediaInfo.setText(LocaleBundle.getString("EditMediaInfoDialog.btnShow")); //$NON-NLS-1$
+			btnShowMediaInfo.setText(LocaleBundle.getString("EditMediaInfoDialog.btnShow"));
 			pnlTop.add(btnShowMediaInfo, CC.xy(5, 1));
 
 			//---- btnHintsMediaInfo ----
-			btnHintsMediaInfo.setText(LocaleBundle.getString("EditMediaInfoDialog.btnHints")); //$NON-NLS-1$
+			btnHintsMediaInfo.setText(LocaleBundle.getString("EditMediaInfoDialog.btnHints"));
 			pnlTop.add(btnHintsMediaInfo, CC.xy(7, 1));
 
 			//---- btnApplyMediaInfo ----
-			btnApplyMediaInfo.setText(LocaleBundle.getString("UIGeneric.btnApply.text")); //$NON-NLS-1$
+			btnApplyMediaInfo.setText(LocaleBundle.getString("UIGeneric.btnApply.text"));
 			pnlTop.add(btnApplyMediaInfo, CC.xy(9, 1));
 			pnlTop.add(progressBar, CC.xy(1, 3, CC.FILL, CC.FILL));
 
@@ -477,15 +477,15 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlTop.add(btnRunFFProbeFull, CC.xy(3, 3));
 
 			//---- btnShowFFProbeFull ----
-			btnShowFFProbeFull.setText(LocaleBundle.getString("EditMediaInfoDialog.btnShow")); //$NON-NLS-1$
+			btnShowFFProbeFull.setText(LocaleBundle.getString("EditMediaInfoDialog.btnShow"));
 			pnlTop.add(btnShowFFProbeFull, CC.xy(5, 3));
 
 			//---- btnHintsFFProbeFull ----
-			btnHintsFFProbeFull.setText(LocaleBundle.getString("EditMediaInfoDialog.btnHints")); //$NON-NLS-1$
+			btnHintsFFProbeFull.setText(LocaleBundle.getString("EditMediaInfoDialog.btnHints"));
 			pnlTop.add(btnHintsFFProbeFull, CC.xy(7, 3));
 
 			//---- btnApplyFFProbeFull ----
-			btnApplyFFProbeFull.setText(LocaleBundle.getString("UIGeneric.btnApply.text")); //$NON-NLS-1$
+			btnApplyFFProbeFull.setText(LocaleBundle.getString("UIGeneric.btnApply.text"));
 			pnlTop.add(btnApplyFFProbeFull, CC.xy(9, 3));
 
 			//---- btnRunFFProbeFast ----
@@ -493,15 +493,15 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlTop.add(btnRunFFProbeFast, CC.xy(3, 5));
 
 			//---- btnShowFFProbeFast ----
-			btnShowFFProbeFast.setText(LocaleBundle.getString("EditMediaInfoDialog.btnShow")); //$NON-NLS-1$
+			btnShowFFProbeFast.setText(LocaleBundle.getString("EditMediaInfoDialog.btnShow"));
 			pnlTop.add(btnShowFFProbeFast, CC.xy(5, 5));
 
 			//---- btnHintsFFProbeFast ----
-			btnHintsFFProbeFast.setText(LocaleBundle.getString("EditMediaInfoDialog.btnHints")); //$NON-NLS-1$
+			btnHintsFFProbeFast.setText(LocaleBundle.getString("EditMediaInfoDialog.btnHints"));
 			pnlTop.add(btnHintsFFProbeFast, CC.xy(7, 5));
 
 			//---- btnApplyFFProbeFast ----
-			btnApplyFFProbeFast.setText(LocaleBundle.getString("UIGeneric.btnApply.text")); //$NON-NLS-1$
+			btnApplyFFProbeFast.setText(LocaleBundle.getString("UIGeneric.btnApply.text"));
 			pnlTop.add(btnApplyFFProbeFast, CC.xy(9, 5));
 
 			//---- btnRunMP4Box ----
@@ -509,28 +509,28 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlTop.add(btnRunMP4Box, CC.xy(3, 7));
 
 			//---- btnShowMP4Box ----
-			btnShowMP4Box.setText(LocaleBundle.getString("EditMediaInfoDialog.btnShow")); //$NON-NLS-1$
+			btnShowMP4Box.setText(LocaleBundle.getString("EditMediaInfoDialog.btnShow"));
 			pnlTop.add(btnShowMP4Box, CC.xy(5, 7));
 
 			//---- btnHintsMP4Box ----
-			btnHintsMP4Box.setText(LocaleBundle.getString("EditMediaInfoDialog.btnHints")); //$NON-NLS-1$
+			btnHintsMP4Box.setText(LocaleBundle.getString("EditMediaInfoDialog.btnHints"));
 			pnlTop.add(btnHintsMP4Box, CC.xy(7, 7));
 
 			//---- btnApplyMP4Box ----
-			btnApplyMP4Box.setText(LocaleBundle.getString("UIGeneric.btnApply.text")); //$NON-NLS-1$
+			btnApplyMP4Box.setText(LocaleBundle.getString("UIGeneric.btnApply.text"));
 			pnlTop.add(btnApplyMP4Box, CC.xy(9, 7));
 		}
 		contentPane.add(pnlTop, CC.xywh(2, 2, 5, 1, CC.FILL, CC.FILL));
 
 		//======== pnlGeneral ========
 		{
-			pnlGeneral.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.header1"))); //$NON-NLS-1$
+			pnlGeneral.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.header1")));
 			pnlGeneral.setLayout(new FormLayout(
-				"$lcgap, default, $lcgap, default:grow, $lcgap, 60dlu, $lcgap", //$NON-NLS-1$
-				"13*($lgap, default), $lgap")); //$NON-NLS-1$
+				"$lcgap, default, $lcgap, default:grow, $lcgap, 60dlu, $lcgap",
+				"13*($lgap, default), $lgap"));
 
 			//---- lblGeneralCDate ----
-			lblGeneralCDate.setText(LocaleBundle.getString("EditMediaInfoDialog.CDate")); //$NON-NLS-1$
+			lblGeneralCDate.setText(LocaleBundle.getString("EditMediaInfoDialog.CDate"));
 			lblGeneralCDate.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlGeneral.add(lblGeneralCDate, CC.xy(2, 2));
 
@@ -540,15 +540,15 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlGeneral.add(ctrlCDate, CC.xy(4, 2));
 
 			//---- lblHintCDate ----
-			lblHintCDate.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintCDate.setText("<dynamic>");
 			pnlGeneral.add(lblHintCDate, CC.xy(6, 2));
 
 			//---- lblFullCDate ----
-			lblFullCDate.setText("<dynamic>"); //$NON-NLS-1$
+			lblFullCDate.setText("<dynamic>");
 			pnlGeneral.add(lblFullCDate, CC.xy(4, 4));
 
 			//---- lblGeneralMDate ----
-			lblGeneralMDate.setText(LocaleBundle.getString("EditMediaInfoDialog.MDate")); //$NON-NLS-1$
+			lblGeneralMDate.setText(LocaleBundle.getString("EditMediaInfoDialog.MDate"));
 			lblGeneralMDate.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlGeneral.add(lblGeneralMDate, CC.xy(2, 6));
 
@@ -558,15 +558,15 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlGeneral.add(ctrlMDate, CC.xy(4, 6));
 
 			//---- lblHintMDate ----
-			lblHintMDate.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintMDate.setText("<dynamic>");
 			pnlGeneral.add(lblHintMDate, CC.xy(6, 6));
 
 			//---- lblFullMDate ----
-			lblFullMDate.setText("<dynamic>"); //$NON-NLS-1$
+			lblFullMDate.setText("<dynamic>");
 			pnlGeneral.add(lblFullMDate, CC.xy(4, 8));
 
 			//---- lblGeneralFilesize ----
-			lblGeneralFilesize.setText(LocaleBundle.getString("EditMediaInfoDialog.Filesize")); //$NON-NLS-1$
+			lblGeneralFilesize.setText(LocaleBundle.getString("EditMediaInfoDialog.Filesize"));
 			lblGeneralFilesize.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlGeneral.add(lblGeneralFilesize, CC.xy(2, 10));
 
@@ -576,15 +576,15 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlGeneral.add(ctrlFilesize, CC.xy(4, 10));
 
 			//---- lblHintFilesize ----
-			lblHintFilesize.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintFilesize.setText("<dynamic>");
 			pnlGeneral.add(lblHintFilesize, CC.xy(6, 10));
 
 			//---- lblFullFilesize1 ----
-			lblFullFilesize1.setText("<dynamic>"); //$NON-NLS-1$
+			lblFullFilesize1.setText("<dynamic>");
 			pnlGeneral.add(lblFullFilesize1, CC.xy(4, 12));
 
 			//---- lblGeneralDuration ----
-			lblGeneralDuration.setText(LocaleBundle.getString("EditMediaInfoDialog.Duration")); //$NON-NLS-1$
+			lblGeneralDuration.setText(LocaleBundle.getString("EditMediaInfoDialog.Duration"));
 			lblGeneralDuration.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlGeneral.add(lblGeneralDuration, CC.xy(2, 14));
 
@@ -594,19 +594,19 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlGeneral.add(ctrlDuration, CC.xy(4, 14));
 
 			//---- lblHintDuration ----
-			lblHintDuration.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintDuration.setText("<dynamic>");
 			pnlGeneral.add(lblHintDuration, CC.xy(6, 14));
 
 			//---- lblFullDuration1 ----
-			lblFullDuration1.setText("<dynamic>"); //$NON-NLS-1$
+			lblFullDuration1.setText("<dynamic>");
 			pnlGeneral.add(lblFullDuration1, CC.xy(4, 16));
 
 			//---- lblFullDuration2 ----
-			lblFullDuration2.setText("<dynamic>"); //$NON-NLS-1$
+			lblFullDuration2.setText("<dynamic>");
 			pnlGeneral.add(lblFullDuration2, CC.xy(4, 18));
 
 			//---- lblGeneralBitrate ----
-			lblGeneralBitrate.setText(LocaleBundle.getString("EditMediaInfoDialog.Bitrate")); //$NON-NLS-1$
+			lblGeneralBitrate.setText(LocaleBundle.getString("EditMediaInfoDialog.Bitrate"));
 			lblGeneralBitrate.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlGeneral.add(lblGeneralBitrate, CC.xy(2, 20));
 
@@ -616,20 +616,20 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlGeneral.add(ctrlBitrate, CC.xy(4, 20));
 
 			//---- lblHintBitrate ----
-			lblHintBitrate.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintBitrate.setText("<dynamic>");
 			pnlGeneral.add(lblHintBitrate, CC.xy(6, 20));
 
 			//---- lblFullBitrate ----
-			lblFullBitrate.setText("<dynamic>"); //$NON-NLS-1$
+			lblFullBitrate.setText("<dynamic>");
 			pnlGeneral.add(lblFullBitrate, CC.xy(4, 22));
 
 			//---- lblChecksum ----
-			lblChecksum.setText(LocaleBundle.getString("EditMediaInfoDialog.Checksum")); //$NON-NLS-1$
+			lblChecksum.setText(LocaleBundle.getString("EditMediaInfoDialog.Checksum"));
 			lblChecksum.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlGeneral.add(lblChecksum, CC.xy(2, 24));
 
 			//---- lblHintChecksum ----
-			lblHintChecksum.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintChecksum.setText("<dynamic>");
 			pnlGeneral.add(lblHintChecksum, CC.xywh(4, 24, 3, 1));
 			pnlGeneral.add(ctrlChecksum, CC.xywh(2, 26, 5, 1));
 		}
@@ -637,43 +637,43 @@ public class EditMediaInfoDialog extends JCCDialog
 
 		//======== pnlVideo ========
 		{
-			pnlVideo.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.header2"))); //$NON-NLS-1$
+			pnlVideo.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.header2")));
 			pnlVideo.setLayout(new FormLayout(
-				"$lcgap, default, $lcgap, default:grow, $lcgap, 60dlu, $lcgap", //$NON-NLS-1$
-				"8*($lgap, default), $lgap")); //$NON-NLS-1$
+				"$lcgap, default, $lcgap, default:grow, $lcgap, 60dlu, $lcgap",
+				"8*($lgap, default), $lgap"));
 
 			//---- lblVideoFormat ----
-			lblVideoFormat.setText(LocaleBundle.getString("EditMediaInfoDialog.Format")); //$NON-NLS-1$
+			lblVideoFormat.setText(LocaleBundle.getString("EditMediaInfoDialog.Format"));
 			lblVideoFormat.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlVideo.add(lblVideoFormat, CC.xy(2, 2));
 			pnlVideo.add(ctrlVideoFormat, CC.xy(4, 2));
 
 			//---- lblHintVideoFormat ----
-			lblHintVideoFormat.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintVideoFormat.setText("<dynamic>");
 			pnlVideo.add(lblHintVideoFormat, CC.xy(6, 2));
 
 			//---- lblVideoWidth ----
-			lblVideoWidth.setText(LocaleBundle.getString("EditMediaInfoDialog.Width")); //$NON-NLS-1$
+			lblVideoWidth.setText(LocaleBundle.getString("EditMediaInfoDialog.Width"));
 			lblVideoWidth.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlVideo.add(lblVideoWidth, CC.xy(2, 4));
 			pnlVideo.add(ctrlVideoWidth, CC.xy(4, 4));
 
 			//---- lblHintVideoWidth ----
-			lblHintVideoWidth.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintVideoWidth.setText("<dynamic>");
 			pnlVideo.add(lblHintVideoWidth, CC.xy(6, 4));
 
 			//---- lblVideoHeight ----
-			lblVideoHeight.setText(LocaleBundle.getString("EditMediaInfoDialog.Height")); //$NON-NLS-1$
+			lblVideoHeight.setText(LocaleBundle.getString("EditMediaInfoDialog.Height"));
 			lblVideoHeight.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlVideo.add(lblVideoHeight, CC.xy(2, 6));
 			pnlVideo.add(ctrlVideoHeight, CC.xy(4, 6));
 
 			//---- lblHintVideoHeight ----
-			lblHintVideoHeight.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintVideoHeight.setText("<dynamic>");
 			pnlVideo.add(lblHintVideoHeight, CC.xy(6, 6));
 
 			//---- lblVideoFramerate ----
-			lblVideoFramerate.setText(LocaleBundle.getString("EditMediaInfoDialog.Framerate")); //$NON-NLS-1$
+			lblVideoFramerate.setText(LocaleBundle.getString("EditMediaInfoDialog.Framerate"));
 			lblVideoFramerate.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlVideo.add(lblVideoFramerate, CC.xy(2, 8));
 
@@ -682,11 +682,11 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlVideo.add(ctrlVideoFramerate, CC.xy(4, 8));
 
 			//---- lblHintVideoFramerate ----
-			lblHintVideoFramerate.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintVideoFramerate.setText("<dynamic>");
 			pnlVideo.add(lblHintVideoFramerate, CC.xy(6, 8));
 
 			//---- lblVideoBitdepth ----
-			lblVideoBitdepth.setText(LocaleBundle.getString("EditMediaInfoDialog.Bitdepth")); //$NON-NLS-1$
+			lblVideoBitdepth.setText(LocaleBundle.getString("EditMediaInfoDialog.Bitdepth"));
 			lblVideoBitdepth.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlVideo.add(lblVideoBitdepth, CC.xy(2, 10));
 
@@ -695,11 +695,11 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlVideo.add(ctrlVideoBitdepth, CC.xy(4, 10));
 
 			//---- lblHintVideoBitdepth ----
-			lblHintVideoBitdepth.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintVideoBitdepth.setText("<dynamic>");
 			pnlVideo.add(lblHintVideoBitdepth, CC.xy(6, 10));
 
 			//---- lblVideoFramecount ----
-			lblVideoFramecount.setText(LocaleBundle.getString("EditMediaInfoDialog.Framecount")); //$NON-NLS-1$
+			lblVideoFramecount.setText(LocaleBundle.getString("EditMediaInfoDialog.Framecount"));
 			lblVideoFramecount.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlVideo.add(lblVideoFramecount, CC.xy(2, 12));
 
@@ -708,54 +708,54 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlVideo.add(ctrlVideoFramecount, CC.xy(4, 12));
 
 			//---- lblHintVideoFramecount ----
-			lblHintVideoFramecount.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintVideoFramecount.setText("<dynamic>");
 			pnlVideo.add(lblHintVideoFramecount, CC.xy(6, 12));
 
 			//---- lblFullFramecount ----
-			lblFullFramecount.setText("<dynamic>"); //$NON-NLS-1$
+			lblFullFramecount.setText("<dynamic>");
 			pnlVideo.add(lblFullFramecount, CC.xy(4, 14));
 
 			//---- lblVideoCodec ----
-			lblVideoCodec.setText(LocaleBundle.getString("EditMediaInfoDialog.Codec")); //$NON-NLS-1$
+			lblVideoCodec.setText(LocaleBundle.getString("EditMediaInfoDialog.Codec"));
 			lblVideoCodec.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlVideo.add(lblVideoCodec, CC.xy(2, 16));
 			pnlVideo.add(ctrlVideoCodec, CC.xy(4, 16));
 
 			//---- lblHintVideoCodec ----
-			lblHintVideoCodec.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintVideoCodec.setText("<dynamic>");
 			pnlVideo.add(lblHintVideoCodec, CC.xy(6, 16));
 		}
 		contentPane.add(pnlVideo, CC.xy(4, 4, CC.FILL, CC.FILL));
 
 		//======== panel1 ========
 		{
-			panel1.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.Tracks"))); //$NON-NLS-1$
+			panel1.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.Tracks")));
 			panel1.setLayout(new FormLayout(
-				"$lcgap, default:grow, $lcgap", //$NON-NLS-1$
-				"$lgap, default:grow, $lcgap")); //$NON-NLS-1$
+				"$lcgap, default:grow, $lcgap",
+				"$lgap, default:grow, $lcgap"));
 			panel1.add(tabTracks, CC.xy(2, 2, CC.DEFAULT, CC.FILL));
 		}
 		contentPane.add(panel1, CC.xywh(6, 4, 1, 3, CC.FILL, CC.FILL));
 
 		//======== pnlAudio ========
 		{
-			pnlAudio.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.header3"))); //$NON-NLS-1$
+			pnlAudio.setBorder(new TitledBorder(LocaleBundle.getString("EditMediaInfoDialog.header3")));
 			pnlAudio.setLayout(new FormLayout(
-				"$lcgap, default, $lcgap, default:grow, $lcgap, 60dlu, $lcgap", //$NON-NLS-1$
-				"4*($lgap, default), $lgap")); //$NON-NLS-1$
+				"$lcgap, default, $lcgap, default:grow, $lcgap, 60dlu, $lcgap",
+				"4*($lgap, default), $lgap"));
 
 			//---- lblAudioFormat ----
-			lblAudioFormat.setText(LocaleBundle.getString("EditMediaInfoDialog.Format")); //$NON-NLS-1$
+			lblAudioFormat.setText(LocaleBundle.getString("EditMediaInfoDialog.Format"));
 			lblAudioFormat.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlAudio.add(lblAudioFormat, CC.xy(2, 2));
 			pnlAudio.add(ctrlAudioFormat, CC.xy(4, 2));
 
 			//---- lblHintAudioFormat ----
-			lblHintAudioFormat.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintAudioFormat.setText("<dynamic>");
 			pnlAudio.add(lblHintAudioFormat, CC.xy(6, 2));
 
 			//---- lblAudioChannels ----
-			lblAudioChannels.setText(LocaleBundle.getString("EditMediaInfoDialog.Channels")); //$NON-NLS-1$
+			lblAudioChannels.setText(LocaleBundle.getString("EditMediaInfoDialog.Channels"));
 			lblAudioChannels.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlAudio.add(lblAudioChannels, CC.xy(2, 4));
 
@@ -764,33 +764,33 @@ public class EditMediaInfoDialog extends JCCDialog
 			pnlAudio.add(ctrlAudioChannels, CC.xy(4, 4));
 
 			//---- lblHintAudioChannels ----
-			lblHintAudioChannels.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintAudioChannels.setText("<dynamic>");
 			pnlAudio.add(lblHintAudioChannels, CC.xy(6, 4));
 
 			//---- lblAudioCodec ----
-			lblAudioCodec.setText(LocaleBundle.getString("EditMediaInfoDialog.Codec")); //$NON-NLS-1$
+			lblAudioCodec.setText(LocaleBundle.getString("EditMediaInfoDialog.Codec"));
 			lblAudioCodec.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlAudio.add(lblAudioCodec, CC.xy(2, 6));
 			pnlAudio.add(ctrlAudioCodec, CC.xy(4, 6));
 
 			//---- lblHintAudioCodec ----
-			lblHintAudioCodec.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintAudioCodec.setText("<dynamic>");
 			pnlAudio.add(lblHintAudioCodec, CC.xy(6, 6));
 
 			//---- lblAudioSamplerate ----
-			lblAudioSamplerate.setText(LocaleBundle.getString("EditMediaInfoDialog.Samplerate")); //$NON-NLS-1$
+			lblAudioSamplerate.setText(LocaleBundle.getString("EditMediaInfoDialog.Samplerate"));
 			lblAudioSamplerate.setHorizontalAlignment(SwingConstants.TRAILING);
 			pnlAudio.add(lblAudioSamplerate, CC.xy(2, 8));
 			pnlAudio.add(ctrlAudioSamplerate, CC.xy(4, 8));
 
 			//---- lblHintAudioSamplerate ----
-			lblHintAudioSamplerate.setText("<dynamic>"); //$NON-NLS-1$
+			lblHintAudioSamplerate.setText("<dynamic>");
 			pnlAudio.add(lblHintAudioSamplerate, CC.xy(6, 8));
 		}
 		contentPane.add(pnlAudio, CC.xy(4, 6, CC.FILL, CC.FILL));
 
 		//---- btnOK ----
-		btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+		btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
 		btnOK.addActionListener(e -> onOK(e));
 		contentPane.add(btnOK, CC.xy(6, 8, CC.RIGHT, CC.DEFAULT));
 		setSize(1300, 775);

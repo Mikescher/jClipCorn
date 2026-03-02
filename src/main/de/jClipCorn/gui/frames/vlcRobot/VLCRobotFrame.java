@@ -366,7 +366,7 @@ public class VLCRobotFrame extends JCCFrame {
 		lblText = new JTextArea();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("VLCRobotFrame.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("VLCRobotFrame.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(300, 300));
 		addWindowListener(new WindowAdapter() {
@@ -375,7 +375,7 @@ public class VLCRobotFrame extends JCCFrame {
 				onWindowClosing();
 			}
 		});
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
 		//======== tabbedPane ========
@@ -386,15 +386,15 @@ public class VLCRobotFrame extends JCCFrame {
 			//======== pnlMain ========
 			{
 				pnlMain.setLayout(new FormLayout(
-					"$rgap, default, 2*($lcgap, default:grow), $lcgap, default, $rgap", //$NON-NLS-1$
-					"$rgap, default, $lgap, default:grow, 4*($lgap, default), $rgap")); //$NON-NLS-1$
+					"$rgap, default, 2*($lcgap, default:grow), $lcgap, default, $rgap",
+					"$rgap, default, $lgap, default:grow, 4*($lgap, default), $rgap"));
 
 				//---- lblTitle ----
-				lblTitle.setText("ROBOT"); //$NON-NLS-1$
+				lblTitle.setText("ROBOT");
 				pnlMain.add(lblTitle, CC.xy(2, 2));
 
 				//---- label2 ----
-				label2.setText(LocaleBundle.getString("VLCRobotFrame.lblFreq")); //$NON-NLS-1$
+				label2.setText(LocaleBundle.getString("VLCRobotFrame.lblFreq"));
 				pnlMain.add(label2, CC.xy(4, 2, CC.RIGHT, CC.DEFAULT));
 
 				//---- cbxFreq ----
@@ -402,45 +402,45 @@ public class VLCRobotFrame extends JCCFrame {
 				pnlMain.add(cbxFreq, CC.xy(6, 2));
 
 				//---- lblFrequency ----
-				lblFrequency.setText("[FREQ]"); //$NON-NLS-1$
+				lblFrequency.setText("[FREQ]");
 				pnlMain.add(lblFrequency, CC.xy(8, 2));
 				pnlMain.add(lsData, CC.xywh(2, 4, 7, 1, CC.FILL, CC.FILL));
 
 				//---- lblStatus ----
-				lblStatus.setText("[STATUS]"); //$NON-NLS-1$
+				lblStatus.setText("[STATUS]");
 				pnlMain.add(lblStatus, CC.xy(2, 6, CC.FILL, CC.FILL));
 				pnlMain.add(progressBar, CC.xywh(4, 6, 3, 1, CC.DEFAULT, CC.FILL));
 
 				//---- lblTime ----
-				lblTime.setText("[TIME]"); //$NON-NLS-1$
+				lblTime.setText("[TIME]");
 				pnlMain.add(lblTime, CC.xy(8, 6, CC.FILL, CC.FILL));
 
 				//---- cbxKeepPosition ----
-				cbxKeepPosition.setText(LocaleBundle.getString("VLCRobotFrame.cbxKeepPosition")); //$NON-NLS-1$
+				cbxKeepPosition.setText(LocaleBundle.getString("VLCRobotFrame.cbxKeepPosition"));
 				cbxKeepPosition.addActionListener(e -> onKeepPositionChanged());
 				pnlMain.add(cbxKeepPosition, CC.xywh(2, 8, 7, 1));
 
 				//---- cbxQueuePreemptive ----
-				cbxQueuePreemptive.setText(LocaleBundle.getString("VLCRobotFrame.cbxQueuePreemptive")); //$NON-NLS-1$
+				cbxQueuePreemptive.setText(LocaleBundle.getString("VLCRobotFrame.cbxQueuePreemptive"));
 				cbxQueuePreemptive.addActionListener(e -> onQueuePreemptiveChanged());
 				pnlMain.add(cbxQueuePreemptive, CC.xywh(2, 10, 7, 1));
 
 				//---- btnStart ----
-				btnStart.setText(LocaleBundle.getString("VLCRobotFrame.btnStart")); //$NON-NLS-1$
+				btnStart.setText(LocaleBundle.getString("VLCRobotFrame.btnStart"));
 				btnStart.addActionListener(e -> onStart());
 				pnlMain.add(btnStart, CC.xy(2, 12));
 
 				//---- btnPlayPause ----
-				btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPlay")); //$NON-NLS-1$
+				btnPlayPause.setText(LocaleBundle.getString("VLCRobotFrame.btnPlay"));
 				btnPlayPause.addActionListener(e -> onPlayPause());
 				pnlMain.add(btnPlayPause, CC.xy(4, 12, CC.LEFT, CC.DEFAULT));
 
 				//---- btnClose ----
-				btnClose.setText(LocaleBundle.getString("VLCRobotFrame.btnClose")); //$NON-NLS-1$
+				btnClose.setText(LocaleBundle.getString("VLCRobotFrame.btnClose"));
 				btnClose.addActionListener(e -> onClose());
 				pnlMain.add(btnClose, CC.xy(8, 12));
 			}
-			tabbedPane.addTab(LocaleBundle.getString("VLCRobotFrame.tabMain"), pnlMain); //$NON-NLS-1$
+			tabbedPane.addTab(LocaleBundle.getString("VLCRobotFrame.tabMain"), pnlMain);
 
 			//======== pnlLog ========
 			{
@@ -456,8 +456,8 @@ public class VLCRobotFrame extends JCCFrame {
 					//======== panel1 ========
 					{
 						panel1.setLayout(new FormLayout(
-							"default:grow, $rgap, default:grow", //$NON-NLS-1$
-							"default:grow")); //$NON-NLS-1$
+							"default:grow, $rgap, default:grow",
+							"default:grow"));
 
 						//======== scrollPane2 ========
 						{
@@ -481,7 +481,7 @@ public class VLCRobotFrame extends JCCFrame {
 				}
 				pnlLog.add(splitPane1, BorderLayout.CENTER);
 			}
-			tabbedPane.addTab(LocaleBundle.getString("VLCRobotFrame.tabLog"), pnlLog); //$NON-NLS-1$
+			tabbedPane.addTab(LocaleBundle.getString("VLCRobotFrame.tabLog"), pnlLog);
 
 			//======== pnlInfo ========
 			{
@@ -491,7 +491,7 @@ public class VLCRobotFrame extends JCCFrame {
 				{
 
 					//---- lblText ----
-					lblText.setText(LocaleBundle.getString("VLCRobotFrame.helpText")); //$NON-NLS-1$
+					lblText.setText(LocaleBundle.getString("VLCRobotFrame.helpText"));
 					lblText.setEditable(false);
 					lblText.setLineWrap(true);
 					lblText.setBorder(new EmptyBorder(4, 4, 4, 4));
@@ -499,7 +499,7 @@ public class VLCRobotFrame extends JCCFrame {
 				}
 				pnlInfo.add(scrollPane1, BorderLayout.CENTER);
 			}
-			tabbedPane.addTab(LocaleBundle.getString("VLCRobotFrame.tabInfo"), pnlInfo); //$NON-NLS-1$
+			tabbedPane.addTab(LocaleBundle.getString("VLCRobotFrame.tabInfo"), pnlInfo);
 
 			tabbedPane.setSelectedIndex(0);
 		}

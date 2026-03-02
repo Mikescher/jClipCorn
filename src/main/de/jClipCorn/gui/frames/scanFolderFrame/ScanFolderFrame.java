@@ -251,17 +251,17 @@ public class ScanFolderFrame extends JCCFrame
 		cbExcludeIfo = new JCheckBox();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("ScanFolderFrame.dlg.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("ScanFolderFrame.dlg.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setMinimumSize(new Dimension(400, 300));
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, 0dlu:grow, $lcgap, 60dlu, 2*($lcgap, 0dlu:grow), $ugap", //$NON-NLS-1$
-			"$ugap, default, $lgap, default:grow, 2*($lgap, default), $ugap")); //$NON-NLS-1$
+			"$ugap, 0dlu:grow, $lcgap, 60dlu, 2*($lcgap, 0dlu:grow), $ugap",
+			"$ugap, default, $lgap, default:grow, 2*($lgap, default), $ugap"));
 		contentPane.add(edPath, CC.xywh(2, 2, 5, 1));
 
 		//---- btnDialog ----
-		btnDialog.setText("..."); //$NON-NLS-1$
+		btnDialog.setText("...");
 		btnDialog.addButtonClickedActionListener(e -> openFolder(e));
 		contentPane.add(btnDialog, CC.xy(8, 2));
 
@@ -281,29 +281,29 @@ public class ScanFolderFrame extends JCCFrame
 		contentPane.add(scrollPane1, CC.xywh(2, 4, 7, 1, CC.FILL, CC.FILL));
 
 		//---- btnOpenFolder ----
-		btnOpenFolder.setText(LocaleBundle.getString("ScanFolderFrame.btnChooseFolder.text")); //$NON-NLS-1$
+		btnOpenFolder.setText(LocaleBundle.getString("ScanFolderFrame.btnChooseFolder.text"));
 		btnOpenFolder.addActionListener(e -> scan(e));
 		contentPane.add(btnOpenFolder, CC.xy(2, 6));
 		contentPane.add(progressBar, CC.xy(4, 6, CC.DEFAULT, CC.FILL));
 
 		//---- btnRemoveAdditionalParts ----
-		btnRemoveAdditionalParts.setText(LocaleBundle.getString("ScanFolderFrame.btnCleanUp.text")); //$NON-NLS-1$
+		btnRemoveAdditionalParts.setText(LocaleBundle.getString("ScanFolderFrame.btnCleanUp.text"));
 		btnRemoveAdditionalParts.setEnabled(false);
 		btnRemoveAdditionalParts.addActionListener(e -> removeAdditional(e));
 		contentPane.add(btnRemoveAdditionalParts, CC.xy(6, 6));
 
 		//---- btnAddAll ----
-		btnAddAll.setText(LocaleBundle.getString("ScanFolderFrame.btnAddAll.text")); //$NON-NLS-1$
+		btnAddAll.setText(LocaleBundle.getString("ScanFolderFrame.btnAddAll.text"));
 		btnAddAll.setEnabled(false);
 		btnAddAll.addActionListener(e -> addAll(e));
 		contentPane.add(btnAddAll, CC.xy(8, 6));
 
 		//---- cbIncludeSeries ----
-		cbIncludeSeries.setText(LocaleBundle.getString("ScanFolderFrame.cbIncludeSeries.text")); //$NON-NLS-1$
+		cbIncludeSeries.setText(LocaleBundle.getString("ScanFolderFrame.cbIncludeSeries.text"));
 		contentPane.add(cbIncludeSeries, CC.xywh(2, 8, 3, 1));
 
 		//---- cbExcludeIfo ----
-		cbExcludeIfo.setText(LocaleBundle.getString("ScanFolderFrame.cbExcludeIfos.text")); //$NON-NLS-1$
+		cbExcludeIfo.setText(LocaleBundle.getString("ScanFolderFrame.cbExcludeIfos.text"));
 		contentPane.add(cbExcludeIfo, CC.xywh(6, 8, 3, 1));
 		setSize(600, 500);
 		setLocationRelativeTo(getOwner());

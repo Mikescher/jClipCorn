@@ -226,21 +226,21 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 		btnABort = new JButton();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("AddSeasonFrame.this.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("AddSeasonFrame.this.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default, $ugap, default:grow, $ugap, default, $ugap", //$NON-NLS-1$
-			"$ugap, 2*(default, $lgap), default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
+			"$ugap, default, $ugap, default:grow, $ugap, default, $ugap",
+			"$ugap, 2*(default, $lgap), default:grow, $lgap, default, $ugap"));
 
 		//---- label1 ----
-		label1.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
+		label1.setText(LocaleBundle.getString("AddMovieFrame.label_1.text"));
 		contentPane.add(label1, CC.xy(2, 2));
 		contentPane.add(edTitle, CC.xy(4, 2));
 		contentPane.add(edCvrControl, CC.xywh(6, 2, 1, 5));
 
 		//---- label2 ----
-		label2.setText(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
+		label2.setText(LocaleBundle.getString("AddMovieFrame.lblYear.text"));
 		contentPane.add(label2, CC.xy(2, 4));
 		contentPane.add(spnYear, CC.xy(4, 4));
 
@@ -249,12 +249,12 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 			panel1.setLayout(new FlowLayout());
 
 			//---- btnOK ----
-			btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+			btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
 			btnOK.addActionListener(e -> onOK(e));
 			panel1.add(btnOK);
 
 			//---- btnABort ----
-			btnABort.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+			btnABort.setText(LocaleBundle.getString("UIGeneric.btnCancel.text"));
 			btnABort.addActionListener(e -> cancel());
 			panel1.add(btnABort);
 		}

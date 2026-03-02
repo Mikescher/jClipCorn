@@ -93,15 +93,15 @@ public class InputErrorDialog extends JCCDialog
 		btnIgnore = new JButton();
 
 		//======== this ========
-		setTitle(LocaleBundle.getString("AddMovieInputErrorDialog.this.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("AddMovieInputErrorDialog.this.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$ugap, default:grow, $ugap", //$NON-NLS-1$
-			"$ugap, default, $lgap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
+			"$ugap, default:grow, $ugap",
+			"$ugap, default, $lgap, default:grow, $lgap, default, $ugap"));
 
 		//---- lblYouHaveErrors ----
-		lblYouHaveErrors.setText(LocaleBundle.getString("AddMovieInputErrorDialog.lblErrors.text")); //$NON-NLS-1$
+		lblYouHaveErrors.setText(LocaleBundle.getString("AddMovieInputErrorDialog.lblErrors.text"));
 		lblYouHaveErrors.setHorizontalAlignment(SwingConstants.CENTER);
 		lblYouHaveErrors.setForeground(Color.red);
 		lblYouHaveErrors.setFont(lblYouHaveErrors.getFont().deriveFont(lblYouHaveErrors.getFont().getStyle() | Font.BOLD));
@@ -119,12 +119,12 @@ public class InputErrorDialog extends JCCDialog
 			panel1.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
 			//---- button1 ----
-			button1.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+			button1.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
 			button1.addActionListener(e -> onOkay());
 			panel1.add(button1);
 
 			//---- btnIgnore ----
-			btnIgnore.setText(LocaleBundle.getString("AddMovieInputErrorDialog.btnIgnore.text")); //$NON-NLS-1$
+			btnIgnore.setText(LocaleBundle.getString("AddMovieInputErrorDialog.btnIgnore.text"));
 			btnIgnore.addActionListener(e -> onIgnore());
 			panel1.add(btnIgnore);
 		}

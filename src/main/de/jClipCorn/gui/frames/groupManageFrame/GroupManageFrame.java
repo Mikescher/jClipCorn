@@ -345,45 +345,45 @@ public class GroupManageFrame extends JCCFrame {
 
 		//======== this ========
 		setMinimumSize(new Dimension(500, 300));
-		setTitle(LocaleBundle.getString("GroupManagerFrame.title")); //$NON-NLS-1$
+		setTitle(LocaleBundle.getString("GroupManagerFrame.title"));
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		var contentPane = getContentPane();
+		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$lcgap, default, $lcgap, 0dlu:grow, $lcgap, default, $lcgap, 0dlu:grow(0.6), $lcgap", //$NON-NLS-1$
-			"$lgap, default, $lgap, default:grow, $lgap, default, $lgap")); //$NON-NLS-1$
+			"$lcgap, default, $lcgap, 0dlu:grow, $lcgap, default, $lcgap, 0dlu:grow(0.6), $lcgap",
+			"$lgap, default, $lgap, default:grow, $lgap, default, $lgap"));
 
 		//======== panel2 ========
 		{
 			panel2.setLayout(new FormLayout(
-				"default", //$NON-NLS-1$
-				"default:grow, 2*($lgap, default), $ugap, default, $lgap, default, $pgap, default, $lgap, default:grow")); //$NON-NLS-1$
+				"default",
+				"default:grow, 2*($lgap, default), $ugap, default, $lgap, default, $pgap, default, $lgap, default:grow"));
 
 			//---- btnMoveUpFast ----
-			btnMoveUpFast.setText("\u25b2\u25b2"); //$NON-NLS-1$
+			btnMoveUpFast.setText("\u25b2\u25b2");
 			btnMoveUpFast.setMargin(new Insets(2, 4, 2, 4));
 			btnMoveUpFast.addActionListener(e -> onMoveUpFast());
 			panel2.add(btnMoveUpFast, CC.xy(1, 3));
 
 			//---- btnMoveUp ----
-			btnMoveUp.setText("\u25b2"); //$NON-NLS-1$
+			btnMoveUp.setText("\u25b2");
 			btnMoveUp.setMargin(new Insets(2, 4, 2, 4));
 			btnMoveUp.addActionListener(e -> onMoveUp());
 			panel2.add(btnMoveUp, CC.xy(1, 5));
 
 			//---- btnMoveDown ----
-			btnMoveDown.setText("\u25bc"); //$NON-NLS-1$
+			btnMoveDown.setText("\u25bc");
 			btnMoveDown.setMargin(new Insets(2, 4, 2, 4));
 			btnMoveDown.addActionListener(e -> onMoveDown());
 			panel2.add(btnMoveDown, CC.xy(1, 7));
 
 			//---- btnMoveDownFast ----
-			btnMoveDownFast.setText("\u25bc\u25bc"); //$NON-NLS-1$
+			btnMoveDownFast.setText("\u25bc\u25bc");
 			btnMoveDownFast.setMargin(new Insets(2, 4, 2, 4));
 			btnMoveDownFast.addActionListener(e -> onMoveDownFast());
 			panel2.add(btnMoveDownFast, CC.xy(1, 9));
 
 			//---- btnAdd ----
-			btnAdd.setText("+"); //$NON-NLS-1$
+			btnAdd.setText("+");
 			btnAdd.setMargin(new Insets(2, 12, 2, 12));
 			btnAdd.addActionListener(e -> onAddGroup());
 			panel2.add(btnAdd, CC.xy(1, 11));
@@ -407,29 +407,29 @@ public class GroupManageFrame extends JCCFrame {
 
 		//======== pnlData ========
 		{
-			pnlData.setBorder(new TitledBorder(LocaleBundle.getString("GroupManagerFrame.hdrData"))); //$NON-NLS-1$
+			pnlData.setBorder(new TitledBorder(LocaleBundle.getString("GroupManagerFrame.hdrData")));
 			pnlData.setLayout(new FormLayout(
-				"[65dlu,default], $lcgap, default:grow, $lcgap, default", //$NON-NLS-1$
-				"5*(default, $lgap), default")); //$NON-NLS-1$
+				"[65dlu,default], $lcgap, default:grow, $lcgap, default",
+				"5*(default, $lgap), default"));
 
 			//---- label1 ----
-			label1.setText(LocaleBundle.getString("GroupManagerFrame.colName")); //$NON-NLS-1$
+			label1.setText(LocaleBundle.getString("GroupManagerFrame.colName"));
 			pnlData.add(label1, CC.xy(1, 1, CC.RIGHT, CC.DEFAULT));
 			pnlData.add(edDataName, CC.xy(3, 1));
 
 			//---- label2 ----
-			label2.setText(LocaleBundle.getString("GroupManagerFrame.colSerialization")); //$NON-NLS-1$
+			label2.setText(LocaleBundle.getString("GroupManagerFrame.colSerialization"));
 			pnlData.add(label2, CC.xy(1, 3, CC.RIGHT, CC.DEFAULT));
 			pnlData.add(cbDataSerialization, CC.xy(3, 3));
 
 			//---- label3 ----
-			label3.setText(LocaleBundle.getString("GroupManagerFrame.colColor")); //$NON-NLS-1$
+			label3.setText(LocaleBundle.getString("GroupManagerFrame.colColor"));
 			pnlData.add(label3, CC.xy(1, 5, CC.RIGHT, CC.DEFAULT));
 
 			//======== pnlDataColor ========
 			{
 				pnlDataColor.setBackground(Color.yellow);
-				pnlDataColor.setBorder(new LineBorder(UIManager.getColor("ToolBar.borderColor"))); //$NON-NLS-1$
+				pnlDataColor.setBorder(new LineBorder(UIManager.getColor("ToolBar.borderColor")));
 				pnlDataColor.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
@@ -456,27 +456,27 @@ public class GroupManageFrame extends JCCFrame {
 			pnlData.add(pnlDataColor, CC.xy(3, 5, CC.FILL, CC.FILL));
 
 			//---- btnResetColors ----
-			btnResetColors.setText(LocaleBundle.getString("GroupManagerFrame.btnResetColors")); //$NON-NLS-1$
+			btnResetColors.setText(LocaleBundle.getString("GroupManagerFrame.btnResetColors"));
 			btnResetColors.addActionListener(e -> onResetColors());
 			pnlData.add(btnResetColors, CC.xy(5, 5));
 
 			//---- label4 ----
-			label4.setText(LocaleBundle.getString("GroupManagerFrame.colParent")); //$NON-NLS-1$
+			label4.setText(LocaleBundle.getString("GroupManagerFrame.colParent"));
 			pnlData.add(label4, CC.xy(1, 7, CC.RIGHT, CC.DEFAULT));
 			pnlData.add(cbxDataParent, CC.xy(3, 7));
 
 			//---- label5 ----
-			label5.setText(LocaleBundle.getString("GroupManagerFrame.lblVisible")); //$NON-NLS-1$
+			label5.setText(LocaleBundle.getString("GroupManagerFrame.lblVisible"));
 			pnlData.add(label5, CC.xy(1, 9, CC.RIGHT, CC.DEFAULT));
 			pnlData.add(cbDataVisible, CC.xy(3, 9));
 
 			//---- btnDelete ----
-			btnDelete.setText(LocaleBundle.getString("GroupManagerFrame.btnDelete")); //$NON-NLS-1$
+			btnDelete.setText(LocaleBundle.getString("GroupManagerFrame.btnDelete"));
 			btnDelete.addActionListener(e -> onDelete());
 			pnlData.add(btnDelete, CC.xy(1, 11));
 
 			//---- btnUpdateData ----
-			btnUpdateData.setText(LocaleBundle.getString("GroupManagerFrame.btnUpdate2")); //$NON-NLS-1$
+			btnUpdateData.setText(LocaleBundle.getString("GroupManagerFrame.btnUpdate2"));
 			btnUpdateData.addActionListener(e -> onUpdateData());
 			pnlData.add(btnUpdateData, CC.xy(5, 11));
 		}

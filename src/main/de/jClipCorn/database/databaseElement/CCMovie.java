@@ -189,6 +189,17 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		return Subtitles.get();
 	}
 
+	public int getZyklusYear() {
+		if (!Zyklus.get().isSet()) return Year.get();
+
+		return CCStreams
+				.iterate(this.movielist.getByZyklus(Zyklus.get().getTitle()))
+				.autosortByProperty(p -> p.Year.get())
+				.first()
+				.map(p->p.Year.get())
+				.orElse(Year.get());
+	}
+
 	public void setViewedHistoryFromUI(CCDateTimeList value) {
 		if (value == null) { CCLog.addUndefinied("Prevented setting CCMovie.ViewedHistory to NULL"); return; } //$NON-NLS-1$
 
@@ -328,8 +339,12 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	}
 
 	public String generateRelativePath(int part) {
-		var year = String.valueOf(Year.get());
-		var name = FilesystemUtils.fixStringToFilesystemname(Zyklus.get().isSet() ? Zyklus.get().getTitle() : Title.get());
+		var year = String.valueOf(getZyklusYear());
+
+		var name = Zyklus.get().isSet() ? Zyklus.get().getTitle() : Title.get();
+		if (name.contains(": ")) name = name.substring(0, name.indexOf(": "));
+		name = FilesystemUtils.fixStringToFilesystemname(name);
+
 		var filename = generateFilename(part);
 
 		return FilesystemUtils.combineWithFSPathSeparator(year, name, filename);

@@ -26,7 +26,7 @@ public class NFOEntryTable extends JCCSimpleTable<NFOEntry> {
 	protected JCCSimpleColumnList<NFOEntry> configureColumns() {
 		JCCSimpleColumnList<NFOEntry> r = new JCCSimpleColumnList<>(this);
 
-		r.add("CreateNFOFrame.table.column_Status")
+		r.add("")
 		 .withSize("auto")
 		 .withIcon(NFOEntryTable::getStatusIcon);
 

@@ -1326,4 +1326,8 @@ public class CCMovieList implements ICCPropertySource {
 	public WebConnectionLayer getWebConnection() {
 		return _webConn;
 	}
+
+	public List<CCMovie> getByZyklus(String zyklus) {
+		return iteratorMovies().filter(m -> m.hasZyklus() && m.Zyklus.get().getTitle().equals(zyklus)).enumerate();
+	}
 }

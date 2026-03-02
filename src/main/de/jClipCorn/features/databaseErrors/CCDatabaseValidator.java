@@ -691,6 +691,47 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						}
 					} catch (Exception ignored) { }
 				});
+
+		// NFO poster file missing
+		addMovieValidation(
+				DatabaseErrorType.ERROR_NFO_POSTER_MISSING,
+				o -> o.ValidateNfoFiles,
+				(mov, e) -> {
+					if (!ccprops().PROP_NFO_CREATE_MOVIES.getValue()) return;
+					if (mov.getPartcount() <= 0) return;
+					var posterPath = MovieNFOWriter.getPosterPath(mov);
+					if (posterPath.isEmpty()) return;
+					if (!posterPath.exists()) {
+						e.add(DatabaseError.createSingle(
+								movielist,
+								DatabaseErrorType.ERROR_NFO_POSTER_MISSING, mov,
+								"Path", posterPath.toString()
+						));
+					}
+				});
+
+		// NFO poster hash mismatch
+		addMovieValidation(
+				DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH,
+				o -> o.ValidateNfoFiles,
+				(mov, e) -> {
+					if (!ccprops().PROP_NFO_CREATE_MOVIES.getValue()) return;
+					if (mov.getPartcount() <= 0) return;
+					var posterPath = MovieNFOWriter.getPosterPath(mov);
+					if (posterPath.isEmpty() || !posterPath.exists()) return;
+					var coverData = mov.getCoverInfo();
+					if (coverData == null) return;
+					try (FileInputStream fis = new FileInputStream(posterPath.toFile())) {
+						String fileHash = DigestUtils.sha256Hex(fis).toUpperCase();
+						if (!fileHash.equals(coverData.Checksum)) {
+							e.add(DatabaseError.createSingle(
+									movielist,
+									DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH, mov,
+									"Path", posterPath.toString()
+							));
+						}
+					} catch (Exception ignored) { }
+				});
 	}
 
 	@SuppressWarnings({"Convert2MethodRef", "nls"})
@@ -1019,6 +1060,45 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						}
 					} catch (Exception ignored) { }
 				});
+
+		// NFO poster file missing (series)
+		addSeriesValidation(
+				DatabaseErrorType.ERROR_NFO_POSTER_MISSING,
+				o -> o.ValidateNfoFiles,
+				(series, e) -> {
+					if (!ccprops().PROP_NFO_CREATE_SERIES.getValue()) return;
+					var posterPath = SeriesNFOWriter.getPosterPath(series);
+					if (posterPath.isEmpty()) return;
+					if (!posterPath.exists()) {
+						e.add(DatabaseError.createSingle(
+								movielist,
+								DatabaseErrorType.ERROR_NFO_POSTER_MISSING, series,
+								"Path", posterPath.toString()
+						));
+					}
+				});
+
+		// NFO poster hash mismatch (series)
+		addSeriesValidation(
+				DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH,
+				o -> o.ValidateNfoFiles,
+				(series, e) -> {
+					if (!ccprops().PROP_NFO_CREATE_SERIES.getValue()) return;
+					var posterPath = SeriesNFOWriter.getPosterPath(series);
+					if (posterPath.isEmpty() || !posterPath.exists()) return;
+					var coverData = series.getCoverInfo();
+					if (coverData == null) return;
+					try (FileInputStream fis = new FileInputStream(posterPath.toFile())) {
+						String fileHash = DigestUtils.sha256Hex(fis).toUpperCase();
+						if (!fileHash.equals(coverData.Checksum)) {
+							e.add(DatabaseError.createSingle(
+									movielist,
+									DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH, series,
+									"Path", posterPath.toString()
+							));
+						}
+					} catch (Exception ignored) { }
+				});
 	}
 
 	@SuppressWarnings({"nls"})
@@ -1119,6 +1199,45 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateSeasons,
 				season -> season.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(season.getScoreComment()),
 				season -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING, season));
+
+		// NFO poster file missing (season)
+		addSeasonValidation(
+				DatabaseErrorType.ERROR_NFO_POSTER_MISSING,
+				o -> o.ValidateNfoFiles,
+				(season, e) -> {
+					if (!ccprops().PROP_NFO_CREATE_SERIES.getValue()) return;
+					var posterPath = SeriesNFOWriter.getSeasonPosterPath(season.getSeries(), season);
+					if (posterPath.isEmpty()) return;
+					if (!posterPath.exists()) {
+						e.add(DatabaseError.createSingle(
+								movielist,
+								DatabaseErrorType.ERROR_NFO_POSTER_MISSING, season,
+								"Path", posterPath.toString()
+						));
+					}
+				});
+
+		// NFO poster hash mismatch (season)
+		addSeasonValidation(
+				DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH,
+				o -> o.ValidateNfoFiles,
+				(season, e) -> {
+					if (!ccprops().PROP_NFO_CREATE_SERIES.getValue()) return;
+					var posterPath = SeriesNFOWriter.getSeasonPosterPath(season.getSeries(), season);
+					if (posterPath.isEmpty() || !posterPath.exists()) return;
+					var coverData = season.getCoverInfo();
+					if (coverData == null) return;
+					try (FileInputStream fis = new FileInputStream(posterPath.toFile())) {
+						String fileHash = DigestUtils.sha256Hex(fis).toUpperCase();
+						if (!fileHash.equals(coverData.Checksum)) {
+							e.add(DatabaseError.createSingle(
+									movielist,
+									DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH, season,
+									"Path", posterPath.toString()
+							));
+						}
+					} catch (Exception ignored) { }
+				});
 	}
 
 	@SuppressWarnings({"nls"})

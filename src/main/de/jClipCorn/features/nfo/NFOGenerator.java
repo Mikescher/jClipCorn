@@ -1,13 +1,19 @@
 package de.jClipCorn.features.nfo;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.covertab.CCCoverData;
+import de.jClipCorn.database.covertab.ICoverCache;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.util.filesystem.FSPath;
+import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +59,11 @@ public class NFOGenerator {
 			} else {
 				String newContent = MovieNFOWriter.generateNFO(movie);
 				NFOStatus status = determineStatus(nfoPath, newContent, createMovieNfos);
+				if (status == NFOStatus.UNCHANGED && createMovieNfos) {
+					if (posterNeedsUpdate(movielist.getCoverCache(), movie.getCoverInfo(), MovieNFOWriter.getPosterPath(movie))) {
+						status = NFOStatus.CHANGED;
+					}
+				}
 				entries.add(NFOEntry.forMovie(nfoPath, status, newContent, movie));
 			}
 			current++;
@@ -73,6 +84,20 @@ public class NFOGenerator {
 			} else {
 				String newContent = SeriesNFOWriter.generateNFO(series);
 				NFOStatus status = determineStatus(seriesNfoPath, newContent, createSeriesNfos);
+				if (status == NFOStatus.UNCHANGED && createSeriesNfos) {
+					ICoverCache coverCache = movielist.getCoverCache();
+					if (posterNeedsUpdate(coverCache, series.getCoverInfo(), SeriesNFOWriter.getPosterPath(series))) {
+						status = NFOStatus.CHANGED;
+					} else {
+						for (int si2 = 0; si2 < series.getSeasonCount(); si2++) {
+							CCSeason sea = series.getSeasonByArrayIndex(si2);
+							if (posterNeedsUpdate(coverCache, sea.getCoverInfo(), SeriesNFOWriter.getSeasonPosterPath(series, sea))) {
+								status = NFOStatus.CHANGED;
+								break;
+							}
+						}
+					}
+				}
 				entries.add(NFOEntry.forSeries(seriesNfoPath, status, newContent, series));
 			}
 			current++;
@@ -149,9 +174,11 @@ public class NFOGenerator {
 			case CREATE:
 			case CHANGED:
 				writeNfoFile(entry.getFilePath(), entry.getContent());
+				writePosterFiles(entry);
 				break;
 			case DELETE:
 				deleteNfoFile(entry.getFilePath());
+				deletePosterFiles(entry);
 				break;
 			case UNCHANGED:
 				// Do nothing
@@ -168,6 +195,83 @@ public class NFOGenerator {
 	private static void deleteNfoFile(FSPath path) throws IOException {
 		if (path.exists()) {
 			path.deleteWithException();
+		}
+	}
+
+	private static void writePosterFiles(NFOEntry entry) throws IOException {
+		if (entry.getMovie() != null) {
+			CCMovie movie = entry.getMovie();
+			ICoverCache coverCache = movie.getMovieList().getCoverCache();
+			CCCoverData coverData = movie.getCoverInfo();
+			FSPath posterPath = MovieNFOWriter.getPosterPath(movie);
+			copyCoverFile(coverCache, coverData, posterPath);
+		} else if (entry.getSeries() != null) {
+			CCSeries series = entry.getSeries();
+			ICoverCache coverCache = series.getMovieList().getCoverCache();
+
+			// Series poster
+			copyCoverFile(coverCache, series.getCoverInfo(), SeriesNFOWriter.getPosterPath(series));
+
+			// Season posters
+			for (int i = 0; i < series.getSeasonCount(); i++) {
+				CCSeason season = series.getSeasonByArrayIndex(i);
+				FSPath seasonPosterPath = SeriesNFOWriter.getSeasonPosterPath(series, season);
+				if (!seasonPosterPath.isEmpty()) {
+					copyCoverFile(coverCache, season.getCoverInfo(), seasonPosterPath);
+				}
+			}
+		}
+		// Episodes don't have covers - no-op
+	}
+
+	private static void deletePosterFiles(NFOEntry entry) {
+		if (entry.getMovie() != null) {
+			FSPath posterPath = MovieNFOWriter.getPosterPath(entry.getMovie());
+			if (!posterPath.isEmpty() && posterPath.exists()) {
+				posterPath.toFile().delete();
+			}
+		} else if (entry.getSeries() != null) {
+			CCSeries series = entry.getSeries();
+
+			// Series poster
+			FSPath seriesPosterPath = SeriesNFOWriter.getPosterPath(series);
+			if (!seriesPosterPath.isEmpty() && seriesPosterPath.exists()) {
+				seriesPosterPath.toFile().delete();
+			}
+
+			// Season posters
+			for (int i = 0; i < series.getSeasonCount(); i++) {
+				CCSeason season = series.getSeasonByArrayIndex(i);
+				FSPath seasonPosterPath = SeriesNFOWriter.getSeasonPosterPath(series, season);
+				if (!seasonPosterPath.isEmpty() && seasonPosterPath.exists()) {
+					seasonPosterPath.toFile().delete();
+				}
+			}
+		}
+		// Episodes don't have covers - no-op
+	}
+
+	private static void copyCoverFile(ICoverCache coverCache, CCCoverData coverData, FSPath targetPath) throws IOException {
+		if (coverData == null) return;
+		if (targetPath.isEmpty()) return;
+
+		FSPath coverPath = coverCache.getFilepath(coverData);
+		if (coverPath.isEmpty() || !coverPath.exists()) return;
+
+		Files.copy(coverPath.toPath(), targetPath.toPath(), StandardCopyOption.REPLACE_EXISTING);
+	}
+
+	private static boolean posterNeedsUpdate(ICoverCache coverCache, CCCoverData coverData, FSPath posterPath) {
+		if (posterPath.isEmpty()) return false;
+		if (coverData == null) return false;
+
+		if (!posterPath.exists()) return true;
+
+		try (FileInputStream fis = new FileInputStream(posterPath.toFile())) {
+			String fileHash = DigestUtils.sha256Hex(fis).toUpperCase();
+			return !fileHash.equals(coverData.Checksum);
+		} catch (IOException e) {
+			return true;
 		}
 	}
 }

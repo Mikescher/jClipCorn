@@ -1,7 +1,6 @@
 package de.jClipCorn.features.nfo;
 
 import de.jClipCorn.database.covertab.CCCoverData;
-import de.jClipCorn.database.covertab.ICoverCache;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
@@ -23,6 +22,16 @@ public class MovieNFOWriter {
 		if (videoPath.isEmpty()) return FSPath.Empty;
 
 		return videoPath.replaceExtension("nfo");
+	}
+
+	public static FSPath getPosterPath(CCMovie movie) {
+		if (movie.getPartcount() == 0) return FSPath.Empty;
+
+		FSPath videoPath = movie.Parts.get(0).toFSPath(movie);
+		if (videoPath.isEmpty()) return FSPath.Empty;
+
+		String coverExt = movie.getMovieList().ccprops().PROP_COVER_TYPE.getValue();
+		return videoPath.replaceExtension(coverExt);
 	}
 
 	public static String generateNFO(CCMovie movie) {
@@ -117,22 +126,15 @@ public class MovieNFOWriter {
 	}
 
 	private static void writeCoverThumb(Element root, CCMovie movie) {
-		FSPath nfoPath = getNFOPath(movie);
-		if (nfoPath.isEmpty()) return;
+		FSPath posterPath = getPosterPath(movie);
+		if (posterPath.isEmpty()) return;
 
-		ICoverCache coverCache = movie.getMovieList().getCoverCache();
 		CCCoverData coverData = movie.getCoverInfo();
 		if (coverData == null) return;
 
-		FSPath coverPath = coverCache.getFilepath(coverData);
-		if (coverPath.isEmpty() || !coverPath.exists()) return;
-
-		// Calculate relative path from NFO location to cover file
-		String relativePath = nfoPath.getParent().toPath().relativize(coverPath.toPath()).toString();
-
 		Element thumb = new Element("thumb");
 		thumb.setAttribute("aspect", "poster");
-		thumb.setText(relativePath);
+		thumb.setText(posterPath.getFilenameWithExt());
 		root.addContent(thumb);
 	}
 

@@ -1,7 +1,7 @@
 package de.jClipCorn.features.nfo;
 
 import de.jClipCorn.database.covertab.CCCoverData;
-import de.jClipCorn.database.covertab.ICoverCache;
+import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
@@ -17,10 +17,32 @@ import org.jdom2.output.XMLOutputter;
 public class SeriesNFOWriter {
 
 	public static FSPath getNFOPath(CCSeries series) {
-		FSPath rootPath = series.guessSeriesRootPath();
+		FSPath rootPath = series.guessSeriesBasePath();
 		if (rootPath.isEmpty()) return FSPath.Empty;
 
 		return rootPath.append("tvshow.nfo");
+	}
+
+	public static FSPath getPosterPath(CCSeries series) {
+		FSPath rootPath = series.guessSeriesBasePath();
+		if (rootPath.isEmpty()) return FSPath.Empty;
+
+		String coverExt = series.getMovieList().ccprops().PROP_COVER_TYPE.getValue();
+		return rootPath.append("tvshow." + coverExt);
+	}
+
+	public static FSPath getSeasonPosterPath(CCSeries series, CCSeason season) {
+		FSPath basePath = series.guessSeriesBasePath();
+		if (basePath.isEmpty()) return FSPath.Empty;
+
+		if (season.getEpisodeCount() == 0) return FSPath.Empty;
+
+		FSPath episodePath = season.getEpisodeByArrayIndex(0).getPart().toFSPath(season);
+		if (episodePath.isEmpty()) return FSPath.Empty;
+
+		String seasonFolderName = episodePath.getParent().getDirectoryName();
+		String coverExt = series.getMovieList().ccprops().PROP_COVER_TYPE.getValue();
+		return basePath.append(seasonFolderName + "." + coverExt);
 	}
 
 	public static String generateNFO(CCSeries series) {
@@ -116,22 +138,15 @@ public class SeriesNFOWriter {
 	}
 
 	private static void writeCoverThumb(Element root, CCSeries series) {
-		FSPath nfoPath = getNFOPath(series);
-		if (nfoPath.isEmpty()) return;
+		FSPath posterPath = getPosterPath(series);
+		if (posterPath.isEmpty()) return;
 
-		ICoverCache coverCache = series.getMovieList().getCoverCache();
 		CCCoverData coverData = series.getCoverInfo();
 		if (coverData == null) return;
 
-		FSPath coverPath = coverCache.getFilepath(coverData);
-		if (coverPath.isEmpty() || !coverPath.exists()) return;
-
-		// Calculate relative path from NFO location to cover file
-		String relativePath = nfoPath.getParent().toPath().relativize(coverPath.toPath()).toString();
-
 		Element thumb = new Element("thumb");
 		thumb.setAttribute("aspect", "poster");
-		thumb.setText(relativePath);
+		thumb.setText(posterPath.getFilenameWithExt());
 		root.addContent(thumb);
 	}
 

@@ -490,7 +490,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 			return common;
 		});
 	}
-	
+
 	public FSPath guessSeriesRootPath() {
 		return _cache.get(SeriesCache.SERIES_ROOT_PATH, null, ser->
 		{
@@ -502,6 +502,29 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 			for(var episode: iteratorEpisodes())
 			{
 				var path = episode.getPart().toFSPath(this).getParent(3); // season-folder -> series-folder -> root-folder
+				result.put(path, result.getOrDefault(path, 0) + 1);
+
+				if (result.getOrDefault(path, 0) > countMax) {
+					countMax = result.getOrDefault(path, 0);
+					pathMax = path;
+				}
+			}
+
+			return pathMax;
+		});
+	}
+
+	public FSPath guessSeriesBasePath() {
+		return _cache.get(SeriesCache.SERIES_BASE_PATH, null, ser->
+		{
+			Map<FSPath, Integer> result = new HashMap<>();
+
+			FSPath pathMax = FSPath.Empty; //$NON-NLS-1$
+			int countMax = 0;
+
+			for(var episode: iteratorEpisodes())
+			{
+				var path = episode.getPart().toFSPath(this).getParent(2); // season-folder -> series-folder
 				result.put(path, result.getOrDefault(path, 0) + 1);
 
 				if (result.getOrDefault(path, 0) > countMax) {

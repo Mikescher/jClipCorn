@@ -93,6 +93,8 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_NFO_MISSING                         = new DatabaseErrorType(86, null);
 	public final static DatabaseErrorType ERROR_NFO_ORPHANED                        = new DatabaseErrorType(87, null);
 	public final static DatabaseErrorType ERROR_NFO_CONTENT_MISMATCH                = new DatabaseErrorType(88, null);
+	public final static DatabaseErrorType ERROR_NFO_POSTER_MISSING                 = new DatabaseErrorType(89, null);
+	public final static DatabaseErrorType ERROR_NFO_POSTER_HASH_MISMATCH           = new DatabaseErrorType(90, null);
 
 	private final int type;
 

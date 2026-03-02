@@ -20,6 +20,7 @@ public class SeriesCache extends CalculationCache<CCSeries>
 	public static final String VIEWED_COUNT                             = "VIEWED_COUNT";
 	public static final String COMMON_PATH_START                        = "COMMON_PATH_START";
 	public static final String SERIES_ROOT_PATH                         = "SERIES_ROOT_PATH";
+	public static final String SERIES_BASE_PATH                         = "SERIES_BASE_PATH";
 	public static final String FULL_VIEW_COUNT                          = "FULL_VIEW_COUNT";
 	public static final String ALL_LANGUAGES                            = "ALL_LANGUAGES";
 	public static final String COMMON_LANGUAGES                         = "COMMON_LANGUAGES";

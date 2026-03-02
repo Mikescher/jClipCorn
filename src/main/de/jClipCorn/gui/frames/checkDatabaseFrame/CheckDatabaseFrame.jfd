@@ -99,7 +99,7 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JTextArea" ) {
 							name: "edMetadata"
 							"editable": false
-							"font": new java.awt.Font( "Noto Mono", 0, 13 )
+							"font": new com.jformdesigner.model.SwingDerivedFont( "JetBrains Mono", 0, 0, false )
 						} )
 					}, new FormLayoutConstraints( class java.lang.String ) {
 						"value": "right"

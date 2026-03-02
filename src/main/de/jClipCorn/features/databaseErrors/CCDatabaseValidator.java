@@ -14,6 +14,7 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
+import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.lambda.Func0to1WithIOException;
@@ -236,25 +237,35 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					}
 				});
 
-		// Wrong filename
+		// Wrong filename / folder structure
 		addMovieValidation(
 				DatabaseErrorType.ERROR_WRONG_FILENAME,
 				o -> o.ValidateMovies,
 				(mov, movielist, e) ->
 				{
 					var md = new ArrayList<Tuple<String, String>>();
-					boolean wrongfn = false;
+					boolean wrongpath = false;
 					for (int i = 0; i < mov.getPartcount(); i++) {
-						var should = mov.generateFilename(i);
-						var actual = mov.Parts.get(i).toFSPath(this).getFilenameWithExt();
-						if (!Str.equals(actual, should))
+						var should = mov.generateRelativePath(i);
+						var abspath = mov.Parts.get(i).toFSPath(this).toString();
+						if (ApplicationHelper.isWindows()) {
+							abspath = abspath.toLowerCase();
+							should = should.toLowerCase();
+						}
+						if (!abspath.endsWith(should))
 						{
-							wrongfn = true;
-							md.add(Tuple.Create("Part["+i+"].Filename.Should", should));
-							md.add(Tuple.Create("Part["+i+"].Filename.Actual", actual));
+							wrongpath = true;
+							md.add(Tuple.Create("Part["+i+"].Path.Should (relative)", mov.generateRelativePath(i)));
+							md.add(Tuple.Create("Part["+i+"].Path.Actual (relative)", mov.Parts.get(i).toRelativeStringFromRoot()));
+
+							md.add(Tuple.Create("Part["+i+"].FSPath.Should", mov.generateGuessedAbsolutePath(i).toString()));
+							md.add(Tuple.Create("Part["+i+"].FSPath.Actual", mov.Parts.get(i).toFSPath(this).toString()));
+
+							md.add(Tuple.Create("Part["+i+"].CCPath.Should", CCPath.createFromFSPath(mov.generateGuessedAbsolutePath(i), movielist).toString()));
+							md.add(Tuple.Create("Part["+i+"].CCPath.Actual", mov.Parts.get(i).toString()));
 						}
 					}
-					if (wrongfn) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_WRONG_FILENAME, mov, md));
+					if (wrongpath) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_WRONG_FILENAME, mov, md));
 				});
 
 		// Watch never <> ViewedState

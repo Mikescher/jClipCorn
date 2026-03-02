@@ -84,7 +84,7 @@ public class DatabaseSeeder {
 		//ml.addGroup(CCGroup.create("Studio Bones",        false, "Animation Studios", true));
 
 		{
-			var f = pathMov.append("Die Verurteilten.mp4");
+			var f = pathMov.append("1994").append("Die Verurteilten").append("Die Verurteilten.mp4");
 			cp("000", "mp4", f);
 
 			var e = ml.createNewEmptyMovie();
@@ -116,7 +116,7 @@ public class DatabaseSeeder {
 		}
 
 		{
-			var f = pathMov.append("Stirb Langsam I - Stirb Langsam [GER+ENG].mkv");
+			var f = pathMov.append("1988").append("Stirb Langsam").append("Stirb Langsam I - Stirb Langsam [GER+ENG].mkv");
 			cp("001", "mkv", f);
 
 			var e = ml.createNewEmptyMovie();
@@ -149,8 +149,8 @@ public class DatabaseSeeder {
 		}
 
 		{
-			var f1 = pathMov.append("Stirb Langsam II - Die Hard 2 (Part 1).avi");
-			var f2 = pathMov.append("Stirb Langsam II - Die Hard 2 (Part 2).avi");
+			var f1 = pathMov.append("1990").append("Stirb Langsam").append("Stirb Langsam II - Die Hard 2 (Part 1).avi");
+			var f2 = pathMov.append("1990").append("Stirb Langsam").append("Stirb Langsam II - Die Hard 2 (Part 2).avi");
 			cp("002", "avi", f1);
 			cp("006", "avi", f2);
 

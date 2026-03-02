@@ -23,6 +23,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
 import de.jClipCorn.util.exceptions.FVHException;
 import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -324,6 +325,31 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		filename = new StringBuilder(FilesystemUtils.fixStringToFilesystemname(filename.toString()));
 		
 		return filename.toString();
+	}
+
+	public String generateRelativePath(int part) {
+		var year = String.valueOf(Year.get());
+		var name = FilesystemUtils.fixStringToFilesystemname(Zyklus.get().isSet() ? Zyklus.get().getTitle() : Title.get());
+		var filename = generateFilename(part);
+
+		return FilesystemUtils.combineWithFSPathSeparator(year, name, filename);
+	}
+
+	public FSPath generateGuessedAbsolutePath(int part)  {
+		var currentPath = Parts.get(part).toFSPath(this);
+		var expectedRelPath = generateRelativePath(part);
+
+		// Determine base directory:
+		// If grandparent looks like a year (4 digits), file is already in year/name structure -> go up 3 levels
+		// Otherwise file is in flat structure -> go up 1 level
+		FSPath basePath = currentPath.getParent();
+
+		String grandparentName = currentPath.getParent().getParent().getDirectoryName();
+		if (grandparentName.matches("\\d{4}")) { //$NON-NLS-1$
+			basePath = currentPath.getParent(3);
+		}
+
+		return basePath.append(expectedRelPath);
 	}
 
 	public boolean hasZyklus() {

@@ -433,7 +433,7 @@ public class CheckDatabaseFrame extends JCCFrame
 
                     //---- edMetadata ----
                     edMetadata.setEditable(false);
-                    edMetadata.setFont(new Font("Noto Mono", Font.PLAIN, 13)); //$NON-NLS-1$
+                    edMetadata.setFont(new Font("JetBrains Mono", edMetadata.getFont().getStyle(), edMetadata.getFont().getSize())); //$NON-NLS-1$
                     scrollPane3.setViewportView(edMetadata);
                 }
                 splitPane2.setBottomComponent(scrollPane3);

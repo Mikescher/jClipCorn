@@ -188,54 +188,54 @@ public class CreateNFOFrame extends JCCFrame {
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        btnGenerate = new JButton();
-        lblSummary = new JLabel();
-        tableMain = new NFOEntryTable(this);
-        btnApply = new JButton();
-        progressBar = new JProgressBar();
-        lblProgress = new JLabel();
+		btnGenerate = new JButton();
+		lblSummary = new JLabel();
+		tableMain = new NFOEntryTable(this);
+		btnApply = new JButton();
+		progressBar = new JProgressBar();
+		lblProgress = new JLabel();
 
-        //======== this ========
-        setTitle(LocaleBundle.getString("CreateNFOFrame.title")); //$NON-NLS-1$
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        var contentPane = getContentPane();
-        contentPane.setLayout(new FormLayout(
-            "$ugap, default, $lcgap, default:grow, $lcgap, [150dlu,default], $ugap", //$NON-NLS-1$
-            "$ugap, default, $lgap, default:grow, $lgap, default, $lgap")); //$NON-NLS-1$
+		//======== this ========
+		setTitle(LocaleBundle.getString("CreateNFOFrame.title"));
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		Container contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$ugap, default, $lcgap, default:grow, $lcgap, [150dlu,default], $ugap",
+			"$ugap, default, $lgap, default:grow, $lgap, default, $lgap"));
 
-        //---- btnGenerate ----
-        btnGenerate.setText(LocaleBundle.getString("CreateNFOFrame.btnGenerate")); //$NON-NLS-1$
-        btnGenerate.setFont(btnGenerate.getFont().deriveFont(btnGenerate.getFont().getStyle() | Font.BOLD));
-        btnGenerate.addActionListener(e -> onGenerate(e));
-        contentPane.add(btnGenerate, CC.xy(2, 2));
+		//---- btnGenerate ----
+		btnGenerate.setText(LocaleBundle.getString("CreateNFOFrame.btnGenerate"));
+		btnGenerate.setFont(btnGenerate.getFont().deriveFont(btnGenerate.getFont().getStyle() | Font.BOLD));
+		btnGenerate.addActionListener(e -> onGenerate(e));
+		contentPane.add(btnGenerate, CC.xy(2, 2));
 
-        //---- lblSummary ----
-        lblSummary.setText(" "); //$NON-NLS-1$
-        contentPane.add(lblSummary, CC.xywh(4, 2, 3, 1));
-        contentPane.add(tableMain, CC.xywh(2, 4, 5, 1, CC.FILL, CC.FILL));
+		//---- lblSummary ----
+		lblSummary.setText(" ");
+		contentPane.add(lblSummary, CC.xywh(4, 2, 3, 1));
+		contentPane.add(tableMain, CC.xywh(2, 4, 5, 1, CC.FILL, CC.FILL));
 
-        //---- btnApply ----
-        btnApply.setText(LocaleBundle.getString("CreateNFOFrame.btnApply")); //$NON-NLS-1$
-        btnApply.setFont(btnApply.getFont().deriveFont(btnApply.getFont().getStyle() | Font.BOLD));
-        btnApply.setEnabled(false);
-        btnApply.addActionListener(e -> onApply(e));
-        contentPane.add(btnApply, CC.xy(2, 6));
-        contentPane.add(progressBar, CC.xy(4, 6));
+		//---- btnApply ----
+		btnApply.setText(LocaleBundle.getString("CreateNFOFrame.btnApply"));
+		btnApply.setFont(btnApply.getFont().deriveFont(btnApply.getFont().getStyle() | Font.BOLD));
+		btnApply.setEnabled(false);
+		btnApply.addActionListener(e -> onApply(e));
+		contentPane.add(btnApply, CC.xy(2, 6));
+		contentPane.add(progressBar, CC.xy(4, 6));
 
-        //---- lblProgress ----
-        lblProgress.setText(" "); //$NON-NLS-1$
-        contentPane.add(lblProgress, CC.xy(6, 6));
-        setSize(1000, 687);
-        setLocationRelativeTo(getOwner());
+		//---- lblProgress ----
+		lblProgress.setText(" ");
+		contentPane.add(lblProgress, CC.xy(6, 6));
+		setSize(800, 550);
+		setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    private JButton btnGenerate;
-    private JLabel lblSummary;
-    private NFOEntryTable tableMain;
-    private JButton btnApply;
-    private JProgressBar progressBar;
-    private JLabel lblProgress;
+	private JButton btnGenerate;
+	private JLabel lblSummary;
+	private NFOEntryTable tableMain;
+	private JButton btnApply;
+	private JProgressBar progressBar;
+	private JLabel lblProgress;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

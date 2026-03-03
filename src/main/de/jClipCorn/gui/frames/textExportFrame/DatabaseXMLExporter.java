@@ -83,7 +83,7 @@ public class DatabaseXMLExporter extends DatabaseTextExporter {
 		}
 		
 		XMLOutputter xout = new XMLOutputter();
-		xout.setFormat(Format.getPrettyFormat());
+		xout.setFormat(Format.getPrettyFormat().setLineSeparator("\n"));
 		return xout.outputString(document);
 	}
 

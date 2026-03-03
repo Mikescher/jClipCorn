@@ -12,6 +12,7 @@ import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
 import de.jClipCorn.util.helper.ApplicationHelper;
@@ -686,7 +687,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 							e.add(DatabaseError.createSingle(
 									movielist,
 									DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, mov,
-									"Path", nfoPath.toString()
+									"Path", nfoPath.toString(),
+									"Actual", existing.replace("\r", "\\r").replace("\n", "\\n"),
+									"Expected", generated.replace("\r", "\\r").replace("\n", "\\n")
 							));
 						}
 					} catch (Exception ignored) { }
@@ -727,7 +730,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 							e.add(DatabaseError.createSingle(
 									movielist,
 									DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH, mov,
-									"Path", posterPath.toString()
+									"Path", posterPath.toString(),
+									"ActualHash", fileHash,
+									"ExpectedHash", coverData.Checksum
 							));
 						}
 					} catch (Exception ignored) { }
@@ -1055,7 +1060,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 							e.add(DatabaseError.createSingle(
 									movielist,
 									DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, series,
-									"Path", nfoPath.toString()
+									"Path", nfoPath.toString(),
+									"Actual", existing.replace("\r", "\\r").replace("\n", "\\n"),
+									"Expected", generated.replace("\r", "\\r").replace("\n", "\\n")
 							));
 						}
 					} catch (Exception ignored) { }
@@ -1094,7 +1101,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 							e.add(DatabaseError.createSingle(
 									movielist,
 									DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH, series,
-									"Path", posterPath.toString()
+									"Path", posterPath.toString(),
+									"ActualHash", fileHash,
+									"ExpectedHash", coverData.Checksum
 							));
 						}
 					} catch (Exception ignored) { }
@@ -1233,7 +1242,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 							e.add(DatabaseError.createSingle(
 									movielist,
 									DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH, season,
-									"Path", posterPath.toString()
+									"Path", posterPath.toString(),
+									"ActualHash", fileHash,
+									"ExpectedHash", coverData.Checksum
 							));
 						}
 					} catch (Exception ignored) { }
@@ -1611,7 +1622,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 							e.add(DatabaseError.createSingle(
 									movielist,
 									DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, episode,
-									"Path", nfoPath.toString()
+									"Path", nfoPath.toString(),
+									"Actual", existing.replace("\r", "\\r").replace("\n", "\\n"),
+									"Expected", generated.replace("\r", "\\r").replace("\n", "\\n")
 							));
 						}
 					} catch (Exception ignored) { }
@@ -2456,5 +2469,89 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
 		}
 
+	}
+
+	@Override
+	@SuppressWarnings("nls")
+	protected void findOrphanedNfoAndPosterFiles(List<DatabaseError> e, DoubleProgressCallbackListener pcl)
+	{
+		pcl.stepRootAndResetSub("Find orphaned NFO/poster files", 1);
+
+		try
+		{
+			// Build set of all expected NFO paths
+			Set<String> expectedNfoPaths = new HashSet<>();
+			for (CCMovie mov : movielist.iteratorMovies()) {
+				FSPath p = MovieNFOWriter.getNFOPath(mov);
+				if (!p.isEmpty()) expectedNfoPaths.add(p.toAbsolutePathString());
+			}
+			for (CCSeries ser : movielist.iteratorSeries()) {
+				FSPath p = SeriesNFOWriter.getNFOPath(ser);
+				if (!p.isEmpty()) expectedNfoPaths.add(p.toAbsolutePathString());
+				for (int si = 0; si < ser.getSeasonCount(); si++) {
+					CCSeason sea = ser.getSeasonByArrayIndex(si);
+					for (int ei = 0; ei < sea.getEpisodeCount(); ei++) {
+						CCEpisode epi = sea.getEpisodeByArrayIndex(ei);
+						FSPath ep = EpisodeNFOWriter.getNFOPath(epi);
+						if (!ep.isEmpty()) expectedNfoPaths.add(ep.toAbsolutePathString());
+					}
+				}
+			}
+
+			// Build set of all expected poster paths
+			Set<String> expectedPosterPaths = new HashSet<>();
+			for (CCMovie mov : movielist.iteratorMovies()) {
+				FSPath p = MovieNFOWriter.getPosterPath(mov);
+				if (!p.isEmpty()) expectedPosterPaths.add(p.toAbsolutePathString());
+			}
+			for (CCSeries ser : movielist.iteratorSeries()) {
+				FSPath p = SeriesNFOWriter.getPosterPath(ser);
+				if (!p.isEmpty()) expectedPosterPaths.add(p.toAbsolutePathString());
+				for (int si = 0; si < ser.getSeasonCount(); si++) {
+					CCSeason sea = ser.getSeasonByArrayIndex(si);
+					FSPath sp = SeriesNFOWriter.getSeasonPosterPath(ser, sea);
+					if (!sp.isEmpty()) expectedPosterPaths.add(sp.toAbsolutePathString());
+				}
+			}
+
+			String coverExt = ccprops().PROP_COVER_TYPE.getValue();
+
+			// Scan directories
+			List<FSPath> dirsToScan = new ArrayList<>();
+
+			var oMovieDir = movielist.getCommonMoviesPath();
+			if (!oMovieDir.isEmpty()) {
+				var d = oMovieDir.toFSPath(ccprops());
+				if (d.directoryExists()) dirsToScan.add(d);
+			}
+
+			var oSeriesDir = movielist.getCommonSeriesPath();
+			if (!oSeriesDir.isEmpty()) {
+				var d = oSeriesDir.toFSPath(ccprops());
+				if (d.directoryExists()) dirsToScan.add(d);
+			}
+
+			for (FSPath dir : dirsToScan) {
+				for (FSPath file : dir.listRecursiveDepthFirst()) {
+					if (!file.fileExists()) continue;
+
+					String ext = file.getExtension();
+
+					if (ext.equalsIgnoreCase("nfo")) {
+						if (!expectedNfoPaths.contains(file.toAbsolutePathString())) {
+							e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NFO_ORPHANED, file, "Path", file.toAbsolutePathString()));
+						}
+					} else if (ext.equalsIgnoreCase(coverExt)) {
+						if (!expectedPosterPaths.contains(file.toAbsolutePathString())) {
+							e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_POSTER_ORPHANED, file, "Path", file.toAbsolutePathString()));
+						}
+					}
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
+		}
 	}
 }

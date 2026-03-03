@@ -107,8 +107,9 @@ public class SeriesNFOWriter {
 		}
 
 		XMLOutputter xout = new XMLOutputter();
-		xout.setFormat(Format.getPrettyFormat());
-		return xout.outputString(doc);
+		xout.setFormat(Format.getPrettyFormat().setLineSeparator("\n"));
+
+		return xout.outputString(doc).replace("\r", "");
 	}
 
 	private static void writeUniqueIds(Element root, CCSeries series) {

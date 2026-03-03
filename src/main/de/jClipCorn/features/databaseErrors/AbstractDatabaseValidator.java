@@ -63,6 +63,7 @@ public abstract class AbstractDatabaseValidator implements ICCPropertySource {
 		if (opt.ValidateOnlineReferences) outerCount++;           // [7]
 		if (opt.ValidateDatabaseConsistence) outerCount++;        // [8]
 		if (opt.FindEmptyDirectories) outerCount++;               // [9]
+		if (opt.ValidateNfoFiles) outerCount++;                   // [10]
 
 		pcl.setMaxAndResetValueBoth(outerCount+1, 1);
 
@@ -83,6 +84,8 @@ public abstract class AbstractDatabaseValidator implements ICCPropertySource {
 		if (opt.ValidateDatabaseConsistence) findInternalDatabaseErrors(e, pcl); // [8]
 
 		if (opt.FindEmptyDirectories) findEmptyDirectories(e, pcl); // [9]
+
+		if (opt.ValidateNfoFiles) findOrphanedNfoAndPosterFiles(e, pcl); // [10]
 
 		pcl.reset();
 	}
@@ -223,4 +226,5 @@ public abstract class AbstractDatabaseValidator implements ICCPropertySource {
 	protected abstract void findDuplicateOnlineRef(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
 	protected abstract void findInternalDatabaseErrors(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
 	protected abstract void findEmptyDirectories(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
+	protected abstract void findOrphanedNfoAndPosterFiles(List<DatabaseError> e, DoubleProgressCallbackListener pcl);
 }

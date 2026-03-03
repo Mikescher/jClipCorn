@@ -38,7 +38,7 @@ public class TestGeneratedFilenames extends ClipCornBaseTest {
 		assertEquals(loc("2003/Kill Bill/Kill Bill I - Volume I (Part 2).avi"), ml.findDatabaseMovie(8).generateRelativePath(1));
 
 		// Der Herr der Ringe III - year 2003, zyklus "Der Herr der Ringe"
-		assertEquals(loc("2003/Der Herr der Ringe/Der Herr der Ringe III - Die Rückkehr des Königs [GER+ENG].mkv"), ml.findDatabaseMovie(10).generateRelativePath(0));
+		assertEquals(loc("2001/Der Herr der Ringe/Der Herr der Ringe III - Die Rückkehr des Königs [GER+ENG].mkv"), ml.findDatabaseMovie(10).generateRelativePath(0));
 	}
 
 	@Test

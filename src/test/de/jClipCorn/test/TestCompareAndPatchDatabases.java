@@ -98,7 +98,7 @@ public class TestCompareAndPatchDatabases extends ClipCornBaseTest {
 		var export_actual = DatabaseXMLExporter.export(mlBase.iteratorElements().enumerate(), new ExportOptions(true, true, false, false));
 
 		XMLOutputter xout = new XMLOutputter();
-		xout.setFormat(Format.getPrettyFormat());
+		xout.setFormat(Format.getPrettyFormat().setLineSeparator("\n"));
 
 		var xml_should = xout.outputString(export_should);
 		var xml_actual = xout.outputString(export_actual);

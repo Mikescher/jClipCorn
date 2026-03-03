@@ -95,8 +95,9 @@ public class MovieNFOWriter {
 		}
 
 		XMLOutputter xout = new XMLOutputter();
-		xout.setFormat(Format.getPrettyFormat());
-		return xout.outputString(doc);
+		xout.setFormat(Format.getPrettyFormat().setLineSeparator("\n"));
+
+		return xout.outputString(doc).replace("\r", "");
 	}
 
 	private static void writeUniqueIds(Element root, CCMovie movie) {

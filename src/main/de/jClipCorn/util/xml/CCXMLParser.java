@@ -26,7 +26,7 @@ public class CCXMLParser {
 
 	private static String fmtXML(Document d) {
 		XMLOutputter xout = new XMLOutputter();
-		xout.setFormat(Format.getPrettyFormat());
+		xout.setFormat(Format.getPrettyFormat().setLineSeparator("\n"));
 		return xout.outputString(d);
 	}
 

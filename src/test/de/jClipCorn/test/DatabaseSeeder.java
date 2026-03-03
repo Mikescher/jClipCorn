@@ -149,8 +149,8 @@ public class DatabaseSeeder {
 		}
 
 		{
-			var f1 = pathMov.append("1990").append("Stirb Langsam").append("Stirb Langsam II - Die Hard 2 (Part 1).avi");
-			var f2 = pathMov.append("1990").append("Stirb Langsam").append("Stirb Langsam II - Die Hard 2 (Part 2).avi");
+			var f1 = pathMov.append("1988").append("Stirb Langsam").append("Stirb Langsam II - Die Hard 2 (Part 1).avi");
+			var f2 = pathMov.append("1988").append("Stirb Langsam").append("Stirb Langsam II - Die Hard 2 (Part 2).avi");
 			cp("002", "avi", f1);
 			cp("006", "avi", f2);
 

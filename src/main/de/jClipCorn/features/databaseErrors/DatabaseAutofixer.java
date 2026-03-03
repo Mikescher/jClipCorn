@@ -1,9 +1,14 @@
 package de.jClipCorn.features.databaseErrors;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.covertab.CCCoverData;
+import de.jClipCorn.database.covertab.ICoverCache;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.nfo.EpisodeNFOWriter;
+import de.jClipCorn.features.nfo.MovieNFOWriter;
+import de.jClipCorn.features.nfo.SeriesNFOWriter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -15,6 +20,8 @@ import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
@@ -501,5 +508,72 @@ public class DatabaseAutofixer {
 		}
 
 		return false;
+	}
+
+	public static boolean fixError_OrphanedFile(CCMovieList ml, DatabaseError err) {
+		if (err.getElement1() instanceof FSPath path) {
+			if (!path.exists()) return true;
+			return path.deleteSafe();
+		}
+		return false;
+	}
+
+	public static boolean fixError_NFO(CCMovieList ml, DatabaseError err) {
+		try {
+			if (err.getElement1() instanceof CCMovie mov) {
+
+				FSPath nfoPath = MovieNFOWriter.getNFOPath(mov);
+				if (nfoPath.isEmpty()) return false;
+
+				String content = MovieNFOWriter.generateNFO(mov);
+				nfoPath.writeAsUTF8TextFile(content);
+
+				copyCoverToPath(ml.getCoverCache(), mov.getCoverInfo(), MovieNFOWriter.getPosterPath(mov));
+
+				return true;
+			} else if (err.getElement1() instanceof CCSeries ser) {
+
+				FSPath nfoPath = SeriesNFOWriter.getNFOPath(ser);
+				if (nfoPath.isEmpty()) return false;
+
+				String content = SeriesNFOWriter.generateNFO(ser);
+				nfoPath.writeAsUTF8TextFile(content);
+
+				ICoverCache coverCache = ml.getCoverCache();
+				copyCoverToPath(coverCache, ser.getCoverInfo(), SeriesNFOWriter.getPosterPath(ser));
+				for (int i = 0; i < ser.getSeasonCount(); i++) {
+					CCSeason sea = ser.getSeasonByArrayIndex(i);
+					FSPath seasonPosterPath = SeriesNFOWriter.getSeasonPosterPath(ser, sea);
+					if (!seasonPosterPath.isEmpty()) {
+						copyCoverToPath(coverCache, sea.getCoverInfo(), seasonPosterPath);
+					}
+				}
+
+				return true;
+			} else if (err.getElement1() instanceof CCEpisode epi) {
+
+				FSPath nfoPath = EpisodeNFOWriter.getNFOPath(epi);
+				if (nfoPath.isEmpty()) return false;
+
+				String content = EpisodeNFOWriter.generateNFO(epi);
+				nfoPath.writeAsUTF8TextFile(content);
+
+				return true;
+			}
+		} catch (IOException e) {
+			return false;
+		}
+
+		return false;
+	}
+
+	private static void copyCoverToPath(ICoverCache coverCache, CCCoverData coverData, FSPath targetPath) throws IOException {
+		if (coverData == null) return;
+		if (targetPath.isEmpty()) return;
+
+		FSPath coverPath = coverCache.getFilepath(coverData);
+		if (coverPath.isEmpty() || !coverPath.exists()) return;
+
+		Files.copy(coverPath.toPath(), targetPath.toPath(), StandardCopyOption.REPLACE_EXISTING);
 	}
 }

@@ -526,7 +526,7 @@ public class CheckDatabaseFrame extends JCCFrame
             //---- cbValEmptyDirs ----
             cbValEmptyDirs.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValEmptyDirs")); //$NON-NLS-1$
             cbValEmptyDirs.addItemListener(e -> cbxAnyItemStateChanged(e));
-            panel2.add(cbValEmptyDirs, CC.xy(7, 7));
+            panel2.add(cbValEmptyDirs, CC.xy(5, 7));
         }
         contentPane.add(panel2, CC.xywh(2, 10, 3, 1));
         setSize(1500, 875);

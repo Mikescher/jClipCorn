@@ -143,9 +143,7 @@ public class FSPath implements IPath, Comparable<FSPath> {
 
 	public String readAsUTF8TextFile() throws IOException
 	{
-		var result = readAsTextFile(Str.UTF8, SimpleFileUtils.LINE_END);
-		if (!result.isEmpty() && result.charAt(0) == 0xFEFF) result = result.substring(1); // remove BOM
-		return result;
+		return Files.readString(toPath());
 	}
 
 	public String readAsTextFile(Charset encoding, String newline) throws IOException

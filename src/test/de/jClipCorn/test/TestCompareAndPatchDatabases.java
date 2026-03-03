@@ -134,6 +134,8 @@ public class TestCompareAndPatchDatabases extends ClipCornBaseTest {
 
 		List<DatabaseError> errs = new ArrayList<>();
 
+		mlBase.getMovie("Die Hard 2").year().set(1988);
+
 		var validator = new CCDatabaseValidator(mlBase);
 		validator.validate(errs, opt_val, DoubleProgressCallbackListener.EMPTY);
 

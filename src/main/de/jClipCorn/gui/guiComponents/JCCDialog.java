@@ -29,6 +29,14 @@ public class JCCDialog extends JDialog implements ICCWindow
 		setIconImage(Resources.IMG_FRAME_ICON.get());
 	}
 
+	public JCCDialog(CCMovieList ml, java.awt.Window owner)
+	{
+		super(owner);
+		movielist = ml;
+
+		setIconImage(Resources.IMG_FRAME_ICON.get());
+	}
+
 	@Override
 	public CCMovieList getMovieList() {
 		return movielist;

@@ -36,7 +36,7 @@ public class CustomFilterEditDialog extends JCCDialog {
 	private AbstractCustomFilter _currentSelectedFilter = null;
 
 	public CustomFilterEditDialog(Component owner, CCMovieList ml, CustomFilterObject filter, FinishListener fl) {
-		super(ml);
+		super(ml, owner instanceof Window ? (Window) owner : SwingUtilities.getWindowAncestor(owner));
 
 		filterObject = filter;
 		finListener = fl;

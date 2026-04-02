@@ -22,6 +22,7 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
 import de.jClipCorn.util.exceptions.FVHException;
+import de.jClipCorn.features.nfo.MovieNFOWriter;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
@@ -39,6 +40,9 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	private final MovieCache _cache = new MovieCache(this);
 
+	public FSPath NfoPath = FSPath.Empty;
+	public FSPath NfoCoverPath = FSPath.Empty;
+
 	public final EZyklusPropPack         Zyklus        = new EZyklusPropPack(   "Zyklus",        CCMovieZyklus.EMPTY,          this, EPropertyType.OBJECTIVE_METADATA);
 	public final ECCPathListProp         Parts         = new ECCPathListProp(   "Parts",         CCPathList.EMPTY,             this, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
 	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,       this);
@@ -53,6 +57,11 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	public CCMovie(CCMovieList ml, int id) {
 		super(ml, id);
+	}
+
+	public void initNfoPaths() {
+		NfoPath = MovieNFOWriter.getNFOPath(this);
+		NfoCoverPath = MovieNFOWriter.getPosterPath(this);
 	}
 
 	@Override

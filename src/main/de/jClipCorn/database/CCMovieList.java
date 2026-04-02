@@ -83,6 +83,7 @@ public class CCMovieList implements ICCPropertySource {
 		_cache = new MovieListCache(this);
 
 		addChangeListener(new CCDBUpdateAdapter(){ @Override public void onChangeDatabaseElement(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] p) { CCLog.addMovieListChangeEvent(root, el, p); } });
+		addChangeListener(new de.jClipCorn.features.nfo.NFOAutoUpdateListener(this));
 	}
 	
 	public static CCMovieList createInstanceMovieList(CCProperties ccprops) {

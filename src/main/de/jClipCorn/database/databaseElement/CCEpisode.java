@@ -13,6 +13,7 @@ import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
+import de.jClipCorn.features.nfo.EpisodeNFOWriter;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
@@ -58,13 +59,19 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public final EEnumProp<CCUserScore>  Score         = new EEnumProp<>(       "Score",         CCUserScore.RATING_NO,        this, EPropertyType.USER_METADATA);
 	public final EStringProp             ScoreComment  = new EStringProp(       "ScoreComment",  Str.Empty,                    this, EPropertyType.USER_METADATA);
 
+	public FSPath NfoPath = FSPath.Empty;
+
 	private IEProperty[] _properties = null;
 
 	private boolean isUpdating = false;
-	
+
 	public CCEpisode(CCSeason owner, int localID) {
 		this.owner   = owner;
 		LocalID.setReadonlyPropToInitial(localID);
+	}
+
+	public void initNfoPaths() {
+		NfoPath = EpisodeNFOWriter.getNFOPath(this);
 	}
 
 	public IEProperty[] getProperties()

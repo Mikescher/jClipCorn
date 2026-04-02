@@ -8,6 +8,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.nfo.EpisodeNFOWriter;
 import de.jClipCorn.features.nfo.MovieNFOWriter;
+import de.jClipCorn.features.nfo.SeasonNFOWriter;
 import de.jClipCorn.features.nfo.SeriesNFOWriter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.Opt;
@@ -251,10 +252,30 @@ public class DatabaseAutofixer {
 				// Create parent directories if needed
 				expectedPath.getParent().mkdirsSafe();
 
+				var oldNFO = mov.NfoPath;
+				var oldCov = mov.NfoCoverPath;
+
 				boolean succ = actulalPath.renameToSafe(expectedPath);
 				mov.Parts.set(i, CCPath.createFromFSPath(expectedPath, ml));
 
+				var newNFO = MovieNFOWriter.getNFOPath(mov);
+				var newCov = MovieNFOWriter.getPosterPath(mov);
+
+				boolean succ2 = true;
+				if (succ && !oldNFO.isEmpty() && !oldNFO.equalsOnFilesystem(newNFO) && oldNFO.exists() && !newNFO.exists()) {
+					succ2 = oldNFO.renameToSafe(newNFO);
+					if (succ2) mov.NfoPath = newNFO;
+				}
+
+				boolean succ3 = true;
+				if (succ && !oldCov.isEmpty() && !oldCov.equalsOnFilesystem(newCov) && oldCov.exists() && !newCov.exists()) {
+					succ3 = oldCov.renameToSafe(newCov);
+					if (succ3) mov.NfoCoverPath = newCov;
+				}
+
 				if (! succ) return false;
+				if (! succ2) return false;
+				if (! succ3) return false;
 			}
 
 			return true;
@@ -543,7 +564,7 @@ public class DatabaseAutofixer {
 				copyCoverToPath(coverCache, ser.getCoverInfo(), SeriesNFOWriter.getPosterPath(ser));
 				for (int i = 0; i < ser.getSeasonCount(); i++) {
 					CCSeason sea = ser.getSeasonByArrayIndex(i);
-					FSPath seasonPosterPath = SeriesNFOWriter.getSeasonPosterPath(ser, sea);
+					FSPath seasonPosterPath = SeasonNFOWriter.getPosterPath(ser, sea);
 					if (!seasonPosterPath.isEmpty()) {
 						copyCoverToPath(coverCache, sea.getCoverInfo(), seasonPosterPath);
 					}

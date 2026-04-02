@@ -21,6 +21,7 @@ import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.YearRange;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
+import de.jClipCorn.features.nfo.SeriesNFOWriter;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
@@ -42,11 +43,19 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 	private final List<CCSeason> seasons = new Vector<>();
 
+	public FSPath NfoPath = FSPath.Empty;
+	public FSPath NfoCoverPath = FSPath.Empty;
+
 	private final SeriesCache _cache;
 
 	public CCSeries(CCMovieList ml, int id) {
 		super(ml, id);
 		_cache = new SeriesCache(this);
+	}
+
+	public void initNfoPaths() {
+		NfoPath = SeriesNFOWriter.getNFOPath(this);
+		NfoCoverPath = SeriesNFOWriter.getPosterPath(this);
 	}
 
 	@Override

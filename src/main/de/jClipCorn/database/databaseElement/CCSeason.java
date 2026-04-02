@@ -15,6 +15,7 @@ import de.jClipCorn.database.elementProps.impl.EStringProp;
 import de.jClipCorn.database.util.*;
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
+import de.jClipCorn.features.nfo.SeasonNFOWriter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.ICCPropertySource;
@@ -48,15 +49,21 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	public final EEnumProp<CCUserScore>  Score        = new EEnumProp<>("Score",         CCUserScore.RATING_NO, this, EPropertyType.USER_METADATA);
 	public final EStringProp             ScoreComment = new EStringProp("ScoreComment",  Str.Empty,             this, EPropertyType.USER_METADATA);
 
+	public FSPath NfoCoverPath = FSPath.Empty;
+
 	private IEProperty[] _properties = null;
 
 	private final List<CCEpisode> episodes = new Vector<>();
 
 	private boolean isUpdating = false;
-	
+
 	public CCSeason(CCSeries owner, int localID) {
 		this.owner    = owner;
 		LocalID.setReadonlyPropToInitial(localID);
+	}
+
+	public void initNfoPaths(CCSeries series) {
+		NfoCoverPath = SeasonNFOWriter.getPosterPath(series, this);
 	}
 
 	public IEProperty[] getProperties()

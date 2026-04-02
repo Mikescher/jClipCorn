@@ -1,4 +1,6 @@
 
+.PHONY: build betaJar anyReleaseJar changelog run-tests jformdesigner jfd
+
 build:
 	./gradlew build
 

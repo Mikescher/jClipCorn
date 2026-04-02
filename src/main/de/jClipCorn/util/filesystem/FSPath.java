@@ -359,6 +359,8 @@ public class FSPath implements IPath, Comparable<FSPath> {
 		if (other == null) return false;
 		if (other == this) return true;
 
+		if (other.equals(this)) return true; // fast branch
+
 		var p1 = this.toNormalizedAndAbsolutePathString();
 		var p2 = other.toNormalizedAndAbsolutePathString();
 

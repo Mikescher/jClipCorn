@@ -5,6 +5,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.features.nfo.EpisodeNFOWriter;
+import de.jClipCorn.features.nfo.SeasonNFOWriter;
+import de.jClipCorn.features.nfo.SeriesNFOWriter;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.JReadableFSPathTextField;
@@ -189,10 +192,50 @@ public class CreateSeriesFolderStructureFrame extends JCCFrame
 								}
 							}
 
+							{
+								var oldNFO = episode.NfoPath;
+
+								var newNFO = EpisodeNFOWriter.getNFOPath(episode);
+
+								if (!oldNFO.isEmpty() && !oldNFO.equalsOnFilesystem(newNFO) && oldNFO.exists() && !newNFO.exists()) {
+									var ok = oldNFO.renameToSafe(newNFO);
+									if (ok) episode.NfoPath = newNFO;
+								}
+							}
+
 							episode.Part.set(CCPath.createFromFSPath(newfile, this));
 
 							final int _v = curr++;
 							SwingUtils.invokeLater(() -> this.progress.setValue(_v));
+						}
+
+						{
+							var oldCov = season.NfoCoverPath;
+
+							var newCov = SeasonNFOWriter.getPosterPath(series, season);
+
+							if (!oldCov.isEmpty() && !oldCov.equalsOnFilesystem(newCov) && oldCov.exists() && !newCov.exists()) {
+								var ok = oldCov.renameToSafe(newCov);
+								if (ok) season.NfoCoverPath = newCov;
+							}
+						}
+					}
+
+					{
+						var oldNFO = series.NfoPath;
+						var oldCov = series.NfoCoverPath;
+
+						var newNFO = SeriesNFOWriter.getNFOPath(series);
+						var newCov = SeriesNFOWriter.getPosterPath(series);
+
+						if (!oldNFO.isEmpty() && !oldNFO.equalsOnFilesystem(newNFO) && oldNFO.exists() && !newNFO.exists()) {
+							var ok = oldNFO.renameToSafe(newNFO);
+							if (ok) series.NfoPath = newNFO;
+						}
+
+						if (!oldCov.isEmpty() && !oldCov.equalsOnFilesystem(newCov) && oldCov.exists() && !newCov.exists()) {
+							var ok = oldCov.renameToSafe(newCov);
+							if (ok) series.NfoCoverPath = newCov;
 						}
 					}
 

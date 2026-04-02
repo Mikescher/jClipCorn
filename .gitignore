@@ -51,6 +51,8 @@ local.properties
 .idea/**/gradle.xml
 .idea/**/libraries
 
+.idea/modules/jClipCorn.main.iml
+
 cmake-build-*/
 
 .idea/**/mongoSettings.xml

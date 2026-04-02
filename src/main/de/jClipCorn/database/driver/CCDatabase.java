@@ -220,7 +220,7 @@ public class CCDatabase {
 		}
 	}
 
-	private CCDatabaseElement createMovieFromDatabase(CCSQLResultSet rs, CCMovieList ml) throws SQLException, CCFormatException, SQLWrapperException {
+	private CCMovie createMovieFromDatabase(CCSQLResultSet rs, CCMovieList ml) throws SQLException, CCFormatException, SQLWrapperException {
 		CCMovie mov = new CCMovie(ml, rs.getInt(DatabaseStructure.COL_MOV_LOCALID));
 
 		mov.beginUpdating();
@@ -230,11 +230,12 @@ public class CCDatabase {
 		mov.abortUpdating();
 
 		mov.resetDirty();
+		mov.initNfoPaths();
 
 		return mov;
 	}
 
-	private CCDatabaseElement createSeriesFromDatabase(CCSQLResultSet rs, CCMovieList ml, boolean fillSeries) throws SQLException, CCFormatException, SQLWrapperException {
+	private CCSeries createSeriesFromDatabase(CCSQLResultSet rs, CCMovieList ml, boolean fillSeries) throws SQLException, CCFormatException, SQLWrapperException {
 		int lid = rs.getInt(DatabaseStructure.COL_SER_LOCALID);
 		CCSeries ser = new CCSeries(ml, lid);
 
@@ -245,6 +246,7 @@ public class CCDatabase {
 		ser.abortUpdating();
 
 		ser.resetDirty();
+		ser.initNfoPaths();
 
 		if (fillSeries) fillSeries(ser);
 
@@ -261,6 +263,7 @@ public class CCDatabase {
 		seas.abortUpdating();
 
 		seas.resetDirty();
+		seas.initNfoPaths(ser);
 
 		if (fillSeason) fillSeason(seas);
 
@@ -277,6 +280,7 @@ public class CCDatabase {
 		ep.abortUpdating();
 
 		ep.resetDirty();
+		ep.initNfoPaths();
 
 		return ep;
 	}
@@ -889,7 +893,10 @@ public class CCDatabase {
 
 					CCSQLResultSet rs2 = stmt2.executeQuery(this);
 
-					while (rs2.next()) ml.directlyInsert(createSeriesFromDatabase(rs2, ml, true));
+					while (rs2.next()) {
+						CCSeries de = createSeriesFromDatabase(rs2, ml, true);
+						ml.directlyInsert(de);
+					}
 
 					rs2.close();
 				}
@@ -907,7 +914,7 @@ public class CCDatabase {
 
 					List<CCDatabaseElement> temp = new ArrayList<>();
 					while (rs.next()) {
-						CCDatabaseElement de = createMovieFromDatabase(rs, ml);
+						CCMovie de = createMovieFromDatabase(rs, ml);
 						temp.add(de);
 					}
 					ml.directlyInsert(temp);
@@ -924,9 +931,9 @@ public class CCDatabase {
 
 					List<CCDatabaseElement> temp = new ArrayList<>();
 					while (rs.next()) {
-						CCDatabaseElement de = createSeriesFromDatabase(rs, ml, false);
+						CCSeries de = createSeriesFromDatabase(rs, ml, false);
 						temp.add(de);
-						if (de.getClass() == CCSeries.class) seriesMap.put(de.getLocalID(), (CCSeries) de);
+						if (de.getClass() == CCSeries.class) seriesMap.put(de.getLocalID(), de);
 					}
 					ml.directlyInsert(temp);
 
@@ -958,6 +965,8 @@ public class CCDatabase {
 					rs.close();
 				}
 
+				HashMap<Integer, CCEpisode> episodeMap = new HashMap<>();
+
 				// EPISODES
 				{
 					CCSQLStatement stmt = stmts.selectAllEpisodeTabStatement;
@@ -973,7 +982,9 @@ public class CCDatabase {
 						lastSeason = sea;
 
 						sea.beginUpdating();
-						sea.directlyInsertEpisode(createEpisodeFromDatabase(rs, sea));
+						CCEpisode episode = createEpisodeFromDatabase(rs, sea);
+						sea.directlyInsertEpisode(episode);
+						episodeMap.put(episode.getLocalID(), episode);
 						sea.abortUpdating();
 					}
 					rs.close();
@@ -981,6 +992,10 @@ public class CCDatabase {
 
 				for (CCSeason s : seasonMap.values()) s.enforceOrder();
 				for (CCSeries s : seriesMap.values()) s.enforceOrder();
+
+				for (CCSeries s : seriesMap.values()) s.initNfoPaths();
+				for (CCSeason s : seasonMap.values()) s.initNfoPaths(s.getSeries());
+				for (CCEpisode e : episodeMap.values()) e.initNfoPaths();
 
 				ml.sortByIDAfterInitialLoad();
 			}

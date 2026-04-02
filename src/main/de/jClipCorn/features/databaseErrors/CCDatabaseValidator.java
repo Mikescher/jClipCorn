@@ -7,6 +7,7 @@ import de.jClipCorn.database.covertab.ICoverCache;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.driver.PublicDatabaseInterface;
+import de.jClipCorn.features.nfo.SeasonNFOWriter;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -1215,7 +1216,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateNfoFiles,
 				(season, e) -> {
 					if (!ccprops().PROP_NFO_CREATE_SERIES.getValue()) return;
-					var posterPath = SeriesNFOWriter.getSeasonPosterPath(season.getSeries(), season);
+					var posterPath = SeasonNFOWriter.getPosterPath(season.getSeries(), season);
 					if (posterPath.isEmpty()) return;
 					if (!posterPath.exists()) {
 						e.add(DatabaseError.createSingle(
@@ -1232,7 +1233,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				o -> o.ValidateNfoFiles,
 				(season, e) -> {
 					if (!ccprops().PROP_NFO_CREATE_SERIES.getValue()) return;
-					var posterPath = SeriesNFOWriter.getSeasonPosterPath(season.getSeries(), season);
+					var posterPath = SeasonNFOWriter.getPosterPath(season.getSeries(), season);
 					if (posterPath.isEmpty() || !posterPath.exists()) return;
 					var coverData = season.getCoverInfo();
 					if (coverData == null) return;
@@ -2509,7 +2510,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				if (!p.isEmpty()) expectedPosterPaths.add(p.toAbsolutePathString());
 				for (int si = 0; si < ser.getSeasonCount(); si++) {
 					CCSeason sea = ser.getSeasonByArrayIndex(si);
-					FSPath sp = SeriesNFOWriter.getSeasonPosterPath(ser, sea);
+					FSPath sp = SeasonNFOWriter.getPosterPath(ser, sea);
 					if (!sp.isEmpty()) expectedPosterPaths.add(sp.toAbsolutePathString());
 				}
 			}

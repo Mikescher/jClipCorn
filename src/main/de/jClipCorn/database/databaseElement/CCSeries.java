@@ -907,19 +907,16 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		return 0;
 	}
 
-	public int getAutoEpisodeLength() {
-		return _cache.getInt(SeriesCache.AUTO_EPISODE_LENGTH, null, ser->
+	public Opt<Integer> getAutoEpisodeLength() {
+		return _cache.get(SeriesCache.AUTO_EPISODE_LENGTH, null, ser->
 		{
 			var i0 = getCommonEpisodeLength();
-			if (i0.isPresent()) return i0.get();
+			if (i0.isPresent()) return i0;
 
 			var i1 = getConsensEpisodeLength();
-			if (i1.isPresent()) return i1.get();
+			if (i1.isPresent()) return i1;
 
-			var i2 = getAverageEpisodeLength();
-			if (i2.isPresent()) return i2.get();
-
-			return 0;
+			return Opt.empty();
 		});
 	}
 

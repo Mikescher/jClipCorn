@@ -281,28 +281,31 @@ public class AddMultiEpisodesFrame extends JCCFrame
 				{
 
 					int avg = (_successcount == 0) ? 0 : (int)Math.round(_successsum / _successcount);
-					int serdef = target.getSeries().getAutoEpisodeLength();
+
+					var serdefOpt = target.getSeries().getAutoEpisodeLength();
+					if (!serdefOpt.isPresent()) serdefOpt = target.getSeries().getConsensEpisodeLength();
+					String serdefStr = serdefOpt.isEmpty() ? "-" : (serdefOpt.orElse(-1) + " min."); //$NON-NLS-1$ //$NON-NLS-2$
 
 					String[] options = new String[]
-							{
-									LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_1"), //$NON-NLS-1$
-									LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_2"), //$NON-NLS-1$
-									LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_3"), //$NON-NLS-1$
-									LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_4"), //$NON-NLS-1$
-									LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_5"), //$NON-NLS-1$
-							};
+					{
+						LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_1"), //$NON-NLS-1$
+						LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_2"), //$NON-NLS-1$
+						LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_3"), //$NON-NLS-1$
+						LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_4"), //$NON-NLS-1$
+						LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_5"), //$NON-NLS-1$
+					};
 
 					String values = CCStreams.iterate(lens).stringjoin(p -> (p==-1) ? "ERROR" : Math.round(p)+ " min.", "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 					int response = JOptionPane.showOptionDialog(
-							AddMultiEpisodesFrame.this,
-							LocaleBundle.getFormattedString("AddMultiEpisodesFrame.OptionLength", values, avg, serdef), //$NON-NLS-1$
-							LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_caption"), //$NON-NLS-1$
-							JOptionPane.DEFAULT_OPTION,
-							JOptionPane.PLAIN_MESSAGE,
-							null,
-							options,
-							options[4]);
+						AddMultiEpisodesFrame.this,
+						LocaleBundle.getFormattedString("AddMultiEpisodesFrame.OptionLength", values, avg, serdefStr), //$NON-NLS-1$
+						LocaleBundle.getString("AddMultiEpisodesFrame.OptionLength_caption"), //$NON-NLS-1$
+						JOptionPane.DEFAULT_OPTION,
+						JOptionPane.PLAIN_MESSAGE,
+						null,
+						options,
+						options[4]);
 
 					if (response == 0) {
 						//det values
@@ -350,7 +353,8 @@ public class AddMultiEpisodesFrame extends JCCFrame
 					} else if (response == 3) {
 						// default
 
-						for (int i = 0; i < data.size(); i++) data.get(i).Length = serdef;
+						if (serdefOpt.isEmpty()) return;
+						for (int i = 0; i < data.size(); i++) data.get(i).Length = serdefOpt.get();
 						for (int i = 0; i < data.size(); i++) data.get(i).validate(target);
 						lsData.forceDataChangedRedraw();
 						lsData.autoResize();

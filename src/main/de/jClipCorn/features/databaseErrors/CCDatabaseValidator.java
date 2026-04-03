@@ -7,8 +7,12 @@ import de.jClipCorn.database.covertab.ICoverCache;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.driver.PublicDatabaseInterface;
+import de.jClipCorn.features.nfo.EpisodeNFOWriter;
+import de.jClipCorn.features.nfo.MovieNFOWriter;
 import de.jClipCorn.features.nfo.SeasonNFOWriter;
+import de.jClipCorn.features.nfo.SeriesNFOWriter;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
@@ -22,11 +26,9 @@ import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.lambda.Func0to1WithIOException;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
-import de.jClipCorn.features.nfo.EpisodeNFOWriter;
-import de.jClipCorn.features.nfo.MovieNFOWriter;
-import de.jClipCorn.features.nfo.SeriesNFOWriter;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
 
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
@@ -738,6 +740,33 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						}
 					} catch (Exception ignored) { }
 				});
+
+		// Missing file checksums
+		addMovieValidation(
+				DatabaseErrorType.ERROR_CHECKSUM_MISSING,
+				o -> o.ValidateMovies,
+				(mov, e) -> {
+					if (mov.getPartcount() == 0) return;
+					List<String> missing = new ArrayList<>();
+					if (!isValidMovieChecksumArray(mov.ChecksumCRC32.get(), mov.getPartcount())) missing.add("CRC32");
+					if (!isValidMovieChecksumArray(mov.ChecksumMD5.get(),   mov.getPartcount())) missing.add("MD5");
+					if (!isValidMovieChecksumArray(mov.ChecksumSHA256.get(),mov.getPartcount())) missing.add("SHA256");
+					if (!isValidMovieChecksumArray(mov.ChecksumSHA512.get(),mov.getPartcount())) missing.add("SHA512");
+					if (!missing.isEmpty()) {
+						e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_CHECKSUM_MISSING, mov, "Missing", String.join(", ", missing)));
+					}
+				});
+	}
+
+	private static boolean isValidMovieChecksumArray(Opt<String> value, int partcount)
+	{
+		if (value.isEmpty()) return false;
+		try {
+			var arr = new JSONArray(value.get());
+			return arr.length() == partcount;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@SuppressWarnings({"Convert2MethodRef", "nls"})
@@ -1629,6 +1658,22 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 							));
 						}
 					} catch (Exception ignored) { }
+				});
+
+		// Missing file checksums
+		addEpisodeValidation(
+				DatabaseErrorType.ERROR_CHECKSUM_MISSING,
+				o -> o.ValidateEpisodes,
+				(episode, e) -> {
+					if (episode.Part.get().isEmpty()) return;
+					List<String> missing = new ArrayList<>();
+					if (episode.ChecksumCRC32.get().isEmpty())  missing.add("CRC32");
+					if (episode.ChecksumMD5.get().isEmpty())    missing.add("MD5");
+					if (episode.ChecksumSHA256.get().isEmpty()) missing.add("SHA256");
+					if (episode.ChecksumSHA512.get().isEmpty()) missing.add("SHA512");
+					if (!missing.isEmpty()) {
+						e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_CHECKSUM_MISSING, episode, "Missing", String.join(", ", missing)));
+					}
 				});
 	}
 

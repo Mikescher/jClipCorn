@@ -317,6 +317,11 @@ public class CCDatabase {
 		ep.MediaInfo.AudioChannels.set(Opt.ofNullable(rs.getNullableShort(DatabaseStructure.COL_EPIS_MI_ACHANNELS)));
 		ep.MediaInfo.AudioCodec.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_MI_ACODEC)));
 		ep.MediaInfo.AudioSamplerate.set(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_SAMPLERATE)));
+
+		ep.ChecksumCRC32.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_CRC32)));
+		ep.ChecksumMD5.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_MD5)));
+		ep.ChecksumSHA256.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_SHA256)));
+		ep.ChecksumSHA512.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_SHA512)));
 	}
 
 	private void updateSeasonFromResultSet(CCSQLResultSet rs, CCSeason seas) throws SQLException, SQLWrapperException {
@@ -390,6 +395,11 @@ public class CCDatabase {
 		mov.SpecialVersion.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_SPECIALVERSION)));
 		mov.AnimeSeason.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_ANIMESEASON)));
 		mov.AnimeStudio.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_ANIMESTUDIO)));
+
+		mov.ChecksumCRC32.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_CRC32)));
+		mov.ChecksumMD5.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_MD5)));
+		mov.ChecksumSHA256.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_SHA256)));
+		mov.ChecksumSHA512.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_SHA512)));
 	}
 
 	private int getNewID() {
@@ -647,6 +657,11 @@ public class CCDatabase {
 			stmt.setNullableInt(DatabaseStructure.COL_MOV_MI_SAMPLERATE, mi.AudioSamplerate.orElse(null));
 			stmt.setNullableStr(DatabaseStructure.COL_MOV_MI_CHECKSUM,   mi.Checksum.orElse(null));
 
+			stmt.setNullableStr(DatabaseStructure.COL_MOV_CHECKSUM_CRC32,  mov.ChecksumCRC32.get().orElse(null));
+			stmt.setNullableStr(DatabaseStructure.COL_MOV_CHECKSUM_MD5,    mov.ChecksumMD5.get().orElse(null));
+			stmt.setNullableStr(DatabaseStructure.COL_MOV_CHECKSUM_SHA256, mov.ChecksumSHA256.get().orElse(null));
+			stmt.setNullableStr(DatabaseStructure.COL_MOV_CHECKSUM_SHA512, mov.ChecksumSHA512.get().orElse(null));
+
 			stmt.execute();
 			mov.resetDirty();
 
@@ -765,6 +780,11 @@ public class CCDatabase {
 			stmt.setNullableStr(DatabaseStructure.COL_EPIS_MI_ACODEC,     mi.AudioCodec.orElse(null));
 			stmt.setNullableInt(DatabaseStructure.COL_EPIS_MI_SAMPLERATE, mi.AudioSamplerate.orElse(null));
 			stmt.setNullableStr(DatabaseStructure.COL_EPIS_MI_CHECKSUM,   mi.Checksum.orElse(null));
+
+			stmt.setNullableStr(DatabaseStructure.COL_EPIS_CHECKSUM_CRC32,  ep.ChecksumCRC32.get().orElse(null));
+			stmt.setNullableStr(DatabaseStructure.COL_EPIS_CHECKSUM_MD5,    ep.ChecksumMD5.get().orElse(null));
+			stmt.setNullableStr(DatabaseStructure.COL_EPIS_CHECKSUM_SHA256, ep.ChecksumSHA256.get().orElse(null));
+			stmt.setNullableStr(DatabaseStructure.COL_EPIS_CHECKSUM_SHA512, ep.ChecksumSHA512.get().orElse(null));
 
 			stmt.setInt(DatabaseStructure.COL_EPIS_LOCALID,       ep.getLocalID());
 

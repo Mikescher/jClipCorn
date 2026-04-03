@@ -9,12 +9,14 @@ import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.zip.CRC32;
 
 public class ChecksumHelper
 {
@@ -149,6 +151,66 @@ public class ChecksumHelper
 		{
 			return false;
 		}
+	}
+
+	public static class ChecksumResult
+	{
+		public final String CRC32;
+		public final String MD5;
+		public final String SHA256;
+		public final String SHA512;
+
+		public ChecksumResult(String crc32, String md5, String sha256, String sha512)
+		{
+			this.CRC32  = crc32;
+			this.MD5    = md5;
+			this.SHA256 = sha256;
+			this.SHA512 = sha512;
+		}
+	}
+
+	@SuppressWarnings("nls")
+	public static ChecksumResult computeAllChecksums(FSPath file) throws IOException
+	{
+		try
+		{
+			var crc32  = new CRC32();
+			var md5    = MessageDigest.getInstance("MD5");
+			var sha256 = MessageDigest.getInstance("SHA-256");
+			var sha512 = MessageDigest.getInstance("SHA-512");
+
+			byte[] buffer = new byte[64 * 1024];
+
+			try (InputStream fis = new BufferedInputStream(new FileInputStream(file.toFile())))
+			{
+				int bytesRead;
+				while ((bytesRead = fis.read(buffer)) != -1)
+				{
+					crc32.update(buffer, 0, bytesRead);
+					md5.update(buffer, 0, bytesRead);
+					sha256.update(buffer, 0, bytesRead);
+					sha512.update(buffer, 0, bytesRead);
+				}
+			}
+
+			return new ChecksumResult(
+				String.format("%08X", crc32.getValue()),
+				bytesToHex(md5.digest()),
+				bytesToHex(sha256.digest()),
+				bytesToHex(sha512.digest())
+			);
+		}
+		catch (NoSuchAlgorithmException e)
+		{
+			throw new IOException("Hash algorithm not available", e);
+		}
+	}
+
+	private static String bytesToHex(byte[] bytes)
+	{
+		var sb = new StringBuilder(bytes.length * 2);
+		for (byte b : bytes) sb.append(String.format("%02X", b)); //$NON-NLS-1$
+		return sb.toString();
 	}
 
 	public static boolean isPossibleVideoHash(String ccfvh, CCMediaInfo mediainfo)

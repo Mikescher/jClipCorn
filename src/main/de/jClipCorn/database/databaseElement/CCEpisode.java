@@ -21,6 +21,7 @@ import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.DatabaseUpdateException;
@@ -58,6 +59,10 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public final ELanguageListProp       Subtitles     = new ELanguageListProp( "Subtitles",     CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
 	public final EEnumProp<CCUserScore>  Score         = new EEnumProp<>(       "Score",         CCUserScore.RATING_NO,        this, EPropertyType.USER_METADATA);
 	public final EStringProp             ScoreComment  = new EStringProp(       "ScoreComment",  Str.Empty,                    this, EPropertyType.USER_METADATA);
+	public final EOptStringProp          ChecksumCRC32 = new EOptStringProp(    "ChecksumCRC32", Opt.empty(),                  this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+	public final EOptStringProp          ChecksumMD5   = new EOptStringProp(    "ChecksumMD5",   Opt.empty(),                  this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+	public final EOptStringProp          ChecksumSHA256= new EOptStringProp(    "ChecksumSHA256",Opt.empty(),                  this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+	public final EOptStringProp          ChecksumSHA512= new EOptStringProp(    "ChecksumSHA512",Opt.empty(),                  this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
 
 	public FSPath NfoPath = FSPath.Empty;
 
@@ -68,6 +73,16 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public CCEpisode(CCSeason owner, int localID) {
 		this.owner   = owner;
 		LocalID.setReadonlyPropToInitial(localID);
+
+		Part.addChangeListener((_1, _2, _3) -> clearChecksums());
+		MediaInfo.Checksum.addChangeListener((_1, _2, _3) -> clearChecksums());
+	}
+
+	private void clearChecksums() {
+		ChecksumCRC32.set(Opt.empty());
+		ChecksumMD5.set(Opt.empty());
+		ChecksumSHA256.set(Opt.empty());
+		ChecksumSHA512.set(Opt.empty());
 	}
 
 	public void initNfoPaths() {
@@ -101,6 +116,13 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 					ScoreComment,
 				})
 				.append(MediaInfo.getProperties())
+				.append(new IEProperty[]
+				{
+					ChecksumCRC32,
+					ChecksumMD5,
+					ChecksumSHA256,
+					ChecksumSHA512,
+				})
 				.toArray(new IEProperty[0]);
 	}
 
@@ -118,6 +140,10 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public ELanguageListProp       subtitles()     { return Subtitles;     }
 	public EEnumProp<CCUserScore>  score()         { return Score;         }
 	public EStringProp             scoreComment()  { return ScoreComment;  }
+	public EOptStringProp          checksumCRC32() { return ChecksumCRC32; }
+	public EOptStringProp          checksumMD5()   { return ChecksumMD5;   }
+	public EOptStringProp          checksumSHA256(){ return ChecksumSHA256;}
+	public EOptStringProp          checksumSHA512(){ return ChecksumSHA512;}
 
 	public CCProperties ccprops() {
 		return getMovieList().ccprops();

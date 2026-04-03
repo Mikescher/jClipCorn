@@ -19,6 +19,8 @@ import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.xml.CCXMLException;
 
+import org.json.JSONArray;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
@@ -111,6 +113,7 @@ public class DatabaseSeeder {
 				e.setCover(cvr("000"));
 
 				e.Parts.set(CCPathList.create(CCPath.createFromFSPath(f, ml)));
+				setMovieChecksums(e, f);
 			}
 			e.endUpdating();
 		}
@@ -144,6 +147,7 @@ public class DatabaseSeeder {
 				e.setCover(cvr("001"));
 
 				e.Parts.set(CCPathList.create(CCPath.createFromFSPath(f, ml)));
+				setMovieChecksums(e, f);
 			}
 			e.endUpdating();
 		}
@@ -178,6 +182,7 @@ public class DatabaseSeeder {
 				e.setCover(cvr("002"));
 
 				e.Parts.set(CCPathList.create(CCPath.createFromFSPath(f1, ml), CCPath.createFromFSPath(f2, ml)));
+				setMovieChecksums(e, f1, f2);
 			}
 			e.endUpdating();
 		}
@@ -237,6 +242,7 @@ public class DatabaseSeeder {
 						epis.AddDate.set(CCDate.create(14, 8, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.create(CCDateTime.getUnspecified(), CCDateTime.createFromSQL("2020-08-14 20:21:00")));
 						epis.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE, CCDBLanguage.ENGLISH));
+						setEpisodeChecksums(epis, f);
 					}
 					epis.endUpdating();
 				}
@@ -260,6 +266,7 @@ public class DatabaseSeeder {
 						epis.AddDate.set(CCDate.create(14, 8, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.create(CCDateTime.getUnspecified(), CCDateTime.createFromSQL("2020-08-14 20:52:00")));
 						epis.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE, CCDBLanguage.ENGLISH));
+						setEpisodeChecksums(epis, f);
 					}
 					epis.endUpdating();
 				}
@@ -283,6 +290,7 @@ public class DatabaseSeeder {
 						epis.AddDate.set(CCDate.create(14, 8, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.create(CCDateTime.getUnspecified(), CCDateTime.createFromSQL("2020-08-14 21:19:00")));
 						epis.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE, CCDBLanguage.ENGLISH));
+						setEpisodeChecksums(epis, f);
 					}
 					epis.endUpdating();
 				}
@@ -318,6 +326,7 @@ public class DatabaseSeeder {
 						epis.AddDate.set(CCDate.create(1, 9, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.createEmpty());
 						epis.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE));
+						setEpisodeChecksums(epis, f);
 					}
 					epis.endUpdating();
 				}
@@ -341,6 +350,7 @@ public class DatabaseSeeder {
 						epis.AddDate.set(CCDate.create(1, 9, 2020));
 						epis.ViewedHistory.set(CCDateTimeList.createEmpty());
 						epis.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.JAPANESE));
+						setEpisodeChecksums(epis, f);
 					}
 					epis.endUpdating();
 				}
@@ -366,5 +376,31 @@ public class DatabaseSeeder {
 		var fvhash = ChecksumHelper.fastVideoHash(Collections.singletonList(dest));
 		var attr = dest.readFileAttr();
 		return new MediaInfoRunner(ml).parse(out, fvhash, attr, dest).toMediaInfo();
+	}
+
+	private static void setMovieChecksums(de.jClipCorn.database.databaseElement.CCMovie mov, FSPath... files) throws IOException {
+		var crc32arr  = new JSONArray();
+		var md5arr    = new JSONArray();
+		var sha256arr = new JSONArray();
+		var sha512arr = new JSONArray();
+		for (var f : files) {
+			var cs = ChecksumHelper.computeAllChecksums(f);
+			crc32arr.put(cs.CRC32);
+			md5arr.put(cs.MD5);
+			sha256arr.put(cs.SHA256);
+			sha512arr.put(cs.SHA512);
+		}
+		mov.ChecksumCRC32.set(Opt.of(crc32arr.toString()));
+		mov.ChecksumMD5.set(Opt.of(md5arr.toString()));
+		mov.ChecksumSHA256.set(Opt.of(sha256arr.toString()));
+		mov.ChecksumSHA512.set(Opt.of(sha512arr.toString()));
+	}
+
+	private static void setEpisodeChecksums(de.jClipCorn.database.databaseElement.CCEpisode epis, FSPath f) throws IOException {
+		var cs = ChecksumHelper.computeAllChecksums(f);
+		epis.ChecksumCRC32.set(Opt.of(cs.CRC32));
+		epis.ChecksumMD5.set(Opt.of(cs.MD5));
+		epis.ChecksumSHA256.set(Opt.of(cs.SHA256));
+		epis.ChecksumSHA512.set(Opt.of(cs.SHA512));
 	}
 }

@@ -17,6 +17,7 @@ import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
 
 import java.awt.image.BufferedImage;
@@ -585,6 +586,55 @@ public class DatabaseAutofixer {
 			return false;
 		}
 
+		return false;
+	}
+
+	@SuppressWarnings("nls")
+	public static boolean fixError_ChecksumMissing(CCMovieList ml, DatabaseError err) {
+		if (err.getElement1() instanceof CCMovie mov) {
+			try {
+				var crc32arr  = new org.json.JSONArray();
+				var md5arr    = new org.json.JSONArray();
+				var sha256arr = new org.json.JSONArray();
+				var sha512arr = new org.json.JSONArray();
+
+				for (int i = 0; i < mov.getPartcount(); i++) {
+					var path = mov.Parts.get(i).toFSPath(ml);
+					if (!path.exists()) return false;
+					var result = ChecksumHelper.computeAllChecksums(path);
+					crc32arr.put(result.CRC32);
+					md5arr.put(result.MD5);
+					sha256arr.put(result.SHA256);
+					sha512arr.put(result.SHA512);
+				}
+
+				mov.beginUpdating();
+				mov.ChecksumCRC32.set(Opt.of(crc32arr.toString()));
+				mov.ChecksumMD5.set(Opt.of(md5arr.toString()));
+				mov.ChecksumSHA256.set(Opt.of(sha256arr.toString()));
+				mov.ChecksumSHA512.set(Opt.of(sha512arr.toString()));
+				mov.endUpdating();
+				return true;
+			} catch (IOException e) {
+				return false;
+			}
+		} else if (err.getElement1() instanceof CCEpisode epi) {
+			try {
+				var path = epi.Part.get().toFSPath(ml);
+				if (!path.exists()) return false;
+				var result = ChecksumHelper.computeAllChecksums(path);
+
+				epi.beginUpdating();
+				epi.ChecksumCRC32.set(Opt.of(result.CRC32));
+				epi.ChecksumMD5.set(Opt.of(result.MD5));
+				epi.ChecksumSHA256.set(Opt.of(result.SHA256));
+				epi.ChecksumSHA512.set(Opt.of(result.SHA512));
+				epi.endUpdating();
+				return true;
+			} catch (IOException e) {
+				return false;
+			}
+		}
 		return false;
 	}
 

@@ -54,9 +54,23 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp( "ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
 	public final ELanguageSetProp        Language      = new ELanguageSetProp(  "Language",      CCDBLanguageSet.EMPTY,        this, EPropertyType.OBJECTIVE_METADATA);
 	public final ELanguageListProp       Subtitles     = new ELanguageListProp( "Subtitles",     CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
+	public final EOptStringProp          ChecksumCRC32 = new EOptStringProp(    "ChecksumCRC32", Opt.empty(),                  this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+	public final EOptStringProp          ChecksumMD5   = new EOptStringProp(    "ChecksumMD5",   Opt.empty(),                  this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+	public final EOptStringProp          ChecksumSHA256= new EOptStringProp(    "ChecksumSHA256",Opt.empty(),                  this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+	public final EOptStringProp          ChecksumSHA512= new EOptStringProp(    "ChecksumSHA512",Opt.empty(),                  this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
 
 	public CCMovie(CCMovieList ml, int id) {
 		super(ml, id);
+
+		Parts.addChangeListener((_1, _2, _3) -> clearChecksums());
+		MediaInfo.Checksum.addChangeListener((_1, _2, _3) -> clearChecksums());
+	}
+
+	private void clearChecksums() {
+		ChecksumCRC32.set(Opt.empty());
+		ChecksumMD5.set(Opt.empty());
+		ChecksumSHA256.set(Opt.empty());
+		ChecksumSHA512.set(Opt.empty());
 	}
 
 	public void initNfoPaths() {
@@ -83,6 +97,13 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 					Subtitles,
 				})
 				.append(MediaInfo.getProperties())
+				.append(new IEProperty[]
+				{
+					ChecksumCRC32,
+					ChecksumMD5,
+					ChecksumSHA256,
+					ChecksumSHA512,
+				})
 				.toArray(new IEProperty[0]);
 	}
 
@@ -97,6 +118,10 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public EDateTimeListProp       viewedHistory() { return ViewedHistory; }
 	public ELanguageSetProp        language()      { return Language;      }
 	public ELanguageListProp       subtitles()     { return Subtitles;     }
+	public EOptStringProp          checksumCRC32() { return ChecksumCRC32; }
+	public EOptStringProp          checksumMD5()   { return ChecksumMD5;   }
+	public EOptStringProp          checksumSHA256(){ return ChecksumSHA256;}
+	public EOptStringProp          checksumSHA512(){ return ChecksumSHA512;}
 
 	@Override
 	public boolean updateDB() {

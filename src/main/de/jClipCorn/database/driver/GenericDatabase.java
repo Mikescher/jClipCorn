@@ -322,12 +322,18 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 	}
 
 	public int querySingleIntSQL(String sql, int columnIndex) {
-		return (Integer) querySingleSQL(sql, columnIndex);
+		var v = querySingleSQL(sql, columnIndex);
+		if (v instanceof Integer i) return i;
+		if (v instanceof String s) return Integer.parseInt(s);
+		throw new RuntimeException("Unexpected type returned from querySingleSQL: " + ((v != null) ? v.getClass().getName() : "null"));
 	}
 
 	@Override
 	public int querySingleIntSQLThrow(String sql, int columnIndex) throws SQLException {
-		return (Integer) querySingleSQLThrow(sql, columnIndex);
+		var v = querySingleSQLThrow(sql, columnIndex);
+		if (v instanceof Integer i) return i;
+		if (v instanceof String s) return Integer.parseInt(s);
+		throw new RuntimeException("Unexpected type returned from querySingleSQL: " + ((v != null) ? v.getClass().getName() : "null"));
 	}
 
 	public String querySingleStringSQL(String sql, int columnIndex) {

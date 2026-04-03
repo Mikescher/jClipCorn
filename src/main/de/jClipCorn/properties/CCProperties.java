@@ -169,6 +169,9 @@ public class CCProperties implements ICCPropertySource {
 	public CCEnumProperty<NextEpisodeHeuristic>             PROP_SERIES_NEXT_EPISODE_HEURISTIC;
 	public CCEnumProperty<CoverImageSize>                   PROP_DATABASE_MAX_COVER_SIZE;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER;
+	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_SPECIALVERSION;
+	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_ANIMESTUDIO;
+	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_ANIMESEASON;
 	public CCBoolProperty                                   PROP_MAINFRAME_ASYNC_COVER_LOADING;
 	public CCEnumProperty<AniListTitleLang>                 PROP_ANILIST_PREFERRED_TITLE_LANG;
 	public CCBoolProperty                                   PROP_PATHSYNTAX_SELF;
@@ -337,6 +340,9 @@ public class CCProperties implements ICCPropertySource {
 		PROP_MAINFRAME_DONT_FILTER_WATCHNEVER       = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_DONT_FILTER_WATCHNEVER",       true);
 		PROP_MAINFRAME_SORT_GENRES                  = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SORT_GENRES",                  true);
 		PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER     = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER",     false);
+		PROP_MAINFRAME_SHOW_SPECIALVERSION          = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_SPECIALVERSION",          false);
+		PROP_MAINFRAME_SHOW_ANIMESTUDIO             = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_ANIMESTUDIO",             false);
+		PROP_MAINFRAME_SHOW_ANIMESEASON             = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_ANIMESEASON",             false);
 		PROP_MAINFRAME_ASYNC_COVER_LOADING          = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_ASYNC_COVER_LOADING",          false);
 		PROP_MAINFRAME_SHOW_VIEWCOUNT               = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_VIEWCOUNT",               true);
 		PROP_MAINFRAME_VISIBLE_COLUMNS              = new CCEnumSetProperty<>(CAT_VIEW,         this,   "PROP_MAINFRAME_VISIBLE_COLUMNS",              getDefColumns(),                   MainFrameColumn.getWrapper());

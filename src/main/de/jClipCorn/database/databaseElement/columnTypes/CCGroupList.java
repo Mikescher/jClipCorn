@@ -168,7 +168,7 @@ public class CCGroupList implements CCIterable<CCGroup> {
 		return hc;
 	}
 
-	public void drawOnImage(CCMovieList ml, BufferedImage bi, boolean alpha) {
+	public int drawOnImage(CCMovieList ml, BufferedImage bi, boolean alpha) {
 		final int PADDING_X = 4;
 		final int PADDING_Y = 2;
 		final int RADIUS = 5;
@@ -240,6 +240,8 @@ public class CCGroupList implements CCIterable<CCGroup> {
 		}
 		
 		g.dispose();
+
+		return di;
 	}
 
 	public CCStream<CCGroup> iterate() {

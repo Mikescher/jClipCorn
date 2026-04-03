@@ -1,12 +1,19 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.*;
 
 public class CCStringList implements CCIterable<String> {
@@ -153,6 +160,80 @@ public class CCStringList implements CCIterable<String> {
 		return hc;
 	}
 	
+	public int drawOnImage(BufferedImage bi, boolean alpha, Color baseColor, int verticalOffset) {
+		if (isEmpty()) return 0;
+
+		final int PADDING_X = 4;
+		final int PADDING_Y = 2;
+		final int RADIUS = 5;
+		final int MARGIN = 3;
+
+		Graphics2D g = bi.createGraphics();
+
+		Font old = g.getFont();
+		g.setFont(new Font(old.getFontName(), Font.BOLD, old.getSize()));
+
+		FontMetrics fm = g.getFontMetrics();
+
+		Point tr = ImageUtilities.getTopRightNonTransparentPixel(bi);
+
+		int right = tr.x;
+		int top = tr.y;
+
+		int height = fm.getHeight();
+		int offset = fm.getDescent();
+
+		int di = 0;
+		for (String value : list) {
+			String display = value;
+			int width = fm.stringWidth(display);
+
+			boolean limited = false;
+			while (!display.isEmpty() && width > (bi.getWidth() - 2 * PADDING_X - MARGIN)) {
+				display = display.substring(0, display.length() - 1);
+				width = fm.stringWidth(display + "...");
+				limited = true;
+			}
+			if (limited) display = display + "...";
+
+			if (alpha)
+				g.setColor(new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), CCGroup.COLOR_TAG_ALPHA));
+			else
+				g.setColor(baseColor);
+
+			int yBase = top + (verticalOffset + di) * (height + 2 * PADDING_Y + 2 * MARGIN) + MARGIN;
+
+			g.fillRoundRect(
+					right - MARGIN - PADDING_X - width - PADDING_X,
+					yBase,
+					2 * PADDING_X + width,
+					2 * PADDING_Y + height,
+					RADIUS,
+					RADIUS);
+
+			g.setColor(Color.BLACK);
+
+			g.drawRoundRect(
+					right - MARGIN - PADDING_X - width - PADDING_X,
+					yBase,
+					2 * PADDING_X + width,
+					2 * PADDING_Y + height,
+					RADIUS,
+					RADIUS);
+
+			g.drawString(
+					display,
+					right - MARGIN - PADDING_X - width,
+					yBase + PADDING_Y + height - offset);
+
+			di++;
+		}
+
+		g.dispose();
+
+		return di;
+	}
+
 	@Override
 	public String toString() {
 		return String.join(", ", list);

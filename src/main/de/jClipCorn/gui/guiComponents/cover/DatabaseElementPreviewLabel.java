@@ -11,6 +11,7 @@ import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.helper.ThreadUtils;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
@@ -19,8 +20,12 @@ import java.util.TimerTask;
 
 public class DatabaseElementPreviewLabel extends CoverLabel {
 	private static final long serialVersionUID = -2960790547511297760L;
-	
+
 	private final static int TIMER_DELAY = 100;
+
+	private static final Color COLOR_SPECIAL_VERSION = new Color(155, 89, 182);
+	private static final Color COLOR_ANIME_STUDIO    = new Color(52, 152, 219);
+	private static final Color COLOR_ANIME_SEASON    = new Color(230, 126, 34);
 
 	private enum DEPLMode {
 		MODE_DEFAULT,
@@ -98,27 +103,44 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	
 	private BufferedImage getImageWithOverlay(CCDatabaseElement el, boolean alpha) {
 		if (noOverlay) return getImageWithoutOverlay(el);
-		
+
 		boolean drawSCorner = movielist.ccprops().PROP_MAINFRAME_SHOWCOVERCORNER.getValue()  && el.isSeries();
-		boolean drawTag = movielist.ccprops().PROP_MAINFRAME_SHOWTAGS.getValue() && el.isMovie() && el.Tags.get().hasTags();
-		boolean drawGroups = movielist.ccprops().PROP_MAINFRAME_SHOWGROUPS.getValue() && el.hasGroups();
-		
-		if (drawSCorner || drawTag || drawGroups) {
+		boolean drawTag     = movielist.ccprops().PROP_MAINFRAME_SHOWTAGS.getValue()         && el.isMovie() && el.Tags.get().hasTags();
+		boolean drawGroups  = movielist.ccprops().PROP_MAINFRAME_SHOWGROUPS.getValue()        && el.hasGroups();
+		boolean drawSpecVer = movielist.ccprops().PROP_MAINFRAME_SHOW_SPECIALVERSION.getValue() && !el.getSpecialVersion().isEmpty();
+		boolean drawStudio  = movielist.ccprops().PROP_MAINFRAME_SHOW_ANIMESTUDIO.getValue()    && !el.getAnimeStudio().isEmpty();
+		boolean drawSeason  = movielist.ccprops().PROP_MAINFRAME_SHOW_ANIMESEASON.getValue()    && !el.getAnimeSeason().isEmpty();
+
+		if (drawSCorner || drawTag || drawGroups || drawSpecVer || drawStudio || drawSeason) {
 			BufferedImage biorig = el.getCover();
-			
+
 			BufferedImage bi = ImageUtilities.resizeCoverImageForFullSizeUI(biorig);
 			if (bi == biorig) bi = ImageUtilities.deepCopyImage(bi);
-			
+
 			if (drawSCorner) {
 				ImageUtilities.makeFullSizeSeriesCover(bi);
 			}
-			
+
 			if (drawTag) {
 				el.getTags().drawOnImage(bi, false);
 			}
-			
+
+			int vertOffset = 0;
+
 			if (drawGroups) {
-				el.getGroups().drawOnImage(el.getMovieList(), bi, alpha);
+				vertOffset = el.getGroups().drawOnImage(el.getMovieList(), bi, alpha);
+			}
+
+			if (drawSpecVer) {
+				vertOffset += el.getSpecialVersion().drawOnImage(bi, alpha, COLOR_SPECIAL_VERSION, vertOffset);
+			}
+
+			if (drawStudio) {
+				vertOffset += el.getAnimeStudio().drawOnImage(bi, alpha, COLOR_ANIME_STUDIO, vertOffset);
+			}
+
+			if (drawSeason) {
+				vertOffset += el.getAnimeSeason().drawOnImage(bi, alpha, COLOR_ANIME_SEASON, vertOffset);
 			}
 
 			return bi;

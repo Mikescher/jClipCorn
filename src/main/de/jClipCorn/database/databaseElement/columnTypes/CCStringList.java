@@ -11,9 +11,9 @@ import java.util.*;
 
 public class CCStringList implements CCIterable<String> {
 	public static final CCStringList EMPTY = new CCStringList();
-	
+
 	private final List<String> list;
-	
+
 	private CCStringList(List<String> lst) {
 		List<String> filtered = new ArrayList<>();
 		for (String s : lst) {
@@ -127,7 +127,7 @@ public class CCStringList implements CCIterable<String> {
 	public CCStream<String> ccstream() {
 		return CCStreams.iterate(list);
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof CCStringList)) return false;

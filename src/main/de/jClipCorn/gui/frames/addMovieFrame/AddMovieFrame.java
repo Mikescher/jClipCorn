@@ -7,6 +7,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.MovieDataPack;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.util.comparator.CCAnimeSeasonComparator;
 import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
@@ -537,10 +538,12 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 	public void setOnlineReference(CCOnlineReferenceList ref) {
 		edReference.setValue(ref);
 	}
+
 	@Override
 	public void setAnimeSeason(CCStringList animeSeason) {
-		edAnimeSeason.setValues(animeSeason.ccstream().toList());
+		edAnimeSeason.setValues(animeSeason.ccstream().sort(new CCAnimeSeasonComparator()).toList());
 	}
+
 	@Override
 	public void setAnimeStudio(CCStringList animeStudio) {
 		edAnimeStudio.setValues(animeStudio.ccstream().toList());

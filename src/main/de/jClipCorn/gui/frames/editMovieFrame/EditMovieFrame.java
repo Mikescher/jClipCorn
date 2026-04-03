@@ -6,6 +6,7 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.MovieDataPack;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.util.comparator.CCAnimeSeasonComparator;
 import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
@@ -189,7 +190,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		ctrlMediaInfo.setValue(movie.MediaInfo.get());
 
 		edSpecialVersion.setValues(movie.SpecialVersion.get().ccstream().toList());
-		edAnimeSeason.setValues(movie.AnimeSeason.get().ccstream().toList());
+		edAnimeSeason.setValues(movie.AnimeSeason.get().ccstream().sort(new CCAnimeSeasonComparator()).toList());
 		edAnimeStudio.setValues(movie.AnimeStudio.get().ccstream().toList());
 
 		testPaths();
@@ -206,7 +207,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	}
 	@Override
 	public void setAnimeSeason(CCStringList animeSeason) {
-		edAnimeSeason.setValues(animeSeason.ccstream().toList());
+		edAnimeSeason.setValues(animeSeason.ccstream().sort(new CCAnimeSeasonComparator()).toList());
 	}
 	@Override
 	public void setAnimeStudio(CCStringList animeStudio) {

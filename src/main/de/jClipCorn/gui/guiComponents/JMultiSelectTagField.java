@@ -226,15 +226,16 @@ public class JMultiSelectTagField extends JPanel {
         List<String> allValues = designmode ? new ArrayList<>() : valueSupplier.get();
         if (allValues == null) allValues = new ArrayList<>();
 
-        // Add all available values plus any selected values not in the list
-        Set<String> allPossibleValues = new HashSet<>(allValues);
-        allPossibleValues.addAll(selectedValues);
+        allValues = CCStreams.iterate(allValues).uniqueStable().toList();
 
-        List<String> sortedValues = allPossibleValues.stream()
-            .sorted(String::compareToIgnoreCase)
-            .collect(Collectors.toList());
+        var allValuesSet = new HashSet<>(allValues);
+        for (var sv : selectedValues) {
+            if (allValuesSet.add(sv)) {
+                allValues.add(sv);
+            }
+        }
 
-        for (String value : sortedValues) {
+        for (String value : allValues) {
             JCheckBox checkbox = new JCheckBox(value);
             checkbox.setSelected(selectedValues.contains(value));
             checkbox.setBackground(Color.WHITE);

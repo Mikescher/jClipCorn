@@ -9,6 +9,7 @@ import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.CCQualityCategory;
+import de.jClipCorn.util.comparator.CCAnimeSeasonComparator;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewMovieMenuBar;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
@@ -168,7 +169,7 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 
 		lblAnimeStudio.setText(movie.AnimeStudio.get().ccstream().stringjoin(", "));
 
-		lblAnimeSeason.setText(movie.AnimeSeason.get().ccstream().stringjoin(", "));
+		lblAnimeSeason.setText(movie.AnimeSeason.get().ccstream().sort(new CCAnimeSeasonComparator()).stringjoin(", "));
 
 		DefaultListModel<String> dlsmGenre;
 		lsGenres.setModel(dlsmGenre = new DefaultListModel<>());

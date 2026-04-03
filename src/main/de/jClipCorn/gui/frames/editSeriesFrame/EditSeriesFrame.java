@@ -10,6 +10,7 @@ import de.jClipCorn.database.databaseElement.datapacks.EpisodeDataPack;
 import de.jClipCorn.database.databaseElement.datapacks.SeasonDataPack;
 import de.jClipCorn.database.databaseElement.datapacks.SeriesDataPack;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.util.comparator.CCAnimeSeasonComparator;
 import de.jClipCorn.features.metadata.exceptions.MediaQueryException;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
@@ -429,7 +430,7 @@ public class EditSeriesFrame extends JCCFrame
 
 			@Override
 			public void setAnimeSeason(CCStringList animeSeason) {
-				edAnimeSeason.setValues(animeSeason.ccstream().toList());
+				edAnimeSeason.setValues(animeSeason.ccstream().sort(new CCAnimeSeasonComparator()).toList());
 			}
 
 			@Override
@@ -527,7 +528,7 @@ public class EditSeriesFrame extends JCCFrame
 			edSeriesTags.setValue(series.getTags());
 
 			edSpecialVersion.setValues(series.SpecialVersion.get().ccstream().toList());
-			edAnimeSeason.setValues(series.AnimeSeason.get().ccstream().toList());
+			edAnimeSeason.setValues(series.AnimeSeason.get().ccstream().sort(new CCAnimeSeasonComparator()).toList());
 			edAnimeStudio.setValues(series.AnimeStudio.get().ccstream().toList());
 
 			lsSeasons.setSelectedIndex(-1);

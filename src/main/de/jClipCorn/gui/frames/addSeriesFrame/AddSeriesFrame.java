@@ -7,6 +7,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.SeriesDataPack;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.util.comparator.CCAnimeSeasonComparator;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
@@ -261,7 +262,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 
 	@Override
 	public void setAnimeSeason(CCStringList animeSeason) {
-		edAnimeSeason.setValues(animeSeason.ccstream().toList());
+		edAnimeSeason.setValues(animeSeason.ccstream().sort(new CCAnimeSeasonComparator()).toList());
 	}
 
 	@Override

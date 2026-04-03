@@ -5,6 +5,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.util.comparator.CCAnimeSeasonComparator;
 import de.jClipCorn.features.online.OnlineSearchType;
 import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
@@ -303,7 +304,7 @@ public class ParseOnlineDialog extends JCCDialog
 				if (md.Genres != null) cbxGenre6.setSelectedEnum(md.Genres.getGenre(6));
 				if (md.Genres != null) cbxGenre7.setSelectedEnum(md.Genres.getGenre(7));
 
-				if (md.AnimeSeason != null && !md.AnimeSeason.isEmpty()) edAnimeSeason.setText(md.AnimeSeason.ccstream().stringjoin(", "));
+				if (md.AnimeSeason != null && !md.AnimeSeason.isEmpty()) edAnimeSeason.setText(md.AnimeSeason.ccstream().sort(new CCAnimeSeasonComparator()).stringjoin(", "));
 				if (md.AnimeStudio != null && !md.AnimeStudio.isEmpty()) edAnimeStudio.setText(md.AnimeStudio.ccstream().stringjoin(", "));
 
 				btnRef.setIcon(selectedReference.getIconButton());

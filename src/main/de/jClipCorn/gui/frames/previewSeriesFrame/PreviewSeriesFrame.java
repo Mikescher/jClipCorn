@@ -14,6 +14,7 @@ import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.features.actionTree.IActionRootFrame;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
+import de.jClipCorn.util.comparator.CCAnimeSeasonComparator;
 import de.jClipCorn.features.actionTree.menus.impl.ClipEpisodePopup;
 import de.jClipCorn.features.actionTree.menus.impl.PreviewSeriesMenuBar;
 import de.jClipCorn.features.actionTree.menus.impl.SerCoverChooserPopupMenu;
@@ -284,7 +285,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		lblSpecialVersion.setVisible(!series.SpecialVersion.get().isEmpty());
 		labelSpecialVersion.setVisible(!series.SpecialVersion.get().isEmpty());
 
-		lblAnimeSeason.setText(series.AnimeSeason.get().ccstream().stringjoin("\n"));
+		lblAnimeSeason.setText(series.AnimeSeason.get().ccstream().sort(new CCAnimeSeasonComparator()).stringjoin("\n"));
 		lblAnimeSeason.setVisible(!series.AnimeSeason.get().isEmpty());
 		labelAnimeSeason.setVisible(!series.AnimeSeason.get().isEmpty());
 

@@ -110,6 +110,14 @@ public class JAutoCompleteTextField extends JPanel {
         return tagField.hasValues();
     }
 
+    public OverFlowMode getOverFlowMode() {
+        return tagField.getOverFlowMode();
+    }
+
+    public void setOverFlowMode(OverFlowMode mode) {
+        tagField.setOverFlowMode(mode);
+    }
+
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);

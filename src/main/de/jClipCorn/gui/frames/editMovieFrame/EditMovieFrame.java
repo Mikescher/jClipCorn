@@ -1221,16 +1221,25 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 				//---- lblSpecialVersion ----
 				lblSpecialVersion.setText(LocaleBundle.getString("EditMovieFrame.lblSpecialVersion.text"));
 				pnlData.add(lblSpecialVersion, CC.xy(1, 35));
+
+				//---- edSpecialVersion ----
+				edSpecialVersion.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
 				pnlData.add(edSpecialVersion, CC.xywh(3, 35, 3, 1));
 
 				//---- lblAnimeSeason ----
 				lblAnimeSeason.setText(LocaleBundle.getString("EditMovieFrame.lblAnimeSeason.text"));
 				pnlData.add(lblAnimeSeason, CC.xy(1, 37));
+
+				//---- edAnimeSeason ----
+				edAnimeSeason.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
 				pnlData.add(edAnimeSeason, CC.xywh(3, 37, 3, 1));
 
 				//---- lblAnimeStudio ----
 				lblAnimeStudio.setText(LocaleBundle.getString("EditMovieFrame.lblAnimeStudio.text"));
 				pnlData.add(lblAnimeStudio, CC.xy(1, 39));
+
+				//---- edAnimeStudio ----
+				edAnimeStudio.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
 				pnlData.add(edAnimeStudio, CC.xywh(3, 39, 3, 1));
 			}
 			pnlLeft.add(pnlData, CC.xy(1, 3, CC.FILL, CC.FILL));

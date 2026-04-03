@@ -408,11 +408,17 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		//---- lblAnimeSeason ----
 		lblAnimeSeason.setText(LocaleBundle.getString("AddSeriesFrame.lblAnimeSeason.text"));
 		contentPane.add(lblAnimeSeason, CC.xy(2, 29));
+
+		//---- edAnimeSeason ----
+		edAnimeSeason.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
 		contentPane.add(edAnimeSeason, CC.xy(4, 29));
 
 		//---- lblAnimeStudio ----
 		lblAnimeStudio.setText(LocaleBundle.getString("AddSeriesFrame.lblAnimeStudio.text"));
 		contentPane.add(lblAnimeStudio, CC.xy(2, 31));
+
+		//---- edAnimeStudio ----
+		edAnimeStudio.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
 		contentPane.add(edAnimeStudio, CC.xy(4, 31));
 
 		//======== panel1 ========

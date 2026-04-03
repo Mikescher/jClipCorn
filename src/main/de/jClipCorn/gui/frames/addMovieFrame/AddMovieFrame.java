@@ -1390,16 +1390,25 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				//---- lblSpecialVersion ----
 				lblSpecialVersion.setText(LocaleBundle.getString("AddMovieFrame.lblSpecialVersion.text"));
 				pnlData.add(lblSpecialVersion, CC.xy(1, 31));
+
+				//---- edSpecialVersion ----
+				edSpecialVersion.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
 				pnlData.add(edSpecialVersion, CC.xywh(3, 31, 3, 1));
 
 				//---- lblAnimeSeason ----
 				lblAnimeSeason.setText(LocaleBundle.getString("AddMovieFrame.lblAnimeSeason.text"));
 				pnlData.add(lblAnimeSeason, CC.xy(1, 33));
+
+				//---- edAnimeSeason ----
+				edAnimeSeason.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
 				pnlData.add(edAnimeSeason, CC.xywh(3, 33, 3, 1));
 
 				//---- lblAnimeStudio ----
 				lblAnimeStudio.setText(LocaleBundle.getString("AddMovieFrame.lblAnimeStudio.text"));
 				pnlData.add(lblAnimeStudio, CC.xy(1, 35));
+
+				//---- edAnimeStudio ----
+				edAnimeStudio.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
 				pnlData.add(edAnimeStudio, CC.xywh(3, 35, 3, 1));
 
 				//---- lblWatchLater ----

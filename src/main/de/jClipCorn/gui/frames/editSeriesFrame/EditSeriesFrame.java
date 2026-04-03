@@ -1564,16 +1564,25 @@ public class EditSeriesFrame extends JCCFrame
 				//---- lblSpecialVersion ----
 				lblSpecialVersion.setText(LocaleBundle.getString("EditSeriesFrame.lblSpecialVersion.text"));
 				panel5.add(lblSpecialVersion, CC.xy(1, 17));
+
+				//---- edSpecialVersion ----
+				edSpecialVersion.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
 				panel5.add(edSpecialVersion, CC.xy(3, 17));
 
 				//---- lblAnimeSeason ----
 				lblAnimeSeason.setText(LocaleBundle.getString("EditSeriesFrame.lblAnimeSeason.text"));
 				panel5.add(lblAnimeSeason, CC.xy(1, 19));
+
+				//---- edAnimeSeason ----
+				edAnimeSeason.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
 				panel5.add(edAnimeSeason, CC.xy(3, 19));
 
 				//---- lblAnimeStudio ----
 				lblAnimeStudio.setText(LocaleBundle.getString("EditSeriesFrame.lblAnimeStudio.text"));
 				panel5.add(lblAnimeStudio, CC.xy(1, 21));
+
+				//---- edAnimeStudio ----
+				edAnimeStudio.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
 				panel5.add(edAnimeStudio, CC.xy(3, 21));
 			}
 			pnlEditSeries.add(panel5, CC.xy(2, 4, CC.FILL, CC.FILL));

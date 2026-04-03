@@ -3,6 +3,7 @@ package de.jClipCorn.gui.guiComponents;
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.gui.guiComponents.tags.TagsChangedListener;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -39,6 +40,7 @@ public class JMultiSelectTagField extends JPanel {
     private List<JCheckBox> checkboxes;
     private final boolean designmode;
     private final EventListenerList listenerList = new EventListenerList();
+    private OverFlowMode overFlowMode = OverFlowMode.CLIP;
 
     @DesignCreate
     private static JMultiSelectTagField designCreate() {
@@ -375,6 +377,21 @@ public class JMultiSelectTagField extends JPanel {
      */
     public void addChangeListener(TagsChangedListener listener) {
         listenerList.add(TagsChangedListener.class, listener);
+    }
+
+    public OverFlowMode getOverFlowMode() {
+        return overFlowMode;
+    }
+
+    public void setOverFlowMode(OverFlowMode mode) {
+        this.overFlowMode = mode;
+        if (mode == OverFlowMode.WRAP) {
+            tagPanel.setLayout(new WrapFlowLayout(FlowLayout.LEFT, 2, 2));
+        } else {
+            tagPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 2));
+        }
+        tagPanel.revalidate();
+        tagPanel.repaint();
     }
 
     /**

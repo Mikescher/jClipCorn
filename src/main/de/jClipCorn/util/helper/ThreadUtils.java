@@ -24,4 +24,10 @@ public class ThreadUtils {
 			while (System.currentTimeMillis() - s < millis) { /* */ }
 		}
 	}
+
+	@SuppressWarnings({"deprecation", "removal"})
+	public static void killThread(Thread t) {
+		t.stop();
+	}
+
 }

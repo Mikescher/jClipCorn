@@ -274,6 +274,7 @@ new FormModel {
 			add( new FormComponent( "de.jClipCorn.gui.guiComponents.JAutoCompleteTextField" ) {
 				name: "edAnimeSeason"
 				auxiliary() {
+					"JavaCodeGenerator.postInitCode": "${field}.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);"
 					"JavaCodeGenerator.customCreateCode": "new ${field_type}(() -> movielist.getAnimeSeasonList(), true);"
 				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
@@ -290,6 +291,7 @@ new FormModel {
 			add( new FormComponent( "de.jClipCorn.gui.guiComponents.JAutoCompleteTextField" ) {
 				name: "edAnimeStudio"
 				auxiliary() {
+					"JavaCodeGenerator.postInitCode": "${field}.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);"
 					"JavaCodeGenerator.customCreateCode": "new ${field_type}(() -> movielist.getAnimeStudioList(), true);"
 				}
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {

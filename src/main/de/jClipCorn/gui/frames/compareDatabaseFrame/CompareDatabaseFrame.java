@@ -15,6 +15,7 @@ import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.listener.DoubleProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -235,7 +236,7 @@ public class CompareDatabaseFrame extends JCCFrame
 	{
 		if (activeThread == null) { updateUI(); return; }
 
-		activeThread.stop();
+		ThreadUtils.killThread(activeThread);
 		updateUI();
 	}
 

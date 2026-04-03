@@ -15,6 +15,7 @@ import de.jClipCorn.util.filesystem.FileChooserHelper;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.listener.DoubleProgressCallbackProgressBarHelper;
 
 import javax.swing.*;
@@ -206,7 +207,7 @@ public class ApplyPatchFrame extends JCCFrame
 	private void cancelThread(ActionEvent e) {
 		if (activeThread == null) { updateUI(); return; }
 
-		activeThread.stop();
+		ThreadUtils.killThread(activeThread);
 		updateUI();
 	}
 

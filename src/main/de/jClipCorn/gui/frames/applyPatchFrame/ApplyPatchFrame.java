@@ -13,9 +13,9 @@ import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
+import de.jClipCorn.util.exceptions.CancelledException;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
-import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.listener.DoubleProgressCallbackProgressBarHelper;
 
 import javax.swing.*;
@@ -27,6 +27,7 @@ public class ApplyPatchFrame extends JCCFrame
 	private java.util.List<ActionVM> _actions = null;
 	private PatchExecState _state = null;
 	private Thread activeThread = null;
+	private DoubleProgressCallbackProgressBarHelper activeCB = null;
 
 	public ApplyPatchFrame(Component owner, CCMovieList ml)
 	{
@@ -135,6 +136,7 @@ public class ApplyPatchFrame extends JCCFrame
 		var state   = _state;
 
 		var cb = new DoubleProgressCallbackProgressBarHelper(progressBar1, lblProgress1, progressBar2, lblProgress2);
+		activeCB = cb;
 
 		var opt = new PatchExecOptions(
 				edPathPatchfile.getPath(),
@@ -186,6 +188,10 @@ public class ApplyPatchFrame extends JCCFrame
 
 				SwingUtils.invokeLater(this::updateUI);
 			}
+			catch (CancelledException ignored)
+			{
+				// cancelled by user
+			}
 			catch (Throwable e)
 			{
 				DialogHelper.showDispatchError(this, "Error", e.toString()); //$NON-NLS-1$
@@ -194,6 +200,7 @@ public class ApplyPatchFrame extends JCCFrame
 			{
 				SwingUtils.invokeLater(() -> MainFrame.getInstance().endBlockingIntermediate());
 				activeThread = null;
+				activeCB = null;
 				cb.reset();
 				SwingUtils.invokeLater(this::updateUI);
 			}
@@ -203,12 +210,10 @@ public class ApplyPatchFrame extends JCCFrame
 		updateUI();
 	}
 
-	@SuppressWarnings({"deprecation", "removal"})
 	private void cancelThread(ActionEvent e) {
 		if (activeThread == null) { updateUI(); return; }
 
-		ThreadUtils.killThread(activeThread);
-		updateUI();
+		if (activeCB != null) activeCB.cancel();
 	}
 
 	private void initComponents() {

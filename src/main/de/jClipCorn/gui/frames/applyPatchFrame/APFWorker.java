@@ -17,6 +17,7 @@ import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.lambda.Func2to0;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
+import de.jClipCorn.util.exceptions.CancelledException;
 import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.xml.CCXMLParser;
 
@@ -54,6 +55,8 @@ public class APFWorker
 
 		for (int i = 0; i < actlist.size(); i++)
 		{
+			if (cb.isCancelled()) throw new CancelledException();
+
 			var act = actlist.get(i);
 
 			cb.stepRootAndResetSub(String.valueOf(act.Ctr), act.Commands.size() + 1);

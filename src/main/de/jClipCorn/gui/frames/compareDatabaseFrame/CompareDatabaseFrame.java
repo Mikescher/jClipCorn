@@ -13,9 +13,9 @@ import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
+import de.jClipCorn.util.exceptions.CancelledException;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
-import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.listener.DoubleProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -28,6 +28,7 @@ public class CompareDatabaseFrame extends JCCFrame
 {
 	private CompareState currState = null;
 	private Thread activeThread = null;
+	private DoubleProgressCallbackProgressBarHelper activeCB = null;
 
 	public CompareDatabaseFrame(Component owner, CCMovieList ml)
 	{
@@ -150,6 +151,7 @@ public class CompareDatabaseFrame extends JCCFrame
 		currState = null;
 
 		var cb = new DoubleProgressCallbackProgressBarHelper(progressBar1, lblProgress1, progressBar2, lblProgress2);
+		activeCB = cb;
 
 		var rulestr = edRules.getText();
 
@@ -163,6 +165,10 @@ public class CompareDatabaseFrame extends JCCFrame
 
 				SwingUtils.invokeLater(this::updateUI);
 			}
+			catch (CancelledException ignored)
+			{
+				// cancelled by user
+			}
 			catch (Throwable e)
 			{
 				DialogHelper.showDispatchError(this, "Error", e.toString()); //$NON-NLS-1$
@@ -170,6 +176,7 @@ public class CompareDatabaseFrame extends JCCFrame
 			finally
 			{
 				activeThread = null;
+				activeCB = null;
 				SwingUtils.invokeLater(this::updateUI);
 				cb.reset();
 			}
@@ -191,6 +198,7 @@ public class CompareDatabaseFrame extends JCCFrame
 	private void startCreatingPatch(ActionEvent ae)
 	{
 		var cb = new DoubleProgressCallbackProgressBarHelper(progressBar1, lblProgress1, progressBar2, lblProgress2);
+		activeCB = cb;
 		var state = currState;
 
 		if (state == null) return;
@@ -215,6 +223,10 @@ public class CompareDatabaseFrame extends JCCFrame
 			{
 				CDFWorkerPatch.createPatch(state, dir, cb, porcelain, noVideo, noCover, noRecalcMI);
 			}
+			catch (CancelledException ignored)
+			{
+				// cancelled by user
+			}
 			catch (Throwable e)
 			{
 				DialogHelper.showDispatchError(this, "Error", e.toString()); //$NON-NLS-1$
@@ -222,6 +234,7 @@ public class CompareDatabaseFrame extends JCCFrame
 			finally
 			{
 				activeThread = null;
+				activeCB = null;
 				SwingUtils.invokeLater(this::updateUI);
 				cb.reset();
 			}
@@ -231,13 +244,11 @@ public class CompareDatabaseFrame extends JCCFrame
 		updateUI();
 	}
 
-	@SuppressWarnings({"deprecation", "removal"})
 	private void cancelThread(ActionEvent ae)
 	{
 		if (activeThread == null) { updateUI(); return; }
 
-		ThreadUtils.killThread(activeThread);
-		updateUI();
+		if (activeCB != null) activeCB.cancel();
 	}
 
 	private void initComponents() {

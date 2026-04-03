@@ -25,9 +25,4 @@ public class ThreadUtils {
 		}
 	}
 
-	@SuppressWarnings({"deprecation", "removal"})
-	public static void killThread(Thread t) {
-		t.stop();
-	}
-
 }

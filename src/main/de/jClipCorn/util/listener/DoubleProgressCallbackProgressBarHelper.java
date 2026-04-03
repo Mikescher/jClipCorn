@@ -5,12 +5,15 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.SwingUtils;
 
 import javax.swing.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DoubleProgressCallbackProgressBarHelper implements DoubleProgressCallbackListener {
 	private final JProgressBar pbRoot;
 	private final JLabel lblRoot;
 	private final JProgressBar pbSub;
 	private final JLabel lblSub;
+
+	private final AtomicBoolean cancelled = new AtomicBoolean(false);
 
 	private int progressRoot;
 	private int progressSub;
@@ -128,6 +131,15 @@ public class DoubleProgressCallbackProgressBarHelper implements DoubleProgressCa
 		this.msgSub = msgSub;
 
 		update();
+	}
+
+	public void cancel() {
+		cancelled.set(true);
+	}
+
+	@Override
+	public boolean isCancelled() {
+		return cancelled.get();
 	}
 
 	private void update() {

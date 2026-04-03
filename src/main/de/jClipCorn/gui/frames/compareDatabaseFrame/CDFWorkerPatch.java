@@ -7,6 +7,7 @@ import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.features.serialization.xmlexport.impl.DatabaseXMLExporterImpl;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.CancelledException;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
@@ -51,12 +52,15 @@ public class CDFWorkerPatch
 		cb.setValueBoth(1, 0, "Movies", "");
 		ctr = exportMovies(state, datadir, root, cb, porcelain, noVideo, noCover, noRecalcMI, ctr);
 
+		if (cb.isCancelled()) throw new CancelledException();
 		cb.setValueBoth(2, 0, "Series", "");
 		ctr = exportSeries(state, datadir, root, cb, porcelain, noVideo, noCover, noRecalcMI, ctr);
 
+		if (cb.isCancelled()) throw new CancelledException();
 		cb.setValueBoth(3, 0, "Seasons", "");
 		ctr = exportSeasons(state, datadir, root, cb, porcelain, noVideo, noCover, noRecalcMI, ctr);
 
+		if (cb.isCancelled()) throw new CancelledException();
 		cb.setValueBoth(4, 0, "Episodes", "");
 		ctr = exportEpisodes(state, datadir, root, cb, porcelain, noVideo, noCover, noRecalcMI, ctr);
 
@@ -75,6 +79,7 @@ public class CDFWorkerPatch
 
 		for (var e: elements)
 		{
+			if (cb.isCancelled()) throw new CancelledException();
 			cb.stepSub(e.getLocTitle().orElse(e.getExtTitle().orElse(Str.Empty)));
 
 			if (e.getNeedsCreateNew())
@@ -325,6 +330,7 @@ public class CDFWorkerPatch
 
 		for (var e: elements)
 		{
+			if (cb.isCancelled()) throw new CancelledException();
 			cb.stepSub(e.getLocTitle().orElse(e.getExtTitle().orElse(Str.Empty)));
 
 			if (e.getNeedsCreateNew())
@@ -477,6 +483,7 @@ public class CDFWorkerPatch
 
 		for (var e: elements)
 		{
+			if (cb.isCancelled()) throw new CancelledException();
 			cb.stepSub(e.getLocTitle().orElse(e.getExtTitle().orElse(Str.Empty)));
 
 			if (e.getNeedsCreateNew())
@@ -616,6 +623,7 @@ public class CDFWorkerPatch
 
 		for (var e: elements)
 		{
+			if (cb.isCancelled()) throw new CancelledException();
 			cb.stepSub(e.getLocTitle().orElse(e.getExtTitle().orElse(Str.Empty)));
 
 			if (e.getNeedsCreateNew())

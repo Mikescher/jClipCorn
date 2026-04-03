@@ -4,6 +4,7 @@ import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.exceptions.CancelledException;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
@@ -21,6 +22,8 @@ public class CDFWorkerCompare
 
 		if (!mlExt.databaseExists()) throw new Exception("Database " + dbPath + " | " + dbName + " not found");
 
+		if (cb.isCancelled()) throw new CancelledException();
+
 		cb.setValueBoth(1, 0, "Reading", "");
 
 		mlExt.connectExternal(false);
@@ -28,12 +31,15 @@ public class CDFWorkerCompare
 		{
 			if (!Str.equals(mlLoc.getDatabaseVersion(), mlExt.getDatabaseVersion())) throw new Exception("Databases have different versions");
 
+			if (cb.isCancelled()) throw new CancelledException();
+
 			cb.setValueBoth(2, 0, "Comparing", "");
 			cb.setSubMax(mlExt.getTotalDatabaseElementCount() + mlLoc.getTotalDatabaseElementCount() + 1);
 
 			var state = new CompareState(mlLoc, mlExt, cb, ruleset);
 
 			compareAndMatchMovies(mlExt, mlLoc, state);
+			if (cb.isCancelled()) throw new CancelledException();
 			compareAndMatchSeries(mlExt, mlLoc, state);
 
 			return state;
@@ -48,6 +54,8 @@ public class CDFWorkerCompare
 	{
 		var movsLoc = mlLoc.iteratorMovies().filter(e -> !state.Ruleset.ShouldSkipLoc(e.LocalID.get())).toList();
 		var movsExt = mlExt.iteratorMovies().filter(e -> !state.Ruleset.ShouldSkipExt(e.LocalID.get())).toList();
+
+		if (state.ProgressCallback.isCancelled()) throw new CancelledException();
 
 		// Force matched by Ruleset
 		for (var mloc : new ArrayList<>(movsLoc))
@@ -163,6 +171,8 @@ public class CDFWorkerCompare
 	{
 		var serLoc = mlLoc.iteratorSeries().filter(e -> !state.Ruleset.ShouldSkipLoc(e.LocalID.get())).toList();
 		var serExt = mlExt.iteratorSeries().filter(e -> !state.Ruleset.ShouldSkipExt(e.LocalID.get())).toList();
+
+		if (state.ProgressCallback.isCancelled()) throw new CancelledException();
 
 		// Force matched by Ruleset
 		for (var sloc : new ArrayList<>(serLoc))

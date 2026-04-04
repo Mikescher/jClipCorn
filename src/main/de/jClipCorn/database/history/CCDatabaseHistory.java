@@ -209,6 +209,7 @@ public class CCDatabaseHistory {
 		}
 
 		_db.writeInformationToDB(DatabaseStructure.INFOKEY_HISTORY, "1"); //$NON-NLS-1$
+		_db.getHistoryDatabase().writeInfo(DatabaseStructure.INFOKEY_HISTORY, "1"); //$NON-NLS-1$
 	}
 
 	public void disableTrigger() throws SQLException {
@@ -217,6 +218,7 @@ public class CCDatabaseHistory {
 		List<Tuple<String, String>> triggerStatements = createTriggerStatements();
 
 		_db.writeInformationToDB(DatabaseStructure.INFOKEY_HISTORY, "0"); //$NON-NLS-1$
+		_db.getHistoryDatabase().writeInfo(DatabaseStructure.INFOKEY_HISTORY, "0"); //$NON-NLS-1$
 
 		for (Tuple<String, String> trigger : triggerStatements) {
 			Tuple<String, String> dbMatch = CCStreams.iterate(triggerDB).firstOrNull(p -> p.Item1.equalsIgnoreCase(trigger.Item1));

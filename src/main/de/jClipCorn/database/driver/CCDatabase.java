@@ -10,6 +10,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCHexColor;
 import de.jClipCorn.database.databaseElement.columnTypes.CCPathList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCStringList;
 import de.jClipCorn.database.history.CCDatabaseHistory;
+import de.jClipCorn.database.history.CCHistoryDatabase;
 import de.jClipCorn.database.migration.DatabaseMigrator;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
@@ -46,6 +47,7 @@ public class CCDatabase {
 	private final ICoverCache coverCache;
 	private final Statements stmts;
 	private final CCDatabaseHistory _history;
+	private final CCHistoryDatabase _historyDb;
 	private final CCProperties ccproperties;
 
 	private final boolean _readonly;
@@ -82,7 +84,10 @@ public class CCDatabase {
 		}
 		
 		_history = new CCDatabaseHistory(this);
-		
+		_historyDb = (driver == CCDatabaseDriver.SQLITE)
+				? CCHistoryDatabase.createFileBased(databaseDirectory, databaseName, readonly)
+				: CCHistoryDatabase.createInMemory();
+
 		upgrader = new DatabaseMigrator(ccprops, db, databaseDirectory, databaseName, readonly);
 
 		stmts = new Statements();
@@ -152,22 +157,27 @@ public class CCDatabase {
 	private boolean driverConnect() {
 		try {
 			if (! db.databaseExists(databaseDirectory, databaseName)) return false;
-			
+
 			db.establishDBConnection(databaseDirectory, databaseName);
-			
+
 			upgrader.tryUpgrade();
 
 			stmts.initialize(this);
 
 			coverCache.init();
 
+			if (!_historyDb.tryconnect(this)) {
+				CCLog.addError("Failed to connect history database"); //$NON-NLS-1$
+				return false;
+			}
+
 			return true;
 		} catch (SQLException e) {
 			db.setLastError(e);
-			
+
 			Exception next = e.getNextException();
 			if (next != null) db.setLastError(e);
-			
+
 			return false;
 		} catch (Exception e) {
 			db.setLastError(e);
@@ -197,12 +207,24 @@ public class CCDatabase {
 			writeInformationToDB(DatabaseStructure.INFOKEY_LASTID,      "0"); //$NON-NLS-1$
 			writeInformationToDB(DatabaseStructure.INFOKEY_LASTCOVERID, "-1"); //$NON-NLS-1$
 			writeInformationToDB(DatabaseStructure.INFOKEY_DUUID,       UUID.randomUUID().toString());
+
+			if (!_historyDb.tryconnect(this)) {
+				CCLog.addError("Failed to create history database"); //$NON-NLS-1$
+			}
 		}
 
 		return res;
 	}
 	
 	public void disconnect(boolean cleanshutdown) {
+		try {
+			if (_historyDb.isConnected()) {
+				_historyDb.disconnect();
+			}
+		} catch (Exception e) {
+			CCLog.addError("Could not disconnect from history database", e); //$NON-NLS-1$
+		}
+
 		try {
 			if (db.isConnected()) {
 				stmts.shutdown();
@@ -1401,13 +1423,13 @@ public class CCDatabase {
 		return _history;
 	}
 
+	public CCHistoryDatabase getHistoryDatabase() {
+		return _historyDb;
+	}
+
 	public int getHistoryCount() {
-		try {
-			return stmts.countHistory.executeQueryInt(this);
-		} catch (SQLException e) {
-			CCLog.addError(e);
-			return 0;
-		}
+		syncHistoryToHistoryDb();
+		return _historyDb.getHistoryCount();
 	}
 
 	public List<Tuple<String, String>> listTrigger() throws SQLException {
@@ -1427,57 +1449,76 @@ public class CCDatabase {
 	}
 
 	public List<String[]> queryHistory(CCDateTime start, Opt<Integer> limit, String idfilter) {
+		syncHistoryToHistoryDb();
+		return _historyDb.queryHistory(start, limit, idfilter);
+	}
+
+	@SuppressWarnings("nls")
+	public synchronized void syncHistoryToHistoryDb() {
+		if (!_historyDb.isConnected()) return;
+		if (!db.isConnected()) return;
+		if (_readonly) return;
+
 		try {
-			List<String[]> result = new ArrayList<>();
+			// Step 1: Read all current rows with their rowids from main DB
+			List<Object[]> rows = db.querySQL(
+					"SELECT rowid, [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM HISTORY", 8);
 
-			CCSQLResultSet rs;
-			if (idfilter != null) {
-				if (start != null) {
-					CCSQLStatement stmt = stmts.queryHistoryStatementFilteredLimited;
-					stmt.clearParameters();
-					stmt.setStr(COL_HISTORY_ID, idfilter);
-					stmt.setStr(COL_HISTORY_DATE, start.toUTC(TimeZone.getDefault()).toStringSQL());
-					rs = stmt.executeQuery(this);
-				} else {
-					CCSQLStatement stmt = stmts.queryHistoryStatementFiltered;
-					stmt.clearParameters();
-					stmt.setStr(COL_HISTORY_ID, idfilter);
-					rs = stmt.executeQuery(this);
-				}
-			} else {
-				if (start != null) {
-					CCSQLStatement stmt = stmts.queryHistoryStatementLimited;
-					stmt.clearParameters();
-					stmt.setStr(COL_HISTORY_DATE, start.toUTC(TimeZone.getDefault()).toStringSQL());
-					rs = stmt.executeQuery(this);
-				} else {
-					CCSQLStatement stmt = stmts.queryHistoryStatement;
-					stmt.clearParameters();
-					rs = stmt.executeQuery(this);
-				}
+			if (rows.isEmpty()) {
+				CCLog.addInformation("Skipping sync of history - nothing to do");
+				return;
 			}
 
-			while (rs.next()) {
-				String[] arr = new String[7];
-				arr[0] = rs.getString(COL_HISTORY_TABLE);
-				arr[1] = rs.getString(COL_HISTORY_ID);
-				arr[2] = rs.getString(COL_HISTORY_DATE);
-				arr[3] = rs.getString(COL_HISTORY_ACTION);
-				arr[4] = rs.getString(COL_HISTORY_FIELD);
-				arr[5] = rs.getNullableString(COL_HISTORY_OLD);
-				arr[6] = rs.getNullableString(COL_HISTORY_NEW);
-				result.add(arr);
+			CCLog.addInformation("Starting sync of " + rows.size() + " history rows to history DB");
 
-				if (limit.isPresent() && result.size() >= limit.get()) break;
+			// Step 2: Insert into history DB (in a transaction)
+			_historyDb.beginTransaction();
+			try {
+				for (Object[] row : rows) {
+					try {
+					_historyDb.insertHistoryRow(
+							(String) row[1],
+							(String) row[2],
+							(String) row[3],
+							(String) row[4],
+							(String) row[5],
+							row[6],
+							row[7]);
+					} catch (Exception ie) {
+						throw ie;
+					}
+				}
+				_historyDb.commitTransaction();
+			} catch (Exception e) {
+				_historyDb.rollbackTransaction();
+				CCLog.addError("Failed to insert history rows into history DB, rows remain in main DB", e);
+				return;
 			}
 
-			rs.close();
+			// Step 3: Delete only the rows we copied, by rowid (batch in chunks of 500)
+			List<Long> rowids = new ArrayList<>();
+			for (Object[] row : rows) {
+				Object rid = row[0];
+				if (rid instanceof Long l)    rowids.add(l);
+				else if (rid instanceof Integer i) rowids.add((long) i);
+				else                          rowids.add(Long.parseLong(rid.toString()));
+			}
 
-			return result;
+			for (int i = 0; i < rowids.size(); i += 500) {
+				int end = Math.min(i + 500, rowids.size());
+				StringBuilder deleteSQL = new StringBuilder("DELETE FROM HISTORY WHERE rowid IN (");
+				for (int j = i; j < end; j++) {
+					if (j > i) deleteSQL.append(",");
+					deleteSQL.append(rowids.get(j));
+				}
+				deleteSQL.append(")");
+				db.executeSQLThrow(deleteSQL.toString());
+			}
 
-		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(e);
-			return new ArrayList<>();
+			CCLog.addInformation("Synced " + rows.size() + " history rows to history DB");
+
+		} catch (SQLException e) {
+			CCLog.addError("Failed to sync history to history DB", e);
 		}
 	}
 

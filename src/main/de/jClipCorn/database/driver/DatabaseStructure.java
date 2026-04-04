@@ -306,6 +306,8 @@ public class DatabaseStructure
 	public final static CCSQLKVKey INFOKEY_LASTID       = new CCSQLKVKey("LAST_ID");                                //$NON-NLS-1$
 	public final static CCSQLKVKey INFOKEY_LASTCOVERID  = new CCSQLKVKey("LAST_COVERID");                           //$NON-NLS-1$
 
+	public final static CCSQLKVKey INFOKEY_VERSION_MAINDB = new CCSQLKVKey("VERSION_MAINDB");                       //$NON-NLS-1$
+
 	public final static CCSQLKVKey[] INFOKEYS = new CCSQLKVKey[]
 	{
 		INFOKEY_DBVERSION, INFOKEY_DATE, INFOKEY_TIME, INFOKEY_USERNAME, INFOKEY_DUUID, INFOKEY_HISTORY, INFOKEY_LASTID, INFOKEY_LASTCOVERID

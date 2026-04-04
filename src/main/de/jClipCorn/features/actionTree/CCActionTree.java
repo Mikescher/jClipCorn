@@ -184,6 +184,7 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 				add(maintenance, "ResetViewed",        null, "ClipMenuBar.Maintenance.ResetViewed",        Resources.ICN_MENUBAR_RESETVIEWED,     true, this::onClickMaintenanceResetViewed);
 				add(maintenance, "RegenerateDUUID",    null, "ClipMenuBar.Maintenance.RegenerateDUUID",    Resources.ICN_MENUBAR_REGENERATEDUUID, true, this::onClickMaintenanceRegenerateDUUID);
 				add(maintenance, "AutoFindReferences", null, "ClipMenuBar.Maintenance.AutoFindReferences", Resources.ICN_MENUBAR_AUTOFINDREF,     true, this::onClickMaintenanceAutoFindReferences);
+				add(maintenance, "HistorySync",        null, "ClipMenuBar.Maintenance.HistorySync",        Resources.ICN_MENUBAR_DATABASEHISTORY, true, this::onClickMaintenanceHistorySync);
 			}
 			
 			CCActionElement help = addMaster("Help", null, "ClipMenuBar.Help", null);
@@ -471,7 +472,11 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 	private void onClickMaintenanceAutoFindReferences(CCTreeActionEvent e) {
 		new AutoFindReferenceFrame(e.SwingOwner, movielist).setVisible(true);
 	}
-	
+
+	private void onClickMaintenanceHistorySync(CCTreeActionEvent e) {
+		movielist.syncHistoryToHistoryDb();
+	}
+
 	private void onClickExtrasRandomMovie(CCTreeActionEvent e) {
 		if (movielist.getMovieCount() > 0) new RandomMovieFrame(e.SwingOwner, movielist).setVisible(true);
 	}

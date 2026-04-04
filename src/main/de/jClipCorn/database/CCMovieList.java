@@ -196,6 +196,14 @@ public class CCMovieList implements ICCPropertySource {
 			Globals.TIMINGS.stop(Globals.TIMING_STARTUP_TOTAL);
 
 			mf.endBlockingIntermediate();
+
+			// Schedule delayed background sync of history from main DB to history DB
+			new Thread(() ->
+			{
+				try { Thread.sleep(15_000); } catch (InterruptedException e) { return; } //$NON-NLS-1$
+				try { database.syncHistoryToHistoryDb(); } catch (Exception e) { CCLog.addError(e); } //$NON-NLS-1$
+			}, "THREAD_HISTORY_SYNC").start(); //$NON-NLS-1$
+
 		}, "THREAD_LOAD_DATABASE").start(); //$NON-NLS-1$
 	}
 	
@@ -1122,6 +1130,10 @@ public class CCMovieList implements ICCPropertySource {
 	public void resetLocalDUUID() {
 		database.resetInformation_DUUID();
 		_cache.bust();
+	}
+
+	public void syncHistoryToHistoryDb() {
+		database.syncHistoryToHistoryDb();
 	}
 	
 	public boolean groupExists(String name) {

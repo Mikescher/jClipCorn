@@ -80,6 +80,9 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 		errs.remove(e5);
 		errs.remove(e6);
 
+		// Test database predates the checksum feature - all entries with files will have missing checksums
+		errs.removeIf(p -> p.isTypeOf(DatabaseErrorType.ERROR_CHECKSUM_MISSING));
+
 		assertEmptyErrors(errs);
 	}
 

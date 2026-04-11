@@ -1,6 +1,7 @@
 package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.util.lambda.Func1to0WithGenericException;
 import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.database.databaseElement.caches.SeriesCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
@@ -97,8 +98,8 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		_cache.bust();
 	}
 
-	public CCSeason createNewEmptySeason() {
-		return movielist.createNewEmptySeason(this);
+	public CCSeason createNewSeason(Func1to0WithGenericException<CCSeason, Exception> initFunc) throws Exception {
+		return movielist.createNewSeason(this, initFunc);
 	}
 	
 	public boolean isViewed() { // All parts viewed

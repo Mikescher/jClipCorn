@@ -102,7 +102,7 @@ public class ImportElementsFrame extends JCCFrame {
 		{
 			try {
 				onAddAll();
-			} catch (CCFormatException | CCXMLException | SerializationException e) {
+			} catch (Exception e) {
 				DialogHelper.showDispatchError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$ //$NON-NLS-2$
 				CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
 			}
@@ -209,7 +209,7 @@ public class ImportElementsFrame extends JCCFrame {
 		{
 			try {
 				onAdd();
-			} catch (CCFormatException | CCXMLException | SerializationException e) {
+			} catch (Exception e) {
 				DialogHelper.showDispatchError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$ //$NON-NLS-2$
 				CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
 			}
@@ -301,7 +301,7 @@ public class ImportElementsFrame extends JCCFrame {
 		}
 	}
 	
-	private void onAdd() throws CCFormatException, CCXMLException, SerializationException {
+	private void onAdd() throws Exception {
 		if (lbContent.getSelectedValue() == null) {
 			return;
 		}
@@ -315,15 +315,13 @@ public class ImportElementsFrame extends JCCFrame {
 		}
 	}
 		
-	private void onAddMovie(CCXMLElement value, int index) throws CCFormatException, CCXMLException, SerializationException {
-		CCMovie mov = movielist.createNewEmptyMovie();
-		DatabaseXMLImporter.parseSingleMovie(mov, value, f->null, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false)));
+	private void onAddMovie(CCXMLElement value, int index) throws Exception {
+		movielist.createNewMovie(mov -> DatabaseXMLImporter.parseSingleMovie(mov, value, f->null, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false))));
 		listModel.remove(index);
 	}
-	
-	private void onAddSeries(CCXMLElement value, int index) throws CCFormatException, CCXMLException, SerializationException {
-		CCSeries ser = movielist.createNewEmptySeries();
-		DatabaseXMLImporter.parseSingleSeries(ser, value, f->null, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false)));
+
+	private void onAddSeries(CCXMLElement value, int index) throws Exception {
+		movielist.createNewSeries(ser -> DatabaseXMLImporter.parseSingleSeries(ser, value, f->null, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false))));
 		listModel.remove(index);
 	}
 	
@@ -344,7 +342,7 @@ public class ImportElementsFrame extends JCCFrame {
 			CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
 			tmpMov.setDefaultValues(false);
 			DatabaseXMLImporter.parseSingleMovie(tmpMov, value, f->null, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), false, true)));
-		} catch (CCFormatException | SerializationException | CCXMLException e) {
+		} catch (Exception e) {
 			CCLog.addError(e);
 			return;
 		}
@@ -355,7 +353,7 @@ public class ImportElementsFrame extends JCCFrame {
 	}
 
 	@SuppressWarnings("nls")
-	private void onAddAll() throws CCFormatException, CCXMLException, SerializationException {
+	private void onAddAll() throws Exception {
 		for (int i = listModel.size()-1; i >= 0; i--) {
 			CCXMLElement value = listModel.get(i);
 			

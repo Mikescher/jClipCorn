@@ -1,6 +1,8 @@
 package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.util.lambda.Func1to0WithGenericException;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
 import de.jClipCorn.database.databaseElement.caches.SeasonCache;
@@ -100,11 +102,13 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 
 	public void setDefaultValues(boolean updateDB) {
-		beginUpdating();
+		try {
+			beginUpdating();
 
-		for (IEProperty prop : getProperties()) if (!prop.isReadonly()) prop.resetToDefault();
-
-		if (updateDB) endUpdating(); else abortUpdating();
+			for (IEProperty prop : getProperties()) if (!prop.isReadonly()) prop.resetToDefault();
+		} finally {
+			if (updateDB) endUpdating(); else abortUpdating();
+		}
 	}
 
 	public boolean isDirty() {
@@ -121,19 +125,20 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 
 	public void beginUpdating() {
+		if (isUpdating) CCLog.addUndefinied("Cannot call beginUpdating on an object already being updated (will result in a premature+duplicate db-write!)"); //$NON-NLS-1$
 		isUpdating = true;
 	}
-	
+
 	public void endUpdating() {
 		isUpdating = false;
-		
+
 		updateDB();
 	}
-	
+
 	public void abortUpdating() {
 		isUpdating = false;
 	}
-	
+
 	public boolean updateDB() {
 		if (! isUpdating) {
 			return owner.getMovieList().update(this);
@@ -424,8 +429,8 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		});
 	}
 	
-	public CCEpisode createNewEmptyEpisode() {
-		return getMovieList().createNewEmptyEpisode(this);
+	public CCEpisode createNewEpisode(Func1to0WithGenericException<CCEpisode, Exception> initFunc) throws Exception {
+		return getMovieList().createNewEpisode(this, initFunc);
 	}
 	
 	public int getNewUnusedEpisodeNumber() {

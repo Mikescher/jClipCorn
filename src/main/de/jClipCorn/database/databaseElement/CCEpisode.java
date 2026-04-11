@@ -222,11 +222,14 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	public void setDefaultValues(boolean updateDB) {
-		beginUpdating();
+		try {
+			beginUpdating();
 
-		for (IEProperty prop : getProperties()) if (!prop.isReadonly()) prop.resetToDefault();
+			for (IEProperty prop : getProperties()) if (!prop.isReadonly()) prop.resetToDefault();
+		} finally {
+			if (updateDB) endUpdating(); else abortUpdating();
+		}
 
-		if (updateDB) endUpdating(); else abortUpdating();
 	}
 
 	public boolean isDirty() {
@@ -243,15 +246,16 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	public void beginUpdating() {
+		if (isUpdating) CCLog.addUndefinied("Cannot call beginUpdating on an object already being updated (will result in a premature+duplicate db-write!)"); //$NON-NLS-1$
 		isUpdating = true;
 	}
-	
+
 	public void endUpdating() {
 		isUpdating = false;
-		
+
 		updateDB();
 	}
-	
+
 	public void abortUpdating() {
 		isUpdating = false;
 	}

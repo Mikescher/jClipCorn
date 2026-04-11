@@ -347,13 +347,14 @@ public class TestCustomCharFilter extends ClipCornBaseTest {
 	@Test
 	@Parameters(method = "testMoviesDataSupplier")
 	@TestCaseName("testMovies{0}")
-	public void testMovies(String _f, TestMoviesData d) {
+	public void testMovies(String _f, TestMoviesData d) throws Exception {
 
 		var ml = createEmptyDB();
 
-		var mov = ml.createNewEmptyMovie();
-		mov.title().set(d.Title);
-		mov.zyklus().set(d.Zyklus, d.ZyklusNumber);
+		var mov = ml.createNewMovie(m -> {
+			m.title().set(d.Title);
+			m.zyklus().set(d.Zyklus, d.ZyklusNumber);
+		});
 
 		var dcs = new String[]{};
 		if (!d.Charset.isEmpty()) {
@@ -381,12 +382,13 @@ public class TestCustomCharFilter extends ClipCornBaseTest {
 	@Test
 	@Parameters(method = "testSeriesDataSupplier")
 	@TestCaseName("testSeries{0}")
-	public void testSeries(String _f, TestSeriesData d, ElemFieldMatchType efmt) {
+	public void testSeries(String _f, TestSeriesData d, ElemFieldMatchType efmt) throws Exception {
 
 		var ml = createEmptyDB();
 
-		var ser = ml.createNewEmptySeries();
-		ser.title().set(d.Title);
+		var ser = ml.createNewSeries(s -> {
+			s.title().set(d.Title);
+		});
 
 		var dcs = new String[]{};
 		if (!d.Charset.isEmpty()) {

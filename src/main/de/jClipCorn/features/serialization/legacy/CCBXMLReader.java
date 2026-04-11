@@ -1,8 +1,6 @@
 package de.jClipCorn.features.serialization.legacy;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCEpisode;
-import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
@@ -97,124 +95,128 @@ public class CCBXMLReader {
 	}
 	
 	private void createMovie(Element e) throws DataConversionException, CCFormatException {
-		CCMovie newMov = movielist.createNewEmptyMovie();
-		newMov.beginUpdating();
-		
-		newMov.Title.set(e.getChildText("filmtitel"));
-		newMov.Zyklus.setTitle(getZyklusName(e.getChildText("zyklus")));
-		newMov.Zyklus.setNumber(getZyklusNumber(e.getChildText("zyklus")));
-		if (e.getChildText("gesehen").equals("1")) newMov.ViewedHistory.add(CCDateTime.getUnspecified());
-		newMov.Language.set(e.getChild("sprache").getAttribute("dec").getIntValue());
-		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre00").getAttribute("dec").getIntValue()), 0);
-		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre01").getAttribute("dec").getIntValue()), 1);
-		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre02").getAttribute("dec").getIntValue()), 2);
-		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre03").getAttribute("dec").getIntValue()), 3);
-		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre04").getAttribute("dec").getIntValue()), 4);
-		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre05").getAttribute("dec").getIntValue()), 5);
-		newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
-		newMov.Length.set(Integer.parseInt(e.getChildText("länge")));
-		newMov.AddDate.set(CCDate.deserialize(e.getChildText("adddate")));
-		newMov.OnlineScore.set(CCOnlineScore.create(Short.parseShort(e.getChildText("imdbscore")), (short)10));
-		newMov.FSK.set(e.getChild("usk").getAttribute("dec").getIntValue());
-		newMov.Format.set(e.getChild("format").getAttribute("dec").getIntValue());
-		newMov.Year.set(Integer.parseInt(e.getChildText("jahr")));
-		newMov.FileSize.set(e.getChild("größe").getAttribute("dec").getLongValue() * 1024);
-		newMov.Parts.set(0, CCPath.create(e.getChildText("pathpart1")));
-		newMov.Parts.set(1, CCPath.create(e.getChildText("pathpart2")));
-		//String cvrval = e.getChildText("cover");
-		//newMov.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
-		
-		final CCMovie finmov = newMov;
 		try {
-			SwingUtils.invokeAndWait(() -> finmov.endUpdating());
+			SwingUtils.invokeAndWait(() -> {
+				try {
+					movielist.createNewMovie(newMov -> {
+						newMov.Title.set(e.getChildText("filmtitel"));
+						newMov.Zyklus.setTitle(getZyklusName(e.getChildText("zyklus")));
+						newMov.Zyklus.setNumber(getZyklusNumber(e.getChildText("zyklus")));
+						if (e.getChildText("gesehen").equals("1")) newMov.ViewedHistory.add(CCDateTime.getUnspecified());
+						newMov.Language.set(e.getChild("sprache").getAttribute("dec").getIntValue());
+						newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre00").getAttribute("dec").getIntValue()), 0);
+						newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre01").getAttribute("dec").getIntValue()), 1);
+						newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre02").getAttribute("dec").getIntValue()), 2);
+						newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre03").getAttribute("dec").getIntValue()), 3);
+						newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre04").getAttribute("dec").getIntValue()), 4);
+						newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre05").getAttribute("dec").getIntValue()), 5);
+						newMov.Genres.set(translateGenre(e.getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
+						newMov.Length.set(Integer.parseInt(e.getChildText("länge")));
+						newMov.AddDate.set(CCDate.deserialize(e.getChildText("adddate")));
+						newMov.OnlineScore.set(CCOnlineScore.create(Short.parseShort(e.getChildText("imdbscore")), (short)10));
+						newMov.FSK.set(e.getChild("usk").getAttribute("dec").getIntValue());
+						newMov.Format.set(e.getChild("format").getAttribute("dec").getIntValue());
+						newMov.Year.set(Integer.parseInt(e.getChildText("jahr")));
+						newMov.FileSize.set(e.getChild("größe").getAttribute("dec").getLongValue() * 1024);
+						newMov.Parts.set(0, CCPath.create(e.getChildText("pathpart1")));
+						newMov.Parts.set(1, CCPath.create(e.getChildText("pathpart2")));
+						//String cvrval = e.getChildText("cover");
+						//newMov.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
+					});
+				} catch (Exception ex) {
+					CCLog.addError(ex);
+				}
+			});
 		} catch (InvocationTargetException | InterruptedException e1) {
 			CCLog.addError(e1);
 		}
 	}
 	
 	private void createSeries(Element e) throws DataConversionException, CCFormatException {
-		CCSeries newSer = movielist.createNewEmptySeries();
-		newSer.beginUpdating();
-
 		CCDBLanguage lang = CCDBLanguage.getWrapper().findOrException(e.getChild("info").getChild("sprache").getAttribute("dec").getIntValue());
 
-		newSer.Title.set(e.getChild("info").getChildText("serientitel"));
-		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre00").getAttribute("dec").getIntValue()), 0);
-		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre01").getAttribute("dec").getIntValue()), 1);
-		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre02").getAttribute("dec").getIntValue()), 2);
-		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre03").getAttribute("dec").getIntValue()), 3);
-		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre04").getAttribute("dec").getIntValue()), 4);
-		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre05").getAttribute("dec").getIntValue()), 5);
-		newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
-		newSer.OnlineScore.set(CCOnlineScore.create(Short.parseShort(e.getChild("info").getChildText("imdbscore")), (short)10));
-		newSer.FSK.set(e.getChild("info").getChild("usk").getAttribute("dec").getIntValue());
-		//String cvrval = e.getChild("info").getChildText("cover");
-		//newSer.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
-		
-		for (Iterator<Element> itseries = e.getChildren().iterator(); itseries.hasNext();) {
-			Element eseries = itseries.next();
-			if (eseries.getName().equals("season")) {
-				createSeason(newSer, eseries, lang);
-			}
-		}
-		
-		final CCSeries finser = newSer;
+		final CCSeries[] serRef = new CCSeries[1];
 		try {
-			SwingUtils.invokeAndWait(() -> finser.endUpdating());
+			SwingUtils.invokeAndWait(() -> {
+				try {
+					serRef[0] = movielist.createNewSeries(newSer -> {
+						newSer.Title.set(e.getChild("info").getChildText("serientitel"));
+						newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre00").getAttribute("dec").getIntValue()), 0);
+						newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre01").getAttribute("dec").getIntValue()), 1);
+						newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre02").getAttribute("dec").getIntValue()), 2);
+						newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre03").getAttribute("dec").getIntValue()), 3);
+						newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre04").getAttribute("dec").getIntValue()), 4);
+						newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre05").getAttribute("dec").getIntValue()), 5);
+						newSer.Genres.set(translateGenre(e.getChild("info").getChild("genre").getChild("genre06").getAttribute("dec").getIntValue()), 6);
+						newSer.OnlineScore.set(CCOnlineScore.create(Short.parseShort(e.getChild("info").getChildText("imdbscore")), (short)10));
+						newSer.FSK.set(e.getChild("info").getChild("usk").getAttribute("dec").getIntValue());
+						//String cvrval = e.getChild("info").getChildText("cover");
+						//newSer.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
+					});
+				} catch (Exception ex) {
+					CCLog.addError(ex);
+				}
+			});
 		} catch (InvocationTargetException | InterruptedException e1) {
 			CCLog.addError(e1);
+		}
+
+		if (serRef[0] != null) {
+			for (Iterator<Element> itseries = e.getChildren().iterator(); itseries.hasNext();) {
+				Element eseries = itseries.next();
+				if (eseries.getName().equals("season")) {
+					createSeason(serRef[0], eseries, lang);
+				}
+			}
 		}
 	}
 	
 	private void createSeason(CCSeries series, Element owner, CCDBLanguage lang) throws DataConversionException, CCFormatException {
-		CCSeason newSeas = series.createNewEmptySeason();
-		
-		newSeas.beginUpdating();
-		
-		newSeas.Title.set(owner.getChild("info").getChildText("staffeltitel"));
-		newSeas.Year.set(Integer.parseInt(owner.getChild("info").getChildText("jahr")));
-		//String cvrval = owner.getChild("info").getChildText("cover");
-		//newSeas.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
-		
-		for (Iterator<Element> itseason = owner.getChildren().iterator(); itseason.hasNext();) {
-			Element eseason = itseason.next();
-			if (eseason.getName().equals("episode")) {
-				createEpisode(newSeas, eseason, lang);
-			}
-		}
-		
-		final CCSeason finseas = newSeas;
+		final CCSeason[] seaRef = new CCSeason[1];
 		try {
-			SwingUtils.invokeAndWait(finseas::endUpdating);
+			SwingUtils.invokeAndWait(() -> {
+				try {
+					seaRef[0] = series.createNewSeason(newSeas -> {
+						newSeas.Title.set(owner.getChild("info").getChildText("staffeltitel"));
+						newSeas.Year.set(Integer.parseInt(owner.getChild("info").getChildText("jahr")));
+						//String cvrval = owner.getChild("info").getChildText("cover");
+						//newSeas.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
+					});
+				} catch (Exception ex) {
+					CCLog.addError(ex);
+				}
+			});
 		} catch (InvocationTargetException | InterruptedException e) {
 			CCLog.addError(e);
+		}
+
+		if (seaRef[0] != null) {
+			for (Iterator<Element> itseason = owner.getChildren().iterator(); itseason.hasNext();) {
+				Element eseason = itseason.next();
+				if (eseason.getName().equals("episode")) {
+					createEpisode(seaRef[0], eseason, lang);
+				}
+			}
 		}
 	}
 	
 	private void createEpisode(CCSeason season, Element owner, CCDBLanguage lang) throws DataConversionException, CCFormatException {
-		CCEpisode newEp = season.createNewEmptyEpisode();
-		
-		newEp.beginUpdating();
-		
-		newEp.EpisodeNumber.set(owner.getAttribute("number").getIntValue());
-		newEp.Title.set(owner.getChildText("filmtitel"));
-		if (owner.getChildText("gesehen").equals("1")) newEp.addToViewedHistory(CCDateTime.getUnspecified());
-		newEp.Length.set(Integer.parseInt(owner.getChildText("länge")));
-		newEp.Format.set(owner.getChild("format").getAttribute("dec").getIntValue());
-		newEp.FileSize.set(owner.getChild("größe").getAttribute("dec").getLongValue() * 1024);
-		newEp.Part.set(CCPath.create(owner.getChildText("pathpart1")));
-		newEp.AddDate.set(CCDate.deserialize(owner.getChildText("adddate")));
-		newEp.Language.set(CCDBLanguageSet.single(lang));
-		
-		final CCEpisode finep = newEp;
 		try {
-			SwingUtils.invokeAndWait(() -> 
-			{
+			SwingUtils.invokeAndWait(() -> {
 				try {
-					finep.endUpdating();
-				} catch (Exception e) {
-					CCLog.addError(e);
-					throw e;
+					season.createNewEpisode(newEp -> {
+						newEp.EpisodeNumber.set(owner.getAttribute("number").getIntValue());
+						newEp.Title.set(owner.getChildText("filmtitel"));
+						if (owner.getChildText("gesehen").equals("1")) newEp.addToViewedHistory(CCDateTime.getUnspecified());
+						newEp.Length.set(Integer.parseInt(owner.getChildText("länge")));
+						newEp.Format.set(owner.getChild("format").getAttribute("dec").getIntValue());
+						newEp.FileSize.set(owner.getChild("größe").getAttribute("dec").getLongValue() * 1024);
+						newEp.Part.set(CCPath.create(owner.getChildText("pathpart1")));
+						newEp.AddDate.set(CCDate.deserialize(owner.getChildText("adddate")));
+						newEp.Language.set(CCDBLanguageSet.single(lang));
+					});
+				} catch (Exception ex) {
+					CCLog.addError(ex);
 				}
 			});
 		} catch (InvocationTargetException | InterruptedException e) {

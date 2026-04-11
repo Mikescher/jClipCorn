@@ -45,6 +45,7 @@ import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.http.WebConnectionLayer;
 import de.jClipCorn.util.lambda.Func0to0;
+import de.jClipCorn.util.lambda.Func1to0WithGenericException;
 import de.jClipCorn.util.lambda.Func4to0;
 import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
 import de.jClipCorn.util.stream.CCStream;
@@ -362,44 +363,71 @@ public class CCMovieList implements ICCPropertySource {
 		return null;
 	}
 
-	public CCMovie createNewEmptyMovie() {
+	public CCMovie createNewMovie(Func1to0WithGenericException<CCMovie, Exception> initFunc) throws Exception {
 		CCMovie mov = database.createNewEmptyMovie(this);
 		list.add(mov);
 		_cache.bust();
 
-		fireOnAddDatabaseElement(mov);
+		try
+		{
+			mov.beginUpdating();
+			initFunc.invoke(mov);
+			fireOnAddDatabaseElement(mov);
+		} finally {
+			mov.endUpdating();
+		}
+
 
 		return mov;
 	}
 
-	public CCSeries createNewEmptySeries() {
+	public CCSeries createNewSeries(Func1to0WithGenericException<CCSeries, Exception> initFunc) throws Exception {
 		CCSeries s = database.createNewEmptySeries(this);
 		list.add(s);
 		_cache.bust();
 
-		fireOnAddDatabaseElement(s);
+		try
+		{
+			s.beginUpdating();
+			initFunc.invoke(s);
+			fireOnAddDatabaseElement(s);
+		} finally {
+			s.endUpdating();
+		}
+
 
 		return s;
 	}
 
-	public CCSeason createNewEmptySeason(CCSeries ser) {
+	public CCSeason createNewSeason(CCSeries ser, Func1to0WithGenericException<CCSeason, Exception> initFunc) throws Exception {
 		CCSeason seas = database.createNewEmptySeason(ser);
 		ser.directlyInsertSeason(seas);
 
-		fireOnChangeDatabaseElement(ser, ser, new String[]{"@SEASONS"});  //$NON-NLS-1$
-
-		fireOnAddSeason(seas);
+		try {
+			seas.beginUpdating();
+			initFunc.invoke(seas);
+			fireOnChangeDatabaseElement(ser, ser, new String[]{"@SEASONS"});  //$NON-NLS-1$
+			fireOnAddSeason(seas);
+		} finally {
+			seas.endUpdating();
+		}
 
 		return seas;
 	}
 
-	public CCEpisode createNewEmptyEpisode(CCSeason sea) {
+	public CCEpisode createNewEpisode(CCSeason sea, Func1to0WithGenericException<CCEpisode, Exception> initFunc) throws Exception {
 		CCEpisode epi = database.createNewEmptyEpisode(sea);
 		sea.directlyInsertEpisode(epi);
 
-		fireOnChangeDatabaseElement(sea.getSeries(), sea, new String[]{"@EPISODES"});  //$NON-NLS-1$
-
-		fireOnAddEpisode(epi);
+		try
+		{
+			epi.beginUpdating();
+			initFunc.invoke(epi);
+			fireOnChangeDatabaseElement(sea.getSeries(), sea, new String[]{"@EPISODES"});  //$NON-NLS-1$
+			fireOnAddEpisode(epi);
+		} finally {
+			epi.endUpdating();
+		}
 
 		return epi;
 	}
@@ -537,10 +565,13 @@ public class CCMovieList implements ICCPropertySource {
 
 		if (database.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
-			
-			el.beginUpdating();
-			database.updateMovieFromDatabase(el);
-			el.abortUpdating();
+
+			try {
+				el.beginUpdating();
+				database.updateMovieFromDatabase(el);
+			} finally {
+				el.abortUpdating();
+			}
 			
 			return true;
 		}
@@ -557,10 +588,13 @@ public class CCMovieList implements ICCPropertySource {
 
 		if (database.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
-						
-			ep.beginUpdating();
-			database.updateEpisodeFromDatabase(ep);
-			ep.abortUpdating();
+
+			try {
+				ep.beginUpdating();
+				database.updateEpisodeFromDatabase(ep);
+			} finally {
+				ep.abortUpdating();
+			}
 			
 			return true;
 		}
@@ -577,10 +611,13 @@ public class CCMovieList implements ICCPropertySource {
 
 		if (database.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
-			
-			se.beginUpdating();
-			database.updateSeriesFromDatabase(se);
-			se.abortUpdating();
+
+			try {
+				se.beginUpdating();
+				database.updateSeriesFromDatabase(se);
+			} finally {
+				se.abortUpdating();
+			}
 			
 			return true;
 		}
@@ -597,10 +634,13 @@ public class CCMovieList implements ICCPropertySource {
 
 		if (database.isReadonly()) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
-			
-			sa.beginUpdating();
-			database.updateSeasonFromDatabase(sa);
-			sa.abortUpdating();
+
+			try {
+				sa.beginUpdating();
+				database.updateSeasonFromDatabase(sa);
+			} finally {
+				sa.abortUpdating();
+			}
 			
 			return true;
 		}

@@ -696,25 +696,28 @@ public class AddMultiEpisodesFrame extends JCCFrame
 
 						SwingUtils.invokeAndWait(() ->
 						{
-							CCEpisode newEp = target.createNewEmptyEpisode();
-							newEp.beginUpdating();
-							newEp.Title.set(vm.Title);
-							newEp.EpisodeNumber.set(vm.EpisodeNumber);
-							newEp.Format.set(vm.getFormat());
-							newEp.MediaInfo.set(vm.MediaInfo);
-							newEp.Length.set(vm.Length);
-							newEp.FileSize.set(vm.Filesize);
-							newEp.AddDate.set(vm.getAddDate());
-							newEp.ViewedHistory.set(vm.getViewedHistory());
-							newEp.Part.set(final_realImmediatePath);
-							newEp.Tags.set(CCTagList.EMPTY);
-							newEp.Language.set(vm.Language);
-							newEp.Subtitles.set(vm.Subtitles);
-							newEp.endUpdating();
+							try {
+								CCEpisode newEp = target.createNewEpisode(ep -> {
+									ep.Title.set(vm.Title);
+									ep.EpisodeNumber.set(vm.EpisodeNumber);
+									ep.Format.set(vm.getFormat());
+									ep.MediaInfo.set(vm.MediaInfo);
+									ep.Length.set(vm.Length);
+									ep.FileSize.set(vm.Filesize);
+									ep.AddDate.set(vm.getAddDate());
+									ep.ViewedHistory.set(vm.getViewedHistory());
+									ep.Part.set(final_realImmediatePath);
+									ep.Tags.set(CCTagList.EMPTY);
+									ep.Language.set(vm.Language);
+									ep.Subtitles.set(vm.Subtitles);
+								});
 
-							newEp.beginUpdating();
-							newEp.Part.set(final_realTargetPath);
-							newEp.endUpdating();
+								newEp.beginUpdating();
+								newEp.Part.set(final_realTargetPath);
+								newEp.endUpdating();
+							} catch (Exception e) {
+								throw new RuntimeException(e);
+							}
 						});
 					}
 					catch (Exception e)

@@ -1,6 +1,7 @@
 package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.elementProps.impl.EStringListProp;
@@ -100,11 +101,13 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public EStringListProp          animeStudio()     { return AnimeStudio;     }
 
 	public void setDefaultValues(boolean updateDB) {
-		beginUpdating();
+		try {
+			beginUpdating();
 
-		for (IEProperty prop : getProperties()) if (!prop.isReadonly()) prop.resetToDefault();
-
-		if (updateDB) endUpdating(); else abortUpdating();
+			for (IEProperty prop : getProperties()) if (!prop.isReadonly()) prop.resetToDefault();
+		} finally {
+			if (updateDB) endUpdating(); else abortUpdating();
+		}
 	}
 
 	public boolean isDirty() {
@@ -121,15 +124,16 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 
 	public void beginUpdating() {
+		if (isUpdating) CCLog.addUndefinied("Cannot call beginUpdating on an object already being updated (will result in a premature+duplicate db-write!)"); //$NON-NLS-1$
 		isUpdating = true;
 	}
-	
+
 	public void endUpdating() {
 		isUpdating = false;
-		
+
 		updateDB();
 	}
-	
+
 	public void abortUpdating() {
 		isUpdating = false;
 	}

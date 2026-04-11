@@ -6,19 +6,17 @@ import de.jClipCorn.features.serialization.xmlimport.IDatabaseXMLImporterImpl;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
-import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.xml.CCXMLElement;
-import de.jClipCorn.util.xml.CCXMLException;
 
 import java.awt.image.BufferedImage;
 
 @SuppressWarnings("nls")
 public class DatabaseXMLImportImpl_V3 implements IDatabaseXMLImporterImpl
 {
-	public void importDatabaseElement(CCDatabaseElement o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws CCFormatException, CCXMLException
+	public void importDatabaseElement(CCDatabaseElement o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws Exception
 	{
 		e.execIfAttrExists("title", v -> o.title().set(v));
 		e.execIfAttrExists("genres", v -> o.Genres.set(CCGenreList.deserialize(v)));
@@ -47,107 +45,91 @@ public class DatabaseXMLImportImpl_V3 implements IDatabaseXMLImporterImpl
 	}
 
 	@Override
-	public void importMovie(CCMovie o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws CCFormatException, CCXMLException
+	public void importMovie(CCMovie o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws Exception
 	{
-		o.beginUpdating();
-		{
-			importDatabaseElement(o, e, imgf, s);
+		importDatabaseElement(o, e, imgf, s);
 
-			e.execIfAttrExists("adddate", v -> o.AddDate.set(CCDate.deserializeSQL(v)));
+		e.execIfAttrExists("adddate", v -> o.AddDate.set(CCDate.deserializeSQL(v)));
 
-			if (s.ResetAddDate) o.AddDate.set(CCDate.getCurrentDate());
+		if (s.ResetAddDate) o.AddDate.set(CCDate.getCurrentDate());
 
-			e.execIfLongAttrExists("filesize", v -> o.fileSize().set(v));
-			e.execIfIntAttrExists("format", v -> o.format().set(v));
-			e.execIfIntAttrExists("length", v -> o.length().set(v));
-			e.execIfAttrExists("languages", v -> o.Language.set(CCDBLanguageSet.parseFromString(v)));
+		e.execIfLongAttrExists("filesize", v -> o.fileSize().set(v));
+		e.execIfIntAttrExists("format", v -> o.format().set(v));
+		e.execIfIntAttrExists("length", v -> o.length().set(v));
+		e.execIfAttrExists("languages", v -> o.Language.set(CCDBLanguageSet.parseFromString(v)));
 
-			for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
-				int fi = i;
-				e.execIfAttrExists("part_"+i, v -> o.Parts.set(fi, v));
-			}
-
-			e.execIfIntAttrExists("year", v -> o.year().set(v));
-			e.execIfAttrExists("zyklus", v -> o.zyklus().setTitle(v));
-			e.execIfIntAttrExists("zyklusnumber", v -> o.zyklus().setNumber(v));
-			e.execIfAttrExists("history", v -> o.viewedHistory().set(v));
-
-			if (!o.isViewed() && e.hasAttribute("viewed") && e.getAttributeBoolValueOrThrow("viewed")) o.ViewedHistory.add(CCDateTime.getUnspecified());
-			if (s.ResetViewed) o.ViewedHistory.set(CCDateTimeList.createEmpty());
+		for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
+			int fi = i;
+			e.execIfAttrExists("part_"+i, v -> o.Parts.set(fi, v));
 		}
-		o.endUpdating();
+
+		e.execIfIntAttrExists("year", v -> o.year().set(v));
+		e.execIfAttrExists("zyklus", v -> o.zyklus().setTitle(v));
+		e.execIfIntAttrExists("zyklusnumber", v -> o.zyklus().setNumber(v));
+		e.execIfAttrExists("history", v -> o.viewedHistory().set(v));
+
+		if (!o.isViewed() && e.hasAttribute("viewed") && e.getAttributeBoolValueOrThrow("viewed")) o.ViewedHistory.add(CCDateTime.getUnspecified());
+		if (s.ResetViewed) o.ViewedHistory.set(CCDateTimeList.createEmpty());
 	}
 
 	@Override
-	public void importSeries(CCSeries o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws CCFormatException, CCXMLException
+	public void importSeries(CCSeries o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws Exception
 	{
-		o.beginUpdating();
-		{
-			importDatabaseElement(o, e, imgf, s);
+		importDatabaseElement(o, e, imgf, s);
 
-			for (CCXMLElement xchild : e.getAllChildren("season"))
-			{
-				importSeason(o.createNewEmptySeason(), xchild, imgf, s);
-			}
+		for (CCXMLElement xchild : e.getAllChildren("season"))
+		{
+			o.createNewSeason(seas -> importSeason(seas, xchild, imgf, s));
 		}
-		o.endUpdating();
 	}
 
 	@Override
-	public void importSeason(CCSeason o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws CCFormatException, CCXMLException
+	public void importSeason(CCSeason o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws Exception
 	{
-		o.beginUpdating();
+		e.execIfAttrExists("title", v -> o.title().set(v));
+		e.execIfIntAttrExists("year", v -> o.year().set(v));
+
+		for (CCXMLElement xchild : e.getAllChildren("episode"))
 		{
-			e.execIfAttrExists("title", v -> o.title().set(v));
-			e.execIfIntAttrExists("year", v -> o.year().set(v));
+			o.createNewEpisode(epi -> importEpisode(epi, xchild, imgf, s));
+		}
 
-			for (CCXMLElement xchild : e.getAllChildren("episode"))
-			{
-				importEpisode(o.createNewEmptyEpisode(), xchild, imgf, s);
-			}
-
-			if (!s.IgnoreCoverData && e.hasAttribute("coverdata")) {
+		if (!s.IgnoreCoverData && e.hasAttribute("coverdata")) {
+			o.setCover(-1); //Damit er nicht probiert was zu löschen
+			o.setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValueOrThrow("coverdata"))));
+		} else if (e.hasAttribute("covername")) {
+			BufferedImage img = imgf.invoke(e.getAttributeValueOrThrow("covername"));
+			if (img != null) {
 				o.setCover(-1); //Damit er nicht probiert was zu löschen
-				o.setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValueOrThrow("coverdata"))));
-			} else if (e.hasAttribute("covername")) {
-				BufferedImage img = imgf.invoke(e.getAttributeValueOrThrow("covername"));
-				if (img != null) {
-					o.setCover(-1); //Damit er nicht probiert was zu löschen
-					o.setCover(img);
-				}
+				o.setCover(img);
 			}
 		}
-		o.endUpdating();
 	}
 
 	@Override
-	public void importEpisode(CCEpisode o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws CCFormatException, CCXMLException
+	public void importEpisode(CCEpisode o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws Exception
 	{
-		o.beginUpdating();
-		{
-			e.execIfAttrExists("title", v -> o.title().set(v));
+		e.execIfAttrExists("title", v -> o.title().set(v));
 
-			e.execIfAttrExists("adddate", v -> o.AddDate.set(CCDate.deserializeSQL(v)));
+		e.execIfAttrExists("adddate", v -> o.AddDate.set(CCDate.deserializeSQL(v)));
 
-			if (s.ResetAddDate) o.AddDate.set(CCDate.getCurrentDate());
+		if (s.ResetAddDate) o.AddDate.set(CCDate.getCurrentDate());
 
-			e.execIfIntAttrExists("episodenumber", v -> o.episodeNumber().set(v));
-			e.execIfLongAttrExists("filesize", v -> o.fileSize().set(v));
-			e.execIfIntAttrExists("format", v -> o.format().set(v));
+		e.execIfIntAttrExists("episodenumber", v -> o.episodeNumber().set(v));
+		e.execIfLongAttrExists("filesize", v -> o.fileSize().set(v));
+		e.execIfIntAttrExists("format", v -> o.format().set(v));
 
-			e.execIfAttrExists("history", v -> o.ViewedHistory.set(CCDateTimeList.parse(v)));
+		e.execIfAttrExists("history", v -> o.ViewedHistory.set(CCDateTimeList.parse(v)));
 
-			e.execIfIntAttrExists("length", v -> o.length().set(v));
-			e.execIfAttrExists("part", v -> o.part().set(v));
-			e.execIfAttrExists("tags", v -> o.Tags.set(CCTagList.deserialize(v)));
+		e.execIfIntAttrExists("length", v -> o.length().set(v));
+		e.execIfAttrExists("part", v -> o.part().set(v));
+		e.execIfAttrExists("tags", v -> o.Tags.set(CCTagList.deserialize(v)));
 
-			if (s.ResetTags) o.Tags.set(CCTagList.EMPTY);
+		if (s.ResetTags) o.Tags.set(CCTagList.EMPTY);
 
-			e.execIfAttrExists("languages", v -> o.Language.set(CCDBLanguageSet.parseFromString(v)));
+		e.execIfAttrExists("languages", v -> o.Language.set(CCDBLanguageSet.parseFromString(v)));
 
-			if (!o.isViewed() && e.hasAttribute("viewed") && e.getAttributeBoolValueOrThrow("viewed")) o.addToViewedHistory(CCDateTime.getUnspecified());
-			if (s.ResetViewed) o.ViewedHistory.set(CCDateTimeList.createEmpty());
-		}
-		o.endUpdating();
+		if (!o.isViewed() && e.hasAttribute("viewed") && e.getAttributeBoolValueOrThrow("viewed")) o.addToViewedHistory(CCDateTime.getUnspecified());
+		if (s.ResetViewed) o.ViewedHistory.set(CCDateTimeList.createEmpty());
 	}
 }

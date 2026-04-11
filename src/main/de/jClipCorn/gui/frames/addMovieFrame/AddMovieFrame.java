@@ -144,7 +144,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		firstChooseClick = false;
 	}
 
-	private void onBtnOK(boolean check) throws EnumValueNotFoundException {
+	private void onBtnOK(boolean check) throws Exception {
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserData(problems);
@@ -169,67 +169,66 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 			return;
 		}
 
-		CCMovie newM = movielist.createNewEmptyMovie();
+		movielist.createNewMovie(newM -> {
 
-		newM.beginUpdating();
+			//#####################################################################################
 
-		//#####################################################################################
+			if (forceViewedHistory != null) newM.setViewedHistoryFromUI(forceViewedHistory);
 
-		if (forceViewedHistory != null) newM.setViewedHistoryFromUI(forceViewedHistory);
+			newM.Parts.set(0, edPart0.getPath());
+			newM.Parts.set(1, edPart1.getPath());
+			newM.Parts.set(2, edPart2.getPath());
+			newM.Parts.set(3, edPart3.getPath());
+			newM.Parts.set(4, edPart4.getPath());
+			newM.Parts.set(5, edPart5.getPath());
 
-		newM.Parts.set(0, edPart0.getPath());
-		newM.Parts.set(1, edPart1.getPath());
-		newM.Parts.set(2, edPart2.getPath());
-		newM.Parts.set(3, edPart3.getPath());
-		newM.Parts.set(4, edPart4.getPath());
-		newM.Parts.set(5, edPart5.getPath());
+			newM.Title.set(edTitle.getText());
+			newM.Zyklus.setTitle(edZyklus.getText());
+			newM.Zyklus.setNumber((int) spnZyklus.getValue());
 
-		newM.Title.set(edTitle.getText());
-		newM.Zyklus.setTitle(edZyklus.getText());
-		newM.Zyklus.setNumber((int) spnZyklus.getValue());
+			newM.MediaInfo.set(ctrlMediaInfo.getValue());
+			newM.Language.set(cbxLanguage.getValue());
+			newM.Subtitles.set(cbxSubtitles.getValue());
 
-		newM.MediaInfo.set(ctrlMediaInfo.getValue());
-		newM.Language.set(cbxLanguage.getValue());
-		newM.Subtitles.set(cbxSubtitles.getValue());
+			newM.Length.set((int) spnLength.getValue());
 
-		newM.Length.set((int) spnLength.getValue());
+			newM.AddDate.set(spnAddDate.getValue());
 
-		newM.AddDate.set(spnAddDate.getValue());
+			newM.OnlineScore.set(spnOnlineScore.getValue());
 
-		newM.OnlineScore.set(spnOnlineScore.getValue());
+			newM.FSK.set(cbxFSK.getSelectedEnum().asFSK());
+			newM.Format.set(cbxFormat.getSelectedEnum());
 
-		newM.FSK.set(cbxFSK.getSelectedEnum().asFSK());
-		newM.Format.set(cbxFormat.getSelectedEnum());
+			newM.Year.set(spnYear.getValue());
+			newM.FileSize.set(spnSize.getValue());
 
-		newM.Year.set(spnYear.getValue());
-		newM.FileSize.set(spnSize.getValue());
+			newM.Genres.set(cbxGenre0.getSelectedEnum(), 0);
+			newM.Genres.set(cbxGenre1.getSelectedEnum(), 1);
+			newM.Genres.set(cbxGenre2.getSelectedEnum(), 2);
+			newM.Genres.set(cbxGenre3.getSelectedEnum(), 3);
+			newM.Genres.set(cbxGenre4.getSelectedEnum(), 4);
+			newM.Genres.set(cbxGenre5.getSelectedEnum(), 5);
+			newM.Genres.set(cbxGenre6.getSelectedEnum(), 6);
+			newM.Genres.set(cbxGenre7.getSelectedEnum(), 7);
 
-		newM.Genres.set(cbxGenre0.getSelectedEnum(), 0);
-		newM.Genres.set(cbxGenre1.getSelectedEnum(), 1);
-		newM.Genres.set(cbxGenre2.getSelectedEnum(), 2);
-		newM.Genres.set(cbxGenre3.getSelectedEnum(), 3);
-		newM.Genres.set(cbxGenre4.getSelectedEnum(), 4);
-		newM.Genres.set(cbxGenre5.getSelectedEnum(), 5);
-		newM.Genres.set(cbxGenre6.getSelectedEnum(), 6);
-		newM.Genres.set(cbxGenre7.getSelectedEnum(), 7);
+			newM.Score.set(cbxScore.getSelectedEnum());
+			newM.OnlineReference.set(edReference.getValue());
+			newM.Groups.set(edGroups.getValue());
 
-		newM.Score.set(cbxScore.getSelectedEnum());
-		newM.OnlineReference.set(edReference.getValue());
-		newM.Groups.set(edGroups.getValue());
+			newM.SpecialVersion.set(CCStringList.create(edSpecialVersion.getValues()));
+			newM.AnimeSeason.set(CCStringList.create(edAnimeSeason.getValues()));
+			newM.AnimeStudio.set(CCStringList.create(edAnimeStudio.getValues()));
 
-		newM.SpecialVersion.set(CCStringList.create(edSpecialVersion.getValues()));
-		newM.AnimeSeason.set(CCStringList.create(edAnimeSeason.getValues()));
-		newM.AnimeStudio.set(CCStringList.create(edAnimeStudio.getValues()));
+			// Set tags
+			var tags = CCTagList.EMPTY;
+			tags = tags.getSetTag(CCSingleTag.TAG_WATCH_LATER, cbWatchLater.isSelected());
+			tags = tags.getSetTag(CCSingleTag.TAG_WATCH_NEVER, cbWatchNever.isSelected());
+			newM.Tags.set(tags);
 
-		// Set tags
-		var tags = CCTagList.EMPTY;
-		tags = tags.getSetTag(CCSingleTag.TAG_WATCH_LATER, cbWatchLater.isSelected());
-		tags = tags.getSetTag(CCSingleTag.TAG_WATCH_NEVER, cbWatchNever.isSelected());
-		newM.Tags.set(tags);
+			newM.setCover(edCvrControl.getResizedImageForStorage());
 
-		newM.setCover(edCvrControl.getResizedImageForStorage());
-
-		newM.endUpdating();
+			//#####################################################################################
+		});
 
 		dispose();
 	}
@@ -596,7 +595,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 	{
 		try {
 			onBtnOK(false);
-		} catch (EnumValueNotFoundException e) {
+		} catch (Exception e) {
 			CCLog.addError(e);
 		}
 	}
@@ -1029,7 +1028,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		try {
 			onBtnOK(true);
 		}
-		catch (EnumValueNotFoundException e1) {
+		catch (Exception e1) {
 			CCLog.addError(e1);
 		}
 	}

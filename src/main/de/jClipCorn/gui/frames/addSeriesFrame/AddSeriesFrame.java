@@ -75,7 +75,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		{
 			onBtnOK(true);
 		}
-		catch (EnumValueNotFoundException e1)
+		catch (Exception e1)
 		{
 			CCLog.addError(e1);
 		}
@@ -86,7 +86,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		this.dispose();
 	}
 
-	private void onBtnOK(boolean check) throws EnumValueNotFoundException {
+	private void onBtnOK(boolean check) throws Exception {
 		java.util.List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserData(problems);
@@ -111,39 +111,36 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 			return;
 		}
 
-		CCSeries newS = movielist.createNewEmptySeries();
+		CCSeries newS = movielist.createNewSeries(s -> {
 
-		newS.beginUpdating();
+			//#####################################################################################
 
-		//#####################################################################################
+			s.Title.set(edTitle.getText());
 
-		newS.Title.set(edTitle.getText());
+			s.OnlineScore.set(spnOnlinescore.getValue());
 
-		newS.OnlineScore.set(spnOnlinescore.getValue());
+			s.FSK.set(cbxFSK.getSelectedEnum().asFSK());
 
-		newS.FSK.set(cbxFSK.getSelectedEnum().asFSK());
+			s.OnlineReference.set(edReference.getValue());
 
-		newS.OnlineReference.set(edReference.getValue());
+			s.Genres.set(cbxGenre0.getSelectedEnum(), 0);
+			s.Genres.set(cbxGenre1.getSelectedEnum(), 1);
+			s.Genres.set(cbxGenre2.getSelectedEnum(), 2);
+			s.Genres.set(cbxGenre3.getSelectedEnum(), 3);
+			s.Genres.set(cbxGenre4.getSelectedEnum(), 4);
+			s.Genres.set(cbxGenre5.getSelectedEnum(), 5);
+			s.Genres.set(cbxGenre6.getSelectedEnum(), 6);
+			s.Genres.set(cbxGenre7.getSelectedEnum(), 7);
 
-		newS.Genres.set(cbxGenre0.getSelectedEnum(), 0);
-		newS.Genres.set(cbxGenre1.getSelectedEnum(), 1);
-		newS.Genres.set(cbxGenre2.getSelectedEnum(), 2);
-		newS.Genres.set(cbxGenre3.getSelectedEnum(), 3);
-		newS.Genres.set(cbxGenre4.getSelectedEnum(), 4);
-		newS.Genres.set(cbxGenre5.getSelectedEnum(), 5);
-		newS.Genres.set(cbxGenre6.getSelectedEnum(), 6);
-		newS.Genres.set(cbxGenre7.getSelectedEnum(), 7);
+			s.Groups.set(edGroups.getValue());
 
-		newS.Groups.set(edGroups.getValue());
+			s.AnimeSeason.set(CCStringList.create(edAnimeSeason.getValues()));
+			s.AnimeStudio.set(CCStringList.create(edAnimeStudio.getValues()));
 
-		newS.AnimeSeason.set(CCStringList.create(edAnimeSeason.getValues()));
-		newS.AnimeStudio.set(CCStringList.create(edAnimeStudio.getValues()));
+			s.setCover(edCvrControl.getResizedImageForStorage());
 
-		newS.setCover(edCvrControl.getResizedImageForStorage());
-
-		//#####################################################################################
-
-		newS.endUpdating();
+			//#####################################################################################
+		});
 
 		EditSeriesFrame esf = new EditSeriesFrame(this, newS, null);
 		esf.setVisible(true);
@@ -176,7 +173,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 	public void onAMIEDIgnoreClicked() {
 		try {
 			onBtnOK(false);
-		} catch (EnumValueNotFoundException e) {
+		} catch (Exception e) {
 			CCLog.addError(e);
 		}
 	}

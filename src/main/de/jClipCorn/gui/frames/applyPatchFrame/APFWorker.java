@@ -347,15 +347,14 @@ public class APFWorker
 			{
 				try
 				{
-					var dbelem = ml.createNewEmptyMovie();
-					DatabaseXMLImporter.parseSingleMovie(dbelem, dat, fn->null, new ImportState(xmlvers, new ImportOptions
+					var dbelem = ml.createNewMovie(mov -> DatabaseXMLImporter.parseSingleMovie(mov, dat, fn->null, new ImportState(xmlvers, new ImportOptions
 					(
 						true, // resetAddDate
 						true, // resetViewed
 						true, // resetScore
 						true, // resetTags
 						true  // ignoreCoverData
-					)));
+					))));
 
 					if (idOut != null) state.Variables.put(idOut, String.valueOf(dbelem.getLocalID()));
 				}
@@ -378,15 +377,14 @@ public class APFWorker
 			{
 				try
 				{
-					var dbelem = ml.createNewEmptySeries();
-					DatabaseXMLImporter.parseSingleSeries(dbelem, dat, fn->null, new ImportState(xmlvers, new ImportOptions
+					var dbelem = ml.createNewSeries(ser -> DatabaseXMLImporter.parseSingleSeries(ser, dat, fn->null, new ImportState(xmlvers, new ImportOptions
 					(
 						true, // resetAddDate
 						true, // resetViewed
 						true, // resetScore
 						true, // resetTags
 						true  // ignoreCoverData
-					)));
+					))));
 
 					if (idOut != null) state.Variables.put(idOut, String.valueOf(dbelem.getLocalID()));
 				}
@@ -411,15 +409,14 @@ public class APFWorker
 			{
 				try
 				{
-					var dbelem = ml.createNewEmptySeason(parent);
-					DatabaseXMLImporter.parseSingleSeason(dbelem, dat, fn->null, new ImportState(xmlvers, new ImportOptions
+					var dbelem = ml.createNewSeason(parent, sea -> DatabaseXMLImporter.parseSingleSeason(sea, dat, fn->null, new ImportState(xmlvers, new ImportOptions
 					(
 						true, // resetAddDate
 						true, // resetViewed
 						true, // resetScore
 						true, // resetTags
 						true  // ignoreCoverData
-					)));
+					))));
 
 					if (idOut != null) state.Variables.put(idOut, String.valueOf(dbelem.getLocalID()));
 				}
@@ -444,15 +441,14 @@ public class APFWorker
 			{
 				try
 				{
-					var dbelem = ml.createNewEmptyEpisode(parent);
-					DatabaseXMLImporter.parseSingleEpisode(dbelem, dat, fn->null, new ImportState(xmlvers, new ImportOptions
+					var dbelem = ml.createNewEpisode(parent, ep -> DatabaseXMLImporter.parseSingleEpisode(ep, dat, fn->null, new ImportState(xmlvers, new ImportOptions
 					(
 						true, // resetAddDate
 						true, // resetViewed
 						true, // resetScore
 						true, // resetTags
 						true  // ignoreCoverData
-					)));
+					))));
 
 					if (idOut != null) state.Variables.put(idOut, String.valueOf(dbelem.getLocalID()));
 				}

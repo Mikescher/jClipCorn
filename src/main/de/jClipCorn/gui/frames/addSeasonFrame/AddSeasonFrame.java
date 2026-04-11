@@ -6,6 +6,7 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.SeasonDataPack;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.ParseResultHandler;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.features.userdataProblem.UserDataProblemHandler;
@@ -58,7 +59,7 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 		this.dispose();
 	}
 
-	private void onBtnOK(boolean check) {
+	private void onBtnOK(boolean check) throws Exception {
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserData(problems);
@@ -83,19 +84,16 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 			return;
 		}
 
-		CCSeason newS = parent.createNewEmptySeason();
+		parent.createNewSeason(newS -> {
 
-		newS.beginUpdating();
+			//#####################################################################################
 
-		//#####################################################################################
+			newS.Title.set(edTitle.getText());
+			newS.Year.set(spnYear.getValue());
+			newS.setCover(edCvrControl.getResizedImageForStorage());
 
-		newS.Title.set(edTitle.getText());
-		newS.Year.set(spnYear.getValue());
-		newS.setCover(edCvrControl.getResizedImageForStorage());
-
-		//#####################################################################################
-
-		newS.endUpdating();
+			//#####################################################################################
+		});
 
 		if (listener != null) {
 			listener.onUpdate(null);
@@ -122,7 +120,11 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 
 	@Override
 	public void onAMIEDIgnoreClicked() {
-		onBtnOK(false);
+		try {
+			onBtnOK(false);
+		} catch (Exception e) {
+			CCLog.addError(e);
+		}
 	}
 
 	@Override
@@ -211,7 +213,11 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 	}
 
 	private void onOK(ActionEvent e) {
-		onBtnOK(true);
+		try {
+			onBtnOK(true);
+		} catch (Exception ex) {
+			CCLog.addError(ex);
+		}
 	}
 
 	private void initComponents() {

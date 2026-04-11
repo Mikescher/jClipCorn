@@ -679,7 +679,11 @@ public class EditSeriesFrame extends JCCFrame
 	}
 
 	private void addEmptySeason() {
-		series.createNewEmptySeason().Title.set("<untitled>"); //$NON-NLS-1$
+		try {
+			series.createNewSeason(s -> s.Title.set("<untitled>")); //$NON-NLS-1$
+		} catch (Exception e) {
+			CCLog.addError(e);
+		}
 
 		updateSeriesPanel();
 	}
@@ -795,14 +799,18 @@ public class EditSeriesFrame extends JCCFrame
 		if (_currentEpisodeMemory != null && _isDirtyEpisode) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeEpisodeButDirty")) return; //$NON-NLS-1$
 		if (_isDirtySeason) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeSeasonButDirty")) return; //$NON-NLS-1$
 
-		CCEpisode newEp = season.createNewEmptyEpisode();
-
-		newEp.Title.set("<untitled>"); //$NON-NLS-1$
-		newEp.AddDate.set(CCDate.getCurrentDate());
-		newEp.EpisodeNumber.set(season.getNextEpisodeNumber());
-		var commonLen = season.getCommonEpisodeLength();
-		if (commonLen.isEmpty()) commonLen = season.getConsensEpisodeLength();
-		if (commonLen.isPresent()) newEp.Length.set(commonLen.get());
+		try {
+			season.createNewEpisode(newEp -> {
+				newEp.Title.set("<untitled>"); //$NON-NLS-1$
+				newEp.AddDate.set(CCDate.getCurrentDate());
+				newEp.EpisodeNumber.set(season.getNextEpisodeNumber());
+				var commonLen = season.getCommonEpisodeLength();
+				if (commonLen.isEmpty()) commonLen = season.getConsensEpisodeLength();
+				if (commonLen.isPresent()) newEp.Length.set(commonLen.get());
+			});
+		} catch (Exception e) {
+			CCLog.addError(e);
+		}
 
 		updateSeasonPanel(false);
 	}
@@ -1011,28 +1019,31 @@ public class EditSeriesFrame extends JCCFrame
 
 		String prevTitle = episode.getTitle();
 
-		episode.beginUpdating();
+		try {
+			episode.beginUpdating();
 
-		//#####################################################################################
+			//#####################################################################################
 
-		episode.Title.set(edEpisodeTitle.getText());
-		episode.EpisodeNumber.set((int) spnEpisodeEpisode.getValue());
-		episode.Format.set(cbxEpisodeFormat.getSelectedEnum());
-		episode.MediaInfo.set(ctrlEpisodeMediaInfo.getValue());
-		episode.Length.set((int) spnEpisodeLength.getValue());
-		episode.FileSize.set(spnEpisodeSize.getValue());
-		episode.AddDate.set(spnEpisodeAdded.getValue());
-		episode.ViewedHistory.set(ctrlEpisodeHistory.getValue());
-		episode.Part.set(edEpisodePart.getPath());
-		episode.Tags.set(edEpisodeTags.getValue());
-		episode.Language.set(ctrlEpisodeLanguage.getValue());
-		episode.Subtitles.set(ctrlEpisodeSubtitles.getValue());
-		episode.Score.set(cbxEpisodeScore.getSelectedEnum());
-		episode.ScoreComment.set(memoEpisodeComment.getText());
+			episode.Title.set(edEpisodeTitle.getText());
+			episode.EpisodeNumber.set((int) spnEpisodeEpisode.getValue());
+			episode.Format.set(cbxEpisodeFormat.getSelectedEnum());
+			episode.MediaInfo.set(ctrlEpisodeMediaInfo.getValue());
+			episode.Length.set((int) spnEpisodeLength.getValue());
+			episode.FileSize.set(spnEpisodeSize.getValue());
+			episode.AddDate.set(spnEpisodeAdded.getValue());
+			episode.ViewedHistory.set(ctrlEpisodeHistory.getValue());
+			episode.Part.set(edEpisodePart.getPath());
+			episode.Tags.set(edEpisodeTags.getValue());
+			episode.Language.set(ctrlEpisodeLanguage.getValue());
+			episode.Subtitles.set(ctrlEpisodeSubtitles.getValue());
+			episode.Score.set(cbxEpisodeScore.getSelectedEnum());
+			episode.ScoreComment.set(memoEpisodeComment.getText());
 
-		//#####################################################################################
+			//#####################################################################################
 
-		episode.endUpdating();
+		} finally {
+			episode.endUpdating();
+		}
 
 		updateEpisodePanel(false);
 

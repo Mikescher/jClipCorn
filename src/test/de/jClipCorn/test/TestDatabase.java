@@ -28,31 +28,29 @@ public class TestDatabase extends ClipCornBaseTest {
 	@Test
 	public void testAddMovie() throws Exception {
 		CCMovieList ml = createEmptyDB();
-		
-		assertEquals(0, ml.getElementCount());
-		
-		CCMovie movWrite = ml.createNewEmptyMovie();
 
-		movWrite.beginUpdating();
-		movWrite.Title.set("Title");
-		movWrite.AddDate.set(CCDate.getCurrentDate());
-		movWrite.Format.set(CCFileFormat.MKV);
-		movWrite.Zyklus.setNumber(4);
-		movWrite.Zyklus.setTitle("Zyklus");
-		movWrite.FileSize.set(1024);
-		movWrite.FSK.set(CCFSK.RATING_III);
-		movWrite.Genres.set(CCGenre.GENRE_002, 0);
-		movWrite.Genres.set(CCGenre.GENRE_004, 1);
-		movWrite.Genres.set(CCGenre.GENRE_006, 2);
-		movWrite.Language.set(CCDBLanguageSet.ENGLISH);
-		movWrite.Length.set(120);
-		movWrite.OnlineScore.set(CCOnlineScore.create((short)6, (short)10));
-		movWrite.Year.set(2012);
-		movWrite.Score.set(CCUserScore.RATING_III);
-		movWrite.OnlineReference.set("tmdb:movie/207703");
-		movWrite.MediaInfo.set(CCMediaInfo.create(1565454159, 1565454169, new CCFileSize(1570732032), "[01-0015E036FC-75:78:FD:8B:56:3E:4E:DD]", 5903.904, 2128398, "MPEG-4 Visual", 720, 304, 23.976, (short)8, 141552, "XVID", "AC-3", (short)6, "2000", 48000));
-		movWrite.Parts.set(0, "C:\\test.mov");
-		movWrite.endUpdating();
+		assertEquals(0, ml.getElementCount());
+
+		CCMovie movWrite = ml.createNewMovie(m -> {
+			m.Title.set("Title");
+			m.AddDate.set(CCDate.getCurrentDate());
+			m.Format.set(CCFileFormat.MKV);
+			m.Zyklus.setNumber(4);
+			m.Zyklus.setTitle("Zyklus");
+			m.FileSize.set(1024);
+			m.FSK.set(CCFSK.RATING_III);
+			m.Genres.set(CCGenre.GENRE_002, 0);
+			m.Genres.set(CCGenre.GENRE_004, 1);
+			m.Genres.set(CCGenre.GENRE_006, 2);
+			m.Language.set(CCDBLanguageSet.ENGLISH);
+			m.Length.set(120);
+			m.OnlineScore.set(CCOnlineScore.create((short)6, (short)10));
+			m.Year.set(2012);
+			m.Score.set(CCUserScore.RATING_III);
+			m.OnlineReference.set("tmdb:movie/207703");
+			m.MediaInfo.set(CCMediaInfo.create(1565454159, 1565454169, new CCFileSize(1570732032), "[01-0015E036FC-75:78:FD:8B:56:3E:4E:DD]", 5903.904, 2128398, "MPEG-4 Visual", 720, 304, 23.976, (short)8, 141552, "XVID", "AC-3", (short)6, "2000", 48000));
+			m.Parts.set(0, "C:\\test.mov");
+		});
 		
 		assertEquals(1, ml.getElementCount());
 
@@ -97,34 +95,31 @@ public class TestDatabase extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testAddSeries() {
+	public void testAddSeries() throws Exception {
 		CCMovieList ml = createEmptyDB();
 
 		assertEquals(0, ml.getElementCount());
 
-		CCSeries serWrite = ml.createNewEmptySeries();
-		{
-			serWrite.Score.set(CCUserScore.RATING_V);
-			serWrite.Groups.set(CCGroupList.create(CCGroup.create("G0"), CCGroup.create("G1")));
-			serWrite.Title.set("MySeries");
-			serWrite.Genres.set(CCGenreList.create(CCGenre.GENRE_006, CCGenre.GENRE_020, CCGenre.GENRE_006));
-			serWrite.Tags.set(CCTagList.create(CCSingleTag.TAG_WATCH_LATER, CCSingleTag.TAG_BAD_QUALITY));
-			serWrite.OnlineReference.set(CCOnlineReferenceList.create(CCSingleOnlineReference.createIMDB("1234"), CCSingleOnlineReference.createMyAnimeList(999)));
-			serWrite.FSK.set(CCFSK.RATING_I);
-			serWrite.OnlineScore.set(CCOnlineScore.create((short)4, (short)10));
-		}
+		CCSeries serWrite = ml.createNewSeries(s -> {
+			s.Score.set(CCUserScore.RATING_V);
+			s.Groups.set(CCGroupList.create(CCGroup.create("G0"), CCGroup.create("G1")));
+			s.Title.set("MySeries");
+			s.Genres.set(CCGenreList.create(CCGenre.GENRE_006, CCGenre.GENRE_020, CCGenre.GENRE_006));
+			s.Tags.set(CCTagList.create(CCSingleTag.TAG_WATCH_LATER, CCSingleTag.TAG_BAD_QUALITY));
+			s.OnlineReference.set(CCOnlineReferenceList.create(CCSingleOnlineReference.createIMDB("1234"), CCSingleOnlineReference.createMyAnimeList(999)));
+			s.FSK.set(CCFSK.RATING_I);
+			s.OnlineScore.set(CCOnlineScore.create((short)4, (short)10));
+		});
 
-		CCSeason seaWrite = serWrite.createNewEmptySeason();
-		{
-			seaWrite.Title.set("MySeason ~~~");
-			seaWrite.Year.set(2020);
-		}
+		CCSeason seaWrite = serWrite.createNewSeason(sea -> {
+			sea.Title.set("MySeason ~~~");
+			sea.Year.set(2020);
+		});
 
-		CCEpisode epiWrite = seaWrite.createNewEmptyEpisode();
-		{
-			epiWrite.EpisodeNumber.set(1);
-			epiWrite.Title.set("This is my title: fight me");
-			epiWrite.MediaInfo.set(CCMediaInfo.create(
+		CCEpisode epiWrite = seaWrite.createNewEpisode(epi -> {
+			epi.EpisodeNumber.set(1);
+			epi.Title.set("This is my title: fight me");
+			epi.MediaInfo.set(CCMediaInfo.create(
 					CCDateTime.create(15, 4, 2019, 6,  0, 0).toFileTimestamp(GMT_2), // long cdate
 					CCDateTime.create(15, 4, 2019, 8, 30, 0).toFileTimestamp(GMT_2), // long mdate
 					new CCFileSize(3570481288L),                                     // long filesize
@@ -142,15 +137,15 @@ public class TestDatabase extends ClipCornBaseTest {
 					(short)2,                                                        // short audiochannels
 					"A_AC3",                                                         // String audiocodec
 					48000));                                                         // int audiosamplerate
-			epiWrite.Length.set(98);
-			epiWrite.Tags.set(CCTagList.create(CCSingleTag.TAG_MISSING_TIME));
-			epiWrite.Format.set(CCFileFormat.MKV);
-			epiWrite.FileSize.set(3570481288L);
-			epiWrite.Part.set("/media/example.mkv");
-			epiWrite.AddDate.set(CCDate.create(1, 1, 2000));
-			epiWrite.ViewedHistory.set(CCDateTimeList.create(CCDateTime.create(10, 1, 2000, 6, 0, 0), CCDateTime.create(12, 1, 2000, 12, 0, 0), CCDateTime.create(22, 1, 2000, 18, 0, 0)));
-			epiWrite.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.RUSSIAN, CCDBLanguage.SPANISH));
-		}
+			epi.Length.set(98);
+			epi.Tags.set(CCTagList.create(CCSingleTag.TAG_MISSING_TIME));
+			epi.Format.set(CCFileFormat.MKV);
+			epi.FileSize.set(3570481288L);
+			epi.Part.set("/media/example.mkv");
+			epi.AddDate.set(CCDate.create(1, 1, 2000));
+			epi.ViewedHistory.set(CCDateTimeList.create(CCDateTime.create(10, 1, 2000, 6, 0, 0), CCDateTime.create(12, 1, 2000, 12, 0, 0), CCDateTime.create(22, 1, 2000, 18, 0, 0)));
+			epi.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.RUSSIAN, CCDBLanguage.SPANISH));
+		});
 
 		assertEquals(1, ml.getElementCount());
 		assertEquals(0, ml.iteratorMovies().count());

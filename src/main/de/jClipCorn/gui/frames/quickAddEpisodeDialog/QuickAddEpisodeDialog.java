@@ -255,28 +255,31 @@ public class QuickAddEpisodeDialog extends JCCDialog
 
 				SwingUtils.invokeLater(() ->
 				{
-					CCEpisode newEp = season.createNewEmptyEpisode();
-					newEp.beginUpdating();
-					newEp.Title.set(title);
-					newEp.EpisodeNumber.set(episodenumber);
-					newEp.Format.set(format);
-					newEp.MediaInfo.set(minfo);
-					newEp.Length.set(length);
-					newEp.FileSize.set(filesize);
-					newEp.AddDate.set(adddate);
-					newEp.ViewedHistory.set(history);
-					newEp.Part.set(CCPath.createFromFSPath(imd, Opt.False, this));
-					newEp.Tags.set(tags);
-					newEp.Language.set(lang);
-					newEp.Subtitles.set(subs);
-					newEp.endUpdating();
+					try {
+						CCEpisode newEp = season.createNewEpisode(ep -> {
+							ep.Title.set(title);
+							ep.EpisodeNumber.set(episodenumber);
+							ep.Format.set(format);
+							ep.MediaInfo.set(minfo);
+							ep.Length.set(length);
+							ep.FileSize.set(filesize);
+							ep.AddDate.set(adddate);
+							ep.ViewedHistory.set(history);
+							ep.Part.set(CCPath.createFromFSPath(imd, Opt.False, this));
+							ep.Tags.set(tags);
+							ep.Language.set(lang);
+							ep.Subtitles.set(subs);
+						});
 
-					newEp.beginUpdating();
-					newEp.Part.set(CCPath.createFromFSPath(dst, this));
-					newEp.endUpdating();
+						newEp.beginUpdating();
+						newEp.Part.set(CCPath.createFromFSPath(dst, this));
+						newEp.endUpdating();
 
-					if (ucListener != null) ucListener.onUpdate(newEp);
-					dispose();
+						if (ucListener != null) ucListener.onUpdate(newEp);
+						dispose();
+					} catch (Exception ex) {
+						CCLog.addError(ex);
+					}
 				});
 
 			} catch (Exception e) {

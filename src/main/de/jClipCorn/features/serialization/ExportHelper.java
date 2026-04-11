@@ -21,8 +21,6 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.util.TimeKeeper;
 import de.jClipCorn.util.datatypes.Tuple3;
-import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.util.exceptions.SerializationException;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -291,7 +289,7 @@ public class ExportHelper {
 					throw new Exception("File not found: " + DB_XML_FILENAME_MAIN); //$NON-NLS-1$
 				}
 
-				DatabaseXMLImporter.run(contentMain, movielist::createNewEmptyMovie, movielist::createNewEmptySeries, covers, new ImportOptions(false, false, false, false, false));
+				DatabaseXMLImporter.run(contentMain, movielist, covers, new ImportOptions(false, false, false, false, false));
 			}
 						
 			{
@@ -389,7 +387,7 @@ public class ExportHelper {
 	/// [jmccexport] = single xml file, contains a one or multiple elements
 	/// In case of *.jsccexport set maxCount==1 to enforce loading only a single element
 	/// otherwise set to "-1"
-	public static void importElements(CCMovieList movielist, String xmlcontent, ImportOptions opt, int maxCount) throws CCFormatException, CCXMLException, SerializationException {
+	public static void importElements(CCMovieList movielist, String xmlcontent, ImportOptions opt, int maxCount) throws Exception {
 		if (maxCount < 0) maxCount = Integer.MAX_VALUE;
 
 		List<Tuple3<Integer, CCXMLElement, CCXMLParser>> allvalues = getAllElementsOfExport(xmlcontent);
@@ -397,11 +395,9 @@ public class ExportHelper {
 		for(Tuple3<Integer, CCXMLElement, CCXMLParser> value : CCStreams.iterate(allvalues).take(maxCount)) {
 
 			if (value.Item2.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
-				CCMovie mov = movielist.createNewEmptyMovie();
-				DatabaseXMLImporter.parseSingleMovie(mov, value.Item2, fn->null, new ImportState(value.Item3, value.Item1, opt));
+				movielist.createNewMovie(mov -> DatabaseXMLImporter.parseSingleMovie(mov, value.Item2, fn->null, new ImportState(value.Item3, value.Item1, opt)));
 			} else if (value.Item2.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
-				CCSeries ser = movielist.createNewEmptySeries();
-				DatabaseXMLImporter.parseSingleSeries(ser, value.Item2, fn->null, new ImportState(value.Item3, value.Item1, opt));
+				movielist.createNewSeries(ser -> DatabaseXMLImporter.parseSingleSeries(ser, value.Item2, fn->null, new ImportState(value.Item3, value.Item1, opt)));
 			}
 
 		}
@@ -461,7 +457,7 @@ public class ExportHelper {
 					amf.setVisible(true);
 				}
 			}
-		} catch (IOException | CCFormatException | SerializationException | CCXMLException e) {
+		} catch (Exception e) {
 			CCLog.addError(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
 		}
 	}

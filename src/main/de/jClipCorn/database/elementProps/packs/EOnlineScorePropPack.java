@@ -64,6 +64,21 @@ public class EOnlineScorePropPack extends EPropertyPack {
 		}
 	}
 
+	public void setOnly(short n, short d) {
+		try
+		{
+			_ignoreCacheUpdates = true;
+
+			Numerator.setOnly(n);
+			Denominator.setOnly(d);
+		}
+		finally
+		{
+			_ignoreCacheUpdates = false;
+			updateCache();
+		}
+	}
+
 	public void set(CCOnlineScore v) {
 		try
 		{

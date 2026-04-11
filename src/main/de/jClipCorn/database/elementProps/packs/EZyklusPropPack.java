@@ -65,6 +65,21 @@ public class EZyklusPropPack extends EPropertyPack {
 		}
 	}
 
+	public void setOnly(String vTitle, int vNumber) {
+		try
+		{
+			_ignoreCacheUpdates = true;
+
+			Title.setOnly(vTitle);
+			Number.setOnly(vNumber);
+		}
+		finally
+		{
+			_ignoreCacheUpdates = false;
+			updateCache();
+		}
+	}
+
 	public void set(CCMovieZyklus v) {
 		try
 		{

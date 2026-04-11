@@ -35,6 +35,13 @@ public class EEnumProp<TType extends ContinoousEnum<TType>> extends EProperty<TT
 		set(ev);
 	}
 
+	@SuppressWarnings("unchecked")
+	public void setOnly(int v) {
+		TType ev = (TType)_wrapper.findOrNull(v);
+
+		setOnly(ev);
+	}
+
 	@Override
 	public String serializeToString() {
 		return String.valueOf(get().asInt());

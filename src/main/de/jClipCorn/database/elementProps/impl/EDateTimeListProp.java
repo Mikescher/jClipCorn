@@ -14,6 +14,10 @@ public class EDateTimeListProp extends EProperty<CCDateTimeList> {
 		set(CCDateTimeList.parse(v));
 	}
 
+	public void setOnly(String v) throws CCFormatException {
+		setOnly(CCDateTimeList.parse(v));
+	}
+
 	public void add(CCDateTime v) {
 		set(get().add(v));
 	}

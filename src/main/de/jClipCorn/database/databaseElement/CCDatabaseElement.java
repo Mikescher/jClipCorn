@@ -150,7 +150,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public void setCover(int cid) {
 		CoverID.set(cid);
 	}
-	
+
 	public void setCover(BufferedImage cvr) {
 		if (cvr == null) {
 			return;

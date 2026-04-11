@@ -58,8 +58,8 @@ public abstract class EProperty<TType> implements IEProperty {
 		set(v, true, true, true, true, true);
 	}
 
-	public void setWithoutListenerAndUpdateDB(TType v) {
-		set(v, true, true, false, false, true);
+	public void setOnly(TType v) {
+		set(v, false, false, false, false, false);
 	}
 
 	protected void set(TType v, boolean verifyReadonly, boolean bustCache, boolean updateDB, boolean callListener, boolean setDirty) {

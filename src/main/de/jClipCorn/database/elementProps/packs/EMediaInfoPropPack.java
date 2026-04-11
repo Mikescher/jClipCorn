@@ -70,7 +70,7 @@ public class EMediaInfoPropPack extends EPropertyPack {
 		updateCache();
 	}
 
-	private void updateCache() {
+	public void updateCache() {
 		if (_ignoreCacheUpdates) return;
 
 		_cache = CCMediaInfo.create

@@ -13,6 +13,10 @@ public class ELanguageSetProp extends EProperty<CCDBLanguageSet> {
 		set(CCDBLanguageSet.fromBitmask(v));
 	}
 
+	public void setOnly(long v) {
+		setOnly(CCDBLanguageSet.fromBitmask(v));
+	}
+
 	@Override
 	public String serializeToString() {
 		return get().serializeToString();

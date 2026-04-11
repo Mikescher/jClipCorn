@@ -13,6 +13,10 @@ public class EOnlineRefListProp extends EProperty<CCOnlineReferenceList> {
 		set(CCOnlineReferenceList.parse(v));
 	}
 
+	public void setOnly(String v) throws CCFormatException {
+		setOnly(CCOnlineReferenceList.parse(v));
+	}
+
 	@Override
 	public String serializeToString() {
 		return get().toSerializationString();

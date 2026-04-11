@@ -14,6 +14,10 @@ public class EGenreListProp extends EProperty<CCGenreList> {
 		set(new CCGenreList(v));
 	}
 
+	public void setOnly(long v) {
+		setOnly(new CCGenreList(v));
+	}
+
 	public void set(CCGenre genre, int idx) {
 		set(get().getSetGenre(idx, genre));
 	}

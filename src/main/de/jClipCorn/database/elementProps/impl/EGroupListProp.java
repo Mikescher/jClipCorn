@@ -23,6 +23,11 @@ public class EGroupListProp extends EProperty<CCGroupList> {
 	public void set(String v) throws CCFormatException {
 		set(CCGroupList.parseWithoutAddingNewGroups(parent.getMovieList(), v));
 	}
+
+	public void setOnly(String v) throws CCFormatException {
+		setOnly(CCGroupList.parseWithoutAddingNewGroups(parent.getMovieList(), v));
+	}
+
 	public void setFromMovieListWithoutDBUpdateOrCallback(CCGroupList v) {
 		try
 		{

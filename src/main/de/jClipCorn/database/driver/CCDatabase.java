@@ -308,120 +308,122 @@ public class CCDatabase {
 	}
 
 	private void updateEpisodeFromResultSet(CCSQLResultSet rs, CCEpisode ep) throws SQLException, CCFormatException, SQLWrapperException {
-		ep.EpisodeNumber.set(rs.getInt(DatabaseStructure.COL_EPIS_EPISODE));
-		ep.Title.set(rs.getString(DatabaseStructure.COL_EPIS_NAME));
-		ep.ViewedHistory.set(rs.getString(DatabaseStructure.COL_EPIS_VIEWEDHISTORY));
-		ep.Length.set(rs.getInt(DatabaseStructure.COL_EPIS_LENGTH));
-		ep.Format.set(rs.getInt(DatabaseStructure.COL_EPIS_FORMAT));
-		ep.FileSize.set(rs.getLong(DatabaseStructure.COL_EPIS_FILESIZE));
-		ep.Part.set(CCPath.create(rs.getString(DatabaseStructure.COL_EPIS_PART_1)));
-		ep.AddDate.set(rs.getDate(DatabaseStructure.COL_EPIS_ADDDATE));
-		ep.Tags.set(rs.getString(DatabaseStructure.COL_EPIS_TAGS));
-		ep.Language.set(rs.getLong(DatabaseStructure.COL_EPIS_LANGUAGE));
-		ep.Subtitles.set(rs.getString(DatabaseStructure.COL_EPIS_SUBTITLES));
-		ep.Score.set(rs.getInt(DatabaseStructure.COL_EPIS_SCORE));
-		ep.ScoreComment.set(rs.getString(DatabaseStructure.COL_EPIS_SCORECOMMENT));
+		ep.EpisodeNumber.setOnly(rs.getInt(DatabaseStructure.COL_EPIS_EPISODE));
+		ep.Title.setOnly(rs.getString(DatabaseStructure.COL_EPIS_NAME));
+		ep.ViewedHistory.setOnly(rs.getString(DatabaseStructure.COL_EPIS_VIEWEDHISTORY));
+		ep.Length.setOnly(rs.getInt(DatabaseStructure.COL_EPIS_LENGTH));
+		ep.Format.setOnly(rs.getInt(DatabaseStructure.COL_EPIS_FORMAT));
+		ep.FileSize.setOnly(rs.getLong(DatabaseStructure.COL_EPIS_FILESIZE));
+		ep.Part.setOnly(CCPath.create(rs.getString(DatabaseStructure.COL_EPIS_PART_1)));
+		ep.AddDate.setOnly(rs.getDate(DatabaseStructure.COL_EPIS_ADDDATE));
+		ep.Tags.setOnly(rs.getString(DatabaseStructure.COL_EPIS_TAGS));
+		ep.Language.setOnly(rs.getLong(DatabaseStructure.COL_EPIS_LANGUAGE));
+		ep.Subtitles.setOnly(rs.getString(DatabaseStructure.COL_EPIS_SUBTITLES));
+		ep.Score.setOnly(rs.getInt(DatabaseStructure.COL_EPIS_SCORE));
+		ep.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_EPIS_SCORECOMMENT));
 
-		ep.MediaInfo.CDate.set(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_CDATE)));
-		ep.MediaInfo.MDate.set(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_MDATE)));
-		ep.MediaInfo.Checksum.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_MI_CHECKSUM)));
-		ep.MediaInfo.Filesize.set(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_FILESIZE)).map(CCFileSize::new));
-		ep.MediaInfo.Duration.set(Opt.ofNullable(rs.getNullableFloat(DatabaseStructure.COL_EPIS_MI_DURATION)));
-		ep.MediaInfo.Bitrate.set(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_BITRATE)));
-		ep.MediaInfo.VideoFormat.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_MI_VFORMAT)));
-		ep.MediaInfo.Width.set(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_WIDTH)));
-		ep.MediaInfo.Height.set(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_HEIGHT)));
-		ep.MediaInfo.Framerate.set(Opt.ofNullable(rs.getNullableFloat(DatabaseStructure.COL_EPIS_MI_FRAMERATE)));
-		ep.MediaInfo.Bitdepth.set(Opt.ofNullable(rs.getNullableShort(DatabaseStructure.COL_EPIS_MI_BITDEPTH)));
-		ep.MediaInfo.Framecount.set(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_FRAMECOUNT)));
-		ep.MediaInfo.VideoCodec.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_MI_VCODEC)));
-		ep.MediaInfo.AudioFormat.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_MI_AFORMAT)));
-		ep.MediaInfo.AudioChannels.set(Opt.ofNullable(rs.getNullableShort(DatabaseStructure.COL_EPIS_MI_ACHANNELS)));
-		ep.MediaInfo.AudioCodec.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_MI_ACODEC)));
-		ep.MediaInfo.AudioSamplerate.set(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_SAMPLERATE)));
+		ep.MediaInfo.CDate.setOnly(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_CDATE)));
+		ep.MediaInfo.MDate.setOnly(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_MDATE)));
+		ep.MediaInfo.Checksum.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_MI_CHECKSUM)));
+		ep.MediaInfo.Filesize.setOnly(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_FILESIZE)).map(CCFileSize::new));
+		ep.MediaInfo.Duration.setOnly(Opt.ofNullable(rs.getNullableFloat(DatabaseStructure.COL_EPIS_MI_DURATION)));
+		ep.MediaInfo.Bitrate.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_BITRATE)));
+		ep.MediaInfo.VideoFormat.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_MI_VFORMAT)));
+		ep.MediaInfo.Width.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_WIDTH)));
+		ep.MediaInfo.Height.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_HEIGHT)));
+		ep.MediaInfo.Framerate.setOnly(Opt.ofNullable(rs.getNullableFloat(DatabaseStructure.COL_EPIS_MI_FRAMERATE)));
+		ep.MediaInfo.Bitdepth.setOnly(Opt.ofNullable(rs.getNullableShort(DatabaseStructure.COL_EPIS_MI_BITDEPTH)));
+		ep.MediaInfo.Framecount.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_FRAMECOUNT)));
+		ep.MediaInfo.VideoCodec.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_MI_VCODEC)));
+		ep.MediaInfo.AudioFormat.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_MI_AFORMAT)));
+		ep.MediaInfo.AudioChannels.setOnly(Opt.ofNullable(rs.getNullableShort(DatabaseStructure.COL_EPIS_MI_ACHANNELS)));
+		ep.MediaInfo.AudioCodec.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_MI_ACODEC)));
+		ep.MediaInfo.AudioSamplerate.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_EPIS_MI_SAMPLERATE)));
+		ep.MediaInfo.updateCache();
 
-		ep.ChecksumCRC32.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_CRC32)));
-		ep.ChecksumMD5.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_MD5)));
-		ep.ChecksumSHA256.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_SHA256)));
-		ep.ChecksumSHA512.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_SHA512)));
+		ep.ChecksumCRC32.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_CRC32)));
+		ep.ChecksumMD5.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_MD5)));
+		ep.ChecksumSHA256.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_SHA256)));
+		ep.ChecksumSHA512.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_SHA512)));
 	}
 
 	private void updateSeasonFromResultSet(CCSQLResultSet rs, CCSeason seas) throws SQLException, SQLWrapperException {
-		seas.Title.set(rs.getString(DatabaseStructure.COL_SEAS_NAME));
-		seas.Year.set(rs.getInt(DatabaseStructure.COL_SEAS_YEAR));
-		seas.Score.set(rs.getInt(DatabaseStructure.COL_SEAS_SCORE));
-		seas.ScoreComment.set(rs.getString(DatabaseStructure.COL_SEAS_SCORECOMMENT));
+		seas.Title.setOnly(rs.getString(DatabaseStructure.COL_SEAS_NAME));
+		seas.Year.setOnly(rs.getInt(DatabaseStructure.COL_SEAS_YEAR));
+		seas.Score.setOnly(rs.getInt(DatabaseStructure.COL_SEAS_SCORE));
+		seas.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_SEAS_SCORECOMMENT));
 
-		seas.setCover(rs.getInt(DatabaseStructure.COL_SEAS_COVERID));
+		seas.CoverID.setOnly(rs.getInt(DatabaseStructure.COL_SEAS_COVERID));
 	}
 
 	private void updateSeriesFromResultSet(CCSQLResultSet rs, CCSeries ser) throws SQLException, CCFormatException, SQLWrapperException {
-		ser.Title.set(rs.getString(DatabaseStructure.COL_SER_NAME));
-		ser.Genres.set(rs.getLong(DatabaseStructure.COL_SER_GENRE));
-		ser.OnlineScore.set(rs.getShort(DatabaseStructure.COL_SER_ONLINESCORE_NUM), rs.getShort(DatabaseStructure.COL_SER_ONLINESCORE_DENOM));
-		ser.FSK.set(rs.getInt(DatabaseStructure.COL_SER_FSK));
-		ser.Score.set(rs.getInt(DatabaseStructure.COL_SER_SCORE));
-		ser.ScoreComment.set(rs.getString(DatabaseStructure.COL_SER_SCORECOMMENT));
-		ser.OnlineReference.set(rs.getString(DatabaseStructure.COL_SER_ONLINEREF));
-		ser.Tags.set(rs.getString(DatabaseStructure.COL_SER_TAGS));
+		ser.Title.setOnly(rs.getString(DatabaseStructure.COL_SER_NAME));
+		ser.Genres.setOnly(rs.getLong(DatabaseStructure.COL_SER_GENRE));
+		ser.OnlineScore.setOnly(rs.getShort(DatabaseStructure.COL_SER_ONLINESCORE_NUM), rs.getShort(DatabaseStructure.COL_SER_ONLINESCORE_DENOM));
+		ser.FSK.setOnly(rs.getInt(DatabaseStructure.COL_SER_FSK));
+		ser.Score.setOnly(rs.getInt(DatabaseStructure.COL_SER_SCORE));
+		ser.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_SER_SCORECOMMENT));
+		ser.OnlineReference.setOnly(rs.getString(DatabaseStructure.COL_SER_ONLINEREF));
+		ser.Tags.setOnly(rs.getString(DatabaseStructure.COL_SER_TAGS));
 
-		ser.setCover(rs.getInt(DatabaseStructure.COL_SER_COVERID));
-		ser.Groups.set(rs.getString(DatabaseStructure.COL_SER_GROUPS));
-		ser.SpecialVersion.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_SPECIALVERSION)));
-		ser.AnimeSeason.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_ANIMESEASON)));
-		ser.AnimeStudio.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_ANIMESTUDIO)));
+		ser.CoverID.setOnly(rs.getInt(DatabaseStructure.COL_SER_COVERID));
+		ser.Groups.setOnly(rs.getString(DatabaseStructure.COL_SER_GROUPS));
+		ser.SpecialVersion.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_SPECIALVERSION)));
+		ser.AnimeSeason.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_ANIMESEASON)));
+		ser.AnimeStudio.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_ANIMESTUDIO)));
 	}
 
 	private void updateMovieFromResultSet(CCSQLResultSet rs, CCMovie mov) throws SQLException, CCFormatException, SQLWrapperException {
-		mov.Title.set(rs.getString(DatabaseStructure.COL_MOV_NAME));
-		mov.ViewedHistory.set(rs.getString(DatabaseStructure.COL_MOV_VIEWEDHISTORY));
-		mov.Zyklus.set(rs.getString(DatabaseStructure.COL_MOV_ZYKLUS), rs.getInt(DatabaseStructure.COL_MOV_ZYKLUSNUMBER));
-		mov.Language.set(rs.getLong(DatabaseStructure.COL_MOV_LANGUAGE));
-		mov.Subtitles.set(rs.getString(DatabaseStructure.COL_MOV_SUBTITLES));
-		mov.Genres.set(rs.getLong(DatabaseStructure.COL_MOV_GENRE));
-		mov.Length.set(rs.getInt(DatabaseStructure.COL_MOV_LENGTH));
-		mov.AddDate.set(rs.getDate(DatabaseStructure.COL_MOV_ADDDATE));
-		mov.OnlineScore.set(rs.getShort(DatabaseStructure.COL_MOV_ONLINESCORE_NUM), rs.getShort(DatabaseStructure.COL_MOV_ONLINESCORE_DENOM));
-		mov.FSK.set(rs.getInt(DatabaseStructure.COL_MOV_FSK));
-		mov.Format.set(rs.getInt(DatabaseStructure.COL_MOV_FORMAT));
-		mov.Year.set(rs.getInt(DatabaseStructure.COL_MOV_MOVIEYEAR));
-		mov.OnlineReference.set(rs.getString(DatabaseStructure.COL_MOV_ONLINEREF));
-		mov.FileSize.set(rs.getLong(DatabaseStructure.COL_MOV_FILESIZE));
-		mov.Tags.set(rs.getString(DatabaseStructure.COL_MOV_TAGS));
+		mov.Title.setOnly(rs.getString(DatabaseStructure.COL_MOV_NAME));
+		mov.ViewedHistory.setOnly(rs.getString(DatabaseStructure.COL_MOV_VIEWEDHISTORY));
+		mov.Zyklus.setOnly(rs.getString(DatabaseStructure.COL_MOV_ZYKLUS), rs.getInt(DatabaseStructure.COL_MOV_ZYKLUSNUMBER));
+		mov.Language.setOnly(rs.getLong(DatabaseStructure.COL_MOV_LANGUAGE));
+		mov.Subtitles.setOnly(rs.getString(DatabaseStructure.COL_MOV_SUBTITLES));
+		mov.Genres.setOnly(rs.getLong(DatabaseStructure.COL_MOV_GENRE));
+		mov.Length.setOnly(rs.getInt(DatabaseStructure.COL_MOV_LENGTH));
+		mov.AddDate.setOnly(rs.getDate(DatabaseStructure.COL_MOV_ADDDATE));
+		mov.OnlineScore.setOnly(rs.getShort(DatabaseStructure.COL_MOV_ONLINESCORE_NUM), rs.getShort(DatabaseStructure.COL_MOV_ONLINESCORE_DENOM));
+		mov.FSK.setOnly(rs.getInt(DatabaseStructure.COL_MOV_FSK));
+		mov.Format.setOnly(rs.getInt(DatabaseStructure.COL_MOV_FORMAT));
+		mov.Year.setOnly(rs.getInt(DatabaseStructure.COL_MOV_MOVIEYEAR));
+		mov.OnlineReference.setOnly(rs.getString(DatabaseStructure.COL_MOV_ONLINEREF));
+		mov.FileSize.setOnly(rs.getLong(DatabaseStructure.COL_MOV_FILESIZE));
+		mov.Tags.setOnly(rs.getString(DatabaseStructure.COL_MOV_TAGS));
 
-		mov.Parts.set(CCPathList.createFromJSON(rs.getString(DatabaseStructure.COL_MOV_PARTS)));
+		mov.Parts.setOnly(CCPathList.createFromJSON(rs.getString(DatabaseStructure.COL_MOV_PARTS)));
 
-		mov.Score.set(rs.getInt(DatabaseStructure.COL_MOV_SCORE));
-		mov.ScoreComment.set(rs.getString(DatabaseStructure.COL_MOV_SCORECOMMENT));
+		mov.Score.setOnly(rs.getInt(DatabaseStructure.COL_MOV_SCORE));
+		mov.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_MOV_SCORECOMMENT));
 
-		mov.MediaInfo.CDate.set(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_MOV_MI_CDATE)));
-		mov.MediaInfo.MDate.set(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_MOV_MI_MDATE)));
-		mov.MediaInfo.Checksum.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_MI_CHECKSUM)));
-		mov.MediaInfo.Filesize.set(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_MOV_MI_FILESIZE)).map(CCFileSize::new));
-		mov.MediaInfo.Duration.set(Opt.ofNullable(rs.getNullableFloat(DatabaseStructure.COL_MOV_MI_DURATION)));
-		mov.MediaInfo.Bitrate.set(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_MOV_MI_BITRATE)));
-		mov.MediaInfo.VideoFormat.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_MI_VFORMAT)));
-		mov.MediaInfo.Width.set(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_MOV_MI_WIDTH)));
-		mov.MediaInfo.Height.set(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_MOV_MI_HEIGHT)));
-		mov.MediaInfo.Framerate.set(Opt.ofNullable(rs.getNullableFloat(DatabaseStructure.COL_MOV_MI_FRAMERATE)));
-		mov.MediaInfo.Bitdepth.set(Opt.ofNullable(rs.getNullableShort(DatabaseStructure.COL_MOV_MI_BITDEPTH)));
-		mov.MediaInfo.Framecount.set(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_MOV_MI_FRAMECOUNT)));
-		mov.MediaInfo.VideoCodec.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_MI_VCODEC)));
-		mov.MediaInfo.AudioFormat.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_MI_AFORMAT)));
-		mov.MediaInfo.AudioChannels.set(Opt.ofNullable(rs.getNullableShort(DatabaseStructure.COL_MOV_MI_ACHANNELS)));
-		mov.MediaInfo.AudioCodec.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_MI_ACODEC)));
-		mov.MediaInfo.AudioSamplerate.set(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_MOV_MI_SAMPLERATE)));
+		mov.MediaInfo.CDate.setOnly(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_MOV_MI_CDATE)));
+		mov.MediaInfo.MDate.setOnly(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_MOV_MI_MDATE)));
+		mov.MediaInfo.Checksum.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_MI_CHECKSUM)));
+		mov.MediaInfo.Filesize.setOnly(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_MOV_MI_FILESIZE)).map(CCFileSize::new));
+		mov.MediaInfo.Duration.setOnly(Opt.ofNullable(rs.getNullableFloat(DatabaseStructure.COL_MOV_MI_DURATION)));
+		mov.MediaInfo.Bitrate.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_MOV_MI_BITRATE)));
+		mov.MediaInfo.VideoFormat.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_MI_VFORMAT)));
+		mov.MediaInfo.Width.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_MOV_MI_WIDTH)));
+		mov.MediaInfo.Height.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_MOV_MI_HEIGHT)));
+		mov.MediaInfo.Framerate.setOnly(Opt.ofNullable(rs.getNullableFloat(DatabaseStructure.COL_MOV_MI_FRAMERATE)));
+		mov.MediaInfo.Bitdepth.setOnly(Opt.ofNullable(rs.getNullableShort(DatabaseStructure.COL_MOV_MI_BITDEPTH)));
+		mov.MediaInfo.Framecount.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_MOV_MI_FRAMECOUNT)));
+		mov.MediaInfo.VideoCodec.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_MI_VCODEC)));
+		mov.MediaInfo.AudioFormat.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_MI_AFORMAT)));
+		mov.MediaInfo.AudioChannels.setOnly(Opt.ofNullable(rs.getNullableShort(DatabaseStructure.COL_MOV_MI_ACHANNELS)));
+		mov.MediaInfo.AudioCodec.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_MI_ACODEC)));
+		mov.MediaInfo.AudioSamplerate.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_MOV_MI_SAMPLERATE)));
+		mov.MediaInfo.updateCache();
 
-		mov.setCover(rs.getInt(DatabaseStructure.COL_MOV_COVERID));
-		mov.Groups.set(rs.getString(DatabaseStructure.COL_MOV_GROUPS));
-		mov.SpecialVersion.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_SPECIALVERSION)));
-		mov.AnimeSeason.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_ANIMESEASON)));
-		mov.AnimeStudio.set(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_ANIMESTUDIO)));
+		mov.CoverID.setOnly(rs.getInt(DatabaseStructure.COL_MOV_COVERID));
+		mov.Groups.setOnly(rs.getString(DatabaseStructure.COL_MOV_GROUPS));
+		mov.SpecialVersion.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_SPECIALVERSION)));
+		mov.AnimeSeason.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_ANIMESEASON)));
+		mov.AnimeStudio.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_ANIMESTUDIO)));
 
-		mov.ChecksumCRC32.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_CRC32)));
-		mov.ChecksumMD5.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_MD5)));
-		mov.ChecksumSHA256.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_SHA256)));
-		mov.ChecksumSHA512.set(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_SHA512)));
+		mov.ChecksumCRC32.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_CRC32)));
+		mov.ChecksumMD5.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_MD5)));
+		mov.ChecksumSHA256.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_SHA256)));
+		mov.ChecksumSHA512.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_SHA512)));
 	}
 
 	private int getNewID() {

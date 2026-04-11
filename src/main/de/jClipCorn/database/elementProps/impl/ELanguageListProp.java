@@ -13,6 +13,10 @@ public class ELanguageListProp extends EProperty<CCDBLanguageList> {
 		set(CCDBLanguageList.parseFromString(v));
 	}
 
+	public void setOnly(String v) throws CCFormatException {
+		setOnly(CCDBLanguageList.parseFromString(v));
+	}
+
 	@Override
 	public String serializeToString() {
 		return get().serializeToString();

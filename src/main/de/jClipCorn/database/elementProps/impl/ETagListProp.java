@@ -19,6 +19,10 @@ public class ETagListProp extends EProperty<CCTagList> {
 		set(CCTagList.fromJSONArray(jsonString));
 	}
 
+	public void setOnly(String jsonString) {
+		setOnly(CCTagList.fromJSONArray(jsonString));
+	}
+
 	public void set(short v) {
 		Set<CCSingleTag> tagSet = new HashSet<>();
 		for (int i = 0; i < 16; i++) {

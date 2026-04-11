@@ -64,10 +64,10 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	}
 
 	public void clearChecksums() {
-		ChecksumCRC32.setWithoutListenerAndUpdateDB(Opt.empty());
-		ChecksumMD5.setWithoutListenerAndUpdateDB(Opt.empty());
-		ChecksumSHA256.setWithoutListenerAndUpdateDB(Opt.empty());
-		ChecksumSHA512.setWithoutListenerAndUpdateDB(Opt.empty());
+		ChecksumCRC32.setOnly(Opt.empty());
+		ChecksumMD5.setOnly(Opt.empty());
+		ChecksumSHA256.setOnly(Opt.empty());
+		ChecksumSHA512.setOnly(Opt.empty());
 	}
 
 	public void initNfoPaths() {

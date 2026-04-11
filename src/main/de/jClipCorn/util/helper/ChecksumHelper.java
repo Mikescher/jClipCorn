@@ -245,6 +245,9 @@ public class ChecksumHelper
 	}
 
 	public static void clearMoviePropsIfNeccessary(IEProperty prop, CCMovie movie, Object vOld, Object vNew) {
+		if (movie.getMovieList().isInitializingOrIsLoading()) return;
+		if (movie.getMovieList().isReadonly()) return;
+
 		if (prop.getName().equals(movie.Parts.getName())) {
 			movie.clearChecksums();
 		} else if (prop.getName().equals(movie.MediaInfo.Checksum.getName())) {
@@ -253,6 +256,9 @@ public class ChecksumHelper
 	}
 
 	public static void clearEpisodePropsIfNeccessary(IEProperty prop, CCEpisode episode, Object vOld, Object vNew) {
+		if (episode.getMovieList().isInitializingOrIsLoading()) return;
+		if (episode.getMovieList().isReadonly()) return;
+
 		if (prop.getName().equals(episode.Part.getName())) {
 			episode.clearChecksums();
 		} else if (prop.getName().equals(episode.MediaInfo.Checksum.getName())) {

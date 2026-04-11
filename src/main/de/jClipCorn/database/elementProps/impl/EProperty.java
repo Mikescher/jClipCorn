@@ -58,6 +58,10 @@ public abstract class EProperty<TType> implements IEProperty {
 		set(v, true, true, true, true, true);
 	}
 
+	public void setWithoutListenerAndUpdateDB(TType v) {
+		set(v, true, true, false, false, true);
+	}
+
 	protected void set(TType v, boolean verifyReadonly, boolean bustCache, boolean updateDB, boolean callListener, boolean setDirty) {
 		if (verifyReadonly && isReadonly()) throw new Error("Cannot update field ["+getValueType().asString()+"]::["+Name+"] - its readonly");
 
@@ -77,6 +81,26 @@ public abstract class EProperty<TType> implements IEProperty {
 
 		if (bustCache) parent.getCache().bust();
 		if (updateDB)  parent.updateDB();
+	}
+
+	public void setWithException(TType v) throws DatabaseUpdateException {
+		if (isReadonly()) throw new Error("Cannot update field ["+getValueType().asString()+"]::["+Name+"] - its readonly");
+
+		v = validateValue(v);
+
+		var old = _value;
+
+		_value = v;
+
+		if (!valueEquals(old, v)) _dirty = true;
+
+		if (!valueEquals(old, v)) {
+			triggerListener(v, old);
+		}
+
+
+		parent.getCache().bust();
+		parent.updateDBWithException();
 	}
 
 	private void triggerListener(TType v, TType old) {
@@ -103,16 +127,6 @@ public abstract class EProperty<TType> implements IEProperty {
 	 * It is _neccesary_ that this method never returns an invalid value (somehing that validateValue would reject)
 	 */
 	protected TType onValueChanging(TType valOld, TType valNew){ return valNew; /* override me */ }
-
-	public void setWithException(TType v) throws DatabaseUpdateException {
-		v = validateValue(v);
-
-		_value = v;
-		_dirty = true;
-
-		parent.getCache().bust();
-		parent.updateDBWithException();
-	}
 
 	public TType get() {
 		return _value;
@@ -146,13 +160,11 @@ public abstract class EProperty<TType> implements IEProperty {
 		return "() -> " + _value;
 	}
 
-	public void addChangeListener(Func3to0<EProperty<TType>, TType, TType> lstnr)
-	{
+	public void addChangeListener(Func3to0<EProperty<TType>, TType, TType> lstnr) {
 		_listener.add(lstnr);
 	}
 
-	public boolean isReadonly()
-	{
+	public boolean isReadonly() {
 		return getValueType().isReadonly();
 	}
 

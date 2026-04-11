@@ -18,6 +18,7 @@ import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.iterators.*;
 import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.transactionLog.CCTransactionLog;
 import de.jClipCorn.features.nfo.NFOAutoUpdateListener;
 import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
@@ -95,6 +96,10 @@ public class CCMovieList implements ICCPropertySource {
 
 		addMoviePropChangeListener(ChecksumHelper::clearMoviePropsIfNeccessary);
 		addEpisodePropChangeListener(ChecksumHelper::clearEpisodePropsIfNeccessary);
+
+		if (!ccprops.ARG_READONLY && ccprops.PROP_DATABASE_TRANSACTION_LOG.getValue()) {
+			new CCTransactionLog(this).register(this);
+		}
 	}
 	
 	public static CCMovieList createInstanceMovieList(CCProperties ccprops) {

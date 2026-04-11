@@ -262,6 +262,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_NFO_AUTO_CREATE_MOVIES;
 	public CCBoolProperty                                   PROP_NFO_CREATE_SERIES;
 	public CCBoolProperty                                   PROP_NFO_AUTO_CREATE_SERIES;
+	public CCBoolProperty                                   PROP_DATABASE_TRANSACTION_LOG;
 
 	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public boolean ARG_READONLY = false;
@@ -364,6 +365,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_LOG_MAX_LINECOUNT                      = new CCPIntProperty(CAT_DATABASE,          this,   "PROP_LOG_MAX_LINECOUNT",                      1048576); // 2^20
 		PROP_DATABASE_LOAD_ALL_COVERDATA            = new CCBoolProperty(CAT_DATABASE,          this,   "PROP_DATABASE_LOAD_ALL_COVERDATA",            false);
 		PROP_DATABASE_COVER_QUANTIZER               = new CCEnumProperty<>(CAT_DATABASE,        this,   "PROP_DATABASE_COVER_QUANTIZER",               ColorQuantizerMethod.HSL_DISTINCT_SELECTION, ColorQuantizerMethod.getWrapper());
+		PROP_DATABASE_TRANSACTION_LOG               = new CCBoolProperty(CAT_DATABASE,          this,   "PROP_DATABASE_TRANSACTION_LOG",               true);
 
 		PROP_DATABASE_DEFAULTPARSERLANG             = new CCEnumProperty<>(CAT_PARSER,          this,   "PROP_DATABASE_DEFAULTPARSERLANG",             CCDBLanguage.GERMAN,                CCDBLanguage.getWrapper());
 		PROP_TMDB_LANGUAGE                          = new CCEnumProperty<>(CAT_PARSER,          this,   "PROP_TMDB_LANGUAGE",                          getDefBLanguage(),                  BrowserLanguage.getWrapper());

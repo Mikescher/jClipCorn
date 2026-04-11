@@ -73,12 +73,9 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public CCEpisode(CCSeason owner, int localID) {
 		this.owner   = owner;
 		LocalID.setReadonlyPropToInitial(localID);
-
-		Part.addChangeListener((_1, _2, _3) -> clearChecksums());
-		MediaInfo.Checksum.addChangeListener((_1, _2, _3) -> clearChecksums());
 	}
 
-	private void clearChecksums() {
+	public void clearChecksums() {
 		ChecksumCRC32.set(Opt.empty());
 		ChecksumMD5.set(Opt.empty());
 		ChecksumSHA256.set(Opt.empty());

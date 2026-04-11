@@ -11,11 +11,14 @@ import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseConnectResult;
 import de.jClipCorn.database.driver.DatabaseStructure;
 import de.jClipCorn.database.driver.PublicDatabaseInterface;
+import de.jClipCorn.database.elementProps.IEProperty;
+import de.jClipCorn.database.elementProps.impl.EProperty;
 import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.iterators.*;
 import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.nfo.NFOAutoUpdateListener;
 import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.gui.frames.initialConfigFrame.InitialConfigFrame;
@@ -38,9 +41,11 @@ import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ApplicationHelper;
+import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.http.WebConnectionLayer;
 import de.jClipCorn.util.lambda.Func0to0;
+import de.jClipCorn.util.lambda.Func4to0;
 import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
@@ -54,12 +59,17 @@ import java.util.*;
 import java.util.List;
 
 public class CCMovieList implements ICCPropertySource {
-	private final List<CCDatabaseElement> list;
+	private final List<CCDatabaseElement> list = new Vector<>();
 	
-	private final List<CCDBUpdateListener> listener;
+	private final List<CCDBUpdateListener> listener = new Vector<>();
+	private final List<Func4to0<IEProperty, CCMovie, Object, Object>> propMovieChangedListener = new ArrayList<>();
+	private final List<Func4to0<IEProperty, CCSeries, Object, Object>> propSeriesChangedListener = new ArrayList<>();
+	private final List<Func4to0<IEProperty, CCSeason, Object, Object>> propSeasonChangedListener = new ArrayList<>();
+	private final List<Func4to0<IEProperty, CCEpisode, Object, Object>> propEpisodeChangedListener = new ArrayList<>();
+
 	
-	private CCDatabase database;
-	private List<CCGroup> databaseGroups;
+	private       CCDatabase database;
+	private final List<CCGroup> databaseGroups;
 
 	private final CCProperties ccproperties;
 
@@ -71,9 +81,6 @@ public class CCMovieList implements ICCPropertySource {
 	private boolean isLoaded  = false;
 
 	private CCMovieList(CCDatabase db, CCProperties ccprops) {
-		this.list     = new Vector<>();
-		this.listener = new Vector<>();
-
 		this.ccproperties = ccprops;
 
 		this.databaseGroups = new ArrayList<>();
@@ -83,7 +90,10 @@ public class CCMovieList implements ICCPropertySource {
 		_cache = new MovieListCache(this);
 
 		addChangeListener(new CCDBUpdateAdapter(){ @Override public void onChangeDatabaseElement(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] p) { CCLog.addMovieListChangeEvent(root, el, p); } });
-		addChangeListener(new de.jClipCorn.features.nfo.NFOAutoUpdateListener(this));
+		addChangeListener(new NFOAutoUpdateListener(this));
+
+		addMoviePropChangeListener(ChecksumHelper::clearMoviePropsIfNeccessary);
+		addEpisodePropChangeListener(ChecksumHelper::clearEpisodePropsIfNeccessary);
 	}
 	
 	public static CCMovieList createInstanceMovieList(CCProperties ccprops) {
@@ -1343,4 +1353,73 @@ public class CCMovieList implements ICCPropertySource {
 	public List<CCMovie> getByZyklus(String zyklus) {
 		return iteratorMovies().filter(m -> m.hasZyklus() && m.Zyklus.get().getTitle().equals(zyklus)).enumerate();
 	}
+
+	public <TType> void triggerMoviePropChangedListener(EProperty<TType> property, CCMovie elem, TType valueOld, TType valueNew) {
+		if (!EventQueue.isDispatchThread() && !CCLog.isUnitTest()) {
+			SwingUtils.invokeLater(() -> triggerMoviePropChangedListener(property, elem, valueOld, valueNew));
+			return;
+		}
+
+		for (var pcl : propMovieChangedListener) pcl.invoke(property, elem, valueOld, valueNew);
+	}
+
+	public void addMoviePropChangeListener(Func4to0<IEProperty, CCMovie, Object, Object> l) {
+		propMovieChangedListener.add(l);
+	}
+
+	public void removeMoviePropChangeListener(Func4to0<IEProperty, CCMovie, Object, Object> l) {
+		propMovieChangedListener.remove(l);
+	}
+
+	public <TType> void triggerSeriesPropChangedListener(EProperty<TType> property, CCSeries elem, TType valueOld, TType valueNew) {
+		if (!EventQueue.isDispatchThread() && !CCLog.isUnitTest()) {
+			SwingUtils.invokeLater(() -> triggerSeriesPropChangedListener(property, elem, valueOld, valueNew));
+			return;
+		}
+
+		for (var pcl : propSeriesChangedListener) pcl.invoke(property, elem, valueOld, valueNew);
+	}
+
+	public void addSeriesPropChangeListener(Func4to0<IEProperty, CCSeries, Object, Object> l) {
+		propSeriesChangedListener.add(l);
+	}
+
+	public void removeSeriesPropChangeListener(Func4to0<IEProperty, CCSeries, Object, Object> l) {
+		propSeriesChangedListener.remove(l);
+	}
+
+	public <TType> void triggerSeasonPropChangedListener(EProperty<TType> property, CCSeason elem, TType valueOld, TType valueNew) {
+		if (!EventQueue.isDispatchThread() && !CCLog.isUnitTest()) {
+			SwingUtils.invokeLater(() -> triggerSeasonPropChangedListener(property, elem, valueOld, valueNew));
+			return;
+		}
+
+		for (var pcl : propSeasonChangedListener) pcl.invoke(property, elem, valueOld, valueNew);
+	}
+
+	public void addSeasonPropChangeListener(Func4to0<IEProperty, CCSeason, Object, Object> l) {
+		propSeasonChangedListener.add(l);
+	}
+
+	public void removeSeasonPropChangeListener(Func4to0<IEProperty, CCSeason, Object, Object> l) {
+		propSeasonChangedListener.remove(l);
+	}
+
+	public <TType> void triggerEpisodePropChangedListener(EProperty<TType> property, CCEpisode elem, TType valueOld, TType valueNew) {
+		if (!EventQueue.isDispatchThread() && !CCLog.isUnitTest()) {
+			SwingUtils.invokeLater(() -> triggerEpisodePropChangedListener(property, elem, valueOld, valueNew));
+			return;
+		}
+
+		for (var pcl : propEpisodeChangedListener) pcl.invoke(property, elem, valueOld, valueNew);
+	}
+
+	public void addEpisodePropChangeListener(Func4to0<IEProperty, CCEpisode, Object, Object> l) {
+		propEpisodeChangedListener.add(l);
+	}
+
+	public void removeEpisodePropChangeListener(Func4to0<IEProperty, CCEpisode, Object, Object> l) {
+		propEpisodeChangedListener.remove(l);
+	}
+
 }

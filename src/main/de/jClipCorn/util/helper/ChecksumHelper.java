@@ -1,6 +1,9 @@
 package de.jClipCorn.util.helper;
 
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
+import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.FVHException;
@@ -240,4 +243,21 @@ public class ChecksumHelper
 			throw new Error("Unknown CCFVH version: " + version.get());
 		}
 	}
+
+	public static void clearMoviePropsIfNeccessary(IEProperty prop, CCMovie movie, Object vOld, Object vNew) {
+		if (prop.getName().equals(movie.Parts.getName())) {
+			movie.clearChecksums();
+		} else if (prop.getName().equals(movie.MediaInfo.Checksum.getName())) {
+			movie.clearChecksums();
+		}
+	}
+
+	public static void clearEpisodePropsIfNeccessary(IEProperty prop, CCEpisode episode, Object vOld, Object vNew) {
+		if (prop.getName().equals(episode.Part.getName())) {
+			episode.clearChecksums();
+		} else if (prop.getName().equals(episode.MediaInfo.Checksum.getName())) {
+			episode.clearChecksums();
+		}
+	}
+
 }

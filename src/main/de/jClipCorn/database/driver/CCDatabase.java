@@ -1475,18 +1475,14 @@ public class CCDatabase {
 			_historyDb.beginTransaction();
 			try {
 				for (Object[] row : rows) {
-					try {
 					_historyDb.insertHistoryRow(
-							(String) row[1],
-							(String) row[2],
-							(String) row[3],
-							(String) row[4],
-							(String) row[5],
-							row[6],
-							row[7]);
-					} catch (Exception ie) {
-						throw ie;
-					}
+						(String) row[1],
+						(String) row[2],
+						(String) row[3],
+						(String) row[4],
+						(String) row[5],
+						row[6],
+						row[7]);
 				}
 				_historyDb.commitTransaction();
 			} catch (Exception e) {

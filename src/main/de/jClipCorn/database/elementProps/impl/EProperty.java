@@ -1,5 +1,9 @@
 package de.jClipCorn.database.elementProps.impl;
 
+import de.jClipCorn.database.databaseElement.CCEpisode;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.features.log.CCLog;
@@ -15,6 +19,7 @@ import java.util.List;
 public abstract class EProperty<TType> implements IEProperty {
 
 	private TType _value;
+	private Class<?> _cls;
 	private boolean _dirty = false;
 
 	protected final IPropertyParent parent;
@@ -26,13 +31,14 @@ public abstract class EProperty<TType> implements IEProperty {
 	public final TType DefaultValue;
 
 	public EProperty(String name, TType defValue, IPropertyParent p, EPropertyType t) {
+		if (defValue == null) CCLog.addUndefinied(Str.format("Default value for [{0}] cannot be NULL", name));
+
 		_value       = defValue;
+		_cls         = defValue.getClass();
 		parent       = p;
 		DefaultValue = defValue;
 		Name         = name;
 		ValueType    = t;
-
-		if (DefaultValue == null) CCLog.addUndefinied(Str.format("Default value for [{0}] cannot be NULL", Name));
 	}
 
 	protected TType validateValue(TType v) {
@@ -65,10 +71,31 @@ public abstract class EProperty<TType> implements IEProperty {
 
 		if (setDirty && !valueEquals(old, v)) _dirty = true;
 
-		if (callListener && !valueEquals(old, v)) for (var l: _listener) l.invoke(this, old, v);
+		if (callListener && !valueEquals(old, v)) {
+			triggerListener(v, old);
+		}
 
 		if (bustCache) parent.getCache().bust();
 		if (updateDB)  parent.updateDB();
+	}
+
+	private void triggerListener(TType v, TType old) {
+		for (var l: _listener) l.invoke(this, old, v);
+
+		switch (parent.getStructureType()) {
+			case MOVIE:
+				parent.getMovieList().triggerMoviePropChangedListener(this, (CCMovie)parent, old, v);
+				break;
+			case SERIES:
+				parent.getMovieList().triggerSeriesPropChangedListener(this, (CCSeries)parent, old, v);
+				break;
+			case SEASON:
+				parent.getMovieList().triggerSeasonPropChangedListener(this, (CCSeason)parent, old, v);
+				break;
+			case EPISODE:
+				parent.getMovieList().triggerEpisodePropChangedListener(this, (CCEpisode)parent, old, v);
+				break;
+		}
 	}
 
 	/**

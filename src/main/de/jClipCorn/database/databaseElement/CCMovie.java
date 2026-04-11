@@ -61,12 +61,9 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	public CCMovie(CCMovieList ml, int id) {
 		super(ml, id);
-
-		Parts.addChangeListener((_1, _2, _3) -> clearChecksums());
-		MediaInfo.Checksum.addChangeListener((_1, _2, _3) -> clearChecksums());
 	}
 
-	private void clearChecksums() {
+	public void clearChecksums() {
 		ChecksumCRC32.set(Opt.empty());
 		ChecksumMD5.set(Opt.empty());
 		ChecksumSHA256.set(Opt.empty());

@@ -86,8 +86,25 @@ public class MoviePlayer {
 
 	@SuppressWarnings("nls")
 	public static boolean play(List<FSPath> abspaths, NamedPathVar player, CCProperties ccprops)  {
-		var playerpath = (player == null) ? getVLCPath(ccprops) : Tuple.Create(player.Path, FSPath.splitArguments(player.Arguments));
-		
+		// player != null              => an explicitly chosen alternative mediaplayer
+		// player == null + primary set => the configured primary mediaplayer (new default)
+		// player == null + no primary  => fall back to VLC (which also enables the vlc-specific parameters)
+		boolean isvlc;
+		Tuple<FSPath, String[]> playerpath;
+		if (player != null) {
+			playerpath = Tuple.Create(player.Path, FSPath.splitArguments(player.Arguments));
+			isvlc = false;
+		} else {
+			var primary = ccprops.PROP_PLAY_PRIMARY_MEDIAPLAYER.getValue().getPathAndArgs();
+			if (!FSPath.isNullOrEmpty(primary.Item1)) {
+				playerpath = primary;
+				isvlc = false;
+			} else {
+				playerpath = getVLCPath(ccprops);
+				isvlc = true;
+			}
+		}
+
 		if (FSPath.isNullOrEmpty(playerpath.Item1)) {
 			CCLog.addWarning(LocaleBundle.getString("LogMessage.VLCNotFound"));
 			
@@ -105,7 +122,7 @@ public class MoviePlayer {
 				return false;
 			}
 		} else {
-			List<String> parameters = getParameters(playerpath, ccprops, player == null);
+			List<String> parameters = getParameters(playerpath, ccprops, isvlc);
 			
 			for (var abspath : abspaths) {
 

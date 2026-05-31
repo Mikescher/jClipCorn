@@ -12,6 +12,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
+import de.jClipCorn.properties.property.CCFrameSizeProperty;
 import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.datatypes.Opt;
@@ -39,7 +40,9 @@ public abstract class AutomaticSettingsFrame extends JCCFrame {
 	private JButton btnExtended;
 
 	private List<PropertyElement> elements = new ArrayList<>();
-	
+
+	private FrameSizesTablePanel frameSizesPanel;
+
 	public AutomaticSettingsFrame(MainFrame owner, CCProperties properties){
 		super(owner.getMovielist());
 		this.properties = properties;
@@ -148,6 +151,25 @@ public abstract class AutomaticSettingsFrame extends JCCFrame {
 
 		var pnlTabInner = new JPanel();
 
+		if (category.equals(CCProperties.CAT_FRAMESIZES))
+		{
+			// horizontally scrollable so the (Frame | Default | hosts...) table can overflow the window width
+			scrlPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+			pnlTabOuter.setLayout(new FormLayout(
+				new ColumnSpec[]{FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default"), FormSpecs.RELATED_GAP_COLSPEC}, //$NON-NLS-1$
+				new RowSpec[]{FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.UNRELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC}));
+
+			// the generic rows for this category only contain PROP_FSIZE_DEBUG (the frame-size props are rendered as a table)
+			var tabOrder = reinitPanel(pnlTabInner, category, Opt.empty());
+			pnlTabOuter.add(pnlTabInner, CC.xy(2, 2));
+
+			frameSizesPanel = new FrameSizesTablePanel(properties);
+			pnlTabOuter.add(frameSizesPanel, CC.xy(2, 4, CC.LEFT, CC.TOP));
+
+			return tabOrder;
+		}
+
 		if (category.showFilter())
 		{
 			var cspec = new ColumnSpec[]{FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC};
@@ -212,6 +234,7 @@ public abstract class AutomaticSettingsFrame extends JCCFrame {
 		var props = CCStreams
 				.iterate(properties.getPropertyList())
 				.filter(p -> p.getCategory().equals(category))
+				.filter(p -> !CCFrameSizeProperty.class.isInstance(p)) // rendered via FrameSizesTablePanel instead
 				.filter(p -> filterBySearch(p, filter))
 				.enumerate();
 
@@ -288,14 +311,16 @@ public abstract class AutomaticSettingsFrame extends JCCFrame {
 		for (PropertyElement pe : elements) {
 			pe.setComponentValue();
 		}
+		if (frameSizesPanel != null) frameSizesPanel.loadValues();
 	}
-	
+
 	private List<String> applyValues() {
 		List<String> r = new ArrayList<>();
 		for (PropertyElement pe : elements) {
 			var v = pe.setPropertyValue();
 			if (v.isPresent()) r.add(v.get());
 		}
+		if (frameSizesPanel != null) r.addAll(frameSizesPanel.applyValues());
 		return r;
 	}
 	

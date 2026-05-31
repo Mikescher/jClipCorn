@@ -291,7 +291,7 @@ public class Main {
  - [ ] GenericTextDialog
  - [X] GroupManageFrame
  - [ ] ImportElementsFrame
- - [ ] InitialConfigFrame
+ - [x] InitialConfigFrame
  - [x] InputErrorFrame
  - [X] LogFrame
  - [x] MoveSeriesFrame

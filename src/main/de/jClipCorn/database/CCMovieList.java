@@ -137,15 +137,12 @@ public class CCMovieList implements ICCPropertySource {
 	}
 
 	public void showInitialWizard() {
-		if (!database.exists()) {
-			boolean cont = InitialConfigFrame.ShowWizard(ccprops());
+		if (database.isFirstLaunch()) {
+			boolean cont = InitialConfigFrame.ShowWizard(this);
 			
 			if (!cont) {
 				ApplicationHelper.exitApplication(0, true);
 			}
-
-			// re-create the database object after the wizard created it on disk
-			database = CCDatabase.create(CCDatabaseDriver.SQLITE, FilesystemUtils.getRealSelfDirectory(), Main.DATABASE_NAME, Main.ARG_READONLY);
 		}
 	}
 

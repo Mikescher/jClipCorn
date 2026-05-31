@@ -2,9 +2,12 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.database.util.iterators.GenresIterator;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.exceptions.GenreOverflowException;
 import de.jClipCorn.util.stream.CCStream;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -346,6 +349,25 @@ public class CCGenreList {
 
 	public String serialize() {
 		return iterate().stringjoin(g -> String.valueOf(g.asInt()), ";"); //$NON-NLS-1$
+	}
+
+	public String asJSONArray() {
+		JSONArray arr = new JSONArray();
+		for (CCGenre g : iterate()) arr.put(g.asInt());
+		return arr.toString();
+	}
+
+	public static CCGenreList fromJSONArray(String json) {
+		if (Str.isNullOrWhitespace(json)) return EMPTY;
+
+		try {
+			JSONArray arr = new JSONArray(json);
+			List<CCGenre> lst = new ArrayList<>();
+			for (int i = 0; i < arr.length(); i++) lst.add(CCGenre.getWrapper().findOrException(arr.getInt(i)));
+			return new CCGenreList(lst);
+		} catch (JSONException | CCFormatException e) {
+			return EMPTY;
+		}
 	}
 
 	public static CCGenreList deserialize(String v) throws EnumFormatException, GenreOverflowException

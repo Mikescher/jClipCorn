@@ -27,9 +27,9 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_MOV_VIEWEDHISTORY     = new CCSQLColDef("VIEWED_HISTORY",       CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_ZYKLUS            = new CCSQLColDef("ZYKLUS",               CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_ZYKLUSNUMBER      = new CCSQLColDef("ZYKLUSNUMBER",         CCSQLType.INTEGER,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_LANGUAGE          = new CCSQLColDef("LANGUAGE",             CCSQLType.BIGINT,      NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_LANGUAGE          = new CCSQLColDef("LANGUAGE",             CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_SUBTITLES         = new CCSQLColDef("SUBTITLES",            CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_GENRE             = new CCSQLColDef("GENRE",                CCSQLType.BIGINT,      NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_GENRE             = new CCSQLColDef("GENRE",                CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_LENGTH            = new CCSQLColDef("LENGTH",               CCSQLType.INTEGER,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_ADDDATE           = new CCSQLColDef("ADDDATE",              CCSQLType.DATE,        NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_ONLINESCORE_NUM   = new CCSQLColDef("ONLINESCORE_NUM",      CCSQLType.SMALLINT,    NON_NULLABLE);
@@ -81,7 +81,7 @@ public class DatabaseStructure
 
 	public final static CCSQLColDef COL_SER_LOCALID           = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_NAME              = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SER_GENRE             = new CCSQLColDef("GENRE",                CCSQLType.BIGINT,      NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_GENRE             = new CCSQLColDef("GENRE",                CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_ONLINESCORE_NUM   = new CCSQLColDef("ONLINESCORE_NUM",      CCSQLType.TINYINT,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_ONLINESCORE_DENOM = new CCSQLColDef("ONLINESCORE_DENOM",    CCSQLType.TINYINT,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_FSK               = new CCSQLColDef("FSK",                  CCSQLType.TINYINT,     NON_NULLABLE);
@@ -114,7 +114,7 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_EPIS_PART_1           = new CCSQLColDef("PART1",                CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_EPIS_TAGS             = new CCSQLColDef("TAGS",                 CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_EPIS_ADDDATE          = new CCSQLColDef("ADDDATE",              CCSQLType.DATE,        NON_NULLABLE);
-	public final static CCSQLColDef COL_EPIS_LANGUAGE         = new CCSQLColDef("LANGUAGE",             CCSQLType.BIGINT,      NON_NULLABLE);
+	public final static CCSQLColDef COL_EPIS_LANGUAGE         = new CCSQLColDef("LANGUAGE",             CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_EPIS_SUBTITLES        = new CCSQLColDef("SUBTITLES",            CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_EPIS_SCORE            = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
 	public final static CCSQLColDef COL_EPIS_SCORECOMMENT     = new CCSQLColDef("SCORECOMMENT",         CCSQLType.VARCHAR,     NON_NULLABLE);

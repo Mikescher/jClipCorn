@@ -1,11 +1,14 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.GroupFormatException;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -128,6 +131,33 @@ public class CCGroupList implements CCIterable<CCGroup> {
 		}
 		
 		return b.toString();
+	}
+
+	public String asJSONArray() {
+		JSONArray arr = new JSONArray();
+		for (CCGroup ccGroup : list) arr.put(ccGroup.Name);
+		return arr.toString();
+	}
+
+	public static CCGroupList fromJSONArrayWithoutAddingNewGroups(CCMovieList ml, String json) {
+		if (Str.isNullOrWhitespace(json)) return new CCGroupList();
+
+		try {
+			JSONArray arr = new JSONArray(json);
+			List<CCGroup> gl = new ArrayList<>();
+			for (int i = 0; i < arr.length(); i++) {
+				String name = arr.getString(i);
+				if (! CCGroup.isValidGroupName(name)) continue;
+
+				CCGroup g = ml.getGroupOrNull(name);
+				if (g == null) g = CCGroup.create(name);
+
+				gl.add(g);
+			}
+			return new CCGroupList(gl);
+		} catch (JSONException e) {
+			return new CCGroupList();
+		}
 	}
 
 	public CCGroup get(int i) {

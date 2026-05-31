@@ -24,7 +24,7 @@ public class EOnlineRefListProp extends EProperty<CCOnlineReferenceList> {
 
 	@Override
 	public Object serializeToDatabaseValue() {
-		return get().toSerializationString();
+		return get().asJSONArray();
 	}
 
 	@Override
@@ -33,8 +33,8 @@ public class EOnlineRefListProp extends EProperty<CCOnlineReferenceList> {
 	}
 
 	@Override
-	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
-		set(CCOnlineReferenceList.parse((String)v));
+	public void deserializeFromDatabaseValue(Object v) {
+		set(CCOnlineReferenceList.fromJSONArray((String)v));
 	}
 
 	@Override

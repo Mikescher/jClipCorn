@@ -24,7 +24,7 @@ public class ELanguageListProp extends EProperty<CCDBLanguageList> {
 
 	@Override
 	public Object serializeToDatabaseValue() {
-		return get().serializeToString();
+		return get().asJSONArray();
 	}
 
 	@Override
@@ -33,8 +33,8 @@ public class ELanguageListProp extends EProperty<CCDBLanguageList> {
 	}
 
 	@Override
-	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
-		set(CCDBLanguageList.parseFromString((String)v));
+	public void deserializeFromDatabaseValue(Object v) {
+		set(CCDBLanguageList.fromJSONArray((String)v));
 	}
 
 	@Override

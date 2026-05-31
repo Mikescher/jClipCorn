@@ -1,11 +1,15 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.helper.ObjectUtils;
 import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -127,13 +131,49 @@ public class CCOnlineReferenceList implements CCIterable<CCSingleOnlineReference
 
 	public String toSerializationString() {
 		if (Main.isUnset() && Additional.isEmpty()) return ""; //$NON-NLS-1$
-		
+
 		StringBuilder b = new StringBuilder();
 		b.append(Main.toSerializationString());
-		
+
 		for (CCSingleOnlineReference sor : Additional) b.append(SEPERATOR).append(sor.toSerializationString());
-		
+
 		return b.toString();
+	}
+
+	@SuppressWarnings("nls")
+	public String asJSONArray() {
+		JSONArray arr = new JSONArray();
+		for (CCSingleOnlineReference r : ccstream()) {
+			JSONObject o = new JSONObject();
+			o.put("t", r.type.getIdentifier());
+			o.put("id", r.id);
+			if (r.hasDescription()) o.put("d", r.description);
+			arr.put(o);
+		}
+		return arr.toString();
+	}
+
+	@SuppressWarnings("nls")
+	public static CCOnlineReferenceList fromJSONArray(String json) {
+		if (Str.isNullOrWhitespace(json)) return EMPTY;
+
+		try {
+			JSONArray arr = new JSONArray(json);
+			CCSingleOnlineReference main = null;
+			List<CCSingleOnlineReference> lst = new ArrayList<>();
+			for (int i = 0; i < arr.length(); i++) {
+				JSONObject o = arr.getJSONObject(i);
+				CCOnlineRefType type = CCOnlineRefType.parse(o.getString("t"));
+				String id = o.getString("id");
+				String desc = o.optString("d", Str.Empty);
+				CCSingleOnlineReference ref = new CCSingleOnlineReference(type, id, desc);
+				if (main == null) main = ref; else lst.add(ref);
+			}
+			if (main == null) main = CCSingleOnlineReference.EMPTY;
+			return new CCOnlineReferenceList(main, lst);
+		} catch (JSONException | OnlineRefFormatException e) {
+			return EMPTY;
+		}
 	}
 
 	public boolean isValid() {

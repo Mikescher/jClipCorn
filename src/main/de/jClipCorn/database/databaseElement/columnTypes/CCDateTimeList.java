@@ -8,6 +8,8 @@ import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.IterableStream;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.*;
 
@@ -110,6 +112,25 @@ public class CCDateTimeList implements CCIterable<CCDateTime> {
 
 	public static CCDateTimeList create(CCDate date) {
 		return new CCDateTimeList(CCDateTime.create(date));
+	}
+
+	public String asJSONArray() {
+		JSONArray arr = new JSONArray();
+		for (CCDateTime dt : list) arr.put(dt.getSQLStringRepresentation());
+		return arr.toString();
+	}
+
+	public static CCDateTimeList fromJSONArray(String json) {
+		if (Str.isNullOrWhitespace(json)) return new CCDateTimeList();
+
+		try {
+			JSONArray arr = new JSONArray(json);
+			List<CCDateTime> lst = new ArrayList<>();
+			for (int i = 0; i < arr.length(); i++) lst.add(CCDateTime.createFromSQL(arr.getString(i)));
+			return new CCDateTimeList(lst);
+		} catch (JSONException | CCFormatException e) {
+			return new CCDateTimeList();
+		}
 	}
 
 	public CCDateTime getFirstOrInvalid() {

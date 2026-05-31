@@ -4,9 +4,15 @@ import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.*;
 import de.jClipCorn.database.databaseElement.*;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGenreList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGroup;
+import de.jClipCorn.database.databaseElement.columnTypes.CCGroupList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCHexColor;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCPathList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCStringList;
 import de.jClipCorn.database.history.CCDatabaseHistory;
@@ -312,15 +318,15 @@ public class CCDatabase {
 	private void updateEpisodeFromResultSet(CCSQLResultSet rs, CCEpisode ep) throws SQLException, CCFormatException, SQLWrapperException {
 		ep.EpisodeNumber.setOnly(rs.getInt(DatabaseStructure.COL_EPIS_EPISODE));
 		ep.Title.setOnly(rs.getString(DatabaseStructure.COL_EPIS_NAME));
-		ep.ViewedHistory.setOnly(rs.getString(DatabaseStructure.COL_EPIS_VIEWEDHISTORY));
+		ep.ViewedHistory.setOnly(CCDateTimeList.fromJSONArray(rs.getString(DatabaseStructure.COL_EPIS_VIEWEDHISTORY)));
 		ep.Length.setOnly(rs.getInt(DatabaseStructure.COL_EPIS_LENGTH));
 		ep.Format.setOnly(rs.getInt(DatabaseStructure.COL_EPIS_FORMAT));
 		ep.FileSize.setOnly(rs.getLong(DatabaseStructure.COL_EPIS_FILESIZE));
 		ep.Part.setOnly(CCPath.create(rs.getString(DatabaseStructure.COL_EPIS_PART_1)));
 		ep.AddDate.setOnly(rs.getDate(DatabaseStructure.COL_EPIS_ADDDATE));
 		ep.Tags.setOnly(rs.getString(DatabaseStructure.COL_EPIS_TAGS));
-		ep.Language.setOnly(rs.getLong(DatabaseStructure.COL_EPIS_LANGUAGE));
-		ep.Subtitles.setOnly(rs.getString(DatabaseStructure.COL_EPIS_SUBTITLES));
+		ep.Language.setOnly(CCDBLanguageSet.fromJSONArray(rs.getString(DatabaseStructure.COL_EPIS_LANGUAGE)));
+		ep.Subtitles.setOnly(CCDBLanguageList.fromJSONArray(rs.getString(DatabaseStructure.COL_EPIS_SUBTITLES)));
 		ep.Score.setOnly(rs.getInt(DatabaseStructure.COL_EPIS_SCORE));
 		ep.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_EPIS_SCORECOMMENT));
 
@@ -360,16 +366,16 @@ public class CCDatabase {
 
 	private void updateSeriesFromResultSet(CCSQLResultSet rs, CCSeries ser) throws SQLException, CCFormatException, SQLWrapperException {
 		ser.Title.setOnly(rs.getString(DatabaseStructure.COL_SER_NAME));
-		ser.Genres.setOnly(rs.getLong(DatabaseStructure.COL_SER_GENRE));
+		ser.Genres.setOnly(CCGenreList.fromJSONArray(rs.getString(DatabaseStructure.COL_SER_GENRE)));
 		ser.OnlineScore.setOnly(rs.getShort(DatabaseStructure.COL_SER_ONLINESCORE_NUM), rs.getShort(DatabaseStructure.COL_SER_ONLINESCORE_DENOM));
 		ser.FSK.setOnly(rs.getInt(DatabaseStructure.COL_SER_FSK));
 		ser.Score.setOnly(rs.getInt(DatabaseStructure.COL_SER_SCORE));
 		ser.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_SER_SCORECOMMENT));
-		ser.OnlineReference.setOnly(rs.getString(DatabaseStructure.COL_SER_ONLINEREF));
+		ser.OnlineReference.setOnly(CCOnlineReferenceList.fromJSONArray(rs.getString(DatabaseStructure.COL_SER_ONLINEREF)));
 		ser.Tags.setOnly(rs.getString(DatabaseStructure.COL_SER_TAGS));
 
 		ser.CoverID.setOnly(rs.getInt(DatabaseStructure.COL_SER_COVERID));
-		ser.Groups.setOnly(rs.getString(DatabaseStructure.COL_SER_GROUPS));
+		ser.Groups.setOnly(CCGroupList.fromJSONArrayWithoutAddingNewGroups(ser.getMovieList(), rs.getString(DatabaseStructure.COL_SER_GROUPS)));
 		ser.SpecialVersion.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_SPECIALVERSION)));
 		ser.AnimeSeason.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_ANIMESEASON)));
 		ser.AnimeStudio.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_ANIMESTUDIO)));
@@ -377,18 +383,18 @@ public class CCDatabase {
 
 	private void updateMovieFromResultSet(CCSQLResultSet rs, CCMovie mov) throws SQLException, CCFormatException, SQLWrapperException {
 		mov.Title.setOnly(rs.getString(DatabaseStructure.COL_MOV_NAME));
-		mov.ViewedHistory.setOnly(rs.getString(DatabaseStructure.COL_MOV_VIEWEDHISTORY));
+		mov.ViewedHistory.setOnly(CCDateTimeList.fromJSONArray(rs.getString(DatabaseStructure.COL_MOV_VIEWEDHISTORY)));
 		mov.Zyklus.setOnly(rs.getString(DatabaseStructure.COL_MOV_ZYKLUS), rs.getInt(DatabaseStructure.COL_MOV_ZYKLUSNUMBER));
-		mov.Language.setOnly(rs.getLong(DatabaseStructure.COL_MOV_LANGUAGE));
-		mov.Subtitles.setOnly(rs.getString(DatabaseStructure.COL_MOV_SUBTITLES));
-		mov.Genres.setOnly(rs.getLong(DatabaseStructure.COL_MOV_GENRE));
+		mov.Language.setOnly(CCDBLanguageSet.fromJSONArray(rs.getString(DatabaseStructure.COL_MOV_LANGUAGE)));
+		mov.Subtitles.setOnly(CCDBLanguageList.fromJSONArray(rs.getString(DatabaseStructure.COL_MOV_SUBTITLES)));
+		mov.Genres.setOnly(CCGenreList.fromJSONArray(rs.getString(DatabaseStructure.COL_MOV_GENRE)));
 		mov.Length.setOnly(rs.getInt(DatabaseStructure.COL_MOV_LENGTH));
 		mov.AddDate.setOnly(rs.getDate(DatabaseStructure.COL_MOV_ADDDATE));
 		mov.OnlineScore.setOnly(rs.getShort(DatabaseStructure.COL_MOV_ONLINESCORE_NUM), rs.getShort(DatabaseStructure.COL_MOV_ONLINESCORE_DENOM));
 		mov.FSK.setOnly(rs.getInt(DatabaseStructure.COL_MOV_FSK));
 		mov.Format.setOnly(rs.getInt(DatabaseStructure.COL_MOV_FORMAT));
 		mov.Year.setOnly(rs.getInt(DatabaseStructure.COL_MOV_MOVIEYEAR));
-		mov.OnlineReference.setOnly(rs.getString(DatabaseStructure.COL_MOV_ONLINEREF));
+		mov.OnlineReference.setOnly(CCOnlineReferenceList.fromJSONArray(rs.getString(DatabaseStructure.COL_MOV_ONLINEREF)));
 		mov.FileSize.setOnly(rs.getLong(DatabaseStructure.COL_MOV_FILESIZE));
 		mov.Tags.setOnly(rs.getString(DatabaseStructure.COL_MOV_TAGS));
 
@@ -417,7 +423,7 @@ public class CCDatabase {
 		mov.MediaInfo.updateCache();
 
 		mov.CoverID.setOnly(rs.getInt(DatabaseStructure.COL_MOV_COVERID));
-		mov.Groups.setOnly(rs.getString(DatabaseStructure.COL_MOV_GROUPS));
+		mov.Groups.setOnly(CCGroupList.fromJSONArrayWithoutAddingNewGroups(mov.getMovieList(), rs.getString(DatabaseStructure.COL_MOV_GROUPS)));
 		mov.SpecialVersion.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_SPECIALVERSION)));
 		mov.AnimeSeason.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_ANIMESEASON)));
 		mov.AnimeStudio.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_ANIMESTUDIO)));
@@ -637,12 +643,12 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_MOV_LOCALID,       mov.getLocalID());
 
 			stmt.setStr(DatabaseStructure.COL_MOV_NAME,              mov.Title.get());
-			stmt.setStr(DatabaseStructure.COL_MOV_VIEWEDHISTORY,     mov.ViewedHistory.get().toSerializationString());
+			stmt.setStr(DatabaseStructure.COL_MOV_VIEWEDHISTORY,     mov.ViewedHistory.get().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_MOV_ZYKLUS,            mov.Zyklus.get().getTitle());
 			stmt.setInt(DatabaseStructure.COL_MOV_ZYKLUSNUMBER,      mov.Zyklus.get().getNumber());
-			stmt.setLng(DatabaseStructure.COL_MOV_LANGUAGE,          mov.Language.get().serializeToLong());
-			stmt.setStr(DatabaseStructure.COL_MOV_SUBTITLES,         mov.Subtitles.get().serializeToString());
-			stmt.setLng(DatabaseStructure.COL_MOV_GENRE,             mov.Genres.get().getAllGenres());
+			stmt.setStr(DatabaseStructure.COL_MOV_LANGUAGE,          mov.Language.get().asJSONArray());
+			stmt.setStr(DatabaseStructure.COL_MOV_SUBTITLES,         mov.Subtitles.get().asJSONArray());
+			stmt.setStr(DatabaseStructure.COL_MOV_GENRE,             mov.Genres.get().asJSONArray());
 			stmt.setInt(DatabaseStructure.COL_MOV_LENGTH,            mov.Length.get());
 			stmt.setStr(DatabaseStructure.COL_MOV_ADDDATE,           mov.AddDate.get().toStringSQL());
 			stmt.setSht(DatabaseStructure.COL_MOV_ONLINESCORE_NUM,   mov.OnlineScore.Numerator.get());
@@ -650,14 +656,14 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_MOV_FSK,               mov.FSK.get().asInt());
 			stmt.setInt(DatabaseStructure.COL_MOV_FORMAT,            mov.Format.get().asInt());
 			stmt.setInt(DatabaseStructure.COL_MOV_MOVIEYEAR,         mov.Year.get());
-			stmt.setStr(DatabaseStructure.COL_MOV_ONLINEREF,         mov.OnlineReference.get().toSerializationString());
+			stmt.setStr(DatabaseStructure.COL_MOV_ONLINEREF,         mov.OnlineReference.get().asJSONArray());
 			stmt.setLng(DatabaseStructure.COL_MOV_FILESIZE,          mov.FileSize.get().getBytes());
 			stmt.setStr(DatabaseStructure.COL_MOV_TAGS,              mov.Tags.get().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_MOV_PARTS,             mov.Parts.get().asJSONArray());
 			stmt.setInt(DatabaseStructure.COL_MOV_SCORE,             mov.Score.get().asInt());
 			stmt.setStr(DatabaseStructure.COL_MOV_SCORECOMMENT,      mov.ScoreComment.get());
 
-			stmt.setStr(DatabaseStructure.COL_MOV_GROUPS,            mov.getGroups().toSerializationString());
+			stmt.setStr(DatabaseStructure.COL_MOV_GROUPS,            mov.getGroups().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_MOV_SPECIALVERSION,    mov.SpecialVersion.serializeToString());
 			stmt.setStr(DatabaseStructure.COL_MOV_ANIMESEASON,       mov.AnimeSeason.serializeToString());
 			stmt.setStr(DatabaseStructure.COL_MOV_ANIMESTUDIO,       mov.AnimeStudio.serializeToString());
@@ -707,17 +713,17 @@ public class CCDatabase {
 			stmt.clearParameters();
 
 			stmt.setStr(DatabaseStructure.COL_SER_NAME,              ser.Title.get());
-			stmt.setLng(DatabaseStructure.COL_SER_GENRE,             ser.Genres.get().getAllGenres());
+			stmt.setStr(DatabaseStructure.COL_SER_GENRE,             ser.Genres.get().asJSONArray());
 			stmt.setInt(DatabaseStructure.COL_SER_ONLINESCORE_NUM,   ser.OnlineScore.Numerator.get());
 			stmt.setInt(DatabaseStructure.COL_SER_ONLINESCORE_DENOM, ser.OnlineScore.Denominator.get());
 			stmt.setInt(DatabaseStructure.COL_SER_FSK,               ser.FSK.get().asInt());
-			stmt.setStr(DatabaseStructure.COL_SER_ONLINEREF,         ser.OnlineReference.get().toSerializationString());
+			stmt.setStr(DatabaseStructure.COL_SER_ONLINEREF,         ser.OnlineReference.get().asJSONArray());
 			stmt.setInt(DatabaseStructure.COL_SER_SCORE,             ser.Score.get().asInt());
 			stmt.setStr(DatabaseStructure.COL_SER_SCORECOMMENT,      ser.ScoreComment.get());
 			stmt.setStr(DatabaseStructure.COL_SER_TAGS,              ser.Tags.get().asJSONArray());
 
 			stmt.setInt(DatabaseStructure.COL_SER_COVERID,           ser.getCoverID());
-			stmt.setStr(DatabaseStructure.COL_SER_GROUPS,            ser.getGroups().toSerializationString());
+			stmt.setStr(DatabaseStructure.COL_SER_GROUPS,            ser.getGroups().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_SER_SPECIALVERSION,    ser.SpecialVersion.serializeToString());
 			stmt.setStr(DatabaseStructure.COL_SER_ANIMESEASON,       ser.AnimeSeason.serializeToString());
 			stmt.setStr(DatabaseStructure.COL_SER_ANIMESTUDIO,       ser.AnimeStudio.serializeToString());
@@ -775,15 +781,15 @@ public class CCDatabase {
 
 			stmt.setInt(DatabaseStructure.COL_EPIS_EPISODE,       ep.EpisodeNumber.get());
 			stmt.setStr(DatabaseStructure.COL_EPIS_NAME,          ep.Title.get());
-			stmt.setStr(DatabaseStructure.COL_EPIS_VIEWEDHISTORY, ep.ViewedHistory.get().toSerializationString());
+			stmt.setStr(DatabaseStructure.COL_EPIS_VIEWEDHISTORY, ep.ViewedHistory.get().asJSONArray());
 			stmt.setInt(DatabaseStructure.COL_EPIS_LENGTH,        ep.Length.get());
 			stmt.setInt(DatabaseStructure.COL_EPIS_FORMAT,        ep.Format.get().asInt());
 			stmt.setLng(DatabaseStructure.COL_EPIS_FILESIZE,      ep.FileSize.get().getBytes());
 			stmt.setStr(DatabaseStructure.COL_EPIS_PART_1,        ep.Part.get().toString());
 			stmt.setStr(DatabaseStructure.COL_EPIS_TAGS,          ep.Tags.get().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_EPIS_ADDDATE,       ep.AddDate.get().toStringSQL());
-			stmt.setLng(DatabaseStructure.COL_EPIS_LANGUAGE,      ep.Language.get().serializeToLong());
-			stmt.setStr(DatabaseStructure.COL_EPIS_SUBTITLES,     ep.Subtitles.get().serializeToString());
+			stmt.setStr(DatabaseStructure.COL_EPIS_LANGUAGE,      ep.Language.get().asJSONArray());
+			stmt.setStr(DatabaseStructure.COL_EPIS_SUBTITLES,     ep.Subtitles.get().asJSONArray());
 			stmt.setInt(DatabaseStructure.COL_EPIS_SCORE,         ep.Score.get().asInt());
 			stmt.setStr(DatabaseStructure.COL_EPIS_SCORECOMMENT,  ep.ScoreComment.get());
 

@@ -9,6 +9,8 @@ import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -81,6 +83,25 @@ public class CCDBLanguageSet implements CCIterable<CCDBLanguage> {
 
 	public String serializeToString() {
 		return CCStreams.iterate(_languages).autosort().stringjoin(CCDBLanguage::getLongString, ";"); //$NON-NLS-1$
+	}
+
+	public String asJSONArray() {
+		JSONArray arr = new JSONArray();
+		for (CCDBLanguage l : CCStreams.iterate(_languages).autosort()) arr.put(l.asInt());
+		return arr.toString();
+	}
+
+	public static CCDBLanguageSet fromJSONArray(String json) {
+		if (Str.isNullOrWhitespace(json)) return EMPTY;
+
+		try {
+			JSONArray arr = new JSONArray(json);
+			var r = new HashSet<CCDBLanguage>();
+			for (int i = 0; i < arr.length(); i++) r.add(CCDBLanguage.getWrapper().findOrException(arr.getInt(i)));
+			return new CCDBLanguageSet(r);
+		} catch (JSONException | CCFormatException e) {
+			return EMPTY;
+		}
 	}
 
 	public String toOutputString() {

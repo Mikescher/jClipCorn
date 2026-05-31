@@ -54,6 +54,9 @@ public class Statements {
 	public CCSQLStatement writeInfoKeyStatement;
 	public CCSQLStatement readInfoKeyStatement;
 
+	public CCSQLStatement readAllPropertiesStatement;
+	public CCSQLStatement writePropertyKeyStatement;
+
 	public CCSQLStatement selectGroupsStatement;
 	public CCSQLStatement insertGroupStatement;
 	public CCSQLStatement removeGroupStatement;
@@ -142,6 +145,9 @@ public class Statements {
 
 			readInfoKeyStatement  = SQLBuilder.createSelect(TAB_INFO).addSelectField(COL_INFO_VALUE).addPreparedWhereCondition(COL_INFO_KEY).build(d, statements);
 			writeInfoKeyStatement = SQLBuilder.createInsertOrReplace(TAB_INFO).addPreparedField(COL_INFO_KEY).addPreparedField(COL_INFO_VALUE).build(d, statements);
+
+			readAllPropertiesStatement = SQLBuilder.createSelect(TAB_PROPERTIES).addSelectField(COL_PROP_KEY).addSelectField(COL_PROP_VALUE).build(d, statements);
+			writePropertyKeyStatement  = SQLBuilder.createInsertOrReplace(TAB_PROPERTIES).addPreparedField(COL_PROP_KEY).addPreparedField(COL_PROP_VALUE).addPreparedField(COL_PROP_LAST_CHANGED).build(d, statements);
 
 			selectGroupsStatement    = SQLBuilder.createSelectAll(TAB_GROUPS).build(d, statements);
 			insertGroupStatement     = SQLBuilder.createInsertSingle(TAB_GROUPS).build(d, statements);

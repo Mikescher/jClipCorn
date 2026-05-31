@@ -2,8 +2,8 @@ package de.jClipCorn.database.migration;
 
 import de.jClipCorn.database.driver.GenericDatabase;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 
 import java.io.IOException;
@@ -13,8 +13,8 @@ import java.util.List;
 
 public class Migration_28_29 extends DBMigration {
 
-	public Migration_28_29(GenericDatabase db, CCProperties ccprops, FSPath databaseDirectory, String databaseName, boolean readonly) {
-		super(db, ccprops, databaseDirectory, databaseName, readonly);
+	public Migration_28_29(GenericDatabase db, FSPath databaseDirectory, String databaseName, boolean readonly) {
+		super(db, databaseDirectory, databaseName, readonly);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class Migration_28_29 extends DBMigration {
 
 	@SuppressWarnings("nls")
 	private void migrateLegacyFilterFile() throws Exception {
-		FSPath flst = ccprops.PROP_MAINFRAME_FILTERLISTPATH.getValue().toFSPath(ccprops);
+		FSPath flst = FilesystemUtils.getRealSelfDirectory().append("jClipCorn.flst");
 
 		if (!flst.exists()) {
 			CCLog.addInformation("[MIGRATION] No legacy filter file found - skipping filter import");

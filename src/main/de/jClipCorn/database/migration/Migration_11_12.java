@@ -3,7 +3,6 @@ package de.jClipCorn.database.migration;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
 import de.jClipCorn.database.driver.GenericDatabase;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.stream.CCStreams;
@@ -13,8 +12,8 @@ import java.util.List;
 
 public class Migration_11_12 extends DBMigration {
 
-	public Migration_11_12(GenericDatabase db, CCProperties ccprops, FSPath databaseDirectory, String databaseName, boolean readonly) {
-		super(db, ccprops, databaseDirectory, databaseName, readonly);
+	public Migration_11_12(GenericDatabase db, FSPath databaseDirectory, String databaseName, boolean readonly) {
+		super(db, databaseDirectory, databaseName, readonly);
 	}
 
 	@Override

@@ -36,13 +36,10 @@ public class DatabaseSeeder {
 		var dbPath = tempPath.append("db");
 		dbPath.mkdirsWithException();
 
-		var props = CCProperties.create(tempPath.append(Main.PROPERTIES_PATH), new String[0]);
-
-		props.PROP_DATABASE_DIR.setValue(dbPath);
-
 		System.out.println("Load DB from: " + tempPath);
 
-		var ml = CCMovieList.createInstanceMovieList(props);
+		var ml = CCMovieList.loadExtern(null, dbPath, Main.DATABASE_NAME, false);
+		var props = ml.ccprops();
 		ml.connectAndLoadExternal(true);
 		{
 			ml.getHistory().enableTrigger();
@@ -54,7 +51,7 @@ public class DatabaseSeeder {
 		{
 			ml.shutdown();
 
-			var mlRet = CCMovieList.createInstanceMovieList(props);
+			var mlRet = CCMovieList.loadExtern(null, dbPath, Main.DATABASE_NAME, false);
 			mlRet.connectAndLoadExternal(true);
 
 			ClipCornBaseTest.CLEANUP.add(() -> { System.out.println("[CLEANUP] Shutdown ML"); mlRet.shutdown(); });

@@ -1,6 +1,8 @@
 package de.jClipCorn;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.driver.CCDatabase;
+import de.jClipCorn.database.driver.DatabaseConnectResult;
 import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.log.ExceptionHandler;
@@ -12,6 +14,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.properties.enumerations.ResourcePreloadMode;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -27,15 +30,19 @@ import de.jClipCorn.util.helper.SwingUtils;
 //
 
 public class Main {
-	public final static String TITLE     = "jClipCorn"; //$NON-NLS-1$
-	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.11.12"/*</gradle_version_marker>*/; //$NON-NLS-1$
-	public final static String DBVERSION = "30";    //$NON-NLS-1$
-	public final static String JXMLVER   = "10";     //$NON-NLS-1$
-
-	public final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
+	public final static String TITLE             = "jClipCorn";                                                             //$NON-NLS-1$
+	public final static String VERSION           = /*<gradle_version_marker>*/"1.10.11.13"/*</gradle_version_marker>*/;     //$NON-NLS-1$
+	public final static String DBVERSION         = "31";                                                                    //$NON-NLS-1$
+	public final static String JXMLVER           = "10";                                                                    //$NON-NLS-1$
+	public final static String DATABASE_NAME     = "ClipCornDB";                                                            //$NON-NLS-1$
+	public final static String LOG_PATH          = "jClipcorn.log";                                                         //$NON-NLS-1$
+	public final static String BACKUP_FOLDERNAME = "jClipCorn_backup";                                                      //$NON-NLS-1$
 	
 	public static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
 	public static boolean BETA = true;
+
+	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
+	public static boolean ARG_READONLY = false;
 
 	private static CCProperties _uiPropertyAcc;
 
@@ -44,36 +51,57 @@ public class Main {
 
 		Globals.TIMINGS.start(Globals.TIMING_STARTUP_TOTAL);
 
+		interpreteArgs(arg);
+
 		Globals.TIMINGS.start(Globals.TIMING_INIT_TOTAL);
 		{
-			CCProperties ccprops;
+			var database = CCDatabase.create(CCDatabaseDriver.SQLITE, FilesystemUtils.getRealSelfDirectory(), Main.DATABASE_NAME, Main.ARG_READONLY);
 
-			Globals.TIMINGS.start(Globals.TIMING_INIT_LOAD_PROPERTIES);
-			{
-				_uiPropertyAcc = ccprops = CCProperties.create(FilesystemUtils.getRealSelfDirectory().append(PROPERTIES_PATH), arg);
-			}
-			Globals.TIMINGS.stop(Globals.TIMING_INIT_LOAD_PROPERTIES);
-
-			CCLog.setPath(ccprops.PROP_LOG_PATH.getValue());
-			CCLog.setCCProps(ccprops);
+			CCLog.setPath(LOG_PATH);
 
 			Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler.getInstance()); // For Main Thread
 
 			Globals.TIMINGS.start(Globals.TIMING_INIT_TESTREADONLY);
 			{
-				FilesystemUtils.testWritePermissions(ccprops);
+				FilesystemUtils.testWritePermissions();
 			}
 			Globals.TIMINGS.stop(Globals.TIMING_INIT_TESTREADONLY);
 
-			final CCMovieList mList = CCMovieList.createInstanceMovieList(ccprops);
+			CCProperties ccprops;
+
+			Globals.TIMINGS.start(Globals.TIMING_LOAD_DATABASE_CONNECT);
+			{
+				var lastConnectResult = database.tryconnect();
+
+				if (lastConnectResult == DatabaseConnectResult.ERROR_CANTCONNECT) {
+					CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorConnectDB"), database.getLastError()); //$NON-NLS-1$
+				} else if (lastConnectResult == DatabaseConnectResult.ERROR_CANTCREATE) {
+					CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorCreateDB"), database.getLastError()); //$NON-NLS-1$
+				}
+			}
+			Globals.TIMINGS.stop(Globals.TIMING_LOAD_DATABASE_CONNECT);
+
+			Globals.TIMINGS.start(Globals.TIMING_INIT_LOAD_PROPERTIES);
+			{
+				_uiPropertyAcc = ccprops = CCProperties.createAndLoad(database);
+				CCLog.setCCProps(ccprops);
+				LocaleBundle.updateLang(ccprops);
+			}
+			Globals.TIMINGS.stop(Globals.TIMING_INIT_LOAD_PROPERTIES);
+
+			final CCMovieList mList = CCMovieList.createInstanceMovieList(ccprops, database);
+
+			Resources.init();
+
+			BackupManager bm = new BackupManager(mList);
+			bm.init();
+			bm.doActions(null);
 
 			DEBUG |= mList.ccprops().PROP_OTHER_DEBUGMODE.getValue();
 
 			if (mList.ccprops().PROP_COMMON_PRESCANFILESYSTEM.getValue()) {
 				mList.getDriveMap().preScan(); // creates a new Thread
 			}
-
-			Resources.init();
 
 			if (mList.ccprops().PROP_LOADING_PRELOADRESOURCES.getValue() == ResourcePreloadMode.SYNC_PRELOAD) {
 				Globals.TIMINGS.start(Globals.TIMING_INIT_PRELOADRESOURCES);
@@ -84,12 +112,6 @@ public class Main {
 				Resources.preload_async();
 				Globals.TIMINGS.stop(Globals.TIMING_INIT_PRELOADRESOURCES);
 			}
-
-			BackupManager bm = new BackupManager(mList);
-			bm.init();
-			bm.doActions(null);
-
-			mList.connect();
 
 			CCLog.addDebug(LocaleBundle.getTranslationCount(mList.ccprops()) + " Translations in Locale " + LocaleBundle.getCurrentLocale(mList.ccprops())); //$NON-NLS-1$
 
@@ -106,6 +128,21 @@ public class Main {
 			});
 		}
 		Globals.TIMINGS.stop(Globals.TIMING_INIT_TOTAL);
+	}
+
+	private static void interpreteArgs(String[] args) {
+		@SuppressWarnings("nls")
+		String[] readOnlyArgs = {"readonly", "-readonly", "--readonly", "read-only", "-read-only", "--read-only", "ro", "-ro", "--ro"};
+
+		for (String arg : args) {
+			for (String readOnlyArg : readOnlyArgs) {
+				if (arg.equalsIgnoreCase(readOnlyArg)) {
+					Main.ARG_READONLY = true;
+
+					CCLog.addDebug("ReadOnly Mode activated (" + arg + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+			}
+		}
 	}
 
 	@SuppressWarnings({"unchecked", "nls"})

@@ -1,6 +1,5 @@
 package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
-import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
@@ -18,7 +17,7 @@ public class CDFWorkerCompare
 		cb.setMaxAndResetValueBoth(3, 1);
 		cb.setValueBoth(0, 0, "Connecting", "");
 
-		var mlExt = CCMovieList.loadExtern(null, dbPath, dbName, true, CCProperties.createReadonly(dbPath.append(Main.PROPERTIES_PATH)));
+		var mlExt = CCMovieList.loadExtern(null, dbPath, dbName, true);
 
 		if (!mlExt.databaseExists()) throw new Exception("Database " + dbPath + " | " + dbName + " not found");
 

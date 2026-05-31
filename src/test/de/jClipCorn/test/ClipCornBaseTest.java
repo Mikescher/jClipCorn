@@ -1,6 +1,5 @@
 package de.jClipCorn.test;
 
-import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.features.databaseErrors.DatabaseError;
@@ -274,13 +273,9 @@ public class ClipCornBaseTest {
 
 	public static CCMovieList reloadDBAfterShutdown(CCMovieList ml) throws Exception {
 
-		var dbPath = ml.getDatabaseDirectory().getParent();
+		var dbDir = ml.getDatabaseDirectory().getParent();
 
-		var props = CCProperties.create(dbPath.getParent().append(Main.PROPERTIES_PATH), new String[0]);
-		props.PROP_DATABASE_DIR.setValue(dbPath);
-		props.PROP_DATABASE_NAME.setValue(ml.getDatabaseName());
-
-		var mlRet = CCMovieList.createInstanceMovieList(ml.ccprops());
+		var mlRet = CCMovieList.loadExtern(null, dbDir, ml.getDatabaseName(), false);
 		mlRet.connectAndLoadExternal(true);
 
 		ClipCornBaseTest.CLEANUP.add(() -> { System.out.println("[CLEANUP] Shutdown ML"); mlRet.shutdown(); });

@@ -70,8 +70,8 @@ public class BackupManager {
 		return movielist.ccprops();
 	}
 
-	private FSPath getBackupDirectory() {
-		var d = FilesystemUtils.getRealSelfDirectory().append(ccprops().PROP_BACKUP_FOLDERNAME.getValue());
+	private static FSPath getBackupDirectory() {
+		var d = FilesystemUtils.getRealSelfDirectory().append(Main.BACKUP_FOLDERNAME);
 
 		if (!d.exists()) d.mkdirsSafe();
 
@@ -88,7 +88,7 @@ public class BackupManager {
 
 			for (FSPath f : archives) {
 				try {
-					CCBackup backup = new CCBackup(movielist, f);
+					CCBackup backup = new CCBackup(f);
 
 					backuplist.add(backup);
 				} catch (Exception e) {
@@ -118,7 +118,7 @@ public class BackupManager {
 		for (int i = backuplist.size() - 1; i >= 0; i--) {
 			CCBackup backup = backuplist.get(i);
 
-			if (backup.isExpired()) deleteBackup(backup);
+			if (backup.isExpired(ccprops())) deleteBackup(backup);
 		}
 	}
 
@@ -148,7 +148,7 @@ public class BackupManager {
 		if (needsCreateBackup()) createBackup(c);
 	}
 
-	private FSPath getNewBackupName() {
+	private static FSPath getNewBackupName() {
 		var dir = getBackupDirectory();
 
 		int id = 0;
@@ -163,7 +163,7 @@ public class BackupManager {
 	}
 
 	public String getStandardBackupname() {
-		return String.format(BACKUPNAME, ccprops().PROP_DATABASE_NAME.getValue());
+		return String.format(BACKUPNAME, Main.DATABASE_NAME);
 	}
 
 	public void createBackupWithWait(Component c) {
@@ -182,12 +182,31 @@ public class BackupManager {
 		createBackup(c, name, CCDate.getCurrentDate(), persistent, Main.VERSION, Main.DBVERSION);
 	}
 
-	public void createMigrationBackupWithWait(String oldVersion) throws IOException {
-		waitForInitialized_IO(() ->
-		{
-			String name = "Automatic backup (database migration from " + oldVersion + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-			createBackupInternal(name, CCDate.getCurrentDate(), false, Main.VERSION, Main.DBVERSION, new ProgressCallbackSink(), true);
-		});
+	public static void createMigrationBackup(String oldVersion, FSPath dbpath) throws IOException {
+		String name = "Automatic backup (database migration from " + oldVersion + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+
+		var file = getNewBackupName();
+
+		FileOutputStream os = new FileOutputStream(file.toFile());
+		ZipOutputStream zos = new ZipOutputStream(os);
+		zos.setLevel(0);
+
+		ExportHelper.zipDir(
+				dbpath,
+				dbpath.append(Main.DATABASE_NAME),
+				zos,
+				true,
+				(f) -> (f.isDirectory() && !f.getDirectoryName().equalsIgnoreCase(Main.DATABASE_NAME)) || !f.getParent().getDirectoryName().equalsIgnoreCase(Main.DATABASE_NAME),
+				new ProgressCallbackSink());
+
+		zos.close();
+
+		CCBackup backup = new CCBackup(file, name, CCDate.getCurrentDate(), false, Main.VERSION, Main.DBVERSION, true);
+		boolean ok = backup.saveToFile();
+		if (!ok) {
+			if (file.exists()) FileUtils.deleteQuietly(file.toFile());
+			throw new IOException("saveToFile failed"); //$NON-NLS-1$
+		}
 	}
 
 	public void createPatchBackupWithWait() throws IOException {
@@ -250,7 +269,7 @@ public class BackupManager {
 
 		zos.close();
 
-		CCBackup backup = new CCBackup(movielist, file, name, date, persistent, jccversion, dbversion, excludeCovers);
+		CCBackup backup = new CCBackup(file, name, date, persistent, jccversion, dbversion, excludeCovers);
 		boolean ok = backup.saveToFile();
 		if (!ok) {
 			if (file.exists()) FileUtils.deleteQuietly(file.toFile());

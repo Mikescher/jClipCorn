@@ -1,5 +1,6 @@
 package de.jClipCorn.util.filesystem;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
@@ -16,8 +17,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 @SuppressWarnings("nls")
 public class FilesystemUtils {
@@ -189,9 +190,9 @@ public class FilesystemUtils {
 		return true;
 	}
 
-	public static void testWritePermissions(CCProperties ccprops) {
+	public static void testWritePermissions() {
 		var cwwd = canWriteInWorkingDir();
-		if (! cwwd.Item2 && !ccprops.ARG_READONLY) {
+		if (! cwwd.Item2 && !Main.ARG_READONLY) {
 			CCLog.addDebug("getRealSelfDirectory(): " + getRealSelfDirectory());
 			CCLog.addDebug("TESTFILE_NAME:          " + TESTFILE_NAME);
 			CCLog.addDebug("Exception:              " + cwwd.Item1);

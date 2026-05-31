@@ -9,8 +9,8 @@ import java.util.List;
 
 public class Migration_14_15 extends DBMigration {
 
-	public Migration_14_15(GenericDatabase db, CCProperties ccprops, FSPath databaseDirectory, String databaseName, boolean readonly) {
-		super(db, ccprops, databaseDirectory, databaseName, readonly);
+	public Migration_14_15(GenericDatabase db, FSPath databaseDirectory, String databaseName, boolean readonly) {
+		super(db, databaseDirectory, databaseName, readonly);
 	}
 
 	@Override

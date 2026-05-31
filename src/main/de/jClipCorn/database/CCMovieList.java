@@ -2,6 +2,7 @@ package de.jClipCorn.database;
 
 import de.jClipCorn.Globals;
 import de.jClipCorn.Main;
+import de.jClipCorn.database.covertab.CCMemoryCoverCache;
 import de.jClipCorn.database.covertab.ICoverCache;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.caches.ICalculationCache;
@@ -67,7 +68,9 @@ public class CCMovieList implements ICCPropertySource {
 	private final List<Func4to0<IEProperty, CCEpisode, Object, Object>> propEpisodeChangedListener = new ArrayList<>();
 
 	
-	private       CCDatabase database;
+	private CCDatabase  database;
+	private ICoverCache coverCache;
+
 	private final List<CCGroup> databaseGroups;
 
 	private CCTransactionLog transactionLog = null;
@@ -87,6 +90,10 @@ public class CCMovieList implements ICCPropertySource {
 		this.databaseGroups = new ArrayList<>();
 		this.database = db;
 
+		this.coverCache = db.createCoverCache(ccprops);
+
+		this.coverCache.init();
+
 		_webConn = WebConnectionLayer.create(ccprops);
 		_cache = new MovieListCache(this);
 
@@ -96,20 +103,13 @@ public class CCMovieList implements ICCPropertySource {
 		addMoviePropChangeListener(ChecksumHelper::clearMoviePropsIfNeccessary);
 		addEpisodePropChangeListener(ChecksumHelper::clearEpisodePropsIfNeccessary);
 
-		if (!ccprops.ARG_READONLY && !database.isInMemory() && ccprops.PROP_DATABASE_TRANSACTION_LOG.getValue()) {
+		if (!Main.ARG_READONLY && !database.isInMemory() && ccprops.PROP_DATABASE_TRANSACTION_LOG.getValue()) {
 			transactionLog = new CCTransactionLog(this);
 			transactionLog.register(this);
 		}
 	}
-	
-	public static CCMovieList createInstanceMovieList(CCProperties ccprops) {
-		var db = CCDatabase.create(
-				ccprops,
-				ccprops.PROP_DATABASE_DRIVER.getValue(),
-				ccprops.PROP_DATABASE_DIR.getValue().isEmpty() ? FilesystemUtils.getRealSelfDirectory() : ccprops.PROP_DATABASE_DIR.getValue(),
-				ccprops.PROP_DATABASE_NAME.getValue(),
-				ccprops.ARG_READONLY);
 
+	public static CCMovieList createInstanceMovieList(CCProperties ccprops, CCDatabase db) {
 		return new CCMovieList(db, ccprops);
 	}
 
@@ -118,16 +118,18 @@ public class CCMovieList implements ICCPropertySource {
 	}
 	
 	public static CCMovieList createInMemory(CCProperties ccprops) {
-		return new CCMovieList(CCDatabase.createInMemory(ccprops), ccprops);
+		return new CCMovieList(CCDatabase.createInMemory(), ccprops);
 	}
 	
 	public static CCMovieList createStub() {
 		var ccprops = CCProperties.createInMemory();
-		return new CCMovieList(CCDatabase.createStub(ccprops), ccprops);
+		return new CCMovieList(CCDatabase.createStub(), ccprops);
 	}
 
-	public static CCMovieList loadExtern(CCDatabaseDriver drv, FSPath directory, String dbName, boolean readonly, CCProperties ccprops) {
-		return new CCMovieList(CCDatabase.create(ccprops, drv, directory, dbName, readonly), ccprops);
+	public static CCMovieList loadExtern(CCDatabaseDriver drv, FSPath directory, String dbName, boolean readonly) {
+		var db = CCDatabase.create(drv, directory, dbName, readonly);
+		var ccprops = CCProperties.createAndLoad(db);
+		return new CCMovieList(db, ccprops);
 	}
 
 	public CCProperties ccprops() {
@@ -138,32 +140,13 @@ public class CCMovieList implements ICCPropertySource {
 		if (!database.exists()) {
 			boolean cont = InitialConfigFrame.ShowWizard(ccprops());
 			
-			if (! cont) {
+			if (!cont) {
 				ApplicationHelper.exitApplication(0, true);
 			}
 
-			// in case db type has changed
-			database = CCDatabase.create(
-					ccprops(),
-					ccprops().PROP_DATABASE_DRIVER.getValue(),
-					FilesystemUtils.getRealSelfDirectory(),
-					ccprops().PROP_DATABASE_NAME.getValue(),
-					ccprops().ARG_READONLY);
+			// re-create the database object after the wizard created it on disk
+			database = CCDatabase.create(CCDatabaseDriver.SQLITE, FilesystemUtils.getRealSelfDirectory(), Main.DATABASE_NAME, Main.ARG_READONLY);
 		}
-	}
-
-	public void connect() {
-		Globals.TIMINGS.start(Globals.TIMING_LOAD_DATABASE_CONNECT);
-		{
-			DatabaseConnectResult dbcr = database.tryconnect();
-
-			if (dbcr == DatabaseConnectResult.ERROR_CANTCONNECT) {
-				CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorConnectDB"), database.getLastError()); //$NON-NLS-1$
-			} else if (dbcr == DatabaseConnectResult.ERROR_CANTCREATE) {
-				CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorCreateDB"), database.getLastError()); //$NON-NLS-1$
-			}
-		}
-		Globals.TIMINGS.stop(Globals.TIMING_LOAD_DATABASE_CONNECT);
 	}
 
 	public void connectAndLoad(final MainFrame mf, Func0to0 postInit) {
@@ -200,7 +183,7 @@ public class CCMovieList implements ICCPropertySource {
 
 					Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
 					{
-						database.fillCoverCache(ccprops().PROP_DATABASE_LOAD_ALL_COVERDATA.getValue());
+						database.fillCoverCache(coverCache, ccprops().PROP_DATABASE_LOAD_ALL_COVERDATA.getValue());
 					}
 					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
 				}
@@ -228,7 +211,7 @@ public class CCMovieList implements ICCPropertySource {
 
 		}, "THREAD_LOAD_DATABASE").start(); //$NON-NLS-1$
 	}
-	
+
 	public void connectAndLoadForTests(boolean skipconnect)
 	{
 		isLoading = true;
@@ -242,7 +225,7 @@ public class CCMovieList implements ICCPropertySource {
 
 			database.fillGroups(CCMovieList.this);
 			database.fillMovieList(CCMovieList.this);
-			database.fillCoverCache(true);
+			database.fillCoverCache(coverCache, true);
 		}
 		isLoading = false;
 		isLoaded  = true;
@@ -259,7 +242,7 @@ public class CCMovieList implements ICCPropertySource {
 
 			database.fillGroups(CCMovieList.this);
 			database.fillMovieList(CCMovieList.this);
-			database.fillCoverCache(true);
+			database.fillCoverCache(coverCache, true);
 		}
 		isLoading = false;
 		isLoaded  = true;
@@ -270,12 +253,13 @@ public class CCMovieList implements ICCPropertySource {
 
 		databaseGroups.clear();
 		list.clear();
-		database.resetForTestReload();
+
+		((CCMemoryCoverCache)coverCache).resetForTestReload();
 
 		// refill
 		database.fillGroups(CCMovieList.this);
 		database.fillMovieList(CCMovieList.this);
-		database.fillCoverCache(true);
+		database.fillCoverCache(coverCache, true);
 	}
 
 	public boolean isInitializingOrIsLoading() {
@@ -664,11 +648,11 @@ public class CCMovieList implements ICCPropertySource {
 	}
 
 	public ICoverCache getCoverCache() {
-		return database.getCoverCache();
+		return coverCache;
 	}
 
 	public int getCoverCount() {
-		return database.getCoverCache().getCoverCount();
+		return coverCache.getCoverCount();
 	}
 	
 	public void removeEpisodeFromDatabase(CCEpisode ep) {
@@ -1133,6 +1117,7 @@ public class CCMovieList implements ICCPropertySource {
 
 	public void reconnectDatabase() {
 		database.reconnect();
+		coverCache.init();
 	}
 
 	public CCEpisode getLastPlayedEpisode() {
@@ -1174,7 +1159,7 @@ public class CCMovieList implements ICCPropertySource {
 	public void testDatabaseVersion() {
 		String real = database.getInformation_DBVersion();
 		String expected = Main.DBVERSION;
-		String name = ccprops().PROP_DATABASE_NAME.getValue();
+		String name = database.getDBName();
 		String type = database.getDBTypeName();
 		
 		if (! real.equals(Main.DBVERSION)) {
@@ -1509,4 +1494,7 @@ public class CCMovieList implements ICCPropertySource {
 		propEpisodeChangedListener.remove(l);
 	}
 
+	public boolean isFirstLaunch() {
+		return database.isFirstLaunch();
+	}
 }

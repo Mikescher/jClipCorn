@@ -65,7 +65,7 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 
 		instance = this;
 
-		if (ccprops().firstLaunch) {
+		if (movielist.isFirstLaunch()) {
 			JOptionPane.showMessageDialog(this,
 					LocaleBundle.getString("MainFrame.disclaimer.text"),  //$NON-NLS-1$
 					LocaleBundle.getString("MainFrame.disclaimer.caption"),  //$NON-NLS-1$

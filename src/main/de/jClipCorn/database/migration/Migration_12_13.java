@@ -3,7 +3,6 @@ package de.jClipCorn.database.migration;
 import de.jClipCorn.database.covertab.CCDefaultCoverCache;
 import de.jClipCorn.database.driver.GenericDatabase;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.colorquantizer.ColorQuantizer;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.colorquantizer.util.ColorQuantizerConverter;
@@ -24,8 +23,8 @@ import static de.jClipCorn.database.driver.DatabaseStructure.*;
 
 public class Migration_12_13 extends DBMigration {
 
-	public Migration_12_13(GenericDatabase db, CCProperties ccprops, FSPath databaseDirectory, String databaseName, boolean readonly) {
-		super(db, ccprops, databaseDirectory, databaseName, readonly);
+	public Migration_12_13(GenericDatabase db, FSPath databaseDirectory, String databaseName, boolean readonly) {
+		super(db, databaseDirectory, databaseName, readonly);
 	}
 
 	@Override
@@ -55,8 +54,8 @@ public class Migration_12_13 extends DBMigration {
 
 		var cvrdir = databaseDirectory.append(databaseName, CCDefaultCoverCache.COVER_DIRECTORY_NAME);
 
-		final String prefix = ccprops.PROP_COVER_PREFIX.getValue();
-		final String suffix = "." + ccprops.PROP_COVER_TYPE.getValue();  //$NON-NLS-1$
+		final String prefix = "cover_";
+		final String suffix = ".png";  //$NON-NLS-1$
 
 		String[] files = cvrdir.listFilenames((path, name) -> name.startsWith(prefix) && name.endsWith(suffix));
 		for (String _f : files) {
@@ -69,7 +68,7 @@ public class Migration_12_13 extends DBMigration {
 			String checksum;
 			try (FileInputStream fis = new FileInputStream(f.toFile())) { checksum = DigestUtils.sha256Hex(fis).toUpperCase(); }
 
-			ColorQuantizerMethod ptype = ccprops.PROP_DATABASE_COVER_QUANTIZER.getValue();
+			ColorQuantizerMethod ptype = ColorQuantizerMethod.HSL_DISTINCT_SELECTION;
 			ColorQuantizer quant = ptype.create();
 			quant.analyze(img, 16);
 			byte[] preview = ColorQuantizerConverter.quantizeTo4BitRaw(quant, ColorQuantizerConverter.shrink(img, ColorQuantizerConverter.PREVIEW_WIDTH));

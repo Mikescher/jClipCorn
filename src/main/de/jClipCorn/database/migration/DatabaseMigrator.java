@@ -4,14 +4,14 @@ import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.GenericDatabase;
+import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
-import de.jClipCorn.util.lambda.Func5to1;
+import de.jClipCorn.util.lambda.Func4to1;
 
 import javax.swing.*;
 import java.sql.SQLException;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import static de.jClipCorn.database.driver.DatabaseStructure.*;
 
 public class DatabaseMigrator {
-	private static final List<Func5to1<GenericDatabase, CCProperties,FSPath, String, Boolean, DBMigration>> MIGRRATION_LIST = List.of(
+	private static final List<Func4to1<GenericDatabase, FSPath, String, Boolean, DBMigration>> MIGRRATION_LIST = List.of(
 			Migration_06_07::new,
 			Migration_07_08::new,
 			Migration_08_09::new,
@@ -46,23 +46,26 @@ public class DatabaseMigrator {
 			Migration_26_27::new,
 			Migration_27_28::new,
 			Migration_28_29::new,
-			Migration_29_30::new
+			Migration_29_30::new,
+			Migration_30_31::new
 	);
 
 	private final List<DBMigration> migrations;
 
 	private final GenericDatabase db;
+	private final FSPath dbpath;
 	private final boolean readonly;
 
 	private final List<UpgradeAction> afterConnectActions = new ArrayList<>();
 
-	public DatabaseMigrator(CCProperties ccprops, GenericDatabase db, FSPath dbpath, String dbName, boolean readonly) {
+	public DatabaseMigrator(GenericDatabase db, FSPath dbpath, String dbName, boolean readonly) {
 		super();
 		
 		this.db       = db;
+		this.dbpath   = dbpath;
 		this.readonly = readonly;
 
-		this.migrations = MIGRRATION_LIST.stream().map(p -> p.invoke(db, ccprops, dbpath, dbName, readonly)).collect(Collectors.toList());
+		this.migrations = MIGRRATION_LIST.stream().map(p -> p.invoke(db, dbpath, dbName, readonly)).collect(Collectors.toList());
 
 		CCLog.addDebug(this.migrations.size() + " database migrations are loaded"); //$NON-NLS-1$
 	}
@@ -102,7 +105,9 @@ public class DatabaseMigrator {
 				return;
 			}
 			
-			BackupManager.getInstanceDirect().createMigrationBackupWithWait(version);
+			BackupManager.createMigrationBackup(version, dbpath);
+
+			var restoreTrigger = false;
 
 			while (!version.equals(Main.DBVERSION)) {
 				var fromVersion = version;
@@ -112,8 +117,20 @@ public class DatabaseMigrator {
 				var actions = migration.get().migrate();
 				this.afterConnectActions.addAll(actions);
 
+				if (migration.get().backupAndRestoreTrigger()) {
+					restoreTrigger = true;
+				}
+
 				setDBVersion(version = migration.get().getToVersion());
 			}
+
+			if (restoreTrigger) {
+				if (db.querySingleStringSQL("SELECT IVALUE FROM INFO WHERE IKEY = 'HISTORY_ENABLED'", 0).equals("1"))
+				{
+					for (var trigger : CCDatabaseHistory.createTriggerStatements()) db.executeSQLThrow(trigger.Item2);
+				}
+			}
+
 
 			if (! getDBVersion().equals(Main.DBVERSION)) {
 				throw new Exception("version mismatch after migration");

@@ -2,6 +2,7 @@ package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
@@ -44,7 +45,7 @@ public class CompareDatabaseFrame extends JCCFrame
 	{
 		setTitle(LocaleBundle.getString("CompareDatabaseFrame.this.title")); //$NON-NLS-1$
 
-		edDatabaseName.setText(ccprops().PROP_DATABASE_NAME.getDefault());
+		edDatabaseName.setText(Main.DATABASE_NAME);
 
 		try {
 			edRules.setText(SimpleFileUtils.readTextResource("/compare_rules_example.txt", this.getClass())); //$NON-NLS-1$

@@ -1,10 +1,10 @@
 package de.jClipCorn.properties;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
+import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.frames.vlcRobot.VLCRobotFrequency;
-import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.toolbar.ClipToolbar;
 import de.jClipCorn.properties.enumerations.*;
 import de.jClipCorn.properties.impl.*;
@@ -21,19 +21,14 @@ import de.jClipCorn.util.datatypes.CharListMatchType;
 import de.jClipCorn.util.datatypes.ElemFieldMatchType;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTimeFormat;
-import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ApplicationHelper;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.*;
 
 public class CCProperties implements ICCPropertySource {
-	private final static String HEADER = "jClipCorn Configuration File"; //$NON-NLS-1$
-	
+
 	public final static CCPropertyCategory NONVISIBLE        = new CCPropertyCategory();
 	public final static CCPropertyCategory CAT_COMMON        = new CCPropertyCategory(0,  "COMMON");       //$NON-NLS-1$
 	public final static CCPropertyCategory CAT_VIEW          = new CCPropertyCategory(1,  "VIEW");         //$NON-NLS-1$
@@ -66,16 +61,11 @@ public class CCProperties implements ICCPropertySource {
 		CAT_FRAMESIZES,
 		CAT_KEYSTROKES
 	};
-	
-	@SuppressWarnings("nls")
-	public final static String[] readOnlyArgs = {"readonly", "-readonly", "--readonly", "read-only", "-read-only", "--read-only", "ro", "-ro", "--ro"};
 
 	private final Object _fileLock = new Object();
 	private final List<CCProperty<Object>> propertylist = new Vector<>();
 
 	public CCBoolProperty                                   PROP_ADD_MOVIE_RELATIVE_AUTO;
-	public CCStringProperty                                 PROP_DATABASE_NAME;
-	public CCStringProperty                                 PROP_LOG_PATH;
 	public CCEnumProperty<UILanguage>                       PROP_UI_LANG;
 	public CCStringProperty                                 PROP_SELF_DIRECTORY;
 	public CCStringProperty                                 PROP_COVER_PREFIX;
@@ -104,13 +94,11 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_SCANFOLDER_EXCLUDEIFOS;
 	public CCDateProperty                                   PROP_BACKUP_LASTBACKUP;
 	public CCBoolProperty                                   PROP_BACKUP_CREATEBACKUPS;
-	public CCStringProperty                                 PROP_BACKUP_FOLDERNAME;
 	public CCPIntProperty                                   PROP_BACKUP_BACKUPTIME;
 	public CCRIntProperty                                   PROP_BACKUP_COMPRESSION;
 	public CCBoolProperty                                   PROP_BACKUP_AUTODELETEBACKUPS;
 	public CCPIntProperty                                   PROP_BACKUP_LIFETIME;
 	public CCBoolProperty                                   PROP_BACKUP_EXCLUDECOVERS;
-	public CCBoolProperty                                   PROP_LOG_APPEND;
 	public CCPIntProperty                                   PROP_LOG_MAX_LINECOUNT;
 	public CCEnumProperty<InitalSortingColumn>              PROP_VIEW_DB_START_SORT;
 	public CCRIntProperty                                   PROP_VALIDATE_FILESIZEDRIFT;
@@ -147,14 +135,12 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_STATISTICS_INTERACTIVECHARTS;
 	public CCBoolProperty                                   PROP_DATABASE_CLEANSHUTDOWN;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOWTAGS;
-	public CCCCPathProperty                                 PROP_MAINFRAME_FILTERLISTPATH;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOWCOVERCORNER;
 	public CCBoolProperty                                   PROP_VALIDATE_CHECK_SERIES_STRUCTURE;
 	public CCBoolProperty                                   PROP_MAINFRAME_DONT_FILTER_WATCHNEVER;
 	public CCBoolProperty                                   PROP_SHOW_PARTIAL_VIEWED_STATE;
 	public CCSeasonRegexListProperty                        PROP_SEASON_INDEX_REGEXPRESSIONS;
 	public CCPIntProperty                                   PROP_STATISTICS_TIMELINEGRAVITY;
-	public CCEnumProperty<CCDatabaseDriver>                 PROP_DATABASE_DRIVER;
 	public CCEnumProperty<DisplayDateAlgorithm>             PROP_SERIES_DISPLAYED_DATE;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOWGROUPS;
 	public CCEnumProperty<CCDBLanguage>                     PROP_DATABASE_DEFAULTPARSERLANG;
@@ -219,7 +205,6 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_VLC_ROBOT_QUEUE_PREEMPTIVE;
 	public CCStringProperty                                 PROP_MAINFRAME_COLUMN_SIZE_CACHE;
 	public CCBoolProperty                                   PROP_MAINFRAME_FILTERTREE_RECOLLAPSE;
-	public CCFSPathProperty                                 PROP_DATABASE_DIR;
 	public CCEnumProperty<SeriesViewCountMode>              PROP_SERIES_VIEWCOUNT_MODE;
 	public CCBoolProperty                                   PROP_SKIP_DEFAULT_LANG_IN_FILENAMES;
 	public CCBoolProperty                                   PROP_PLAY_FAILONMISSINGFILES;
@@ -265,49 +250,30 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_NFO_AUTO_CREATE_SERIES;
 	public CCBoolProperty                                   PROP_DATABASE_TRANSACTION_LOG;
 
-	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
-	public boolean ARG_READONLY = false;
-	
-	public boolean firstLaunch = false;
-	
 	private final Properties properties;
-	private final FSPath path;
 	private final DriveMap driveMap;
 
-	private CCProperties() {
+	// Can be null (for in-memory mode)
+	private final CCDatabase db;
+
+	private CCProperties(CCDatabase db) {
 		properties = new Properties();
-		this.path = null;
 		this.driveMap = new DriveMap(this);
-		
+		this.db = db;
+
 		createProperties();
-	}
-	
-	private CCProperties(FSPath path, String[] args) {
-		properties = new Properties();
-		this.path = path;
-		this.driveMap = new DriveMap(this);
-		load(path);
-		
-		createProperties();
-		interpreteArgs(args);
 
 		CCLog.addDebug(propertylist.size() + " Properties in List intialized"); //$NON-NLS-1$
-		
-		if (firstLaunch) save();
-
-		LocaleBundle.updateLang(this);
 	}
 
-	public static CCProperties create(FSPath path, String[] args) {
-		return new CCProperties(path, args);
+	public static CCProperties createAndLoad(CCDatabase db) {
+		var props = new CCProperties(db);
+		props.load();
+		return props;
 	}
 
-	public static CCProperties createReadonly(FSPath path) {
-		return new CCProperties(path, new String[]{readOnlyArgs[0]});
-	}
-	
 	public static CCProperties createInMemory() {
-		return new CCProperties();
+		return new CCProperties(null);
 	}
 
 	public DriveMap getDriveMap() {
@@ -323,9 +289,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_USE_INTELLISORT                        = new CCBoolProperty(CAT_COMMON,            this,   "PROP_USE_INTELLISORT",                        false);
 		PROP_COMMON_CHECKFORUPDATES                 = new CCBoolProperty(CAT_COMMON,            this,   "PROP_COMMON_CHECKFORUPDATES",                 true);
 		PROP_COMMON_PRESCANFILESYSTEM               = new CCBoolProperty(CAT_COMMON,            this,   "PROP_COMMON_PRESCANFILESYSTEM",               true);
-		PROP_LOG_APPEND                             = new CCBoolProperty(CAT_COMMON,            this,   "PROP_LOG_APPEND",                             true);
 		PROP_DATABASE_CLEANSHUTDOWN                 = new CCBoolProperty(CAT_COMMON,            this,   "PROP_DATABASE_CLEANSHUTDOWN",                 false);
-		PROP_MAINFRAME_FILTERLISTPATH               = new CCCCPathProperty(CAT_COMMON,          this,   "PROP_MAINFRAME_FILTERLISTPATH",               getDefFLPath());
 
 		PROP_UI_APPTHEME                            = new CCLookAndFeelProperty(CAT_VIEW,       this,   "PROP_UI_APPTHEME",                            getDefTheme());
 		PROP_MAINFRAME_TABLEBACKGROUND              = new CCEnumProperty<>(CAT_VIEW,            this,   "PROP_MAINFRAME_TABLEBACKGROUND",              UITableBackground.WHITE,            UITableBackground.getWrapper());
@@ -355,9 +319,6 @@ public class CCProperties implements ICCPropertySource {
 		PROP_CHARSELECTOR_EXCLUSIONS                = new CCBoolProperty(CAT_VIEW,              this,   "PROP_CHARSELECTOR_EXCLUSIONS",                true);
 		PROP_CHARSELECTOR_IGNORENONCHARS            = new CCBoolProperty(CAT_VIEW,              this,   "PROP_CHARSELECTOR_IGNORENONCHARS",            true);
 
-		PROP_DATABASE_NAME                          = new CCStringProperty(CAT_DATABASE,        this,   "PROP_DATABASE_NAME",                          "ClipCornDB");
-		PROP_DATABASE_DIR                           = new CCFSPathProperty(CAT_DATABASE,        this,   "PROP_DATABASE_DIR",                           FSPath.Empty,                       "",          CCPathPropertyMode.DIRECTORIES);
-		PROP_LOG_PATH                               = new CCStringProperty(CAT_DATABASE,        this,   "PROP_LOG_PATH",                               "jClipcorn.log");
 		PROP_SELF_DIRECTORY                         = new CCStringProperty(CAT_DATABASE,        this,   "PROP_SELF_DIRECTORY",                         "");
 		PROP_COVER_PREFIX                           = new CCStringProperty(CAT_DATABASE,        this,   "PROP_COVER_PREFIX",                           "cover_");
 		PROP_COVER_TYPE                             = new CCStringProperty(CAT_DATABASE,        this,   "PROP_COVER_TYPE",                             "png");
@@ -413,7 +374,6 @@ public class CCProperties implements ICCPropertySource {
 		PROP_PLAY_MP4BOX_PATH                       = new CCExecutableProperty(CAT_TOOLS,       this,   "PROP_PLAY_MP4BOX_PATH",                       FSPath.Empty,                       MP4BoxPathConf.INST);
 
 		PROP_BACKUP_CREATEBACKUPS                   = new CCBoolProperty(CAT_BACKUP,            this,   "PROP_BACKUP_CREATEBACKUPS",                   false);
-		PROP_BACKUP_FOLDERNAME                      = new CCStringProperty(CAT_BACKUP,          this,   "PROP_BACKUP_FOLDERNAME",                      "jClipCorn_backup");
 		PROP_BACKUP_BACKUPTIME                      = new CCPIntProperty(CAT_BACKUP,            this,   "PROP_BACKUP_BACKUPTIME",                      7);
 		PROP_BACKUP_COMPRESSION                     = new CCRIntProperty(CAT_BACKUP,            this,   "PROP_BACKUP_COMPRESSION",                     0,                                  10);
 		PROP_BACKUP_AUTODELETEBACKUPS               = new CCBoolProperty(CAT_BACKUP,            this,   "PROP_BACKUP_AUTODELETEBACKUPS",               true);
@@ -456,7 +416,6 @@ public class CCProperties implements ICCPropertySource {
 		PROP_IMPORT_RESETTAGS                       = new CCBoolProperty(NONVISIBLE,            this,   "PROP_IMPORT_RESETTAGS",                       true);
 		PROP_PARSEIMDB_LANGUAGE                     = new CCRIntProperty(NONVISIBLE,            this,   "PROP_PARSEIMDB_LANGUAGE",                     1,                                  2);
 		PROP_STATISTICS_INTERACTIVECHARTS           = new CCBoolProperty(NONVISIBLE,            this,   "PROP_STATISTICS_INTERACTIVECHARTS",           false);
-		PROP_DATABASE_DRIVER                        = new CCEnumProperty<>(NONVISIBLE,          this,   "PROP_DATABASE_DRIVER",                        CCDatabaseDriver.SQLITE,            CCDatabaseDriver.getWrapper());
 		PROP_SHOW_EXTENDED_FEATURES                 = new CCBoolProperty(NONVISIBLE,            this,   "PROP_SHOW_EXTENDED_FEATURES",                 true);
 		PROP_DEBUG_USE_HTTPCACHE                    = new CCBoolProperty(NONVISIBLE,            this,   "PROP_DEBUG_USE_HTTPCACHE",                    false);
 		PROP_DEBUG_HTTPCACHE_PATH                   = new CCFSPathProperty(NONVISIBLE,          this,   "PROP_DEBUG_HTTPCACHE_PATH",                   getDefHttpCachePath(),       null, CCPathPropertyMode.DIRECTORIES);
@@ -545,10 +504,6 @@ public class CCProperties implements ICCPropertySource {
 		return set;
 	}
 
-	private CCPath getDefFLPath() {
-		return CCPath.create("<?self>jClipCorn."+ExportHelper.EXTENSION_FILTERLIST); //$NON-NLS-1$
-	}
-	
 	private ArrayList<String> getDefSeasonRegex() {
 		ArrayList<String> result = new ArrayList<>();
 		result.add("Staffel[ ]?(?<index>[0-9]+).*"); //$NON-NLS-1$
@@ -595,50 +550,30 @@ public class CCProperties implements ICCPropertySource {
 		return getDefTheme() != AppTheme.WINDOWS;
 	}
 
-	public void load(FSPath path) {
-		try {
-			synchronized (_fileLock) {
-				FileInputStream stream = new FileInputStream(path.toFile());
-				properties.load(stream);
-				stream.close();
+	private void load() {
+		if (db == null) return;
+
+		Map<String, String> rows = db.readAllProperties();
+		synchronized (_fileLock) {
+			for (Map.Entry<String, String> e : rows.entrySet()) {
+				properties.setProperty(e.getKey(), e.getValue());
 			}
-		} catch (IOException e) {
-			firstLaunch = true;
-			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFileNotFound", path)); //$NON-NLS-1$
 		}
 	}
-	
-	public void save() {
-		if (path == null) return;
-		
-		try {
-			synchronized (_fileLock) {
-				FileOutputStream stream = new FileOutputStream(path.toFile());
-				properties.store(stream, HEADER);
-				stream.close();
-			}
-		} catch (IOException e) {
-			CCLog.addError(e);
-		}
-	}
-	
+
 	public void setProperty(String ident, String val) {
 		properties.setProperty(ident, val);
-		fireChangedEvent();
+		if (db != null && !Main.ARG_READONLY) db.writeProperty(ident, val);
 	}
-	
+
 	public String getProperty(String ident) {
 		return properties.getProperty(ident);
 	}
-	
+
 	public void addPropertyToList(CCProperty<Object> p) {
 		propertylist.add(p);
 	}
-	
-	private void fireChangedEvent() {
-		save();
-	}
-	
+
 	public List<CCProperty<Object>> getPropertyList() {
 		return propertylist;
 	}
@@ -669,18 +604,6 @@ public class CCProperties implements ICCPropertySource {
 		}
 		
 		return cat + 1;
-	}
-
-	private void interpreteArgs(String[] args) {
-		for (String arg : args) {
-			for (String readOnlyArg : readOnlyArgs) {
-				if (arg.equalsIgnoreCase(readOnlyArg)) {
-					ARG_READONLY = true;
-
-					CCLog.addDebug("ReadOnly Mode activated (" + arg + ")"); //$NON-NLS-1$ //$NON-NLS-2$
-				}
-			}
-		}
 	}
 
 	public List<PathSyntaxVar> getActivePathVariables() {

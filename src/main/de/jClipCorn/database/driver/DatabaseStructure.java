@@ -14,6 +14,10 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_INFO_KEY              = new CCSQLColDef("IKEY",                  CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_INFO_VALUE            = new CCSQLColDef("IVALUE",                CCSQLType.VARCHAR,     NON_NULLABLE);
 
+	public final static CCSQLColDef COL_PROP_KEY             = new CCSQLColDef("PKEY",                  CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_PROP_VALUE           = new CCSQLColDef("PVALUE",                CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_PROP_LAST_CHANGED    = new CCSQLColDef("LAST_CHANGED",          CCSQLType.VARCHAR,     NON_NULLABLE);
+
 	public final static CCSQLColDef COL_HISTORY_TABLE         = new CCSQLColDef("TABLE",                CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_HISTORY_ID            = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_HISTORY_DATE          = new CCSQLColDef("DATE",                 CCSQLType.VARCHAR,     NON_NULLABLE);
@@ -305,11 +309,23 @@ public class DatabaseStructure
 
 			});
 
+	public final static CCSQLTableDef TAB_PROPERTIES = new CCSQLTableDef(
+			"PROPERTIES",
+			COL_PROP_KEY,
+			new CCSQLColDef[]
+			{
+				COL_PROP_VALUE, COL_PROP_LAST_CHANGED
+			},
+			new CCSQLFKey[]
+			{
+
+			});
+
 	//--------------------------------------------------------------------------------------------------
 
 	public final static CCSQLTableDef[] TABLES = new CCSQLTableDef[]
 	{
-		TAB_MOVIES, TAB_SERIES, TAB_SEASONS, TAB_EPISODES, TAB_INFO, TAB_GROUPS, TAB_COVERS, TAB_HISTORY, TAB_TEMP, TAB_FILTERS
+		TAB_MOVIES, TAB_SERIES, TAB_SEASONS, TAB_EPISODES, TAB_INFO, TAB_GROUPS, TAB_COVERS, TAB_HISTORY, TAB_TEMP, TAB_FILTERS, TAB_PROPERTIES
 	};
 
 	//--------------------------------------------------------------------------------------------------

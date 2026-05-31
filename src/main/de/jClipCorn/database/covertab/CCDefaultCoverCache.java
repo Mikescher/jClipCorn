@@ -30,6 +30,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 	public final static String COVER_DIRECTORY_NAME = "cover"; //$NON-NLS-1$
 
 	protected final CCDatabase _db;
+	protected final CCProperties _ccprops;
 
 	protected Map<Integer, BufferedImage> _cache;
 
@@ -38,11 +39,12 @@ public class CCDefaultCoverCache implements ICoverCache {
 
 	private final FSPath _coverPath;
 
-	public CCDefaultCoverCache(CCDatabase database) {
+	public CCDefaultCoverCache(CCDatabase database, CCProperties ccprops) {
 		_db = database;
 		_elements = new HashMap<>();
 		_elementsList = new ArrayList<>();
-		_cache = new CachedHashMap<>(ccprops().PROP_DATABASE_COVERCACHESIZE.getValue());
+		_ccprops = ccprops;
+		_cache = new CachedHashMap<>(_ccprops.PROP_DATABASE_COVERCACHESIZE.getValue());
 
 		_coverPath = database.getDBPath().append(COVER_DIRECTORY_NAME);
 	}
@@ -53,7 +55,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 	}
 
 	public CCProperties ccprops() {
-		return _db.ccprops();
+		return _ccprops;
 	}
 
 	private void tryCreatePath() {

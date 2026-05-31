@@ -48,47 +48,45 @@ import static de.jClipCorn.database.driver.DatabaseStructure.*;
 public class CCDatabase {
 
 	private final FSPath databaseDirectory; // = most of the time the working directory
-	private final String databaseName;      // = the PROP_DATABASE_NAME
+	private final String databaseName;      // = Main.DATABASE_NAME ("ClipCornDB")
 
 	private final GenericDatabase db;
 	public  final DatabaseMigrator upgrader;
-	private final ICoverCache coverCache;
 	private final Statements stmts;
 	private final CCDatabaseHistory _history;
 	private final CCHistoryDatabase _historyDb;
-	private final CCProperties ccproperties;
+	private final CCDatabaseDriver _driver;
 
 	private final boolean _readonly;
 
-	private CCDatabase(CCProperties ccprops, CCDatabaseDriver driver, FSPath dbDir, String dbName, boolean readonly) {
+	private boolean firstLaunch = false;
+
+	private CCDatabase(CCDatabaseDriver driver, FSPath dbDir, String dbName, boolean readonly) {
 		super();
 
 		_readonly = readonly;
 
+		_driver = driver;
+
 		databaseDirectory = dbDir;
 		databaseName      = dbName;
-
-		ccproperties = ccprops;
 
 		if (driver == null) driver = autoDetermineDriver(dbDir, dbName);
 
 		switch (driver) {
 		case SQLITE:
 			db = new SQLiteDatabase(readonly);
-			coverCache = new CCDefaultCoverCache(this);
 			break;
 		case STUB:
 			db = new StubDatabase();
-			coverCache = new CCStubCoverCache();
 			break;
 		case INMEMORY:
 			db = new MemoryDatabase();
-			coverCache = new CCMemoryCoverCache(this);
 			break;
 		default:
 			CCLog.addDefaultSwitchError(this, driver);
-			coverCache = null;
 			db = null;
+			break;
 		}
 		
 		_history = new CCDatabaseHistory(this);
@@ -96,13 +94,9 @@ public class CCDatabase {
 				? CCHistoryDatabase.createFileBased(databaseDirectory, databaseName, readonly)
 				: CCHistoryDatabase.createInMemory();
 
-		upgrader = new DatabaseMigrator(ccprops, db, databaseDirectory, databaseName, readonly);
+		upgrader = new DatabaseMigrator(db, databaseDirectory, databaseName, readonly);
 
 		stmts = new Statements();
-	}
-
-	public CCProperties ccprops() {
-		return ccproperties;
 	}
 
 	private static CCDatabaseDriver autoDetermineDriver(FSPath dbDir, String dbName) {
@@ -113,25 +107,34 @@ public class CCDatabase {
 		return CCDatabaseDriver.SQLITE; // fallback
 	}
 
+	public ICoverCache createCoverCache(CCProperties ccprops) {
+		switch (_driver) {
+			case SQLITE:
+				return new CCDefaultCoverCache(this, ccprops);
+			case STUB:
+				return new CCStubCoverCache();
+			case INMEMORY:
+				return new CCMemoryCoverCache(this, ccprops);
+			default:
+				CCLog.addDefaultSwitchError(this, _driver);
+				return null;
+		}
+	}
+
 	public boolean isReadonly() {
 		return _readonly;
 	}
 
-	public void resetForTestReload() {
-		if (!(coverCache instanceof CCMemoryCoverCache)) throw new Error();
-		((CCMemoryCoverCache)coverCache).resetForTestReload();
+	public static CCDatabase create(CCDatabaseDriver dbDriver, FSPath dbPath, String dbName, boolean dbReadonly) {
+		return new CCDatabase(dbDriver, dbPath, dbName, dbReadonly);
 	}
 	
-	public static CCDatabase create(CCProperties ccprops, CCDatabaseDriver dbDriver, FSPath dbPath, String dbName, boolean dbReadonly) {
-		return new CCDatabase(ccprops, dbDriver, dbPath, dbName, dbReadonly);
+	public static CCDatabase createStub() {
+		return new CCDatabase(CCDatabaseDriver.STUB, FSPath.Empty, "STUB", false); //$NON-NLS-1$
 	}
 	
-	public static CCDatabase createStub(CCProperties ccprops) {
-		return new CCDatabase(ccprops, CCDatabaseDriver.STUB, FSPath.Empty, "STUB", false); //$NON-NLS-1$
-	}
-	
-	public static CCDatabase createInMemory(CCProperties ccprops) {
-		return new CCDatabase(ccprops, CCDatabaseDriver.INMEMORY, FSPath.Empty, "INMEMORY", false); //$NON-NLS-1$
+	public static CCDatabase createInMemory() {
+		return new CCDatabase(CCDatabaseDriver.INMEMORY, FSPath.Empty, "INMEMORY", false); //$NON-NLS-1$
 	}
 	
 	public boolean exists() {
@@ -150,6 +153,8 @@ public class CCDatabase {
 				return DatabaseConnectResult.ERROR_CANTCONNECT;
 			}
 		} else {
+			this.firstLaunch = true;
+
 			if (driverCreate()) {
 				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBCreated", getDBPath())); //$NON-NLS-1$
 				
@@ -171,8 +176,6 @@ public class CCDatabase {
 			upgrader.tryUpgrade();
 
 			stmts.initialize(this);
-
-			coverCache.init();
 
 			if (!_historyDb.tryconnect(this)) {
 				CCLog.addError("Failed to connect history database"); //$NON-NLS-1$
@@ -204,8 +207,6 @@ public class CCDatabase {
 				db.setLastError(e);
 				return false;
 			}
-
-			coverCache.init();
 
 			writeInformationToDB(DatabaseStructure.INFOKEY_DBVERSION,   Main.DBVERSION);
 			writeInformationToDB(DatabaseStructure.INFOKEY_DATE,        CCDate.getCurrentDate().toStringSQL());
@@ -927,7 +928,7 @@ public class CCDatabase {
 	public void fillMovieList(CCMovieList ml) {
 		try
 		{
-			if (ccprops().PROP_LOADING_LIVEUPDATE.getValue())
+			if (ml.ccprops().PROP_LOADING_LIVEUPDATE.getValue())
 			{
 				{
 					CCSQLStatement stmt1 = stmts.selectAllMoviesTabStatement;
@@ -1086,7 +1087,7 @@ public class CCDatabase {
 		}
 	}
 
-	public void fillCoverCache(boolean loadAll) {
+	public void fillCoverCache(ICoverCache coverCache, boolean loadAll) {
 		try
 		{
 			if (loadAll)
@@ -1302,6 +1303,46 @@ public class CCDatabase {
 			CCLog.addError(e);
 		}
 	}
+
+	public Map<String, String> readAllProperties() {
+		Map<String, String> result = new HashMap<>();
+
+		if (!db.isConnected()) return result;
+
+		try {
+			CCSQLStatement stmt = stmts.readAllPropertiesStatement;
+			stmt.clearParameters();
+
+			CCSQLResultSet rs = stmt.executeQuery(this);
+			while (rs.next()) {
+				result.put(rs.getStringDirect(1), rs.getStringDirect(2));
+			}
+			rs.close();
+		} catch (SQLException e) {
+			// missing PROPERTIES table (old / external compare DB) ends up here -> empty map -> defaults
+			CCLog.addError(e);
+		}
+
+		return result;
+	}
+
+	public void writeProperty(String key, String value) {
+		if (_readonly) return;
+		if (!db.isConnected()) return;
+
+		try {
+			CCSQLStatement stmt = stmts.writePropertyKeyStatement;
+			stmt.clearParameters();
+
+			stmt.setStr(DatabaseStructure.COL_PROP_KEY,          key);
+			stmt.setStr(DatabaseStructure.COL_PROP_VALUE,        value);
+			stmt.setStr(DatabaseStructure.COL_PROP_LAST_CHANGED, CCDateTime.getCurrentDateTime().toStringSQL());
+
+			stmt.executeUpdate();
+		} catch (SQLException | SQLWrapperException e) {
+			CCLog.addError(e);
+		}
+	}
 	
 	public void removeGroup(String name) {
 		try {
@@ -1467,10 +1508,6 @@ public class CCDatabase {
 		return db.isInMemory();
 	}
 
-	public ICoverCache getCoverCache() {
-		return coverCache;
-	}
-
 	public boolean supportsDateType() {
 		return db.supportsDateType();
 	}
@@ -1578,30 +1615,15 @@ public class CCDatabase {
 		}
 	}
 
-	public static boolean validateDatabaseName(String name) {
-		if (name == null) return false;
-
-		if (name.length() == 0) return false;
-
-		for (int i = 0; i < name.length(); i++) {
-			char chr = name.charAt(i);
-
-			boolean isDigit = (chr >= '0' && chr <= '9');
-			boolean isUpper = (chr >= 'A' && chr <= 'Z');
-			boolean isLower = (chr >= 'a' && chr <= 'z');
-			boolean isSpecial = (chr == '_' || chr == '-');
-
-			if (!(isDigit || isUpper || isLower || isSpecial)) return false;
-		}
-
-		return true;
-	}
-
 	public int getNewCoverID() throws SQLException {
 		// increment
 		stmts.newDatabaseCoverIDStatement1.execute();
 
 		// read back
 		return stmts.newDatabaseCoverIDStatement2.executeQueryInt(this);
+	}
+
+	public boolean isFirstLaunch() {
+		return this.firstLaunch;
 	}
 }

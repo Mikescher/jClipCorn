@@ -1,5 +1,6 @@
 package de.jClipCorn.features.log;
 
+import de.jClipCorn.Main;
 import de.jClipCorn.gui.guiComponents.cover.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
@@ -19,6 +20,8 @@ import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CCLogInternal {
+	private static final boolean LOG_APPEND = true; // Log lasts over multiple Sessions
+
 	private static List<CCLogElement>         log       = new Vector<>();
 	private static List<CCLogChangedListener> listener  = new Vector<>();
 	private static List<CCSQLLogElement>      sqlLog    = new Vector<>();
@@ -137,7 +140,7 @@ public class CCLogInternal {
 	public static void save() {
 		if (isUnitTest) return;
 
-		if (ccprops.ARG_READONLY) {
+		if (Main.ARG_READONLY) {
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
 			return;
 		}
@@ -146,10 +149,10 @@ public class CCLogInternal {
 			FileWriter file = null;
 			PrintWriter out = null;
 			try {
-				file = new FileWriter(path, ccprops.PROP_LOG_APPEND.getValue());
+				file = new FileWriter(path, LOG_APPEND);
 				out = new PrintWriter(file);
 
-				if (ccprops.PROP_LOG_APPEND.getValue()) {
+				if (LOG_APPEND) {
 					out.print('\n');
 					out.print("--------------------------------  " + CCDate.getCurrentDate().toStringSerialize() + "  --------------------------------" + '\n'); //$NON-NLS-1$ //$NON-NLS-2$
 					out.print('\n');
@@ -175,7 +178,7 @@ public class CCLogInternal {
 				}
 			}
 
-			if (ccprops.PROP_LOG_APPEND.getValue()) {
+			if (LOG_APPEND && ccprops != null) {
 				try {
 					BufferedReader reader = new BufferedReader(new FileReader(path));
 					int lines = 0;

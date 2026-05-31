@@ -24,10 +24,12 @@ public class CCMemoryCoverCache implements ICoverCache {
 	private Map<Integer, BufferedImage> data;
 	private final HashMap<Integer, CCCoverData> _elements;
 	protected final CCDatabase _db;
+	protected final CCProperties _ccprops;
 
-	public CCMemoryCoverCache(CCDatabase database) {
+	public CCMemoryCoverCache(CCDatabase database, CCProperties ccprops) {
 		_db = database;
 		_elements = new HashMap<>();
+		_ccprops = ccprops;
 	}
 
 	@Override
@@ -36,7 +38,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 	}
 
 	public CCProperties ccprops() {
-		return _db.ccprops();
+		return _ccprops;
 	}
 
 	@Override

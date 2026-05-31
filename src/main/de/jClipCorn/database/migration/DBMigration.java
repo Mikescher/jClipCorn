@@ -2,25 +2,21 @@ package de.jClipCorn.database.migration;
 
 import de.jClipCorn.database.driver.GenericDatabase;
 import de.jClipCorn.database.history.CCDatabaseHistory;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.util.List;
 
 import static de.jClipCorn.database.driver.DatabaseStructure.*;
-import static de.jClipCorn.database.driver.DatabaseStructure.INFOKEY_DBVERSION;
 
 public abstract class DBMigration {
 	protected final GenericDatabase db;
-	protected final CCProperties ccprops;
 	protected final FSPath databaseDirectory;
 	protected final String databaseName;
 	protected final boolean readonly;
 
-	protected DBMigration(GenericDatabase db, CCProperties ccprops, FSPath databaseDirectory, String databaseName, boolean readonly) {
+	protected DBMigration(GenericDatabase db, FSPath databaseDirectory, String databaseName, boolean readonly) {
 		this.db = db;
-		this.ccprops = ccprops;
 		this.databaseDirectory = databaseDirectory;
 		this.databaseName = databaseName;
 		this.readonly = readonly;
@@ -68,13 +64,6 @@ public abstract class DBMigration {
 		// ======================================================
 		var actions = run();
 		// ======================================================
-
-		if (backupTrigger) {
-			if (db.querySingleStringSQL("SELECT IVALUE FROM INFO WHERE IKEY = 'HISTORY_ENABLED'", 0).equals("1"))
-			{
-				for (var trigger : CCDatabaseHistory.createTriggerStatements()) db.executeSQLThrow(trigger.Item2);
-			}
-		}
 
 		db.executeSQLThrow(String.format("UPDATE %s SET %s='%s' WHERE %s='%s'",  //$NON-NLS-1$
 				TAB_INFO.Name,

@@ -16,12 +16,11 @@ import de.jClipCorn.database.elementProps.impl.EProperty;
 import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.iterators.*;
-import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.features.log.CCLog;
-import de.jClipCorn.features.transactionLog.CCTransactionLog;
 import de.jClipCorn.features.nfo.NFOAutoUpdateListener;
 import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
+import de.jClipCorn.features.transactionLog.CCTransactionLog;
 import de.jClipCorn.gui.frames.initialConfigFrame.InitialConfigFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
@@ -34,9 +33,7 @@ import de.jClipCorn.util.comparator.CCAnimeSeasonComparator;
 import de.jClipCorn.util.comparator.CCDatabaseElementComparator;
 import de.jClipCorn.util.comparator.CCMovieComparator;
 import de.jClipCorn.util.comparator.CCSeriesComparator;
-import de.jClipCorn.util.datatypes.Opt;
-import de.jClipCorn.util.datatypes.Tuple;
-import de.jClipCorn.util.datatypes.Tuple1;
+import de.jClipCorn.util.datatypes.*;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -73,6 +70,8 @@ public class CCMovieList implements ICCPropertySource {
 	private       CCDatabase database;
 	private final List<CCGroup> databaseGroups;
 
+	private CCTransactionLog transactionLog = null;
+
 	private final CCProperties ccproperties;
 
 	private final WebConnectionLayer _webConn;
@@ -97,8 +96,9 @@ public class CCMovieList implements ICCPropertySource {
 		addMoviePropChangeListener(ChecksumHelper::clearMoviePropsIfNeccessary);
 		addEpisodePropChangeListener(ChecksumHelper::clearEpisodePropsIfNeccessary);
 
-		if (!ccprops.ARG_READONLY && ccprops.PROP_DATABASE_TRANSACTION_LOG.getValue()) {
-			new CCTransactionLog(this).register(this);
+		if (!ccprops.ARG_READONLY && !database.isInMemory() && ccprops.PROP_DATABASE_TRANSACTION_LOG.getValue()) {
+			transactionLog = new CCTransactionLog(this);
+			transactionLog.register(this);
 		}
 	}
 	
@@ -151,8 +151,22 @@ public class CCMovieList implements ICCPropertySource {
 					ccprops().ARG_READONLY);
 		}
 	}
-	
-	public void connect(final MainFrame mf, Func0to0 postInit) {
+
+	public void connect() {
+		Globals.TIMINGS.start(Globals.TIMING_LOAD_DATABASE_CONNECT);
+		{
+			DatabaseConnectResult dbcr = database.tryconnect();
+
+			if (dbcr == DatabaseConnectResult.ERROR_CANTCONNECT) {
+				CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorConnectDB"), database.getLastError()); //$NON-NLS-1$
+			} else if (dbcr == DatabaseConnectResult.ERROR_CANTCREATE) {
+				CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorCreateDB"), database.getLastError()); //$NON-NLS-1$
+			}
+		}
+		Globals.TIMINGS.stop(Globals.TIMING_LOAD_DATABASE_CONNECT);
+	}
+
+	public void connectAndLoad(final MainFrame mf, Func0to0 postInit) {
 		new Thread(() ->
 		{
 			Globals.TIMINGS.start(Globals.TIMING_LOAD_TOTAL);
@@ -160,38 +174,30 @@ public class CCMovieList implements ICCPropertySource {
 				isLoading = true;
 				isLoaded  = false;
 
-				BackupManager bm = new BackupManager(CCMovieList.this);
-				bm.init();
-				bm.doActions(mf);
-
 				mf.beginBlockingIntermediate();
-
-				Globals.TIMINGS.start(Globals.TIMING_LOAD_DATABASE_CONNECT);
-				{
-					DatabaseConnectResult dbcr = database.tryconnect();
-
-					if (dbcr == DatabaseConnectResult.ERROR_CANTCONNECT) {
-						CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorConnectDB"), database.getLastError()); //$NON-NLS-1$
-					} else if (dbcr == DatabaseConnectResult.ERROR_CANTCREATE) {
-						CCLog.addFatalError(LocaleBundle.getString("LogMessage.ErrorCreateDB"), database.getLastError()); //$NON-NLS-1$
-					}
-				}
-				Globals.TIMINGS.stop(Globals.TIMING_LOAD_DATABASE_CONNECT);
 
 				testDatabaseVersion();
 
 				Globals.TIMINGS.start(Globals.TIMING_LOAD_DATABASE);
 				{
+					Globals.TIMINGS.start(Globals.TIMING_LOAD_FILTERS);
+					{
+						mf.loadFilters();
+					}
+					Globals.TIMINGS.stop(Globals.TIMING_LOAD_FILTERS);
+
 					Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_GROUPS);
 					{
 						database.fillGroups(CCMovieList.this);
 					}
 					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_GROUPS);
+
 					Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_ELEMENTS);
 					{
 						database.fillMovieList(CCMovieList.this);
 					}
 					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_ELEMENTS);
+
 					Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
 					{
 						database.fillCoverCache(ccprops().PROP_DATABASE_LOAD_ALL_COVERDATA.getValue());
@@ -223,7 +229,7 @@ public class CCMovieList implements ICCPropertySource {
 		}, "THREAD_LOAD_DATABASE").start(); //$NON-NLS-1$
 	}
 	
-	public void connectForTests(boolean skipconnect)
+	public void connectAndLoadForTests(boolean skipconnect)
 	{
 		isLoading = true;
 		isLoaded  = false;
@@ -242,7 +248,7 @@ public class CCMovieList implements ICCPropertySource {
 		isLoaded  = true;
 	}
 
-	public void connectExternal(boolean allowCreate) throws Exception
+	public void connectAndLoadExternal(boolean allowCreate) throws Exception
 	{
 		isLoading = true;
 		isLoaded  = false;
@@ -1326,6 +1332,42 @@ public class CCMovieList implements ICCPropertySource {
 		_cache.bust();
 	}
 	
+	/**
+	 * @return the persisted custom filters as (id, name, serialized-definition) tuples, ordered by their sort index
+	 */
+	public List<Tuple3<Integer, String, String>> getCustomFilterRows() {
+		return database.getCustomFilterList();
+	}
+
+	/**
+	 * Replaces all persisted custom filters with the given rows (id, sort, name, serialized-definition).
+	 * Per-filter transaction-log entries are emitted separately via {@link #logCustomFilterAdded},
+	 * {@link #logCustomFilterChanged} and {@link #logCustomFilterDeleted}.
+	 */
+	public void writeCustomFilterRows(List<Tuple4<Integer, Integer, String, String>> rows) {
+		if (isReadonly()) {
+			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
+			return;
+		}
+
+		database.clearCustomFilters();
+		for (Tuple4<Integer, Integer, String, String> row : rows) {
+			database.insertCustomFilter(row.Item1, row.Item2, row.Item3, row.Item4);
+		}
+	}
+
+	public void logCustomFilterAdded(int id, String name, String newVal) {
+		if (transactionLog != null) transactionLog.logFilterAdded(id, name, newVal);
+	}
+
+	public void logCustomFilterChanged(int id, String name, String oldVal, String newVal) {
+		if (transactionLog != null) transactionLog.logFilterChanged(id, name, oldVal, newVal);
+	}
+
+	public void logCustomFilterDeleted(int id, String name, String oldVal) {
+		if (transactionLog != null) transactionLog.logFilterDeleted(id, name, oldVal);
+	}
+
 	public boolean isInMemory() {
 		return database.isInMemory();
 	}

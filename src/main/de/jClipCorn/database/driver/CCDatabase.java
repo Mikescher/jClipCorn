@@ -20,6 +20,7 @@ import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.datetime.CCTime;
@@ -32,6 +33,7 @@ import de.jClipCorn.util.sqlwrapper.*;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
 
@@ -1338,6 +1340,56 @@ public class CCDatabase {
 			stmt.setBoo(DatabaseStructure.COL_GRPS_VISIBLE,   visible);
 
 			stmt.setStr(DatabaseStructure.COL_GRPS_NAME,      name);
+
+			stmt.executeUpdate();
+		} catch (SQLException | SQLWrapperException e) {
+			CCLog.addError(e);
+		}
+	}
+
+	public List<Tuple3<Integer, String, String>> getCustomFilterList() {
+		List<Tuple3<Integer, String, String>> result = new ArrayList<>();
+		try {
+			CCSQLStatement stmt = stmts.selectFiltersStatement;
+			stmt.clearParameters();
+
+			CCSQLResultSet rs = stmt.executeQuery(this);
+
+			while (rs.next()) {
+				int id        = rs.getInt(DatabaseStructure.COL_FILT_ID);
+				String name   = rs.getString(DatabaseStructure.COL_FILT_NAME);
+				String def    = rs.getString(DatabaseStructure.COL_FILT_DEFINITION);
+
+				result.add(Tuple3.Create(id, name, def));
+			}
+
+			rs.close();
+		} catch (SQLException | SQLWrapperException e) {
+			CCLog.addError(e);
+		}
+		return result;
+	}
+
+	public void clearCustomFilters() {
+		try {
+			CCSQLStatement stmt = stmts.removeAllFiltersStatement;
+			stmt.clearParameters();
+
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			CCLog.addError(e);
+		}
+	}
+
+	public void insertCustomFilter(int id, int sort, String name, String definition) {
+		try {
+			CCSQLStatement stmt = stmts.insertFilterStatement;
+			stmt.clearParameters();
+
+			stmt.setInt(DatabaseStructure.COL_FILT_ID,         id);
+			stmt.setInt(DatabaseStructure.COL_FILT_SORT,       sort);
+			stmt.setStr(DatabaseStructure.COL_FILT_NAME,       name);
+			stmt.setStr(DatabaseStructure.COL_FILT_DEFINITION, definition);
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {

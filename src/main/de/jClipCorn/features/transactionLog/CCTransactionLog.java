@@ -111,6 +111,18 @@ public class CCTransactionLog {
 		});
 	}
 
+	public void logFilterAdded(int id, String name, String newVal) {
+		logEntry(CCTransactionAction.FILTER_ADDED, "FILTER", id, name, null, newVal);
+	}
+
+	public void logFilterDeleted(int id, String name, String oldVal) {
+		logEntry(CCTransactionAction.FILTER_DELETED, "FILTER", id, name, oldVal, null);
+	}
+
+	public void logFilterChanged(int id, String name, String oldVal, String newVal) {
+		logEntry(CCTransactionAction.FILTER_CHANGED, "FILTER", id, name, oldVal, newVal);
+	}
+
 	private void logEntry(CCTransactionAction action, String type, int localId, String name, Object oldVal, Object newVal) {
 		String ts = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ").format(new Date());
 		String oldStr = objToStr(oldVal);

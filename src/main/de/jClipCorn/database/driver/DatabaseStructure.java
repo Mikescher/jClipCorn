@@ -157,6 +157,11 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_CVRS_PREVIEW          = new CCSQLColDef("PREVIEW",              CCSQLType.BLOB,        NON_NULLABLE);
 	public final static CCSQLColDef COL_CVRS_CREATED          = new CCSQLColDef("CREATED",              CCSQLType.VARCHAR,     NON_NULLABLE);
 
+	public final static CCSQLColDef COL_FILT_ID               = new CCSQLColDef("ID",                   CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_FILT_SORT             = new CCSQLColDef("SORT",                 CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_FILT_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_FILT_DEFINITION       = new CCSQLColDef("DEFINITION",           CCSQLType.VARCHAR,     NON_NULLABLE);
+
 	//--------------------------------------------------------------------------------------------------
 
 	public final static CCSQLTableDef TAB_MOVIES = new CCSQLTableDef(
@@ -288,11 +293,23 @@ public class DatabaseStructure
 
 			});
 
+	public final static CCSQLTableDef TAB_FILTERS = new CCSQLTableDef(
+			"FILTERS",
+			COL_FILT_ID,
+			new CCSQLColDef[]
+			{
+				COL_FILT_SORT, COL_FILT_NAME, COL_FILT_DEFINITION
+			},
+			new CCSQLFKey[]
+			{
+
+			});
+
 	//--------------------------------------------------------------------------------------------------
 
 	public final static CCSQLTableDef[] TABLES = new CCSQLTableDef[]
 	{
-		TAB_MOVIES, TAB_SERIES, TAB_SEASONS, TAB_EPISODES, TAB_INFO, TAB_GROUPS, TAB_COVERS, TAB_HISTORY, TAB_TEMP
+		TAB_MOVIES, TAB_SERIES, TAB_SEASONS, TAB_EPISODES, TAB_INFO, TAB_GROUPS, TAB_COVERS, TAB_HISTORY, TAB_TEMP, TAB_FILTERS
 	};
 
 	//--------------------------------------------------------------------------------------------------

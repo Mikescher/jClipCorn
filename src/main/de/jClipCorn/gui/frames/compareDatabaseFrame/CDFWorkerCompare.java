@@ -26,7 +26,7 @@ public class CDFWorkerCompare
 
 		cb.setValueBoth(1, 0, "Reading", "");
 
-		mlExt.connectExternal(false);
+		mlExt.connectAndLoadExternal(false);
 		try
 		{
 			if (!Str.equals(mlLoc.getDatabaseVersion(), mlExt.getDatabaseVersion())) throw new Exception("Databases have different versions");

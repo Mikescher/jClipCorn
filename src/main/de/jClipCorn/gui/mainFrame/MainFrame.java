@@ -318,6 +318,10 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 		movielist.removeChangeListener(_mlListener);
 	}
 
+	public void loadFilters() {
+		filterTree.load();
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		panelTop = new JPanel();

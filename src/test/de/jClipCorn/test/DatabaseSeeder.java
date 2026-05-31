@@ -43,7 +43,7 @@ public class DatabaseSeeder {
 		System.out.println("Load DB from: " + tempPath);
 
 		var ml = CCMovieList.createInstanceMovieList(props);
-		ml.connectExternal(true);
+		ml.connectAndLoadExternal(true);
 		{
 			ml.getHistory().enableTrigger();
 
@@ -55,7 +55,7 @@ public class DatabaseSeeder {
 			ml.shutdown();
 
 			var mlRet = CCMovieList.createInstanceMovieList(props);
-			mlRet.connectExternal(true);
+			mlRet.connectAndLoadExternal(true);
 
 			ClipCornBaseTest.CLEANUP.add(() -> { System.out.println("[CLEANUP] Shutdown ML"); mlRet.shutdown(); });
 

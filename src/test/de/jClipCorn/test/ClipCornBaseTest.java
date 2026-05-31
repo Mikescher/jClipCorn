@@ -71,7 +71,7 @@ public class ClipCornBaseTest {
 	protected CCMovieList createEmptyDB() {
 		var ccprops = createInMemoryProperties();
 		CCMovieList ml = CCMovieList.createInMemory(ccprops);
-		ml.connectForTests(false);
+		ml.connectAndLoadForTests(false);
 
 		return ml;
 	}
@@ -86,7 +86,7 @@ public class ClipCornBaseTest {
 		var ccprops = createInMemoryProperties();
 
 		CCMovieList ml1 = CCMovieList.createInMemory(ccprops);
-		ml1.connectForTests(false);
+		ml1.connectAndLoadForTests(false);
 
 		var filep = SimpleFileUtils.getSystemTempFile("jxmlbkp");
 		SimpleFileUtils.writeTextResource(filep, "/example_data_full.jxmlbkp", ClipCornBaseTest.class);
@@ -118,7 +118,7 @@ public class ClipCornBaseTest {
 			// so ml2 is acting like the data was there all along and not just recently imported
 
 			var ml2 = CCMovieList.createRawForUnitTests(ml1.getDatabaseForUnitTests(), ccprops);
-			ml2.connectForTests(true);
+			ml2.connectAndLoadForTests(true);
 			return ml2;
 		}
 
@@ -281,7 +281,7 @@ public class ClipCornBaseTest {
 		props.PROP_DATABASE_NAME.setValue(ml.getDatabaseName());
 
 		var mlRet = CCMovieList.createInstanceMovieList(ml.ccprops());
-		mlRet.connectExternal(true);
+		mlRet.connectAndLoadExternal(true);
 
 		ClipCornBaseTest.CLEANUP.add(() -> { System.out.println("[CLEANUP] Shutdown ML"); mlRet.shutdown(); });
 

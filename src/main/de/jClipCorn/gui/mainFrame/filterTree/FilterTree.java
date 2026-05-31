@@ -47,7 +47,9 @@ public class FilterTree extends AbstractFilterTree {
 		this.movielist = list;
 		
 		this.tree.ActionMode = SimpletreeActionMode.OnClick;
-		
+	}
+
+	public void load() {
 		customFilterList.load();
 	}
 

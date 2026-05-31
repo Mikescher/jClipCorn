@@ -1,6 +1,7 @@
 package de.jClipCorn;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.backupManager.BackupManager;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.log.ExceptionHandler;
 import de.jClipCorn.gui.LookAndFeelManager;
@@ -28,7 +29,7 @@ import de.jClipCorn.util.helper.SwingUtils;
 public class Main {
 	public final static String TITLE     = "jClipCorn"; //$NON-NLS-1$
 	public final static String VERSION   = /*<gradle_version_marker>*/"1.10.11.12"/*</gradle_version_marker>*/; //$NON-NLS-1$
-	public final static String DBVERSION = "28";    //$NON-NLS-1$
+	public final static String DBVERSION = "29";    //$NON-NLS-1$
 	public final static String JXMLVER   = "10";     //$NON-NLS-1$
 
 	public final static String PROPERTIES_PATH = "jClipcorn.properties"; //$NON-NLS-1$
@@ -66,7 +67,31 @@ public class Main {
 
 			final CCMovieList mList = CCMovieList.createInstanceMovieList(ccprops);
 
-			init(mList);
+			DEBUG |= mList.ccprops().PROP_OTHER_DEBUGMODE.getValue();
+
+			if (mList.ccprops().PROP_COMMON_PRESCANFILESYSTEM.getValue()) {
+				mList.getDriveMap().preScan(); // creates a new Thread
+			}
+
+			Resources.init();
+
+			if (mList.ccprops().PROP_LOADING_PRELOADRESOURCES.getValue() == ResourcePreloadMode.SYNC_PRELOAD) {
+				Globals.TIMINGS.start(Globals.TIMING_INIT_PRELOADRESOURCES);
+				Resources.preload();
+				Globals.TIMINGS.stop(Globals.TIMING_INIT_PRELOADRESOURCES);
+			} else if (mList.ccprops().PROP_LOADING_PRELOADRESOURCES.getValue() == ResourcePreloadMode.ASYNC_PRELOAD) {
+				Globals.TIMINGS.start(Globals.TIMING_INIT_PRELOADRESOURCES);
+				Resources.preload_async();
+				Globals.TIMINGS.stop(Globals.TIMING_INIT_PRELOADRESOURCES);
+			}
+
+			BackupManager bm = new BackupManager(mList);
+			bm.init();
+			bm.doActions(null);
+
+			mList.connect();
+
+			CCLog.addDebug(LocaleBundle.getTranslationCount(mList.ccprops()) + " Translations in Locale " + LocaleBundle.getCurrentLocale(mList.ccprops())); //$NON-NLS-1$
 
 			SwingUtils.invokeLater(() ->
 			{
@@ -77,32 +102,10 @@ public class Main {
 				final MainFrame myFrame = new MainFrame(mList);
 				myFrame.start();
 
-				mList.connect(myFrame, () -> post_init(ccprops, arg));
+				mList.connectAndLoad(myFrame, () -> post_init(ccprops, arg));
 			});
 		}
 		Globals.TIMINGS.stop(Globals.TIMING_INIT_TOTAL);
-	}
-	
-	private static void init(CCMovieList ml) {
-		DEBUG |= ml.ccprops().PROP_OTHER_DEBUGMODE.getValue();
-
-		if (ml.ccprops().PROP_COMMON_PRESCANFILESYSTEM.getValue()) {
-			ml.getDriveMap().preScan(); // creates a new Thread
-		}
-
-		Resources.init();
-		
-		if (ml.ccprops().PROP_LOADING_PRELOADRESOURCES.getValue() == ResourcePreloadMode.SYNC_PRELOAD) {
-			Globals.TIMINGS.start(Globals.TIMING_INIT_PRELOADRESOURCES);
-			Resources.preload();
-			Globals.TIMINGS.stop(Globals.TIMING_INIT_PRELOADRESOURCES);
-		} else if (ml.ccprops().PROP_LOADING_PRELOADRESOURCES.getValue() == ResourcePreloadMode.ASYNC_PRELOAD) {
-			Globals.TIMINGS.start(Globals.TIMING_INIT_PRELOADRESOURCES);
-			Resources.preload_async();
-			Globals.TIMINGS.stop(Globals.TIMING_INIT_PRELOADRESOURCES);
-		}
-		
-		CCLog.addDebug(LocaleBundle.getTranslationCount(ml.ccprops()) + " Translations in Locale " + LocaleBundle.getCurrentLocale(ml.ccprops())); //$NON-NLS-1$
 	}
 
 	@SuppressWarnings({"unchecked", "nls"})

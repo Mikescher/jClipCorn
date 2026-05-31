@@ -60,6 +60,10 @@ public class Statements {
 	public CCSQLStatement updateGroupStatement;
 	public CCSQLStatement removeAllGroupsStatement;
 
+	public CCSQLStatement selectFiltersStatement;
+	public CCSQLStatement insertFilterStatement;
+	public CCSQLStatement removeAllFiltersStatement;
+
 	public CCSQLStatement selectCoversFullStatement;
 	public CCSQLStatement selectCoversFastStatement;
 	public CCSQLStatement insertCoversStatement;
@@ -144,6 +148,10 @@ public class Statements {
 			updateGroupStatement     = SQLBuilder.createUpdateSingle(TAB_GROUPS, COL_GRPS_NAME).build(d, statements);
 			removeGroupStatement     = SQLBuilder.createDelete(TAB_GROUPS).addPreparedWhereCondition(COL_GRPS_NAME).build(d, statements);
 			removeAllGroupsStatement = SQLBuilder.createDelete(TAB_GROUPS).build(d, statements);
+
+			selectFiltersStatement    = SQLBuilder.createSelectAll(TAB_FILTERS).setOrder(COL_FILT_SORT, SQLOrder.ASC).build(d, statements);
+			insertFilterStatement     = SQLBuilder.createInsertSingle(TAB_FILTERS).build(d, statements);
+			removeAllFiltersStatement = SQLBuilder.createDelete(TAB_FILTERS).build(d, statements);
 
 			selectCoversFullStatement = SQLBuilder.createSelectAll(TAB_COVERS).build(d, statements);
 			selectCoversFastStatement = SQLBuilder.createSelectAll(TAB_COVERS).remSelectField(COL_CVRS_PREVIEW).build(d, statements);

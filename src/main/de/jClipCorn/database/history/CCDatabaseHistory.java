@@ -54,6 +54,7 @@ public class CCDatabaseHistory {
 		for(CCSQLTableDef tab : DatabaseStructure.TABLES) {
 			if (tab == DatabaseStructure.TAB_HISTORY) continue;
 			if (tab == DatabaseStructure.TAB_TEMP) continue;
+			if (tab == DatabaseStructure.TAB_FILTERS) continue;
 
 			result.add(createTriggerOnAdd(tab));
 			for(CCSQLColDef col : tab.Columns) result.add(createTriggerOnUpdate(tab, col));

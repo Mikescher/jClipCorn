@@ -113,12 +113,32 @@ public class CCMovieList implements ICCPropertySource {
 		return new CCMovieList(db, ccprops);
 	}
 
-	public static CCMovieList createRawForUnitTests(CCDatabase db, CCProperties ccprops) {
-		return new CCMovieList(db, ccprops);
+	public static CCMovieList recreateRawForUnitTests(CCDatabase db, CCProperties ccprops, ICoverCache coverCache) {
+		var ml = new CCMovieList(db, ccprops);
+		ml.coverCache = coverCache;
+
+		db.fillGroups(ml);
+		db.fillMovieList(ml);
+		db.fillCoverCache(ml.coverCache, true);
+		
+		return ml;
 	}
 	
-	public static CCMovieList createInMemory(CCProperties ccprops) {
-		return new CCMovieList(CCDatabase.createInMemory(), ccprops);
+	public static CCMovieList createNewInMemoryForTests() {
+		var db = CCDatabase.createInMemory();
+
+		var r = db.tryconnect();
+		if (r != DatabaseConnectResult.SUCESS_CONNECTED && r != DatabaseConnectResult.SUCCESS_CREATED) throw new Error(String.valueOf(r));
+
+		var ccprops = CCProperties.createAndLoad(db);
+		
+		var ml = new CCMovieList(db, ccprops);
+
+		db.fillGroups(ml);
+		db.fillMovieList(ml);
+		db.fillCoverCache(ml.coverCache, true);
+
+		return ml;
 	}
 	
 	public static CCMovieList createStub() {
@@ -126,10 +146,22 @@ public class CCMovieList implements ICCPropertySource {
 		return new CCMovieList(CCDatabase.createStub(), ccprops);
 	}
 
-	public static CCMovieList loadExtern(CCDatabaseDriver drv, FSPath directory, String dbName, boolean readonly) {
+	public static CCMovieList connectAndLoadExtern(CCDatabaseDriver drv, FSPath directory, String dbName, boolean readonly, boolean allowCreate) throws Exception {
 		var db = CCDatabase.create(drv, directory, dbName, readonly);
+
+		var r = db.tryconnect();
+		if (r != DatabaseConnectResult.SUCESS_CONNECTED && r != DatabaseConnectResult.SUCCESS_CREATED) throw new Exception(String.valueOf(r));
+		if (!allowCreate && r == DatabaseConnectResult.SUCCESS_CREATED) throw new Exception(String.valueOf(r));
+
 		var ccprops = CCProperties.createAndLoad(db);
-		return new CCMovieList(db, ccprops);
+
+		var ml = new CCMovieList(db, ccprops);
+
+		db.fillGroups(ml);
+		db.fillMovieList(ml);
+		db.fillCoverCache(ml.coverCache, true);
+		
+		return ml;
 	}
 
 	public CCProperties ccprops() {
@@ -207,42 +239,6 @@ public class CCMovieList implements ICCPropertySource {
 			}, "THREAD_HISTORY_SYNC").start(); //$NON-NLS-1$
 
 		}, "THREAD_LOAD_DATABASE").start(); //$NON-NLS-1$
-	}
-
-	public void connectAndLoadForTests(boolean skipconnect)
-	{
-		isLoading = true;
-		isLoaded  = false;
-		{
-			if (!skipconnect)
-			{
-				var r = database.tryconnect();
-				if (r != DatabaseConnectResult.SUCESS_CONNECTED && r != DatabaseConnectResult.SUCCESS_CREATED) throw new Error(String.valueOf(r));
-			}
-
-			database.fillGroups(CCMovieList.this);
-			database.fillMovieList(CCMovieList.this);
-			database.fillCoverCache(coverCache, true);
-		}
-		isLoading = false;
-		isLoaded  = true;
-	}
-
-	public void connectAndLoadExternal(boolean allowCreate) throws Exception
-	{
-		isLoading = true;
-		isLoaded  = false;
-		{
-			var r = database.tryconnect();
-			if (r != DatabaseConnectResult.SUCESS_CONNECTED && r != DatabaseConnectResult.SUCCESS_CREATED) throw new Exception(String.valueOf(r));
-			if (!allowCreate && r == DatabaseConnectResult.SUCCESS_CREATED) throw new Exception(String.valueOf(r));
-
-			database.fillGroups(CCMovieList.this);
-			database.fillMovieList(CCMovieList.this);
-			database.fillCoverCache(coverCache, true);
-		}
-		isLoading = false;
-		isLoaded  = true;
 	}
 
 	public void forceReconnectAndReloadForTests() {

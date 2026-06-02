@@ -3,7 +3,6 @@ package de.jClipCorn.test;
 import de.jClipCorn.Main;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.exceptions.InnerMediaQueryException;
 import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
 import de.jClipCorn.properties.CCProperties;
@@ -38,21 +37,18 @@ public class DatabaseSeeder {
 
 		System.out.println("Load DB from: " + tempPath);
 
-		var ml = CCMovieList.loadExtern(null, dbPath, Main.DATABASE_NAME, false);
-		var props = ml.ccprops();
-		ml.connectAndLoadExternal(true);
+		var ml = CCMovieList.connectAndLoadExtern(null, dbPath, Main.DATABASE_NAME, false, true);
 		{
 			ml.getHistory().enableTrigger();
 
-			seed(props, ml, tempPath);
+			seed(ml.ccprops(), ml, tempPath);
 		}
 
 		if (reloadAfterCreate)
 		{
 			ml.shutdown();
 
-			var mlRet = CCMovieList.loadExtern(null, dbPath, Main.DATABASE_NAME, false);
-			mlRet.connectAndLoadExternal(true);
+			var mlRet = CCMovieList.connectAndLoadExtern(null, dbPath, Main.DATABASE_NAME, false, false);
 
 			ClipCornBaseTest.CLEANUP.add(() -> { System.out.println("[CLEANUP] Shutdown ML"); mlRet.shutdown(); });
 

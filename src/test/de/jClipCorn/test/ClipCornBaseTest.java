@@ -68,11 +68,7 @@ public class ClipCornBaseTest {
 	}
 
 	protected CCMovieList createEmptyDB() {
-		var ccprops = createInMemoryProperties();
-		CCMovieList ml = CCMovieList.createInMemory(ccprops);
-		ml.connectAndLoadForTests(false);
-
-		return ml;
+		return CCMovieList.createNewInMemoryForTests();
 	}
 
 	protected CCMovieList createSeededDB() throws Exception {
@@ -82,10 +78,8 @@ public class ClipCornBaseTest {
 	protected CCMovieList createExampleDB() throws IOException { return createExampleDB(false); }
 
 	protected CCMovieList createExampleDB(boolean reloadFromMemory) throws IOException {
-		var ccprops = createInMemoryProperties();
-
-		CCMovieList ml1 = CCMovieList.createInMemory(ccprops);
-		ml1.connectAndLoadForTests(false);
+		CCMovieList ml1 = CCMovieList.createNewInMemoryForTests();
+		applyTestPathSyntax(ml1.ccprops());
 
 		var filep = SimpleFileUtils.getSystemTempFile("jxmlbkp");
 		SimpleFileUtils.writeTextResource(filep, "/example_data_full.jxmlbkp", ClipCornBaseTest.class);
@@ -116,8 +110,7 @@ public class ClipCornBaseTest {
 			// With reload the data is loaded again from the (in-mem) database,
 			// so ml2 is acting like the data was there all along and not just recently imported
 
-			var ml2 = CCMovieList.createRawForUnitTests(ml1.getDatabaseForUnitTests(), ccprops);
-			ml2.connectAndLoadForTests(true);
+			var ml2 = CCMovieList.recreateRawForUnitTests(ml1.getDatabaseForUnitTests(), ml1.ccprops(), ml1.getCoverCache());
 			return ml2;
 		}
 
@@ -128,7 +121,16 @@ public class ClipCornBaseTest {
 	protected CCProperties createInMemoryProperties()
 	{
 		var props = CCProperties.createInMemory();
+		applyTestPathSyntax(props);
+		return props;
+	}
 
+	// Sets up the path-variables (`mov`/`ser`) and drive-map that the test database (example_data_full.jxmlbkp)
+	// stores its paths relative to (e.g. `<?[mov]>1982/...`). Without these the validator cannot round-trip
+	// the stored CCPaths and reports them all as ERROR_NON_NORMALIZED_PATH.
+	@SuppressWarnings("unchecked")
+	protected void applyTestPathSyntax(CCProperties props)
+	{
 		if (ApplicationHelper.isWindows())
 		{
 			props.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar(Str.Empty, "mov", CCPath.create("C:/tmpfs/jcc/mov/")));
@@ -157,8 +159,6 @@ public class ClipCornBaseTest {
 					Tuple3.Create('O', "Network Drive 2", "")
 			);
 		}
-
-		return props;
 	}
 
 	protected void assertImageEquals(BufferedImage a, BufferedImage b) {
@@ -275,8 +275,7 @@ public class ClipCornBaseTest {
 
 		var dbDir = ml.getDatabaseDirectory().getParent();
 
-		var mlRet = CCMovieList.loadExtern(null, dbDir, ml.getDatabaseName(), false);
-		mlRet.connectAndLoadExternal(true);
+		var mlRet = CCMovieList.connectAndLoadExtern(null, dbDir, ml.getDatabaseName(), false, true);
 
 		ClipCornBaseTest.CLEANUP.add(() -> { System.out.println("[CLEANUP] Shutdown ML"); mlRet.shutdown(); });
 

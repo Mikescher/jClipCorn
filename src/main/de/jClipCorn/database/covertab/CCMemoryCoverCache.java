@@ -21,20 +21,22 @@ import java.io.FileInputStream;
 import java.util.*;
 
 public class CCMemoryCoverCache implements ICoverCache {
-	private Map<Integer, BufferedImage> data;
+	private Map<Integer, BufferedImage> _data;
 	private final HashMap<Integer, CCCoverData> _elements;
+	
 	protected final CCDatabase _db;
 	protected final CCProperties _ccprops;
 
 	public CCMemoryCoverCache(CCDatabase database, CCProperties ccprops) {
-		_db = database;
 		_elements = new HashMap<>();
+		_data = new HashMap<>();
+		_db = database;
 		_ccprops = ccprops;
 	}
 
 	@Override
 	public void init() {
-		data = new HashMap<>();
+		_data.clear();
 	}
 
 	public CCProperties ccprops() {
@@ -71,7 +73,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 
 	@Override
 	public BufferedImage getCover(CCCoverData cce) {
-		BufferedImage res = data.get(cce.ID);
+		BufferedImage res = _data.get(cce.ID);
 
 		if (res == null) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverFileBroken", cce.ID)); //$NON-NLS-1$
@@ -103,7 +105,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 
 			_db.insertCoverEntry(cce);
 
-			data.put(cid, newCover);
+			_data.put(cid, newCover);
 			_elements.put(cid, cce);
 
 			f.deleteSafe();
@@ -131,7 +133,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 
 		_db.deleteCoverEntry(cce);
 
-		data.remove(cid);
+		_data.remove(cid);
 		_elements.remove(cid);
 
 	}
@@ -144,7 +146,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 
 	@Override
 	public boolean coverFileExists(int cid) {
-		return data.containsKey(cid);
+		return _data.containsKey(cid);
 	}
 
 	@Override
@@ -181,6 +183,5 @@ public class CCMemoryCoverCache implements ICoverCache {
 
 	public void resetForTestReload() {
 		_elements.clear();
-		data.clear();
 	}
 }

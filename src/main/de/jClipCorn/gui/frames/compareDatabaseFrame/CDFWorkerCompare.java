@@ -1,7 +1,6 @@
 package de.jClipCorn.gui.frames.compareDatabaseFrame;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.CancelledException;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -17,15 +16,10 @@ public class CDFWorkerCompare
 		cb.setMaxAndResetValueBoth(3, 1);
 		cb.setValueBoth(0, 0, "Connecting", "");
 
-		var mlExt = CCMovieList.loadExtern(null, dbPath, dbName, true);
-
-		if (!mlExt.databaseExists()) throw new Exception("Database " + dbPath + " | " + dbName + " not found");
-
-		if (cb.isCancelled()) throw new CancelledException();
-
 		cb.setValueBoth(1, 0, "Reading", "");
 
-		mlExt.connectAndLoadExternal(false);
+		var mlExt = CCMovieList.connectAndLoadExtern(null, dbPath, dbName, true, false);
+
 		try
 		{
 			if (!Str.equals(mlLoc.getDatabaseVersion(), mlExt.getDatabaseVersion())) throw new Exception("Databases have different versions");

@@ -66,12 +66,12 @@ public class CCDatabase {
 
 		_readonly = readonly;
 
-		_driver = driver;
-
 		databaseDirectory = dbDir;
 		databaseName      = dbName;
 
 		if (driver == null) driver = autoDetermineDriver(dbDir, dbName);
+
+		_driver = driver;
 
 		switch (driver) {
 		case SQLITE:
@@ -1306,8 +1306,6 @@ public class CCDatabase {
 
 	public Map<String, String> readAllProperties() {
 		Map<String, String> result = new HashMap<>();
-
-		if (!db.isConnected()) return result;
 
 		try {
 			CCSQLStatement stmt = stmts.readAllPropertiesStatement;

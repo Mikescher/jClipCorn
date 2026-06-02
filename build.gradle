@@ -196,12 +196,10 @@ tasks.register("changelog") {
 //=====================================================================================================================
 
 
-tasks.register("run-tests") {
+tasks.register("run-tests", Exec) {
 	group = 'Custom'
 
-	doLast {
-		commandLine 'bash', '-c', "docker run --rm \$(docker build -q . -f Dockerfile_tests || echo __err_build__)"
-	}
+	commandLine 'bash', '-c', "docker run --rm \$(docker build -q . -f Dockerfile_tests || echo __err_build__)"
 }
 
 

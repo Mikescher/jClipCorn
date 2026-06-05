@@ -24,6 +24,7 @@ import de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
 import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.gui.guiComponents.JCCFrameDimensionInput;
+import de.jClipCorn.gui.guiComponents.referenceChooser.ReferenceChooserDialog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
@@ -89,6 +90,7 @@ public class FrameSizesTablePanel extends JPanel {
 		add(properties.PROP_FSIZE_SETTINGSFRAME,                    SettingsFrame.class);
 		add(properties.PROP_FSIZE_STATISTICSFRAME,                  StatisticsFrame.class);
 		add(properties.PROP_FSIZE_WATCHHISTORYFRAME,                WatchHistoryFrame.class);
+		add(properties.PROP_FSIZE_REFERENCECHOOSERDIALOG,           ReferenceChooserDialog.class);
 	}
 
 	private void add(CCFrameSizeProperty prop, Class<? extends Window> frameClass) {

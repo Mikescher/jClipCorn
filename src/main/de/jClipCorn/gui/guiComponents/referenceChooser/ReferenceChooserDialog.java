@@ -35,6 +35,7 @@ public class ReferenceChooserDialog extends JCCDialog {
 		initGUI();
 		updateControls(dataMain, dataAdditional);
 		setSize(380, Math.max(250, 165 + 32*dataAdditional.size()));
+		ccprops().PROP_FSIZE_REFERENCECHOOSERDIALOG.applyOrSkip(this);
 
 
 		setLocationRelativeTo(parent);
@@ -114,11 +115,11 @@ public class ReferenceChooserDialog extends JCCDialog {
 		cspec.add(ColumnSpec.decode("default")); //$NON-NLS-1$
 		cspec.add(ColumnSpec.decode("default")); //$NON-NLS-1$
 
-		rspec.add(RowSpec.decode("24px")); //$NON-NLS-1$
+		rspec.add(RowSpec.decode("default")); //$NON-NLS-1$
 		rspec.add(RowSpec.decode("5dlu")); //$NON-NLS-1$
 		for (int i = 0; i < dataAdditional.size(); i++) {
 			rspec.add(FormSpecs.RELATED_GAP_ROWSPEC);
-			rspec.add(RowSpec.decode("24px")); //$NON-NLS-1$
+			rspec.add(RowSpec.decode("default")); //$NON-NLS-1$
 		}
 		rspec.add(RowSpec.decode("default:grow")); //$NON-NLS-1$
 
@@ -142,20 +143,25 @@ public class ReferenceChooserDialog extends JCCDialog {
 			JButton btnIn = new JButton(Resources.ICN_GENERIC_BULLET_ADD.get());
 			JButton btnRm = new JButton(Resources.ICN_GENERIC_BULLET_REM.get());
 
-			pnlData.add(btnUp, "3, "+(4 + i*2)+", fill, fill"); //$NON-NLS-1$ //$NON-NLS-2$
-			pnlData.add(btnDn, "4, "+(4 + i*2)+", fill, fill"); //$NON-NLS-1$ //$NON-NLS-2$
-			pnlData.add(btnIn, "5, "+(4 + i*2)+", fill, fill"); //$NON-NLS-1$ //$NON-NLS-2$
-			pnlData.add(btnRm, "6, "+(4 + i*2)+", fill, fill"); //$NON-NLS-1$ //$NON-NLS-2$
+			pnlData.add(btnUp, "3, "+(4 + i*2)+", center, center"); //$NON-NLS-1$ //$NON-NLS-2$
+			pnlData.add(btnDn, "4, "+(4 + i*2)+", center, center"); //$NON-NLS-1$ //$NON-NLS-2$
+			pnlData.add(btnIn, "5, "+(4 + i*2)+", center, center"); //$NON-NLS-1$ //$NON-NLS-2$
+			pnlData.add(btnRm, "6, "+(4 + i*2)+", center, center"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			btnUp.addActionListener(e -> moveRefUp(fi));
 			btnDn.addActionListener(e -> moveRefDown(fi));
 			btnIn.addActionListener(e -> insertNewRef(fi));
 			btnRm.addActionListener(e -> removeRef(fi));
 
-			btnUp.setMargin(new Insets(0, 0, 0, 0));
-			btnDn.setMargin(new Insets(0, 0, 0, 0));
-			btnIn.setMargin(new Insets(0, 0, 0, 0));
-			btnRm.setMargin(new Insets(0, 0, 0, 0));
+			// keep the move/insert/remove buttons square (matching the row height) and aligned in their cells
+			int btnSize = c.getPreferredSize().height;
+			Dimension btnDim = new Dimension(btnSize, btnSize);
+			for (JButton b : new JButton[]{ btnUp, btnDn, btnIn, btnRm }) {
+				b.setMargin(new Insets(0, 0, 0, 0));
+				b.setPreferredSize(btnDim);
+				b.setMinimumSize(btnDim);
+				b.setMaximumSize(btnDim);
+			}
 
 			btnUp.setEnabled(i>0);
 			btnDn.setEnabled(i<(dataAdditional.size()-1));

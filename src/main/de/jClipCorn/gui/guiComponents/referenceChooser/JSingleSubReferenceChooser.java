@@ -42,14 +42,15 @@ public class JSingleSubReferenceChooser extends JPanel {
 		setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("20px"), //$NON-NLS-1$
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
-				ColumnSpec.decode("46px"), //$NON-NLS-1$
+				ColumnSpec.decode("72px"), //$NON-NLS-1$
 				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
 			new RowSpec[] {
-				RowSpec.decode("fill:15dlu"),})); //$NON-NLS-1$
+				RowSpec.decode("fill:default"),})); //$NON-NLS-1$
 
 		cbxType = new WideComboBox<>();
-		cbxType.setPreferredSize(new Dimension(46, 20));
-		add(cbxType, "3, 1, left, fill"); //$NON-NLS-1$
+		// wide enough that the (square) dropdown-arrow at the full row height doesn't squeeze/clip the type-icon
+		cbxType.setPreferredSize(new Dimension(72, 22));
+		add(cbxType, "3, 1, fill, fill"); //$NON-NLS-1$
 		cbxModel = new DefaultComboBoxModel<>(CCOnlineRefType.values());
 		cbxType.setModel(cbxModel);
 		cbxType.setRenderer(new RefChooserComboBoxRenderer());

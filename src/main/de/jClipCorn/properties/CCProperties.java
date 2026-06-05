@@ -242,6 +242,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCFrameSizeProperty                              PROP_FSIZE_SETTINGSFRAME;
 	public CCFrameSizeProperty                              PROP_FSIZE_STATISTICSFRAME;
 	public CCFrameSizeProperty                              PROP_FSIZE_WATCHHISTORYFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_REFERENCECHOOSERDIALOG;
 	public CCBoolProperty                                   PROP_SERIALIZE_ANIMESTUDIO_IN_FILENAMES;
 	public CCBoolProperty                                   PROP_SERIALIZE_ANIMESEASON_IN_FILENAMES;
 	public CCBoolProperty                                   PROP_SERIALIZE_SPECIALVERSION_IN_FILENAMES;
@@ -466,6 +467,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_FSIZE_SETTINGSFRAME                    = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_SETTINGSFRAME",                    new FrameSizeVar(1550, 1000));
 		PROP_FSIZE_STATISTICSFRAME                  = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_STATISTICSFRAME",                  new FrameSizeVar(1600, 1000));
 		PROP_FSIZE_WATCHHISTORYFRAME                = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_WATCHHISTORYFRAME",                new FrameSizeVar(1400, 1000));
+		PROP_FSIZE_REFERENCECHOOSERDIALOG           = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_REFERENCECHOOSERDIALOG",           new FrameSizeVar(0, 0));
 
 		PROP_ADD_MOVIE_RELATIVE_AUTO                = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",                true);
 		PROP_PATHSYNTAX_SELF                        = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELF",                        true);

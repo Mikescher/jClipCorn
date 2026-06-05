@@ -19,9 +19,12 @@ public class RefChooserComboBoxEditor extends BasicComboBoxEditor {
     	component = new JPanel(new BorderLayout());
     	component.setBackground(Color.WHITE);
     	component.setBorder(new MatteBorder(1, 1, 1, 1, SystemColor.windowBorder));
-    	
+
     	label = new JLabel();
-    	
+    	// center the icon in the editor so it sits with even padding around it
+    	label.setHorizontalAlignment(SwingConstants.CENTER);
+    	label.setVerticalAlignment(SwingConstants.CENTER);
+
     	label.setText(""); //$NON-NLS-1$
     	label.setIcon(CCOnlineRefType.NONE.getIcon16x16());
     	

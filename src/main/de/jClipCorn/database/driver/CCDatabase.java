@@ -284,7 +284,7 @@ public class CCDatabase {
 		return ser;
 	}
 
-	private CCSeason createSeasonFromDatabase(CCSQLResultSet rs, CCSeries ser, boolean fillSeason) throws SQLException, SQLWrapperException {
+	private CCSeason createSeasonFromDatabase(CCSQLResultSet rs, CCSeries ser, boolean fillSeason) throws SQLException, CCFormatException, SQLWrapperException {
 		CCSeason seas = new CCSeason(ser, rs.getInt(DatabaseStructure.COL_SEAS_LOCALID));
 
 		seas.beginUpdating();
@@ -356,12 +356,14 @@ public class CCDatabase {
 		ep.ChecksumSHA512.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_SHA512)));
 	}
 
-	private void updateSeasonFromResultSet(CCSQLResultSet rs, CCSeason seas) throws SQLException, SQLWrapperException {
+	private void updateSeasonFromResultSet(CCSQLResultSet rs, CCSeason seas) throws SQLException, CCFormatException, SQLWrapperException {
 		seas.Title.setOnly(rs.getString(DatabaseStructure.COL_SEAS_NAME));
 		seas.Year.setOnly(rs.getInt(DatabaseStructure.COL_SEAS_YEAR));
 		seas.Score.setOnly(rs.getInt(DatabaseStructure.COL_SEAS_SCORE));
 		seas.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_SEAS_SCORECOMMENT));
 		seas.OnlineReference.setOnly(CCOnlineReferenceList.fromJSONArray(rs.getString(DatabaseStructure.COL_SEAS_ONLINEREF)));
+		seas.AnimeSeason.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SEAS_ANIMESEASON)));
+		seas.AnimeStudio.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SEAS_ANIMESTUDIO)));
 
 		seas.CoverID.setOnly(rs.getInt(DatabaseStructure.COL_SEAS_COVERID));
 	}
@@ -379,8 +381,6 @@ public class CCDatabase {
 		ser.CoverID.setOnly(rs.getInt(DatabaseStructure.COL_SER_COVERID));
 		ser.Groups.setOnly(CCGroupList.fromJSONArrayWithoutAddingNewGroups(ser.getMovieList(), rs.getString(DatabaseStructure.COL_SER_GROUPS)));
 		ser.SpecialVersion.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_SPECIALVERSION)));
-		ser.AnimeSeason.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_ANIMESEASON)));
-		ser.AnimeStudio.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_ANIMESTUDIO)));
 	}
 
 	private void updateMovieFromResultSet(CCSQLResultSet rs, CCMovie mov) throws SQLException, CCFormatException, SQLWrapperException {
@@ -727,8 +727,6 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_SER_COVERID,           ser.getCoverID());
 			stmt.setStr(DatabaseStructure.COL_SER_GROUPS,            ser.getGroups().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_SER_SPECIALVERSION,    ser.SpecialVersion.serializeToString());
-			stmt.setStr(DatabaseStructure.COL_SER_ANIMESEASON,       ser.AnimeSeason.serializeToString());
-			stmt.setStr(DatabaseStructure.COL_SER_ANIMESTUDIO,       ser.AnimeStudio.serializeToString());
 
 			stmt.setInt(DatabaseStructure.COL_SER_LOCALID,           ser.getLocalID());
 
@@ -757,6 +755,8 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_SEAS_SCORE,        sea.Score.get().asInt());
 			stmt.setStr(DatabaseStructure.COL_SEAS_SCORECOMMENT, sea.ScoreComment.get());
 			stmt.setStr(DatabaseStructure.COL_SEAS_ONLINEREF,    sea.OnlineReference.get().asJSONArray());
+			stmt.setStr(DatabaseStructure.COL_SEAS_ANIMESEASON,  sea.AnimeSeason.serializeToString());
+			stmt.setStr(DatabaseStructure.COL_SEAS_ANIMESTUDIO,  sea.AnimeStudio.serializeToString());
 
 			stmt.setInt(DatabaseStructure.COL_SEAS_COVERID,   sea.getCoverID());
 
@@ -898,7 +898,7 @@ public class CCDatabase {
 			sea.resetDirty();
 
 			return true;
-		} catch (SQLException | SQLWrapperException e) {
+		} catch (SQLException | CCFormatException | SQLWrapperException e) {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", sea.Title.get(), sea.getLocalID()), e);
 			return false;
 		}
@@ -1157,10 +1157,10 @@ public class CCDatabase {
 
 			ser.abortUpdating();
 			ser.enforceOrder();
-			
+
 			rs.close();
-			
-		} catch (SQLException | SQLWrapperException e) {
+
+		} catch (SQLException | CCFormatException | SQLWrapperException e) {
 			CCLog.addError(e);
 		}
 	}

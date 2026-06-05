@@ -111,6 +111,9 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 			return;
 		}
 
+		final CCStringList animeSeason = CCStringList.create(edAnimeSeason.getValues());
+		final CCStringList animeStudio = CCStringList.create(edAnimeStudio.getValues());
+
 		CCSeries newS = movielist.createNewSeries(s -> {
 
 			//#####################################################################################
@@ -134,13 +137,19 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 
 			s.Groups.set(edGroups.getValue());
 
-			s.AnimeSeason.set(CCStringList.create(edAnimeSeason.getValues()));
-			s.AnimeStudio.set(CCStringList.create(edAnimeStudio.getValues()));
-
 			s.setCover(edCvrControl.getResizedImageForStorage());
 
 			//#####################################################################################
 		});
+
+		// AnimeSeason/AnimeStudio are properties of the seasons
+		// auto-create an empty season that carries those values.
+		if (!animeSeason.isEmpty() || !animeStudio.isEmpty()) {
+			newS.createNewSeason(newSeas -> {
+				newSeas.AnimeSeason.set(animeSeason);
+				newSeas.AnimeStudio.set(animeStudio);
+			});
+		}
 
 		EditSeriesFrame esf = new EditSeriesFrame(this, newS, null);
 		esf.setVisible(true);

@@ -14,6 +14,7 @@ import de.jClipCorn.database.elementProps.impl.EEnumProp;
 import de.jClipCorn.database.elementProps.impl.EIntProp;
 import de.jClipCorn.database.elementProps.impl.EOnlineRefListProp;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
+import de.jClipCorn.database.elementProps.impl.EStringListProp;
 import de.jClipCorn.database.elementProps.impl.EStringProp;
 import de.jClipCorn.database.util.*;
 import de.jClipCorn.features.actionTree.CCActionElement;
@@ -52,6 +53,8 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	public final EEnumProp<CCUserScore>  Score        = new EEnumProp<>("Score",         CCUserScore.RATING_NO, this, EPropertyType.USER_METADATA);
 	public final EStringProp             ScoreComment = new EStringProp("ScoreComment",  Str.Empty,             this, EPropertyType.USER_METADATA);
 	public final EOnlineRefListProp      OnlineReference = new EOnlineRefListProp("OnlineReference", CCOnlineReferenceList.EMPTY, this, EPropertyType.OBJECTIVE_METADATA);
+	public final EStringListProp         AnimeSeason  = new EStringListProp("AnimeSeason",    CCStringList.EMPTY,    this, EPropertyType.OBJECTIVE_METADATA);
+	public final EStringListProp         AnimeStudio  = new EStringListProp("AnimeStudio",    CCStringList.EMPTY,    this, EPropertyType.OBJECTIVE_METADATA);
 
 	public FSPath NfoCoverPath = FSPath.Empty;
 
@@ -87,6 +90,8 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 			Score,
 			ScoreComment,
 			OnlineReference,
+			AnimeSeason,
+			AnimeStudio,
 		};
 	}
 
@@ -95,8 +100,13 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	public EEnumProp<CCUserScore>  score()            { return Score;           }
 	public EStringProp             scoreComment()     { return ScoreComment;    }
 	public EOnlineRefListProp      onlineReference()  { return OnlineReference; }
+	public EStringListProp         animeSeason()      { return AnimeSeason;     }
+	public EStringListProp         animeStudio()      { return AnimeStudio;     }
 
 	public CCOnlineReferenceList getOnlineReference() { return OnlineReference.get(); }
+
+	public CCStringList getAnimeSeason() { return AnimeSeason.get(); }
+	public CCStringList getAnimeStudio() { return AnimeStudio.get(); }
 
 	public CCProperties ccprops() {
 		return getMovieList().ccprops();

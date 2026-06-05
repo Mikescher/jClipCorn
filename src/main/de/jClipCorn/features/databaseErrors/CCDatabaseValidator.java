@@ -1001,26 +1001,28 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				DatabaseErrorType.ERROR_INVALID_GROUPLIST,
 				o -> o.ValidateSeries,
 				(series, movielist, e) -> {
-					for (String animeSeason : series.AnimeSeason.get()) {
-						// Check for untrimmed
-						if (Str.isUntrimmed(animeSeason)) {
-							e.add(DatabaseError.createSingle(
-								movielist,
-								DatabaseErrorType.ERROR_NOT_TRIMMED, series,
-								"AnimeSeason", "'" + animeSeason + "'"
-							));
-							return;
-						}
-						
-						// Check regex pattern
-						if (!CCDatabaseElement.REGEX_ANIMESEASON.matcher(animeSeason).matches()) {
-							e.add(DatabaseError.createSingle(
-								movielist,
-								DatabaseErrorType.ERROR_INVALID_GROUPLIST, series,
-								"Problem", "Invalid AnimeSeason format (must match: (Spring|Summer|Fall|Winter) YYYY)",
-								"AnimeSeason", "'" + animeSeason + "'"
-							));
-							return;
+					for (CCSeason sea : series.iteratorSeasons()) {
+						for (String animeSeason : sea.getAnimeSeason()) {
+							// Check for untrimmed
+							if (Str.isUntrimmed(animeSeason)) {
+								e.add(DatabaseError.createSingle(
+									movielist,
+									DatabaseErrorType.ERROR_NOT_TRIMMED, series,
+									"AnimeSeason", "'" + animeSeason + "'"
+								));
+								return;
+							}
+
+							// Check regex pattern
+							if (!CCDatabaseElement.REGEX_ANIMESEASON.matcher(animeSeason).matches()) {
+								e.add(DatabaseError.createSingle(
+									movielist,
+									DatabaseErrorType.ERROR_INVALID_GROUPLIST, series,
+									"Problem", "Invalid AnimeSeason format (must match: (Spring|Summer|Fall|Winter) YYYY)",
+									"AnimeSeason", "'" + animeSeason + "'"
+								));
+								return;
+							}
 						}
 					}
 				});
@@ -1030,17 +1032,21 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				DatabaseErrorType.ERROR_NOT_TRIMMED,
 				o -> o.ValidateSeries,
 				series -> {
-					for (String ast : series.AnimeStudio.get()) {
-						if (Str.isUntrimmed(ast)) return true;
+					for (CCSeason sea : series.iteratorSeasons()) {
+						for (String ast : sea.getAnimeStudio()) {
+							if (Str.isUntrimmed(ast)) return true;
+						}
 					}
 					return false;
 				},
 				series -> {
 					StringBuilder untrimmed = new StringBuilder();
-					for (String ast : series.AnimeStudio.get()) {
-						if (Str.isUntrimmed(ast)) {
-							if (untrimmed.length() > 0) untrimmed.append(", ");
-							untrimmed.append("'").append(ast).append("'");
+					for (CCSeason sea : series.iteratorSeasons()) {
+						for (String ast : sea.getAnimeStudio()) {
+							if (Str.isUntrimmed(ast)) {
+								if (untrimmed.length() > 0) untrimmed.append(", ");
+								untrimmed.append("'").append(ast).append("'");
+							}
 						}
 					}
 					return DatabaseError.createSingle(

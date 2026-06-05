@@ -285,13 +285,13 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		lblSpecialVersion.setVisible(!series.SpecialVersion.get().isEmpty());
 		labelSpecialVersion.setVisible(!series.SpecialVersion.get().isEmpty());
 
-		lblAnimeSeason.setText(series.AnimeSeason.get().ccstream().sort(new CCAnimeSeasonComparator()).stringjoin("\n"));
-		lblAnimeSeason.setVisible(!series.AnimeSeason.get().isEmpty());
-		labelAnimeSeason.setVisible(!series.AnimeSeason.get().isEmpty());
+		lblAnimeSeason.setText(series.getAnimeSeason().ccstream().sort(new CCAnimeSeasonComparator()).stringjoin("\n"));
+		lblAnimeSeason.setVisible(!series.getAnimeSeason().isEmpty());
+		labelAnimeSeason.setVisible(!series.getAnimeSeason().isEmpty());
 
-		lblAnimeStudio.setText(series.AnimeStudio.get().ccstream().stringjoin("\n"));
-		lblAnimeStudio.setVisible(!series.AnimeStudio.get().isEmpty());
-		labelAnimeStudio.setVisible(!series.AnimeStudio.get().isEmpty());
+		lblAnimeStudio.setText(series.getAnimeStudio().ccstream().stringjoin("\n"));
+		lblAnimeStudio.setVisible(!series.getAnimeStudio().isEmpty());
+		labelAnimeStudio.setVisible(!series.getAnimeStudio().isEmpty());
 
 		ThreadUtils.delay(50, () -> { pnlInfo.revalidate(); });
 	}

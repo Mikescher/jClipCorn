@@ -40,8 +40,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public final EOnlineRefListProp       OnlineReference = new EOnlineRefListProp(  "OnlineReference", CCOnlineReferenceList.EMPTY, this, EPropertyType.OBJECTIVE_METADATA);
 	public final ETagListProp             Tags            = new ETagListProp(        "Tags",            CCTagList.EMPTY,             this, EPropertyType.USER_METADATA);
 	public final EStringListProp          SpecialVersion  = new EStringListProp(     "SpecialVersion",  CCStringList.EMPTY,          this, EPropertyType.OBJECTIVE_METADATA);
-	public final EStringListProp          AnimeSeason     = new EStringListProp(     "AnimeSeason",     CCStringList.EMPTY,          this, EPropertyType.OBJECTIVE_METADATA);
-	public final EStringListProp          AnimeStudio     = new EStringListProp(     "AnimeStudio",     CCStringList.EMPTY,          this, EPropertyType.OBJECTIVE_METADATA);
 
 	private IEProperty[] _properties = null;
 
@@ -81,8 +79,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 					OnlineReference,
 					Tags,
 					SpecialVersion,
-					AnimeSeason,
-					AnimeStudio,
 				})
 				.append(OnlineScore.getProperties())
 				.toArray(new IEProperty[0]);
@@ -97,8 +93,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public EOnlineRefListProp       onlineReference() { return OnlineReference; }
 	public ETagListProp             tags()            { return Tags;            }
 	public EStringListProp          specialVersion()  { return SpecialVersion;  }
-	public EStringListProp          animeSeason()     { return AnimeSeason;     }
-	public EStringListProp          animeStudio()     { return AnimeStudio;     }
 
 	public void setDefaultValues(boolean updateDB) {
 		try {
@@ -231,13 +225,19 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 		return Groups.get();
 	}
 
-	public CCStringList getAnimeStudio() {
-		return AnimeStudio.get();
-	}
+	/**
+	 * AnimeStudio is no longer a property of CCDatabaseElement itself.
+	 * For movies this returns the movie's own value, for series this returns the
+	 * aggregated set of all studios from all its seasons (see [[CCSeason]]).
+	 */
+	public abstract CCStringList getAnimeStudio();
 
-	public CCStringList getAnimeSeason() {
-		return AnimeSeason.get();
-	}
+	/**
+	 * AnimeSeason is no longer a property of CCDatabaseElement itself.
+	 * For movies this returns the movie's own value, for series this returns the
+	 * aggregated list of all anime-seasons from all its seasons (see [[CCSeason]]).
+	 */
+	public abstract CCStringList getAnimeSeason();
 
 	public CCStringList getSpecialVersion() {
 		return SpecialVersion.get();

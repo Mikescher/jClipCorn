@@ -38,8 +38,6 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("onlinreref",     o.getOnlineReference().toSerializationString());
 		e.setAttribute("tags",           o.getTags().serialize());
 		e.setAttribute("specialversion", o.SpecialVersion.serializeToString());
-		e.setAttribute("animeseason",    o.AnimeSeason.serializeToString());
-		e.setAttribute("animestudio",    o.AnimeStudio.serializeToString());
 
 		if (! s.CoverData) e.setAttribute("covername", o.getCoverInfo().Filename);
 		if (! s.CoverData) e.setAttribute("coverid", o.getCoverInfo().ID + "");
@@ -50,6 +48,9 @@ public class DatabaseXMLExporterImpl {
 
 	public static void exportMovie(Element e, CCMovie o, ExportOptions s) {
 		exportDatabaseElement(e, o, s);
+
+		e.setAttribute("animeseason",    o.AnimeSeason.serializeToString());
+		e.setAttribute("animestudio",    o.AnimeStudio.serializeToString());
 
 		e.setAttribute("adddate",      o.getAddDate().toStringSQL());
 		e.setAttribute("filesize",     o.getFilesize().getBytes() + "");
@@ -105,6 +106,8 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("score",      String.valueOf(o.Score.get().asInt()));
 		e.setAttribute("comment",    o.ScoreComment.get());
 		e.setAttribute("onlinreref", o.getOnlineReference().toSerializationString());
+		e.setAttribute("animeseason", o.AnimeSeason.serializeToString());
+		e.setAttribute("animestudio", o.AnimeStudio.serializeToString());
 
 		if (! s.CoverData) e.setAttribute("covername", o.getCoverInfo().Filename);
 		if (! s.CoverData) e.setAttribute("coverid", o.getCoverInfo().ID + "");

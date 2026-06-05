@@ -250,6 +250,28 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		return Tags.get();
 	}
 
+	/**
+	 * AnimeSeason is now a property of the individual {@link CCSeason}s.
+	 * This returns the aggregated (deduplicated) list of all anime-seasons over all seasons of this series.
+	 */
+	@Override
+	public CCStringList getAnimeSeason() {
+		Set<String> all = new LinkedHashSet<>();
+		for (CCSeason s : iteratorSeasons()) for (String v : s.getAnimeSeason()) all.add(v);
+		return CCStringList.create(all);
+	}
+
+	/**
+	 * AnimeStudio is now a property of the individual {@link CCSeason}s.
+	 * This returns the aggregated (deduplicated) set of all studios over all seasons of this series.
+	 */
+	@Override
+	public CCStringList getAnimeStudio() {
+		Set<String> all = new LinkedHashSet<>();
+		for (CCSeason s : iteratorSeasons()) for (String v : s.getAnimeStudio()) all.add(v);
+		return CCStringList.create(all);
+	}
+
 	@Override
 	public CCFileFormat getFormat() {
 		return _cache.get(SeriesCache.FORMAT, null, ser->

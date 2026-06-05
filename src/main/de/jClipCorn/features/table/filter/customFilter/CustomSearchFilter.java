@@ -118,13 +118,13 @@ public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 			}
 		}
 		
-		for (String season : e.AnimeSeason.get()) {
+		for (String season : e.getAnimeSeason()) {
 			if (season.equalsIgnoreCase(searchTerm)) {
 				return true;
 			}
 		}
-		
-		for (String studio : e.AnimeStudio.get()) {
+
+		for (String studio : e.getAnimeStudio()) {
 			if (studio.equalsIgnoreCase(searchTerm)) {
 				return true;
 			}

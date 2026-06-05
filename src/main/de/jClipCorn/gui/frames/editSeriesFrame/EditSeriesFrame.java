@@ -325,12 +325,12 @@ public class EditSeriesFrame extends JCCFrame
 
 			@Override
 			public void setAnimeSeason(CCStringList animeSeason) {
-				// NOP
+				edAnimeSeason.setValues(animeSeason.ccstream().sort(new CCAnimeSeasonComparator()).toList());
 			}
 
 			@Override
 			public void setAnimeStudio(CCStringList animeStudio) {
-				// NOP
+				edAnimeStudio.setValues(animeStudio.ccstream().toList());
 			}
 
 			@Override
@@ -430,12 +430,12 @@ public class EditSeriesFrame extends JCCFrame
 
 			@Override
 			public void setAnimeSeason(CCStringList animeSeason) {
-				edAnimeSeason.setValues(animeSeason.ccstream().sort(new CCAnimeSeasonComparator()).toList());
+				// NOP
 			}
 
 			@Override
 			public void setAnimeStudio(CCStringList animeStudio) {
-				edAnimeStudio.setValues(animeStudio.ccstream().toList());
+				// NOP
 			}
 
 			@Override
@@ -528,8 +528,6 @@ public class EditSeriesFrame extends JCCFrame
 			edSeriesTags.setValue(series.getTags());
 
 			edSpecialVersion.setValues(series.SpecialVersion.get().ccstream().toList());
-			edAnimeSeason.setValues(series.AnimeSeason.get().ccstream().sort(new CCAnimeSeasonComparator()).toList());
-			edAnimeStudio.setValues(series.AnimeStudio.get().ccstream().toList());
 
 			lsSeasons.setSelectedIndex(-1);
 			DefaultListModel<String> ml;
@@ -596,6 +594,8 @@ public class EditSeriesFrame extends JCCFrame
 				cbxSeasonScore.setSelectedEnum(season.getScore());
 				memoSeasonComment.setText(season.getScoreComment());
 				edSeasonReference.setValue(season.getOnlineReference());
+				edAnimeSeason.setValues(season.AnimeSeason.get().ccstream().sort(new CCAnimeSeasonComparator()).toList());
+				edAnimeStudio.setValues(season.AnimeStudio.get().ccstream().toList());
 
 				lsEpisodes.setSelectedIndex(-1);
 				DefaultListModel<String> ml;
@@ -758,8 +758,6 @@ public class EditSeriesFrame extends JCCFrame
 		series.Tags.set(edSeriesTags.getValue());
 
 		series.SpecialVersion.set(CCStringList.create(edSpecialVersion.getValues()));
-		series.AnimeSeason.set(CCStringList.create(edAnimeSeason.getValues()));
-		series.AnimeStudio.set(CCStringList.create(edAnimeStudio.getValues()));
 
 		//#####################################################################################
 
@@ -933,6 +931,8 @@ public class EditSeriesFrame extends JCCFrame
 		season.Score.set(cbxSeasonScore.getSelectedEnum());
 		season.ScoreComment.set(memoSeasonComment.getText());
 		season.OnlineReference.set(edSeasonReference.getValue());
+		season.AnimeSeason.set(CCStringList.create(edAnimeSeason.getValues()));
+		season.AnimeStudio.set(CCStringList.create(edAnimeStudio.getValues()));
 
 		//#####################################################################################
 
@@ -1356,10 +1356,6 @@ public class EditSeriesFrame extends JCCFrame
 		edSeriesTags = new TagPanel();
 		lblSpecialVersion = new JLabel();
 		edSpecialVersion = new JAutoCompleteTextField(() -> movielist.getSpecialVersionList());
-		lblAnimeSeason = new JLabel();
-		edAnimeSeason = new JAutoCompleteTextField(() -> movielist.getAnimeSeasonList(), true);
-		lblAnimeStudio = new JLabel();
-		edAnimeStudio = new JAutoCompleteTextField(() -> movielist.getAnimeStudioList(), true);
 		panel8 = new JPanel();
 		scrollPane1 = new JScrollPane();
 		lsSeasons = new JList<>();
@@ -1384,6 +1380,10 @@ public class EditSeriesFrame extends JCCFrame
 		memoSeasonComment = new JTextArea();
 		lblSeasonReference = new JLabel();
 		edSeasonReference = new JReferenceChooser(movielist);
+		lblAnimeSeason = new JLabel();
+		edAnimeSeason = new JAutoCompleteTextField(() -> movielist.getAnimeSeasonList(), true);
+		lblAnimeStudio = new JLabel();
+		edAnimeStudio = new JAutoCompleteTextField(() -> movielist.getAnimeStudioList(), true);
 		scrollPane2 = new JScrollPane();
 		lsEpisodes = new JList<>();
 		btnAddEpisode = new JButton();
@@ -1515,7 +1515,7 @@ public class EditSeriesFrame extends JCCFrame
 			{
 				panel5.setLayout(new FormLayout(
 					"default, $lcgap, 0dlu:grow",
-					"14dlu, 3*($lgap, pref), $lgap, 32dlu, 6*($lgap, pref)"));
+					"14dlu, 3*($lgap, pref), $lgap, 32dlu, 4*($lgap, pref)"));
 
 				//---- label9 ----
 				label9.setText(LocaleBundle.getString("AddMovieFrame.label_1.text"));
@@ -1583,22 +1583,6 @@ public class EditSeriesFrame extends JCCFrame
 				//---- edSpecialVersion ----
 				edSpecialVersion.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
 				panel5.add(edSpecialVersion, CC.xy(3, 17));
-
-				//---- lblAnimeSeason ----
-				lblAnimeSeason.setText(LocaleBundle.getString("EditSeriesFrame.lblAnimeSeason.text"));
-				panel5.add(lblAnimeSeason, CC.xy(1, 19));
-
-				//---- edAnimeSeason ----
-				edAnimeSeason.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
-				panel5.add(edAnimeSeason, CC.xy(3, 19));
-
-				//---- lblAnimeStudio ----
-				lblAnimeStudio.setText(LocaleBundle.getString("EditSeriesFrame.lblAnimeStudio.text"));
-				panel5.add(lblAnimeStudio, CC.xy(1, 21));
-
-				//---- edAnimeStudio ----
-				edAnimeStudio.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
-				panel5.add(edAnimeStudio, CC.xy(3, 21));
 			}
 			pnlEditSeries.add(panel5, CC.xy(2, 4, CC.FILL, CC.FILL));
 
@@ -1667,7 +1651,7 @@ public class EditSeriesFrame extends JCCFrame
 			pnlEditSeason.setBorder(LineBorder.createBlackLineBorder());
 			pnlEditSeason.setLayout(new FormLayout(
 				"2*($lcgap, default), $lcgap, 0dlu:grow, $lcgap, default, $lcgap",
-				"3*($lgap, pref), $lgap, default, $lgap, 32dlu, $lgap, pref, 6*($lgap, default), $lgap, 0dlu:grow, $lgap, default, $lgap"));
+				"3*($lgap, pref), $lgap, default, $lgap, 32dlu, 3*($lgap, pref), 6*($lgap, default), $lgap, 0dlu:grow, $lgap, default, $lgap"));
 			pnlEditSeason.add(edSeasonCvrControl, CC.xywh(2, 2, 7, 1));
 
 			//---- label17 ----
@@ -1701,6 +1685,22 @@ public class EditSeriesFrame extends JCCFrame
 			pnlEditSeason.add(lblSeasonReference, CC.xy(2, 12));
 			pnlEditSeason.add(edSeasonReference, CC.xywh(4, 12, 5, 1));
 
+			//---- lblAnimeSeason ----
+			lblAnimeSeason.setText(LocaleBundle.getString("EditSeriesFrame.lblAnimeSeason.text"));
+			pnlEditSeason.add(lblAnimeSeason, CC.xy(2, 14));
+
+			//---- edAnimeSeason ----
+			edAnimeSeason.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
+			pnlEditSeason.add(edAnimeSeason, CC.xywh(4, 14, 5, 1));
+
+			//---- lblAnimeStudio ----
+			lblAnimeStudio.setText(LocaleBundle.getString("EditSeriesFrame.lblAnimeStudio.text"));
+			pnlEditSeason.add(lblAnimeStudio, CC.xy(2, 16));
+
+			//---- edAnimeStudio ----
+			edAnimeStudio.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
+			pnlEditSeason.add(edAnimeStudio, CC.xywh(4, 16, 5, 1));
+
 			//======== scrollPane2 ========
 			{
 
@@ -1708,32 +1708,32 @@ public class EditSeriesFrame extends JCCFrame
 				lsEpisodes.addListSelectionListener(e -> onEpisodeSelected());
 				scrollPane2.setViewportView(lsEpisodes);
 			}
-			pnlEditSeason.add(scrollPane2, CC.xywh(2, 14, 5, 13));
+			pnlEditSeason.add(scrollPane2, CC.xywh(2, 18, 5, 13));
 
 			//---- btnAddEpisode ----
 			btnAddEpisode.setText(LocaleBundle.getString("EditSeriesFrame.btnAddEmptyEpisode.text"));
 			btnAddEpisode.addActionListener(e -> addEmptyEpisode());
-			pnlEditSeason.add(btnAddEpisode, CC.xy(8, 14));
+			pnlEditSeason.add(btnAddEpisode, CC.xy(8, 18));
 
 			//---- btnAddMultipleEpisodes ----
 			btnAddMultipleEpisodes.setText(LocaleBundle.getString("EditSeriesFrame.btnAddMultipleEpisodes.text"));
 			btnAddMultipleEpisodes.addActionListener(e -> multiAddEpisodes());
-			pnlEditSeason.add(btnAddMultipleEpisodes, CC.xy(8, 16));
+			pnlEditSeason.add(btnAddMultipleEpisodes, CC.xy(8, 20));
 
 			//---- btnEditAllEpisodesInBatch ----
 			btnEditAllEpisodesInBatch.setText(LocaleBundle.getString("EditSeriesFrame.btnBatchEdit.text"));
 			btnEditAllEpisodesInBatch.addActionListener(e -> batchEditEpisodes());
-			pnlEditSeason.add(btnEditAllEpisodesInBatch, CC.xy(8, 18));
+			pnlEditSeason.add(btnEditAllEpisodesInBatch, CC.xy(8, 22));
 
 			//---- btnEditSelectedEpisodesInBatch ----
 			btnEditSelectedEpisodesInBatch.setText(LocaleBundle.getString("EditSeriesFrame.btnBatchEditSelection.text"));
 			btnEditSelectedEpisodesInBatch.addActionListener(e -> batchEditSelectedEpisodes());
-			pnlEditSeason.add(btnEditSelectedEpisodesInBatch, CC.xy(8, 20));
+			pnlEditSeason.add(btnEditSelectedEpisodesInBatch, CC.xy(8, 24));
 
 			//---- btnRemoveEpisodes ----
 			btnRemoveEpisodes.setText(LocaleBundle.getString("EditSeriesFrame.btnRemoveEpisode.text"));
 			btnRemoveEpisodes.addActionListener(e -> removeEpisode());
-			pnlEditSeason.add(btnRemoveEpisodes, CC.xy(8, 24));
+			pnlEditSeason.add(btnRemoveEpisodes, CC.xy(8, 28));
 
 			//======== panel9 ========
 			{
@@ -1744,7 +1744,7 @@ public class EditSeriesFrame extends JCCFrame
 				button12.addActionListener(e -> onSeasonOkay());
 				panel9.add(button12);
 			}
-			pnlEditSeason.add(panel9, CC.xywh(2, 28, 7, 1));
+			pnlEditSeason.add(panel9, CC.xywh(2, 32, 7, 1));
 		}
 		contentPane.add(pnlEditSeason, CC.xy(4, 2, CC.FILL, CC.FILL));
 
@@ -1951,10 +1951,6 @@ public class EditSeriesFrame extends JCCFrame
 	private TagPanel edSeriesTags;
 	private JLabel lblSpecialVersion;
 	private JAutoCompleteTextField edSpecialVersion;
-	private JLabel lblAnimeSeason;
-	private JAutoCompleteTextField edAnimeSeason;
-	private JLabel lblAnimeStudio;
-	private JAutoCompleteTextField edAnimeStudio;
 	private JPanel panel8;
 	private JScrollPane scrollPane1;
 	private JList<String> lsSeasons;
@@ -1979,6 +1975,10 @@ public class EditSeriesFrame extends JCCFrame
 	private JTextArea memoSeasonComment;
 	private JLabel lblSeasonReference;
 	private JReferenceChooser edSeasonReference;
+	private JLabel lblAnimeSeason;
+	private JAutoCompleteTextField edAnimeSeason;
+	private JLabel lblAnimeStudio;
+	private JAutoCompleteTextField edAnimeStudio;
 	private JScrollPane scrollPane2;
 	private JList<String> lsEpisodes;
 	private JButton btnAddEpisode;

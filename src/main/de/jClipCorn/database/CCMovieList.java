@@ -838,7 +838,7 @@ public class CCMovieList implements ICCPropertySource {
 			List<String> result = new ArrayList<>();
 
 			for (CCDatabaseElement el : list) {
-				for (String season : el.AnimeSeason.get()) {
+				for (String season : el.getAnimeSeason()) {
 					if (!result.contains(season) && !season.isEmpty()) {
 						result.add(season);
 					}
@@ -857,7 +857,7 @@ public class CCMovieList implements ICCPropertySource {
 			List<String> result = new ArrayList<>();
 
 			for (CCDatabaseElement el : list) {
-				for (String studio : el.AnimeStudio.get()) {
+				for (String studio : el.getAnimeStudio()) {
 					if (!result.contains(studio) && !studio.isEmpty()) {
 						result.add(studio);
 					}

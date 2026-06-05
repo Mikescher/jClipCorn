@@ -178,7 +178,7 @@ new FormModel {
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 					"$columnSpecs": "default, labelcompgap, 0dlu:grow"
-					"$rowSpecs": "14dlu, linegap, pref, linegap, pref, linegap, pref, linegap, 32dlu, linegap, pref, linegap, pref, linegap, pref, linegap, pref, linegap, pref, linegap, pref"
+					"$rowSpecs": "14dlu, linegap, pref, linegap, pref, linegap, pref, linegap, 32dlu, linegap, pref, linegap, pref, linegap, pref, linegap, pref"
 				} ) {
 					name: "panel5"
 					add( new FormComponent( "javax.swing.JLabel" ) {
@@ -336,40 +336,6 @@ new FormModel {
 						"gridX": 3
 						"gridY": 17
 					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "lblAnimeSeason"
-						"text": new FormMessage( null, "EditSeriesFrame.lblAnimeSeason.text" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 1
-						"gridY": 19
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JAutoCompleteTextField" ) {
-						name: "edAnimeSeason"
-						auxiliary() {
-							"JavaCodeGenerator.postInitCode": "${field}.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);"
-							"JavaCodeGenerator.customCreateCode": "new ${field_type}(() -> movielist.getAnimeSeasonList(), true);"
-						}
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 3
-						"gridY": 19
-					} )
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "lblAnimeStudio"
-						"text": new FormMessage( null, "EditSeriesFrame.lblAnimeStudio.text" )
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 1
-						"gridY": 21
-					} )
-					add( new FormComponent( "de.jClipCorn.gui.guiComponents.JAutoCompleteTextField" ) {
-						name: "edAnimeStudio"
-						auxiliary() {
-							"JavaCodeGenerator.postInitCode": "${field}.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);"
-							"JavaCodeGenerator.customCreateCode": "new ${field_type}(() -> movielist.getAnimeStudioList(), true);"
-						}
-					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-						"gridX": 3
-						"gridY": 21
-					} )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
 					"gridY": 4
@@ -463,7 +429,7 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "labelcompgap, default, labelcompgap, default, labelcompgap, 0dlu:grow, labelcompgap, default, labelcompgap"
-				"$rowSpecs": "linegap, pref, linegap, pref, linegap, pref, linegap, default, linegap, 32dlu, linegap, pref, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 0dlu:grow, linegap, default, linegap"
+				"$rowSpecs": "linegap, pref, linegap, pref, linegap, pref, linegap, default, linegap, 32dlu, linegap, pref, linegap, pref, linegap, pref, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 0dlu:grow, linegap, default, linegap"
 			} ) {
 				name: "pnlEditSeason"
 				"border": new javax.swing.border.LineBorder( sfield java.awt.Color black, 1, false )
@@ -560,6 +526,42 @@ new FormModel {
 					"gridY": 12
 					"gridWidth": 5
 				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblAnimeSeason"
+					"text": new FormMessage( null, "EditSeriesFrame.lblAnimeSeason.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 14
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.JAutoCompleteTextField" ) {
+					name: "edAnimeSeason"
+					auxiliary() {
+						"JavaCodeGenerator.postInitCode": "${field}.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);"
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(() -> movielist.getAnimeSeasonList(), true);"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 14
+					"gridWidth": 5
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblAnimeStudio"
+					"text": new FormMessage( null, "EditSeriesFrame.lblAnimeStudio.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 16
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.JAutoCompleteTextField" ) {
+					name: "edAnimeStudio"
+					auxiliary() {
+						"JavaCodeGenerator.postInitCode": "${field}.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);"
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(() -> movielist.getAnimeStudioList(), true);"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 16
+					"gridWidth": 5
+				} )
 				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 					name: "scrollPane2"
 					add( new FormComponent( "javax.swing.JList" ) {
@@ -571,7 +573,7 @@ new FormModel {
 					} )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
-					"gridY": 14
+					"gridY": 18
 					"gridHeight": 13
 					"gridWidth": 5
 				} )
@@ -581,7 +583,7 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addEmptyEpisode", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 8
-					"gridY": 14
+					"gridY": 18
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnAddMultipleEpisodes"
@@ -589,7 +591,7 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "multiAddEpisodes", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 8
-					"gridY": 16
+					"gridY": 20
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnEditAllEpisodesInBatch"
@@ -597,7 +599,7 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "batchEditEpisodes", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 8
-					"gridY": 18
+					"gridY": 22
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnEditSelectedEpisodesInBatch"
@@ -605,7 +607,7 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "batchEditSelectedEpisodes", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 8
-					"gridY": 20
+					"gridY": 24
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnRemoveEpisodes"
@@ -613,7 +615,7 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "removeEpisode", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 8
-					"gridY": 24
+					"gridY": 28
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
 					name: "panel9"
@@ -624,7 +626,7 @@ new FormModel {
 					} )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
-					"gridY": 28
+					"gridY": 32
 					"gridWidth": 7
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {

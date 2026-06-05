@@ -96,8 +96,6 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_SER_COVERID           = new CCSQLColDef("COVERID",              CCSQLType.INTEGER,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_TAGS              = new CCSQLColDef("TAGS",                 CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_SPECIALVERSION    = new CCSQLColDef("SPECIALVERSION",       CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SER_ANIMESEASON       = new CCSQLColDef("ANIMESEASON",          CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SER_ANIMESTUDIO       = new CCSQLColDef("ANIMESTUDIO",          CCSQLType.VARCHAR,     NON_NULLABLE);
 
 	public final static CCSQLColDef COL_SEAS_LOCALID          = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_SERIESID         = new CCSQLColDef("SERIESID",             CCSQLType.INTEGER,     NON_NULLABLE);
@@ -107,6 +105,8 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_SEAS_SCORE            = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_SCORECOMMENT     = new CCSQLColDef("SCORECOMMENT",         CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_ONLINEREF        = new CCSQLColDef("ONLINEREF",            CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SEAS_ANIMESEASON      = new CCSQLColDef("ANIMESEASON",          CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SEAS_ANIMESTUDIO      = new CCSQLColDef("ANIMESTUDIO",          CCSQLType.VARCHAR,     NON_NULLABLE);
 
 	public final static CCSQLColDef COL_EPIS_LOCALID          = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
 	public final static CCSQLColDef COL_EPIS_SEASONID         = new CCSQLColDef("SEASONID",             CCSQLType.INTEGER,     NON_NULLABLE);
@@ -197,7 +197,7 @@ public class DatabaseStructure
 			{
 				COL_SER_NAME, COL_SER_GENRE, COL_SER_ONLINESCORE_NUM, COL_SER_ONLINESCORE_DENOM, COL_SER_FSK, COL_SER_ONLINEREF,
 				COL_SER_GROUPS, COL_SER_SCORE, COL_SER_SCORECOMMENT, COL_SER_COVERID, COL_SER_TAGS,
-				COL_SER_SPECIALVERSION, COL_SER_ANIMESEASON, COL_SER_ANIMESTUDIO
+				COL_SER_SPECIALVERSION
 			},
 			new CCSQLFKey[]
 			{
@@ -210,7 +210,8 @@ public class DatabaseStructure
 			new CCSQLColDef[]
 			{
 				COL_SEAS_SERIESID,
-				COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERID, COL_SEAS_SCORE, COL_SEAS_SCORECOMMENT, COL_SEAS_ONLINEREF
+				COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERID, COL_SEAS_SCORE, COL_SEAS_SCORECOMMENT, COL_SEAS_ONLINEREF,
+				COL_SEAS_ANIMESEASON, COL_SEAS_ANIMESTUDIO
 			},
 			new CCSQLFKey[]
 			{

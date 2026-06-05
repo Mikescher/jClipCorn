@@ -19,7 +19,7 @@ public class CustomAnimeStudioFilter extends AbstractCustomDatabaseElementFilter
 
 	@Override
 	public boolean includes(CCDatabaseElement e) {
-		CCStringList animeStudios = e.AnimeStudio.get();
+		CCStringList animeStudios = e.getAnimeStudio();
 		
 		// If search string is empty, match elements that have no anime studios
 		if (searchString.isEmpty()) {

@@ -255,12 +255,12 @@ public class SearchFrame extends JCCFrame
 			}
 			if (serFound) continue;
 
-			for (String season : ser.AnimeSeason.get()) {
+			for (String season : ser.getAnimeSeason()) {
 				if (season.equalsIgnoreCase(searchString)) { result.add(ser); serFound = true; break; }
 			}
 			if (serFound) continue;
 
-			for (String studio : ser.AnimeStudio.get()) {
+			for (String studio : ser.getAnimeStudio()) {
 				if (studio.equalsIgnoreCase(searchString)) { result.add(ser); serFound = true; break; }
 			}
 			if (serFound) continue;

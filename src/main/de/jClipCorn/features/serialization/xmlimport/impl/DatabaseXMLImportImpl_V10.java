@@ -28,8 +28,6 @@ public class DatabaseXMLImportImpl_V10 implements IDatabaseXMLImporterImpl
 
 		// Import new fields (V10)
 		e.execIfAttrExists("specialversion", v -> o.SpecialVersion.set(CCStringList.deserialize(v)));
-		e.execIfAttrExists("animeseason", v -> o.AnimeSeason.set(CCStringList.deserialize(v)));
-		e.execIfAttrExists("animestudio", v -> o.AnimeStudio.set(CCStringList.deserialize(v)));
 
 		if (s.ResetTags) o.Tags.set(CCTagList.EMPTY);
 
@@ -55,6 +53,9 @@ public class DatabaseXMLImportImpl_V10 implements IDatabaseXMLImporterImpl
 	public void importMovie(CCMovie o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws Exception
 	{
 		importDatabaseElement(o, e, imgf, s);
+
+		e.execIfAttrExists("animeseason", v -> o.AnimeSeason.set(CCStringList.deserialize(v)));
+		e.execIfAttrExists("animestudio", v -> o.AnimeStudio.set(CCStringList.deserialize(v)));
 
 		e.execIfAttrExists("adddate", v -> o.AddDate.set(CCDate.deserializeSQL(v)));
 
@@ -118,6 +119,8 @@ public class DatabaseXMLImportImpl_V10 implements IDatabaseXMLImporterImpl
 		e.execIfIntAttrExists("score", o.Score::set);
 		e.execIfAttrExists("comment", o.ScoreComment::set);
 		e.execIfAttrExists("onlinreref", o.OnlineReference::set);
+		e.execIfAttrExists("animeseason", v -> o.AnimeSeason.set(CCStringList.deserialize(v)));
+		e.execIfAttrExists("animestudio", v -> o.AnimeStudio.set(CCStringList.deserialize(v)));
 
 		if (s.ResetScore) o.Score.set(CCUserScore.RATING_NO);
 		if (s.ResetScore) o.ScoreComment.set(Str.Empty);

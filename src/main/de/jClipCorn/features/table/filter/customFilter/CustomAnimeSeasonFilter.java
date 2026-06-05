@@ -19,7 +19,7 @@ public class CustomAnimeSeasonFilter extends AbstractCustomDatabaseElementFilter
 
 	@Override
 	public boolean includes(CCDatabaseElement e) {
-		CCStringList animeSeasons = e.AnimeSeason.get();
+		CCStringList animeSeasons = e.getAnimeSeason();
 		
 		// If search string is empty, match elements that have no anime seasons
 		if (searchString.isEmpty()) {

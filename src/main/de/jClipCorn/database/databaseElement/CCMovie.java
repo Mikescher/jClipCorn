@@ -58,6 +58,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public final EOptStringProp          ChecksumMD5   = new EOptStringProp(    "ChecksumMD5",   Opt.empty(),                  this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
 	public final EOptStringProp          ChecksumSHA256= new EOptStringProp(    "ChecksumSHA256",Opt.empty(),                  this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
 	public final EOptStringProp          ChecksumSHA512= new EOptStringProp(    "ChecksumSHA512",Opt.empty(),                  this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
+	public final EStringListProp         AnimeSeason   = new EStringListProp(   "AnimeSeason",   CCStringList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
+	public final EStringListProp         AnimeStudio   = new EStringListProp(   "AnimeStudio",   CCStringList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
 
 	public CCMovie(CCMovieList ml, int id) {
 		super(ml, id);
@@ -100,6 +102,8 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 					ChecksumMD5,
 					ChecksumSHA256,
 					ChecksumSHA512,
+					AnimeSeason,
+					AnimeStudio,
 				})
 				.toArray(new IEProperty[0]);
 	}
@@ -119,6 +123,18 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public EOptStringProp          checksumMD5()   { return ChecksumMD5;   }
 	public EOptStringProp          checksumSHA256(){ return ChecksumSHA256;}
 	public EOptStringProp          checksumSHA512(){ return ChecksumSHA512;}
+	public EStringListProp         animeSeason()   { return AnimeSeason;    }
+	public EStringListProp         animeStudio()   { return AnimeStudio;    }
+
+	@Override
+	public CCStringList getAnimeSeason() {
+		return AnimeSeason.get();
+	}
+
+	@Override
+	public CCStringList getAnimeStudio() {
+		return AnimeStudio.get();
+	}
 
 	@Override
 	public boolean updateDB() {

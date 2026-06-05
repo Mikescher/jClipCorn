@@ -614,7 +614,7 @@ public class StatisticsHelper {
 		HashMap<String, Integer> result = new HashMap<>();
 
 		for (CCSeries e : it) {
-			for (String as : e.AnimeSeason.get()) {
+			for (String as : e.getAnimeSeason()) {
 				if (as != null && !as.trim().isEmpty()) {
 					result.put(as, result.getOrDefault(as, 0) + 1);
 				}
@@ -628,7 +628,7 @@ public class StatisticsHelper {
 		HashMap<String, Integer> result = new HashMap<>();
 
 		for (CCSeries e : it) {
-			for (String ast : e.AnimeStudio.get()) {
+			for (String ast : e.getAnimeStudio()) {
 				if (ast != null && !ast.trim().isEmpty()) {
 					result.put(ast, result.getOrDefault(ast, 0) + 1);
 				}

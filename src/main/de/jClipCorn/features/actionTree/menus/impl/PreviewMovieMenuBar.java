@@ -7,6 +7,8 @@ import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.actionTree.menus.ClipMenuBar;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.util.MoviePlayer;
+import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.listener.ActionCallbackListener;
@@ -55,7 +57,7 @@ public class PreviewMovieMenuBar extends ClipMenuBar {
 		addMaster("PreviewMovieFrame.Menubar.Extras");
 		{
 			addActionNode("OpenFolder");
-			addOpenInBrowserActionNodes(_movie.getOnlineReference());
+			addOpenInBrowserActionNodes(List.of(Tuple.Create(Opt.<String>empty(), _movie.getOnlineReference())));
 		}
 		addMaster("PreviewMovieFrame.Menubar.Export");
 		{

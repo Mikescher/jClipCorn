@@ -463,7 +463,7 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "labelcompgap, default, labelcompgap, default, labelcompgap, 0dlu:grow, labelcompgap, default, labelcompgap"
-				"$rowSpecs": "linegap, pref, linegap, pref, linegap, pref, linegap, default, linegap, 32dlu, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 0dlu:grow, linegap, default, linegap"
+				"$rowSpecs": "linegap, pref, linegap, pref, linegap, pref, linegap, default, linegap, 32dlu, linegap, pref, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 0dlu:grow, linegap, default, linegap"
 			} ) {
 				name: "pnlEditSeason"
 				"border": new javax.swing.border.LineBorder( sfield java.awt.Color black, 1, false )
@@ -543,6 +543,23 @@ new FormModel {
 					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 					"gridWidth": 5
 				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblSeasonReference"
+					"text": new FormMessage( null, "AddMovieFrame.lblOnlineID.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 2
+					"gridY": 12
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser" ) {
+					name: "edSeasonReference"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 4
+					"gridY": 12
+					"gridWidth": 5
+				} )
 				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 					name: "scrollPane2"
 					add( new FormComponent( "javax.swing.JList" ) {
@@ -554,7 +571,7 @@ new FormModel {
 					} )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
-					"gridY": 12
+					"gridY": 14
 					"gridHeight": 13
 					"gridWidth": 5
 				} )
@@ -564,7 +581,7 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addEmptyEpisode", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 8
-					"gridY": 12
+					"gridY": 14
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnAddMultipleEpisodes"
@@ -572,7 +589,7 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "multiAddEpisodes", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 8
-					"gridY": 14
+					"gridY": 16
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnEditAllEpisodesInBatch"
@@ -580,7 +597,7 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "batchEditEpisodes", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 8
-					"gridY": 16
+					"gridY": 18
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnEditSelectedEpisodesInBatch"
@@ -588,7 +605,7 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "batchEditSelectedEpisodes", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 8
-					"gridY": 18
+					"gridY": 20
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "btnRemoveEpisodes"
@@ -596,7 +613,7 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "removeEpisode", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 8
-					"gridY": 22
+					"gridY": 24
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
 					name: "panel9"
@@ -607,7 +624,7 @@ new FormModel {
 					} )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
-					"gridY": 26
+					"gridY": 28
 					"gridWidth": 7
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {

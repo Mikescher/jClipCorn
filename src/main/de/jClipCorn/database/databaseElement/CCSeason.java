@@ -12,6 +12,7 @@ import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.database.elementProps.impl.EEnumProp;
 import de.jClipCorn.database.elementProps.impl.EIntProp;
+import de.jClipCorn.database.elementProps.impl.EOnlineRefListProp;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
 import de.jClipCorn.database.elementProps.impl.EStringProp;
 import de.jClipCorn.database.util.*;
@@ -50,6 +51,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	public final EIntProp                Year         = new EIntProp(   "Year",          1900,                  this, EPropertyType.OBJECTIVE_METADATA);
 	public final EEnumProp<CCUserScore>  Score        = new EEnumProp<>("Score",         CCUserScore.RATING_NO, this, EPropertyType.USER_METADATA);
 	public final EStringProp             ScoreComment = new EStringProp("ScoreComment",  Str.Empty,             this, EPropertyType.USER_METADATA);
+	public final EOnlineRefListProp      OnlineReference = new EOnlineRefListProp("OnlineReference", CCOnlineReferenceList.EMPTY, this, EPropertyType.OBJECTIVE_METADATA);
 
 	public FSPath NfoCoverPath = FSPath.Empty;
 
@@ -84,13 +86,17 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 			Year,
 			Score,
 			ScoreComment,
+			OnlineReference,
 		};
 	}
 
-	public EIntProp                year()          { return Year;          }
-	public EStringProp             title()         { return Title;         }
-	public EEnumProp<CCUserScore>  score()         { return Score;         }
-	public EStringProp             scoreComment()  { return ScoreComment;  }
+	public EIntProp                year()             { return Year;            }
+	public EStringProp             title()            { return Title;           }
+	public EEnumProp<CCUserScore>  score()            { return Score;           }
+	public EStringProp             scoreComment()     { return ScoreComment;    }
+	public EOnlineRefListProp      onlineReference()  { return OnlineReference; }
+
+	public CCOnlineReferenceList getOnlineReference() { return OnlineReference.get(); }
 
 	public CCProperties ccprops() {
 		return getMovieList().ccprops();

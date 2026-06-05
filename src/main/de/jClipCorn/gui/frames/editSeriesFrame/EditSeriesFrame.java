@@ -260,7 +260,7 @@ public class EditSeriesFrame extends JCCFrame
 
 			@Override
 			public CCOnlineReferenceList getSearchReference() {
-				return CCOnlineReferenceList.EMPTY;
+				return edSeasonReference.getValue();
 			}
 
 			@Override
@@ -320,7 +320,7 @@ public class EditSeriesFrame extends JCCFrame
 
 			@Override
 			public void setOnlineReference(CCOnlineReferenceList ref) {
-				// nothing
+				edSeasonReference.setValue(ref);
 			}
 
 			@Override
@@ -595,6 +595,7 @@ public class EditSeriesFrame extends JCCFrame
 				spnSeasonYear.setValue(season.getYear());
 				cbxSeasonScore.setSelectedEnum(season.getScore());
 				memoSeasonComment.setText(season.getScoreComment());
+				edSeasonReference.setValue(season.getOnlineReference());
 
 				lsEpisodes.setSelectedIndex(-1);
 				DefaultListModel<String> ml;
@@ -931,6 +932,7 @@ public class EditSeriesFrame extends JCCFrame
 		season.Year.set(spnSeasonYear.getValue());
 		season.Score.set(cbxSeasonScore.getSelectedEnum());
 		season.ScoreComment.set(memoSeasonComment.getText());
+		season.OnlineReference.set(edSeasonReference.getValue());
 
 		//#####################################################################################
 
@@ -1380,6 +1382,8 @@ public class EditSeriesFrame extends JCCFrame
 		label34 = new JLabel();
 		scrollPane4 = new JScrollPane();
 		memoSeasonComment = new JTextArea();
+		lblSeasonReference = new JLabel();
+		edSeasonReference = new JReferenceChooser(movielist);
 		scrollPane2 = new JScrollPane();
 		lsEpisodes = new JList<>();
 		btnAddEpisode = new JButton();
@@ -1663,7 +1667,7 @@ public class EditSeriesFrame extends JCCFrame
 			pnlEditSeason.setBorder(LineBorder.createBlackLineBorder());
 			pnlEditSeason.setLayout(new FormLayout(
 				"2*($lcgap, default), $lcgap, 0dlu:grow, $lcgap, default, $lcgap",
-				"3*($lgap, pref), $lgap, default, $lgap, 32dlu, 6*($lgap, default), $lgap, 0dlu:grow, $lgap, default, $lgap"));
+				"3*($lgap, pref), $lgap, default, $lgap, 32dlu, $lgap, pref, 6*($lgap, default), $lgap, 0dlu:grow, $lgap, default, $lgap"));
 			pnlEditSeason.add(edSeasonCvrControl, CC.xywh(2, 2, 7, 1));
 
 			//---- label17 ----
@@ -1692,6 +1696,11 @@ public class EditSeriesFrame extends JCCFrame
 			}
 			pnlEditSeason.add(scrollPane4, CC.xywh(4, 10, 5, 1, CC.DEFAULT, CC.FILL));
 
+			//---- lblSeasonReference ----
+			lblSeasonReference.setText(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text"));
+			pnlEditSeason.add(lblSeasonReference, CC.xy(2, 12));
+			pnlEditSeason.add(edSeasonReference, CC.xywh(4, 12, 5, 1));
+
 			//======== scrollPane2 ========
 			{
 
@@ -1699,32 +1708,32 @@ public class EditSeriesFrame extends JCCFrame
 				lsEpisodes.addListSelectionListener(e -> onEpisodeSelected());
 				scrollPane2.setViewportView(lsEpisodes);
 			}
-			pnlEditSeason.add(scrollPane2, CC.xywh(2, 12, 5, 13));
+			pnlEditSeason.add(scrollPane2, CC.xywh(2, 14, 5, 13));
 
 			//---- btnAddEpisode ----
 			btnAddEpisode.setText(LocaleBundle.getString("EditSeriesFrame.btnAddEmptyEpisode.text"));
 			btnAddEpisode.addActionListener(e -> addEmptyEpisode());
-			pnlEditSeason.add(btnAddEpisode, CC.xy(8, 12));
+			pnlEditSeason.add(btnAddEpisode, CC.xy(8, 14));
 
 			//---- btnAddMultipleEpisodes ----
 			btnAddMultipleEpisodes.setText(LocaleBundle.getString("EditSeriesFrame.btnAddMultipleEpisodes.text"));
 			btnAddMultipleEpisodes.addActionListener(e -> multiAddEpisodes());
-			pnlEditSeason.add(btnAddMultipleEpisodes, CC.xy(8, 14));
+			pnlEditSeason.add(btnAddMultipleEpisodes, CC.xy(8, 16));
 
 			//---- btnEditAllEpisodesInBatch ----
 			btnEditAllEpisodesInBatch.setText(LocaleBundle.getString("EditSeriesFrame.btnBatchEdit.text"));
 			btnEditAllEpisodesInBatch.addActionListener(e -> batchEditEpisodes());
-			pnlEditSeason.add(btnEditAllEpisodesInBatch, CC.xy(8, 16));
+			pnlEditSeason.add(btnEditAllEpisodesInBatch, CC.xy(8, 18));
 
 			//---- btnEditSelectedEpisodesInBatch ----
 			btnEditSelectedEpisodesInBatch.setText(LocaleBundle.getString("EditSeriesFrame.btnBatchEditSelection.text"));
 			btnEditSelectedEpisodesInBatch.addActionListener(e -> batchEditSelectedEpisodes());
-			pnlEditSeason.add(btnEditSelectedEpisodesInBatch, CC.xy(8, 18));
+			pnlEditSeason.add(btnEditSelectedEpisodesInBatch, CC.xy(8, 20));
 
 			//---- btnRemoveEpisodes ----
 			btnRemoveEpisodes.setText(LocaleBundle.getString("EditSeriesFrame.btnRemoveEpisode.text"));
 			btnRemoveEpisodes.addActionListener(e -> removeEpisode());
-			pnlEditSeason.add(btnRemoveEpisodes, CC.xy(8, 22));
+			pnlEditSeason.add(btnRemoveEpisodes, CC.xy(8, 24));
 
 			//======== panel9 ========
 			{
@@ -1735,7 +1744,7 @@ public class EditSeriesFrame extends JCCFrame
 				button12.addActionListener(e -> onSeasonOkay());
 				panel9.add(button12);
 			}
-			pnlEditSeason.add(panel9, CC.xywh(2, 26, 7, 1));
+			pnlEditSeason.add(panel9, CC.xywh(2, 28, 7, 1));
 		}
 		contentPane.add(pnlEditSeason, CC.xy(4, 2, CC.FILL, CC.FILL));
 
@@ -1968,6 +1977,8 @@ public class EditSeriesFrame extends JCCFrame
 	private JLabel label34;
 	private JScrollPane scrollPane4;
 	private JTextArea memoSeasonComment;
+	private JLabel lblSeasonReference;
+	private JReferenceChooser edSeasonReference;
 	private JScrollPane scrollPane2;
 	private JList<String> lsEpisodes;
 	private JButton btnAddEpisode;

@@ -16,6 +16,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
 import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple1;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.datetime.CCDate;
@@ -416,6 +417,20 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 	public int findSeasoninSorted(CCSeason ccSeason) {
 		return getSeasonsSorted().indexOf(ccSeason);
+	}
+
+	/**
+	 * Returns the online-references of this series together with the references of each of its seasons.
+	 * The first entry is always the series itself ({@code Opt.empty()});
+	 * every following entry is a season (in sorted order) that has at least one reference
+	 */
+	public List<Tuple<Opt<CCSeason>, CCOnlineReferenceList>> getOnlineReferenceRecursive() {
+		List<Tuple<Opt<CCSeason>, CCOnlineReferenceList>> result = new ArrayList<>();
+		result.add(Tuple.Create(Opt.empty(), getOnlineReference()));
+		for (CCSeason s : getSeasonsSorted()) {
+			if (!s.getOnlineReference().isEmpty()) result.add(Tuple.Create(Opt.of(s), s.getOnlineReference()));
+		}
+		return result;
 	}
 
 	@Override

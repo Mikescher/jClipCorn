@@ -4,10 +4,13 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.actionTree.menus.ClipPopupMenu;
 import de.jClipCorn.util.MoviePlayer;
+import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 
 import java.awt.*;
+import java.util.List;
 
 public class ClipMoviePopup extends ClipPopupMenu {
 	private static final long serialVersionUID = -3030683884876620182L;
@@ -59,7 +62,7 @@ public class ClipMoviePopup extends ClipPopupMenu {
 		//#############
 		
 		addAction("OpenFolder");
-		addOpenInBrowserAction(_movie, _movie.getOnlineReference());
+		addOpenInBrowserAction(_movie, List.of(Tuple.Create(Opt.<String>empty(), _movie.getOnlineReference())));
 		
 		//#############
 		addSeparator();

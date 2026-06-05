@@ -349,7 +349,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		}
 
 		var seriesOnlineRef = series.onlineReference().get();
-		var seasonOnlineRefs = seriesOnlineRef.ccstream().filter(p -> p.hasDescription() && p.description.equals(s.title().get())).toList();
+		var seasonOnlineRefs = s.getOnlineReference().ccstream().toList();
 		if (seasonOnlineRefs.isEmpty()) {
 			btnSeasonOnlinescore.setVisible(false);
 		} else {
@@ -459,7 +459,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		var season = getSelectedSeason();
 		if (season == null) return;
 
-		var seasonOnlineRefs = series.onlineReference().get().ccstream().filter(p -> p.hasDescription() && p.description.equals(season.title().get())).toList();
+		var seasonOnlineRefs = season.getOnlineReference().ccstream().toList();
 
 		if (seasonOnlineRefs.isEmpty()) return;
 

@@ -361,6 +361,7 @@ public class CCDatabase {
 		seas.Year.setOnly(rs.getInt(DatabaseStructure.COL_SEAS_YEAR));
 		seas.Score.setOnly(rs.getInt(DatabaseStructure.COL_SEAS_SCORE));
 		seas.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_SEAS_SCORECOMMENT));
+		seas.OnlineReference.setOnly(CCOnlineReferenceList.fromJSONArray(rs.getString(DatabaseStructure.COL_SEAS_ONLINEREF)));
 
 		seas.CoverID.setOnly(rs.getInt(DatabaseStructure.COL_SEAS_COVERID));
 	}
@@ -755,6 +756,7 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_SEAS_YEAR,         sea.Year.get());
 			stmt.setInt(DatabaseStructure.COL_SEAS_SCORE,        sea.Score.get().asInt());
 			stmt.setStr(DatabaseStructure.COL_SEAS_SCORECOMMENT, sea.ScoreComment.get());
+			stmt.setStr(DatabaseStructure.COL_SEAS_ONLINEREF,    sea.OnlineReference.get().asJSONArray());
 
 			stmt.setInt(DatabaseStructure.COL_SEAS_COVERID,   sea.getCoverID());
 

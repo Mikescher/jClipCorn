@@ -13,6 +13,8 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.listener.ActionCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
@@ -21,7 +23,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public abstract class ClipMenuBar extends JMenuBar {
 	private static final long serialVersionUID = -6537611193514097201L;
@@ -183,55 +184,65 @@ public abstract class ClipMenuBar extends JMenuBar {
 	}
 
 	@SuppressWarnings("nls")
-	protected void addOpenInBrowserActionNodes(CCOnlineReferenceList ref)
+	protected void addOpenInBrowserActionNodes(List<Tuple<Opt<String>, CCOnlineReferenceList>> _refs)
 	{
-		// (see also [ClipPopupMenu, ClipMenuBar, OnlineRefButton] for same logic)
+		var refs = CCStreams.iterate(_refs).filter(p -> !p.Item2.isEmpty()).toList();
 
-		if (!ref.hasAdditional() || !ref.isMainSet())
+		var own = CCStreams.
+				iterate(refs).
+				filter(p -> p.Item1.isEmpty()).
+				map(p -> p.Item2).
+				firstOr(CCOnlineReferenceList.EMPTY);
+
+		var nonOwn = CCStreams.
+				iterate(refs).
+				filter(p -> !p.Item1.isEmpty()).
+				toList();
+
+		var all = CCStreams.iterate(refs).flatten(p -> p.Item2.ccstream()).toList();
+
+		if (refs.size() == 1 && refs.get(0).Item1.isEmpty() && refs.get(0).Item2.isOnlyMainSet())
 		{
-			addNode("ClipMenuBar.Other.MovieExtra.ShowInBrowser", () -> openRef(ref.Main), Resources.ICN_MENUBAR_ONLINEREFERENCE, false, false);
+			addNode("ClipMenuBar.Other.MovieExtra.ShowInBrowser", () -> openRef(refs.get(0).Item2.Main), Resources.ICN_MENUBAR_ONLINEREFERENCE, false, false);
 			return;
 		}
 
 		addSubMaster("ClipMenuBar.Other.MovieExtra.ShowInBrowser", Resources.ICN_MENUBAR_ONLINEREFERENCE);
 
-		if (ref.isMainSet())
+		if (own.isMainSet())
 		{
-			addSubNode("@" + (ref.Main.hasDescription() ? ref.Main.description : ref.Main.type.asString()), () -> openRef(ref.Main), ref.Main.getIconRef(), false, false);
+			addSubNode("@" + (own.Main.hasDescription() ? own.Main.description : own.Main.type.asString()), () -> openRef(own.Main), own.Main.getIconRef(), false, false);
 
 			addSubSeparator();
 		}
 
-		var ungrouped = CCStreams.iterate(ref.Additional).filter(r -> !r.hasDescription()).toList();
-		var grouped = CCStreams.iterate(ref.Additional).filter(CCSingleOnlineReference::hasDescription).groupBy(r -> r.description).autosortByProperty(Map.Entry::getKey).toList();
-
-		for (var soref : ungrouped)
+		for (var soref : own.Additional)
 		{
-			addSubNode("@" + (soref.hasDescription() ? soref.description : soref.type.asString()), () -> openRef(soref), soref.getIconRef(), false, false);
+			addSubNode("@" + soref.type.asString(), () -> openRef(soref), soref.getIconRef(), false, false);
 		}
 
-		if (!grouped.isEmpty() && !ungrouped.isEmpty()) addSubSeparator();
+		if (!nonOwn.isEmpty()) addSubSeparator();
 
-		for (var soreflist : CCStreams.iterate(grouped))
+		for (var group : nonOwn)
 		{
-			addSubSubMaster("@"+soreflist.getKey(), null);
+			addSubSubMaster("@" + group.Item1.get(), null);
 
-			for (var soref : soreflist.getValue())
+			for (var soref : group.Item2)
 			{
-				addSubSubNode("@" + (soref.hasDescription() ? soref.description : soref.type.asString()), () -> openRef(soref), soref.getIconRef(), false, false);
+				addSubSubNode("@" + soref.type.asString(), () -> openRef(soref), soref.getIconRef(), false, false);
 			}
 
-			if (soreflist.getValue().size() > 1)
+			if (group.Item2.totalCount() > 1)
 			{
 				addSubSubSeparator();
-				addSubSubNode("ClipMenuBar.Other.ShowAllInBrowser", () -> openAllInBrowser(soreflist.getValue()), Resources.ICN_MENUBAR_ONLINEREFERENCE, false, false);
+				addSubSubNode("ClipMenuBar.Other.ShowAllInBrowser", () -> openAllInBrowser(group.Item2.ccstream().toList()), Resources.ICN_MENUBAR_ONLINEREFERENCE, false, false);
 			}
 		}
 
-		if (ref.totalCount() > 2)
+		if (all.size() > 2)
 		{
 			addSubSeparator();
-			addSubNode("ClipMenuBar.Other.ShowAllInBrowser", () -> openAllInBrowser(ref.ccstream().toList()), Resources.ICN_MENUBAR_ONLINEREFERENCE, false, false);
+			addSubNode("ClipMenuBar.Other.ShowAllInBrowser", () -> openAllInBrowser(all), Resources.ICN_MENUBAR_ONLINEREFERENCE, false, false);
 		}
 	}
 

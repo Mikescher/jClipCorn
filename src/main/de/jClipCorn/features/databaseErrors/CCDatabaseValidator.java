@@ -1279,6 +1279,17 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						}
 					} catch (Exception ignored) { }
 				});
+
+		// invalid online-reference
+		addSeasonValidation(
+				DatabaseErrorType.ERROR_INVALID_ONLINEREF,
+				o -> o.ValidateSeasons,
+				season -> !season.getOnlineReference().isValid(),
+				season -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_INVALID_ONLINEREF, season,
+						"OnlineRef", season.getOnlineReference().toSerializationString(),
+						"OnlineRef.Invalid", season.getOnlineReference().ccstream().filter(p -> p.isInvalid()).stringjoin(p -> p.toSerializationString(), " ; "),
+						"OnlineRef.Unset", season.getOnlineReference().ccstream().filter(p -> p.isUnset()).stringjoin(p -> p.toSerializationString(), " ; ")
+				));
 	}
 
 	@SuppressWarnings({"nls"})
@@ -2236,6 +2247,35 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			}
 
 			pcl.stepSub(el.getFullDisplayTitle());
+		}
+
+		for (CCSeries ser : movielist.iteratorSeries())
+		{
+			for (CCSeason sea : ser.iteratorSeasons())
+			{
+				for(CCSingleOnlineReference soref : sea.getOnlineReference())
+				{
+					var key = ser.getSemiCommonLanguages().serializeToLong() + '_' + soref.toSerializationString();
+					if (!refSet.containsKey(key))
+					{
+						// store the parent series as owner - duplicates within the same series (series<->season, season<->season) are allowed
+						refSet.put(key, ser);
+					}
+					else
+					{
+						var el2 = refSet.get(key);
+						if (el2 == ser) continue; // duplicate of the own series' reference (or a sibling season) -> explicitly allowed
+
+						e.add(DatabaseError.createDouble(
+								movielist, DatabaseErrorType.ERROR_DUPLICATE_REF, sea, el2,
+								"Element1.ID", String.valueOf(sea.getLocalID()),
+								"Element1.Title", sea.getQualifiedTitle(),
+								"Element2.ID", String.valueOf(el2.getLocalID()),
+								"Element2.Title", el2.getQualifiedTitle()
+						));
+					}
+				}
+			}
 		}
 	}
 

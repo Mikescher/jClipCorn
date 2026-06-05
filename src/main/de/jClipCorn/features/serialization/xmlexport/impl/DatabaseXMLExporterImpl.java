@@ -100,10 +100,11 @@ public class DatabaseXMLExporterImpl {
 	public static void exportSeason(Element e, CCSeason o, ExportOptions s) {
 		if (s.ExportLocalID) e.setAttribute("seasonid", o.getLocalID() + "");
 
-		e.setAttribute("title",   o.getTitle());
-		e.setAttribute("year",    o.getYear() + "");
-		e.setAttribute("score",   String.valueOf(o.Score.get().asInt()));
-		e.setAttribute("comment", o.ScoreComment.get());
+		e.setAttribute("title",      o.getTitle());
+		e.setAttribute("year",       o.getYear() + "");
+		e.setAttribute("score",      String.valueOf(o.Score.get().asInt()));
+		e.setAttribute("comment",    o.ScoreComment.get());
+		e.setAttribute("onlinreref", o.getOnlineReference().toSerializationString());
 
 		if (! s.CoverData) e.setAttribute("covername", o.getCoverInfo().Filename);
 		if (! s.CoverData) e.setAttribute("coverid", o.getCoverInfo().ID + "");

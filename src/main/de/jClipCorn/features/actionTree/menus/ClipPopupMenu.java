@@ -16,6 +16,8 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.MultiSizeIconRef;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.listener.ActionCallbackListener;
@@ -26,7 +28,6 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public abstract class ClipPopupMenu extends JPopupMenu {
 	private static final long serialVersionUID = -3924972933691119441L;
@@ -129,11 +130,24 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 	}
 
 	@SuppressWarnings("nls")
-	protected void addOpenInBrowserAction(CCDatabaseElement src, CCOnlineReferenceList ref)
+	protected void addOpenInBrowserAction(CCDatabaseElement src, List<Tuple<Opt<String>, CCOnlineReferenceList>> _refs)
 	{
-		// (see also [ClipPopupMenu, ClipMenuBar, OnlineRefButton] for same logic)
+		var refs = CCStreams.iterate(_refs).filter(p -> !p.Item2.isEmpty()).toList();
 
-		if (!ref.hasAdditional() || !ref.isMainSet())
+		var own = CCStreams.
+				iterate(refs).
+				filter(p -> p.Item1.isEmpty()).
+				map(p -> p.Item2).
+				firstOr(CCOnlineReferenceList.EMPTY);
+
+		var nonOwn = CCStreams.
+				iterate(refs).
+				filter(p -> !p.Item1.isEmpty()).
+				toList();
+
+		var all = CCStreams.iterate(refs).flatten(p -> p.Item2.ccstream()).toList();
+
+		if (refs.size() == 1 && refs.get(0).Item1.isEmpty() && refs.get(0).Item2.isOnlyMainSet())
 		{
 			addAction("ShowInBrowser");
 			return;
@@ -145,42 +159,40 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.ErrorActionNotFound", "ShowInBrowser")); //$NON-NLS-1$
 			return;
 		}
-		
+
 		JMenu menu = new JMenu(el0.getCaption());
 		add(menu);
 		menu.setIcon(el0.getSmallIcon());
 
-		if (ref.isMainSet())
+		if (own.isMainSet())
 		{
 			menu.add(mitem(
-					ref.Main.hasDescription() ? ref.Main.description : ref.Main.type.asString(),
-					ref.Main.type.getIcon16x16(),
+					own.Main.hasDescription() ? own.Main.description : own.Main.type.asString(),
+					own.Main.type.getIcon16x16(),
 					el0.getKeyStroke(),
-					e -> ref.Main.openInBrowser(src, ccprops())));
+					e -> own.Main.openInBrowser(src, ccprops())));
 
 			menu.addSeparator();
 		}
 
-		var ungrouped = CCStreams.iterate(ref.Additional).filter(r -> !r.hasDescription()).toList();
-		var grouped = CCStreams.iterate(ref.Additional).filter(CCSingleOnlineReference::hasDescription).groupBy(r -> r.description).autosortByProperty(Map.Entry::getKey).toList();
+		var ungrouped = CCStreams.iterate(own.Additional).filter(r -> !r.hasDescription()).toList();
 
-		for (var soref : ungrouped)
+		for (var soref : own.Additional)
 		{
 			menu.add(mitem(
-					soref.hasDescription() ? soref.description : soref.type.asString(),
+					soref.type.asString(),
 					soref.type.getIcon16x16(),
 					null,
 					e -> soref.openInBrowser(src, ccprops())));
 		}
 
-		if (!grouped.isEmpty() && !ungrouped.isEmpty()) menu.addSeparator();
+		if (!nonOwn.isEmpty()) menu.addSeparator();
 
-		for (var soreflist : CCStreams.iterate(grouped))
+		for (var group : nonOwn)
 		{
+			JMenu submenu = new JMenu(group.Item1.get());
 
-			JMenu submenu = new JMenu(soreflist.getKey());
-
-			for (var soref : soreflist.getValue())
+			for (var soref : group.Item2)
 			{
 				submenu.add(mitem(
 						soref.type.asString(),
@@ -189,7 +201,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 						e -> soref.openInBrowser(src, ccprops())));
 			}
 
-			if (soreflist.getValue().size() > 1)
+			if (group.Item2.totalCount() > 1)
 			{
 				submenu.addSeparator();
 
@@ -197,13 +209,13 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 						LocaleBundle.getString("ClipMenuBar.Other.ShowAllInBrowser"),
 						Resources.ICN_MENUBAR_ONLINEREFERENCE.get16x16(),
 						null,
-						e -> openAllInBrowser(src, soreflist.getValue())));
+						e -> openAllInBrowser(src, group.Item2.ccstream().toList())));
 			}
 
 			menu.add(submenu);
 		}
 
-		if (ref.totalCount() > 2)
+		if (all.size() > 2)
 		{
 			menu.addSeparator();
 
@@ -211,7 +223,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 					LocaleBundle.getString("ClipMenuBar.Other.ShowAllInBrowser"),
 					Resources.ICN_MENUBAR_ONLINEREFERENCE.get16x16(),
 					null,
-					e -> openAllInBrowser(src, ref.ccstream().toList())));
+					e -> openAllInBrowser(src, all)));
 		}
 	}
 

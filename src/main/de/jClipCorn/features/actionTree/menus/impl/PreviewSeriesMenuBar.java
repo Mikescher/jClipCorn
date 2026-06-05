@@ -6,9 +6,11 @@ import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.actionTree.menus.ClipMenuBar;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.util.MoviePlayer;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.listener.ActionCallbackListener;
+import de.jClipCorn.util.stream.CCStreams;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -67,7 +69,7 @@ public class PreviewSeriesMenuBar extends ClipMenuBar {
 		addMaster("PreviewSeriesFrame.Menu.Extras");
 		{
 			addActionTreeNode("PlayRandomEpisode");
-			addOpenInBrowserActionNodes(_series.getOnlineReference());
+			addOpenInBrowserActionNodes(CCStreams.iterate(_series.getOnlineReferenceRecursive()).map(t -> Tuple.Create(t.Item1.map(s -> s.title().get()), t.Item2)).toList());
 			addActionNode("ExportSingleSeries");
 			addActionNode("SaveTXTEpisodeguide");
 			addActionNode("MoveSeries");

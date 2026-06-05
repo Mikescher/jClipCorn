@@ -4,8 +4,10 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.actionTree.menus.ClipPopupMenu;
 import de.jClipCorn.util.MoviePlayer;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.listener.ActionCallbackListener;
+import de.jClipCorn.util.stream.CCStreams;
 
 import java.awt.*;
 
@@ -65,7 +67,7 @@ public class ClipSeriesPopup extends ClipPopupMenu {
 		//#############
 
 		addAction("OpenFolder");
-		addOpenInBrowserAction(_series, _series.getOnlineReference());
+		addOpenInBrowserAction(_series, CCStreams.iterate(_series.getOnlineReferenceRecursive()).map(t -> Tuple.Create(t.Item1.map(s -> s.title().get()), t.Item2)).toList());
 
 		//#############
 		addSeparator();

@@ -2,7 +2,6 @@ package de.jClipCorn.gui.frames.addSeasonFrame;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.SeasonDataPack;
@@ -14,6 +13,7 @@ import de.jClipCorn.gui.frames.inputErrorFrame.InputErrorDialog;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.editCoverControl.EditCoverControl;
 import de.jClipCorn.gui.guiComponents.jYearSpinner.JYearSpinner;
+import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
@@ -90,6 +90,7 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 
 			newS.Title.set(edTitle.getText());
 			newS.Year.set(spnYear.getValue());
+			newS.OnlineReference.set(edReference.getValue());
 			newS.setCover(edCvrControl.getResizedImageForStorage());
 
 			//#####################################################################################
@@ -139,7 +140,7 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 
 	@Override
 	public CCOnlineReferenceList getSearchReference() {
-		return CCOnlineReferenceList.EMPTY;
+		return edReference.getValue();
 	}
 
 	@Override
@@ -194,7 +195,7 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 
 	@Override
 	public void setOnlineReference(CCOnlineReferenceList ref) {
-		// NOP
+		edReference.setValue(ref);
 	}
 
 	@Override
@@ -222,62 +223,71 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		label1 = new JLabel();
-		edTitle = new JTextField();
-		edCvrControl = new EditCoverControl(this, this);
-		label2 = new JLabel();
-		spnYear = new JYearSpinner();
-		panel1 = new JPanel();
-		btnOK = new JButton();
-		btnABort = new JButton();
+        label1 = new JLabel();
+        edTitle = new JTextField();
+        edCvrControl = new EditCoverControl(this, this);
+        label2 = new JLabel();
+        spnYear = new JYearSpinner();
+        label3 = new JLabel();
+        edReference = new JReferenceChooser(movielist);
+        panel1 = new JPanel();
+        btnOK = new JButton();
+        btnABort = new JButton();
 
-		//======== this ========
-		setTitle(LocaleBundle.getString("AddSeasonFrame.this.title"));
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		Container contentPane = getContentPane();
-		contentPane.setLayout(new FormLayout(
-			"$ugap, default, $ugap, default:grow, $ugap, default, $ugap",
-			"$ugap, 2*(default, $lgap), default:grow, $lgap, default, $ugap"));
+        //======== this ========
+        setTitle(LocaleBundle.getString("AddSeasonFrame.this.title")); //$NON-NLS-1$
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        var contentPane = getContentPane();
+        contentPane.setLayout(new FormLayout(
+            "$ugap, default, $ugap, default:grow, $ugap, default, $ugap", //$NON-NLS-1$
+            "$ugap, 3*(default, $lgap), default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
 
-		//---- label1 ----
-		label1.setText(LocaleBundle.getString("AddMovieFrame.label_1.text"));
-		contentPane.add(label1, CC.xy(2, 2));
-		contentPane.add(edTitle, CC.xy(4, 2));
-		contentPane.add(edCvrControl, CC.xywh(6, 2, 1, 5));
+        //---- label1 ----
+        label1.setText(LocaleBundle.getString("AddMovieFrame.label_1.text")); //$NON-NLS-1$
+        contentPane.add(label1, CC.xy(2, 2));
+        contentPane.add(edTitle, CC.xy(4, 2));
+        contentPane.add(edCvrControl, CC.xywh(6, 2, 1, 7));
 
-		//---- label2 ----
-		label2.setText(LocaleBundle.getString("AddMovieFrame.lblYear.text"));
-		contentPane.add(label2, CC.xy(2, 4));
-		contentPane.add(spnYear, CC.xy(4, 4));
+        //---- label2 ----
+        label2.setText(LocaleBundle.getString("AddMovieFrame.lblYear.text")); //$NON-NLS-1$
+        contentPane.add(label2, CC.xy(2, 4));
+        contentPane.add(spnYear, CC.xy(4, 4));
 
-		//======== panel1 ========
-		{
-			panel1.setLayout(new FlowLayout());
+        //---- label3 ----
+        label3.setText(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text")); //$NON-NLS-1$
+        contentPane.add(label3, CC.xy(2, 6));
+        contentPane.add(edReference, CC.xy(4, 6));
 
-			//---- btnOK ----
-			btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
-			btnOK.addActionListener(e -> onOK(e));
-			panel1.add(btnOK);
+        //======== panel1 ========
+        {
+            panel1.setLayout(new FlowLayout());
 
-			//---- btnABort ----
-			btnABort.setText(LocaleBundle.getString("UIGeneric.btnCancel.text"));
-			btnABort.addActionListener(e -> cancel());
-			panel1.add(btnABort);
-		}
-		contentPane.add(panel1, CC.xywh(2, 8, 5, 1, CC.FILL, CC.FILL));
-		setSize(500, 400);
-		setLocationRelativeTo(getOwner());
+            //---- btnOK ----
+            btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
+            btnOK.addActionListener(e -> onOK(e));
+            panel1.add(btnOK);
+
+            //---- btnABort ----
+            btnABort.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+            btnABort.addActionListener(e -> cancel());
+            panel1.add(btnABort);
+        }
+        contentPane.add(panel1, CC.xywh(2, 10, 5, 1, CC.FILL, CC.FILL));
+        setSize(600, 410);
+        setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	private JLabel label1;
-	private JTextField edTitle;
-	private EditCoverControl edCvrControl;
-	private JLabel label2;
-	private JYearSpinner spnYear;
-	private JPanel panel1;
-	private JButton btnOK;
-	private JButton btnABort;
+    private JLabel label1;
+    private JTextField edTitle;
+    private EditCoverControl edCvrControl;
+    private JLabel label2;
+    private JYearSpinner spnYear;
+    private JLabel label3;
+    private JReferenceChooser edReference;
+    private JPanel panel1;
+    private JButton btnOK;
+    private JButton btnABort;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

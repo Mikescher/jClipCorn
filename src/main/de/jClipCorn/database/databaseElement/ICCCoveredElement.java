@@ -2,6 +2,7 @@ package de.jClipCorn.database.databaseElement;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.elementProps.impl.EStringProp;
 import de.jClipCorn.util.datatypes.Tuple;
 
@@ -20,6 +21,8 @@ public interface ICCCoveredElement extends ICCDatabaseStructureElement {
 
 	BufferedImage getCover();
 	Tuple<Integer, Integer> getCoverDimensions();
+
+	CCOnlineReferenceList getOnlineReference();
 
 	CCMovieList getMovieList();
 }

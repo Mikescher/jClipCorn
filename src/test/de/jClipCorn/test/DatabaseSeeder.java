@@ -194,6 +194,9 @@ public class DatabaseSeeder {
 					s.Title.set("01 - Neon Genesis Evangelion");
 					s.Year.set(1995);
 					s.setCover(cvr2("101"));
+					// season-level online-reference (duplicating the series' MAL main ref is explicitly allowed)
+					s.OnlineReference.set(CCOnlineReferenceList.create(CCSingleOnlineReference.createMyAnimeList("30"),
+							CCSingleOnlineReference.createAniDB("22")));
 				});
 
 				{

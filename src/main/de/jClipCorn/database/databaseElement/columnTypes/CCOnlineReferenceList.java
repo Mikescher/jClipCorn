@@ -203,4 +203,8 @@ public class CCOnlineReferenceList implements CCIterable<CCSingleOnlineReference
 	public int totalCount() {
 		return (Main.isSet() ? 1 : 0) + Additional.size();
 	}
+
+	public boolean isOnlyMainSet() {
+		return Main.isSet() && Additional.isEmpty();
+	}
 }

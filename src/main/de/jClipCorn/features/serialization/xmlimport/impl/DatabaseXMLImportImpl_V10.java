@@ -117,6 +117,7 @@ public class DatabaseXMLImportImpl_V10 implements IDatabaseXMLImporterImpl
 
 		e.execIfIntAttrExists("score", o.Score::set);
 		e.execIfAttrExists("comment", o.ScoreComment::set);
+		e.execIfAttrExists("onlinreref", o.OnlineReference::set);
 
 		if (s.ResetScore) o.Score.set(CCUserScore.RATING_NO);
 		if (s.ResetScore) o.ScoreComment.set(Str.Empty);

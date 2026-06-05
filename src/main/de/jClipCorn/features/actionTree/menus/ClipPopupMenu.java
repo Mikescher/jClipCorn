@@ -252,7 +252,7 @@ public abstract class ClipPopupMenu extends JPopupMenu {
 			add(menu);
 			menu.setIcon(act.getSmallIcon());
 			{
-				JMenuItem subitem = menu.add("VLC Media Player");
+				JMenuItem subitem = menu.add(LocaleBundle.getString("ClipMenuBar.Movies.Play"));
 				subitem.addActionListener(e -> act.execute(getSourceFrame(), ActionSource.POPUP_MENU, getSourceObject(), getSourceListener()));
 				subitem.setIcon(act.getSmallIcon());
 				menu.add(subitem);

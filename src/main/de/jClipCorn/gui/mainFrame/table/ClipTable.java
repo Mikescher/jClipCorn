@@ -588,7 +588,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 		for (var idx=0; idx < config.size(); idx++) {
 			var ccfg = config.get(idx);
 			if (data.contains(ccfg.Identifier)) {
-				cfg[idx] = ccfg.AdjusterConfig;
+				cfg[idx] = getAdjusterConfig(ccfg);
 
 				if (initial) continue;
 				TableColumn column = getColumn(ccfg.Identifier);
@@ -608,6 +608,15 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 		}
 
 		_adjusterConfig = CCStreams.iterate(cfg).stringjoin(e->e, "|"); //$NON-NLS-1$
+	}
+
+	@SuppressWarnings("HardCodedStringLiteral")
+	private String getAdjusterConfig(JCCPrimaryColumnPrototype<CCDatabaseElement, MainFrameColumn> ccfg) {
+		if (ccfg.Identifier == MainFrameColumn.TITLE) {
+			int maxWidth = ccprops().PROP_MAINFRAME_TITLE_COLUMN_MAXWIDTH.getValue();
+			if (maxWidth > 0) return ccfg.AdjusterConfig + ",max=" + maxWidth + ",priority=max";
+		}
+		return ccfg.AdjusterConfig;
 	}
 
 	public void autoResize() {

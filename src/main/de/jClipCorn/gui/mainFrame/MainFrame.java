@@ -289,7 +289,7 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 
 	public void onSettingsChanged(java.util.List<String> changes)
 	{
-		if (CCStreams.iterate(changes).any(c -> Str.equals(c, ccprops().PROP_MAINFRAME_VISIBLE_COLUMNS.getIdentifier())))
+		if (CCStreams.iterate(changes).any(c -> Str.equals(c, ccprops().PROP_MAINFRAME_VISIBLE_COLUMNS.getIdentifier()) || Str.equals(c, ccprops().PROP_MAINFRAME_TITLE_COLUMN_MAXWIDTH.getIdentifier())))
 		{
 			clipTable.configureColumnVisibility(ccprops().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), false);
 			clipTable.autoResize();

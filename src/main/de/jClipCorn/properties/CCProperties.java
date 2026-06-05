@@ -84,6 +84,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_USE_INTELLISORT;
 	public CCBoolProperty                                   PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT;
 	public CCPIntProperty                                   PROP_MAINFRAME_SCROLLSPEED;
+	public CCRIntProperty                                   PROP_MAINFRAME_TITLE_COLUMN_MAXWIDTH;
 	public CCEnumProperty<UITableBackground>                PROP_MAINFRAME_TABLEBACKGROUND;
 	public CCEnumProperty<ResourcePreloadMode>              PROP_LOADING_PRELOADRESOURCES;
 	public CCBoolProperty                                   PROP_LOADING_INITBACKUPMANAGERASYNC;
@@ -295,6 +296,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_MAINFRAME_TABLEBACKGROUND              = new CCEnumProperty<>(CAT_VIEW,            this,   "PROP_MAINFRAME_TABLEBACKGROUND",              UITableBackground.WHITE,            UITableBackground.getWrapper());
 		PROP_LOADING_LIVEUPDATE                     = new CCBoolProperty(CAT_VIEW,              this,   "PROP_LOADING_LIVEUPDATE",                     false);
 		PROP_MAINFRAME_SCROLLSPEED                  = new CCPIntProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SCROLLSPEED",                  3);
+		PROP_MAINFRAME_TITLE_COLUMN_MAXWIDTH        = new CCRIntProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_TITLE_COLUMN_MAXWIDTH",        800,                                -1, 16384);
 		PROP_VIEW_DB_START_SORT                     = new CCEnumProperty<>(CAT_VIEW,            this,   "PROP_VIEW_DB_START_SORT",                     InitalSortingColumn.LOCALID,        InitalSortingColumn.getWrapper());
 		PROP_TOOLBAR_ELEMENTS                       = new CCToolbarProperty(CAT_VIEW,           this,   "PROP_TOOLBAR_ELEMENTS",                       ClipToolbar.STANDARD_CONFIG);
 		PROP_MAINFRAME_CLICKABLEZYKLUS              = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_CLICKABLEZYKLUS",              false);

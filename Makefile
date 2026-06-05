@@ -7,8 +7,18 @@ build:
 
 # create beta-release
 # sets beta flag in Main.java and increases version number
+# afterwards, copy the created jar to the Kreios NFS share (only if build succeeded, share is mounted and target dir exists)
 betaJar:
 	./gradlew betaJar
+	@dest="/home/mike/mounts/Melkor_NFS/Kreios/ClipCorn/"; \
+	mnt="/home/mike/mounts/Melkor_NFS/Kreios"; \
+	jar=$$(ls -t _mybuilds/*.jar 2>/dev/null | head -n1); \
+	if mountpoint -q "$$mnt" && [ -d "$$dest" ]; then \
+		echo "Copying '$$jar' to file://$$dest"; \
+		cp "$$jar" "$$dest"; \
+	else \
+		echo "Skip copy: '$$mnt' not mounted or '$$dest' does not exist"; \
+	fi
 
 
 # create release, first set the version and beta-flag in Main.java

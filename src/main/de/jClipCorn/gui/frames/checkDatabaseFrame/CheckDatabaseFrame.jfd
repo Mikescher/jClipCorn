@@ -8,7 +8,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "unrelgap, default:grow, labelcompgap, 226dlu, unrelgap"
-			"$rowSpecs": "unrelgap, default, linegap, default:grow, linegap, default, linegap, default, linegap, default, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default:grow, linegap, default, linegap, default, unrelgap"
 		} ) {
 			name: "this"
 			"$sizePolicy": 1
@@ -114,31 +114,54 @@ new FormModel {
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				"gridWidth": 3
 			} )
-			add( new FormComponent( "javax.swing.JProgressBar" ) {
-				name: "pbProgress1"
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default:grow, labelcompgap, 226dlu, labelcompgap, default"
+				"$rowSpecs": "default, linegap, default"
+			} ) {
+				name: "pnlProgress"
+				add( new FormComponent( "javax.swing.JProgressBar" ) {
+					name: "pbProgress1"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblProgress1"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnCancelAutofix"
+					"text": new FormMessage( null, "UIGeneric.btnCancel.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cancelAutofix", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 1
+					"gridHeight": 3
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JProgressBar" ) {
+					name: "pbProgress2"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblProgress2"
+					"text": "<dynamic>"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 3
+				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
 				"gridY": 6
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "lblProgress1"
-				"text": "<dynamic>"
-			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 4
-				"gridY": 6
-			} )
-			add( new FormComponent( "javax.swing.JProgressBar" ) {
-				name: "pbProgress2"
-			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 2
-				"gridY": 8
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "lblProgress2"
-				"text": "<dynamic>"
-			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 4
-				"gridY": 8
+				"gridWidth": 3
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "0dlu:grow, labelcompgap, 1dlu:grow, labelcompgap, 1dlu:grow, labelcompgap, 1dlu:grow"
@@ -253,7 +276,7 @@ new FormModel {
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 10
+				"gridY": 8
 				"gridWidth": 3
 			} )
 		}, new FormLayoutConstraints( null ) {

@@ -12,16 +12,14 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.CountAppendix;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.lambda.Func3to0;
 import de.jClipCorn.util.listener.DoubleProgressCallbackProgressBarHelper;
-import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,6 +28,11 @@ import java.util.List;
 public class CheckDatabaseFrame extends JCCFrame
 {
 	private List<DatabaseError> errorList;
+
+	private Thread activeThread = null;
+	private DoubleProgressCallbackProgressBarHelper activeCB = null;
+	private boolean autofixRunning = false;
+	private boolean seriesStructureCheckAllowed = true;
 
 	public CheckDatabaseFrame(CCMovieList ml, MainFrame owner)
 	{
@@ -75,8 +78,53 @@ public class CheckDatabaseFrame extends JCCFrame
 
 		if (!ccprops().PROP_VALIDATE_CHECK_SERIES_STRUCTURE.getValue()) {
 			cbValSeriesStructure.setSelected(false);
-			cbValSeriesStructure.setEnabled(false);
+			seriesStructureCheckAllowed = false;
 		}
+
+		pbProgress1.setVisible(false);
+		lblProgress1.setVisible(false);
+		pbProgress2.setVisible(false);
+		lblProgress2.setVisible(false);
+		btnCancelAutofix.setVisible(false);
+
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (activeThread == null) dispose();
+			}
+		});
+
+		updateUI();
+	}
+
+	private void updateUI() { // Threadsafe
+		SwingUtils.invokeLater(() ->
+		{
+			final boolean idle = (activeThread == null);
+			final boolean hasErrors = (errorList != null && !errorList.isEmpty());
+
+			btnValidate.setEnabled(idle);
+			btnAutofix.setEnabled(idle && hasErrors);
+			btnFixSelected.setEnabled(idle && hasErrors);
+
+			cbValMovies.setEnabled(idle);
+			cbValSeries.setEnabled(idle);
+			cbValSeasons.setEnabled(idle);
+			cbValEpisodes.setEnabled(idle);
+			cbValCovers.setEnabled(idle);
+			cbValGroups.setEnabled(idle);
+			cbValOnlineRefs.setEnabled(idle);
+			cbValCoverFiles.setEnabled(idle);
+			cbValVideoFiles.setEnabled(idle);
+			cbValDatabase.setEnabled(idle);
+			cbValDuplicates.setEnabled(idle);
+			cbValSeriesStructure.setEnabled(idle && seriesStructureCheckAllowed);
+			cbValEmptyDirs.setEnabled(idle);
+			cbValNfoFiles.setEnabled(idle);
+
+			btnCancelAutofix.setVisible(autofixRunning);
+		});
 	}
 
 	private void onErrorSelected() {
@@ -134,28 +182,13 @@ public class CheckDatabaseFrame extends JCCFrame
 	}
 
 	private void autoFix() {
-		btnValidate.setEnabled(false);
-		btnAutofix.setEnabled(false);
+		if (activeThread != null) { updateUI(); return; }
 
-		new Thread(() ->
+		startFixThread("THREAD_AUTOFIX_DB", errorList, (success, cancelled, fixed) -> //$NON-NLS-1$
 		{
-			pbProgress1.setVisible(true);
-			lblProgress1.setVisible(false);
-			pbProgress2.setVisible(false);
-			lblProgress2.setVisible(false);
-
-			boolean succ = DatabaseAutofixer.fixErrors(movielist, errorList, new ProgressCallbackProgressBarHelper(pbProgress1, 500));
-			endFixThread(succ);
-		}, "THREAD_AUTOFIX_DB").start(); //$NON-NLS-1$
-	}
-
-	private void endFixThread(final boolean success) {
-		SwingUtils.invokeLater(() ->
-		{
-			btnValidate.setEnabled(true);
-			btnAutofix.setEnabled(true);
-
-			if (success) {
+			if (cancelled) {
+				DialogHelper.showDispatchLocalInformation(CheckDatabaseFrame.this, "CheckDatabaseDialog.Autofix.dialogCancelled"); //$NON-NLS-1$
+			} else if (success) {
 				DialogHelper.showDispatchLocalInformation(CheckDatabaseFrame.this, "CheckDatabaseDialog.Autofix.dialogSuccessfull"); //$NON-NLS-1$
 			} else {
 				DialogHelper.showDispatchLocalInformation(CheckDatabaseFrame.this, "CheckDatabaseDialog.Autofix.dialogUnsuccessfull"); //$NON-NLS-1$
@@ -163,10 +196,62 @@ public class CheckDatabaseFrame extends JCCFrame
 		});
 	}
 
+	// Runs DatabaseAutofixer.fixErrors on {@code toFix} in a background thread with progress, cancellation and UI-blocking.
+	// {@code onDone} is invoked on the EDT with (fullSuccess, cancelled, listOfFixedErrors).
+	private void startFixThread(String threadName, final List<DatabaseError> toFix, final Func3to0<Boolean, Boolean, List<DatabaseError>> onDone) {
+		if (activeThread != null) { updateUI(); return; }
+
+		final List<DatabaseError> context = errorList;
+
+		pbProgress1.setVisible(true);
+		lblProgress1.setVisible(true);
+		pbProgress2.setVisible(false);
+		lblProgress2.setVisible(false);
+
+		btnCancelAutofix.setEnabled(true);
+
+		final DoubleProgressCallbackProgressBarHelper cb = new DoubleProgressCallbackProgressBarHelper(pbProgress1, lblProgress1, pbProgress2, lblProgress2);
+		activeCB = cb;
+		autofixRunning = true;
+
+		activeThread = new Thread(() ->
+		{
+			boolean succ = false;
+			List<DatabaseError> fixed = new ArrayList<>();
+			try {
+				SwingUtils.invokeLater(() -> MainFrame.getInstance().beginBlockingIntermediate());
+				var r = DatabaseAutofixer.fixErrors(movielist, context, toFix, cb);
+				fixed = r.Item1;
+				succ  = r.Item2;
+			} finally {
+				final boolean fSucc = succ;
+				final boolean cancelled = cb.isCancelled();
+				final List<DatabaseError> fFixed = fixed;
+				SwingUtils.invokeLater(() -> MainFrame.getInstance().endBlockingIntermediate());
+				activeThread = null;
+				activeCB = null;
+				autofixRunning = false;
+				SwingUtils.invokeLater(() ->
+				{
+					pbProgress1.setVisible(false);
+					lblProgress1.setVisible(false);
+					onDone.invoke(fSucc, cancelled, fFixed);
+					updateUI();
+				});
+			}
+		}, threadName);
+		activeThread.start();
+
+		updateUI();
+	}
+
+	private void cancelAutofix(ActionEvent e) {
+		if (activeCB != null) activeCB.cancel();
+		btnCancelAutofix.setEnabled(false); // disable directly, the running action will finish and then cancel
+	}
+
 	private void startValidate() {
-		btnFixSelected.setEnabled(false);
-		btnValidate.setEnabled(false);
-		btnAutofix.setEnabled(false);
+		if (activeThread != null) { updateUI(); return; }
 
 		DatabaseValidatorOptions opts = new DatabaseValidatorOptions();
 
@@ -190,38 +275,52 @@ public class CheckDatabaseFrame extends JCCFrame
 
 		opts.IgnoreDuplicateIfos               = ccprops().PROP_VALIDATE_DUP_IGNORE_IFO.getValue();
 
-		new Thread(() ->
+		autofixRunning = false;
+
+		pbProgress1.setVisible(true);
+		lblProgress1.setVisible(true);
+		pbProgress2.setVisible(true);
+		lblProgress2.setVisible(true);
+
+		activeThread = new Thread(() ->
 		{
-			pbProgress1.setVisible(true);
-			lblProgress1.setVisible(true);
-			pbProgress2.setVisible(true);
-			lblProgress2.setVisible(true);
+			try {
+				List<DatabaseError> errors = new ArrayList<>();
 
-			List<DatabaseError> errors = new ArrayList<>();
+				CCDatabaseValidator validator = new CCDatabaseValidator(movielist);
+				validator.validate(errors, opts, new DoubleProgressCallbackProgressBarHelper(pbProgress1, lblProgress1, pbProgress2, lblProgress2));
 
-			CCDatabaseValidator validator = new CCDatabaseValidator(movielist);
-			validator.validate(errors, opts, new DoubleProgressCallbackProgressBarHelper(pbProgress1, lblProgress1, pbProgress2, lblProgress2));
+				errorList = errors;
 
-			errorList = errors;
+				updateLists();
+			} finally {
+				activeThread = null;
+				endThread();
+			}
+		}, "THREAD_VALIDATE_DATABASE"); //$NON-NLS-1$
+		activeThread.start();
 
-			updateLists();
-
-			endThread();
-		}, "THREAD_VALIDATE_DATABASE").start(); //$NON-NLS-1$
+		updateUI();
 	}
 
 	private void endThread() {
 		SwingUtils.invokeLater(() ->
 		{
-			btnValidate.setEnabled(true);
-			btnFixSelected.setEnabled(errorList.size() > 0);
-			btnAutofix.setEnabled(errorList.size() > 0);
+			pbProgress1.setVisible(false);
+			lblProgress1.setVisible(false);
+			pbProgress2.setVisible(false);
+			lblProgress2.setVisible(false);
+
+			updateUI();
+
 			lblInfo.setText(LocaleBundle.getFormattedString("CheckDatabaseDialog.lblInfo.text_2", errorList.size())); //$NON-NLS-1$
 			edMetadata.setText(Str.Empty);
 		});
 	}
 
 	private void fixSelected() {
+		if (activeThread != null) { updateUI(); return; }
+
 		List<DatabaseError> errlist = lsMain.getSelectedValuesList();
 
 		if (errlist == null || errlist.isEmpty()) {
@@ -229,27 +328,29 @@ public class CheckDatabaseFrame extends JCCFrame
 			return;
 		}
 
-		if (! DatabaseAutofixer.canFix(errorList, errlist)) {
-			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Unfixable")); //$NON-NLS-1$
-			return;
-		}
 
-		boolean hasFixedAll = true;
 		for (DatabaseError err : errlist) {
-			if (err.autoFix()) {
-				errorList.remove(err);
-			} else {
-				hasFixedAll = false;
+			if (! DatabaseAutofixer.canFix(errorList, err)) {
+				DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Unfixable") + "\n\n" + err.getFullErrorString()); //$NON-NLS-1$
+				return;
 			}
 		}
 
-		if (hasFixedAll) {
-			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Fixed")); //$NON-NLS-1$
-		} else {
-			DialogHelper.showDispatchInformation(this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Failed")); //$NON-NLS-1$
-		}
+		final List<DatabaseError> toFix = new ArrayList<>(errlist);
 
-		updateLists();
+		startFixThread("THREAD_FIXSELECTED_DB", toFix, (success, cancelled, fixed) -> //$NON-NLS-1$
+		{
+			errorList.removeAll(fixed);
+			updateLists();
+
+			if (cancelled) {
+				DialogHelper.showDispatchLocalInformation(CheckDatabaseFrame.this, "CheckDatabaseDialog.Autofix.dialogCancelled"); //$NON-NLS-1$
+			} else if (success) {
+				DialogHelper.showDispatchInformation(CheckDatabaseFrame.this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Fixed")); //$NON-NLS-1$
+			} else {
+				DialogHelper.showDispatchInformation(CheckDatabaseFrame.this, getTitle(), LocaleBundle.getString("CheckDatabaseDialog.fixSelectedMessage.Failed")); //$NON-NLS-1$
+			}
+		});
 	}
 
 	private void updateLists() { // Threadsafe
@@ -320,252 +421,269 @@ public class CheckDatabaseFrame extends JCCFrame
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-		panel1 = new JPanel();
-		btnValidate = new JButton();
-		lblInfo = new JLabel();
-		btnAutofix = new JButton();
-		btnFixSelected = new JButton();
-		splitPane1 = new JSplitPane();
-		scrollPane1 = new JScrollPane();
-		lsCategories = new JList<>();
-		splitPane2 = new JSplitPane();
-		scrollPane2 = new JScrollPane();
-		lsMain = new JList<>();
-		scrollPane3 = new JScrollPane();
-		edMetadata = new JTextArea();
-		pbProgress1 = new JProgressBar();
-		lblProgress1 = new JLabel();
-		pbProgress2 = new JProgressBar();
-		lblProgress2 = new JLabel();
-		panel2 = new JPanel();
-		cbValMovies = new JCheckBox();
-		cbValCovers = new JCheckBox();
-		cbValCoverFiles = new JCheckBox();
-		cbValDatabase = new JCheckBox();
-		cbValSeries = new JCheckBox();
-		cbValGroups = new JCheckBox();
-		cbValVideoFiles = new JCheckBox();
-		cbValDuplicates = new JCheckBox();
-		cbValSeasons = new JCheckBox();
-		cbValOnlineRefs = new JCheckBox();
-		cbValNfoFiles = new JCheckBox();
-		cbValSeriesStructure = new JCheckBox();
-		cbValEpisodes = new JCheckBox();
-		cbValEmptyDirs = new JCheckBox();
+        panel1 = new JPanel();
+        btnValidate = new JButton();
+        lblInfo = new JLabel();
+        btnAutofix = new JButton();
+        btnFixSelected = new JButton();
+        splitPane1 = new JSplitPane();
+        scrollPane1 = new JScrollPane();
+        lsCategories = new JList<>();
+        splitPane2 = new JSplitPane();
+        scrollPane2 = new JScrollPane();
+        lsMain = new JList<>();
+        scrollPane3 = new JScrollPane();
+        edMetadata = new JTextArea();
+        pnlProgress = new JPanel();
+        pbProgress1 = new JProgressBar();
+        lblProgress1 = new JLabel();
+        btnCancelAutofix = new JButton();
+        pbProgress2 = new JProgressBar();
+        lblProgress2 = new JLabel();
+        panel2 = new JPanel();
+        cbValMovies = new JCheckBox();
+        cbValCovers = new JCheckBox();
+        cbValCoverFiles = new JCheckBox();
+        cbValDatabase = new JCheckBox();
+        cbValSeries = new JCheckBox();
+        cbValGroups = new JCheckBox();
+        cbValVideoFiles = new JCheckBox();
+        cbValDuplicates = new JCheckBox();
+        cbValSeasons = new JCheckBox();
+        cbValOnlineRefs = new JCheckBox();
+        cbValNfoFiles = new JCheckBox();
+        cbValSeriesStructure = new JCheckBox();
+        cbValEpisodes = new JCheckBox();
+        cbValEmptyDirs = new JCheckBox();
 
-		//======== this ========
-		setTitle(LocaleBundle.getString("CheckDatabaseDialog.this.title"));
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setMinimumSize(new Dimension(650, 400));
-		Container contentPane = getContentPane();
-		contentPane.setLayout(new FormLayout(
-			"$ugap, default:grow, $lcgap, 226dlu, $ugap",
-			"$ugap, default, $lgap, default:grow, 3*($lgap, default), $ugap"));
+        //======== this ========
+        setTitle(LocaleBundle.getString("CheckDatabaseDialog.this.title")); //$NON-NLS-1$
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setMinimumSize(new Dimension(650, 400));
+        var contentPane = getContentPane();
+        contentPane.setLayout(new FormLayout(
+            "$ugap, default:grow, $lcgap, 226dlu, $ugap", //$NON-NLS-1$
+            "$ugap, default, $lgap, default:grow, 2*($lgap, default), $ugap")); //$NON-NLS-1$
 
-		//======== panel1 ========
-		{
-			panel1.setLayout(new FormLayout(
-				"2*(default, $lcgap), default:grow, 2*($lcgap, default)",
-				"default"));
+        //======== panel1 ========
+        {
+            panel1.setLayout(new FormLayout(
+                "2*(default, $lcgap), default:grow, 2*($lcgap, default)", //$NON-NLS-1$
+                "default")); //$NON-NLS-1$
 
-			//---- btnValidate ----
-			btnValidate.setText(LocaleBundle.getString("CheckDatabaseDialog.btnValidate.text"));
-			btnValidate.setFont(btnValidate.getFont().deriveFont(btnValidate.getFont().getStyle() | Font.BOLD));
-			btnValidate.addActionListener(e -> startValidate());
-			panel1.add(btnValidate, CC.xy(1, 1));
+            //---- btnValidate ----
+            btnValidate.setText(LocaleBundle.getString("CheckDatabaseDialog.btnValidate.text")); //$NON-NLS-1$
+            btnValidate.setFont(btnValidate.getFont().deriveFont(btnValidate.getFont().getStyle() | Font.BOLD));
+            btnValidate.addActionListener(e -> startValidate());
+            panel1.add(btnValidate, CC.xy(1, 1));
 
-			//---- lblInfo ----
-			lblInfo.setText(LocaleBundle.getString("CheckDatabaseDialog.lblInfo.text"));
-			panel1.add(lblInfo, CC.xy(3, 1));
+            //---- lblInfo ----
+            lblInfo.setText(LocaleBundle.getString("CheckDatabaseDialog.lblInfo.text")); //$NON-NLS-1$
+            panel1.add(lblInfo, CC.xy(3, 1));
 
-			//---- btnAutofix ----
-			btnAutofix.setText(LocaleBundle.getString("CheckDatabaseDialog.btnAutofix.text"));
-			btnAutofix.addActionListener(e -> autoFix());
-			panel1.add(btnAutofix, CC.xy(7, 1));
+            //---- btnAutofix ----
+            btnAutofix.setText(LocaleBundle.getString("CheckDatabaseDialog.btnAutofix.text")); //$NON-NLS-1$
+            btnAutofix.addActionListener(e -> autoFix());
+            panel1.add(btnAutofix, CC.xy(7, 1));
 
-			//---- btnFixSelected ----
-			btnFixSelected.setText(LocaleBundle.getString("CheckDatabaseDialog.btnFixSelected.text"));
-			btnFixSelected.addActionListener(e -> fixSelected());
-			panel1.add(btnFixSelected, CC.xy(9, 1));
-		}
-		contentPane.add(panel1, CC.xywh(2, 2, 3, 1));
+            //---- btnFixSelected ----
+            btnFixSelected.setText(LocaleBundle.getString("CheckDatabaseDialog.btnFixSelected.text")); //$NON-NLS-1$
+            btnFixSelected.addActionListener(e -> fixSelected());
+            panel1.add(btnFixSelected, CC.xy(9, 1));
+        }
+        contentPane.add(panel1, CC.xywh(2, 2, 3, 1));
 
-		//======== splitPane1 ========
-		{
-			splitPane1.setContinuousLayout(true);
-			splitPane1.setResizeWeight(0.25);
+        //======== splitPane1 ========
+        {
+            splitPane1.setContinuousLayout(true);
+            splitPane1.setResizeWeight(0.25);
 
-			//======== scrollPane1 ========
-			{
-				scrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+            //======== scrollPane1 ========
+            {
+                scrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-				//---- lsCategories ----
-				lsCategories.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				lsCategories.addListSelectionListener(e -> onCategorySelected());
-				scrollPane1.setViewportView(lsCategories);
-			}
-			splitPane1.setLeftComponent(scrollPane1);
+                //---- lsCategories ----
+                lsCategories.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                lsCategories.addListSelectionListener(e -> onCategorySelected());
+                scrollPane1.setViewportView(lsCategories);
+            }
+            splitPane1.setLeftComponent(scrollPane1);
 
-			//======== splitPane2 ========
-			{
-				splitPane2.setOrientation(JSplitPane.VERTICAL_SPLIT);
-				splitPane2.setResizeWeight(0.7);
-				splitPane2.setContinuousLayout(true);
+            //======== splitPane2 ========
+            {
+                splitPane2.setOrientation(JSplitPane.VERTICAL_SPLIT);
+                splitPane2.setResizeWeight(0.7);
+                splitPane2.setContinuousLayout(true);
 
-				//======== scrollPane2 ========
-				{
-					scrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+                //======== scrollPane2 ========
+                {
+                    scrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-					//---- lsMain ----
-					lsMain.addListSelectionListener(e -> onErrorSelected());
-					lsMain.addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseClicked(MouseEvent e) {
-							onErrorClicked(e);
-						}
-					});
-					scrollPane2.setViewportView(lsMain);
-				}
-				splitPane2.setTopComponent(scrollPane2);
+                    //---- lsMain ----
+                    lsMain.addListSelectionListener(e -> onErrorSelected());
+                    lsMain.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            onErrorClicked(e);
+                        }
+                    });
+                    scrollPane2.setViewportView(lsMain);
+                }
+                splitPane2.setTopComponent(scrollPane2);
 
-				//======== scrollPane3 ========
-				{
+                //======== scrollPane3 ========
+                {
 
-					//---- edMetadata ----
-					edMetadata.setEditable(false);
-					edMetadata.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 21));
-					scrollPane3.setViewportView(edMetadata);
-				}
-				splitPane2.setBottomComponent(scrollPane3);
-			}
-			splitPane1.setRightComponent(splitPane2);
-		}
-		contentPane.add(splitPane1, CC.xywh(2, 4, 3, 1, CC.FILL, CC.FILL));
-		contentPane.add(pbProgress1, CC.xy(2, 6));
+                    //---- edMetadata ----
+                    edMetadata.setEditable(false);
+                    edMetadata.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 21));
+                    scrollPane3.setViewportView(edMetadata);
+                }
+                splitPane2.setBottomComponent(scrollPane3);
+            }
+            splitPane1.setRightComponent(splitPane2);
+        }
+        contentPane.add(splitPane1, CC.xywh(2, 4, 3, 1, CC.FILL, CC.FILL));
 
-		//---- lblProgress1 ----
-		lblProgress1.setText("<dynamic>");
-		contentPane.add(lblProgress1, CC.xy(4, 6));
-		contentPane.add(pbProgress2, CC.xy(2, 8));
+        //======== pnlProgress ========
+        {
+            pnlProgress.setLayout(new FormLayout(
+                "default:grow, $lcgap, 226dlu, $lcgap, default", //$NON-NLS-1$
+                "default, $lgap, default")); //$NON-NLS-1$
+            pnlProgress.add(pbProgress1, CC.xy(1, 1, CC.FILL, CC.DEFAULT));
 
-		//---- lblProgress2 ----
-		lblProgress2.setText("<dynamic>");
-		contentPane.add(lblProgress2, CC.xy(4, 8));
+            //---- lblProgress1 ----
+            lblProgress1.setText("<dynamic>"); //$NON-NLS-1$
+            pnlProgress.add(lblProgress1, CC.xy(3, 1));
 
-		//======== panel2 ========
-		{
-			panel2.setLayout(new FormLayout(
-				"0dlu:grow, 3*($lcgap, 1dlu:grow)",
-				"3*(default, $lgap), default"));
+            //---- btnCancelAutofix ----
+            btnCancelAutofix.setText(LocaleBundle.getString("UIGeneric.btnCancel.text")); //$NON-NLS-1$
+            btnCancelAutofix.addActionListener(e -> cancelAutofix(e));
+            pnlProgress.add(btnCancelAutofix, CC.xywh(5, 1, 1, 3, CC.DEFAULT, CC.FILL));
+            pnlProgress.add(pbProgress2, CC.xy(1, 3, CC.FILL, CC.DEFAULT));
 
-			//---- cbValMovies ----
-			cbValMovies.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValMovies"));
-			cbValMovies.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValMovies, CC.xy(1, 1));
+            //---- lblProgress2 ----
+            lblProgress2.setText("<dynamic>"); //$NON-NLS-1$
+            pnlProgress.add(lblProgress2, CC.xy(3, 3));
+        }
+        contentPane.add(pnlProgress, CC.xywh(2, 6, 3, 1, CC.FILL, CC.DEFAULT));
 
-			//---- cbValCovers ----
-			cbValCovers.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValCovers.text"));
-			cbValCovers.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValCovers, CC.xy(3, 1));
+        //======== panel2 ========
+        {
+            panel2.setLayout(new FormLayout(
+                "0dlu:grow, 3*($lcgap, 1dlu:grow)", //$NON-NLS-1$
+                "3*(default, $lgap), default")); //$NON-NLS-1$
 
-			//---- cbValCoverFiles ----
-			cbValCoverFiles.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValCoverFiles"));
-			cbValCoverFiles.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValCoverFiles, CC.xy(5, 1));
+            //---- cbValMovies ----
+            cbValMovies.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValMovies")); //$NON-NLS-1$
+            cbValMovies.addItemListener(e -> cbxAnyItemStateChanged(e));
+            panel2.add(cbValMovies, CC.xy(1, 1));
 
-			//---- cbValDatabase ----
-			cbValDatabase.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValDatabase"));
-			cbValDatabase.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValDatabase, CC.xy(7, 1));
+            //---- cbValCovers ----
+            cbValCovers.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValCovers.text")); //$NON-NLS-1$
+            cbValCovers.addItemListener(e -> cbxAnyItemStateChanged(e));
+            panel2.add(cbValCovers, CC.xy(3, 1));
 
-			//---- cbValSeries ----
-			cbValSeries.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeries"));
-			cbValSeries.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValSeries, CC.xy(1, 3));
+            //---- cbValCoverFiles ----
+            cbValCoverFiles.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValCoverFiles")); //$NON-NLS-1$
+            cbValCoverFiles.addItemListener(e -> cbxAnyItemStateChanged(e));
+            panel2.add(cbValCoverFiles, CC.xy(5, 1));
 
-			//---- cbValGroups ----
-			cbValGroups.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValGroups.text"));
-			cbValGroups.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValGroups, CC.xy(3, 3));
+            //---- cbValDatabase ----
+            cbValDatabase.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValDatabase")); //$NON-NLS-1$
+            cbValDatabase.addItemListener(e -> cbxAnyItemStateChanged(e));
+            panel2.add(cbValDatabase, CC.xy(7, 1));
 
-			//---- cbValVideoFiles ----
-			cbValVideoFiles.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValVideoFiles"));
-			cbValVideoFiles.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValVideoFiles, CC.xy(5, 3));
+            //---- cbValSeries ----
+            cbValSeries.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeries")); //$NON-NLS-1$
+            cbValSeries.addItemListener(e -> cbxAnyItemStateChanged(e));
+            panel2.add(cbValSeries, CC.xy(1, 3));
 
-			//---- cbValDuplicates ----
-			cbValDuplicates.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValDuplicates"));
-			cbValDuplicates.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValDuplicates, CC.xy(7, 3));
+            //---- cbValGroups ----
+            cbValGroups.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValGroups.text")); //$NON-NLS-1$
+            cbValGroups.addItemListener(e -> cbxAnyItemStateChanged(e));
+            panel2.add(cbValGroups, CC.xy(3, 3));
 
-			//---- cbValSeasons ----
-			cbValSeasons.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeasons"));
-			cbValSeasons.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValSeasons, CC.xy(1, 5));
+            //---- cbValVideoFiles ----
+            cbValVideoFiles.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValVideoFiles")); //$NON-NLS-1$
+            cbValVideoFiles.addItemListener(e -> cbxAnyItemStateChanged(e));
+            panel2.add(cbValVideoFiles, CC.xy(5, 3));
 
-			//---- cbValOnlineRefs ----
-			cbValOnlineRefs.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValOnlineRefs.text"));
-			cbValOnlineRefs.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValOnlineRefs, CC.xy(3, 5));
+            //---- cbValDuplicates ----
+            cbValDuplicates.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValDuplicates")); //$NON-NLS-1$
+            cbValDuplicates.addItemListener(e -> cbxAnyItemStateChanged(e));
+            panel2.add(cbValDuplicates, CC.xy(7, 3));
 
-			//---- cbValNfoFiles ----
-			cbValNfoFiles.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValNfoFiles.text"));
-			cbValNfoFiles.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValNfoFiles, CC.xy(5, 5));
+            //---- cbValSeasons ----
+            cbValSeasons.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeasons")); //$NON-NLS-1$
+            cbValSeasons.addItemListener(e -> cbxAnyItemStateChanged(e));
+            panel2.add(cbValSeasons, CC.xy(1, 5));
 
-			//---- cbValSeriesStructure ----
-			cbValSeriesStructure.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValSeriesStructure"));
-			cbValSeriesStructure.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValSeriesStructure, CC.xy(7, 5));
+            //---- cbValOnlineRefs ----
+            cbValOnlineRefs.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValOnlineRefs.text")); //$NON-NLS-1$
+            cbValOnlineRefs.addItemListener(e -> cbxAnyItemStateChanged(e));
+            panel2.add(cbValOnlineRefs, CC.xy(3, 5));
 
-			//---- cbValEpisodes ----
-			cbValEpisodes.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValEpisodes"));
-			cbValEpisodes.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValEpisodes, CC.xy(1, 7));
+            //---- cbValNfoFiles ----
+            cbValNfoFiles.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValNfoFiles.text")); //$NON-NLS-1$
+            cbValNfoFiles.addItemListener(e -> cbxAnyItemStateChanged(e));
+            panel2.add(cbValNfoFiles, CC.xy(5, 5));
 
-			//---- cbValEmptyDirs ----
-			cbValEmptyDirs.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValEmptyDirs"));
-			cbValEmptyDirs.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValEmptyDirs, CC.xy(5, 7));
-		}
-		contentPane.add(panel2, CC.xywh(2, 10, 3, 1));
-		setSize(1200, 700);
-		setLocationRelativeTo(getOwner());
+            //---- cbValSeriesStructure ----
+            cbValSeriesStructure.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValSeriesStructure")); //$NON-NLS-1$
+            cbValSeriesStructure.addItemListener(e -> cbxAnyItemStateChanged(e));
+            panel2.add(cbValSeriesStructure, CC.xy(7, 5));
+
+            //---- cbValEpisodes ----
+            cbValEpisodes.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValEpisodes")); //$NON-NLS-1$
+            cbValEpisodes.addItemListener(e -> cbxAnyItemStateChanged(e));
+            panel2.add(cbValEpisodes, CC.xy(1, 7));
+
+            //---- cbValEmptyDirs ----
+            cbValEmptyDirs.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValEmptyDirs")); //$NON-NLS-1$
+            cbValEmptyDirs.addItemListener(e -> cbxAnyItemStateChanged(e));
+            panel2.add(cbValEmptyDirs, CC.xy(5, 7));
+        }
+        contentPane.add(panel2, CC.xywh(2, 8, 3, 1));
+        setSize(1200, 700);
+        setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	private JPanel panel1;
-	private JButton btnValidate;
-	private JLabel lblInfo;
-	private JButton btnAutofix;
-	private JButton btnFixSelected;
-	private JSplitPane splitPane1;
-	private JScrollPane scrollPane1;
-	private JList<CountAppendix<DatabaseErrorType>> lsCategories;
-	private JSplitPane splitPane2;
-	private JScrollPane scrollPane2;
-	private JList<DatabaseError> lsMain;
-	private JScrollPane scrollPane3;
-	private JTextArea edMetadata;
-	private JProgressBar pbProgress1;
-	private JLabel lblProgress1;
-	private JProgressBar pbProgress2;
-	private JLabel lblProgress2;
-	private JPanel panel2;
-	private JCheckBox cbValMovies;
-	private JCheckBox cbValCovers;
-	private JCheckBox cbValCoverFiles;
-	private JCheckBox cbValDatabase;
-	private JCheckBox cbValSeries;
-	private JCheckBox cbValGroups;
-	private JCheckBox cbValVideoFiles;
-	private JCheckBox cbValDuplicates;
-	private JCheckBox cbValSeasons;
-	private JCheckBox cbValOnlineRefs;
-	private JCheckBox cbValNfoFiles;
-	private JCheckBox cbValSeriesStructure;
-	private JCheckBox cbValEpisodes;
-	private JCheckBox cbValEmptyDirs;
+    private JPanel panel1;
+    private JButton btnValidate;
+    private JLabel lblInfo;
+    private JButton btnAutofix;
+    private JButton btnFixSelected;
+    private JSplitPane splitPane1;
+    private JScrollPane scrollPane1;
+    private JList<CountAppendix<DatabaseErrorType>> lsCategories;
+    private JSplitPane splitPane2;
+    private JScrollPane scrollPane2;
+    private JList<DatabaseError> lsMain;
+    private JScrollPane scrollPane3;
+    private JTextArea edMetadata;
+    private JPanel pnlProgress;
+    private JProgressBar pbProgress1;
+    private JLabel lblProgress1;
+    private JButton btnCancelAutofix;
+    private JProgressBar pbProgress2;
+    private JLabel lblProgress2;
+    private JPanel panel2;
+    private JCheckBox cbValMovies;
+    private JCheckBox cbValCovers;
+    private JCheckBox cbValCoverFiles;
+    private JCheckBox cbValDatabase;
+    private JCheckBox cbValSeries;
+    private JCheckBox cbValGroups;
+    private JCheckBox cbValVideoFiles;
+    private JCheckBox cbValDuplicates;
+    private JCheckBox cbValSeasons;
+    private JCheckBox cbValOnlineRefs;
+    private JCheckBox cbValNfoFiles;
+    private JCheckBox cbValSeriesStructure;
+    private JCheckBox cbValEpisodes;
+    private JCheckBox cbValEmptyDirs;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

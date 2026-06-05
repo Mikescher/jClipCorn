@@ -12,13 +12,16 @@ import de.jClipCorn.features.nfo.SeasonNFOWriter;
 import de.jClipCorn.features.nfo.SeriesNFOWriter;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.ChecksumHelper;
-import de.jClipCorn.util.listener.ProgressCallbackListener;
+import de.jClipCorn.util.Str;
+import de.jClipCorn.util.helper.ThreadUtils;
+import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -29,32 +32,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseAutofixer {
-	public static boolean fixErrors(CCMovieList ml, List<DatabaseError> list, ProgressCallbackListener pcl) {
+	// Tries to fix all errors in {@code toFix} (using {@code contextList} to decide fixability).
+	// Returns the list of successfully fixed errors and whether every fixable error was fixed.
+	public static Tuple<List<DatabaseError>, Boolean> fixErrors(CCMovieList ml, List<DatabaseError> contextList, List<DatabaseError> toFix, DoubleProgressCallbackListener pcl) {
 		ml.getDriveMap().tryWait();
-		
-		pcl.setMax(list.size());
-		pcl.reset();
-		
+
+		pcl.setMaxAndResetValueBoth(toFix.size(), 1);
+
+		List<DatabaseError> fixed = new ArrayList<>();
 		boolean fullsuccess = true;
-		
-		for (int i = 0; i < list.size(); i++) {
-			pcl.step();
-			
-			DatabaseError error = list.get(i);
-			
-			if (! canFix(list, error)) continue;
-			
+
+		for (int i = 0; i < toFix.size(); i++) {
+			if (pcl.isCancelled()) break; // current action has finished, cancel before starting the next one
+
+			DatabaseError error = toFix.get(i);
+
+			pcl.setValueBoth(i, 0, LocaleBundle.getFormattedString("CheckDatabaseDialog.Autofix.progress", error.getType().toString(), error.getElement1Name()), Str.Empty); //$NON-NLS-1$
+
+			if (! canFix(contextList, error)) continue;
+
 			boolean succval = error.autoFix();
-			
-			if(! succval) {
+			ThreadUtils.safeSleep(5000);
+
+			if (succval) {
+				fixed.add(error);
+			} else {
 				CCLog.addWarning(LocaleBundle.getFormattedString("CheckDatabaseDialog.Autofix.problem", error.getErrorString(), error.getElement1Name())); //$NON-NLS-1$
 				fullsuccess = false;
 			}
 		}
-		
+
 		pcl.reset();
-		
-		return fullsuccess;
+
+		return Tuple.Create(fixed, fullsuccess);
 	}
 	
 	private static List<DatabaseError> getAllWithSameElement(List<DatabaseError> list, DatabaseError element) {

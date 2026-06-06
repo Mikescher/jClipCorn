@@ -54,7 +54,7 @@ public abstract class SFixTable extends JTable {
 	private void initListener() {
 		addMouseListener(new MouseAdapter() {
 			final int initialDelayDefault = ToolTipManager.sharedInstance().getInitialDelay();
-			final int dismissDelayDefault = ToolTipManager.sharedInstance().getInitialDelay();
+			final int dismissDelayDefault = ToolTipManager.sharedInstance().getDismissDelay();
 			final int reshowDelayDefault = ToolTipManager.sharedInstance().getReshowDelay();
 
 			@Override

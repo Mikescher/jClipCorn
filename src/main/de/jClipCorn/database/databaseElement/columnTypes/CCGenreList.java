@@ -388,4 +388,8 @@ public class CCGenreList {
 
 		return false;
 	}
+
+	public boolean includesAnime() {
+		return includes(CCGenre.GENRE_022);
+	}
 }

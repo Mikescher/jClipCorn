@@ -4,6 +4,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.Metadataparser;
@@ -21,6 +22,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateMetadataFrame extends JCCFrame
@@ -46,6 +48,9 @@ public class UpdateMetadataFrame extends JCCFrame
 	{
 		initTable();
 
+		tableMain.DeleteLocalAnimeSeason = cbReplaceAnimeSeason.isSelected();
+		tableMain.DeleteLocalAnimeStudio = cbReplaceAnimeStudio.isSelected();
+
 		var defBackground = statusInputFilter.getBackground();
 		edInputFilter.getDocument().addDocumentListener(new DocumentLambdaAdapter(() -> {
 			if (edInputFilter.getText().equals("[0]"))
@@ -63,7 +68,9 @@ public class UpdateMetadataFrame extends JCCFrame
 
 		try
 		{
-			var data = movielist.iteratorElements().map(UpdateMetadataTableElement::new).enumerate();
+			List<UpdateMetadataTableElement> data = new ArrayList<>();
+			for (CCDatabaseElement el : movielist.iteratorElements()) data.add(new UpdateMetadataTableElement(el));
+			for (CCSeason se : movielist.iteratorSeasons())           data.add(new UpdateMetadataTableElement(se));
 
 			var filter = AbstractCustomFilter.createFilterFromExport(movielist, edInputFilter.getText());
 			if (filter == null) throw new Exception("failed to parse filter");
@@ -105,41 +112,55 @@ public class UpdateMetadataFrame extends JCCFrame
 
 		if (!d.Processed) return false;
 
-		CCDatabaseElement el = d.Element;
 		OnlineMetadata md = d.OnlineMeta;
 
-		if (el == null || md == null) return false;
+		if (md == null) return false;
 
-		var os1 = el.getOnlinescore();
-		var os2 = md.OnlineScore;
+		if (d.supportsScore()) {
+			var os1 = d.getLocalScore();
+			var os2 = md.OnlineScore;
 
-		if (os1 != null && os2 != null) {
-			if (!CCOnlineScore.isEqual(os1, os2)) return true;
-		}
-
-		if (tableMain.DeleteLocalGenres) {
-			CCGenreList og1 = el.getGenres();
-			CCGenreList og2 = md.Genres;
-
-			if (og1 != null && og2 != null) {
-				for (CCGenre online : og2.iterate()) {
-					if (!og1.includes(online)) return true;
-				}
-				for (CCGenre local : og1.iterate()) {
-					if (!og2.includes(local)) return true;
-				}
-			}
-		} else {
-			CCGenreList og1 = el.getGenres();
-			CCGenreList og2 = md.Genres;
-
-			if (og1 != null && og2 != null) {
-				for (CCGenre online : og2.iterate()) {
-					if (!og1.includes(online) && !og1.isFull()) return true;
-				}
+			if (os1 != null && os2 != null) {
+				if (!CCOnlineScore.isEqual(os1, os2)) return true;
 			}
 		}
 
+		if (d.supportsGenres()) {
+			CCGenreList og1 = d.getLocalGenres();
+			CCGenreList og2 = md.Genres;
+
+			if (og1 != null && og2 != null) {
+				if (tableMain.DeleteLocalGenres) {
+					for (CCGenre online : og2.iterate()) {
+						if (!og1.includes(online)) return true;
+					}
+					for (CCGenre local : og1.iterate()) {
+						if (!og2.includes(local)) return true;
+					}
+				} else {
+					for (CCGenre online : og2.iterate()) {
+						if (!og1.includes(online) && !og1.isFull()) return true;
+					}
+				}
+			}
+		}
+
+		if (d.supportsAnime()) {
+			if (hasStringListChange(d.getLocalAnimeSeason(), md.AnimeSeason, tableMain.DeleteLocalAnimeSeason)) return true;
+			if (hasStringListChange(d.getLocalAnimeStudio(), md.AnimeStudio, tableMain.DeleteLocalAnimeStudio)) return true;
+		}
+
+		return false;
+	}
+
+	private static boolean hasStringListChange(CCStringList local, CCStringList online, boolean replace) {
+		if (online == null || online.isEmpty()) return false;
+		if (local == null) local = CCStringList.EMPTY;
+
+		for (String o : online) if (!local.contains(o)) return true;
+		if (replace) {
+			for (String l : local) if (!online.contains(l)) return true;
+		}
 
 		return false;
 	}
@@ -167,6 +188,10 @@ public class UpdateMetadataFrame extends JCCFrame
 				btnUpdateSelectedOnlineScore.setEnabled(false);
 				btnUpdateAllReferences.setEnabled(false);
 				btnUpdateSelectedRefs.setEnabled(false);
+				btnUpdateAllAnimeSeason.setEnabled(false);
+				btnUpdateSelectedAnimeSeason.setEnabled(false);
+				btnUpdateAllAnimeStudio.setEnabled(false);
+				btnUpdateSelectedAnimeStudio.setEnabled(false);
 				btnInputFilter.setEnabled(false);
 			});
 			ThreadUtils.setProgressbarAndWait(progressBar, 0, 0, data.size()+1);
@@ -176,10 +201,10 @@ public class UpdateMetadataFrame extends JCCFrame
 				ThreadUtils.setProgressbarAndWait(progressBar, i);
 				i++;
 
-				CCSingleOnlineReference ref = elem.Element.getOnlineReference().Main;
+				CCSingleOnlineReference ref = elem.getOnlineReference().Main;
 				if (! ref.isSet()) continue;
 
-				if (elem.OnlineMeta != null && elem.OnlineMeta.OnlineScore != null) continue;
+				if (elem.OnlineMeta != null) continue;
 
 				Metadataparser mp = ref.getMetadataParser(movielist);
 				if (mp == null) continue;
@@ -211,6 +236,10 @@ public class UpdateMetadataFrame extends JCCFrame
 				btnUpdateSelectedOnlineScore.setEnabled(!movielist.isReadonly());
 				btnUpdateAllReferences.setEnabled(!movielist.isReadonly());
 				btnUpdateSelectedRefs.setEnabled(!movielist.isReadonly());
+				btnUpdateAllAnimeSeason.setEnabled(!movielist.isReadonly());
+				btnUpdateSelectedAnimeSeason.setEnabled(!movielist.isReadonly());
+				btnUpdateAllAnimeStudio.setEnabled(!movielist.isReadonly());
+				btnUpdateSelectedAnimeStudio.setEnabled(!movielist.isReadonly());
 				btnInputFilter.setEnabled(false);
 			});
 			collThread = null;
@@ -249,6 +278,22 @@ public class UpdateMetadataFrame extends JCCFrame
 		UpdateReferencesInDatabase(false);
 	}
 
+	private void updateSelectedAnimeSeason() {
+		UpdateAnimeSeasonInDatabase(true);
+	}
+
+	private void updateAllAnimeSeason() {
+		UpdateAnimeSeasonInDatabase(false);
+	}
+
+	private void updateSelectedAnimeStudio() {
+		UpdateAnimeStudioInDatabase(true);
+	}
+
+	private void updateAllAnimeStudio() {
+		UpdateAnimeStudioInDatabase(false);
+	}
+
 	private void onChangeAllowGenreDelete() {
 		tableMain.DeleteLocalGenres = cbAllowDeleteGenres.isSelected();
 		tableMain.forceDataChangedRedraw();
@@ -256,6 +301,16 @@ public class UpdateMetadataFrame extends JCCFrame
 
 	private void onChangeAllowRefDelete() {
 		tableMain.DeleteLocalReferences = cbAllowDeleteReferences.isSelected();
+		tableMain.forceDataChangedRedraw();
+	}
+
+	private void onChangeAllowAnimeSeasonReplace() {
+		tableMain.DeleteLocalAnimeSeason = cbReplaceAnimeSeason.isSelected();
+		tableMain.forceDataChangedRedraw();
+	}
+
+	private void onChangeAllowAnimeStudioReplace() {
+		tableMain.DeleteLocalAnimeStudio = cbReplaceAnimeStudio.isSelected();
 		tableMain.forceDataChangedRedraw();
 	}
 
@@ -267,9 +322,10 @@ public class UpdateMetadataFrame extends JCCFrame
 		int count = 0;
 
 		for (UpdateMetadataTableElement elem : data) {
+			if (!elem.supportsScore()) continue;
 			if (elem.OnlineMeta != null && elem.OnlineMeta.OnlineScore != null) {
-				if (!CCOnlineScore.isEqual(elem.Element.getOnlinescore(), elem.OnlineMeta.OnlineScore)) {
-					elem.Element.onlineScore().set(elem.OnlineMeta.OnlineScore);
+				if (!CCOnlineScore.isEqual(elem.getLocalScore(), elem.OnlineMeta.OnlineScore)) {
+					elem.setScore(elem.OnlineMeta.OnlineScore);
 					count++;
 				}
 			}
@@ -288,17 +344,18 @@ public class UpdateMetadataFrame extends JCCFrame
 		int count = 0;
 
 		for (UpdateMetadataTableElement elem : data) {
+			if (!elem.supportsGenres()) continue;
 			if (elem.OnlineMeta != null && elem.OnlineMeta.Genres != null) {
 				if (tableMain.DeleteLocalGenres) {
-					if (!elem.Element.getGenres().equals(elem.OnlineMeta.Genres)) {
-						elem.Element.Genres.set(elem.OnlineMeta.Genres);
+					if (!elem.getLocalGenres().equals(elem.OnlineMeta.Genres)) {
+						elem.setGenres(elem.OnlineMeta.Genres);
 						count++;
 					}
 				} else {
 					boolean diff = false;
 					for (CCGenre genre : elem.OnlineMeta.Genres.iterate()) {
-						if (!elem.Element.getGenres().includes(genre) && !elem.Element.getGenres().isFull()) {
-							elem.Element.Genres.tryAddGenre(genre);
+						if (!elem.getLocalGenres().includes(genre) && !elem.getLocalGenres().isFull()) {
+							elem.tryAddGenre(genre);
 							diff = true;
 						}
 					}
@@ -322,13 +379,13 @@ public class UpdateMetadataFrame extends JCCFrame
 		for (UpdateMetadataTableElement elem : data) {
 			if (elem.OnlineMeta != null) {
 				CCOnlineReferenceList onlineref = elem.OnlineMeta.getFullReference();
-				CCOnlineReferenceList localref = elem.Element.getOnlineReference();
+				CCOnlineReferenceList localref = elem.getOnlineReference();
 
 				if (onlineref != null && onlineref.isMainSet()) {
 
 					if (tableMain.DeleteLocalReferences) {
 						if (!localref.equalsIgnoreAdditionalOrder(onlineref)) {
-							elem.Element.OnlineReference.set(onlineref);
+							elem.setOnlineReference(onlineref);
 							count++;
 						}
 					} else {
@@ -339,7 +396,7 @@ public class UpdateMetadataFrame extends JCCFrame
 								diff = true;
 							}
 						}
-						if (diff) { count++; elem.Element.OnlineReference.set(localref); }
+						if (diff) { count++; elem.setOnlineReference(localref); }
 					}
 				}
 			}
@@ -348,6 +405,69 @@ public class UpdateMetadataFrame extends JCCFrame
 		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.MetadataUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.MetadataUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
 
 		tableMain.forceDataChangedRedraw();
+	}
+
+	private void UpdateAnimeSeasonInDatabase(boolean onlySelected) {
+		if (movielist.isReadonly()) return;
+
+		List<UpdateMetadataTableElement> data = onlySelected ? tableMain.getSelectedDataCopy() : tableMain.getDataCopy();
+
+		int count = 0;
+
+		for (UpdateMetadataTableElement elem : data) {
+			if (!elem.supportsAnime()) continue;
+			if (elem.OnlineMeta == null || elem.OnlineMeta.AnimeSeason == null || elem.OnlineMeta.AnimeSeason.isEmpty()) continue;
+
+			CCStringList merged = mergeStringList(elem.getLocalAnimeSeason(), elem.OnlineMeta.AnimeSeason, tableMain.DeleteLocalAnimeSeason);
+			if (merged != null) { elem.setAnimeSeason(merged); count++; }
+		}
+
+		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.MetadataUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.MetadataUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
+
+		tableMain.forceDataChangedRedraw();
+	}
+
+	private void UpdateAnimeStudioInDatabase(boolean onlySelected) {
+		if (movielist.isReadonly()) return;
+
+		List<UpdateMetadataTableElement> data = onlySelected ? tableMain.getSelectedDataCopy() : tableMain.getDataCopy();
+
+		int count = 0;
+
+		for (UpdateMetadataTableElement elem : data) {
+			if (!elem.supportsAnime()) continue;
+			if (elem.OnlineMeta == null || elem.OnlineMeta.AnimeStudio == null || elem.OnlineMeta.AnimeStudio.isEmpty()) continue;
+
+			CCStringList merged = mergeStringList(elem.getLocalAnimeStudio(), elem.OnlineMeta.AnimeStudio, tableMain.DeleteLocalAnimeStudio);
+			if (merged != null) { elem.setAnimeStudio(merged); count++; }
+		}
+
+		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.MetadataUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.MetadataUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
+
+		tableMain.forceDataChangedRedraw();
+	}
+
+	/**
+	 * Merges the online string-list into the local one and returns the new value, or {@code null} if nothing changed.
+	 * With {@code replace == true} the online list fully replaces the local one (if different).
+	 */
+	private static CCStringList mergeStringList(CCStringList local, CCStringList online, boolean replace) {
+		if (local == null) local = CCStringList.EMPTY;
+
+		if (replace) {
+			if (local.isEqual(online)) return null;
+			return online;
+		} else {
+			CCStringList result = local;
+			boolean diff = false;
+			for (String o : online) {
+				if (!result.contains(o)) {
+					result = result.getAdd(o);
+					diff = true;
+				}
+			}
+			return diff ? result : null;
+		}
 	}
 
 	private void filterInput() {
@@ -373,6 +493,12 @@ public class UpdateMetadataFrame extends JCCFrame
 		btnUpdateSelectedRefs = new JButton();
 		cbAllowDeleteReferences = new JCheckBox();
 		btnUpdateAllReferences = new JButton();
+		btnUpdateSelectedAnimeSeason = new JButton();
+		cbReplaceAnimeSeason = new JCheckBox();
+		btnUpdateAllAnimeSeason = new JButton();
+		btnUpdateSelectedAnimeStudio = new JButton();
+		cbReplaceAnimeStudio = new JCheckBox();
+		btnUpdateAllAnimeStudio = new JButton();
 
 		//======== this ========
 		setTitle(LocaleBundle.getString("UpdateMetadataFrame.title"));
@@ -381,7 +507,7 @@ public class UpdateMetadataFrame extends JCCFrame
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
 			"$ugap, default, $lcgap, default:grow, 2*($lcgap, [75dlu,default]), $ugap",
-			"$ugap, 2*(default, $lgap), default:grow, 3*($lgap, default), $ugap"));
+			"$ugap, 2*(default, $lgap), default:grow, 5*($lgap, default), $ugap"));
 
 		//======== statusInputFilter ========
 		{
@@ -484,6 +610,42 @@ public class UpdateMetadataFrame extends JCCFrame
 		btnUpdateAllReferences.setEnabled(false);
 		btnUpdateAllReferences.addActionListener(e -> updateAllOnlineReferences());
 		contentPane.add(btnUpdateAllReferences, CC.xy(8, 12));
+
+		//---- btnUpdateSelectedAnimeSeason ----
+		btnUpdateSelectedAnimeSeason.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate7"));
+		btnUpdateSelectedAnimeSeason.setEnabled(false);
+		btnUpdateSelectedAnimeSeason.addActionListener(e -> updateSelectedAnimeSeason());
+		contentPane.add(btnUpdateSelectedAnimeSeason, CC.xy(2, 14));
+
+		//---- cbReplaceAnimeSeason ----
+		cbReplaceAnimeSeason.setText(LocaleBundle.getString("UpdateMetadataFrame.CBReplaceAnimeSeason"));
+		cbReplaceAnimeSeason.setSelected(true);
+		cbReplaceAnimeSeason.addActionListener(e -> onChangeAllowAnimeSeasonReplace());
+		contentPane.add(cbReplaceAnimeSeason, CC.xy(4, 14));
+
+		//---- btnUpdateAllAnimeSeason ----
+		btnUpdateAllAnimeSeason.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate8"));
+		btnUpdateAllAnimeSeason.setEnabled(false);
+		btnUpdateAllAnimeSeason.addActionListener(e -> updateAllAnimeSeason());
+		contentPane.add(btnUpdateAllAnimeSeason, CC.xy(8, 14));
+
+		//---- btnUpdateSelectedAnimeStudio ----
+		btnUpdateSelectedAnimeStudio.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate9"));
+		btnUpdateSelectedAnimeStudio.setEnabled(false);
+		btnUpdateSelectedAnimeStudio.addActionListener(e -> updateSelectedAnimeStudio());
+		contentPane.add(btnUpdateSelectedAnimeStudio, CC.xy(2, 16));
+
+		//---- cbReplaceAnimeStudio ----
+		cbReplaceAnimeStudio.setText(LocaleBundle.getString("UpdateMetadataFrame.CBReplaceAnimeStudio"));
+		cbReplaceAnimeStudio.setSelected(true);
+		cbReplaceAnimeStudio.addActionListener(e -> onChangeAllowAnimeStudioReplace());
+		contentPane.add(cbReplaceAnimeStudio, CC.xy(4, 16));
+
+		//---- btnUpdateAllAnimeStudio ----
+		btnUpdateAllAnimeStudio.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate10"));
+		btnUpdateAllAnimeStudio.setEnabled(false);
+		btnUpdateAllAnimeStudio.addActionListener(e -> updateAllAnimeStudio());
+		contentPane.add(btnUpdateAllAnimeStudio, CC.xy(8, 16));
 		setSize(1200, 650);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -507,5 +669,11 @@ public class UpdateMetadataFrame extends JCCFrame
 	private JButton btnUpdateSelectedRefs;
 	private JCheckBox cbAllowDeleteReferences;
 	private JButton btnUpdateAllReferences;
+	private JButton btnUpdateSelectedAnimeSeason;
+	private JCheckBox cbReplaceAnimeSeason;
+	private JButton btnUpdateAllAnimeSeason;
+	private JButton btnUpdateSelectedAnimeStudio;
+	private JCheckBox cbReplaceAnimeStudio;
+	private JButton btnUpdateAllAnimeStudio;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

@@ -1,16 +1,16 @@
 package de.jClipCorn.features.table.filter.customFilter;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
+import de.jClipCorn.features.table.filter.AbstractCustomStructureElementFilter;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterEnumChooserConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
+import de.jClipCorn.gui.localization.LocaleBundle;
 
-public class CustomGenreFilter extends AbstractCustomDatabaseElementFilter {
+public class CustomGenreFilter extends AbstractCustomStructureElementFilter {
 	private CCGenre genre = CCGenre.GENRE_000;
 
 	public CustomGenreFilter(CCMovieList ml) {
@@ -18,8 +18,23 @@ public class CustomGenreFilter extends AbstractCustomDatabaseElementFilter {
 	}
 
 	@Override
-	public boolean includes(CCDatabaseElement e) {
-		return e.getGenres().includes(genre);
+	public boolean includes(CCMovie m) {
+		return m.getGenres().includes(genre);
+	}
+
+	@Override
+	public boolean includes(CCSeries s) {
+		return s.getGenres().includes(genre);
+	}
+
+	@Override
+	public boolean includes(CCEpisode s) {
+		return s.getSeries().getGenres().includes(genre);
+	}
+
+	@Override
+	public boolean includes(CCSeason s) {
+		return s.getSeries().getGenres().includes(genre);
 	}
 
 	@Override

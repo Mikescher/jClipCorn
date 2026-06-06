@@ -1,16 +1,18 @@
 package de.jClipCorn.features.table.filter.customFilter;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCStringList;
-import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.features.table.filter.AbstractCustomDatabaseElementFilter;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
+import de.jClipCorn.features.table.filter.AbstractCustomStructureElementFilter;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterConfig;
 import de.jClipCorn.features.table.filter.filterConfig.CustomFilterStringChooserConfig;
 import de.jClipCorn.features.table.filter.filterSerialization.FilterSerializationConfig;
+import de.jClipCorn.gui.localization.LocaleBundle;
 
-public class CustomAnimeSeasonFilter extends AbstractCustomDatabaseElementFilter {
+public class CustomAnimeSeasonFilter extends AbstractCustomStructureElementFilter {
 	private String searchString = ""; //$NON-NLS-1$
 
 	public CustomAnimeSeasonFilter(CCMovieList ml) {
@@ -18,9 +20,21 @@ public class CustomAnimeSeasonFilter extends AbstractCustomDatabaseElementFilter
 	}
 
 	@Override
-	public boolean includes(CCDatabaseElement e) {
-		CCStringList animeSeasons = e.getAnimeSeason();
-		
+	public boolean includes(CCMovie m) {
+		return includes(m.getAnimeSeason());
+	}
+
+	@Override
+	public boolean includes(CCSeries s) {
+		return includes(s.getAnimeSeason());
+	}
+
+	@Override
+	public boolean includes(CCSeason s) {
+		return includes(s.getAnimeSeason());
+	}
+
+	public boolean includes(CCStringList animeSeasons) {
 		// If search string is empty, match elements that have no anime seasons
 		if (searchString.isEmpty()) {
 			return animeSeasons.isEmpty();

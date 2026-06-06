@@ -14,14 +14,16 @@ public class JCCSimpleTableCellRenderer<TData> extends TableRenderer {
 	private Func1to1<TData, Icon> icon;
 	private Func1to1<TData, Color> foreground;
 	private Func1to1<TData, Color> background;
+	private Func1to1<TData, Double> transparency;
 
 	public JCCSimpleTableCellRenderer(CCMovieList ml) {
 		super(ml);
 
-		text       = null;
-		icon       = null;
-		foreground = null;
-		background = null;
+		text         = null;
+		icon         = null;
+		foreground   = null;
+		background   = null;
+		transparency = null;
 	}
 
 	public void setTextFunc(Func1to1<TData, String> v) {
@@ -38,6 +40,10 @@ public class JCCSimpleTableCellRenderer<TData> extends TableRenderer {
 
 	public void setBackgroundFunc(Func1to1<TData, Color> v) {
 		this.background = v;
+	}
+
+	public void setTransparencyFunc(Func1to1<TData, Double> v) {
+		this.transparency = v;
 	}
 
 	@Override
@@ -58,9 +64,18 @@ public class JCCSimpleTableCellRenderer<TData> extends TableRenderer {
 			if (bg != null) c.setBackground(bg);
 		}
 
+		var fg = UIManager.getColor("TextField.foreground");
+
 		if (this.foreground != null) {
-			var fg = this.foreground.invoke(el);
-			if (fg != null) c.setForeground(fg);
+			var fgFunc = this.foreground.invoke(el);
+			if (fg != null) c.setForeground(fg = fgFunc);
+		}
+
+		if (this.transparency != null) {
+			var tp = this.transparency.invoke(el);
+			if (tp != null && fg != null) {
+				c.setForeground(new Color(fg.getRed(), fg.getGreen(), fg.getBlue(), (int) (255 * tp)));
+			}
 		}
 	}
 

@@ -8,7 +8,6 @@ import de.jClipCorn.util.lambda.Func1to1;
 import de.jClipCorn.util.lambda.Func2to1;
 
 import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 public class JCCSimpleColumnPrototype<TData> {
@@ -55,6 +54,14 @@ public class JCCSimpleColumnPrototype<TData> {
 
 	public JCCSimpleColumnPrototype<TData> withSize(String v) {
 		this.AutoResizeConfig = v;
+		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public JCCSimpleColumnPrototype<TData> withTransparency(Func1to1<TData, Double> v) {
+		if (this.CustomCellRenderer) throw new Error("cannot set transparency on an custom cell-renderer");
+
+		((JCCSimpleTableCellRenderer<TData>)this.CellRenderer).setTransparencyFunc(v);
 		return this;
 	}
 

@@ -8,7 +8,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "unrelgap, default, labelcompgap, default:grow, labelcompgap, max(default;75dlu), labelcompgap, max(default;75dlu), unrelgap"
-			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default:grow, linegap, default, linegap, default, linegap, default, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default:grow, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, unrelgap"
 		} ) {
 			name: "this"
 			"$sizePolicy": 1
@@ -162,6 +162,60 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 8
 				"gridY": 12
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnUpdateSelectedAnimeSeason"
+				"text": new FormMessage( null, "UpdateMetadataFrame.BtnUpdate7" )
+				"enabled": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateSelectedAnimeSeason", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 14
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbReplaceAnimeSeason"
+				"text": new FormMessage( null, "UpdateMetadataFrame.CBReplaceAnimeSeason" )
+				"selected": true
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onChangeAllowAnimeSeasonReplace", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 14
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnUpdateAllAnimeSeason"
+				"text": new FormMessage( null, "UpdateMetadataFrame.BtnUpdate8" )
+				"enabled": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateAllAnimeSeason", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 8
+				"gridY": 14
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnUpdateSelectedAnimeStudio"
+				"text": new FormMessage( null, "UpdateMetadataFrame.BtnUpdate9" )
+				"enabled": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateSelectedAnimeStudio", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 16
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbReplaceAnimeStudio"
+				"text": new FormMessage( null, "UpdateMetadataFrame.CBReplaceAnimeStudio" )
+				"selected": true
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onChangeAllowAnimeStudioReplace", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 16
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnUpdateAllAnimeStudio"
+				"text": new FormMessage( null, "UpdateMetadataFrame.BtnUpdate10" )
+				"enabled": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateAllAnimeStudio", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 8
+				"gridY": 16
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

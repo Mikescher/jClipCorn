@@ -80,6 +80,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_PLAY_VLC_AUTOPLAY;
 	public CCBoolProperty                                   PROP_PLAY_USESTANDARDONMISSINGVLC;
 	public CCBoolProperty                                   PROP_PLAY_VLCSINGLEINSTANCEMODE;
+	public CCBoolProperty                                   PROP_PLAY_EMULATE_MPV_SINGLEINSTANCE;
 	public CCEnumProperty<DoubleClickAction>                PROP_ON_DBLCLICK_MOVE;
 	public CCBoolProperty                                   PROP_USE_INTELLISORT;
 	public CCBoolProperty                                   PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT;
@@ -370,6 +371,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_PLAY_VLC_AUTOPLAY                      = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLC_AUTOPLAY",                      true);
 		PROP_PLAY_USESTANDARDONMISSINGVLC           = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_USESTANDARDONMISSINGVLC",           true);
 		PROP_PLAY_VLCSINGLEINSTANCEMODE             = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_VLCSINGLEINSTANCEMODE",             true);
+		PROP_PLAY_EMULATE_MPV_SINGLEINSTANCE        = new CCBoolProperty(CAT_PLAY,              this,   "PROP_PLAY_EMULATE_MPV_SINGLEINSTANCE",        true);
 
 		PROP_PLAY_MEDIAINFO_PATH                    = new CCExecutableProperty(CAT_TOOLS,       this,   "PROP_PLAY_MEDIAINFO_PATH",                    FSPath.Empty,                       MediaInfoPathConf.INST);
 		PROP_PLAY_FFMPEG_PATH                       = new CCExecutableProperty(CAT_TOOLS,       this,   "PROP_PLAY_FFMPEG_PATH",                       FSPath.Empty,                       FFMPEGPathConf.INST);

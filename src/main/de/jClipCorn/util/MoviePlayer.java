@@ -38,6 +38,13 @@ public class MoviePlayer {
 	private final static String DRIVE_2 = "H:" + FSPath.SEPERATOR; //$NON-NLS-1$
 	
 	private static Tuple<FSPath, String[]> lastVLCPath = Tuple.Create(FSPath.Empty, new String[0]);
+
+	private static Process lastMpvProcess = null;
+
+	private static boolean isMpvBinary(FSPath playerpath) {
+		if (FSPath.isNullOrEmpty(playerpath)) return false;
+		return playerpath.getFilenameWithoutExt().toLowerCase().contains("mpv"); //$NON-NLS-1$
+	}
 	
 	public static boolean play(CCMovie mov, NamedPathVar player) {
 		List<FSPath> al = new ArrayList<>();
@@ -138,12 +145,24 @@ public class MoviePlayer {
 				}
 			}
 			
+			boolean ismpv = isMpvBinary(playerpath.Item1);
+
+			if (ismpv && ccprops.PROP_PLAY_EMULATE_MPV_SINGLEINSTANCE.getValue()) {
+				if (lastMpvProcess != null && lastMpvProcess.isAlive() && lastMpvProcess.supportsNormalTermination()) {
+					lastMpvProcess.destroy();
+				}
+				lastMpvProcess = null;
+			}
+
 			try {
 
 				ProcessBuilder pb = new ProcessBuilder(parameters);
 				pb.redirectOutput(new File(ApplicationHelper.getNullFile()));
 				pb.redirectError(new File(ApplicationHelper.getNullFile()));
-				pb.start();
+				Process proc = pb.start();
+
+				if (ismpv) lastMpvProcess = proc;
+
 				return true;
 
 			} catch (IOException e) {

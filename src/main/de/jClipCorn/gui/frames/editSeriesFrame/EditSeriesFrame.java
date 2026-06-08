@@ -127,6 +127,8 @@ public class EditSeriesFrame extends JCCFrame
 		lsSeasons.setCellRenderer(new HFixListCellRenderer());
 		lsEpisodes.setCellRenderer(new HFixListCellRenderer());
 
+		edAnimeSeason.setComparator(new CCAnimeSeasonComparator());
+
 		DirtyUtil.initDirtyListenerRecursive(this::setDirtySeries,  pnlEditSeries);
 		DirtyUtil.initDirtyListenerRecursive(this::setDirtySeason,  pnlEditSeason);
 		DirtyUtil.initDirtyListenerRecursive(this::setDirtyEpisode, pnlEditEpisode);

@@ -16,11 +16,12 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * A multi-value tag field component that displays selected values as removable tags
@@ -31,6 +32,7 @@ public class JMultiSelectTagField extends JPanel {
 
     private final Supplier<List<String>> valueSupplier;
     private final Set<String> selectedValues;
+    private Comparator<String> comparator = null;
     private final JPanel tagPanel;
     private final JButton dropdownButton;
     private JPopupMenu popup;
@@ -54,7 +56,7 @@ public class JMultiSelectTagField extends JPanel {
     private JMultiSelectTagField(Supplier<List<String>> valueSupplier, boolean designmode) {
         super(new BorderLayout());
         this.valueSupplier = valueSupplier;
-        this.selectedValues = new HashSet<>();
+        this.selectedValues = new LinkedHashSet<>();
         this.checkboxes = new ArrayList<>();
         this.designmode = designmode;
         
@@ -276,6 +278,7 @@ public class JMultiSelectTagField extends JPanel {
     private void addValue(String value) {
         if (value != null && !value.trim().isEmpty()) {
             selectedValues.add(value.trim());
+            rebuildOrder();
             updateTagDisplay();
             firePropertyChange("selectedValues", null, getValues());
             fireChangeEvent();
@@ -300,7 +303,7 @@ public class JMultiSelectTagField extends JPanel {
     private void updateTagDisplay() {
         tagPanel.removeAll();
 
-        for (String value : selectedValues.stream().sorted().collect(Collectors.toList())) {
+        for (String value : selectedValues) {
             JPanel tag = createTag(value);
             tagPanel.add(tag);
         }
@@ -351,8 +354,27 @@ public class JMultiSelectTagField extends JPanel {
                 }
             }
         }
+        rebuildOrder();
         updateTagDisplay();
         fireChangeEvent();
+    }
+
+    /**
+     * Sets a comparator used to keep the selected tags sorted. When {@code null}
+     * (the default) the tags are displayed in the order they were supplied/added.
+     */
+    public void setComparator(Comparator<String> comparator) {
+        this.comparator = comparator;
+        rebuildOrder();
+        updateTagDisplay();
+    }
+
+    private void rebuildOrder() {
+        if (comparator == null) return;
+        List<String> sorted = new ArrayList<>(selectedValues);
+        sorted.sort(comparator);
+        selectedValues.clear();
+        selectedValues.addAll(sorted);
     }
 
     public void clearValues() {

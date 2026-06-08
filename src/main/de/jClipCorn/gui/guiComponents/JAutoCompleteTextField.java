@@ -6,6 +6,7 @@ import de.jClipCorn.gui.guiComponents.tags.TagsChangedListener;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -108,6 +109,13 @@ public class JAutoCompleteTextField extends JPanel {
      */
     public boolean hasValues() {
         return tagField.hasValues();
+    }
+
+    /**
+     * Sets a comparator used to keep the selected tags sorted.
+     */
+    public void setComparator(Comparator<String> comparator) {
+        tagField.setComparator(comparator);
     }
 
     public OverFlowMode getOverFlowMode() {

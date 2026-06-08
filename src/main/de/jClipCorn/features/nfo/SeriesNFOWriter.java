@@ -16,14 +16,20 @@ import org.jdom2.output.XMLOutputter;
 public class SeriesNFOWriter {
 
 	public static FSPath getNFOPath(CCSeries series) {
-		FSPath rootPath = series.guessSeriesBasePath();
+		return getNFOPath(series, series.guessSeriesBasePath());
+	}
+
+	public static FSPath getNFOPath(CCSeries series, FSPath rootPath) {
 		if (rootPath.isEmpty()) return FSPath.Empty;
 
 		return rootPath.append("tvshow.nfo");
 	}
 
 	public static FSPath getPosterPath(CCSeries series) {
-		FSPath rootPath = series.guessSeriesBasePath();
+		return getPosterPath(series, series.guessSeriesBasePath());
+	}
+
+	public static FSPath getPosterPath(CCSeries series, FSPath rootPath) {
 		if (rootPath.isEmpty()) return FSPath.Empty;
 
 		String coverExt = series.getMovieList().ccprops().PROP_COVER_TYPE.getValue();

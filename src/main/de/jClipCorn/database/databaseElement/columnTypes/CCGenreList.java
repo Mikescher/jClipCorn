@@ -358,7 +358,7 @@ public class CCGenreList {
 	}
 
 	public static CCGenreList fromJSONArray(String json) {
-		if (Str.isNullOrWhitespace(json)) return EMPTY;
+		if (Str.isNullOrWhitespace(json) || json.equals("[]")) return EMPTY;
 
 		try {
 			JSONArray arr = new JSONArray(json);

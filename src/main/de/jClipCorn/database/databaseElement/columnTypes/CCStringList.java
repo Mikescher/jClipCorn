@@ -45,7 +45,7 @@ public class CCStringList implements CCIterable<String> {
 	}
 	
 	public static CCStringList deserialize(String jsonString) throws CCFormatException {
-		if (jsonString == null || jsonString.trim().isEmpty()) {
+		if (jsonString == null || jsonString.trim().isEmpty() || jsonString.equals("[]")) {
 			return EMPTY;
 		}
 		

@@ -155,7 +155,7 @@ public class CCOnlineReferenceList implements CCIterable<CCSingleOnlineReference
 
 	@SuppressWarnings("nls")
 	public static CCOnlineReferenceList fromJSONArray(String json) {
-		if (Str.isNullOrWhitespace(json)) return EMPTY;
+		if (Str.isNullOrWhitespace(json) || json.equals("[]")) return EMPTY;
 
 		try {
 			JSONArray arr = new JSONArray(json);

@@ -70,7 +70,11 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 
 	public void initNfoPaths(CCSeries series) {
-		NfoCoverPath = SeasonNFOWriter.getPosterPath(series, this);
+		initNfoPaths(series, series.guessSeriesBasePath());
+	}
+
+	public void initNfoPaths(CCSeries series, FSPath basePath) {
+		NfoCoverPath = SeasonNFOWriter.getPosterPath(series, this, basePath);
 	}
 
 	public IEProperty[] getProperties()

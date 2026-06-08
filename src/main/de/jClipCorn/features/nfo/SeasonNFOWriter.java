@@ -7,7 +7,10 @@ import de.jClipCorn.util.filesystem.FSPath;
 @SuppressWarnings("nls")
 public class SeasonNFOWriter {
 	public static FSPath getPosterPath(CCSeries series, CCSeason season) {
-		FSPath basePath = series.guessSeriesBasePath();
+		return getPosterPath(series, season, series.guessSeriesBasePath());
+	}
+
+	public static FSPath getPosterPath(CCSeries series, CCSeason season, FSPath basePath) {
 		if (basePath.isEmpty()) return FSPath.Empty;
 
 		if (season.getEpisodeCount() == 0) return FSPath.Empty;

@@ -39,8 +39,6 @@ import de.jClipCorn.util.sqlwrapper.*;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.*;
 
 import static de.jClipCorn.database.driver.DatabaseStructure.*;
@@ -1020,8 +1018,6 @@ public class CCDatabase {
 					rs.close();
 				}
 
-				HashMap<Integer, CCEpisode> episodeMap = new HashMap<>();
-
 				// EPISODES
 				{
 					CCSQLStatement stmt = stmts.selectAllEpisodeTabStatement;
@@ -1039,7 +1035,6 @@ public class CCDatabase {
 						sea.beginUpdating();
 						CCEpisode episode = createEpisodeFromDatabase(rs, sea);
 						sea.directlyInsertEpisode(episode);
-						episodeMap.put(episode.getLocalID(), episode);
 						sea.abortUpdating();
 					}
 					rs.close();
@@ -1048,9 +1043,17 @@ public class CCDatabase {
 				for (CCSeason s : seasonMap.values()) s.enforceOrder();
 				for (CCSeries s : seriesMap.values()) s.enforceOrder();
 
-				for (CCSeries s : seriesMap.values()) s.initNfoPaths();
-				for (CCSeason s : seasonMap.values()) s.initNfoPaths(s.getSeries());
-				for (CCEpisode e : episodeMap.values()) e.initNfoPaths();
+				// NOTE: Series/Season NFO-paths depend on guessSeriesBasePath(), which iterates the (now attached) episodes, 
+				// so they must be (re)computed *here*, after the episodes are added. 
+				
+				HashMap<Integer, FSPath> seriesBasePaths = new HashMap<>();
+				for (CCSeries s : seriesMap.values()) {
+					FSPath basePath = s.guessSeriesBasePath();
+					seriesBasePaths.put(s.getLocalID(), basePath);
+					s.initNfoPaths(basePath);
+				}
+
+				for (CCSeason s : seasonMap.values()) s.initNfoPaths(s.getSeries(), seriesBasePaths.get(s.getSeries().getLocalID()));
 
 				ml.sortByIDAfterInitialLoad();
 			}

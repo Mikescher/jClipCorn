@@ -140,7 +140,7 @@ public class CCGroupList implements CCIterable<CCGroup> {
 	}
 
 	public static CCGroupList fromJSONArrayWithoutAddingNewGroups(CCMovieList ml, String json) {
-		if (Str.isNullOrWhitespace(json)) return new CCGroupList();
+		if (Str.isNullOrWhitespace(json) || json.equals("[]")) return new CCGroupList();
 
 		try {
 			JSONArray arr = new JSONArray(json);

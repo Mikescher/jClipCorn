@@ -56,8 +56,12 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	}
 
 	public void initNfoPaths() {
-		NfoPath = SeriesNFOWriter.getNFOPath(this);
-		NfoCoverPath = SeriesNFOWriter.getPosterPath(this);
+		initNfoPaths(guessSeriesBasePath());
+	}
+
+	public void initNfoPaths(FSPath basePath) {
+		NfoPath = SeriesNFOWriter.getNFOPath(this, basePath);
+		NfoCoverPath = SeriesNFOWriter.getPosterPath(this, basePath);
 	}
 
 	@Override

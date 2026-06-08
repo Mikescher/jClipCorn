@@ -121,7 +121,7 @@ public class CCDateTimeList implements CCIterable<CCDateTime> {
 	}
 
 	public static CCDateTimeList fromJSONArray(String json) {
-		if (Str.isNullOrWhitespace(json)) return new CCDateTimeList();
+		if (Str.isNullOrWhitespace(json) || json.equals("[]")) return new CCDateTimeList();
 
 		try {
 			JSONArray arr = new JSONArray(json);

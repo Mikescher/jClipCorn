@@ -46,6 +46,14 @@ test {
 	}
 }
 
+// allow the Makefile run-* targets to override the working directory
+// (mirrors the WORKING_DIRECTORY of the IntelliJ run configurations)
+run {
+	if (project.hasProperty('runWorkingDir')) {
+		workingDir = file(project.runWorkingDir)
+	}
+}
+
 project.ext {
 	appmain    = 'de.jClipCorn.Main'
 

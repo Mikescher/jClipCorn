@@ -1,8 +1,28 @@
 
-.PHONY: build betaJar anyReleaseJar changelog run-tests jformdesigner jfd
+.PHONY: build betaJar anyReleaseJar changelog run-tests jformdesigner jfd \
+        run run-prodcopy run-fresh run-debug run-prod-ro run-prod-rw
 
 build:
 	./gradlew build
+
+run: run-prodcopy
+
+run-prodcopy:
+	./gradlew run -PrunWorkingDir="$(HOME)/temp/jcc-prodcopy"
+
+run-fresh:
+	rm -rf   "$(HOME)/temp/jcc_freshcopy"
+	mkdir -p "$(HOME)/temp/jcc_freshcopy"
+	./gradlew run -PrunWorkingDir="$(HOME)/temp/jcc_freshcopy"
+
+run-debug:
+	./gradlew run -PrunWorkingDir="$(HOME)/temp/jcc_debug"
+
+run-prod-ro:
+	./gradlew run -PrunWorkingDir="$(HOME)/mounts/Melkor_NFS/Kreios/ClipCorn" --args="-ro"
+
+run-prod-rw:
+	./gradlew run -PrunWorkingDir="$(HOME)/mounts/Melkor_NFS/Kreios/ClipCorn"
 
 
 # create beta-release

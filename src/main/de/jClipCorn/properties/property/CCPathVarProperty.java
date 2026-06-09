@@ -80,9 +80,14 @@ public class CCPathVarProperty extends CCProperty<PathSyntaxVar> {
 				((CCPathVarPropertyPanel)c).Field2.getPath());
 	}
 
+	private String        _valueCacheKey = null;
+	private PathSyntaxVar _valueCache    = null;
+
 	@Override
 	public PathSyntaxVar getValue() {
 		String val = properties.getProperty(identifier);
+
+		if (val != null && val.equals(_valueCacheKey)) return _valueCache;
 
 		if (val == null) {
 			CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.PropNotFound", identifier)); //$NON-NLS-1$
@@ -92,10 +97,17 @@ public class CCPathVarProperty extends CCProperty<PathSyntaxVar> {
 
 		try {
 			String[] sval = val.split(";"); //$NON-NLS-1$
-			if (sval.length == 0) return PathSyntaxVar.EMPTY;
-			if (sval.length == 2) return new PathSyntaxVar("", Str.fromBase64(sval[0]), CCPath.create(Str.fromBase64(sval[1])));
-			if (sval.length == 3) return new PathSyntaxVar(Str.fromBase64(sval[0]), Str.fromBase64(sval[1]), CCPath.create(Str.fromBase64(sval[2])));
-			throw new Exception("invalid PathSyntaxVar value '" + val + "'");
+			PathSyntaxVar result;
+			
+			if (sval.length == 0)      result = PathSyntaxVar.EMPTY;
+			else if (sval.length == 2) result = new PathSyntaxVar("", Str.fromBase64(sval[0]), CCPath.create(Str.fromBase64(sval[1])));
+			else if (sval.length == 3) result = new PathSyntaxVar(Str.fromBase64(sval[0]), Str.fromBase64(sval[1]), CCPath.create(Str.fromBase64(sval[2])));
+			else throw new Exception("invalid PathSyntaxVar value '" + val + "'");
+
+			_valueCacheKey = val;
+			_valueCache    = result;
+
+			return result;
 		} catch(Exception e) {
 			CCLog.addWarning(LocaleBundle.getFormattedString("LogMessage.PropFormatError", identifier, mclass.getName())); //$NON-NLS-1$
 			setDefault();

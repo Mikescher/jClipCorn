@@ -195,12 +195,21 @@ public class ImageUtilities {
 		graphics.drawImage(bi, 0, 0, width, height, null);
 		graphics.dispose();
 		
-		graphics.setComposite(AlphaComposite.Src);
-		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		graphics.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
-		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-
 		return resizedImage;
+	}
+
+	public static BufferedImage smoothResize(BufferedImage bi, int width, int height) {
+		BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+		Graphics2D graphics = resized.createGraphics();
+		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		graphics.setRenderingHint(RenderingHints.KEY_RENDERING,     RenderingHints.VALUE_RENDER_QUALITY);
+		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON);
+
+		graphics.drawImage(bi, 0, 0, width, height, null);
+		graphics.dispose();
+
+		return resized;
 	}
     
 	private static boolean isCorrectlySized(BufferedImage bb, int prefWidth, int prefHeight) {

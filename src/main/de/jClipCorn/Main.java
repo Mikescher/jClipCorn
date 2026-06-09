@@ -31,7 +31,7 @@ import de.jClipCorn.util.helper.SwingUtils;
 
 public class Main {
 	public final static String TITLE             = "jClipCorn";                                                             //$NON-NLS-1$
-	public final static String VERSION           = /*<gradle_version_marker>*/"1.10.11.16"/*</gradle_version_marker>*/;     //$NON-NLS-1$
+	public final static String VERSION           = /*<gradle_version_marker>*/"1.10.11.17"/*</gradle_version_marker>*/;     //$NON-NLS-1$
 	public final static String DBVERSION         = "33";                                                                    //$NON-NLS-1$
 	public final static String JXMLVER           = "10";                                                                    //$NON-NLS-1$
 	public final static String DATABASE_NAME     = "ClipCornDB";                                                            //$NON-NLS-1$
@@ -43,6 +43,12 @@ public class Main {
 
 	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public static boolean ARG_READONLY = false;
+
+	// force a CCMemoryCoverCache regardless of the DatabaseDriver
+	public static boolean ARG_MEM_COVER_CACHE = false;
+
+	// force a CCPrevCoverCache regardless of the DatabaseDriver
+	public static boolean ARG_PREV_COVER_CACHE = false;
 
 	private static CCProperties _uiPropertyAcc;
 
@@ -134,12 +140,32 @@ public class Main {
 		@SuppressWarnings("nls")
 		String[] readOnlyArgs = {"readonly", "-readonly", "--readonly", "read-only", "-read-only", "--read-only", "ro", "-ro", "--ro"};
 
+		String[] memCoverCacheArgs = {"mem-cover-cache", "-mem-cover-cache", "--mem-cover-cache"};
+
+		String[] prevCoverCacheArgs = {"prev-cover-cache", "-prev-cover-cache", "--prev-cover-cache"};
+
 		for (String arg : args) {
 			for (String readOnlyArg : readOnlyArgs) {
 				if (arg.equalsIgnoreCase(readOnlyArg)) {
 					Main.ARG_READONLY = true;
 
 					CCLog.addDebug("ReadOnly Mode activated (" + arg + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+			}
+
+			for (String memCoverCacheArg : memCoverCacheArgs) {
+				if (arg.equalsIgnoreCase(memCoverCacheArg)) {
+					Main.ARG_MEM_COVER_CACHE = true;
+
+					CCLog.addDebug("Memory CoverCache forced (" + arg + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+			}
+
+			for (String prevCoverCacheArg : prevCoverCacheArgs) {
+				if (arg.equalsIgnoreCase(prevCoverCacheArg)) {
+					Main.ARG_PREV_COVER_CACHE = true;
+
+					CCLog.addDebug("Preview CoverCache forced (" + arg + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}

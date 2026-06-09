@@ -69,6 +69,7 @@ public class Statements {
 
 	public CCSQLStatement selectCoversFullStatement;
 	public CCSQLStatement selectCoversFastStatement;
+	public CCSQLStatement selectSingleCoverStatement;
 	public CCSQLStatement insertCoversStatement;
 	public CCSQLStatement removeCoversStatement;
 
@@ -161,6 +162,7 @@ public class Statements {
 
 			selectCoversFullStatement = SQLBuilder.createSelectAll(TAB_COVERS).build(d, statements);
 			selectCoversFastStatement = SQLBuilder.createSelectAll(TAB_COVERS).remSelectField(COL_CVRS_PREVIEW).build(d, statements);
+			selectSingleCoverStatement = SQLBuilder.createSelectSingle(TAB_COVERS, COL_CVRS_ID).build(d, statements);
 			insertCoversStatement     = SQLBuilder.createInsertSingle(TAB_COVERS).build(d, statements);
 			removeCoversStatement     = SQLBuilder.createDelete(TAB_COVERS).addPreparedWhereCondition(COL_CVRS_ID).build(d, statements);
 

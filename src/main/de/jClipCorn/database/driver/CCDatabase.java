@@ -106,6 +106,14 @@ public class CCDatabase {
 	}
 
 	public ICoverCache createCoverCache(CCProperties ccprops) {
+		if (Main.ARG_PREV_COVER_CACHE) {
+			return new CCPrevCoverCache(this, ccprops);
+		}
+
+		if (Main.ARG_MEM_COVER_CACHE) {
+			return new CCMemoryCoverCache(this, ccprops);
+		}
+
 		switch (_driver) {
 			case SQLITE:
 				return new CCDefaultCoverCache(this, ccprops);
@@ -1140,6 +1148,28 @@ public class CCDatabase {
 			}
 		} catch (SQLException | SQLWrapperException | CCFormatException e) {
 			CCLog.addError(e);
+		}
+	}
+
+	public byte[] getCoverPreviewOrNull(int cid) {
+		try {
+			CCSQLStatement stmt = stmts.selectSingleCoverStatement;
+			stmt.clearParameters();
+			stmt.setInt(DatabaseStructure.COL_CVRS_ID, cid);
+
+			CCSQLResultSet rs = stmt.executeQuery(this);
+
+			byte[] pv = null;
+			if (rs.next()) {
+				pv = rs.getBlob(DatabaseStructure.COL_CVRS_PREVIEW);
+			}
+
+			rs.close();
+
+			return pv;
+		} catch (SQLException | SQLWrapperException e) {
+			CCLog.addError(e);
+			return null;
 		}
 	}
 

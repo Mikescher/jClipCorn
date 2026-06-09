@@ -21,9 +21,9 @@ import java.io.FileInputStream;
 import java.util.*;
 
 public class CCMemoryCoverCache implements ICoverCache {
-	private Map<Integer, BufferedImage> _data;
-	private final HashMap<Integer, CCCoverData> _elements;
-	
+	protected Map<Integer, BufferedImage> _data;
+	protected final HashMap<Integer, CCCoverData> _elements;
+
 	protected final CCDatabase _db;
 	protected final CCProperties _ccprops;
 

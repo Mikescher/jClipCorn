@@ -7,6 +7,9 @@ build:
 
 run: run-prodcopy
 
+run-local:
+	./gradlew run -PrunWorkingDir="$(shell pwd)/_local" --args="-prev-cover-cache"
+
 run-prodcopy:
 	./gradlew run -PrunWorkingDir="$(HOME)/temp/jcc-prodcopy"
 

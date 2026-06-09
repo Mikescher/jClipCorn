@@ -8,27 +8,13 @@ import java.util.regex.Pattern;
 @SuppressWarnings("nls")
 public class RegExHelper {
 	public static boolean startsWithRegEx(String regEx, String input) {
-		Matcher matcher = Pattern.compile(regEx).matcher(input);
-
-		while (matcher.find()) {
-			if (matcher.start() == 0) {
-				return true;
-			}
-		}
-
-		return false;
+		// lookingAt() anchors the match at index 0 (no full-string scan), which is exactly what the old
+		// find()-loop computed ("is there a match starting at position 0?") - but without scanning the whole input.
+		return Pattern.compile(regEx).matcher(input).lookingAt();
 	}
 
 	public static boolean startsWithRegEx(Pattern regEx, String input) {
-		Matcher matcher = regEx.matcher(input);
-
-		while (matcher.find()) {
-			if (matcher.start() == 0) {
-				return true;
-			}
-		}
-
-		return false;
+		return regEx.matcher(input).lookingAt();
 	}
 
 	public static String find(String regEx, String input) {

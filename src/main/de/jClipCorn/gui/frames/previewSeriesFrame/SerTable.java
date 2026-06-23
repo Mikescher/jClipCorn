@@ -299,8 +299,10 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 	}
 
 	private String formatScoreTooltip(CCUserScore score, String comm) {
-		if (score == CCUserScore.RATING_NO) return null;
-		if (Str.isNullOrWhitespace(comm)) return score.asString();
+		if (Str.isNullOrWhitespace(comm)) {
+			if (score == CCUserScore.RATING_NO) return null;
+			return score.asString();
+		}
 
 		return HTMLFormatter.formatTooltip(score.asString(), Str.trim(comm));
 	}

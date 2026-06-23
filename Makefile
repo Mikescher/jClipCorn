@@ -33,14 +33,20 @@ run-prod-rw:
 # afterwards, copy the created jar to the Kreios NFS share (only if build succeeded, share is mounted and target dir exists)
 betaJar:
 	./gradlew betaJar
-	@dest="/home/mike/mounts/Melkor_NFS/Kreios/ClipCorn/"; \
-	mnt="/home/mike/mounts/Melkor_NFS/Kreios"; \
+	@echo ""; \
+	dest1="/home/mike/mounts/Melkor_NFS/Kreios/ClipCorn/"; \
+	dest2="/home/mike/mounts/Melkor_WG/Kreios/ClipCorn/"; \
+	mnt1="/home/mike/mounts/Melkor_NFS/Kreios"; \
+	mnt2="/home/mike/mounts/Melkor_WG/Kreios"; \
 	jar=$$(ls -t _mybuilds/*.jar 2>/dev/null | head -n1); \
-	if mountpoint -q "$$mnt" && [ -d "$$dest" ]; then \
-		echo "Copying '$$jar' to file://$$dest"; \
-		cp "$$jar" "$$dest"; \
+	if mountpoint -q "$$mnt1" && [ -d "$$dest1" ]; then \
+		echo "Copying '$$jar' to file://$$dest1"; \
+		cp "$$jar" "$$dest1"; \
+	elif mountpoint -q "$$mnt2" && [ -d "$$dest2" ]; then \
+		echo "Copying '$$jar' to file://$$dest2"; \
+		cp "$$jar" "$$dest2"; \
 	else \
-		echo "Skip copy: '$$mnt' not mounted or '$$dest' does not exist"; \
+		echo "Skip copy: '$$mnt1'/'$$mnt2' not mounted or '$$dest1'/'$$dest2' does not exist"; \
 	fi
 
 

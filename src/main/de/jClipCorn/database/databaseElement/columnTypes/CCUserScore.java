@@ -93,7 +93,7 @@ public enum CCUserScore implements ContinoousEnum<CCUserScore> {
 				case RATING_III: return Resources.ICN_TABLE_SCORE_3_COMMENT;
 				case RATING_IV:  return Resources.ICN_TABLE_SCORE_4_COMMENT;
 				case RATING_V:   return Resources.ICN_TABLE_SCORE_5_COMMENT;
-				case RATING_NO:  return null;
+				case RATING_NO:  return Resources.ICN_TABLE_SCORE_NO_COMMENT;
 				default:         return null;
 			}
 		}

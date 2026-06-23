@@ -965,10 +965,11 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				series -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_INVALID_ONLINESCORE, series));
 
 		// ScoreComment is set but Score is unset
+		// (allowed for series where no season is fully viewed - a comment can describe the ongoing watch progress)
 		addSeriesValidation(
 				DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING,
 				o -> o.ValidateSeries,
-				series -> series.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(series.getScoreComment()),
+				series -> series.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(series.getScoreComment()) && series.iteratorSeasons().any(CCSeason::isViewed),
 				series -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING, series));
 
 		// SpecialVersion contains untrimmed values
@@ -1239,10 +1240,11 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				));
 
 		// ScoreComment is set but Score is unset
+		// (allowed for seasons that are not fully viewed - a comment can describe the ongoing watch progress)
 		addSeasonValidation(
 				DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING,
 				o -> o.ValidateSeasons,
-				season -> season.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(season.getScoreComment()),
+				season -> season.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(season.getScoreComment()) && season.isViewed(),
 				season -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING, season));
 
 		// NFO poster file missing (season)

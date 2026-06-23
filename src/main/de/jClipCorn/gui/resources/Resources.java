@@ -385,6 +385,8 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_TABLE_SCORE_5_COMMENT   = registerMultisizeIcon("/icons/table/score/award_star_gold_3_comment.png");
 	public final static MultiSizeIconRef ICN_TABLE_SCORE_6_COMMENT   = registerMultisizeIcon("/icons/table/score/bullet_purple_comment.png");
 
+	public final static MultiSizeIconRef ICN_TABLE_SCORE_NO_COMMENT  = registerMultisizeIcon("/icons/table/score/attach.png");
+
 	public final static IconRef ICN_TABLE_FORMAT_0 			= register16x16Icon("/icons/table/format/ext0.png");
 	public final static IconRef ICN_TABLE_FORMAT_1 			= register16x16Icon("/icons/table/format/ext1.png");
 	public final static IconRef ICN_TABLE_FORMAT_2 			= register16x16Icon("/icons/table/format/ext2.png");

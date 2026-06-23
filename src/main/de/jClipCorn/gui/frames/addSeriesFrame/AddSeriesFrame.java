@@ -3,6 +3,7 @@ package de.jClipCorn.gui.frames.addSeriesFrame;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.SeriesDataPack;
@@ -146,8 +147,12 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		// auto-create an empty season that carries those values.
 		if (!animeSeason.isEmpty() || !animeStudio.isEmpty()) {
 			newS.createNewSeason(newSeas -> {
+				newSeas.Title.set("<untitled>"); //$NON-NLS-1$
 				newSeas.AnimeSeason.set(animeSeason);
 				newSeas.AnimeStudio.set(animeStudio);
+
+				Integer year = extractAnimeSeasonYear(animeSeason);
+				if (year != null) newSeas.Year.set(year);
 			});
 		}
 
@@ -155,6 +160,15 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		esf.setVisible(true);
 
 		dispose();
+	}
+
+	// Extract the year from the first anime-season value matching "<Season> <Year>" (e.g. "Fall 2024"), or null if none.
+	private Integer extractAnimeSeasonYear(CCStringList animeSeason) {
+		for (String s : animeSeason) {
+			var m = CCDatabaseElement.REGEX_ANIMESEASON.matcher(s);
+			if (m.matches()) return Integer.parseInt(m.group(2));
+		}
+		return null;
 	}
 
 	private boolean checkUserData(java.util.List<UserDataProblem> ret)

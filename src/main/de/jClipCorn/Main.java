@@ -50,6 +50,10 @@ public class Main {
 	// force a CCPrevCoverCache regardless of the DatabaseDriver
 	public static boolean ARG_PREV_COVER_CACHE = false;
 
+	// CCPath syntax variable overrides supplied via commandline (--ccpath key=value)
+	// these have the highest priority and override the values configured in the properties
+	public static final java.util.LinkedHashMap<String, String> ARG_CCPATH_OVERRIDES = new java.util.LinkedHashMap<>();
+
 	private static CCProperties _uiPropertyAcc;
 
 	public static void main(String[] arg) {
@@ -144,6 +148,8 @@ public class Main {
 
 		String[] prevCoverCacheArgs = {"prev-cover-cache", "-prev-cover-cache", "--prev-cover-cache"};
 
+		String[] ccPathArgs = {"ccpath", "-ccpath", "--ccpath"};
+
 		for (String arg : args) {
 			for (String readOnlyArg : readOnlyArgs) {
 				if (arg.equalsIgnoreCase(readOnlyArg)) {
@@ -166,6 +172,26 @@ public class Main {
 					Main.ARG_PREV_COVER_CACHE = true;
 
 					CCLog.addDebug("Preview CoverCache forced (" + arg + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+			}
+		}
+
+		// "--ccpath key=value" - the variable name and value are supplied as the following argument
+		for (int i = 0; i < args.length; i++) {
+			for (String ccPathArg : ccPathArgs) {
+				if (args[i].equalsIgnoreCase(ccPathArg) && i + 1 < args.length) {
+					String kv = args[i + 1];
+					int sep = kv.indexOf('=');
+					if (sep > 0) {
+						String key = kv.substring(0, sep);
+						String value = kv.substring(sep + 1);
+						Main.ARG_CCPATH_OVERRIDES.put(key, value);
+						CCLog.addInformation("CCPath syntax variable overwritten via commandline: '" + key + "' := '" + value + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					} else {
+						CCLog.addWarning("Invalid --ccpath argument (expected 'key=value'): '" + kv + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+					}
+					i++; // consume the value argument
+					break;
 				}
 			}
 		}

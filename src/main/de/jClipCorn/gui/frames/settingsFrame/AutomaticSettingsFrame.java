@@ -25,7 +25,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public abstract class AutomaticSettingsFrame extends JCCFrame {
 	private static final long serialVersionUID = 4681197289662529891L;
@@ -238,13 +237,22 @@ public abstract class AutomaticSettingsFrame extends JCCFrame {
 				.filter(p -> filterBySearch(p, filter))
 				.enumerate();
 
-		var rowspec = CCStreams
-				.iterate(props)
-				.map(p -> new RowSpec[]{FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, p.getComponentBottomMargin() ? FormSpecs.UNRELATED_GAP_ROWSPEC : null})
-				.flatten(CCStreams::iterate)
-				.filter(Objects::nonNull)
-				.append(FormSpecs.RELATED_GAP_ROWSPEC)
-				.enumerate();
+		// in the PATHSYNTAX tab we additionally render the (readonly) CCPath syntax variables that were overridden via commandline (--ccpath key=value)
+		boolean showCmdlineOverrides = category.equals(CCProperties.CAT_PATHSYNTAX) && filter.isEmpty() && !Main.ARG_CCPATH_OVERRIDES.isEmpty();
+
+		List<RowSpec> rowspec = new ArrayList<>();
+		for (final CCProperty<Object> p : props) {
+			rowspec.add(FormSpecs.RELATED_GAP_ROWSPEC);
+			rowspec.add(FormSpecs.DEFAULT_ROWSPEC);
+			if (p.getComponentBottomMargin()) rowspec.add(FormSpecs.UNRELATED_GAP_ROWSPEC);
+		}
+		if (showCmdlineOverrides) {
+			for (int i = 0; i < Main.ARG_CCPATH_OVERRIDES.size(); i++) {
+				rowspec.add(FormSpecs.RELATED_GAP_ROWSPEC);
+				rowspec.add(FormSpecs.DEFAULT_ROWSPEC);
+			}
+		}
+		rowspec.add(FormSpecs.RELATED_GAP_ROWSPEC);
 
 		pnlTab.setLayout(new FormLayout(colspec, rowspec.toArray(new RowSpec[0])));
 
@@ -287,8 +295,65 @@ public abstract class AutomaticSettingsFrame extends JCCFrame {
 
 			if (p.getComponentBottomMargin()) c++;
 		}
-		
+
+		if (showCmdlineOverrides) {
+			for (var e : Main.ARG_CCPATH_OVERRIDES.entrySet()) {
+				JLabel info = new JLabel(LocaleBundle.getString("Settingsframe.cmdlinePathVar")); //$NON-NLS-1$
+				pnlTab.add(info, "2, " + c + ", right, center"); //$NON-NLS-1$ //$NON-NLS-2$
+
+				pnlTab.add(buildReadonlyOverrideComponent(e.getKey(), e.getValue()), "4, " + c + ", fill, center"); //$NON-NLS-1$ //$NON-NLS-2$
+
+				c += 2;
+			}
+		}
+
 		return tabOrder;
+	}
+
+	@SuppressWarnings("nls")
+	private JPanel buildReadonlyOverrideComponent(String key, String value) {
+		JPanel pnl = new JPanel();
+
+		// pin the host-label column to the exact width the "Host" label occupies in the normal rows,
+		// so the Key/Value columns line up with the editable variables above
+		int hostLabelWidth = new JLabel(LocaleBundle.getString("CCPathVarProperty.Host")).getPreferredSize().width;
+
+		pnl.setLayout(new FormLayout(
+			new ColumnSpec[]
+			{
+				FormSpecs.UNRELATED_GAP_COLSPEC,              //
+				ColumnSpec.decode(hostLabelWidth + "px"),    // (host label slot)
+				FormSpecs.UNRELATED_GAP_COLSPEC,              //
+				ColumnSpec.decode("110px"),                  // (host field slot)
+				FormSpecs.UNRELATED_GAP_COLSPEC,              //
+				ColumnSpec.decode("default"),                // "Key" label
+				FormSpecs.UNRELATED_GAP_COLSPEC,              //
+				ColumnSpec.decode("80px"),                   // key field
+				FormSpecs.UNRELATED_GAP_COLSPEC,             //
+				ColumnSpec.decode("default"),                // "Value" label
+				FormSpecs.UNRELATED_GAP_COLSPEC,             //
+				ColumnSpec.decode("default:grow"),           // value field
+				FormSpecs.UNRELATED_GAP_COLSPEC,             //
+			},
+			new RowSpec[]
+			{
+				FormSpecs.PREF_ROWSPEC,
+			}));
+
+		// where the "Host" label + host input field normally are, show the source marker instead (spans both columns)
+		pnl.add(new JLabel(LocaleBundle.getString("Settingsframe.cmdlinePathVarSource")), "2, 1, 3, 1, left, default");
+
+		pnl.add(new JLabel(LocaleBundle.getString("CCPathVarProperty.Key")), "6, 1, fill, default");
+		var fldKey = new JTextField(key);
+		fldKey.setEditable(false);
+		pnl.add(fldKey, "8, 1, fill, default");
+
+		pnl.add(new JLabel(LocaleBundle.getString("CCPathVarProperty.Value")), "10, 1, fill, default");
+		var fldValue = new JTextField(value);
+		fldValue.setEditable(false);
+		pnl.add(fldValue, "12, 1, fill, default");
+
+		return pnl;
 	}
 
 	private boolean filterBySearch(CCProperty<Object> prop, Opt<String> filter) {

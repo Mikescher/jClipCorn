@@ -21,6 +21,7 @@ import de.jClipCorn.util.datatypes.CharListMatchType;
 import de.jClipCorn.util.datatypes.ElemFieldMatchType;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTimeFormat;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ApplicationHelper;
@@ -646,6 +647,17 @@ public class CCProperties implements ICCPropertySource {
 
 		PathSyntaxVar v10 = PROP_PATHSYNTAX_VAR10.getValue();
 		if (!Str.isNullOrWhitespace(v10.Key) && (Str.isNullOrWhitespace(v10.Hostname) || v10.Hostname.equalsIgnoreCase(hostname))) r.add(v10);
+
+		// commandline overrides (--ccpath key=value) have the highest priority and shadow the configured variables
+		if (!Main.ARG_CCPATH_OVERRIDES.isEmpty()) {
+			r.removeIf(v -> Main.ARG_CCPATH_OVERRIDES.containsKey(v.Key));
+
+			List<PathSyntaxVar> overrides = new ArrayList<>();
+			for (var e : Main.ARG_CCPATH_OVERRIDES.entrySet()) {
+				overrides.add(new PathSyntaxVar(Str.Empty, e.getKey(), CCPath.create(e.getValue())));
+			}
+			r.addAll(0, overrides);
+		}
 
 		return r;
 	}

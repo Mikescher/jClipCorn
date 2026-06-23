@@ -1,0 +1,81 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "type": "java",
+            "name": "Main [local]",
+            "request": "launch",
+            "mainClass": "de.jClipCorn.Main",
+            "projectName": "jClipCorn",
+            "cwd": "${workspaceFolder}/_local",
+            "args": ["-prev-cover-cache"]
+        },
+
+        {
+            "type": "java",
+            "name": "Main [prodcopy]",
+            "request": "launch",
+            "mainClass": "de.jClipCorn.Main",
+            "projectName": "jClipCorn",
+            "cwd": "${userHome}/temp/jcc-prodcopy"
+        },
+
+        {
+            "type": "java",
+            "name": "Main [freshcopy]",
+            "request": "launch",
+            "mainClass": "de.jClipCorn.Main",
+            "projectName": "jClipCorn",
+            "cwd": "${userHome}/temp/jcc_freshcopy"
+        },
+
+        {
+            "type": "java",
+            "name": "Main [debug]",
+            "request": "launch",
+            "mainClass": "de.jClipCorn.Main",
+            "projectName": "jClipCorn",
+            "cwd": "${userHome}/temp/jcc_debug"
+        },
+
+        {
+            "type": "java",
+            "name": "Main (prod - ro)",
+            "request": "launch",
+            "mainClass": "de.jClipCorn.Main",
+            "projectName": "jClipCorn",
+            "cwd": "${userHome}/mounts/Melkor_NFS/Kreios/ClipCorn",
+            "args": ["-ro"]
+        },
+
+        {
+            "type": "java",
+            "name": "[!!] Main (prod - rw)",
+            "request": "launch",
+            "mainClass": "de.jClipCorn.Main",
+            "projectName": "jClipCorn",
+            "cwd": "${userHome}/mounts/Melkor_NFS/Kreios/ClipCorn"
+        },
+
+        {
+            "type": "java",
+            "name": "TestMetadataRunner_Init",
+            "request": "launch",
+            "mainClass": "de.jClipCorn.test.TestMetadataRunner_Init",
+            "projectName": "jClipCorn"
+        },
+
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        }
+        
+    ]
+}

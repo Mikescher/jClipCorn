@@ -19,6 +19,10 @@ public class DatabaseValidatorOptions {
 	public boolean FindEmptyDirectories;
 	public boolean ValidateNfoFiles;
 
+	// When false (default) the NFO-content and poster checks only compare filesizes (cheap, no file reads).
+	// When true the full checks are performed (read+compare NFO text, read+SHA256 the poster file) - much slower over network shares.
+	public boolean ValidateNfoFullComparison;
+
 	public boolean IgnoreDuplicateIfos;
 
 	public DatabaseValidatorOptions() { }

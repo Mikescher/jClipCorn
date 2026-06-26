@@ -165,7 +165,7 @@ new FormModel {
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "0dlu:grow, labelcompgap, 1dlu:grow, labelcompgap, 1dlu:grow, labelcompgap, 1dlu:grow"
-				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default"
+				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, unrelgap, default"
 			} ) {
 				name: "panel2"
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
@@ -273,6 +273,38 @@ new FormModel {
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 5
 					"gridY": 7
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbValNfoFullCompare"
+					"text": new FormMessage( null, "CheckDatabaseFrame.cbValNfoFullCompare.text" )
+					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 7
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnPresetFull"
+					"text": new FormMessage( null, "CheckDatabaseFrame.btnPresetFull.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "presetFull", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 9
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnPresetDefault"
+					"text": new FormMessage( null, "CheckDatabaseFrame.btnPresetDefault.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "presetDefault", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 9
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnPresetQuick"
+					"text": new FormMessage( null, "CheckDatabaseFrame.btnPresetQuick.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "presetQuick", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 9
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2

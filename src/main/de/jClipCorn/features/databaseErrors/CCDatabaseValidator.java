@@ -684,16 +684,30 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					var nfoPath = MovieNFOWriter.getNFOPath(mov);
 					if (!nfoPath.exists()) return;
 					try {
-						var existing = nfoPath.readAsUTF8TextFile();
 						var generated = MovieNFOWriter.generateNFO(mov);
-						if (!existing.equals(generated)) {
-							e.add(DatabaseError.createSingle(
-									movielist,
-									DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, mov,
-									"Path", nfoPath.toString(),
-									"Actual", existing.replace("\r", "\\r").replace("\n", "\\n"),
-									"Expected", generated.replace("\r", "\\r").replace("\n", "\\n")
-							));
+						if (Options.ValidateNfoFullComparison) {
+							var existing = nfoPath.readAsUTF8TextFile();
+							if (!existing.equals(generated)) {
+								e.add(DatabaseError.createSingle(
+										movielist,
+										DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, mov,
+										"Path", nfoPath.toString(),
+										"Actual", existing.replace("\r", "\\r").replace("\n", "\\n"),
+										"Expected", generated.replace("\r", "\\r").replace("\n", "\\n")
+								));
+							}
+						} else {
+							long actualSize   = nfoPath.filesize().getBytes();
+							long expectedSize = generated.getBytes(Str.UTF8).length;
+							if (actualSize != expectedSize) {
+								e.add(DatabaseError.createSingle(
+										movielist,
+										DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, mov,
+										"Path", nfoPath.toString(),
+										"Actual.Filesize", String.valueOf(actualSize),
+										"Expected.Filesize", String.valueOf(expectedSize)
+								));
+							}
 						}
 					} catch (Exception ignored) { }
 				});
@@ -727,18 +741,31 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					if (posterPath.isEmpty() || !posterPath.exists()) return;
 					var coverData = mov.getCoverInfo();
 					if (coverData == null) return;
-					try (FileInputStream fis = new FileInputStream(posterPath.toFile())) {
-						String fileHash = DigestUtils.sha256Hex(fis).toUpperCase();
-						if (!fileHash.equals(coverData.Checksum)) {
+					if (Options.ValidateNfoFullComparison) {
+						try (FileInputStream fis = new FileInputStream(posterPath.toFile())) {
+							String fileHash = DigestUtils.sha256Hex(fis).toUpperCase();
+							if (!fileHash.equals(coverData.Checksum)) {
+								e.add(DatabaseError.createSingle(
+										movielist,
+										DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH, mov,
+										"Path", posterPath.toString(),
+										"ActualHash", fileHash,
+										"ExpectedHash", coverData.Checksum
+								));
+							}
+						} catch (Exception ignored) { }
+					} else {
+						var fsz = posterPath.filesize();
+						if (!CCFileSize.isEqual(fsz, coverData.Filesize)) {
 							e.add(DatabaseError.createSingle(
 									movielist,
 									DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH, mov,
 									"Path", posterPath.toString(),
-									"ActualHash", fileHash,
-									"ExpectedHash", coverData.Checksum
+									"Actual.Filesize", String.valueOf(fsz.getBytes()),
+									"Expected.Filesize", String.valueOf(coverData.Filesize.getBytes())
 							));
 						}
-					} catch (Exception ignored) { }
+					}
 				});
 
 		// Missing file checksums
@@ -1091,16 +1118,30 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					var nfoPath = SeriesNFOWriter.getNFOPath(series);
 					if (!nfoPath.exists()) return;
 					try {
-						var existing = nfoPath.readAsUTF8TextFile();
 						var generated = SeriesNFOWriter.generateNFO(series);
-						if (!existing.equals(generated)) {
-							e.add(DatabaseError.createSingle(
-									movielist,
-									DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, series,
-									"Path", nfoPath.toString(),
-									"Actual", existing.replace("\r", "\\r").replace("\n", "\\n"),
-									"Expected", generated.replace("\r", "\\r").replace("\n", "\\n")
-							));
+						if (Options.ValidateNfoFullComparison) {
+							var existing = nfoPath.readAsUTF8TextFile();
+							if (!existing.equals(generated)) {
+								e.add(DatabaseError.createSingle(
+										movielist,
+										DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, series,
+										"Path", nfoPath.toString(),
+										"Actual", existing.replace("\r", "\\r").replace("\n", "\\n"),
+										"Expected", generated.replace("\r", "\\r").replace("\n", "\\n")
+								));
+							}
+						} else {
+							long actualSize   = nfoPath.filesize().getBytes();
+							long expectedSize = generated.getBytes(Str.UTF8).length;
+							if (actualSize != expectedSize) {
+								e.add(DatabaseError.createSingle(
+										movielist,
+										DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, series,
+										"Path", nfoPath.toString(),
+										"Actual.Filesize", String.valueOf(actualSize),
+										"Expected.Filesize", String.valueOf(expectedSize)
+								));
+							}
 						}
 					} catch (Exception ignored) { }
 				});
@@ -1132,18 +1173,31 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					if (posterPath.isEmpty() || !posterPath.exists()) return;
 					var coverData = series.getCoverInfo();
 					if (coverData == null) return;
-					try (FileInputStream fis = new FileInputStream(posterPath.toFile())) {
-						String fileHash = DigestUtils.sha256Hex(fis).toUpperCase();
-						if (!fileHash.equals(coverData.Checksum)) {
+					if (Options.ValidateNfoFullComparison) {
+						try (FileInputStream fis = new FileInputStream(posterPath.toFile())) {
+							String fileHash = DigestUtils.sha256Hex(fis).toUpperCase();
+							if (!fileHash.equals(coverData.Checksum)) {
+								e.add(DatabaseError.createSingle(
+										movielist,
+										DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH, series,
+										"Path", posterPath.toString(),
+										"ActualHash", fileHash,
+										"ExpectedHash", coverData.Checksum
+								));
+							}
+						} catch (Exception ignored) { }
+					} else {
+						var fsz = posterPath.filesize();
+						if (!CCFileSize.isEqual(fsz, coverData.Filesize)) {
 							e.add(DatabaseError.createSingle(
 									movielist,
 									DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH, series,
 									"Path", posterPath.toString(),
-									"ActualHash", fileHash,
-									"ExpectedHash", coverData.Checksum
+									"Actual.Filesize", String.valueOf(fsz.getBytes()),
+									"Expected.Filesize", String.valueOf(coverData.Filesize.getBytes())
 							));
 						}
-					} catch (Exception ignored) { }
+					}
 				});
 	}
 
@@ -1267,16 +1321,30 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					var nfoPath = SeasonNFOWriter.getNFOPath(season.getSeries(), season);
 					if (nfoPath.isEmpty() || !nfoPath.exists()) return;
 					try {
-						var existing = nfoPath.readAsUTF8TextFile();
 						var generated = SeasonNFOWriter.generateNFO(season.getSeries(), season);
-						if (!existing.equals(generated)) {
-							e.add(DatabaseError.createSingle(
-									movielist,
-									DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, season,
-									"Path", nfoPath.toString(),
-									"Actual", existing.replace("\r", "\\r").replace("\n", "\\n"),
-									"Expected", generated.replace("\r", "\\r").replace("\n", "\\n")
-							));
+						if (Options.ValidateNfoFullComparison) {
+							var existing = nfoPath.readAsUTF8TextFile();
+							if (!existing.equals(generated)) {
+								e.add(DatabaseError.createSingle(
+										movielist,
+										DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, season,
+										"Path", nfoPath.toString(),
+										"Actual", existing.replace("\r", "\\r").replace("\n", "\\n"),
+										"Expected", generated.replace("\r", "\\r").replace("\n", "\\n")
+								));
+							}
+						} else {
+							long actualSize   = nfoPath.filesize().getBytes();
+							long expectedSize = generated.getBytes(Str.UTF8).length;
+							if (actualSize != expectedSize) {
+								e.add(DatabaseError.createSingle(
+										movielist,
+										DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, season,
+										"Path", nfoPath.toString(),
+										"Actual.Filesize", String.valueOf(actualSize),
+										"Expected.Filesize", String.valueOf(expectedSize)
+								));
+							}
 						}
 					} catch (Exception ignored) { }
 				});
@@ -1308,18 +1376,31 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					if (posterPath.isEmpty() || !posterPath.exists()) return;
 					var coverData = season.getCoverInfo();
 					if (coverData == null) return;
-					try (FileInputStream fis = new FileInputStream(posterPath.toFile())) {
-						String fileHash = DigestUtils.sha256Hex(fis).toUpperCase();
-						if (!fileHash.equals(coverData.Checksum)) {
+					if (Options.ValidateNfoFullComparison) {
+						try (FileInputStream fis = new FileInputStream(posterPath.toFile())) {
+							String fileHash = DigestUtils.sha256Hex(fis).toUpperCase();
+							if (!fileHash.equals(coverData.Checksum)) {
+								e.add(DatabaseError.createSingle(
+										movielist,
+										DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH, season,
+										"Path", posterPath.toString(),
+										"ActualHash", fileHash,
+										"ExpectedHash", coverData.Checksum
+								));
+							}
+						} catch (Exception ignored) { }
+					} else {
+						var fsz = posterPath.filesize();
+						if (!CCFileSize.isEqual(fsz, coverData.Filesize)) {
 							e.add(DatabaseError.createSingle(
 									movielist,
 									DatabaseErrorType.ERROR_NFO_POSTER_HASH_MISMATCH, season,
 									"Path", posterPath.toString(),
-									"ActualHash", fileHash,
-									"ExpectedHash", coverData.Checksum
+									"Actual.Filesize", String.valueOf(fsz.getBytes()),
+									"Expected.Filesize", String.valueOf(coverData.Filesize.getBytes())
 							));
 						}
-					} catch (Exception ignored) { }
+					}
 				});
 
 		// invalid online-reference
@@ -1699,16 +1780,30 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					var nfoPath = EpisodeNFOWriter.getNFOPath(episode);
 					if (!nfoPath.exists()) return;
 					try {
-						var existing = nfoPath.readAsUTF8TextFile();
 						var generated = EpisodeNFOWriter.generateNFO(episode);
-						if (!existing.equals(generated)) {
-							e.add(DatabaseError.createSingle(
-									movielist,
-									DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, episode,
-									"Path", nfoPath.toString(),
-									"Actual", existing.replace("\r", "\\r").replace("\n", "\\n"),
-									"Expected", generated.replace("\r", "\\r").replace("\n", "\\n")
-							));
+						if (Options.ValidateNfoFullComparison) {
+							var existing = nfoPath.readAsUTF8TextFile();
+							if (!existing.equals(generated)) {
+								e.add(DatabaseError.createSingle(
+										movielist,
+										DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, episode,
+										"Path", nfoPath.toString(),
+										"Actual", existing.replace("\r", "\\r").replace("\n", "\\n"),
+										"Expected", generated.replace("\r", "\\r").replace("\n", "\\n")
+								));
+							}
+						} else {
+							long actualSize   = nfoPath.filesize().getBytes();
+							long expectedSize = generated.getBytes(Str.UTF8).length;
+							if (actualSize != expectedSize) {
+								e.add(DatabaseError.createSingle(
+										movielist,
+										DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, episode,
+										"Path", nfoPath.toString(),
+										"Actual.Filesize", String.valueOf(actualSize),
+										"Expected.Filesize", String.valueOf(expectedSize)
+								));
+							}
 						}
 					} catch (Exception ignored) { }
 				});

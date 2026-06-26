@@ -191,6 +191,10 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		}
 	}
 
+	public CCDate getAddDate_Oldest() {
+		return calcMinimumAddDate();
+	}
+
 	public CCDate calcMaximumAddDateBySeason() {
 		return _cache.get(SeriesCache.MAXIMUM_ADDDATE_BY_SEASON, null, ser->
 		{

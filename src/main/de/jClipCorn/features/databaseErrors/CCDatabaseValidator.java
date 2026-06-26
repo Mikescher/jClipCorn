@@ -1247,6 +1247,40 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				season -> season.getScore() == CCUserScore.RATING_NO && !Str.isNullOrEmpty(season.getScoreComment()) && season.isViewed(),
 				season -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COMMENT_WITHOUT_RATING, season));
 
+		// NFO file missing (season.nfo)
+		addSeasonValidation(
+				DatabaseErrorType.ERROR_NFO_MISSING,
+				o -> o.ValidateNfoFiles,
+				season -> ccprops().PROP_NFO_CREATE_SERIES.getValue() && !SeasonNFOWriter.getNFOPath(season.getSeries(), season).isEmpty() && !SeasonNFOWriter.getNFOPath(season.getSeries(), season).exists(),
+				season -> DatabaseError.createSingle(
+						movielist,
+						DatabaseErrorType.ERROR_NFO_MISSING, season,
+						"Path", SeasonNFOWriter.getNFOPath(season.getSeries(), season).toString()
+				));
+
+		// NFO content mismatch (season.nfo)
+		addSeasonValidation(
+				DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH,
+				o -> o.ValidateNfoFiles,
+				(season, e) -> {
+					if (!ccprops().PROP_NFO_CREATE_SERIES.getValue()) return;
+					var nfoPath = SeasonNFOWriter.getNFOPath(season.getSeries(), season);
+					if (nfoPath.isEmpty() || !nfoPath.exists()) return;
+					try {
+						var existing = nfoPath.readAsUTF8TextFile();
+						var generated = SeasonNFOWriter.generateNFO(season.getSeries(), season);
+						if (!existing.equals(generated)) {
+							e.add(DatabaseError.createSingle(
+									movielist,
+									DatabaseErrorType.ERROR_NFO_CONTENT_MISMATCH, season,
+									"Path", nfoPath.toString(),
+									"Actual", existing.replace("\r", "\\r").replace("\n", "\\n"),
+									"Expected", generated.replace("\r", "\\r").replace("\n", "\\n")
+							));
+						}
+					} catch (Exception ignored) { }
+				});
+
 		// NFO poster file missing (season)
 		addSeasonValidation(
 				DatabaseErrorType.ERROR_NFO_POSTER_MISSING,
@@ -2584,6 +2618,8 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				if (!p.isEmpty()) expectedNfoPaths.add(p.toAbsolutePathString());
 				for (int si = 0; si < ser.getSeasonCount(); si++) {
 					CCSeason sea = ser.getSeasonByArrayIndex(si);
+					FSPath sp = SeasonNFOWriter.getNFOPath(ser, sea);
+					if (!sp.isEmpty()) expectedNfoPaths.add(sp.toAbsolutePathString());
 					for (int ei = 0; ei < sea.getEpisodeCount(); ei++) {
 						CCEpisode epi = sea.getEpisodeByArrayIndex(ei);
 						FSPath ep = EpisodeNFOWriter.getNFOPath(epi);

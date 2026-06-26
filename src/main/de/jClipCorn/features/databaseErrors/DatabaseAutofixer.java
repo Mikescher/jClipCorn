@@ -582,6 +582,17 @@ public class DatabaseAutofixer {
 				}
 
 				return true;
+			} else if (err.getElement1() instanceof CCSeason sea) {
+
+				FSPath nfoPath = SeasonNFOWriter.getNFOPath(sea.getSeries(), sea);
+				if (nfoPath.isEmpty()) return false;
+
+				String content = SeasonNFOWriter.generateNFO(sea.getSeries(), sea);
+				nfoPath.writeAsUTF8TextFile(content);
+
+				copyCoverToPath(ml.getCoverCache(), sea.getCoverInfo(), SeasonNFOWriter.getPosterPath(sea.getSeries(), sea));
+
+				return true;
 			} else if (err.getElement1() instanceof CCEpisode epi) {
 
 				FSPath nfoPath = EpisodeNFOWriter.getNFOPath(epi);

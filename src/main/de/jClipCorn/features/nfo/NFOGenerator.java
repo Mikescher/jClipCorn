@@ -40,6 +40,7 @@ public class NFOGenerator {
 		int totalEpisodes = 0;
 		for (CCSeries series : movielist.iteratorSeries()) {
 			totalEpisodes++; // for tvshow.nfo
+			totalEpisodes += series.getSeasonCount(); // for season.nfo
 			totalEpisodes += series.getEpisodeCount();
 		}
 		int total = totalMovies + totalEpisodes;
@@ -102,9 +103,22 @@ public class NFOGenerator {
 			}
 			current++;
 
-			// Episode NFOs
+			// Season + Episode NFOs
 			for (int si = 0; si < series.getSeasonCount(); si++) {
 				CCSeason season = series.getSeasonByArrayIndex(si);
+
+				// Season season.nfo
+				if (callback != null) {
+					callback.onProgress(current, total, series.getTitle() + " - " + season.getTitle());
+				}
+				FSPath seasonNfoPath = SeasonNFOWriter.getNFOPath(series, season);
+				if (!seasonNfoPath.isEmpty()) {
+					String newSeasonContent = SeasonNFOWriter.generateNFO(series, season);
+					NFOStatus seasonStatus = determineStatus(seasonNfoPath, newSeasonContent, createSeriesNfos);
+					entries.add(NFOEntry.forSeason(seasonNfoPath, seasonStatus, newSeasonContent, season));
+				}
+				current++;
+
 				for (int ei = 0; ei < season.getEpisodeCount(); ei++) {
 					CCEpisode episode = season.getEpisodeByArrayIndex(ei);
 
@@ -185,6 +199,27 @@ public class NFOGenerator {
 		if (!episode.Part.get().toFSPath(episode.getSeries()).fileExists()) return FSPath.Empty;
 
 		String newContent = EpisodeNFOWriter.generateNFO(episode);
+		NFOStatus status = determineStatus(nfoPath, newContent, createEnabled);
+
+		if (status == NFOStatus.CREATE || status == NFOStatus.CHANGED) {
+			try {
+				writeNfoFile(nfoPath, newContent);
+				return nfoPath;
+			} catch (IOException e) {
+				return FSPath.Empty;
+			}
+		}
+		if (status == NFOStatus.UNCHANGED) return nfoPath;
+		return FSPath.Empty;
+	}
+
+	public static FSPath generateAndApplyForSeason(CCSeries series, CCSeason season) {
+		boolean createEnabled = series.getMovieList().ccprops().PROP_NFO_CREATE_SERIES.getValue();
+
+		FSPath nfoPath = SeasonNFOWriter.getNFOPath(series, season);
+		if (nfoPath.isEmpty()) return FSPath.Empty;
+
+		String newContent = SeasonNFOWriter.generateNFO(series, season);
 		NFOStatus status = determineStatus(nfoPath, newContent, createEnabled);
 
 		if (status == NFOStatus.CREATE || status == NFOStatus.CHANGED) {
@@ -326,6 +361,8 @@ public class NFOGenerator {
 				CCSeason season = series.getSeasonByArrayIndex(i);
 				season.NfoCoverPath = SeasonNFOWriter.getPosterPath(series, season);
 			}
+		} else if (entry.getSeason() != null) {
+			entry.getSeason().NfoPath = entry.getFilePath();
 		} else if (entry.getEpisode() != null) {
 			entry.getEpisode().NfoPath = entry.getFilePath();
 		}
@@ -342,6 +379,8 @@ public class NFOGenerator {
 			for (int i = 0; i < series.getSeasonCount(); i++) {
 				series.getSeasonByArrayIndex(i).NfoCoverPath = FSPath.Empty;
 			}
+		} else if (entry.getSeason() != null) {
+			entry.getSeason().NfoPath = FSPath.Empty;
 		} else if (entry.getEpisode() != null) {
 			entry.getEpisode().NfoPath = FSPath.Empty;
 		}

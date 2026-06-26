@@ -6,6 +6,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.FSPath;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -62,6 +63,13 @@ public class SeriesNFOWriter {
 			root.addContent(new Element("genre").setText(genre.asString()));
 		}
 
+		// Studio(s) (aggregated over all seasons)
+		for (String studio : series.getAnimeStudio()) {
+			if (!Str.isNullOrWhitespace(studio)) {
+				root.addContent(new Element("studio").setText(studio));
+			}
+		}
+
 		// Thumb (cover image)
 		writeCoverThumb(root, series);
 
@@ -71,6 +79,12 @@ public class SeriesNFOWriter {
 			// Convert from 0-6 scale to 1-10 scale
 			int userRating = (int) Math.round(score * 10.0 / 6.0);
 			root.addContent(new Element("userrating").setText(String.valueOf(userRating)));
+		}
+
+		// Add date
+		CCDate addDate = series.getAddDate_Oldest();
+		if (addDate != null && !addDate.isMinimum()) {
+			root.addContent(new Element("dateadded").setText(addDate.toStringSQL()));
 		}
 
 		// Status

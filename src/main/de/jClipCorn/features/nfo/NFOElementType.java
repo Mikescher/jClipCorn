@@ -5,6 +5,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 public enum NFOElementType {
 	MOVIE,
 	SERIES,
+	SEASON,
 	EPISODE;
 
 	public String getLocalized() {

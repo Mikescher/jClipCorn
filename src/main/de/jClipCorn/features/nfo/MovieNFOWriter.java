@@ -61,6 +61,13 @@ public class MovieNFOWriter {
 			root.addContent(new Element("genre").setText(genre.asString()));
 		}
 
+		// Studio(s)
+		for (String studio : movie.getAnimeStudio()) {
+			if (!Str.isNullOrWhitespace(studio)) {
+				root.addContent(new Element("studio").setText(studio));
+			}
+		}
+
 		// Thumb (cover image)
 		writeCoverThumb(root, movie);
 

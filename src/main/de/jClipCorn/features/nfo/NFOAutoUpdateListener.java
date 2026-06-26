@@ -59,12 +59,14 @@ public class NFOAutoUpdateListener extends CCDBUpdateAdapter {
 
 			if (containsProp(props, "@EPISODES")) {
 				updateSeriesNfo(rootElement.asSeries());
+				updateSeasonNfo(episode.getSeries(), episode.getSeason());
 			}
 
 		} else if (actualElement instanceof CCSeason season) {
 			if (!seriesAutoEnabled()) return;
 
 			updateSeriesNfo(rootElement.asSeries());
+			updateSeasonNfo(rootElement.asSeries(), season);
 
 			if (containsProp(props, "CoverID")) {
 				FSPath oldCover = season.NfoCoverPath;
@@ -101,12 +103,18 @@ public class NFOAutoUpdateListener extends CCDBUpdateAdapter {
 			CCSeries series = el.asSeries();
 			deleteFileSafe(series.NfoPath);
 			deleteFileSafe(series.NfoCoverPath);
+			for (int i = 0; i < series.getSeasonCount(); i++) {
+				CCSeason season = series.getSeasonByArrayIndex(i);
+				deleteFileSafe(season.NfoPath);
+				deleteFileSafe(season.NfoCoverPath);
+			}
 		}
 	}
 
 	@Override
 	public void onRemSeason(CCSeason season) {
 		if (!seriesAutoEnabled()) return;
+		deleteFileSafe(season.NfoPath);
 		deleteFileSafe(season.NfoCoverPath);
 	}
 
@@ -122,6 +130,14 @@ public class NFOAutoUpdateListener extends CCDBUpdateAdapter {
 
 		if (!oldNfo.isEmpty() && !oldNfo.equals(newNfo)) deleteFileSafe(oldNfo);
 		series.NfoPath = newNfo;
+	}
+
+	private void updateSeasonNfo(CCSeries series, CCSeason season) {
+		FSPath oldNfo = season.NfoPath;
+		FSPath newNfo = NFOGenerator.generateAndApplyForSeason(series, season);
+
+		if (!oldNfo.isEmpty() && !oldNfo.equals(newNfo)) deleteFileSafe(oldNfo);
+		season.NfoPath = newNfo;
 	}
 
 	private static boolean containsProp(String[] props, String name) {

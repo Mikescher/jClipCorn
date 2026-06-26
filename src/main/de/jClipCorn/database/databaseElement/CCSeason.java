@@ -56,6 +56,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	public final EStringListProp         AnimeSeason  = new EStringListProp("AnimeSeason",    CCStringList.EMPTY,    this, EPropertyType.OBJECTIVE_METADATA);
 	public final EStringListProp         AnimeStudio  = new EStringListProp("AnimeStudio",    CCStringList.EMPTY,    this, EPropertyType.OBJECTIVE_METADATA);
 
+	public FSPath NfoPath = FSPath.Empty;
 	public FSPath NfoCoverPath = FSPath.Empty;
 
 	private IEProperty[] _properties = null;
@@ -74,6 +75,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 
 	public void initNfoPaths(CCSeries series, FSPath basePath) {
+		NfoPath = SeasonNFOWriter.getNFOPath(series, this);
 		NfoCoverPath = SeasonNFOWriter.getPosterPath(series, this, basePath);
 	}
 

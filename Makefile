@@ -27,6 +27,9 @@ run-prod-ro:
 run-prod-rw:
 	./gradlew run -PrunWorkingDir="$(HOME)/mounts/Melkor_NFS/Kreios/ClipCorn"
 
+validate-local-quick:
+	./gradlew run -PrunWorkingDir="$(shell pwd)/_local" --args="--validate-db quick"
+
 
 # create beta-release
 # sets beta flag in Main.java and increases version number

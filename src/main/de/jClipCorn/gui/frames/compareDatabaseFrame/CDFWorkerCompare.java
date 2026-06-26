@@ -18,7 +18,7 @@ public class CDFWorkerCompare
 
 		cb.setValueBoth(1, 0, "Reading", "");
 
-		var mlExt = CCMovieList.connectAndLoadExtern(null, dbPath, dbName, true, false);
+		var mlExt = CCMovieList.connectAndLoadDirect(null, dbPath, dbName, true, false);
 
 		try
 		{

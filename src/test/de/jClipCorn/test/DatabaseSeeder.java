@@ -37,7 +37,7 @@ public class DatabaseSeeder {
 
 		System.out.println("Load DB from: " + tempPath);
 
-		var ml = CCMovieList.connectAndLoadExtern(null, dbPath, Main.DATABASE_NAME, false, true);
+		var ml = CCMovieList.connectAndLoadDirect(null, dbPath, Main.DATABASE_NAME, false, true);
 		{
 			ml.getHistory().enableTrigger();
 
@@ -48,7 +48,7 @@ public class DatabaseSeeder {
 		{
 			ml.shutdown();
 
-			var mlRet = CCMovieList.connectAndLoadExtern(null, dbPath, Main.DATABASE_NAME, false, false);
+			var mlRet = CCMovieList.connectAndLoadDirect(null, dbPath, Main.DATABASE_NAME, false, false);
 
 			ClipCornBaseTest.CLEANUP.add(() -> { System.out.println("[CLEANUP] Shutdown ML"); mlRet.shutdown(); });
 

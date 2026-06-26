@@ -22,7 +22,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class CheckDatabaseFrame extends JCCFrame
@@ -56,31 +55,7 @@ public class CheckDatabaseFrame extends JCCFrame
 		lblProgress1.setText(Str.Empty);
 		lblProgress2.setText(Str.Empty);
 
-		var props = ccprops().PROP_CHECKDATABASE_OPTIONS.getValue();
-
-		cbValMovies.setSelected(           props.contains("MOVIES")            );
-		cbValSeries.setSelected(           props.contains("SERIES")            );
-		cbValSeasons.setSelected(          props.contains("SEASONS")           );
-		cbValEpisodes.setSelected(         props.contains("EPISODES")          );
-
-		cbValCovers.setSelected(           props.contains("COVERS")            );
-		cbValGroups.setSelected(           props.contains("GROUPS")            );
-		cbValOnlineRefs.setSelected(       props.contains("ONLINEREFS")        );
-
-		cbValCoverFiles.setSelected(       props.contains("COVER_FILES")       );
-		cbValVideoFiles.setSelected(       props.contains("VIDEO_FILES")       );
-
-		cbValDatabase.setSelected(         props.contains("DATABASE")          );
-		cbValDuplicates.setSelected(       props.contains("DUPLICATES")        );
-		cbValSeriesStructure.setSelected(  props.contains("SERIES_STRUCTURE")  );
-		cbValEmptyDirs.setSelected(        props.contains("EMPTY_DIRS")        );
-		cbValNfoFiles.setSelected(         props.contains("NFO_FILES")         );
-		cbValNfoFullCompare.setSelected(   props.contains("NFO_FULL_COMPARE")  );
-
-		if (!ccprops().PROP_VALIDATE_CHECK_SERIES_STRUCTURE.getValue()) {
-			cbValSeriesStructure.setSelected(false);
-			seriesStructureCheckAllowed = false;
-		}
+		applyPreset(DatabaseValidatorOptions.deserialize(ccprops().PROP_CHECKDATABASE_OPTIONS.getValue()));
 
 		pbProgress1.setVisible(false);
 		lblProgress1.setVisible(false);
@@ -163,66 +138,56 @@ public class CheckDatabaseFrame extends JCCFrame
 		if (e.getClickCount() == 2 && lsMain.getSelectedIndex() >= 0) lsMain.getSelectedValue().startEditing(this);
 	}
 
-	@SuppressWarnings("nls")
+	// reads the current checkbox state into a DatabaseValidatorOptions object
+	private DatabaseValidatorOptions optionsFromCheckboxes() {
+		var opts = new DatabaseValidatorOptions();
+
+		opts.ValidateMovies                    = cbValMovies.isSelected();
+		opts.ValidateSeries                    = cbValSeries.isSelected();
+		opts.ValidateSeasons                   = cbValSeasons.isSelected();
+		opts.ValidateEpisodes                  = cbValEpisodes.isSelected();
+
+		opts.ValidateCovers                    = cbValCovers.isSelected();
+		opts.ValidateCoverFiles                = cbValCoverFiles.isSelected();
+		opts.ValidateVideoFiles                = cbValVideoFiles.isSelected();
+		opts.ValidateGroups                    = cbValGroups.isSelected();
+		opts.ValidateOnlineReferences          = cbValOnlineRefs.isSelected();
+
+		opts.ValidateDuplicateFilesByPath      = cbValDuplicates.isSelected();
+		opts.ValidateDuplicateFilesByMediaInfo = cbValDuplicates.isSelected();
+		opts.ValidateDatabaseConsistence       = cbValDatabase.isSelected();
+		opts.ValidateSeriesStructure           = cbValSeriesStructure.isSelected();
+		opts.FindEmptyDirectories              = cbValEmptyDirs.isSelected();
+		opts.ValidateNfoFiles                  = cbValNfoFiles.isSelected();
+		opts.ValidateNfoFullComparison         = cbValNfoFullCompare.isSelected();
+
+		return opts;
+	}
+
 	private void cbxAnyItemStateChanged(ItemEvent e) {
-		var v = new HashSet<String>();
-		if (cbValMovies.isSelected())          v.add("MOVIES");
-		if (cbValSeries.isSelected())          v.add("SERIES");
-		if (cbValSeasons.isSelected())         v.add("SEASONS");
-		if (cbValEpisodes.isSelected())        v.add("EPISODES");
-
-		if (cbValCovers.isSelected())          v.add("COVERS");
-		if (cbValGroups.isSelected())          v.add("GROUPS");
-		if (cbValOnlineRefs.isSelected())      v.add("ONLINEREFS");
-
-		if (cbValCoverFiles.isSelected())      v.add("COVER_FILES");
-		if (cbValVideoFiles.isSelected())      v.add("VIDEO_FILES");
-		
-		if (cbValDatabase.isSelected())        v.add("DATABASE");
-		if (cbValDuplicates.isSelected())      v.add("DUPLICATES");
-		if (cbValSeriesStructure.isSelected()) v.add("SERIES_STRUCTURE");
-		if (cbValEmptyDirs.isSelected())       v.add("EMPTY_DIRS");
-		if (cbValNfoFiles.isSelected())        v.add("NFO_FILES");
-		if (cbValNfoFullCompare.isSelected())  v.add("NFO_FULL_COMPARE");
-
-		ccprops().PROP_CHECKDATABASE_OPTIONS.setValue(v);
+		ccprops().PROP_CHECKDATABASE_OPTIONS.setValue(optionsFromCheckboxes().serialize());
 	}
 
-	// [Full] - run every available check (including the slow full NFO/poster checksum comparison)
-	private void presetFull() {
-		applyPreset(true, true, true, true,   true, true, true,   true, true, true,   true, true, true,   true, true);
-	}
+	private void presetFull()    { applyPreset(DatabaseValidatorOptions.presetFull());    }
+	private void presetDefault() { applyPreset(DatabaseValidatorOptions.presetDefault()); }
+	private void presetQuick()   { applyPreset(DatabaseValidatorOptions.presetQuick());   }
 
-	// [Default] - the recommended everyday set (cheap filesize-only NFO/poster checks, + find empty directories)
-	private void presetDefault() {
-		applyPreset(true, true, true, true,   false, false, false,   true, true, true,   true, true, true,   true, false);
-	}
-
-	// [Quick] - like Default but without the NFO checks, the empty-directory scan and the internal-database checks
-	private void presetQuick() {
-		applyPreset(true, true, true, true,   false, false, false,   true, true, true,   false, true, false,   false, false);
-	}
-
-	private void applyPreset(boolean movies, boolean series, boolean seasons, boolean episodes,
-	                         boolean covers, boolean coverFiles, boolean videoFiles,
-	                         boolean groups, boolean onlineRefs, boolean duplicates,
-	                         boolean database, boolean seriesStructure, boolean emptyDirs,
-	                         boolean nfoFiles, boolean nfoFullCompare) {
-		cbValMovies.setSelected(movies);
-		cbValSeries.setSelected(series);
-		cbValSeasons.setSelected(seasons);
-		cbValEpisodes.setSelected(episodes);
-		cbValCovers.setSelected(covers);
-		cbValCoverFiles.setSelected(coverFiles);
-		cbValVideoFiles.setSelected(videoFiles);
-		cbValGroups.setSelected(groups);
-		cbValOnlineRefs.setSelected(onlineRefs);
-		cbValDuplicates.setSelected(duplicates);
-		cbValDatabase.setSelected(database);
-		cbValSeriesStructure.setSelected(seriesStructure && seriesStructureCheckAllowed);
-		cbValEmptyDirs.setSelected(emptyDirs);
-		cbValNfoFiles.setSelected(nfoFiles);
-		cbValNfoFullCompare.setSelected(nfoFullCompare);
+	private void applyPreset(DatabaseValidatorOptions o) {
+		cbValMovies.setSelected(o.ValidateMovies);
+		cbValSeries.setSelected(o.ValidateSeries);
+		cbValSeasons.setSelected(o.ValidateSeasons);
+		cbValEpisodes.setSelected(o.ValidateEpisodes);
+		cbValCovers.setSelected(o.ValidateCovers);
+		cbValCoverFiles.setSelected(o.ValidateCoverFiles);
+		cbValVideoFiles.setSelected(o.ValidateVideoFiles);
+		cbValGroups.setSelected(o.ValidateGroups);
+		cbValOnlineRefs.setSelected(o.ValidateOnlineReferences);
+		cbValDuplicates.setSelected(o.ValidateDuplicateFilesByPath || o.ValidateDuplicateFilesByMediaInfo);
+		cbValDatabase.setSelected(o.ValidateDatabaseConsistence);
+		cbValSeriesStructure.setSelected(o.ValidateSeriesStructure && seriesStructureCheckAllowed);
+		cbValEmptyDirs.setSelected(o.FindEmptyDirectories);
+		cbValNfoFiles.setSelected(o.ValidateNfoFiles);
+		cbValNfoFullCompare.setSelected(o.ValidateNfoFullComparison);
 	}
 
 	private void autoFix() {
@@ -297,28 +262,8 @@ public class CheckDatabaseFrame extends JCCFrame
 	private void startValidate() {
 		if (activeThread != null) { updateUI(); return; }
 
-		DatabaseValidatorOptions opts = new DatabaseValidatorOptions();
-
-		opts.ValidateMovies                    = cbValMovies.isSelected();
-		opts.ValidateSeries                    = cbValSeries.isSelected();
-		opts.ValidateSeasons                   = cbValSeasons.isSelected();
-		opts.ValidateEpisodes                  = cbValEpisodes.isSelected();
-
-		opts.ValidateCovers                    = cbValCovers.isSelected();
-		opts.ValidateCoverFiles                = cbValCoverFiles.isSelected();
-		opts.ValidateVideoFiles                = cbValVideoFiles.isSelected();
-		opts.ValidateGroups                    = cbValGroups.isSelected();
-		opts.ValidateOnlineReferences          = cbValOnlineRefs.isSelected();
-
-		opts.ValidateDuplicateFilesByPath      = cbValDuplicates.isSelected();
-		opts.ValidateDuplicateFilesByMediaInfo = cbValDuplicates.isSelected();
-		opts.ValidateDatabaseConsistence       = cbValDatabase.isSelected();
-		opts.ValidateSeriesStructure           = cbValSeriesStructure.isSelected();
-		opts.FindEmptyDirectories              = cbValEmptyDirs.isSelected();
-		opts.ValidateNfoFiles                  = cbValNfoFiles.isSelected();
-		opts.ValidateNfoFullComparison         = cbValNfoFullCompare.isSelected();
-
-		opts.IgnoreDuplicateIfos               = ccprops().PROP_VALIDATE_DUP_IGNORE_IFO.getValue();
+		DatabaseValidatorOptions opts = optionsFromCheckboxes();
+		opts.IgnoreDuplicateIfos = ccprops().PROP_VALIDATE_DUP_IGNORE_IFO.getValue();
 
 		autofixRunning = false;
 

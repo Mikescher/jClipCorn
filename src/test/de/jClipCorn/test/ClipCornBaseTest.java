@@ -275,7 +275,7 @@ public class ClipCornBaseTest {
 
 		var dbDir = ml.getDatabaseDirectory().getParent();
 
-		var mlRet = CCMovieList.connectAndLoadExtern(null, dbDir, ml.getDatabaseName(), false, true);
+		var mlRet = CCMovieList.connectAndLoadDirect(null, dbDir, ml.getDatabaseName(), false, true);
 
 		ClipCornBaseTest.CLEANUP.add(() -> { System.out.println("[CLEANUP] Shutdown ML"); mlRet.shutdown(); });
 

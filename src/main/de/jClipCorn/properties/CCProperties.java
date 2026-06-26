@@ -139,7 +139,6 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_DATABASE_CLEANSHUTDOWN;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOWTAGS;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOWCOVERCORNER;
-	public CCBoolProperty                                   PROP_VALIDATE_CHECK_SERIES_STRUCTURE;
 	public CCBoolProperty                                   PROP_MAINFRAME_DONT_FILTER_WATCHNEVER;
 	public CCBoolProperty                                   PROP_SHOW_PARTIAL_VIEWED_STATE;
 	public CCSeasonRegexListProperty                        PROP_SEASON_INDEX_REGEXPRESSIONS;
@@ -352,7 +351,6 @@ public class CCProperties implements ICCPropertySource {
 		PROP_PREVSERIES_COVERBORDER                 = new CCBoolProperty(CAT_SERIES,            this,   "PROP_PREVSERIES_COVERBORDER",                 true);
 		PROP_SERIES_ADDDATECALCULATION              = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_ADDDATECALCULATION",              AddDateAlgorithm.NEWEST_DATE,       AddDateAlgorithm.getWrapper());
 		PROP_SERIES_DISPLAYED_DATE                  = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_DISPLAYED_DATE",                  DisplayDateAlgorithm.LAST_VIEWED,   DisplayDateAlgorithm.getWrapper());
-		PROP_VALIDATE_CHECK_SERIES_STRUCTURE        = new CCBoolProperty(CAT_SERIES,            this,   "PROP_VALIDATE_CHECK_SERIES_STRUCTURE",        false);
 		PROP_SHOW_PARTIAL_VIEWED_STATE              = new CCBoolProperty(CAT_SERIES,            this,   "PROP_SHOW_PARTIAL_VIEWED_STATE",              false);
 		PROP_SEASON_INDEX_REGEXPRESSIONS            = new CCSeasonRegexListProperty(CAT_SERIES, this,   "PROP_SEASON_INDEX_REGEXPRESSIONS",            getDefSeasonRegex());
 		PROP_SERIES_NEXT_EPISODE_HEURISTIC          = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_NEXT_EPISODE_HEURISTIC",          NextEpisodeHeuristic.AUTOMATIC,     NextEpisodeHeuristic.getWrapper());

@@ -146,7 +146,7 @@ public class CCMovieList implements ICCPropertySource {
 		return new CCMovieList(CCDatabase.createStub(), ccprops);
 	}
 
-	public static CCMovieList connectAndLoadExtern(CCDatabaseDriver drv, FSPath directory, String dbName, boolean readonly, boolean allowCreate) throws Exception {
+	public static CCMovieList connectAndLoadDirect(CCDatabaseDriver drv, FSPath directory, String dbName, boolean readonly, boolean allowCreate) throws Exception {
 		var db = CCDatabase.create(drv, directory, dbName, readonly);
 
 		var r = db.tryconnect();
@@ -162,20 +162,6 @@ public class CCMovieList implements ICCPropertySource {
 		db.fillCoverCache(ml.coverCache, true);
 		
 		return ml;
-	}
-
-	public CCProperties ccprops() {
-		return ccproperties;
-	}
-
-	public void showInitialWizard() {
-		if (database.isFirstLaunch()) {
-			boolean cont = InitialConfigFrame.ShowWizard(this);
-			
-			if (!cont) {
-				ApplicationHelper.exitApplication(0, true);
-			}
-		}
 	}
 
 	public void connectAndLoad(final MainFrame mf, Func0to0 postInit) {
@@ -253,6 +239,20 @@ public class CCMovieList implements ICCPropertySource {
 		database.fillGroups(CCMovieList.this);
 		database.fillMovieList(CCMovieList.this);
 		database.fillCoverCache(coverCache, true);
+	}
+
+	public CCProperties ccprops() {
+		return ccproperties;
+	}
+
+	public void showInitialWizard() {
+		if (database.isFirstLaunch()) {
+			boolean cont = InitialConfigFrame.ShowWizard(this);
+			
+			if (!cont) {
+				ApplicationHelper.exitApplication(0, true);
+			}
+		}
 	}
 
 	public boolean isInitializingOrIsLoading() {

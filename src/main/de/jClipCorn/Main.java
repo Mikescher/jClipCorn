@@ -4,6 +4,9 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseConnectResult;
 import de.jClipCorn.features.backupManager.BackupManager;
+import de.jClipCorn.features.databaseErrors.CCDatabaseValidator;
+import de.jClipCorn.features.databaseErrors.DatabaseError;
+import de.jClipCorn.features.databaseErrors.DatabaseValidatorOptions;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.log.ExceptionHandler;
 import de.jClipCorn.gui.LookAndFeelManager;
@@ -18,6 +21,7 @@ import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.properties.enumerations.ResourcePreloadMode;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 
 //
 // ========== GRADLE ==========
@@ -54,6 +58,10 @@ public class Main {
 	// these have the highest priority and override the values configured in the properties
 	public static final java.util.LinkedHashMap<String, String> ARG_CCPATH_OVERRIDES = new java.util.LinkedHashMap<>();
 
+	// "--validate-db <preset|tokenlist>": run a headless database-validation, print the result and exit
+	// (preset = "full"/"default"/"quick", or a token list like "MOVIES,SERIES,NFO_FILES")
+	public static String ARG_VALIDATE_DB = null;
+
 	private static CCProperties _uiPropertyAcc;
 
 	public static void main(String[] arg) {
@@ -62,6 +70,11 @@ public class Main {
 		Globals.TIMINGS.start(Globals.TIMING_STARTUP_TOTAL);
 
 		interpreteArgs(arg);
+
+		if (Main.ARG_VALIDATE_DB != null) {
+			runHeadlessDbValidation(Main.ARG_VALIDATE_DB); // loads db, validates, prints, then halts the jvm
+			return;
+		}
 
 		Globals.TIMINGS.start(Globals.TIMING_INIT_TOTAL);
 		{
@@ -140,6 +153,55 @@ public class Main {
 		Globals.TIMINGS.stop(Globals.TIMING_INIT_TOTAL);
 	}
 
+	// Headless database-validation entrypoint (triggered by "--validate-db <spec>").
+	// Loads the database in the working directory read-only, runs the validation described by {@code spec}
+	// (see DatabaseValidatorOptions.parse), prints the result and halts the jvm (exit code != 0 when errors are found).
+	@SuppressWarnings("nls")
+	private static void runHeadlessDbValidation(String spec) {
+		try {
+			CCLog.setPath(LOG_PATH);
+
+			final CCMovieList ml = CCMovieList.connectAndLoadDirect(
+					CCDatabaseDriver.SQLITE,
+					FilesystemUtils.getRealSelfDirectory(),
+					Main.DATABASE_NAME,
+					true,    // readonly - the validation never writes
+					false);  // do not create
+
+			LocaleBundle.updateLang(ml.ccprops());
+
+			DatabaseValidatorOptions opts = DatabaseValidatorOptions.parse(spec);
+			opts.IgnoreDuplicateIfos = ml.ccprops().PROP_VALIDATE_DUP_IGNORE_IFO.getValue();
+
+			var errs = new java.util.ArrayList<DatabaseError>();
+			var validator = new CCDatabaseValidator(ml);
+
+			long t = System.nanoTime();
+			validator.validate(errs, opts, DoubleProgressCallbackListener.EMPTY);
+			long ms = (System.nanoTime() - t) / 1_000_000;
+
+			var byType = new java.util.TreeMap<String, Integer>();
+			for (DatabaseError e : errs) byType.merge(String.format("ERR_%02d  %s", e.ErrorType.getType(), e.ErrorType.toString()), 1, Integer::sum);
+
+			System.out.println();
+			System.out.println("################## DB-VALIDATOR ##################");
+			System.out.println("Database : " + FilesystemUtils.getRealSelfDirectory());
+			System.out.println("Options  : " + String.join(",", new java.util.TreeSet<>(opts.serialize())));
+			System.out.println(String.format("Elements=%d  Movies=%d  Series=%d  Seasons=%d  Episodes=%d", ml.getElementCount(), ml.getMovieCount(), ml.getSeriesCount(), ml.getSeasonCount(), ml.getEpisodeCount()));
+			System.out.println(String.format("Time     : %,d ms", ms));
+			System.out.println("--- errors by type ---");
+			for (var en : byType.entrySet()) System.out.println(String.format("  %6d  %s", en.getValue(), en.getKey()));
+			System.out.println("Total errors: " + errs.size());
+			System.out.println("#################################################");
+			System.out.flush();
+
+			System.exit(errs.isEmpty() ? 0 : 1);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			System.exit(2);
+		}
+	}
+
 	private static void interpreteArgs(String[] args) {
 		@SuppressWarnings("nls")
 		String[] readOnlyArgs = {"readonly", "-readonly", "--readonly", "read-only", "-read-only", "--read-only", "ro", "-ro", "--ro"};
@@ -149,6 +211,8 @@ public class Main {
 		String[] prevCoverCacheArgs = {"prev-cover-cache", "-prev-cover-cache", "--prev-cover-cache"};
 
 		String[] ccPathArgs = {"ccpath", "-ccpath", "--ccpath"};
+
+		String[] validateDbArgs = {"validate-db", "-validate-db", "--validate-db"};
 
 		for (String arg : args) {
 			for (String readOnlyArg : readOnlyArgs) {
@@ -190,6 +254,17 @@ public class Main {
 					} else {
 						CCLog.addWarning("Invalid --ccpath argument (expected 'key=value'): '" + kv + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
+					i++; // consume the value argument
+					break;
+				}
+			}
+		}
+
+		// "--validate-db <preset|tokenlist>" - the spec is supplied as the following argument
+		for (int i = 0; i < args.length; i++) {
+			for (String validateDbArg : validateDbArgs) {
+				if (args[i].equalsIgnoreCase(validateDbArg) && i + 1 < args.length) {
+					Main.ARG_VALIDATE_DB = args[i + 1];
 					i++; // consume the value argument
 					break;
 				}

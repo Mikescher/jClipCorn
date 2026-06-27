@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, ICCCoveredElement, IActionSourceObject, ICCTaggedElement, IDatabaseElementData, IPropertyParent, ICCPropertySource {
 
-	public static final Pattern REGEX_ANIMESEASON = Pattern.compile("^(Spring|Summer|Fall|Winter) (2[0-9]{3})$");
+	public static final Pattern REGEX_ANIMESEASON = Pattern.compile("^(Spring|Summer|Fall|Winter) ([12][0-9]{3})$");
 
 	public final EIntProp                 LocalID         = new EIntProp(            "LocalID",         -1,                          this, EPropertyType.DATABASE_PRIMARY_ID);
 	public final EIntProp                 CoverID         = new EIntProp(            "CoverID",         -1,                          this, EPropertyType.DATABASE_REF);

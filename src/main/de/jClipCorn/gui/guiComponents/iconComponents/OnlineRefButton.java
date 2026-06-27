@@ -6,6 +6,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.KeyStrokeUtil;
 import de.jClipCorn.util.http.HTTPUtilities;
 import de.jClipCorn.util.stream.CCStreams;
@@ -15,6 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +27,7 @@ public class OnlineRefButton extends JPanel {
 	private JButton btnMain;
 
 	private CCOnlineReferenceList value = null;
+	private List<Tuple<String, CCOnlineReferenceList>> seasonValues = new ArrayList<>();
 
 	private final CCMovieList movielist;
 
@@ -63,61 +66,110 @@ public class OnlineRefButton extends JPanel {
 	}
 	
 	public void setValue(CCOnlineReferenceList ref) {
+		setValue(ref, new ArrayList<>());
+	}
+
+	/**
+	 * @param ref        the online-references directly on the element (series / movie)
+	 * @param seasonRefs additional per-season online-references (title + references), shown as submenus in the dropdown
+	 */
+	public void setValue(CCOnlineReferenceList ref, List<Tuple<String, CCOnlineReferenceList>> seasonRefs) {
 		btnMain.setIcon(ref.Main.getIconButton());
 		btnMain.setEnabled(ref.Main.isSet());
-		
-		btnDropDown.setVisible(ref.hasAdditional());
-		
+
 		value = ref;
+		seasonValues = seasonRefs;
+
+		btnDropDown.setVisible(ref.hasAdditional() || !seasonValues.isEmpty());
 	}
 	
 	private void buildMenu(JPopupMenu menu)
 	{
-		if (!value.hasAdditional() || !value.isMainSet()) return;
+		boolean ownPart = value.hasAdditional() && value.isMainSet();
 
-		var ungrouped = CCStreams.iterate(value.Additional).filter(r -> !r.hasDescription()).toList();
-		var grouped = CCStreams.iterate(value.Additional).filter(CCSingleOnlineReference::hasDescription).groupBy(r -> r.description).autosortByProperty(Map.Entry::getKey).toList();
+		if (!ownPart && seasonValues.isEmpty()) return;
 
-		for (var sovalue : ungrouped)
+		if (ownPart)
 		{
-			menu.add(mitem(
-					sovalue.hasDescription() ? sovalue.description : sovalue.type.asString(),
-					sovalue.type.getIcon16x16(),
-					null,
-					e -> sovalue.openInBrowser(null, movielist.ccprops())));
-		}
+			var ungrouped = CCStreams.iterate(value.Additional).filter(r -> !r.hasDescription()).toList();
+			var grouped = CCStreams.iterate(value.Additional).filter(CCSingleOnlineReference::hasDescription).groupBy(r -> r.description).autosortByProperty(Map.Entry::getKey).toList();
 
-		if (!grouped.isEmpty() && !ungrouped.isEmpty()) menu.addSeparator();
-
-		for (var sovaluelist : CCStreams.iterate(grouped))
-		{
-
-			JMenu submenu = new JMenu(sovaluelist.getKey());
-
-			for (var sovalue : sovaluelist.getValue())
+			for (var sovalue : ungrouped)
 			{
-				submenu.add(mitem(
-						sovalue.type.asString(),
+				menu.add(mitem(
+						sovalue.hasDescription() ? sovalue.description : sovalue.type.asString(),
 						sovalue.type.getIcon16x16(),
 						null,
 						e -> sovalue.openInBrowser(null, movielist.ccprops())));
 			}
 
-			if (sovaluelist.getValue().size() > 1)
+			if (!grouped.isEmpty() && !ungrouped.isEmpty()) menu.addSeparator();
+
+			for (var sovaluelist : CCStreams.iterate(grouped))
 			{
-				submenu.addSeparator();
 
-				submenu.add(mitem(
-						LocaleBundle.getString("ClipMenuBar.Other.ShowAllInBrowser"),
-						Resources.ICN_MENUBAR_ONLINEREFERENCE.get16x16(),
-						null,
-						e -> openAllInBrowser(sovaluelist.getValue())));
+				JMenu submenu = new JMenu(sovaluelist.getKey());
+
+				for (var sovalue : sovaluelist.getValue())
+				{
+					submenu.add(mitem(
+							sovalue.type.asString(),
+							sovalue.type.getIcon16x16(),
+							null,
+							e -> sovalue.openInBrowser(null, movielist.ccprops())));
+				}
+
+				if (sovaluelist.getValue().size() > 1)
+				{
+					submenu.addSeparator();
+
+					submenu.add(mitem(
+							LocaleBundle.getString("ClipMenuBar.Other.ShowAllInBrowser"),
+							Resources.ICN_MENUBAR_ONLINEREFERENCE.get16x16(),
+							null,
+							e -> openAllInBrowser(sovaluelist.getValue())));
+				}
+
+				menu.add(submenu);
 			}
-
-			menu.add(submenu);
 		}
 
-		if (value.totalCount() > 2)
+		if (!seasonValues.isEmpty())
+		{
+			if (menu.getComponentCount() > 0) menu.addSeparator();
+
+			for (var season : seasonValues)
+			{
+				JMenu submenu = new JMenu(season.Item1);
+
+				for (var soref : season.Item2)
+				{
+					submenu.add(mitem(
+							soref.type.asString(),
+							soref.type.getIcon16x16(),
+							null,
+							e -> soref.openInBrowser(null, movielist.ccprops())));
+				}
+
+				if (season.Item2.totalCount() > 1)
+				{
+					submenu.addSeparator();
+
+					submenu.add(mitem(
+							LocaleBundle.getString("ClipMenuBar.Other.ShowAllInBrowser"),
+							Resources.ICN_MENUBAR_ONLINEREFERENCE.get16x16(),
+							null,
+							e -> openAllInBrowser(season.Item2.ccstream().toList())));
+				}
+
+				menu.add(submenu);
+			}
+		}
+
+		List<CCSingleOnlineReference> allRefs = new ArrayList<>(value.ccstream().toList());
+		for (var season : seasonValues) allRefs.addAll(season.Item2.ccstream().toList());
+
+		if (allRefs.size() > 2)
 		{
 			menu.addSeparator();
 
@@ -125,7 +177,7 @@ public class OnlineRefButton extends JPanel {
 					LocaleBundle.getString("ClipMenuBar.Other.ShowAllInBrowser"),
 					Resources.ICN_MENUBAR_ONLINEREFERENCE.get16x16(),
 					null,
-					e -> openAllInBrowser(value.ccstream().toList())));
+					e -> openAllInBrowser(allRefs)));
 		}
 	}
 

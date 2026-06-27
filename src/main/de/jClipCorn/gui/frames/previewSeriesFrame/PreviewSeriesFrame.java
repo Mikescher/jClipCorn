@@ -275,7 +275,8 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 
 		lblCover.setModeCover(series);
 
-		btnOnline.setValue(series.OnlineReference.get());
+		btnOnline.setValue(series.OnlineReference.get(),
+				CCStreams.iterate(series.getOnlineReferenceRecursive()).filter(t -> t.Item1.isPresent()).map(t -> Tuple.Create(t.Item1.get().getTitle(), t.Item2)).toList());
 
 		lblGroups.setText(series.Groups.get().iterate().stringjoin(p->p.Name, "\n"));
 

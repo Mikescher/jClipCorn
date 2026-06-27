@@ -262,6 +262,91 @@ public class FilesystemUtils {
 		return result;
 	}
 
+	// Snapshot-based variant of findEmptyDirectories - operates on an already-gathered FSDirectorySnapshot
+	// (single shared walk) instead of touching the filesystem again. Mirrors the live-filesystem logic above.
+	public static List<FSPath> findEmptyDirectories(FSDirectorySnapshot.DirNode root, int maxDepth, boolean returnRecursivelyEmptyDirs)
+	{
+		var result = new ArrayList<FSPath>();
+
+		for (var sub : root.SubDirs)
+		{
+			var r = findEmptyDirectories(sub, 1, maxDepth);
+			if (r.getValueNumber() == 1)
+			{
+				result.addAll(r.get1());
+			}
+			else if (r.getValueNumber() == 2)
+			{
+				result.add(sub.Path);
+			}
+			else if (r.getValueNumber() == 3)
+			{
+				if (returnRecursivelyEmptyDirs) result.add(sub.Path);
+			}
+		}
+
+		return result;
+	}
+
+	private static Either3<List<FSPath>, Boolean, Boolean> findEmptyDirectories(FSDirectorySnapshot.DirNode node, int depth, int maxDepth)
+	{
+		if (depth > maxDepth) return Either3.V1(new ArrayList<>()); // max depth reached - tread directory as "full"
+
+		if (isForceNonEmptyDir(node.Path)) return Either3.V1(new ArrayList<>());
+
+		var subDeletes   = new ArrayList<FSPath>();
+		var emptyDirs    = new ArrayList<FSPath>();
+		var recEmptyDirs = new ArrayList<FSPath>();
+
+		var hasFiles = false;
+		var hasEmptySubDirs = false;
+		var hasNonEmptySubDirs = false;
+
+		for (var fse : node.Files)
+		{
+			if (isEmptyIgnorableFile(fse)) continue;
+			hasFiles = true;
+		}
+
+		for (var sub : node.SubDirs)
+		{
+			var d = findEmptyDirectories(sub, depth+1, maxDepth);
+			if (d.getValueNumber() == 1)
+			{
+				subDeletes.addAll(d.get1());
+				hasNonEmptySubDirs = true;
+			}
+			else if (d.getValueNumber() == 2)
+			{
+				emptyDirs.add(sub.Path);
+				hasEmptySubDirs = true;
+			}
+			else if (d.getValueNumber() == 3)
+			{
+				recEmptyDirs.add(sub.Path);
+				hasEmptySubDirs = true;
+			}
+		}
+
+		if (hasFiles || hasNonEmptySubDirs)
+		{
+			var result = new ArrayList<FSPath>();
+			result.addAll(subDeletes);
+			result.addAll(emptyDirs);
+			result.addAll(recEmptyDirs);
+			return Either3.V1(result);
+		}
+
+		if (hasEmptySubDirs)
+		{
+			// $dir contains no files (direct or recursive), but contains (empty) directories
+			return Either3.V3(true);
+		}
+
+		// $dir contains no files (direct or recursive), and no directories - it's truely empty
+		return Either3.V2(true);
+	}
+
 	public static boolean isEmptyDirectories(FSPath dir, int maxDepth, boolean returnRecursivelyEmptyDirs)
 	{
 		var r = findEmptyDirectories(dir, 1, maxDepth);

@@ -17,6 +17,7 @@ import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
+import de.jClipCorn.util.filesystem.FSDirectorySnapshot;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
@@ -38,8 +39,37 @@ import java.util.*;
 
 public class CCDatabaseValidator extends AbstractDatabaseValidator
 {
+	// single shared filesystem walk of the movie/series trees, lazily built and reused by the
+	// empty-directory check and the orphaned-files check (so the NFS-mounted trees are walked only once)
+	private FSDirectorySnapshot fsSnapshot = null;
+
 	public CCDatabaseValidator(CCMovieList ml) {
 		super(ml);
+	}
+
+	private List<FSPath> collectFilesystemRoots() {
+		var roots = new ArrayList<FSPath>();
+
+		var oMovieDir = movielist.getCommonMoviesPath();
+		if (!oMovieDir.isEmpty()) {
+			var d = oMovieDir.toFSPath(ccprops());
+			if (d.directoryExists()) roots.add(d);
+		}
+
+		var oSeriesDir = movielist.getCommonSeriesPath();
+		if (!oSeriesDir.isEmpty()) {
+			var d = oSeriesDir.toFSPath(ccprops());
+			if (d.directoryExists()) roots.add(d);
+		}
+
+		return roots;
+	}
+
+	private FSDirectorySnapshot getFilesystemSnapshot(DoubleProgressCallbackListener pcl) throws IOException {
+		if (fsSnapshot == null) {
+			fsSnapshot = FSDirectorySnapshot.build(collectFilesystemRoots(), f -> pcl.stepSub(f.getFilenameWithExt()));
+		}
+		return fsSnapshot;
 	}
 
 	@Override
@@ -2642,50 +2672,16 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				+ 2
 		        + 1);
 
-		// ### 1 ###
 		try
 		{
-			pcl.stepSub("Scan movie directory");
+			var snapshot = getFilesystemSnapshot(pcl); // shared single walk (movie + series tree)
 
-			var odir = movielist.getCommonMoviesPath();
-			if (!odir.isEmpty())
+			for (var root : snapshot.getRoots())
 			{
-				var dir = odir.toFSPath(ccprops());
+				var res = FilesystemUtils.findEmptyDirectories(root, 4, true);
 
-				if (dir.directoryExists())
-				{
-					var res = FilesystemUtils.findEmptyDirectories(dir, 4, true, (v) -> pcl.stepSub("Movie: " + v));
-
-					for (var fse : res) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_EMPTY_DIRECTORY, fse));
-				}
+				for (var fse : res) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_EMPTY_DIRECTORY, fse));
 			}
-
-		}
-		catch (Exception ex)
-		{
-			e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
-		}
-
-
-		// ### 2 ###
-		try
-		{
-			pcl.stepSub("Scan series directory");
-
-			var odir = movielist.getCommonSeriesPath();
-			if (!odir.isEmpty())
-			{
-				var dir = odir.toFSPath(ccprops());
-
-				if (dir.directoryExists())
-				{
-					var res = FilesystemUtils.findEmptyDirectories(dir, 4, true, (v) -> pcl.stepSub("Series: " + v));
-
-					for (var fse : res) e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_EMPTY_DIRECTORY, fse));
-				}
-			}
-
-
 		}
 		catch (Exception ex)
 		{
@@ -2741,35 +2737,18 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 
 			String coverExt = ccprops().PROP_COVER_TYPE.getValue();
 
-			// Scan directories
-			List<FSPath> dirsToScan = new ArrayList<>();
+			var snapshot = getFilesystemSnapshot(pcl); // shared single walk (movie + series tree)
 
-			var oMovieDir = movielist.getCommonMoviesPath();
-			if (!oMovieDir.isEmpty()) {
-				var d = oMovieDir.toFSPath(ccprops());
-				if (d.directoryExists()) dirsToScan.add(d);
-			}
+			for (FSPath file : snapshot.getAllFiles()) {
+				String ext = file.getExtension();
 
-			var oSeriesDir = movielist.getCommonSeriesPath();
-			if (!oSeriesDir.isEmpty()) {
-				var d = oSeriesDir.toFSPath(ccprops());
-				if (d.directoryExists()) dirsToScan.add(d);
-			}
-
-			for (FSPath dir : dirsToScan) {
-				for (FSPath file : dir.listRecursiveDepthFirst()) {
-					if (!file.fileExists()) continue;
-
-					String ext = file.getExtension();
-
-					if (ext.equalsIgnoreCase("nfo")) {
-						if (!expectedNfoPaths.contains(file.toAbsolutePathString())) {
-							e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NFO_ORPHANED, file, "Path", file.toAbsolutePathString()));
-						}
-					} else if (ext.equalsIgnoreCase(coverExt)) {
-						if (!expectedPosterPaths.contains(file.toAbsolutePathString())) {
-							e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_POSTER_ORPHANED, file, "Path", file.toAbsolutePathString()));
-						}
+				if (ext.equalsIgnoreCase("nfo")) {
+					if (!expectedNfoPaths.contains(file.toAbsolutePathString())) {
+						e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NFO_ORPHANED, file, "Path", file.toAbsolutePathString()));
+					}
+				} else if (ext.equalsIgnoreCase(coverExt)) {
+					if (!expectedPosterPaths.contains(file.toAbsolutePathString())) {
+						e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_POSTER_ORPHANED, file, "Path", file.toAbsolutePathString()));
 					}
 				}
 			}

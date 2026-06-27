@@ -141,6 +141,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				mov -> mov.getCoverID() == -1,
 				mov -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOCOVERSET, mov));
 
+		// no year set
+		addMovieValidation(
+				DatabaseErrorType.ERROR_NOYEARSET,
+				o -> o.ValidateMovies,
+				mov -> mov.Year.get().isEmpty(),
+				mov -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOYEARSET, mov));
+
 		// cover not found
 		addMovieValidation(
 				DatabaseErrorType.ERROR_COVER_NOT_FOUND,
@@ -853,11 +860,11 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					}
 				});
 
-		// cover not set
+		// cover not set (series without episodes are allowed to have no cover)
 		addSeriesValidation(
 				DatabaseErrorType.ERROR_NOCOVERSET,
 				o -> o.ValidateSeries,
-				series -> series.getCoverID() == -1,
+				series -> !series.isEmpty() && series.getCoverID() == -1,
 				series -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOCOVERSET, series));
 
 		// cover not found
@@ -1241,12 +1248,19 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				season -> season.getTitle().isEmpty(),
 				season -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_TITLE_NOT_SET, season));
 
-		// cover not set
+		// cover not set (seasons without episodes are allowed to have no cover)
 		addSeasonValidation(
 				DatabaseErrorType.ERROR_NOCOVERSET,
 				o -> o.ValidateSeries,
-				season -> season.getCoverID() == -1,
+				season -> !season.isEmpty() && season.getCoverID() == -1,
 				season -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOCOVERSET, season));
+
+		// no year set (seasons without episodes are allowed to have no year)
+		addSeasonValidation(
+				DatabaseErrorType.ERROR_NOYEARSET,
+				o -> o.ValidateSeasons,
+				season -> !season.isEmpty() && season.Year.get().isEmpty(),
+				season -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOYEARSET, season));
 
 		// cover not found
 		addSeasonValidation(

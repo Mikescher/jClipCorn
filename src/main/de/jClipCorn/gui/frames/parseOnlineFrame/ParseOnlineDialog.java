@@ -22,6 +22,7 @@ import de.jClipCorn.gui.guiComponents.referenceChooser.JSingleReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -124,7 +125,7 @@ public class ParseOnlineDialog extends JCCDialog
 		edTitle.setText(Str.Empty);
 		spnLength.setValue(0);
 		ctrlScore.setValue(CCOnlineScore.EMPTY);
-		spnYear.setValue(0);
+		spnYear.setValueOpt(Opt.empty());
 		cbxFSK.clearSelectedEnum();
 		imgCover.clearCover();
 
@@ -170,7 +171,7 @@ public class ParseOnlineDialog extends JCCDialog
 		cbLength.setSelected((int)spnLength.getValue() > 0);
 		cbScore.setSelected(!ctrlScore.getValue().isEmpty());
 		cbTitle.setSelected(edTitle.getText().equalsIgnoreCase(owner.getTitleForParser()));
-		cbYear.setSelected((int)spnYear.getValue() > 0);
+		cbYear.setSelected(spnYear.getValueOpt().isPresent());
 
 		cbGenre0.setSelected(cbxGenre0.hasSelection());
 		cbGenre1.setSelected(cbxGenre1.hasSelection());
@@ -288,7 +289,7 @@ public class ParseOnlineDialog extends JCCDialog
 			SwingUtils.invokeAndWait(() ->
 			{
 				if (md.Title != null) edTitle.setText(md.Title);
-				if (md.Year != null) spnYear.setValue(md.Year);
+				if (md.Year != null) spnYear.setValueOpt(Opt.of(md.Year));
 				if (md.OnlineScore != null) ctrlScore.setValue(md.OnlineScore);
 				if (md.Length != null) spnLength.setValue(md.Length);
 				if (md.FSK != null) cbxFSK.setSelectedEnum(md.FSK);
@@ -337,7 +338,7 @@ public class ParseOnlineDialog extends JCCDialog
 
 		if (cbTitle.isSelected()) owner.setMovieName(edTitle.getText());
 
-		if (cbYear.isSelected()) owner.setYear((int) spnYear.getValue());
+		if (cbYear.isSelected()) spnYear.getValueOpt().ifPresent(owner::setYear);
 
 		if (cbScore.isSelected()) owner.setScore(ctrlScore.getValue());
 

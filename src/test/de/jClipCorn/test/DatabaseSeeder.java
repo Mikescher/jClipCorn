@@ -95,7 +95,7 @@ public class DatabaseSeeder {
 				m.FSK.set(CCFSK.RATING_II);
 				m.ViewedHistory.set(CCDateTimeList.createEmpty());
 				m.Language.set(CCDBLanguageSet.GERMAN);
-				m.Year.set(1994);
+				m.Year.set(Opt.of(1994));
 				m.Groups.set(CCGroupList.EMPTY);
 				m.AddDate.set(CCDate.create(23, 9, 2010));
 				m.Genres.set(CCGenreList.create(CCGenre.GENRE_014, CCGenre.GENRE_040));
@@ -125,7 +125,7 @@ public class DatabaseSeeder {
 				m.ViewedHistory.set(CCDateTimeList.create(CCDateTime.createFromSQL("2019-04-01"), CCDateTime.createFromSQL("2020-08-17 20:08:30"), CCDateTime.createFromSQL("2021-01-03 20:08:30")));
 				m.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN, CCDBLanguage.ENGLISH));
 				m.Subtitles.set(CCDBLanguageList.create(CCDBLanguage.ENGLISH, CCDBLanguage.FRENCH));
-				m.Year.set(1988);
+				m.Year.set(Opt.of(1988));
 				m.Groups.set(CCGroupList.create(CCGroup.create("BruceWillis")));
 				m.AddDate.set(CCDate.create(6, 8, 2015));
 				m.Genres.set(CCGenreList.create(CCGenre.GENRE_006, CCGenre.GENRE_019, CCGenre.GENRE_014));
@@ -156,7 +156,7 @@ public class DatabaseSeeder {
 				m.FSK.set(CCFSK.RATING_IV);
 				m.ViewedHistory.set(CCDateTimeList.create(CCDateTime.getUnspecified(), CCDateTime.createFromSQL("2021-06-06 07:08:00")));
 				m.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN));
-				m.Year.set(1990);
+				m.Year.set(Opt.of(1990));
 				m.Groups.set(CCGroupList.create(CCGroup.create("BruceWillis")));
 				m.AddDate.set(CCDate.create(15, 1, 2017));
 				m.Genres.set(CCGenreList.create(CCGenre.GENRE_006, CCGenre.GENRE_019, CCGenre.GENRE_014, CCGenre.GENRE_010));
@@ -192,7 +192,7 @@ public class DatabaseSeeder {
 			{
 				var sea = ml.createNewSeason(ser, s -> {
 					s.Title.set("01 - Neon Genesis Evangelion");
-					s.Year.set(1995);
+					s.Year.set(Opt.of(1995));
 					s.setCover(cvr2("101"));
 					// season-level online-reference (duplicating the series' MAL main ref is explicitly allowed)
 					s.OnlineReference.set(CCOnlineReferenceList.create(CCSingleOnlineReference.createMyAnimeList("30"),
@@ -263,7 +263,7 @@ public class DatabaseSeeder {
 			{
 				var sea = ml.createNewSeason(ser, s -> {
 					s.Title.set("02 - The End of Evangelion");
-					s.Year.set(1997);
+					s.Year.set(Opt.of(1997));
 					s.setCover(cvr2("102"));
 				});
 

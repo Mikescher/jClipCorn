@@ -50,7 +50,7 @@ public class MovieNFOWriter {
 		root.addContent(new Element("sorttitle").setText(movie.getTitle()));
 
 		// Year
-		root.addContent(new Element("year").setText(String.valueOf(movie.Year.get())));
+		movie.Year.get().ifPresent(year -> root.addContent(new Element("year").setText(String.valueOf(year))));
 
 		// Runtime in minutes
 		int runtimeMinutes = movie.Length.get() / 60;

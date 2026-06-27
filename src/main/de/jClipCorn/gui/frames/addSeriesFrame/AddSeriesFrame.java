@@ -24,6 +24,7 @@ import de.jClipCorn.gui.guiComponents.onlinescore.*;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
 
 import javax.swing.*;
@@ -152,7 +153,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 				newSeas.AnimeStudio.set(animeStudio);
 
 				Integer year = extractAnimeSeasonYear(animeSeason);
-				if (year != null) newSeas.Year.set(year);
+				if (year != null) newSeas.Year.set(Opt.of(year));
 			});
 		}
 

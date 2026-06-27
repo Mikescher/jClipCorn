@@ -4,6 +4,7 @@ import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.serialization.xmlimport.IDatabaseXMLImporterImpl;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.helper.ByteUtilies;
@@ -63,7 +64,7 @@ public class DatabaseXMLImportImpl_V2 implements IDatabaseXMLImporterImpl
 			e.execIfAttrExists("part_"+i, v -> o.Parts.set(fi, v));
 		}
 
-		e.execIfIntAttrExists("year", v -> o.year().set(v));
+		e.execIfIntAttrExists("year", v -> o.year().set(Opt.of(v)));
 		e.execIfAttrExists("zyklus", v -> o.zyklus().setTitle(v));
 		e.execIfIntAttrExists("zyklusnumber", v -> o.zyklus().setNumber(v));
 		e.execIfAttrExists("history", v -> o.viewedHistory().set(v));
@@ -87,7 +88,7 @@ public class DatabaseXMLImportImpl_V2 implements IDatabaseXMLImporterImpl
 	public void importSeason(CCSeason o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws Exception
 	{
 		e.execIfAttrExists("title", v -> o.title().set(v));
-		e.execIfIntAttrExists("year", v -> o.year().set(v));
+		e.execIfIntAttrExists("year", v -> o.year().set(Opt.of(v)));
 
 		for (CCXMLElement xchild : e.getAllChildren("episode"))
 		{

@@ -64,7 +64,7 @@ public class DatabaseXMLImportImpl_V5 implements IDatabaseXMLImporterImpl
 			e.execIfAttrExists("part_"+i, v -> o.Parts.set(fi, v));
 		}
 
-		e.execIfIntAttrExists("year", o.Year::set);
+		e.execIfIntAttrExists("year", v -> o.Year.set(Opt.of(v)));
 		e.execIfAttrExists("zyklus", o.Zyklus::setTitle);
 		e.execIfIntAttrExists("zyklusnumber", o.Zyklus::setNumber);
 		e.execIfAttrExists("history", o.ViewedHistory::set);
@@ -110,7 +110,7 @@ public class DatabaseXMLImportImpl_V5 implements IDatabaseXMLImporterImpl
 	public void importSeason(CCSeason o, CCXMLElement e, Func1to1<String, BufferedImage> imgf, ImportState s) throws Exception
 	{
 		e.execIfAttrExists("title", o.Title::set);
-		e.execIfIntAttrExists("year", o.Year::set);
+		e.execIfIntAttrExists("year", v -> o.Year.set(Opt.of(v)));
 
 		for (CCXMLElement xchild : e.getAllChildren("episode"))
 		{

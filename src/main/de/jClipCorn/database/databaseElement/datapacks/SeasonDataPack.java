@@ -1,18 +1,19 @@
 package de.jClipCorn.database.databaseElement.datapacks;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
+import de.jClipCorn.util.datatypes.Opt;
 
 import java.awt.image.BufferedImage;
 
 public class SeasonDataPack implements ISeasonData
 {
 	private final String title;
-	private final int year;
+	private final Opt<Integer> year;
 	private final BufferedImage cover;
 	private final CCUserScore score;
 	private final String scoreComment;
 
-	public SeasonDataPack(String title, int year, BufferedImage cover, CCUserScore score, String scoreComment)
+	public SeasonDataPack(String title, Opt<Integer> year, BufferedImage cover, CCUserScore score, String scoreComment)
 	{
 		this.title        = title;
 		this.year         = year;
@@ -23,7 +24,7 @@ public class SeasonDataPack implements ISeasonData
 
 	@Override public String getTitle() { return title; }
 
-	@Override public int getYear() { return year; }
+	@Override public Opt<Integer> getYear() { return year; }
 
 	@Override public BufferedImage getCover() { return cover; }
 

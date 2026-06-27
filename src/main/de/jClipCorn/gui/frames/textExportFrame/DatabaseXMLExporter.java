@@ -44,7 +44,7 @@ public class DatabaseXMLExporter extends DatabaseTextExporter {
 				
 				if (addLanguage) jdom_elem.setAttribute(new Attribute("languages", mov.getLanguage().ccstream().stringjoin(CCDBLanguage::getLongString, ";")));
 				if (addFormat) jdom_elem.setAttribute(new Attribute("format", mov.getFormat().asString()));
-				if (addYear) jdom_elem.setAttribute(new Attribute("year", mov.getYear() + ""));
+				if (addYear) jdom_elem.setAttribute(new Attribute("year", mov.getYear().mapOrElse(String::valueOf, "")));
 				if (addSize) jdom_elem.setAttribute(new Attribute("size", mov.getFilesize().getBytes() + " bytes"));
 				if (addViewed) jdom_elem.setAttribute(new Attribute("viewed", mov.isViewed() ? "true" : "false"));
 				
@@ -63,7 +63,7 @@ public class DatabaseXMLExporter extends DatabaseTextExporter {
 					jdom_elem_ser.addContent(jdom_elem_sea);
 
 					jdom_elem_sea.setAttribute(new Attribute("title", season.getTitle()));
-					if (addYear) jdom_elem_sea.setAttribute(new Attribute("year", season.getYear() + ""));
+					if (addYear) jdom_elem_sea.setAttribute(new Attribute("year", season.getYear().mapOrElse(String::valueOf, "")));
 					
 					for (int k = 0; k < season.getEpisodeCount(); k++) {
 						CCEpisode episode = season.getEpisodeByArrayIndex(k);

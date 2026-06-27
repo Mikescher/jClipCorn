@@ -14,6 +14,7 @@ import de.jClipCorn.gui.frames.compareDatabaseFrame.CDFWorkerCompare;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CDFWorkerPatch;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseRuleset;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
@@ -134,7 +135,7 @@ public class TestCompareAndPatchDatabases extends ClipCornBaseTest {
 
 		List<DatabaseError> errs = new ArrayList<>();
 
-		mlBase.getMovie("Die Hard 2").year().set(1988);
+		mlBase.getMovie("Die Hard 2").year().set(Opt.of(1988));
 
 		var validator = new CCDatabaseValidator(mlBase);
 		validator.validate(errs, opt_val, DoubleProgressCallbackListener.EMPTY);

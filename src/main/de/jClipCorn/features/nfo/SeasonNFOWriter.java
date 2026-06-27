@@ -59,11 +59,10 @@ public class SeasonNFOWriter {
 		root.addContent(new Element("seasonnumber").setText(String.valueOf(season.getSeasonNumber())));
 
 		// Year + premiered
-		int year = season.getYear();
-		if (year > 0) {
+		season.getYear().ifPresent(year -> {
 			root.addContent(new Element("year").setText(String.valueOf(year)));
 			root.addContent(new Element("premiered").setText(String.valueOf(year)));
-		}
+		});
 
 		// Studio(s)
 		for (String studio : season.getAnimeStudio()) {

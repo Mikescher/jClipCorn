@@ -782,7 +782,9 @@ public class CCMovieList implements ICCPropertySource {
 			List<Integer> result = new ArrayList<>();
 
 			for (CCMovie mov : iteratorMovies()) {
-				Integer year = mov.Year.get();
+				var oyear = mov.Year.get();
+				if (oyear.isEmpty()) continue;
+				Integer year = oyear.get();
 				if (!result.contains(year)) {
 					result.add(year);
 				}

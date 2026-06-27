@@ -55,7 +55,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 					if (addLanguage) builder.append(" [").append(mov.getLanguage().toOutputString()).append("]");
 					if (addFormat) builder.append(" (").append(mov.getFormat().asString().toUpperCase()).append(")");
 					if (addQuality) builder.append(" (").append(mov.getMediaInfoCategory().getLongText()).append(")");
-					if (addYear) builder.append(" (").append(mov.getYear()).append(")");
+					if (addYear) builder.append(" (").append(mov.getYear().mapOrElse(String::valueOf, "")).append(")");
 					if (addSize) builder.append(" (").append(mov.getFilesize().getFormatted()).append(")");
 
 					builder.append(System.lineSeparator());
@@ -87,7 +87,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 
 					builder.append("\t");
 					builder.append(season.getTitle());
-					if (addYear) builder.append(" (").append(season.getYear()).append(")");
+					if (addYear) builder.append(" (").append(season.getYear().mapOrElse(String::valueOf, "")).append(")");
 
 					builder.append(System.lineSeparator());
 
@@ -145,7 +145,7 @@ public class DatabasePlainTextExporter extends DatabaseTextExporter {
 			if (addLanguage) builder.append(" [").append(mov.getLanguage().toOutputString()).append("]");
 			if (addFormat) builder.append(" (").append(mov.getFormat().asString().toUpperCase()).append(")");
 			if (addQuality) builder.append(" (").append(mov.getMediaInfoCategory().getLongText()).append(")");
-			if (addYear) builder.append(" (").append(mov.getYear()).append(")");
+			if (addYear) builder.append(" (").append(mov.getYear().mapOrElse(String::valueOf, "")).append(")");
 			if (addSize) builder.append(" (").append(mov.getFilesize().getFormatted()).append(")");
 
 			builder.append(SimpleFileUtils.LINE_END);

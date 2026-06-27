@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.guiComponents.jYearSpinner;
 
+import de.jClipCorn.util.datatypes.Opt;
+
 import javax.swing.*;
 
 public class JYearSpinner extends JSpinner {
@@ -13,7 +15,17 @@ public class JYearSpinner extends JSpinner {
 		addPropertyChangeListener(ed);
 	}
 
-	public Integer getValue() {
-		return (int)getModel().getValue();
+	/**
+	 * @return the entered year, or {@link Opt#empty()} if the field has been cleared
+	 */
+	public Opt<Integer> getValueOpt() {
+		return ((YearSpinnerEditor) getEditor()).getValueOpt();
+	}
+
+	/**
+	 * Sets the year, or clears the field when {@code v} is empty.
+	 */
+	public void setValueOpt(Opt<Integer> v) {
+		((YearSpinnerEditor) getEditor()).setValueOpt(v);
 	}
 }

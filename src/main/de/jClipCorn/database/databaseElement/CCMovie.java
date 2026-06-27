@@ -33,6 +33,7 @@ import de.jClipCorn.util.stream.CCStreams;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, ICCDatedElement, IMovieData {
@@ -49,7 +50,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public final EIntProp                Length        = new EIntProp(          "Length",        0,                            this, EPropertyType.OBJECTIVE_METADATA);
 	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
 	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(       "Format",        CCFileFormat.MKV,             this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
-	public final EIntProp                Year          = new EIntProp(          "Year",          1900,                         this, EPropertyType.OBJECTIVE_METADATA);
+	public final EOptIntProp             Year          = new EOptIntProp(       "Year",          Opt.empty(),                  this, EPropertyType.OBJECTIVE_METADATA);
 	public final EFileSizeProp           FileSize      = new EFileSizeProp(     "FileSize",      CCFileSize.ZERO,              this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
 	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp( "ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
 	public final ELanguageSetProp        Language      = new ELanguageSetProp(  "Language",      CCDBLanguageSet.EMPTY,        this, EPropertyType.OBJECTIVE_METADATA);
@@ -113,7 +114,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public EIntProp                length()        { return Length;        }
 	public EDateProp               addDate()       { return AddDate;       }
 	public EEnumProp<CCFileFormat> format()        { return Format;        }
-	public EIntProp                year()          { return Year;          }
+	public EOptIntProp             year()          { return Year;          }
 	public EFileSizeProp           fileSize()      { return FileSize;      }
 	public ECCPathListProp         parts()         { return Parts;         }
 	public EDateTimeListProp       viewedHistory() { return ViewedHistory; }
@@ -211,7 +212,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	@Override
 	public int getFirstYear() {
-		return Year.get();
+		return Year.get().orElse(0);
 	}
 
 	@Override
@@ -236,15 +237,18 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		return Subtitles.get();
 	}
 
-	public int getZyklusYear() {
+	public Opt<Integer> getZyklusYear() {
 		if (!Zyklus.get().isSet()) return Year.get();
 
-		return CCStreams
+		List<Integer> years = CCStreams
 				.iterate(this.movielist.getByZyklus(Zyklus.get().getTitle()))
-				.autosortByProperty(p -> p.Year.get())
-				.first()
-				.map(p->p.Year.get())
-				.orElse(Year.get());
+				.map(p -> p.Year.get())
+				.filter(Opt::isPresent)
+				.map(Opt::get)
+				.enumerate();
+
+		if (years.isEmpty()) return Year.get();
+		return Opt.of(Collections.min(years));
 	}
 
 	public void setViewedHistoryFromUI(CCDateTimeList value) {
@@ -386,7 +390,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	}
 
 	public String generateRelativePath(int part) {
-		var year = String.valueOf(getZyklusYear());
+		var year = getZyklusYear().mapOrElse(String::valueOf, "0000"); //$NON-NLS-1$
 
 		var name = Zyklus.get().isSet() ? Zyklus.get().getTitle() : Title.get();
 		if (name.contains(": ")) name = name.substring(0, name.indexOf(": "));
@@ -429,7 +433,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	}
 
 	@Override
-	public int getYear() {
+	public Opt<Integer> getYear() {
 		return Year.get();
 	}
 

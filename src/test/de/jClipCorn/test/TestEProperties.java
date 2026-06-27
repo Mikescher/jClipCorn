@@ -146,7 +146,7 @@ public class TestEProperties extends ClipCornBaseTest {
 
 		s1.beginUpdating();
 		{
-			s1.Year.set(1980);
+			s1.Year.set(Opt.of(1980));
 			assertTrue(s1.isDirty());
 			assertTrue(s1.Year.isDirty());
 		}
@@ -161,7 +161,7 @@ public class TestEProperties extends ClipCornBaseTest {
 			assertTrue(s1.isDirty());
 			assertTrue(s1.Title.isDirty());
 
-			s1.Year.set(2222);
+			s1.Year.set(Opt.of(2222));
 			assertTrue(s1.isDirty());
 			assertTrue(s1.Year.isDirty());
 		}

@@ -32,6 +32,7 @@ import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.guiComponents.jMediaInfoControl.JMediaInfoControl;
 import de.jClipCorn.gui.guiComponents.jYearSpinner.JYearSpinner;
 import de.jClipCorn.gui.guiComponents.language.LanguageListChooser;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.gui.guiComponents.language.LanguageSetChooser;
 import de.jClipCorn.gui.guiComponents.onlinescore.OnlineScoreControl;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
@@ -124,7 +125,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 
 		forceViewedHistory = tmpMov.ViewedHistory.get();
 
-		setYear(tmpMov.getYear());
+		spnYear.setValueOpt(tmpMov.getYear());
 		setZyklus(tmpMov.getZyklus().getTitle());
 		setZyklusNumber(tmpMov.getZyklus().getNumber());
 		setMovieName(tmpMov.getTitle());
@@ -199,7 +200,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 			newM.FSK.set(cbxFSK.getSelectedEnum().asFSK());
 			newM.Format.set(cbxFormat.getSelectedEnum());
 
-			newM.Year.set(spnYear.getValue());
+			newM.Year.set(spnYear.getValueOpt());
 			newM.FileSize.set(spnSize.getValue());
 
 			newM.Genres.set(cbxGenre0.getSelectedEnum(), 0);
@@ -451,7 +452,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 
 	@Override
 	public void setYear(int y) {
-		spnYear.setValue(y);
+		spnYear.setValueOpt(Opt.of(y));
 	}
 
 	@Override
@@ -562,7 +563,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 				(int) spnLength.getValue(),
 				spnAddDate.getValue(),
 				cbxFormat.getSelectedEnum(),
-				spnYear.getValue(),
+				spnYear.getValueOpt(),
 				spnSize.getValue(),
 				Arrays.asList(edPart0.getPath(), edPart1.getPath(), edPart2.getPath(), edPart3.getPath(), edPart4.getPath(), edPart5.getPath()),
 				CCDateTimeList.createEmpty(),

@@ -2,6 +2,7 @@ package de.jClipCorn.gui.guiComponents.jYearSpinner;
 
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.helper.SwingUtils;
 
 import javax.swing.*;
@@ -38,6 +39,33 @@ public class YearSpinnerEditor extends JPanel implements ChangeListener, Propert
 		return tf;
 	}
 
+	/**
+	 * @return the entered year, or {@link Opt#empty()} when the field is blank
+	 */
+	public Opt<Integer> getValueOpt() {
+		String t = tf.getText().trim();
+		if (t.isEmpty()) return Opt.empty();
+		try {
+			return Opt.of(Integer.parseInt(t));
+		} catch (Exception e) {
+			return Opt.of((int) owner.getModel().getValue());
+		}
+	}
+
+	public void setValueOpt(Opt<Integer> v) {
+		preventCommit = true;
+		try {
+			if (v.isPresent()) {
+				owner.getModel().setValue(v.get());
+				tf.setText(String.valueOf(v.get()));
+			} else {
+				tf.setText(Str.Empty);
+			}
+		} finally {
+			preventCommit = false;
+		}
+	}
+
 	public void update() {
 		var txtCurrent = getTextField().getText();
 		var txtNew = String.valueOf(owner.getModel().getValue());
@@ -63,11 +91,13 @@ public class YearSpinnerEditor extends JPanel implements ChangeListener, Propert
 
 		if (owner == null || owner.getModel() == null) return;
 
-		String text = getTextField().getText();
+		String text = getTextField().getText().trim();
+
+		if (text.isEmpty()) return; // an empty field is a valid (cleared) year - do not revert it
 
 		try
 		{
-			var v = Integer.parseInt(text.trim());
+			var v = Integer.parseInt(text);
 			owner.getModel().setValue(v);
 
 			if (!Str.equals(String.valueOf(owner.getModel().getValue()), text)) update();

@@ -97,6 +97,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_NFO_POSTER_HASH_MISMATCH           = new DatabaseErrorType(90, DatabaseAutofixer::fixError_NFO);
 	public final static DatabaseErrorType ERROR_POSTER_ORPHANED                    = new DatabaseErrorType(91, DatabaseAutofixer::fixError_OrphanedFile);
 	public final static DatabaseErrorType ERROR_CHECKSUM_MISSING                  = new DatabaseErrorType(92, DatabaseAutofixer::fixError_ChecksumMissing);
+	public final static DatabaseErrorType ERROR_NOYEARSET                         = new DatabaseErrorType(93, null);
 
 	private final int type;
 

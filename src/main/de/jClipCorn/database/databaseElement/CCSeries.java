@@ -308,11 +308,16 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		{
 			int miny = Integer.MAX_VALUE;
 			int maxy = Integer.MIN_VALUE;
+			boolean any = false;
 
 			for (CCSeason se: seasons) {
-				miny = Math.min(miny, se.Year.get());
-				maxy = Math.max(maxy, se.Year.get());
+				var y = se.Year.get();
+				if (y.isEmpty()) continue;
+				any = true;
+				miny = Math.min(miny, y.get());
+				maxy = Math.max(maxy, y.get());
 			}
+			if (!any) return YearRange.unset();
 			return new YearRange(miny, maxy);
 		});
 	}
@@ -504,7 +509,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		
 		for (int i = 0; i < getSeasonCount(); i++) {
 			CCSeason season = getSeasonByArrayIndex(i);
-			String seasontitle = season.Title.get() + ' ' + '(' + season.Year.get() + ')';
+			String seasontitle = season.Title.get() + ' ' + '(' + season.Year.get().mapOrElse(String::valueOf, "") + ')'; //$NON-NLS-1$
 			
 			guide.appendNewLine();
 			guide.appendNewLine();

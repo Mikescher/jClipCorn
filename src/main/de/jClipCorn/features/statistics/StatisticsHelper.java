@@ -219,20 +219,22 @@ public class StatisticsHelper {
 	}
 	
 	public static Integer getMinimumYear(CCStream<ICCDatedElement> it) {
-		return it.minOrDefault(e -> e.year().get(), Integer::compare, 0);
+		return it.filter(e -> e.year().get().isPresent()).minOrDefault(e -> e.year().get().get(), Integer::compare, 0);
 	}
-	
+
 	public static Integer getMaximumYear(CCStream<ICCDatedElement> it) {
-		return it.maxOrDefault(e -> e.year().get(), Integer::compare, 0);
+		return it.filter(e -> e.year().get().isPresent()).maxOrDefault(e -> e.year().get().get(), Integer::compare, 0);
 	}
-	
+
 	public static int[] getCountForAllYears(int minYear, int count, CCStream<ICCDatedElement> it) {
 		int[] result = new int[count]; // default all zero
 
 		for (ICCDatedElement m : it) {
-			result[m.year().get() - minYear]++;
+			var y = m.year().get();
+			if (y.isEmpty()) continue;
+			result[y.get() - minYear]++;
 		}
-		
+
 		return result;
 	}
 	

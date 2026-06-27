@@ -93,7 +93,7 @@ public class CustomSearchFilter extends AbstractCustomDatabaseElementFilter {
 		}
 		
 		if (e.isMovie()) {
-			if (new YearRange(e.asMovie().getYear()).asString().equalsIgnoreCase(searchTerm)) {
+			if (e.asMovie().getYear().mapOrElse(y -> new YearRange(y).asString().equalsIgnoreCase(searchTerm), false)) {
 				return true;
 			}
 		} else if (e.isSeries()) {

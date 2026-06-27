@@ -12,6 +12,7 @@ import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.database.elementProps.impl.EEnumProp;
 import de.jClipCorn.database.elementProps.impl.EIntProp;
+import de.jClipCorn.database.elementProps.impl.EOptIntProp;
 import de.jClipCorn.database.elementProps.impl.EOnlineRefListProp;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
 import de.jClipCorn.database.elementProps.impl.EStringListProp;
@@ -49,7 +50,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	public final EIntProp                LocalID      = new EIntProp(   "LocalID",       -1,                    this, EPropertyType.DATABASE_PRIMARY_ID);
 	public final EIntProp                CoverID      = new EIntProp(   "CoverID",       -1,                    this, EPropertyType.DATABASE_REF);
 	public final EStringProp             Title        = new EStringProp("Title",         Str.Empty,             this, EPropertyType.OBJECTIVE_METADATA);
-	public final EIntProp                Year         = new EIntProp(   "Year",          1900,                  this, EPropertyType.OBJECTIVE_METADATA);
+	public final EOptIntProp             Year         = new EOptIntProp("Year",          Opt.empty(),           this, EPropertyType.OBJECTIVE_METADATA);
 	public final EEnumProp<CCUserScore>  Score        = new EEnumProp<>("Score",         CCUserScore.RATING_NO, this, EPropertyType.USER_METADATA);
 	public final EStringProp             ScoreComment = new EStringProp("ScoreComment",  Str.Empty,             this, EPropertyType.USER_METADATA);
 	public final EOnlineRefListProp      OnlineReference = new EOnlineRefListProp("OnlineReference", CCOnlineReferenceList.EMPTY, this, EPropertyType.OBJECTIVE_METADATA);
@@ -101,7 +102,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		};
 	}
 
-	public EIntProp                year()             { return Year;            }
+	public EOptIntProp             year()             { return Year;            }
 	public EStringProp             title()            { return Title;           }
 	public EEnumProp<CCUserScore>  score()            { return Score;           }
 	public EStringProp             scoreComment()     { return ScoreComment;    }
@@ -225,7 +226,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 
 	@Override
-	public int getYear() {
+	public Opt<Integer> getYear() {
 		return Year.get();
 	}
 

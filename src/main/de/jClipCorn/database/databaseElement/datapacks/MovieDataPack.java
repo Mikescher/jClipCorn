@@ -1,6 +1,7 @@
 package de.jClipCorn.database.databaseElement.datapacks;
 
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 
@@ -14,7 +15,7 @@ public class MovieDataPack implements IMovieData
 	private final int length;
 	private final CCDate addDate;
 	private final CCFileFormat format;
-	private final int year;
+	private final Opt<Integer> year;
 	private final CCFileSize filesize;
 	private final List<CCPath> parts;
 	private final CCDateTimeList viewedHistory;
@@ -32,7 +33,7 @@ public class MovieDataPack implements IMovieData
 	private final BufferedImage cover;
 
 	public MovieDataPack(CCMovieZyklus zyklus, CCMediaInfo mediaInfo, int length, CCDate addDate,
-						 CCFileFormat format, int year, CCFileSize filesize, List<CCPath> parts,
+						 CCFileFormat format, Opt<Integer> year, CCFileSize filesize, List<CCPath> parts,
 						 CCDateTimeList viewedHistory, CCDBLanguageSet language, CCDBLanguageList subtitles, String title,
 						 CCGenreList genres, CCOnlineScore onlinescore, CCFSK fsk, CCUserScore score, String scoreComment,
 						 CCOnlineReferenceList onlineReference, CCGroupList groups, CCTagList tags, BufferedImage cover)
@@ -70,7 +71,7 @@ public class MovieDataPack implements IMovieData
 
 	@Override public CCFileFormat getFormat() { return format; }
 
-	@Override public int getYear() { return year; }
+	@Override public Opt<Integer> getYear() { return year; }
 
 	@Override public CCFileSize getFilesize() { return filesize; }
 

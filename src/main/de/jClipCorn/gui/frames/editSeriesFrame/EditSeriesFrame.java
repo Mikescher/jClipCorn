@@ -592,7 +592,7 @@ public class EditSeriesFrame extends JCCFrame
 
 				edSeasonCvrControl.setCover(season.getCover());
 				edSeasonTitle.setText(season.getTitle());
-				spnSeasonYear.setValue(season.getYear());
+				spnSeasonYear.setValueOpt(season.getYear());
 				cbxSeasonScore.setSelectedEnum(season.getScore());
 				memoSeasonComment.setText(season.getScoreComment());
 				edSeasonReference.setValue(season.getOnlineReference());
@@ -929,7 +929,7 @@ public class EditSeriesFrame extends JCCFrame
 
 		season.setCover(edSeasonCvrControl.getResizedImageForStorage());
 		season.Title.set(edSeasonTitle.getText());
-		season.Year.set(spnSeasonYear.getValue());
+		season.Year.set(spnSeasonYear.getValueOpt());
 		season.Score.set(cbxSeasonScore.getSelectedEnum());
 		season.ScoreComment.set(memoSeasonComment.getText());
 		season.OnlineReference.set(edSeasonReference.getValue());
@@ -953,7 +953,7 @@ public class EditSeriesFrame extends JCCFrame
 		var spack = new SeasonDataPack
 		(
 			edSeasonTitle.getText(),
-			spnSeasonYear.getValue(),
+			spnSeasonYear.getValueOpt(),
 			edSeasonCvrControl.getResizedImageForStorage(),
 			cbxSeasonScore.getSelectedEnum(),
 			memoSeasonComment.getText()

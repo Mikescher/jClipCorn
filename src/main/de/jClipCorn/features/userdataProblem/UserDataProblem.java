@@ -174,7 +174,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (newdata.getYear() <= CCDate.YEAR_MIN) {
+		if (newdata.getYear().isPresent() && newdata.getYear().get() <= CCDate.YEAR_MIN) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_YEAR));
 		}
 		
@@ -421,7 +421,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (newdata.getYear() <= CCDate.YEAR_MIN) {
+		if (newdata.getYear().isPresent() && newdata.getYear().get() <= CCDate.YEAR_MIN) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_INVALID_YEAR));
 		}
 		

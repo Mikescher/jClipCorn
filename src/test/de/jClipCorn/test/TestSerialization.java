@@ -7,6 +7,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import junitparams.JUnitParamsRunner;
@@ -40,7 +41,7 @@ public class TestSerialization extends ClipCornBaseTest {
 		assertEquals(714502144, mov.getFilesize().getBytes());
 		assertEquals(CCDBLanguageSet.GERMAN, mov.getLanguage());
 		assertEquals(111, mov.getLength());
-		assertEquals(2010, mov.getYear());
+		assertEquals(Opt.of(2010), mov.getYear());
 		assertEquals(CCUserScore.RATING_NO, mov.Score.get());
 		assertEquals(CCFSK.RATING_III, mov.getFSK());
 		assertEquals(CCOnlineRefType.THEMOVIEDB, mov.getOnlineReference().Main.type);
@@ -68,7 +69,7 @@ public class TestSerialization extends ClipCornBaseTest {
 		assertEquals(714502144, mov.getFilesize().getBytes());
 		assertEquals(CCDBLanguageSet.GERMAN, mov.getLanguage());
 		assertEquals(111, mov.getLength());
-		assertEquals(2010, mov.getYear());
+		assertEquals(Opt.of(2010), mov.getYear());
 		assertEquals(CCUserScore.RATING_NO, mov.Score.get());
 		assertEquals(CCFSK.RATING_III, mov.getFSK());
 		assertEquals(CCOnlineRefType.THEMOVIEDB, mov.getOnlineReference().Main.type);

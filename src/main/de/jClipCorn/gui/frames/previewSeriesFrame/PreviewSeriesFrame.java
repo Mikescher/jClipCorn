@@ -324,9 +324,9 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			return;
 
 		if (Main.DEBUG) {
-			lblSeason.setText(String.format("<%d> %s (%d) (%s)", s.getLocalID(), s.getTitle(), s.getYear(), s.getCoverID())); //$NON-NLS-1$
+			lblSeason.setText(String.format("<%d> %s (%s) (%s)", s.getLocalID(), s.getTitle(), s.getYear().mapOrElse(String::valueOf, ""), s.getCoverID())); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			lblSeason.setText(String.format("%s (%d)", s.getTitle(), s.getYear())); //$NON-NLS-1$
+			lblSeason.setText(String.format("%s (%s)", s.getTitle(), s.getYear().mapOrElse(String::valueOf, ""))); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		var seasonIcon = s.Score.get().getIconRef(!Str.isNullOrWhitespace(s.ScoreComment.get()));

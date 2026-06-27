@@ -10,6 +10,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
@@ -116,7 +117,7 @@ public class CCBXMLReader {
 						newMov.OnlineScore.set(CCOnlineScore.create(Short.parseShort(e.getChildText("imdbscore")), (short)10));
 						newMov.FSK.set(e.getChild("usk").getAttribute("dec").getIntValue());
 						newMov.Format.set(e.getChild("format").getAttribute("dec").getIntValue());
-						newMov.Year.set(Integer.parseInt(e.getChildText("jahr")));
+						newMov.Year.set(Opt.of(Integer.parseInt(e.getChildText("jahr"))));
 						newMov.FileSize.set(e.getChild("größe").getAttribute("dec").getLongValue() * 1024);
 						newMov.Parts.set(0, CCPath.create(e.getChildText("pathpart1")));
 						newMov.Parts.set(1, CCPath.create(e.getChildText("pathpart2")));
@@ -178,7 +179,7 @@ public class CCBXMLReader {
 				try {
 					seaRef[0] = series.createNewSeason(newSeas -> {
 						newSeas.Title.set(owner.getChild("info").getChildText("staffeltitel"));
-						newSeas.Year.set(Integer.parseInt(owner.getChild("info").getChildText("jahr")));
+						newSeas.Year.set(Opt.of(Integer.parseInt(owner.getChild("info").getChildText("jahr"))));
 						//String cvrval = owner.getChild("info").getChildText("cover");
 						//newSeas.setCover(cvrval.substring(0, cvrval.length() - 3) + "png");
 					});

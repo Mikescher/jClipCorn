@@ -49,7 +49,8 @@ public class DatabaseMigrator {
 			Migration_29_30::new,
 			Migration_30_31::new,
 			Migration_31_32::new,
-			Migration_32_33::new
+			Migration_32_33::new,
+			Migration_33_34::new
 	);
 
 	private final List<DBMigration> migrations;

@@ -23,17 +23,17 @@ public class CustomYearFilter extends AbstractCustomMovieOrSeriesFilter {
 
 	@Override
 	public boolean includes(CCMovie m) {
-		return area.contains(new YearRange(m.getYear()));
+		return m.getYear().mapOrElse(y -> area.contains(new YearRange(y)), false);
 	}
 
 	@Override
 	public boolean includes(CCSeries s) {
-		return area.contains(s.getYearRange());
+		return s.getYearRange().isSet() && area.contains(s.getYearRange());
 	}
 
 	@Override
 	public boolean includes(CCSeason s) {
-		return area.contains(new YearRange(s.getYear()));
+		return s.getYear().mapOrElse(y -> area.contains(new YearRange(y)), false);
 	}
 
 	@Override

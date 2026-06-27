@@ -310,7 +310,7 @@ public class AutoFindReferenceFrame extends JCCFrame {
 		if (value.tmdbMeta != null) edTitleTmdb.setText(value.tmdbMeta.Title);
 
 		if (value.local.isMovie()){
-			edYearLocal.setText(Integer.toString((value.local.asMovie()).getYear()));
+			edYearLocal.setText((value.local.asMovie()).getYear().mapOrElse(String::valueOf, "")); //$NON-NLS-1$
 			if (value.tmdbMeta != null) edYearTmdb.setText(Integer.toString(value.tmdbMeta.Year));
 		} else {
 			edYearLocal.setText(""); //$NON-NLS-1$

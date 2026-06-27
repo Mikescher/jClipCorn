@@ -8,6 +8,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.driver.DatabaseStructure;
 import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -45,7 +46,7 @@ public class TestDatabase extends ClipCornBaseTest {
 			m.Language.set(CCDBLanguageSet.ENGLISH);
 			m.Length.set(120);
 			m.OnlineScore.set(CCOnlineScore.create((short)6, (short)10));
-			m.Year.set(2012);
+			m.Year.set(Opt.of(2012));
 			m.Score.set(CCUserScore.RATING_III);
 			m.OnlineReference.set("tmdb:movie/207703");
 			m.MediaInfo.set(CCMediaInfo.create(1565454159, 1565454169, new CCFileSize(1570732032), "[01-0015E036FC-75:78:FD:8B:56:3E:4E:DD]", 5903.904, 2128398, "MPEG-4 Visual", 720, 304, 23.976, (short)8, 141552, "XVID", "AC-3", (short)6, "2000", 48000));
@@ -69,7 +70,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(1024, movRead.getFilesize().getBytes());
 		assertEquals(CCDBLanguageSet.ENGLISH, movRead.getLanguage());
 		assertEquals(120, movRead.getLength());
-		assertEquals(2012, movRead.getYear());
+		assertEquals(Opt.of(2012), movRead.getYear());
 		assertEquals(CCUserScore.RATING_III, movRead.Score.get());
 		assertEquals(CCFSK.RATING_III, movRead.getFSK());
 		assertEquals(CCOnlineRefType.THEMOVIEDB, movRead.getOnlineReference().Main.type);
@@ -113,7 +114,7 @@ public class TestDatabase extends ClipCornBaseTest {
 
 		CCSeason seaWrite = serWrite.createNewSeason(sea -> {
 			sea.Title.set("MySeason ~~~");
-			sea.Year.set(2020);
+			sea.Year.set(Opt.of(2020));
 		});
 
 		CCEpisode epiWrite = seaWrite.createNewEpisode(epi -> {
@@ -175,7 +176,7 @@ public class TestDatabase extends ClipCornBaseTest {
 		CCSeason seaRead = serRead.iteratorSeasons().firstOrNull();
 
 		assertEquals("MySeason ~~~", seaRead.getTitle());
-		assertEquals(2020, seaRead.getYear());
+		assertEquals(Opt.of(2020), seaRead.getYear());
 
 		CCEpisode epiRead = seaRead.iteratorEpisodes().firstOrNull();
 

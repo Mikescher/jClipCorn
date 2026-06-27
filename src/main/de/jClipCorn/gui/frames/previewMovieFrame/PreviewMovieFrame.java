@@ -145,7 +145,7 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 		lblFormatIcon.setIcon(movie.Format.get().getIcon());
 		lblFormat.setText(movie.Format.get().asString());
 
-		lblYear.setText(movie.Year.get() + Str.Empty); //$NON-NLS-1$
+		lblYear.setText(movie.Year.get().mapOrElse(String::valueOf, Str.Empty)); //$NON-NLS-1$
 
 		lblUserScoreIcon.setIcon(movie.Score.get().getIcon(!Str.isNullOrWhitespace(movie.ScoreComment.get())));
 		lblUserScore.setText(movie.Score.get().asString());

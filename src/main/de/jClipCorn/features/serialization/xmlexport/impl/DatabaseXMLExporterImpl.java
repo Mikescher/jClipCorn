@@ -65,7 +65,7 @@ public class DatabaseXMLExporterImpl {
 		}
 
 		e.setAttribute("history",      o.ViewedHistory.get().toSerializationString());
-		e.setAttribute("year",         String.valueOf((o.getYear())));
+		o.getYear().ifPresent(v -> e.setAttribute("year", String.valueOf(v)));
 		e.setAttribute("zyklus",       o.getZyklus().getTitle());
 		e.setAttribute("zyklusnumber", String.valueOf((o.getZyklus().getNumber())));
 
@@ -102,7 +102,7 @@ public class DatabaseXMLExporterImpl {
 		if (s.ExportLocalID) e.setAttribute("seasonid", o.getLocalID() + "");
 
 		e.setAttribute("title",      o.getTitle());
-		e.setAttribute("year",       o.getYear() + "");
+		o.getYear().ifPresent(v -> e.setAttribute("year", String.valueOf(v)));
 		e.setAttribute("score",      String.valueOf(o.Score.get().asInt()));
 		e.setAttribute("comment",    o.ScoreComment.get());
 		e.setAttribute("onlinreref", o.getOnlineReference().toSerializationString());

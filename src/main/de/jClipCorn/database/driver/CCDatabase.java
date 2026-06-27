@@ -364,7 +364,7 @@ public class CCDatabase {
 
 	private void updateSeasonFromResultSet(CCSQLResultSet rs, CCSeason seas) throws SQLException, CCFormatException, SQLWrapperException {
 		seas.Title.setOnly(rs.getString(DatabaseStructure.COL_SEAS_NAME));
-		seas.Year.setOnly(rs.getInt(DatabaseStructure.COL_SEAS_YEAR));
+		seas.Year.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_SEAS_YEAR)));
 		seas.Score.setOnly(rs.getInt(DatabaseStructure.COL_SEAS_SCORE));
 		seas.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_SEAS_SCORECOMMENT));
 		seas.OnlineReference.setOnly(CCOnlineReferenceList.fromJSONArray(rs.getString(DatabaseStructure.COL_SEAS_ONLINEREF)));
@@ -401,7 +401,7 @@ public class CCDatabase {
 		mov.OnlineScore.setOnly(rs.getShort(DatabaseStructure.COL_MOV_ONLINESCORE_NUM), rs.getShort(DatabaseStructure.COL_MOV_ONLINESCORE_DENOM));
 		mov.FSK.setOnly(rs.getInt(DatabaseStructure.COL_MOV_FSK));
 		mov.Format.setOnly(rs.getInt(DatabaseStructure.COL_MOV_FORMAT));
-		mov.Year.setOnly(rs.getInt(DatabaseStructure.COL_MOV_MOVIEYEAR));
+		mov.Year.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_MOV_MOVIEYEAR)));
 		mov.OnlineReference.setOnly(CCOnlineReferenceList.fromJSONArray(rs.getString(DatabaseStructure.COL_MOV_ONLINEREF)));
 		mov.FileSize.setOnly(rs.getLong(DatabaseStructure.COL_MOV_FILESIZE));
 		mov.Tags.setOnly(rs.getString(DatabaseStructure.COL_MOV_TAGS));
@@ -663,7 +663,7 @@ public class CCDatabase {
 			stmt.setSht(DatabaseStructure.COL_MOV_ONLINESCORE_DENOM, mov.OnlineScore.Denominator.get());
 			stmt.setInt(DatabaseStructure.COL_MOV_FSK,               mov.FSK.get().asInt());
 			stmt.setInt(DatabaseStructure.COL_MOV_FORMAT,            mov.Format.get().asInt());
-			stmt.setInt(DatabaseStructure.COL_MOV_MOVIEYEAR,         mov.Year.get());
+			stmt.setNullableInt(DatabaseStructure.COL_MOV_MOVIEYEAR, mov.Year.get().orElse(null));
 			stmt.setStr(DatabaseStructure.COL_MOV_ONLINEREF,         mov.OnlineReference.get().asJSONArray());
 			stmt.setLng(DatabaseStructure.COL_MOV_FILESIZE,          mov.FileSize.get().getBytes());
 			stmt.setStr(DatabaseStructure.COL_MOV_TAGS,              mov.Tags.get().asJSONArray());
@@ -757,7 +757,7 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID,  sea.getSeries().getLocalID());
 
 			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,         sea.Title.get());
-			stmt.setInt(DatabaseStructure.COL_SEAS_YEAR,         sea.Year.get());
+			stmt.setNullableInt(DatabaseStructure.COL_SEAS_YEAR,  sea.Year.get().orElse(null));
 			stmt.setInt(DatabaseStructure.COL_SEAS_SCORE,        sea.Score.get().asInt());
 			stmt.setStr(DatabaseStructure.COL_SEAS_SCORECOMMENT, sea.ScoreComment.get());
 			stmt.setStr(DatabaseStructure.COL_SEAS_ONLINEREF,    sea.OnlineReference.get().asJSONArray());

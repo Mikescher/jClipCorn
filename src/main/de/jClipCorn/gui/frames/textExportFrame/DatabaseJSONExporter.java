@@ -46,7 +46,7 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 				attributes.add("\t\t\"titel\": \"" + simpleEscape(mov.getTitle()) + "\"");
 				if (addLanguage) attributes.add("\t\t\"languages\": [" + mov.getLanguage().ccstream().stringjoin(l -> "\""+l.getLongString()+"\"", ", ") + "]");
 				if (addFormat) attributes.add("\t\t\"format\": \"" + mov.getFormat().asString() + "\"");
-				if (addYear) attributes.add("\t\t\"year\": " + mov.getYear());
+				if (addYear) attributes.add("\t\t\"year\": " + mov.getYear().mapOrElse(String::valueOf, "null"));
 				if (addSize) attributes.add("\t\t\"size\": " + mov.getFilesize().getBytes());
 				if (addViewed) attributes.add("\t\t\"viewed\": " + (mov.isViewed() ? "true" : "false"));
 				
@@ -83,7 +83,7 @@ public class DatabaseJSONExporter extends DatabaseTextExporter {
 
 					if (addYear) {
 						builder.append("\t\t\t\t");
-						builder.append("\"year\": ").append(season.getYear()).append(",");
+						builder.append("\"year\": ").append(season.getYear().mapOrElse(String::valueOf, "null")).append(",");
 						builder.append(System.lineSeparator());
 					}
 					

@@ -91,7 +91,7 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 			//#####################################################################################
 
 			newS.Title.set(edTitle.getText());
-			newS.Year.set(spnYear.getValue());
+			newS.Year.set(spnYear.getValueOpt());
 			newS.OnlineReference.set(edReference.getValue());
 			newS.AnimeSeason.set(CCStringList.create(edAnimeSeason.getValues()));
 			newS.AnimeStudio.set(CCStringList.create(edAnimeStudio.getValues()));
@@ -112,7 +112,7 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 		var spack = new SeasonDataPack
 		(
 			edTitle.getText(),
-			spnYear.getValue(),
+			spnYear.getValueOpt(),
 			edCvrControl.getResizedImageForStorage(),
 			CCUserScore.RATING_NO,
 			Str.Empty

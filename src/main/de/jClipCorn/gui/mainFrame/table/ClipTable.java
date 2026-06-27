@@ -403,12 +403,12 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			LocaleBundle.getString("ClipTableModel.Year"),
 			"auto",
 			LocaleBundle.getString("ClipTableModel.Year"),
-			(r,v) -> { r.setText(v.isMovie() ? String.valueOf(v.asMovie().Year.get()) : v.asSeries().getYearRange().asString()); },
+			(r,v) -> { r.setText(v.isMovie() ? v.asMovie().Year.get().mapOrElse(String::valueOf, "") : v.asSeries().getYearRange().asString()); },
 			(r) -> true,
 			(v1,v2) ->
 			{
-				var o1 = v1.isMovie() ? new YearRange(v1.asMovie().Year.get()) : v1.asSeries().getYearRange();
-				var o2 = v2.isMovie() ? new YearRange(v2.asMovie().Year.get()) : v2.asSeries().getYearRange();
+				var o1 = v1.isMovie() ? v1.asMovie().Year.get().mapOrElse(YearRange::new, YearRange.unset()) : v1.asSeries().getYearRange();
+				var o2 = v2.isMovie() ? v2.asMovie().Year.get().mapOrElse(YearRange::new, YearRange.unset()) : v2.asSeries().getYearRange();
 				return YearRange.compare(o1, o2);
 			},
 			true,

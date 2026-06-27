@@ -40,7 +40,7 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_MOV_ONLINESCORE_DENOM = new CCSQLColDef("ONLINESCORE_DENOM",    CCSQLType.SMALLINT,    NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_FSK               = new CCSQLColDef("FSK",                  CCSQLType.TINYINT,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_FORMAT            = new CCSQLColDef("FORMAT",               CCSQLType.TINYINT,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_MOVIEYEAR         = new CCSQLColDef("MOVIEYEAR",            CCSQLType.SMALLINT,    NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_MOVIEYEAR         = new CCSQLColDef("MOVIEYEAR",            CCSQLType.SMALLINT,    NULLABLE);
 	public final static CCSQLColDef COL_MOV_ONLINEREF         = new CCSQLColDef("ONLINEREF",            CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_GROUPS            = new CCSQLColDef("GROUPS",               CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_FILESIZE          = new CCSQLColDef("FILESIZE",             CCSQLType.BIGINT,      NON_NULLABLE);
@@ -100,7 +100,7 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_SEAS_LOCALID          = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_SERIESID         = new CCSQLColDef("SERIESID",             CCSQLType.INTEGER,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SEAS_YEAR             = new CCSQLColDef("SEASONYEAR",           CCSQLType.SMALLINT,    NON_NULLABLE);
+	public final static CCSQLColDef COL_SEAS_YEAR             = new CCSQLColDef("SEASONYEAR",           CCSQLType.SMALLINT,    NULLABLE);
 	public final static CCSQLColDef COL_SEAS_COVERID          = new CCSQLColDef("COVERID",              CCSQLType.INTEGER,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_SCORE            = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_SCORECOMMENT     = new CCSQLColDef("SCORECOMMENT",         CCSQLType.VARCHAR,     NON_NULLABLE);

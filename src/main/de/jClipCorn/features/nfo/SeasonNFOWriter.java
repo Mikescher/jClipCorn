@@ -40,9 +40,14 @@ public class SeasonNFOWriter {
 		FSPath episodePath = season.getEpisodeByArrayIndex(0).getPart().toFSPath(season);
 		if (episodePath.isEmpty()) return FSPath.Empty;
 
-		String seasonFolderName = episodePath.getParent().getDirectoryName();
+		// The season poster lives inside the season folder (next to season.nfo), named "poster.<ext>"
+		// so Jellyfin/Kodi auto-detect it as the season cover. Jellyfin only recognizes season posters
+		// named poster/folder/cover/default _inside the season folder_ (not "<SeasonFolder>.jpg" in the root).
+		FSPath seasonFolder = episodePath.getParent();
+		if (seasonFolder.isEmpty()) return FSPath.Empty;
+
 		String coverExt = series.getMovieList().ccprops().PROP_COVER_TYPE.getValue();
-		return basePath.append(seasonFolderName + "." + coverExt);
+		return seasonFolder.append("poster." + coverExt);
 	}
 
 	public static String generateNFO(CCSeries series, CCSeason season) {
@@ -106,7 +111,7 @@ public class SeasonNFOWriter {
 				uniqueid.setAttribute("default", "true");
 				hasDefault = true;
 			}
-			uniqueid.setText(ref.id);
+			uniqueid.setText(ref.getNfoUniqueId());
 			root.addContent(uniqueid);
 		}
 
@@ -124,10 +129,10 @@ public class SeasonNFOWriter {
 		CCCoverData coverData = season.getCoverInfo();
 		if (coverData == null) return;
 
-		// The season poster lives in the parent (series) folder, the season.nfo inside the season folder
+		// The season poster lives in the same folder as the season.nfo
 		Element thumb = new Element("thumb");
 		thumb.setAttribute("aspect", "poster");
-		thumb.setText("../" + posterPath.getFilenameWithExt());
+		thumb.setText(posterPath.getFilenameWithExt());
 		root.addContent(thumb);
 	}
 

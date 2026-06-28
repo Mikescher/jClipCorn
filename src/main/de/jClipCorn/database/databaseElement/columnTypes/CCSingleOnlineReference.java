@@ -123,6 +123,22 @@ public class CCSingleOnlineReference {
 		return type != CCOnlineRefType.NONE & !id.trim().isEmpty();
 	}
 
+	/**
+	 * The id as it should be written into external NFO files (Kodi/Jellyfin {@code <uniqueid>}).
+	 * <p>
+	 * TMDB ids are stored internally with a {@code "movie/"} or {@code "tv/"} type-prefix
+	 * (e.g. {@code "tv/63174"}) because that prefix is part of the TMDB api url. Media servers
+	 * however expect only the bare numeric id ({@code "63174"}) and throw when parsing the
+	 * prefixed form. For all other reference types the id is already in the expected format.
+	 */
+	public String getNfoUniqueId() {
+		if (type == CCOnlineRefType.THEMOVIEDB) {
+			int slash = id.indexOf('/');
+			if (slash >= 0 && slash + 1 < id.length()) return id.substring(slash + 1);
+		}
+		return id;
+	}
+
 	public String getURL(CCProperties ccprops) {
 		return CCOnlineRefTypeHelper.getURL(ccprops, this);
 	}

@@ -122,7 +122,7 @@ public class MovieNFOWriter {
 				uniqueid.setAttribute("default", "true");
 				hasDefault = true;
 			}
-			uniqueid.setText(ref.id);
+			uniqueid.setText(ref.getNfoUniqueId());
 			root.addContent(uniqueid);
 		}
 

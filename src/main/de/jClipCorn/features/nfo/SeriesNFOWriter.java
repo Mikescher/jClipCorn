@@ -33,8 +33,10 @@ public class SeriesNFOWriter {
 	public static FSPath getPosterPath(CCSeries series, FSPath rootPath) {
 		if (rootPath.isEmpty()) return FSPath.Empty;
 
+		// Named "poster.<ext>" so Jellyfin/Kodi auto-detect it as the series cover.
+		// (Jellyfin only recognizes poster/folder/cover/default/show - NOT "tvshow.jpg")
 		String coverExt = series.getMovieList().ccprops().PROP_COVER_TYPE.getValue();
-		return rootPath.append("tvshow." + coverExt);
+		return rootPath.append("poster." + coverExt);
 	}
 
 	public static String generateNFO(CCSeries series) {
@@ -132,7 +134,7 @@ public class SeriesNFOWriter {
 				uniqueid.setAttribute("default", "true");
 				hasDefault = true;
 			}
-			uniqueid.setText(ref.id);
+			uniqueid.setText(ref.getNfoUniqueId());
 			root.addContent(uniqueid);
 		}
 

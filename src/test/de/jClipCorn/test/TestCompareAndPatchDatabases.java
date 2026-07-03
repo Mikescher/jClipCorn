@@ -15,6 +15,7 @@ import de.jClipCorn.gui.frames.compareDatabaseFrame.CDFWorkerPatch;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseRuleset;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
@@ -135,7 +136,18 @@ public class TestCompareAndPatchDatabases extends ClipCornBaseTest {
 
 		List<DatabaseError> errs = new ArrayList<>();
 
-		mlBase.getMovie("Die Hard 2").year().set(Opt.of(1988));
+		// 'Die Hard 2' lost its zyklus sibling ('Stirb Langsam I') in the patch, so its zyklus-year
+		// (min year of the zyklus) changes. We pin its year to 1988 so the year-folder stays stable,
+		// and relocate the files into the now-expected per-movie leaf directory (which encodes the year).
+		var dieHard = mlBase.getMovie("Die Hard 2");
+		dieHard.year().set(Opt.of(1988));
+		for (int i = 0; i < dieHard.getPartcount(); i++) {
+			var oldPath = dieHard.Parts.get(i).toFSPath(mlBase);
+			var newPath = dieHard.generateGuessedAbsolutePath(i);
+			newPath.getParent().mkdirsSafe();
+			oldPath.renameToSafe(newPath);
+			dieHard.Parts.set(i, CCPath.createFromFSPath(newPath, mlBase));
+		}
 
 		var validator = new CCDatabaseValidator(mlBase);
 		validator.validate(errs, opt_val, DoubleProgressCallbackListener.EMPTY);

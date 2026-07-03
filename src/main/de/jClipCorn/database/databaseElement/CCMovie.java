@@ -389,14 +389,38 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		return filename.toString();
 	}
 
+	// Per-movie leaf directory name used for zyklus movies (see generateRelativePath).
+	// Contains the movie title with its zyklus prefix but *without* the zyklus number,
+	// without the language tag and with the (individual) movie year appended - e.g.
+	// "S.W.A.T. - Die Spezialeinheit (2003)".
+	@SuppressWarnings("nls")
+	public String generateFoldername() {
+		StringBuilder foldername = new StringBuilder();
+
+		if (Zyklus.get().isSet()) {
+			foldername.append(Zyklus.get().getTitle()).append(" - ");
+		}
+		foldername.append(Str.limit(Title.get().replace(": ", " - "), 128));
+
+		foldername.append(" (").append(Year.get().mapOrElse(String::valueOf, "0000")).append(")");
+
+		return FilesystemUtils.fixStringToFilesystemname(foldername.toString());
+	}
+
 	public String generateRelativePath(int part) {
 		var year = getZyklusYear().mapOrElse(String::valueOf, "0000"); //$NON-NLS-1$
 
 		var name = Zyklus.get().isSet() ? Zyklus.get().getTitle() : Title.get();
-		if (name.contains(": ")) name = name.substring(0, name.indexOf(": "));
+		if (name.contains(": ")) name = name.substring(0, name.indexOf(": ")); //$NON-NLS-1$
 		name = FilesystemUtils.fixStringToFilesystemname(name);
 
 		var filename = generateFilename(part);
+
+		if (Zyklus.get().isSet()) {
+			// Zyklus movies get an additional per-movie leaf directory so that each movie lives
+			// in its own folder (required by e.g. Jellyfin, which wants one directory per movie).
+			return FilesystemUtils.combineWithFSPathSeparator(year, name, generateFoldername(), filename);
+		}
 
 		return FilesystemUtils.combineWithFSPathSeparator(year, name, filename);
 	}
@@ -405,14 +429,21 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		var currentPath = Parts.get(part).toFSPath(this);
 		var expectedRelPath = generateRelativePath(part);
 
-		// Determine base directory:
-		// If grandparent looks like a year (4 digits), file is already in year/name structure -> go up 3 levels
-		// Otherwise file is in flat structure -> go up 1 level
+		// Determine the base directory:
+		// The generated relative path always starts with a {year} folder, so we walk up the
+		// current file's ancestors to locate that year folder - the base is its parent.
+		// This supports the flat (base/file), old (base/year/name/file) and new zyklus
+		// (base/year/name/movie/file) layouts alike.
+		// If no year folder is found we fall back to a flat structure (the file's parent).
 		FSPath basePath = currentPath.getParent();
 
-		String grandparentName = currentPath.getParent().getParent().getDirectoryName();
-		if (grandparentName.matches("\\d{4}")) { //$NON-NLS-1$
-			basePath = currentPath.getParent(3);
+		FSPath probe = currentPath.getParent();
+		for (int i = 0; i < 3; i++) {
+			if (probe.getDirectoryName().matches("\\d{4}")) { //$NON-NLS-1$
+				basePath = probe.getParent();
+				break;
+			}
+			probe = probe.getParent();
 		}
 
 		return basePath.append(expectedRelPath);

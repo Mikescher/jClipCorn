@@ -108,7 +108,7 @@ public class SeriesNFOWriter {
 		for (int i = 0; i < series.getSeasonCount(); i++) {
 			var season = series.getSeasonByArrayIndex(i);
 			Element namedSeason = new Element("namedseason");
-			namedSeason.setAttribute("number", String.valueOf(season.getSeasonNumber()));
+			namedSeason.setAttribute("number", String.valueOf(season.getIndexForCreatedFolderStructure()));
 			namedSeason.setText(season.getTitle());
 			root.addContent(namedSeason);
 		}

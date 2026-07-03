@@ -24,8 +24,8 @@ public class EpisodeNFOWriter {
 		// Title
 		root.addContent(new Element("title").setText(episode.getTitle()));
 
-		// Season number
-		int seasonNumber = episode.getSeason().getSeasonNumber();
+		// Season number (matches the SxxExx index used for the on-disk folder/file structure)
+		int seasonNumber = episode.getSeason().getIndexForCreatedFolderStructure();
 		root.addContent(new Element("season").setText(String.valueOf(seasonNumber)));
 
 		// Episode number

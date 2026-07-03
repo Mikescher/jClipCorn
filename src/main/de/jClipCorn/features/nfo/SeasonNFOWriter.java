@@ -60,8 +60,9 @@ public class SeasonNFOWriter {
 		// Sort title
 		root.addContent(new Element("sorttitle").setText(season.getTitle()));
 
-		// Season number (matches the <season> value written into the episode NFOs of this season)
-		root.addContent(new Element("seasonnumber").setText(String.valueOf(season.getSeasonNumber())));
+		// Season number (matches the <season> value written into the episode NFOs of this season,
+		// as well as the SxxExx index used for the on-disk folder/file structure)
+		root.addContent(new Element("seasonnumber").setText(String.valueOf(season.getIndexForCreatedFolderStructure())));
 
 		// Year + premiered
 		season.getYear().ifPresent(year -> {

@@ -302,9 +302,12 @@ public class FilesystemUtils {
 		var hasEmptySubDirs = false;
 		var hasNonEmptySubDirs = false;
 
+		var siblingNames = new HashSet<String>();
+		for (var fse : node.Files) siblingNames.add(fse.getFilenameWithExt().toLowerCase());
+
 		for (var fse : node.Files)
 		{
-			if (isEmptyIgnorableFile(fse)) continue;
+			if (isEmptyIgnorableFile(fse, siblingNames)) continue;
 			hasFiles = true;
 		}
 
@@ -368,13 +371,38 @@ public class FilesystemUtils {
 		}
 	}
 
-	private static boolean isEmptyIgnorableFile(FSPath fse)
+	// Image extensions for which a "poster.<ext>" / "<basename>.<ext>" file is treated as a (jClipCorn/Jellyfin generated) cover artifact.
+	private static final Set<String> POSTER_IMAGE_EXTENSIONS = Set.of("png", "jpg", "jpeg", "webp", "bmp", "gif");
+
+	private static boolean isEmptyIgnorableFile(FSPath fse, Set<String> siblingFilenamesLower)
 	{
 		if (fse.getFilenameWithExt().equalsIgnoreCase("desktop.ini")) return true;
 		if (fse.getFilenameWithExt().equalsIgnoreCase("Thumbs.db")) return true;
 		if (fse.getExtension().equalsIgnoreCase("tmp")) return true;
 
+		// A leftover NFO metadata file must not keep an otherwise-empty media directory alive
+		// (movie/episode "<basename>.nfo", series "tvshow.nfo", season "season.nfo" - see the *NFOWriter classes).
+		if (fse.getExtension().equalsIgnoreCase("nfo")) return true;
+
+		// ... same for a leftover generated cover image.
+		if (isEmptyIgnorablePosterFile(fse, siblingFilenamesLower)) return true;
+
 		return false;
+	}
+
+	// A generated cover image is ignorable if it is either
+	//   - the series/season cover, which is always literally named "poster.<ext>" (Series/SeasonNFOWriter), or
+	//   - a movie/episode cover "<basename>.<ext>" sitting next to its own "<basename>.nfo" (MovieNFOWriter).
+	// We deliberately do NOT ignore arbitrary images (e.g. a user's "vacation.png") without a matching nfo sibling.
+	private static boolean isEmptyIgnorablePosterFile(FSPath fse, Set<String> siblingFilenamesLower)
+	{
+		if (!POSTER_IMAGE_EXTENSIONS.contains(fse.getExtension().toLowerCase())) return false;
+
+		var base = fse.getFilenameWithoutExt();
+
+		if (base.equalsIgnoreCase("poster")) return true;
+
+		return siblingFilenamesLower.contains(base.toLowerCase() + ".nfo");
 	}
 
 	private static boolean isForceNonEmptyDir(FSPath fse)
@@ -400,11 +428,14 @@ public class FilesystemUtils {
 		var hasEmptySubDirs = false;
 		var hasNonEmptySubDirs = false;
 
+		var siblingNames = new HashSet<String>();
+		for (var fse : dirContent) if (fse.isFile()) siblingNames.add(fse.getFilenameWithExt().toLowerCase());
+
 		for (var fse : dirContent)
 		{
 			if (fse.isFile())
 			{
-				if (isEmptyIgnorableFile(fse)) continue;
+				if (isEmptyIgnorableFile(fse, siblingNames)) continue;
 
 				hasFiles = true;
 			}
@@ -469,6 +500,11 @@ public class FilesystemUtils {
 	public static boolean deleteEmptyDirectory(FSPath folder) {
 		FSPath[] files = folder.list().toArray(new FSPath[0]);
 
+		// Snapshot of the sibling filenames *before* we start deleting, so a poster whose matching
+		// nfo sibling was already removed earlier in this loop is still recognized as ignorable.
+		var siblingNames = new HashSet<String>();
+		for (FSPath fse : files) if (fse.isFile()) siblingNames.add(fse.getFilenameWithExt().toLowerCase());
+
 		for(FSPath fse: files)
 		{
 			if (isForceNonEmptyDir(fse)) return false;
@@ -479,7 +515,7 @@ public class FilesystemUtils {
 			}
 			else
 			{
-				if (!isEmptyIgnorableFile(fse)) return false;
+				if (!isEmptyIgnorableFile(fse, siblingNames)) return false;
 				if (! fse.deleteSafe()) return false;
 			}
 

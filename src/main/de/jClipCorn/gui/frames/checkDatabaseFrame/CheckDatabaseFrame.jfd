@@ -16,7 +16,7 @@ new FormModel {
 			"defaultCloseOperation": 2
 			"minimumSize": new java.awt.Dimension( 650, 400 )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "default, labelcompgap, default, labelcompgap, default:grow, labelcompgap, default, labelcompgap, default"
+				"$columnSpecs": "default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default:grow, labelcompgap, default, labelcompgap, default"
 				"$rowSpecs": "default"
 			} ) {
 				name: "panel1"
@@ -29,11 +29,35 @@ new FormModel {
 					"gridX": 1
 					"gridY": 1
 				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnPresetFull"
+					"text": new FormMessage( null, "CheckDatabaseFrame.btnPresetFull.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "presetFull", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnPresetDefault"
+					"text": new FormMessage( null, "CheckDatabaseFrame.btnPresetDefault.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "presetDefault", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnPresetQuick"
+					"text": new FormMessage( null, "CheckDatabaseFrame.btnPresetQuick.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "presetQuick", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 1
+				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "lblInfo"
 					"text": new FormMessage( null, "CheckDatabaseDialog.lblInfo.text" )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 3
+					"gridX": 9
 					"gridY": 1
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
@@ -41,7 +65,7 @@ new FormModel {
 					"text": new FormMessage( null, "CheckDatabaseDialog.btnAutofix.text" )
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "autoFix", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 7
+					"gridX": 13
 					"gridY": 1
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
@@ -49,7 +73,7 @@ new FormModel {
 					"text": new FormMessage( null, "CheckDatabaseDialog.btnFixSelected.text" )
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "fixSelected", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 9
+					"gridX": 15
 					"gridY": 1
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
@@ -164,8 +188,8 @@ new FormModel {
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "0dlu:grow, labelcompgap, 1dlu:grow, labelcompgap, 1dlu:grow, labelcompgap, 1dlu:grow"
-				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, unrelgap, default"
+				"$columnSpecs": "0dlu:grow, labelcompgap, default, unrelgap, 1dlu:grow, labelcompgap, default, unrelgap, 1dlu:grow, labelcompgap, default, unrelgap, 1dlu:grow, labelcompgap, default"
+				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default"
 			} ) {
 				name: "panel2"
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
@@ -173,6 +197,15 @@ new FormModel {
 					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValMovies" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValMovies"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValMovies.tooltip" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
 					"gridY": 1
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
@@ -180,14 +213,31 @@ new FormModel {
 					"text": new FormMessage( null, "CheckDatabaseFrame.cbValCovers.text" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 3
+					"gridX": 5
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValCovers"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValCovers.tooltip" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 1
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "cbValCoverFiles"
 					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValCoverFiles" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 5
+					"gridX": 9
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValCoverFiles"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValCoverFiles.tooltip" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 11
 					"gridY": 1
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
@@ -195,13 +245,31 @@ new FormModel {
 					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValDatabase" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 7
+					"gridX": 13
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValDatabase"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValDatabase.tooltip" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 15
+					"gridY": 1
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "cbValSeries"
 					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValSeries" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValSeries"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValSeries.tooltip" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
 					"gridY": 3
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
@@ -209,15 +277,31 @@ new FormModel {
 					"text": new FormMessage( null, "CheckDatabaseFrame.cbValGroups.text" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
 					"gridY": 3
-					"gridX": 3
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValGroups"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValGroups.tooltip" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 3
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "cbValVideoFiles"
 					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValVideoFiles" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 5
+					"gridX": 9
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValVideoFiles"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValVideoFiles.tooltip" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 11
 					"gridY": 3
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
@@ -225,7 +309,15 @@ new FormModel {
 					"text": new FormMessage( null, "CheckDatabaseFrame.cbValDuplicates" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 7
+					"gridX": 13
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValDuplicates"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValDuplicates.tooltip" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 15
 					"gridY": 3
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
@@ -233,6 +325,15 @@ new FormModel {
 					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValSeasons" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValSeasons"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValSeasons.tooltip" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
 					"gridY": 5
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
@@ -240,15 +341,31 @@ new FormModel {
 					"text": new FormMessage( null, "CheckDatabaseFrame.cbValOnlineRefs.text" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
 					"gridY": 5
-					"gridX": 3
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValOnlineRefs"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValOnlineRefs.tooltip" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+					"gridY": 5
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "cbValNfoFiles"
 					"text": new FormMessage( null, "CheckDatabaseFrame.cbValNfoFiles.text" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 5
+					"gridX": 9
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValNfoFiles"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValNfoFiles.tooltip" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 11
 					"gridY": 5
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
@@ -256,7 +373,15 @@ new FormModel {
 					"text": new FormMessage( null, "CheckDatabaseFrame.cbValSeriesStructure" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 7
+					"gridX": 13
+					"gridY": 5
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValSeriesStructure"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValSeriesStructure.tooltip" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 15
 					"gridY": 5
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
@@ -264,6 +389,15 @@ new FormModel {
 					"text": new FormMessage( null, "CheckDatabaseDialog.checkbox.cbValEpisodes" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 7
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValEpisodes"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValEpisodes.tooltip" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
 					"gridY": 7
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
@@ -271,7 +405,15 @@ new FormModel {
 					"text": new FormMessage( null, "CheckDatabaseFrame.cbValEmptyDirs" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 5
+					"gridX": 9
+					"gridY": 7
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValEmptyDirs"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValEmptyDirs.tooltip" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 11
 					"gridY": 7
 				} )
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
@@ -279,32 +421,16 @@ new FormModel {
 					"text": new FormMessage( null, "CheckDatabaseFrame.cbValNfoFullCompare.text" )
 					addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cbxAnyItemStateChanged", true ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 7
+					"gridX": 13
 					"gridY": 7
 				} )
-				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "btnPresetFull"
-					"text": new FormMessage( null, "CheckDatabaseFrame.btnPresetFull.text" )
-					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "presetFull", false ) )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "icnValNfoFullCompare"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/icons/table/type/info_16x16.png" )
+					"toolTipText": new FormMessage( null, "CheckDatabaseFrame.cbValNfoFullCompare.tooltip" )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 1
-					"gridY": 9
-				} )
-				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "btnPresetDefault"
-					"text": new FormMessage( null, "CheckDatabaseFrame.btnPresetDefault.text" )
-					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "presetDefault", false ) )
-				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 3
-					"gridY": 9
-				} )
-				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "btnPresetQuick"
-					"text": new FormMessage( null, "CheckDatabaseFrame.btnPresetQuick.text" )
-					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "presetQuick", false ) )
-				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 5
-					"gridY": 9
+					"gridX": 15
+					"gridY": 7
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2

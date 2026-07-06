@@ -168,9 +168,9 @@ public class CheckDatabaseFrame extends JCCFrame
 		ccprops().PROP_CHECKDATABASE_OPTIONS.setValue(optionsFromCheckboxes().serialize());
 	}
 
-	private void presetFull()    { applyPreset(DatabaseValidatorOptions.presetFull());    }
-	private void presetDefault() { applyPreset(DatabaseValidatorOptions.presetDefault()); }
-	private void presetQuick()   { applyPreset(DatabaseValidatorOptions.presetQuick());   }
+	private void presetFull()    { applyPreset(DatabaseValidatorOptions.presetFull());    startValidate(); }
+	private void presetDefault() { applyPreset(DatabaseValidatorOptions.presetDefault()); startValidate(); }
+	private void presetQuick()   { applyPreset(DatabaseValidatorOptions.presetQuick());   startValidate(); }
 
 	private void applyPreset(DatabaseValidatorOptions o) {
 		cbValMovies.setSelected(o.ValidateMovies);
@@ -414,6 +414,9 @@ public class CheckDatabaseFrame extends JCCFrame
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		panel1 = new JPanel();
 		btnValidate = new JButton();
+		btnPresetFull = new JButton();
+		btnPresetDefault = new JButton();
+		btnPresetQuick = new JButton();
 		lblInfo = new JLabel();
 		btnAutofix = new JButton();
 		btnFixSelected = new JButton();
@@ -433,23 +436,35 @@ public class CheckDatabaseFrame extends JCCFrame
 		lblProgress2 = new JLabel();
 		panel2 = new JPanel();
 		cbValMovies = new JCheckBox();
+		icnValMovies = new JLabel();
 		cbValCovers = new JCheckBox();
+		icnValCovers = new JLabel();
 		cbValCoverFiles = new JCheckBox();
+		icnValCoverFiles = new JLabel();
 		cbValDatabase = new JCheckBox();
+		icnValDatabase = new JLabel();
 		cbValSeries = new JCheckBox();
+		icnValSeries = new JLabel();
 		cbValGroups = new JCheckBox();
+		icnValGroups = new JLabel();
 		cbValVideoFiles = new JCheckBox();
+		icnValVideoFiles = new JLabel();
 		cbValDuplicates = new JCheckBox();
+		icnValDuplicates = new JLabel();
 		cbValSeasons = new JCheckBox();
+		icnValSeasons = new JLabel();
 		cbValOnlineRefs = new JCheckBox();
+		icnValOnlineRefs = new JLabel();
 		cbValNfoFiles = new JCheckBox();
+		icnValNfoFiles = new JLabel();
 		cbValSeriesStructure = new JCheckBox();
+		icnValSeriesStructure = new JLabel();
 		cbValEpisodes = new JCheckBox();
+		icnValEpisodes = new JLabel();
 		cbValEmptyDirs = new JCheckBox();
+		icnValEmptyDirs = new JLabel();
 		cbValNfoFullCompare = new JCheckBox();
-		btnPresetFull = new JButton();
-		btnPresetDefault = new JButton();
-		btnPresetQuick = new JButton();
+		icnValNfoFullCompare = new JLabel();
 
 		//======== this ========
 		setTitle(LocaleBundle.getString("CheckDatabaseDialog.this.title"));
@@ -463,7 +478,7 @@ public class CheckDatabaseFrame extends JCCFrame
 		//======== panel1 ========
 		{
 			panel1.setLayout(new FormLayout(
-				"2*(default, $lcgap), default:grow, 2*($lcgap, default)",
+				"5*(default, $lcgap), default:grow, 2*($lcgap, default)",
 				"default"));
 
 			//---- btnValidate ----
@@ -472,19 +487,34 @@ public class CheckDatabaseFrame extends JCCFrame
 			btnValidate.addActionListener(e -> startValidate());
 			panel1.add(btnValidate, CC.xy(1, 1));
 
+			//---- btnPresetFull ----
+			btnPresetFull.setText(LocaleBundle.getString("CheckDatabaseFrame.btnPresetFull.text"));
+			btnPresetFull.addActionListener(e -> presetFull());
+			panel1.add(btnPresetFull, CC.xy(3, 1));
+
+			//---- btnPresetDefault ----
+			btnPresetDefault.setText(LocaleBundle.getString("CheckDatabaseFrame.btnPresetDefault.text"));
+			btnPresetDefault.addActionListener(e -> presetDefault());
+			panel1.add(btnPresetDefault, CC.xy(5, 1));
+
+			//---- btnPresetQuick ----
+			btnPresetQuick.setText(LocaleBundle.getString("CheckDatabaseFrame.btnPresetQuick.text"));
+			btnPresetQuick.addActionListener(e -> presetQuick());
+			panel1.add(btnPresetQuick, CC.xy(7, 1));
+
 			//---- lblInfo ----
 			lblInfo.setText(LocaleBundle.getString("CheckDatabaseDialog.lblInfo.text"));
-			panel1.add(lblInfo, CC.xy(3, 1));
+			panel1.add(lblInfo, CC.xy(9, 1));
 
 			//---- btnAutofix ----
 			btnAutofix.setText(LocaleBundle.getString("CheckDatabaseDialog.btnAutofix.text"));
 			btnAutofix.addActionListener(e -> autoFix());
-			panel1.add(btnAutofix, CC.xy(7, 1));
+			panel1.add(btnAutofix, CC.xy(13, 1));
 
 			//---- btnFixSelected ----
 			btnFixSelected.setText(LocaleBundle.getString("CheckDatabaseDialog.btnFixSelected.text"));
 			btnFixSelected.addActionListener(e -> fixSelected());
-			panel1.add(btnFixSelected, CC.xy(9, 1));
+			panel1.add(btnFixSelected, CC.xy(15, 1));
 		}
 		contentPane.add(panel1, CC.xywh(2, 2, 3, 1));
 
@@ -566,98 +596,158 @@ public class CheckDatabaseFrame extends JCCFrame
 		//======== panel2 ========
 		{
 			panel2.setLayout(new FormLayout(
-				"0dlu:grow, 3*($lcgap, 1dlu:grow)",
-				"3*(default, $lgap), default, $ugap, default"));
+				"0dlu:grow, $lcgap, default, $ugap, 1dlu:grow, $lcgap, default, $ugap, 1dlu:grow, $lcgap, default, $ugap, 1dlu:grow, $lcgap, default",
+				"3*(default, $lgap), default"));
 
 			//---- cbValMovies ----
 			cbValMovies.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValMovies"));
 			cbValMovies.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValMovies, CC.xy(1, 1));
 
+			//---- icnValMovies ----
+			icnValMovies.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValMovies.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValMovies.tooltip"));
+			panel2.add(icnValMovies, CC.xy(3, 1));
+
 			//---- cbValCovers ----
 			cbValCovers.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValCovers.text"));
 			cbValCovers.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValCovers, CC.xy(3, 1));
+			panel2.add(cbValCovers, CC.xy(5, 1));
+
+			//---- icnValCovers ----
+			icnValCovers.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValCovers.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValCovers.tooltip"));
+			panel2.add(icnValCovers, CC.xy(7, 1));
 
 			//---- cbValCoverFiles ----
 			cbValCoverFiles.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValCoverFiles"));
 			cbValCoverFiles.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValCoverFiles, CC.xy(5, 1));
+			panel2.add(cbValCoverFiles, CC.xy(9, 1));
+
+			//---- icnValCoverFiles ----
+			icnValCoverFiles.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValCoverFiles.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValCoverFiles.tooltip"));
+			panel2.add(icnValCoverFiles, CC.xy(11, 1));
 
 			//---- cbValDatabase ----
 			cbValDatabase.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValDatabase"));
 			cbValDatabase.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValDatabase, CC.xy(7, 1));
+			panel2.add(cbValDatabase, CC.xy(13, 1));
+
+			//---- icnValDatabase ----
+			icnValDatabase.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValDatabase.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValDatabase.tooltip"));
+			panel2.add(icnValDatabase, CC.xy(15, 1));
 
 			//---- cbValSeries ----
 			cbValSeries.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeries"));
 			cbValSeries.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValSeries, CC.xy(1, 3));
 
+			//---- icnValSeries ----
+			icnValSeries.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValSeries.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValSeries.tooltip"));
+			panel2.add(icnValSeries, CC.xy(3, 3));
+
 			//---- cbValGroups ----
 			cbValGroups.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValGroups.text"));
 			cbValGroups.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValGroups, CC.xy(3, 3));
+			panel2.add(cbValGroups, CC.xy(5, 3));
+
+			//---- icnValGroups ----
+			icnValGroups.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValGroups.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValGroups.tooltip"));
+			panel2.add(icnValGroups, CC.xy(7, 3));
 
 			//---- cbValVideoFiles ----
 			cbValVideoFiles.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValVideoFiles"));
 			cbValVideoFiles.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValVideoFiles, CC.xy(5, 3));
+			panel2.add(cbValVideoFiles, CC.xy(9, 3));
+
+			//---- icnValVideoFiles ----
+			icnValVideoFiles.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValVideoFiles.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValVideoFiles.tooltip"));
+			panel2.add(icnValVideoFiles, CC.xy(11, 3));
 
 			//---- cbValDuplicates ----
 			cbValDuplicates.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValDuplicates"));
 			cbValDuplicates.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValDuplicates, CC.xy(7, 3));
+			panel2.add(cbValDuplicates, CC.xy(13, 3));
+
+			//---- icnValDuplicates ----
+			icnValDuplicates.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValDuplicates.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValDuplicates.tooltip"));
+			panel2.add(icnValDuplicates, CC.xy(15, 3));
 
 			//---- cbValSeasons ----
 			cbValSeasons.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValSeasons"));
 			cbValSeasons.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValSeasons, CC.xy(1, 5));
 
+			//---- icnValSeasons ----
+			icnValSeasons.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValSeasons.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValSeasons.tooltip"));
+			panel2.add(icnValSeasons, CC.xy(3, 5));
+
 			//---- cbValOnlineRefs ----
 			cbValOnlineRefs.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValOnlineRefs.text"));
 			cbValOnlineRefs.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValOnlineRefs, CC.xy(3, 5));
+			panel2.add(cbValOnlineRefs, CC.xy(5, 5));
+
+			//---- icnValOnlineRefs ----
+			icnValOnlineRefs.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValOnlineRefs.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValOnlineRefs.tooltip"));
+			panel2.add(icnValOnlineRefs, CC.xy(7, 5));
 
 			//---- cbValNfoFiles ----
 			cbValNfoFiles.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValNfoFiles.text"));
 			cbValNfoFiles.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValNfoFiles, CC.xy(5, 5));
+			panel2.add(cbValNfoFiles, CC.xy(9, 5));
+
+			//---- icnValNfoFiles ----
+			icnValNfoFiles.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValNfoFiles.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValNfoFiles.tooltip"));
+			panel2.add(icnValNfoFiles, CC.xy(11, 5));
 
 			//---- cbValSeriesStructure ----
 			cbValSeriesStructure.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValSeriesStructure"));
 			cbValSeriesStructure.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValSeriesStructure, CC.xy(7, 5));
+			panel2.add(cbValSeriesStructure, CC.xy(13, 5));
+
+			//---- icnValSeriesStructure ----
+			icnValSeriesStructure.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValSeriesStructure.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValSeriesStructure.tooltip"));
+			panel2.add(icnValSeriesStructure, CC.xy(15, 5));
 
 			//---- cbValEpisodes ----
 			cbValEpisodes.setText(LocaleBundle.getString("CheckDatabaseDialog.checkbox.cbValEpisodes"));
 			cbValEpisodes.addItemListener(e -> cbxAnyItemStateChanged(e));
 			panel2.add(cbValEpisodes, CC.xy(1, 7));
 
+			//---- icnValEpisodes ----
+			icnValEpisodes.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValEpisodes.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValEpisodes.tooltip"));
+			panel2.add(icnValEpisodes, CC.xy(3, 7));
+
 			//---- cbValEmptyDirs ----
 			cbValEmptyDirs.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValEmptyDirs"));
 			cbValEmptyDirs.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValEmptyDirs, CC.xy(5, 7));
+			panel2.add(cbValEmptyDirs, CC.xy(9, 7));
+
+			//---- icnValEmptyDirs ----
+			icnValEmptyDirs.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValEmptyDirs.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValEmptyDirs.tooltip"));
+			panel2.add(icnValEmptyDirs, CC.xy(11, 7));
 
 			//---- cbValNfoFullCompare ----
 			cbValNfoFullCompare.setText(LocaleBundle.getString("CheckDatabaseFrame.cbValNfoFullCompare.text"));
 			cbValNfoFullCompare.addItemListener(e -> cbxAnyItemStateChanged(e));
-			panel2.add(cbValNfoFullCompare, CC.xy(7, 7));
+			panel2.add(cbValNfoFullCompare, CC.xy(13, 7));
 
-			//---- btnPresetFull ----
-			btnPresetFull.setText(LocaleBundle.getString("CheckDatabaseFrame.btnPresetFull.text"));
-			btnPresetFull.addActionListener(e -> presetFull());
-			panel2.add(btnPresetFull, CC.xy(1, 9));
-
-			//---- btnPresetDefault ----
-			btnPresetDefault.setText(LocaleBundle.getString("CheckDatabaseFrame.btnPresetDefault.text"));
-			btnPresetDefault.addActionListener(e -> presetDefault());
-			panel2.add(btnPresetDefault, CC.xy(3, 9));
-
-			//---- btnPresetQuick ----
-			btnPresetQuick.setText(LocaleBundle.getString("CheckDatabaseFrame.btnPresetQuick.text"));
-			btnPresetQuick.addActionListener(e -> presetQuick());
-			panel2.add(btnPresetQuick, CC.xy(5, 9));
+			//---- icnValNfoFullCompare ----
+			icnValNfoFullCompare.setIcon(new ImageIcon(getClass().getResource("/icons/table/type/info_16x16.png")));
+			icnValNfoFullCompare.setToolTipText(LocaleBundle.getString("CheckDatabaseFrame.cbValNfoFullCompare.tooltip"));
+			panel2.add(icnValNfoFullCompare, CC.xy(15, 7));
 		}
 		contentPane.add(panel2, CC.xywh(2, 8, 3, 1));
 		setSize(1200, 700);
@@ -668,6 +758,9 @@ public class CheckDatabaseFrame extends JCCFrame
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JPanel panel1;
 	private JButton btnValidate;
+	private JButton btnPresetFull;
+	private JButton btnPresetDefault;
+	private JButton btnPresetQuick;
 	private JLabel lblInfo;
 	private JButton btnAutofix;
 	private JButton btnFixSelected;
@@ -687,22 +780,34 @@ public class CheckDatabaseFrame extends JCCFrame
 	private JLabel lblProgress2;
 	private JPanel panel2;
 	private JCheckBox cbValMovies;
+	private JLabel icnValMovies;
 	private JCheckBox cbValCovers;
+	private JLabel icnValCovers;
 	private JCheckBox cbValCoverFiles;
+	private JLabel icnValCoverFiles;
 	private JCheckBox cbValDatabase;
+	private JLabel icnValDatabase;
 	private JCheckBox cbValSeries;
+	private JLabel icnValSeries;
 	private JCheckBox cbValGroups;
+	private JLabel icnValGroups;
 	private JCheckBox cbValVideoFiles;
+	private JLabel icnValVideoFiles;
 	private JCheckBox cbValDuplicates;
+	private JLabel icnValDuplicates;
 	private JCheckBox cbValSeasons;
+	private JLabel icnValSeasons;
 	private JCheckBox cbValOnlineRefs;
+	private JLabel icnValOnlineRefs;
 	private JCheckBox cbValNfoFiles;
+	private JLabel icnValNfoFiles;
 	private JCheckBox cbValSeriesStructure;
+	private JLabel icnValSeriesStructure;
 	private JCheckBox cbValEpisodes;
+	private JLabel icnValEpisodes;
 	private JCheckBox cbValEmptyDirs;
+	private JLabel icnValEmptyDirs;
 	private JCheckBox cbValNfoFullCompare;
-	private JButton btnPresetFull;
-	private JButton btnPresetDefault;
-	private JButton btnPresetQuick;
+	private JLabel icnValNfoFullCompare;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

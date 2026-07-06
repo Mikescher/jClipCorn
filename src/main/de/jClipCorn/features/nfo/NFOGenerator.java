@@ -80,7 +80,7 @@ public class NFOGenerator {
 			FSPath seriesNfoPath = SeriesNFOWriter.getNFOPath(series);
 			if (seriesNfoPath.isEmpty()) {
 				entries.add(NFOEntry.forSeries(seriesNfoPath, NFOStatus.ERROR, "", series));
-			} else if (series.guessSeriesRootPath().isEmpty() || !series.guessSeriesRootPath().directoryExists()) {
+			} else if (series.getMovieList().getSeriesRootDir().isEmpty() || !series.getMovieList().getSeriesRootDir().directoryExists()) {
 				entries.add(NFOEntry.forSeries(seriesNfoPath, NFOStatus.ERROR, "", series));
 			} else {
 				String newContent = SeriesNFOWriter.generateNFO(series);
@@ -174,7 +174,7 @@ public class NFOGenerator {
 
 		FSPath nfoPath = SeriesNFOWriter.getNFOPath(series);
 		if (nfoPath.isEmpty()) return FSPath.Empty;
-		if (series.guessSeriesRootPath().isEmpty() || !series.guessSeriesRootPath().directoryExists()) return FSPath.Empty;
+		if (series.getMovieList().getSeriesRootDir().isEmpty() || !series.getMovieList().getSeriesRootDir().directoryExists()) return FSPath.Empty;
 
 		String newContent = SeriesNFOWriter.generateNFO(series);
 		NFOStatus status = determineStatus(nfoPath, newContent, createEnabled);

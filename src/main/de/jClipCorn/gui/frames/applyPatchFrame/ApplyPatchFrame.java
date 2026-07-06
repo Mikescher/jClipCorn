@@ -57,11 +57,11 @@ public class ApplyPatchFrame extends JCCFrame
 
 	private void postInit()
 	{
-		edPathDestMovies.setPath(movielist.getCommonMoviesPath().toFSPath(this));
-		edPathDestSeries.setPath(movielist.getCommonSeriesPath().toFSPath(this));
+		edPathDestMovies.setPath(movielist.getMoviesRoot().toFSPath(this));
+		edPathDestSeries.setPath(movielist.getSeriesRoot().toFSPath(this));
 
-		edPathDestTrashMov.setPath(movielist.getCommonMoviesPath().toFSPath(this).getParent().append("trash")); //$NON-NLS-1$
-		edPathDestTrashSer.setPath(movielist.getCommonSeriesPath().toFSPath(this).getParent().append("trash")); //$NON-NLS-1$
+		edPathDestTrashMov.setPath(movielist.getMoviesRoot().toFSPath(this).getParent().append("trash")); //$NON-NLS-1$
+		edPathDestTrashSer.setPath(movielist.getSeriesRoot().toFSPath(this).getParent().append("trash")); //$NON-NLS-1$
 	}
 
 	private void updateUI()

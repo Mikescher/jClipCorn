@@ -274,16 +274,17 @@ public class CheckDatabaseFrame extends JCCFrame
 
 		activeThread = new Thread(() ->
 		{
+			List<DatabaseError> errors = new ArrayList<>();
 			try {
-				List<DatabaseError> errors = new ArrayList<>();
-
 				CCDatabaseValidator validator = new CCDatabaseValidator(movielist);
 				validator.validate(errors, opts, new DoubleProgressCallbackProgressBarHelper(pbProgress1, lblProgress1, pbProgress2, lblProgress2));
-
-				errorList = errors;
-
-				updateLists();
+			} catch (Exception e) {
+				// A failing validation must not silently kill the worker thread - log it and still
+				// surface whatever errors were already collected before the failure.
+				CCLog.addError(e);
 			} finally {
+				errorList = errors;
+				updateLists();
 				activeThread = null;
 				endThread();
 			}

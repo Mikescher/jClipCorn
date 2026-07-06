@@ -90,7 +90,7 @@ public class ScanFolderFrame extends JCCFrame
 			popupMenu.addSeparator();
 
 			{
-				var p0 = getMovieList().getCommonMoviesPath();
+				var p0 = getMovieList().getMoviesRoot();
 				if (!p0.isEmpty()) {
 					var menuitem = new JMenuItem("Movies (" + p0.toFSPath(ccprops()).toAbsolutePathString() + ")");
 					menuitem.addActionListener(e -> edPath.setText(p0.toFSPath(ccprops()).toAbsolutePathString()));
@@ -99,7 +99,7 @@ public class ScanFolderFrame extends JCCFrame
 			}
 
 			{
-				var p0 = getMovieList().getCommonSeriesPath();
+				var p0 = getMovieList().getSeriesRoot();
 				if (!p0.isEmpty()) {
 					var menuitem = new JMenuItem("Series (" + p0.toFSPath(ccprops()).toAbsolutePathString() + ")");
 					menuitem.addActionListener(e -> edPath.setText(p0.toFSPath(ccprops()).toAbsolutePathString()));

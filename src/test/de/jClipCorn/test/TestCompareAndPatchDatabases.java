@@ -81,8 +81,8 @@ public class TestCompareAndPatchDatabases extends ClipCornBaseTest {
 		var opt_patch = new PatchExecOptions(
 				patchFilePath,
 				FSPath.create(apf_data+".state"),
-				mlBase.getCommonMoviesPath().toFSPath(mlBase),
-				mlBase.getCommonSeriesPath().toFSPath(mlBase),
+				mlBase.getMoviesRoot().toFSPath(mlBase),
+				mlBase.getSeriesRoot().toFSPath(mlBase),
 				/* autoDestSeries */ true,
 				trashDir,
 				trashDir,
@@ -143,7 +143,7 @@ public class TestCompareAndPatchDatabases extends ClipCornBaseTest {
 		dieHard.year().set(Opt.of(1988));
 		for (int i = 0; i < dieHard.getPartcount(); i++) {
 			var oldPath = dieHard.Parts.get(i).toFSPath(mlBase);
-			var newPath = dieHard.generateGuessedAbsolutePath(i);
+			var newPath = dieHard.generateExpectedAbsolutePath(i);
 			newPath.getParent().mkdirsSafe();
 			oldPath.renameToSafe(newPath);
 			dieHard.Parts.set(i, CCPath.createFromFSPath(newPath, mlBase));

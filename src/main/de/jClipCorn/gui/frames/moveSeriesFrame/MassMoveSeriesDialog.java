@@ -8,7 +8,6 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.guiComponents.*;
-import de.jClipCorn.gui.guiComponents.JCCFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,8 +43,8 @@ public class MassMoveSeriesDialog extends JCCDialog
 
 	private void postInit()
 	{
-		edSearch.setText(movielist.getCommonSeriesPath().toString());
-		edReplace.setText(movielist.getCommonSeriesPath().toString());
+		edSearch.setText(movielist.getSeriesRoot().toString());
+		edReplace.setText(movielist.getSeriesRoot().toString());
 
 		edSearch.getDocument().addDocumentListener(new DocumentLambdaAdapter(() -> btnOK.setEnabled(false)));
 		edReplace.getDocument().addDocumentListener(new DocumentLambdaAdapter(() -> btnOK.setEnabled(false)));

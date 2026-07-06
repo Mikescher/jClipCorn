@@ -192,28 +192,41 @@ public abstract class AbstractDatabaseValidator implements ICCPropertySource {
 				CCMovie mov = el.asMovie();
 				pcl.stepSub(mov.getFullDisplayTitle());
 
-				for (ValidationMethod vm : vmMovies) vm.Method.invoke(mov, movielist, e);
+				invokeChecks(vmMovies, mov, e);
 			}
 			else // is Series
 			{
 				CCSeries series = el.asSeries();
 				pcl.stepSub(series.getFullDisplayTitle());
 
-				for (ValidationMethod vm : vmSeries) vm.Method.invoke(series, movielist, e);
+				invokeChecks(vmSeries, series, e);
 
 				for (int seasi = 0; seasi < series.getSeasonCount(); seasi++) {
 					CCSeason season = series.getSeasonByArrayIndex(seasi);
 					pcl.stepSub(series.getTitle() + " - S" + season.getSeasonNumber()); //$NON-NLS-1$
 
-					for (ValidationMethod vm : vmSeasons) vm.Method.invoke(season, movielist, e);
+					invokeChecks(vmSeasons, season, e);
 
 					for (int epi = 0; epi < season.getEpisodeCount(); epi++) {
 						CCEpisode episode = season.getEpisodeByArrayIndex(epi);
 						pcl.stepSub(series.getTitle() + " - S" + season.getSeasonNumber() + "E" + episode.getEpisodeNumber()); //$NON-NLS-1$ //$NON-NLS-2$
 
-						for (ValidationMethod vm : vmEpisode) vm.Method.invoke(episode, movielist, e);
+						invokeChecks(vmEpisode, episode, e);
 					}
 				}
+			}
+		}
+	}
+
+	// Runs every check for a single element in isolation: a check that throws (e.g. an unresolvable
+	// path, an NFS/IO hiccup, an unexpected NPE) is turned into a single ERROR_DB_EXCEPTION entry
+	// instead of aborting the whole validation run, so all remaining checks and elements still run.
+	private void invokeChecks(List<ValidationMethod> vms, Object element, List<DatabaseError> e) {
+		for (ValidationMethod vm : vms) {
+			try {
+				vm.Method.invoke(element, movielist, e);
+			} catch (Exception ex) {
+				e.add(DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_DB_EXCEPTION, ex));
 			}
 		}
 	}

@@ -9,7 +9,6 @@ import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.gui.guiComponents.*;
-import de.jClipCorn.gui.guiComponents.JCCFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,8 +44,8 @@ public class MassMoveMoviesDialog extends JCCDialog
 
 	private void postInit()
 	{
-		edSearch.setText(movielist.getCommonMoviesPath().toString());
-		edReplace.setText(movielist.getCommonMoviesPath().toString());
+		edSearch.setText(movielist.getMoviesRoot().toString());
+		edReplace.setText(movielist.getMoviesRoot().toString());
 
 		edSearch.getDocument().addDocumentListener(new DocumentLambdaAdapter(() -> btnOK.setEnabled(false)));
 		edReplace.getDocument().addDocumentListener(new DocumentLambdaAdapter(() -> btnOK.setEnabled(false)));

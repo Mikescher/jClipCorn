@@ -176,7 +176,7 @@ public class QuickAddEpisodeDialog extends JCCDialog
 	}
 
 	private CCPath createTarget(CCSeason season, int episode, String title) {
-		var root = season.getSeries().guessSeriesRootPath();
+		var root = getMovieList().getSeriesRootDir();
 		if (FSPath.isNullOrEmpty(root)) return CCPath.Empty;
 
 		var dst = season.getPathForCreatedFolderstructure(root, title, episode, CCFileFormat.getMovieFormatFromPath(edSource.getPath()), null);

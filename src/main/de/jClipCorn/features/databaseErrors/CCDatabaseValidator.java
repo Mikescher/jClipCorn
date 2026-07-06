@@ -21,7 +21,6 @@ import de.jClipCorn.util.filesystem.FSDirectorySnapshot;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.formatter.RomanNumberFormatter;
-import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.lambda.Func0to1WithIOException;
@@ -50,17 +49,14 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 	private List<FSPath> collectFilesystemRoots() {
 		var roots = new ArrayList<FSPath>();
 
-		var oMovieDir = movielist.getCommonMoviesPath();
-		if (!oMovieDir.isEmpty()) {
-			var d = oMovieDir.toFSPath(ccprops());
-			if (d.directoryExists()) roots.add(d);
-		}
+		// Walk-roots come from the configured movie/series collection roots. An unset/invalid or
+		// non-existent root simply contributes no walk-root (the empty-dir / orphaned-file scans
+		// then have nothing to walk instead of failing).
+		var movieDir = movielist.getMoviesRootDir();
+		if (movieDir.directoryExists()) roots.add(movieDir);
 
-		var oSeriesDir = movielist.getCommonSeriesPath();
-		if (!oSeriesDir.isEmpty()) {
-			var d = oSeriesDir.toFSPath(ccprops());
-			if (d.directoryExists()) roots.add(d);
-		}
+		var seriesDir = movielist.getSeriesRootDir();
+		if (seriesDir.directoryExists()) roots.add(seriesDir);
 
 		return roots;
 	}
@@ -287,22 +283,23 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					var md = new ArrayList<Tuple<String, String>>();
 					boolean wrongpath = false;
 					for (int i = 0; i < mov.getPartcount(); i++) {
-						var should = mov.generateRelativePath(i);
-						var abspath = mov.Parts.get(i).toFSPath(this).toString();
-						if (ApplicationHelper.isWindows()) {
-							abspath = abspath.toLowerCase();
-							should = should.toLowerCase();
-						}
-						if (!abspath.endsWith(should))
+						var expected = mov.generateExpectedAbsolutePath(i);
+						if (expected.isEmpty()) continue; // no configured movie root -> cannot verify the location
+
+						var actual = mov.Parts.get(i).toFSPath(this);
+
+						// Now that the movie root is explicit we can verify the *full* expected location
+						// (correct directory AND filename), not just the relative suffix.
+						if (!actual.equalsOnFilesystem(expected))
 						{
 							wrongpath = true;
 							md.add(Tuple.Create("Part["+i+"].Path.Should (relative)", mov.generateRelativePath(i)));
 							md.add(Tuple.Create("Part["+i+"].Path.Actual (relative)", mov.Parts.get(i).toRelativeStringFromRoot()));
 
-							md.add(Tuple.Create("Part["+i+"].FSPath.Should", mov.generateGuessedAbsolutePath(i).toString()));
-							md.add(Tuple.Create("Part["+i+"].FSPath.Actual", mov.Parts.get(i).toFSPath(this).toString()));
+							md.add(Tuple.Create("Part["+i+"].FSPath.Should", expected.toString()));
+							md.add(Tuple.Create("Part["+i+"].FSPath.Actual", actual.toString()));
 
-							md.add(Tuple.Create("Part["+i+"].CCPath.Should", CCPath.createFromFSPath(mov.generateGuessedAbsolutePath(i), movielist).toString()));
+							md.add(Tuple.Create("Part["+i+"].CCPath.Should", CCPath.createFromFSPath(expected, movielist).toString()));
 							md.add(Tuple.Create("Part["+i+"].CCPath.Actual", mov.Parts.get(i).toString()));
 						}
 					}

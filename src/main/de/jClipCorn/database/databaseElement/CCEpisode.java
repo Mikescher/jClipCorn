@@ -459,7 +459,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	public FSPath getPathForCreatedFolderstructure() {
-		var root = getSeries().guessSeriesRootPath();
+		var root = getMovieList().getSeriesRootDir();
 		return getPathForCreatedFolderstructure(root);
 	}
 

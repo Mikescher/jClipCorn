@@ -425,28 +425,15 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		return FilesystemUtils.combineWithFSPathSeparator(year, name, filename);
 	}
 
-	public FSPath generateGuessedAbsolutePath(int part)  {
-		var currentPath = Parts.get(part).toFSPath(this);
-		var expectedRelPath = generateRelativePath(part);
+	// The full, deterministic expected absolute path of this movie part: the configured
+	// movie-collection root with the generated relative path (year/name[/movie]/file) appended.
+	// If no (valid) movie root is configured this returns FSPath.Empty - callers must treat that as
+	// "unknown" and skip path-dependent behaviour (location verification, auto-move).
+	public FSPath generateExpectedAbsolutePath(int part)  {
+		FSPath basePath = getMovieList().getMoviesRootDir();
+		if (basePath.isEmpty()) return FSPath.Empty;
 
-		// Determine the base directory:
-		// The generated relative path always starts with a {year} folder, so we walk up the
-		// current file's ancestors to locate that year folder - the base is its parent.
-		// This supports the flat (base/file), old (base/year/name/file) and new zyklus
-		// (base/year/name/movie/file) layouts alike.
-		// If no year folder is found we fall back to a flat structure (the file's parent).
-		FSPath basePath = currentPath.getParent();
-
-		FSPath probe = currentPath.getParent();
-		for (int i = 0; i < 3; i++) {
-			if (probe.getDirectoryName().matches("\\d{4}")) { //$NON-NLS-1$
-				basePath = probe.getParent();
-				break;
-			}
-			probe = probe.getParent();
-		}
-
-		return basePath.append(expectedRelPath);
+		return basePath.append(generateRelativePath(part));
 	}
 
 	public boolean hasZyklus() {

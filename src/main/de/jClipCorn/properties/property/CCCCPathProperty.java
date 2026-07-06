@@ -2,6 +2,7 @@ package de.jClipCorn.properties.property;
 
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.JCCPathTextField;
+import de.jClipCorn.gui.guiComponents.JValidatingCCPathTextField;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
@@ -16,7 +17,7 @@ public class CCCCPathProperty extends CCProperty<CCPath> {
 
 	@Override
 	public Component getComponent() {
-		return new JCCPathTextField(1);
+		return new JValidatingCCPathTextField(properties, 1);
 	}
 
 	@Override

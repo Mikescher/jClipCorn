@@ -4,7 +4,6 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.IEpisodeData;
-import de.jClipCorn.database.databaseElement.columnTypes.CCMediaInfo;
 import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.properties.CCProperties;
@@ -101,7 +100,7 @@ public class NewEpisodeVM implements IEpisodeData, ICCPropertySource {
 		}
 
 		var root = TargetRoot;
-		if (root.isEmpty()) root = season.getSeries().guessSeriesRootPath();
+		if (root.isEmpty()) root = season.getMovieList().getSeriesRootDir();
 		if (root.isEmpty()) root = globalSeriesRoot;
 
 		if (root.isEmpty()) {

@@ -163,6 +163,8 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_ANIMESEASON;
 	public CCBoolProperty                                   PROP_MAINFRAME_ASYNC_COVER_LOADING;
 	public CCEnumProperty<AniListTitleLang>                 PROP_ANILIST_PREFERRED_TITLE_LANG;
+	public CCCCPathProperty                                 PROP_PATHSYNTAX_MOVIEROOT;
+	public CCCCPathProperty                                 PROP_PATHSYNTAX_SERIESROOT;
 	public CCBoolProperty                                   PROP_PATHSYNTAX_SELF;
 	public CCBoolProperty                                   PROP_PATHSYNTAX_DRIVELABEL;
 	public CCBoolProperty                                   PROP_PATHSYNTAX_SELFDIR;
@@ -470,6 +472,8 @@ public class CCProperties implements ICCPropertySource {
 		PROP_FSIZE_WATCHHISTORYFRAME                = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_WATCHHISTORYFRAME",                new FrameSizeVar(1400, 1000));
 		PROP_FSIZE_REFERENCECHOOSERDIALOG           = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_REFERENCECHOOSERDIALOG",           new FrameSizeVar(0, 0));
 
+		PROP_PATHSYNTAX_MOVIEROOT                   = new CCCCPathProperty(CAT_PATHSYNTAX,      this,   "PROP_PATHSYNTAX_MOVIEROOT",                   CCPath.Empty);
+		PROP_PATHSYNTAX_SERIESROOT                  = new CCCCPathProperty(CAT_PATHSYNTAX,      this,   "PROP_PATHSYNTAX_SERIESROOT",                  CCPath.Empty);
 		PROP_ADD_MOVIE_RELATIVE_AUTO                = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_ADD_MOVIE_RELATIVE_AUTO",                true);
 		PROP_PATHSYNTAX_SELF                        = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELF",                        true);
 		PROP_PATHSYNTAX_DRIVELABEL                  = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_DRIVELABEL",                  true);

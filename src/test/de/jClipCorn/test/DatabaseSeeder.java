@@ -71,6 +71,11 @@ public class DatabaseSeeder {
 		prop.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar(Str.Empty, "mov", CCPath.createFromFSPath(pathMov, Opt.False, ml)));
 		prop.PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar(Str.Empty, "ser", CCPath.createFromFSPath(pathSer, Opt.False, ml)));
 
+		// The seeded movies/series live directly under the mov/ser dirs, so those are the configured
+		// collection roots (mirrors a properly-configured install).
+		prop.PROP_PATHSYNTAX_MOVIEROOT.setValue(CCPath.create("<?[mov]>"));
+		prop.PROP_PATHSYNTAX_SERIESROOT.setValue(CCPath.create("<?[ser]>"));
+
 		//ml.addGroup(CCGroup.create("DCU Animated",        true,  Str.Empty,           false));
 		ml.addGroup(CCGroup.create("BruceWillis",         false, Str.Empty,           false));
 		ml.addGroup(CCGroup.create("Animation Studios",   false, Str.Empty,           false));

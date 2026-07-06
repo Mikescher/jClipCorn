@@ -545,27 +545,38 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 			var common = CCPath.getCommonPath(all);
 
-			if (extendedSearch && common.isEmpty()) common = movielist.getCommonSeriesPath();
+			if (extendedSearch && common.isEmpty()) common = movielist.getSeriesRoot();
 
 			return common;
 		});
 	}
 
-	public FSPath guessSeriesRootPath() {
-		return _cache.get(SeriesCache.SERIES_ROOT_PATH, null, ser->
+	// This series' own folder (series-folder in root/series/season/file). It is anchored at the
+	// configured series root; the actual sub-folder name is taken from where the episodes really
+	// live below that root. Returns FSPath.Empty when no valid series root is configured or none of
+	// the episodes are located below it (callers must then degrade gracefully, e.g. skip NFO writing).
+	public FSPath guessSeriesBasePath() {
+		return _cache.get(SeriesCache.SERIES_BASE_PATH, null, ser->
 		{
+			FSPath root = getMovieList().getSeriesRootDir();
+			if (root.isEmpty()) return FSPath.Empty;
+
+			// vote across episodes to stay robust against the odd misplaced file
 			Map<FSPath, Integer> result = new HashMap<>();
 
-			FSPath pathMax = FSPath.Empty; //$NON-NLS-1$
+			FSPath pathMax = FSPath.Empty;
 			int countMax = 0;
 
 			for(var episode: iteratorEpisodes())
 			{
-				var path = episode.getPart().toFSPath(this).getParent(3); // season-folder -> series-folder -> root-folder
-				result.put(path, result.getOrDefault(path, 0) + 1);
+				var path = resolveChildOfRoot(root, episode.getPart().toFSPath(this));
+				if (path.isEmpty()) continue;
 
-				if (result.getOrDefault(path, 0) > countMax) {
-					countMax = result.getOrDefault(path, 0);
+				int c = result.getOrDefault(path, 0) + 1;
+				result.put(path, c);
+
+				if (c > countMax) {
+					countMax = c;
 					pathMax = path;
 				}
 			}
@@ -574,27 +585,20 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		});
 	}
 
-	public FSPath guessSeriesBasePath() {
-		return _cache.get(SeriesCache.SERIES_BASE_PATH, null, ser->
-		{
-			Map<FSPath, Integer> result = new HashMap<>();
+	// Returns the ancestor of 'file' whose direct parent is 'root' (i.e. root/<child>/.../file),
+	// or FSPath.Empty when 'file' is not located below 'root'.
+	private static FSPath resolveChildOfRoot(FSPath root, FSPath file) {
+		if (root.isEmpty() || file.isEmpty()) return FSPath.Empty;
 
-			FSPath pathMax = FSPath.Empty; //$NON-NLS-1$
-			int countMax = 0;
+		FSPath node = file;
+		for (int i = 0; i < 32 && !node.isEmpty(); i++) {
+			FSPath parent = node.getParent();
+			if (parent.equalsOnFilesystem(root)) return node;
+			if (parent.equalsOnFilesystem(node)) break; // reached the filesystem root without hitting 'root'
+			node = parent;
+		}
 
-			for(var episode: iteratorEpisodes())
-			{
-				var path = episode.getPart().toFSPath(this).getParent(2); // season-folder -> series-folder
-				result.put(path, result.getOrDefault(path, 0) + 1);
-
-				if (result.getOrDefault(path, 0) > countMax) {
-					countMax = result.getOrDefault(path, 0);
-					pathMax = path;
-				}
-			}
-
-			return pathMax;
-		});
+		return FSPath.Empty;
 	}
 
 	@Override

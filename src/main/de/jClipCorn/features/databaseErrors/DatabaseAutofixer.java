@@ -258,7 +258,10 @@ public class DatabaseAutofixer {
 				var actulalPath = mov.Parts.get(i).toFSPath(ml);
 				if (! actulalPath.exists()) return false;
 
-				var expectedPath = mov.generateGuessedAbsolutePath(i);
+				var expectedPath = mov.generateExpectedAbsolutePath(i);
+				// generateExpectedAbsolutePath returns Empty when no (valid) movie root is configured -
+				// never move files to a bogus location in that case.
+				if (expectedPath.isEmpty()) return false;
 
 				// Create parent directories if needed
 				expectedPath.getParent().mkdirsSafe();

@@ -915,64 +915,37 @@ public class CCMovieList implements ICCPropertySource {
 	}
 
 	public FSPath getCommonPathForMovieFileChooser() {
-		var p = getCommonMoviesPath().toFSPath(this);
-		if (p.isEmpty()) p = getCommonSeriesPath().toFSPath(this);
+		var p = getMoviesRoot().toFSPath(this);
+		if (p.isEmpty()) p = getSeriesRoot().toFSPath(this);
 		if (p.isEmpty()) p = FilesystemUtils.getRealSelfDirectory();
 		if (p.isEmpty()) p = FilesystemUtils.getAbsoluteSelfDirectory(ccprops());
 		return p;
 	}
 
 	public FSPath getCommonPathForSeriesFileChooser() {
-		var p = getCommonSeriesPath().toFSPath(this);
-		if (p.isEmpty()) p = getCommonMoviesPath().toFSPath(this);
+		var p = getSeriesRoot().toFSPath(this);
+		if (p.isEmpty()) p = getMoviesRoot().toFSPath(this);
 		if (p.isEmpty()) p = FilesystemUtils.getRealSelfDirectory();
 		if (p.isEmpty()) p = FilesystemUtils.getAbsoluteSelfDirectory(ccprops());
 		return p;
 	}
 
-	public CCPath getCommonSeriesPath() {
-		return _cache.get(MovieListCache.COMMON_SERIES_PATH, null, ml->
-		{
-			List<CCPath> all = new ArrayList<>();
-
-			for (CCSeries ser : iteratorSeries()) {
-				var p = ser.getCommonPathStart(false);
-				if (!p.isEmpty()) all.add(p);
-			}
-
-			return CCPath.getCommonPath(all);
-		});
+	public CCPath getSeriesRoot() {
+		return ccprops().PROP_PATHSYNTAX_SERIESROOT.getValue();
 	}
 
-	public CCPath getCommonMoviesPath() {
-		return _cache.get(MovieListCache.COMMON_MOVIES_PATH, null, ml->
-		{
-			List<CCPath> all = new ArrayList<>();
-
-			for (CCMovie curr : iteratorMovies()) {
-				for (int i = 0; i < curr.getPartcount(); i++) {
-					var p = curr.Parts.get(i);
-					if (!p.isEmpty()) all.add(p);
-				}
-			}
-
-			return CCPath.getCommonPath(all);
-		});
+	public FSPath getSeriesRootDir() {
+		return ccprops().PROP_PATHSYNTAX_SERIESROOT.getValue().toFSPath(this);
 	}
 
-	public FSPath guessSeriesRootPath() {
-		return _cache.get(MovieListCache.GUESS_SERIES_ROOT_PATH, null, ml->
-		{
-			return iteratorSeries()
-					.map(CCSeries::guessSeriesRootPath)
-					.filter(p -> !p.isEmpty())
-					.groupBy(p -> p)
-					.autosortByProperty(p -> p.getValue().size())
-					.map(Map.Entry::getKey)
-					.lastOr(FSPath.Empty);
-		});
+	public CCPath getMoviesRoot() {
+		return ccprops().PROP_PATHSYNTAX_MOVIEROOT.getValue();
 	}
-	
+
+	public FSPath getMoviesRootDir() {
+		return ccprops().PROP_PATHSYNTAX_MOVIEROOT.getValue().toFSPath(this);
+	}
+
 	public Map<String, List<CCMovie>> listAllZyklus() {
 		Map<String, List<CCMovie>> map = new TreeMap<>(); // TreeMap is ordered by default
 		

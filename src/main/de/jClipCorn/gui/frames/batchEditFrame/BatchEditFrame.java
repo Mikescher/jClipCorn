@@ -554,7 +554,7 @@ public class BatchEditFrame extends JCCFrame implements UserDataProblemHandler, 
 	}
 
 	private File[] ShowPathFromDialogChooser() {
-		var dlg = new JFileChooser(target.getSeries().guessSeriesRootPath().toFile());
+		var dlg = new JFileChooser(getMovieList().getSeriesRootDir().toFile());
 		dlg.setMultiSelectionEnabled(true);
 
 		int returnval = dlg.showOpenDialog(this);

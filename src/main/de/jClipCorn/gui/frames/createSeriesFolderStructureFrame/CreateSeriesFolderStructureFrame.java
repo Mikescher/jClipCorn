@@ -51,12 +51,12 @@ public class CreateSeriesFolderStructureFrame extends JCCFrame
 		lblCover.setAndResizeCover(series.getCover());
 		lblTitle.setText(series.getTitle());
 		edCommonPath.setText(series.getCommonPathStart(false).toFSPath(this).toString());
-		edPath.setPath(series.guessSeriesRootPath());
+		edPath.setPath(getMovieList().getSeriesRootDir());
 		btnTest.setEnabled(! edPath.getPath().isEmpty());
 	}
 
 	private void onBtnChoose(ActionEvent evt) {
-		var pStart = series.guessSeriesRootPath();
+		var pStart = getMovieList().getSeriesRootDir();
 		if (pStart.isEmpty()) pStart = series.getCommonPathStart(false).toFSPath(this);
 
 		JFileChooser folderchooser = new JFileChooser(pStart.toFile());

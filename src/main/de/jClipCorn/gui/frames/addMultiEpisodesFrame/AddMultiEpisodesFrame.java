@@ -54,7 +54,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		this.callback  = ucl;
 		this.target    = season;
 
-		_globalSeriesRoot = season.getMovieList().guessSeriesRootPath();
+		_globalSeriesRoot = getMovieList().getSeriesRootDir();
 
 		initComponents();
 		postInit();
@@ -534,7 +534,7 @@ public class AddMultiEpisodesFrame extends JCCFrame
 		JFileChooser vc = new JFileChooser();
 		vc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		vc.setAcceptAllFileFilterUsed(false);
-		var r = target.getSeries().guessSeriesRootPath();
+		var r = getMovieList().getSeriesRootDir();
 		if (FSPath.isNullOrEmpty(r)) r = _globalSeriesRoot;
 		if (!FSPath.isNullOrEmpty(r)) vc.setCurrentDirectory(r.toFile());
 

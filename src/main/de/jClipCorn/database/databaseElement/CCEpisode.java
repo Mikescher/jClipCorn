@@ -28,7 +28,6 @@ import de.jClipCorn.util.exceptions.DatabaseUpdateException;
 import de.jClipCorn.util.exceptions.FVHException;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
-import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.ChecksumHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.stream.CCStreams;
@@ -486,19 +485,10 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	public boolean checkFolderStructure() {
-		var abspath = getPart().toFSPath(this).toString();
-		var relpath = getRelativeFileForCreatedFolderstructure();
+		var expected = getPathForCreatedFolderstructure(); // anchored at getSeriesRootDir()
+		if (expected == null || expected.isEmpty()) return true; // series-root not configured -> cannot validate, treat as OK
 
-		if (ApplicationHelper.isWindows()) {
-			abspath = abspath.toLowerCase();
-			relpath = relpath.toLowerCase();
-		}
-
-		if (! abspath.endsWith(relpath)) {
-			CCLog.addDebug(abspath + " <> " + relpath); //$NON-NLS-1$
-		}
-		
-		return abspath.endsWith(relpath);
+		return getPart().toFSPath(this).equalsOnFilesystem(expected);
 	}
 
 	@Override

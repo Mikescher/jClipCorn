@@ -303,7 +303,47 @@ public class DatabaseAutofixer {
 
 		return false;
 	}
-	
+
+	public static boolean fixError_Invalid_Series_Structure(CCMovieList ml, DatabaseError err) {
+		if (err.getElement1() instanceof CCEpisode episode) {
+
+			var actualPath = episode.getPart().toFSPath(ml);
+			if (! actualPath.exists()) return false;
+
+			var expectedPath = episode.getPathForCreatedFolderstructure();
+			// getPathForCreatedFolderstructure returns null when no (valid) series root is configured -
+			// never move files to a bogus location in that case.
+			if (expectedPath == null || expectedPath.isEmpty()) return false;
+
+			if (actualPath.equalsOnFilesystem(expectedPath)) return true; // already correct
+
+			// never clobber a different existing file at the target
+			if (expectedPath.exists()) return false;
+
+			// Create parent directories if needed
+			expectedPath.getParent().mkdirsSafe();
+
+			var oldNFO = episode.NfoPath;
+
+			boolean succ = actualPath.renameToSafe(expectedPath);
+			if (! succ) return false;
+			episode.Part.set(CCPath.createFromFSPath(expectedPath, ml));
+
+			// derive the new NFO path AFTER Part is updated (EpisodeNFOWriter.getNFOPath reads episode.Part)
+			var newNFO = EpisodeNFOWriter.getNFOPath(episode);
+
+			if (!oldNFO.isEmpty() && !oldNFO.equalsOnFilesystem(newNFO) && oldNFO.exists() && !newNFO.exists()) {
+				boolean succ2 = oldNFO.renameToSafe(newNFO);
+				if (! succ2) return false;
+				episode.NfoPath = newNFO;
+			}
+
+			return true;
+		}
+
+		return false; // CCSeries/CCSeason never carry this error (episode-only validation)
+	}
+
 	public static boolean fixError_Impossible_WatchNever(CCMovieList ml, DatabaseError err) {
 		if (err.getElement1() instanceof ICCTaggedElement elem) {
 			elem.tags().set(CCSingleTag.TAG_WATCH_NEVER, false);

@@ -30,7 +30,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_NONLINKED_COVERFILE                = new DatabaseErrorType(23, null);
 	//public final static DatabaseErrorType ERROR_IMPOSSIBLE_WATCH_LATER           = new DatabaseErrorType(24, DatabaseAutofixer::fixError_Impossible_WatchLater);
 	public final static DatabaseErrorType ERROR_LASTWATCHED_TOO_OLD                = new DatabaseErrorType(25, null);
-	public final static DatabaseErrorType ERROR_INVALID_SERIES_STRUCTURE           = new DatabaseErrorType(26, null);
+	public final static DatabaseErrorType ERROR_INVALID_SERIES_STRUCTURE           = new DatabaseErrorType(26, DatabaseAutofixer::fixError_Invalid_Series_Structure);
 	public final static DatabaseErrorType ERROR_IMPOSSIBLE_WATCH_NEVER             = new DatabaseErrorType(27, DatabaseAutofixer::fixError_Impossible_WatchNever);
 	public final static DatabaseErrorType ERROR_DUPLICATE_GENRE                    = new DatabaseErrorType(28, DatabaseAutofixer::fixError_Duplicate_Genre);
 	public final static DatabaseErrorType ERROR_INVALID_CHARS_IN_PATH              = new DatabaseErrorType(29, null);

@@ -203,7 +203,7 @@ public class CreateSeriesFolderStructureFrame extends JCCFrame
 								}
 							}
 
-							episode.Part.set(CCPath.createFromFSPath(newfile, this));
+							episode.setPartWithoutClearingChecksums(CCPath.createFromFSPath(newfile, this)); // file moved, content unchanged -> keep checksums
 
 							final int _v = curr++;
 							SwingUtils.invokeLater(() -> this.progress.setValue(_v));

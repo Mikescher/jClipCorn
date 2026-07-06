@@ -270,7 +270,7 @@ public class DatabaseAutofixer {
 				var oldCov = mov.NfoCoverPath;
 
 				boolean succ = actulalPath.renameToSafe(expectedPath);
-				mov.Parts.set(i, CCPath.createFromFSPath(expectedPath, ml));
+				mov.setPartWithoutClearingChecksums(i, CCPath.createFromFSPath(expectedPath, ml)); // file moved, content unchanged -> keep checksums
 
 				var newNFO = MovieNFOWriter.getNFOPath(mov);
 				var newCov = MovieNFOWriter.getPosterPath(mov);
@@ -424,7 +424,7 @@ public class DatabaseAutofixer {
 
 			if (pold.equals(pnew)) return false;
 
-			((CCEpisode)err.getElement1()).Part.set(pnew);
+			((CCEpisode)err.getElement1()).setPartWithoutClearingChecksums(pnew); // only the path repr is normalized, same file -> keep checksums
 
 			return true;
 		} else if (err.getElement1() instanceof CCMovie) {
@@ -434,7 +434,7 @@ public class DatabaseAutofixer {
 
 				if (pold.equals(pnew)) continue;
 
-				((CCMovie)err.getElement1()).Parts.set(i, pnew);
+				((CCMovie)err.getElement1()).setPartWithoutClearingChecksums(i, pnew); // only the path repr is normalized, same file -> keep checksums
 				return true;
 			}
 

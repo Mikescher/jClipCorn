@@ -73,6 +73,15 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 		ChecksumSHA512.setOnly(Opt.empty());
 	}
 
+	/**
+	 * Update the stored path of a single part after the file was *moved* on disk (content unchanged).
+	 * Unlike Parts.set(...) this does not fire the ChecksumHelper clear-listener, so the saved
+	 * file-checksums are preserved (they stay valid since the content did not change).
+	 */
+	public void setPartWithoutClearingChecksums(int index, CCPath p) {
+		Parts.setWithoutListeners(index, p);
+	}
+
 	public void initNfoPaths() {
 		NfoPath = MovieNFOWriter.getNFOPath(this);
 		NfoCoverPath = MovieNFOWriter.getPosterPath(this);

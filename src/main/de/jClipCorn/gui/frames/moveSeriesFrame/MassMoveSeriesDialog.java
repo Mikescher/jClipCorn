@@ -107,7 +107,7 @@ public class MassMoveSeriesDialog extends JCCDialog
 
 			var newValue = replacePath(edSearch.getText(), edReplace.getText(), cbxRegex.isSelected(), ep.getPart());
 
-			ep.Part.set(newValue);
+			ep.setPartWithoutClearingChecksums(newValue); // file relocated, content unchanged -> keep checksums
 
 		}
 

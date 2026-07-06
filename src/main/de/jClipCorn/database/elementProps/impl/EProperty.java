@@ -62,6 +62,17 @@ public abstract class EProperty<TType> implements IEProperty {
 		set(v, false, false, false, false, false);
 	}
 
+	/**
+	 * Like {@link #set(Object)} (bust cache + persist to DB + mark dirty) but does NOT fire
+	 * any prop-change listeners. Use ONLY for file *moves*: the on-disk content is unchanged,
+	 * so content-derived props (checksums) must be preserved. Plain set() would trigger the
+	 * ChecksumHelper clear-listener. NOTE: this bypasses ALL prop-change listeners for this
+	 * property - only apply it to props whose listeners you intend to skip (currently Part/Parts).
+	 */
+	public void setWithoutListeners(TType v) {
+		set(v, true, true, true, false, true);
+	}
+
 	protected void set(TType v, boolean verifyReadonly, boolean bustCache, boolean updateDB, boolean callListener, boolean setDirty) {
 		if (verifyReadonly && isReadonly()) throw new Error("Cannot update field ["+getValueType().asString()+"]::["+Name+"] - its readonly");
 

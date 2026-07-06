@@ -47,6 +47,10 @@ public class ECCPathListProp extends EProperty<CCPathList> implements IEProperty
 	public void set(int index, CCPath path) {
 		set(get().set(index, path));
 	}
+
+	public void setWithoutListeners(int index, CCPath path) {
+		setWithoutListeners(get().set(index, path));
+	}
 	
 	public void set(int index, String path) {
 		set(index, CCPath.create(path));

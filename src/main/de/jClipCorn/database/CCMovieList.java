@@ -263,6 +263,13 @@ public class CCMovieList implements ICCPropertySource {
 		return isLoaded;
 	}
 
+	// Test-only: put the (in-memory) movielist into the "fully loaded" state that the real app reaches
+	// after connectAndLoadDirect(), so that loading-gated listeners (e.g. the ChecksumHelper clear-listener)
+	// become active - the in-memory test factories do not go through the load path.
+	public void markLoadedForUnitTests() {
+		isLoaded = true;
+	}
+
 	public CCDatabaseElement getDatabaseElementBySort(int row) { // WARNIG SORT <> MOVIEID || SORT IN DATABASE (SORTED BY MOVIEID)
 		return list.get(row);
 	}

@@ -109,7 +109,7 @@ public class MassMoveMoviesDialog extends JCCDialog
 			for (int i = 0; i < mov.getPartcount(); i++) {
 				var newValue = replacePath(edSearch.getText(), edReplace.getText(), cbxRegex.isSelected(), mov.Parts.get(i));
 
-				mov.Parts.set(i, newValue);
+				mov.setPartWithoutClearingChecksums(i, newValue); // file relocated, content unchanged -> keep checksums
 			}
 		}
 

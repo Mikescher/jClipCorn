@@ -50,6 +50,7 @@ public class JSingleSubReferenceChooser extends JPanel {
 		cbxType = new WideComboBox<>();
 		// wide enough that the (square) dropdown-arrow at the full row height doesn't squeeze/clip the type-icon
 		cbxType.setPreferredSize(new Dimension(72, 22));
+		cbxType.setMinimumSize(new Dimension(72, 22));
 		add(cbxType, "3, 1, fill, fill"); //$NON-NLS-1$
 		cbxModel = new DefaultComboBoxModel<>(CCOnlineRefType.values());
 		cbxType.setModel(cbxModel);

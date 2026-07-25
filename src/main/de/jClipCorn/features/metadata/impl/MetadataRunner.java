@@ -1,18 +1,23 @@
 package de.jClipCorn.features.metadata.impl;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguage;
-import de.jClipCorn.features.metadata.*;
+import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.metadata.AudioTrackMetadata;
+import de.jClipCorn.features.metadata.MetadataError;
+import de.jClipCorn.features.metadata.MetadataSourceType;
+import de.jClipCorn.features.metadata.SubtitleTrackMetadata;
+import de.jClipCorn.features.metadata.VideoMetadata;
 import de.jClipCorn.features.metadata.exceptions.InnerMediaQueryException;
 import de.jClipCorn.features.metadata.exceptions.MetadataQueryException;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.ErrOpt;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.stream.CCStreams;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public abstract class MetadataRunner {
 
@@ -53,6 +58,8 @@ public abstract class MetadataRunner {
 
 			{ var r = getLanguageOrNullFromStr(_title); if (r != null) return r; }
 		}
+
+		CCLog.addWarning("Unknown audio language: {\"lang\": \"" + _langval + ", \"title\": \"" + _title + "\"}");
 
 		throw new InnerMediaQueryException("Unknown audio language: ['" + _langval + "' | '" + _title + "']");
 	}
@@ -138,7 +145,10 @@ public abstract class MetadataRunner {
 		if (langval.equalsIgnoreCase("nor"))                             return CCDBLanguage.NORWEGIAN;
 		if (langval.equalsIgnoreCase("nob"))                             return CCDBLanguage.NORWEGIAN;
 		if (langval.equalsIgnoreCase("nno"))                             return CCDBLanguage.NORWEGIAN;
+		if (langval.equalsIgnoreCase("nn"))                              return CCDBLanguage.NORWEGIAN;
 		if (langval.equalsIgnoreCase("Norsk"))                           return CCDBLanguage.NORWEGIAN;
+		if (langval.equalsIgnoreCase("Nynorsk"))                         return CCDBLanguage.NORWEGIAN;
+		if (langval.equalsIgnoreCase("Norwegian Nynorsk"))               return CCDBLanguage.NORWEGIAN;
 		if (langval.equalsIgnoreCase("Norwegian"))                       return CCDBLanguage.NORWEGIAN;
 
 		if (langval.equalsIgnoreCase("nl"))                              return CCDBLanguage.DUTCH;
@@ -379,6 +389,59 @@ public abstract class MetadataRunner {
 		if (langval.equalsIgnoreCase("srp"))                             return CCDBLanguage.SERBIAN;
 		if (langval.equalsIgnoreCase("Latin, Serbian"))                  return CCDBLanguage.SERBIAN;
 		if (langval.equalsIgnoreCase("Serbian"))                         return CCDBLanguage.SERBIAN;
+
+		if (langval.equalsIgnoreCase("az"))                              return CCDBLanguage.AZERBAIJANI;
+		if (langval.equalsIgnoreCase("aze"))                             return CCDBLanguage.AZERBAIJANI;
+		if (langval.equalsIgnoreCase("azb"))                             return CCDBLanguage.AZERBAIJANI;
+		if (langval.equalsIgnoreCase("Azerbaijani"))                     return CCDBLanguage.AZERBAIJANI;
+		if (langval.equalsIgnoreCase("Azeri"))                           return CCDBLanguage.AZERBAIJANI;
+		if (langval.equalsIgnoreCase("Azari"))                           return CCDBLanguage.AZERBAIJANI;
+		if (langval.equalsIgnoreCase("Aserbaidschanisch"))               return CCDBLanguage.AZERBAIJANI;
+		if (langval.equalsIgnoreCase("Azərbaycan"))                 return CCDBLanguage.AZERBAIJANI; // Azərbaycan
+		if (langval.equalsIgnoreCase("Azərbaycan dili"))            return CCDBLanguage.AZERBAIJANI; // Azərbaycan dili
+		if (langval.equalsIgnoreCase("Azərbaycanca"))               return CCDBLanguage.AZERBAIJANI; // Azərbaycanca
+
+		if (langval.equalsIgnoreCase("hy"))                              return CCDBLanguage.ARMENIAN;
+		if (langval.equalsIgnoreCase("arm"))                             return CCDBLanguage.ARMENIAN;
+		if (langval.equalsIgnoreCase("hye"))                             return CCDBLanguage.ARMENIAN;
+		if (langval.equalsIgnoreCase("Armenian"))                        return CCDBLanguage.ARMENIAN;
+		if (langval.equalsIgnoreCase("Armenisch"))                       return CCDBLanguage.ARMENIAN;
+		if (langval.equalsIgnoreCase("Hayeren"))                         return CCDBLanguage.ARMENIAN;
+		if (langval.equalsIgnoreCase("Հայերեն")) return CCDBLanguage.ARMENIAN; // Հայերեն
+
+		if (langval.equalsIgnoreCase("ka"))                              return CCDBLanguage.GEORGIAN;
+		if (langval.equalsIgnoreCase("geo"))                             return CCDBLanguage.GEORGIAN;
+		if (langval.equalsIgnoreCase("kat"))                             return CCDBLanguage.GEORGIAN;
+		if (langval.equalsIgnoreCase("Georgian"))                        return CCDBLanguage.GEORGIAN;
+		if (langval.equalsIgnoreCase("Georgisch"))                       return CCDBLanguage.GEORGIAN;
+		if (langval.equalsIgnoreCase("Kartuli"))                         return CCDBLanguage.GEORGIAN;
+		if (langval.equalsIgnoreCase("ქართული")) return CCDBLanguage.GEORGIAN; // ქართული
+
+		if (langval.equalsIgnoreCase("kk"))                              return CCDBLanguage.KAZAKH;
+		if (langval.equalsIgnoreCase("kaz"))                             return CCDBLanguage.KAZAKH;
+		if (langval.equalsIgnoreCase("Kazakh"))                          return CCDBLanguage.KAZAKH;
+		if (langval.equalsIgnoreCase("Kasachisch"))                      return CCDBLanguage.KAZAKH;
+		if (langval.equalsIgnoreCase("Qazaq"))                           return CCDBLanguage.KAZAKH;
+		if (langval.equalsIgnoreCase("Qazaq tili"))                      return CCDBLanguage.KAZAKH;
+		if (langval.equalsIgnoreCase("Kazak Tini"))                      return CCDBLanguage.KAZAKH;
+		if (langval.equalsIgnoreCase("Қазақ тілі")) return CCDBLanguage.KAZAKH; // Қазақ тілі
+		if (langval.equalsIgnoreCase("Қазақша"))              return CCDBLanguage.KAZAKH; // Қазақша
+
+		if (langval.equalsIgnoreCase("ky"))                              return CCDBLanguage.KYRGYZ;
+		if (langval.equalsIgnoreCase("kir"))                             return CCDBLanguage.KYRGYZ;
+		if (langval.equalsIgnoreCase("Kyrgyz"))                          return CCDBLanguage.KYRGYZ;
+		if (langval.equalsIgnoreCase("Kirghiz"))                         return CCDBLanguage.KYRGYZ;
+		if (langval.equalsIgnoreCase("Kirgisisch"))                      return CCDBLanguage.KYRGYZ;
+		if (langval.equalsIgnoreCase("Kyrgyzcha"))                       return CCDBLanguage.KYRGYZ;
+		if (langval.equalsIgnoreCase("Кыргызча")) return CCDBLanguage.KYRGYZ; // Кыргызча
+
+		if (langval.equalsIgnoreCase("sq"))                              return CCDBLanguage.ALBANIAN;
+		if (langval.equalsIgnoreCase("alb"))                             return CCDBLanguage.ALBANIAN;
+		if (langval.equalsIgnoreCase("sqi"))                             return CCDBLanguage.ALBANIAN;
+		if (langval.equalsIgnoreCase("Albanian"))                        return CCDBLanguage.ALBANIAN;
+		if (langval.equalsIgnoreCase("Albanisch"))                       return CCDBLanguage.ALBANIAN;
+		if (langval.equalsIgnoreCase("Shqip"))                           return CCDBLanguage.ALBANIAN;
+		if (langval.equalsIgnoreCase("Shqipe"))                          return CCDBLanguage.ALBANIAN;
 
 		return null;
 	}

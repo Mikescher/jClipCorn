@@ -31,7 +31,8 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 	PARTIAL_VIEWED(4),
 	MARKED_FOR_AGAIN(5),
 	MARKED_FOR_CONTINUE(6),
-	MARKED_ABORTED(7);
+	MARKED_ABORTED(7),
+	EMPTY(8);
 	
 	private final static String[] NAMES =
 	{
@@ -43,6 +44,7 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 		LocaleBundle.getString("FilterTree.Viewed.Again"),     //$NON-NLS-1$
 		LocaleBundle.getString("FilterTree.Viewed.Continue"),  //$NON-NLS-1$
 		LocaleBundle.getString("FilterTree.Viewed.Aborted"),   //$NON-NLS-1$
+		LocaleBundle.getString("FilterTree.Viewed.Empty"),     //$NON-NLS-1$
 	};
 
 	private final int id;
@@ -81,6 +83,7 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 			case MARKED_FOR_AGAIN:    return 2;
 			case MARKED_FOR_CONTINUE: return 1;
 			case MARKED_ABORTED:      return 2;
+			case EMPTY:               return 0;
 		}
 
 		return -1;
@@ -114,8 +117,9 @@ public enum ExtendedViewedStateType implements ContinoousEnum<ExtendedViewedStat
 			case MARKED_FOR_AGAIN:    return true;
 			case MARKED_FOR_CONTINUE: return true;
 			case MARKED_ABORTED:      return false;
+			case EMPTY:               return false;
 		}
-		
+
 		CCLog.addError(new Exception());
 		return false;
 	}

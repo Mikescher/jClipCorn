@@ -158,6 +158,8 @@ public class FilterTree extends AbstractFilterTree {
 		
 		addNodeF(parent, Resources.ICN_SIDEBAR_UNVIEWED.get16x16(), LocaleBundle.getString("FilterTree.Viewed.Unviewed"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.NOT_VIEWED)); //$NON-NLS-1$
 
+		addNodeF(parent, Resources.ICN_SIDEBAR_EMPTY.get16x16(), LocaleBundle.getString("FilterTree.Viewed.Empty"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.EMPTY)); //$NON-NLS-1$
+
 		addNodeF(parent, Resources.ICN_SIDEBAR_LATER.get16x16(), LocaleBundle.getString("FilterTree.Viewed.Later"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.MARKED_FOR_LATER)); //$NON-NLS-1$
 
 		addNodeF(parent, Resources.ICN_SIDEBAR_AGAIN.get16x16(), LocaleBundle.getString("FilterTree.Viewed.Again"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.MARKED_FOR_AGAIN)); //$NON-NLS-1$

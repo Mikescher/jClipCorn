@@ -152,6 +152,7 @@ public class Resources {
 	public final static IconRef ICN_TABLE_VIEWED_FALSE 		     = register16HScaledIcon(registerImage("/icons/viewed/watched_empty.png"));
 	public final static IconRef ICN_TABLE_VIEWED_TRUE  		     = register16HScaledIcon(registerImage("/icons/viewed/watched_full.png"));
 	public final static IconRef ICN_TABLE_VIEWED_PARTIAL	     = register16HScaledIcon(registerImage("/icons/viewed/watched_partial.png"));
+	public final static IconRef ICN_TABLE_VIEWED_EMPTY 		     = register16HScaledIcon(registerImage("/icons/viewed/watched_hollow.png"));
 
 	public final static IconRef ICN_TABLE_VIEWED_LATER 		     = register16HScaledIcon(registerCombinedImage(registerImage("/icons/viewed/watched_none.png"),    registerImage("/icons/viewed/overlay_later.png")));
 	public final static IconRef ICN_TABLE_VIEWED_NEVER 		     = register16HScaledIcon(registerCombinedImage(registerImage("/icons/viewed/watched_none.png"),    registerImage("/icons/viewed/overlay_later.png")));
@@ -460,6 +461,7 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_SIDEBAR_TYP            = registerMultisizeIcon("/icons/sidebar/color_swatch.png");
 	public final static MultiSizeIconRef ICN_SIDEBAR_VIEWED         = registerSquareViewedIcon(registerImage("/icons/viewed/watched_full.png"));
 	public final static MultiSizeIconRef ICN_SIDEBAR_UNVIEWED       = registerSquareViewedIcon(registerCombinedImage(registerImage("/icons/viewed/watched_full.png"), registerImage("/icons/viewed/overlay_unwatch.png")));
+	public final static MultiSizeIconRef ICN_SIDEBAR_EMPTY          = registerSquareViewedIcon(registerImage("/icons/viewed/watched_hollow.png"));
 	public final static MultiSizeIconRef ICN_SIDEBAR_LATER          = registerSquareViewedIcon(registerCombinedImage(registerImage("/icons/viewed/watched_full.png"), registerImage("/icons/viewed/overlay_later.png")));
 	public final static MultiSizeIconRef ICN_SIDEBAR_NEVER          = registerSquareViewedIcon(registerCombinedImage(registerImage("/icons/viewed/watched_none.png"), registerImage("/icons/viewed/overlay_aborted.png")));
 	public final static MultiSizeIconRef ICN_SIDEBAR_PARTIALLY      = registerSquareViewedIcon(registerImage("/icons/viewed/watched_partial.png"));

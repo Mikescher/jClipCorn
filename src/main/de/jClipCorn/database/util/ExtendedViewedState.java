@@ -99,6 +99,8 @@ public class ExtendedViewedState {
 	}
 
 	public static ExtendedViewedState create(CCSeries elem) {
+		if (elem.isEmpty()) return new ExtendedViewedState(ExtendedViewedStateType.EMPTY, null, 0, Resources.ICN_TABLE_VIEWED_EMPTY);
+
 		var count = elem.getFullViewCount();
 
 		var isViewed        = elem.isViewed();
@@ -149,6 +151,8 @@ public class ExtendedViewedState {
 	}
 
 	public static ExtendedViewedState create(CCSeason elem) {
+		if (elem.isEmpty()) return new ExtendedViewedState(ExtendedViewedStateType.EMPTY, null, 0, Resources.ICN_TABLE_VIEWED_EMPTY);
+
 		var count = elem.getFullViewCount();
 
 		var isViewed        = elem.isViewed();

@@ -36,3 +36,5 @@ SerienName [S03]
 
 SerienName                           // Match all seasons
     2016-12-11: S3E4                 // Directly use Season + EpisodeNumbers
+
+[2016-12-11 19:04:33]: SerienName [S01E07]   // single-line episode entry

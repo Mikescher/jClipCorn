@@ -41,6 +41,10 @@ public class ImageUtilities {
 	public static BufferedImage resizeCoverImageForFullSizeUI(BufferedImage bi) {
 		return resizeImageProportional(bi, BASE_COVER_WIDTH, BASE_COVER_HEIGHT, COVER_RATIO);
 	}
+
+	public static BufferedImage resizeCoverImageForFullSizeUI(BufferedImage bi, int width, int height) {
+		return resizeImageProportional(bi, width, height, COVER_RATIO);
+	}
 	
 	public static BufferedImage resizeCoverImageForHalfSizeUI(BufferedImage bi) {
 		return resizeImageProportional(bi, HALF_COVER_WIDTH, HALF_COVER_HEIGHT, COVER_RATIO);

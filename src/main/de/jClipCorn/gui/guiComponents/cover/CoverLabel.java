@@ -25,8 +25,12 @@ public class CoverLabel extends JLabel implements MouseListener {
 
 	private BufferedImage original = null;
 
+	// Display-only upscale factor (e.g. for HiDPI/fractional-scaling screens). Does not affect stored covers.
+	private double displayScale = 1.0;
+	private ImageIcon scaledStandardIcon = null;
+
 	protected final CCMovieList movielist;
-	
+
 	public CoverLabel(CCMovieList ml, boolean halfsize) {
 		super();
 		movielist = ml;
@@ -34,7 +38,23 @@ public class CoverLabel extends JLabel implements MouseListener {
 		addMouseListener(this);
 	}
 
+	private int scaledWidth()  { return (int)Math.round((isHalfSize ? ImageUtilities.HALF_COVER_WIDTH  : ImageUtilities.BASE_COVER_WIDTH)  * displayScale); }
+	private int scaledHeight() { return (int)Math.round((isHalfSize ? ImageUtilities.HALF_COVER_HEIGHT : ImageUtilities.BASE_COVER_HEIGHT) * displayScale); }
+
+	public void setDisplayScale(double scale) {
+		this.displayScale = Math.max(1.0, scale);
+		this.scaledStandardIcon = null;
+		super.setBounds(getX(), getY(), scaledWidth(), scaledHeight());
+	}
+
 	public Icon getStandardIcon() {
+		if (displayScale != 1.0) {
+			if (scaledStandardIcon == null) {
+				var raw = (isHalfSize ? Resources.ICN_COVER_STANDARD_SMALL : Resources.ICN_COVER_STANDARD).getImage();
+				scaledStandardIcon = new ImageIcon(ImageUtilities.getScaledInstance(raw, scaledWidth(), scaledHeight()));
+			}
+			return scaledStandardIcon;
+		}
 		if (isHalfSize) {
 			return Resources.ICN_COVER_STANDARD_SMALL.get();
 		} else {
@@ -78,19 +98,11 @@ public class CoverLabel extends JLabel implements MouseListener {
 
 	@Override
 	public void setBounds(int x, int y, int width, int height) {
-	    super.setBounds(
-	    		x,
-	    		y,
-	    		isHalfSize ? ImageUtilities.HALF_COVER_WIDTH  : ImageUtilities.BASE_COVER_WIDTH,
-	    		isHalfSize ? ImageUtilities.HALF_COVER_HEIGHT : ImageUtilities.BASE_COVER_HEIGHT);
+	    super.setBounds(x, y, scaledWidth(), scaledHeight());
 	}
 
 	public void setPosition(int x, int y) {
-	    super.setBounds(
-	    		x,
-	    		y,
-	    		isHalfSize ? ImageUtilities.HALF_COVER_WIDTH  : ImageUtilities.BASE_COVER_WIDTH,
-	    		isHalfSize ? ImageUtilities.HALF_COVER_HEIGHT : ImageUtilities.BASE_COVER_HEIGHT);
+	    super.setBounds(x, y, scaledWidth(), scaledHeight());
 	}
 
 	public void setCoverDirect(BufferedImage cover, BufferedImage orig) {
@@ -98,10 +110,7 @@ public class CoverLabel extends JLabel implements MouseListener {
 
 		if (cover == null) { super.setIcon(null); return; }
 
-		if (isHalfSize)
-			super.setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForHalfSizeUI(cover)));
-		else
-			super.setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForFullSizeUI(cover)));
+		super.setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForFullSizeUI(cover, scaledWidth(), scaledHeight())));
 	}
 
 	public void setAndResizeCover(BufferedImage cover) {
@@ -109,10 +118,7 @@ public class CoverLabel extends JLabel implements MouseListener {
 
 		if (cover == null) { super.setIcon(null); return; }
 
-		if (isHalfSize)
-			super.setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForHalfSizeUI(cover)));
-		else
-			super.setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForFullSizeUI(cover)));
+		super.setIcon(new ImageIcon(ImageUtilities.resizeCoverImageForFullSizeUI(cover, scaledWidth(), scaledHeight())));
 	}
 
 	public void clearCover() {

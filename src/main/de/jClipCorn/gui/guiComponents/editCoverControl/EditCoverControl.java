@@ -39,6 +39,13 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	@DesignCreate
 	private static EditCoverControl designCreate() { return new EditCoverControl(ICCWindow.Dummy.frame(), null); }
 
+	// HiDPI/fractional-scaling factor - the surrounding (dlu-based) layout scales with the font, so this
+	// fixed-pixel control must scale too, otherwise it stays tiny and the buttons truncate their labels.
+	private final double uiScale;
+
+	private int ctrlWidth;
+	private int ctrlHeight;
+
 	private BufferedImage fullImage;
 
 	private final ParseResultHandler owner;
@@ -62,6 +69,9 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		this.coverFileChooser = new JFileChooser(FilesystemUtils.getAbsoluteSelfDirectory(owner.ccprops()).toFile());
 		this.owner = handler;
 		this.ownerWindow = owner;
+		this.uiScale = computeUIScale();
+		this.ctrlWidth = scale(ImageUtilities.BASE_COVER_WIDTH);
+		this.ctrlHeight = scale(ImageUtilities.BASE_COVER_HEIGHT) + scale(34);
 
 		coverFileChooser.setFileFilter(FileChooserHelper.createLocalFileFilter("EditCoverControl.coverFileChooser.description", "png", "bmp", "gif", "jpg", "jpeg")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
@@ -75,10 +85,13 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	private void initGUI() {
 		setLayout(null);
 
+		int coverW = scale(ImageUtilities.BASE_COVER_WIDTH);
+		int coverH = scale(ImageUtilities.BASE_COVER_HEIGHT);
+
 		lblCover = new CoverLabel(ownerWindow.getMovieList(), false);
-		lblCover.setPosition(0, 34);
+		lblCover.setDisplayScale(uiScale);
 		add(lblCover, 1);
-		
+
 		lblResolution = new JLabel();
 		lblResolution.setBounds(0, 0, 0, 0);
 		lblResolution.setForeground(Color.WHITE);
@@ -124,16 +137,41 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		btnFind = new JSplitButton(LocaleBundle.getString("EditCoverControl.btnFind.text")); //$NON-NLS-1$
 		btnFind.addButtonClickedActionListener(e -> showFindCoverDialog());
 		btnFind.setPopupMenu(popupMenu);
-		btnFind.setBounds(102, 0, 80, 23);
 		add(btnFind, 0);
 
 		btnCrop = new JButton(LocaleBundle.getString("EditCoverControl.btnCrop.text")); //$NON-NLS-1$
 		btnCrop.addActionListener(e -> showCropDialog());
-		btnCrop.setBounds(0, 0, 70, 23);
 		add(btnCrop, 0);
 
-		setSize(CTRL_WIDTH, CTRL_HEIGHT);
-		setPreferredSize(new Dimension(CTRL_WIDTH, CTRL_HEIGHT));
+		// Size the buttons to their preferred (font-dependent) size so the labels never truncate,
+		// then place crop at the left and find at the right of the top bar. The find button needs
+		// extra room because JSplitButton paints its dropdown arrow over the rightmost splitWidth.
+		Dimension dCrop = btnCrop.getPreferredSize();
+		Dimension dFind = btnFind.getPreferredSize();
+		int findWidth = dFind.width + btnFind.getSplitWidth();
+		int barHeight = Math.max(dCrop.height, dFind.height);
+		btnCrop.setBounds(0, 0, dCrop.width, barHeight);
+		btnFind.setBounds(coverW - findWidth, 0, findWidth, barHeight);
+
+		int coverY = Math.max(scale(34), barHeight + scale(6));
+		lblCover.setPosition(0, coverY);
+
+		ctrlWidth = coverW;
+		ctrlHeight = coverY + coverH;
+
+		setSize(ctrlWidth, ctrlHeight);
+		setPreferredSize(new Dimension(ctrlWidth, ctrlHeight));
+	}
+
+	private int scale(int value) {
+		return (int)Math.round(value * uiScale);
+	}
+
+	private static double computeUIScale() {
+		Font f = UIManager.getFont("Label.font"); //$NON-NLS-1$
+		if (f == null) f = UIManager.getFont("Button.font"); //$NON-NLS-1$
+		double size = (f != null) ? f.getSize2D() : 12.0;
+		return Math.max(1.0, size / 12.0);
 	}
 
 	public void addCoverChangedListener(final CoverChangedListener l) {
@@ -145,22 +183,22 @@ public class EditCoverControl extends AbstractEditCoverControl {
 
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(CTRL_WIDTH, CTRL_HEIGHT);
+		return new Dimension(ctrlWidth, ctrlHeight);
 	}
-	
+
 	@Override
 	public Dimension getMinimumSize() {
-		return new Dimension(CTRL_WIDTH, CTRL_HEIGHT);
+		return new Dimension(ctrlWidth, ctrlHeight);
 	}
-	
+
 	@Override
 	public Dimension getMaximumSize() {
-		return new Dimension(CTRL_WIDTH, CTRL_HEIGHT);
+		return new Dimension(ctrlWidth, ctrlHeight);
 	}
-	
+
 	@Override
 	public Dimension getSize() {
-		return new Dimension(CTRL_WIDTH, CTRL_HEIGHT);
+		return new Dimension(ctrlWidth, ctrlHeight);
 	}
 
 	private void showChooseCoverDialog() {
@@ -246,8 +284,8 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		if (nci != null) {
 			this.fullImage = nci;
 
-			BufferedImage resized = ImageUtilities.resizeCoverImageForFullSizeUI(nci);
-			
+			BufferedImage resized = ImageUtilities.resizeCoverImageForFullSizeUI(nci, scale(ImageUtilities.BASE_COVER_WIDTH), scale(ImageUtilities.BASE_COVER_HEIGHT));
+
 			if (!ImageUtilities.isImageRatioAcceptable(nci.getWidth(), nci.getHeight())) {
 				Point tr = ImageUtilities.getTopRightNonTransparentPixel(resized);
 				

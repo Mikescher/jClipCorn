@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.frames.textExportFrame;
 
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
@@ -10,121 +12,27 @@ import de.jClipCorn.util.filesystem.FilesystemUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class TextExportFrame extends JCCFrame {
 	private static final long serialVersionUID = -807033167837187549L;
-	
-	private JTextArea memoResult;
-	private JScrollPane scrollPane;
-	private JComboBox<DatabaseTextExporter> cbFormat;
-	private JButton btnCreate;
-	private JButton btnExport;
-	private JLabel lblFormat;
-	private JCheckBox cbxIncludeSeries;
-	private JCheckBox cbxIncludeLanguage;
-	private JCheckBox cbxIncludeYear;
-	private JCheckBox cbxIncludeFormat;
-	private JCheckBox cbxIncludeQuality;
-	private JCheckBox cbxIncludeSize;
-	private JLabel lblOrder;
-	private JComboBox<TextExportOrder> cbxOrder;
-	private JCheckBox cbxIncludeViewed;
-	
+
 	public TextExportFrame(CCMovieList mlist, Component owner) {
 		super(mlist);
-		setSize(new Dimension(600, 620));
 
-		initGUI();
+		initComponents();
+		postInit();
+
 		setLocationRelativeTo(owner);
 	}
-	
-	private void initGUI() {
-		setTitle(LocaleBundle.getString("TextExportFrame.this.title")); //$NON-NLS-1$
 
-		setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		getContentPane().setLayout(null);
-		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 256, 574, 290);
-		getContentPane().add(scrollPane);
-		
-		memoResult = new JTextArea();
-		memoResult.setEditable(false);
-		memoResult.setTabSize(2);
-		scrollPane.setViewportView(memoResult);
-		
-		cbFormat = new JComboBox<>();
+	private void postInit() {
 		cbFormat.setModel(new DefaultComboBoxModel<>(new DatabaseTextExporter[] {
 				new DatabasePlainTextExporter(),
 				new DatabaseJSONExporter(),
 				new DatabaseXMLExporter(),
 		}));
-		cbFormat.setBounds(66, 8, 200, 20);
-		getContentPane().add(cbFormat);
-		
-		btnCreate = new JButton(LocaleBundle.getString("TextExportFrame.btnCreate.text")); //$NON-NLS-1$
-		btnCreate.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				start();
-			}
-		});
-		btnCreate.setBounds(483, 218, 89, 23);
-		getContentPane().add(btnCreate);
-		
-		btnExport = new JButton(LocaleBundle.getString("TextExportFrame.btnExport.text")); //$NON-NLS-1$
-		btnExport.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				export();
-			}
-		});
-		btnExport.setBounds(495, 557, 89, 23);
-		getContentPane().add(btnExport);
-		
-		lblFormat = new JLabel(LocaleBundle.getString("TextExportFrame.lblFormat.text")); //$NON-NLS-1$
-		lblFormat.setBounds(10, 11, 46, 14);
-		getContentPane().add(lblFormat);
-		
-		cbxIncludeSeries = new JCheckBox(LocaleBundle.getString("TextExportFrame.cbxIncludeSeries.text")); //$NON-NLS-1$
-		cbxIncludeSeries.setSelected(true);
-		cbxIncludeSeries.setBounds(10, 57, 256, 23);
-		getContentPane().add(cbxIncludeSeries);
-		
-		cbxIncludeLanguage = new JCheckBox(LocaleBundle.getString("TextExportFrame.cbxIncludeLanguage.text")); //$NON-NLS-1$
-		cbxIncludeLanguage.setBounds(10, 83, 260, 23);
-		getContentPane().add(cbxIncludeLanguage);
-		
-		cbxIncludeYear = new JCheckBox(LocaleBundle.getString("TextExportFrame.cbxIncludeYear.text")); //$NON-NLS-1$
-		cbxIncludeYear.setSelected(true);
-		cbxIncludeYear.setBounds(10, 109, 260, 23);
-		getContentPane().add(cbxIncludeYear);
-		
-		cbxIncludeFormat = new JCheckBox(LocaleBundle.getString("TextExportFrame.cbxIncludeFormat.text")); //$NON-NLS-1$
-		cbxIncludeFormat.setBounds(10, 135, 260, 23);
-		getContentPane().add(cbxIncludeFormat);
-		
-		cbxIncludeQuality = new JCheckBox(LocaleBundle.getString("TextExportFrame.cbxIncludeQuality.text")); //$NON-NLS-1$
-		cbxIncludeQuality.setBounds(10, 161, 260, 23);
-		getContentPane().add(cbxIncludeQuality);
-		
-		cbxIncludeSize = new JCheckBox(LocaleBundle.getString("TextExportFrame.cbxIncludeSize.text")); //$NON-NLS-1$
-		cbxIncludeSize.setBounds(10, 187, 256, 23);
-		getContentPane().add(cbxIncludeSize);
-		
-		lblOrder = new JLabel(LocaleBundle.getString("TextExportFrame.lblOrder.text")); //$NON-NLS-1$
-		lblOrder.setBounds(10, 36, 46, 14);
-		getContentPane().add(lblOrder);
-		
-		cbxIncludeViewed = new JCheckBox(LocaleBundle.getString("TextExportFrame.cbxIncludeViewed.text")); //$NON-NLS-1$
-		cbxIncludeViewed.setBounds(10, 213, 256, 23);
-		getContentPane().add(cbxIncludeViewed);
-		
-		cbxOrder = new JComboBox<>();
+
 		cbxOrder.setModel(new DefaultComboBoxModel<>(new TextExportOrder[] {
 				TextExportOrder.TITLE,
 				TextExportOrder.TITLE_SMART,
@@ -132,38 +40,36 @@ public class TextExportFrame extends JCCFrame {
 				TextExportOrder.YEAR,
 		}));
 		cbxOrder.setSelectedIndex(1);
-		cbxOrder.setBounds(66, 33, 200, 20);
-		getContentPane().add(cbxOrder);
 	}
-	
+
 	private void start() {
 		DatabaseTextExporter expo = (DatabaseTextExporter) cbFormat.getSelectedItem();
-		
+
 		String result = expo.generate(
 				movielist,
 				(TextExportOrder)cbxOrder.getSelectedItem(),
-				cbxIncludeSeries.isSelected(), 
-				cbxIncludeLanguage.isSelected(), 
-				cbxIncludeYear.isSelected(), 
-				cbxIncludeFormat.isSelected(), 
-				cbxIncludeQuality.isSelected(), 
+				cbxIncludeSeries.isSelected(),
+				cbxIncludeLanguage.isSelected(),
+				cbxIncludeYear.isSelected(),
+				cbxIncludeFormat.isSelected(),
+				cbxIncludeQuality.isSelected(),
 				cbxIncludeSize.isSelected(),
 				cbxIncludeViewed.isSelected());
-		
+
 		memoResult.setText(result);
 	}
-	
+
 	private void export() {
 		DatabaseTextExporter expo = (DatabaseTextExporter) cbFormat.getSelectedItem();
 		if (expo == null) return;
-		
+
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_txt.description", expo.getFileExtension())); //$NON-NLS-1$
 		chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
-		
+
 		if (chooser.showSaveDialog(this)  == JFileChooser.APPROVE_OPTION) {
 			start();
-			
+
 			try {
 				FSPath.create(chooser.getSelectedFile()).writeAsUTF8TextFile(memoResult.getText());
 			} catch (IOException e) {
@@ -172,4 +78,122 @@ public class TextExportFrame extends JCCFrame {
 			}
 		}
 	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+        pnlOptions = new JPanel();
+        lblFormat = new JLabel();
+        cbFormat = new JComboBox<>();
+        lblOrder = new JLabel();
+        cbxOrder = new JComboBox<>();
+        cbxIncludeSeries = new JCheckBox();
+        cbxIncludeLanguage = new JCheckBox();
+        cbxIncludeYear = new JCheckBox();
+        cbxIncludeFormat = new JCheckBox();
+        cbxIncludeQuality = new JCheckBox();
+        cbxIncludeSize = new JCheckBox();
+        cbxIncludeViewed = new JCheckBox();
+        btnCreate = new JButton();
+        scrollPane = new JScrollPane();
+        memoResult = new JTextArea();
+        btnExport = new JButton();
+
+        //======== this ========
+        setTitle(LocaleBundle.getString("TextExportFrame.this.title")); //$NON-NLS-1$
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        var contentPane = getContentPane();
+        contentPane.setLayout(new FormLayout(
+            "$ugap, default:grow, $ugap", //$NON-NLS-1$
+            "$ugap, default, $lgap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
+
+        //======== pnlOptions ========
+        {
+            pnlOptions.setLayout(new FormLayout(
+                "default, $lcgap, default:grow, $ugap, default", //$NON-NLS-1$
+                "default, $lgap, default, $ugap, 7*(default)")); //$NON-NLS-1$
+
+            //---- lblFormat ----
+            lblFormat.setText(LocaleBundle.getString("TextExportFrame.lblFormat.text")); //$NON-NLS-1$
+            pnlOptions.add(lblFormat, CC.xy(1, 1));
+            pnlOptions.add(cbFormat, CC.xy(3, 1, CC.FILL, CC.DEFAULT));
+
+            //---- lblOrder ----
+            lblOrder.setText(LocaleBundle.getString("TextExportFrame.lblOrder.text")); //$NON-NLS-1$
+            pnlOptions.add(lblOrder, CC.xy(1, 3));
+            pnlOptions.add(cbxOrder, CC.xy(3, 3, CC.FILL, CC.DEFAULT));
+
+            //---- cbxIncludeSeries ----
+            cbxIncludeSeries.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeSeries.text")); //$NON-NLS-1$
+            cbxIncludeSeries.setSelected(true);
+            pnlOptions.add(cbxIncludeSeries, CC.xywh(1, 5, 3, 1, CC.LEFT, CC.DEFAULT));
+
+            //---- cbxIncludeLanguage ----
+            cbxIncludeLanguage.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeLanguage.text")); //$NON-NLS-1$
+            pnlOptions.add(cbxIncludeLanguage, CC.xywh(1, 6, 3, 1, CC.LEFT, CC.DEFAULT));
+
+            //---- cbxIncludeYear ----
+            cbxIncludeYear.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeYear.text")); //$NON-NLS-1$
+            cbxIncludeYear.setSelected(true);
+            pnlOptions.add(cbxIncludeYear, CC.xywh(1, 7, 3, 1, CC.LEFT, CC.DEFAULT));
+
+            //---- cbxIncludeFormat ----
+            cbxIncludeFormat.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeFormat.text")); //$NON-NLS-1$
+            pnlOptions.add(cbxIncludeFormat, CC.xywh(1, 8, 3, 1, CC.LEFT, CC.DEFAULT));
+
+            //---- cbxIncludeQuality ----
+            cbxIncludeQuality.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeQuality.text")); //$NON-NLS-1$
+            pnlOptions.add(cbxIncludeQuality, CC.xywh(1, 9, 3, 1, CC.LEFT, CC.DEFAULT));
+
+            //---- cbxIncludeSize ----
+            cbxIncludeSize.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeSize.text")); //$NON-NLS-1$
+            pnlOptions.add(cbxIncludeSize, CC.xywh(1, 10, 3, 1, CC.LEFT, CC.DEFAULT));
+
+            //---- cbxIncludeViewed ----
+            cbxIncludeViewed.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeViewed.text")); //$NON-NLS-1$
+            pnlOptions.add(cbxIncludeViewed, CC.xywh(1, 11, 3, 1, CC.LEFT, CC.DEFAULT));
+
+            //---- btnCreate ----
+            btnCreate.setText(LocaleBundle.getString("TextExportFrame.btnCreate.text")); //$NON-NLS-1$
+            btnCreate.addActionListener(e -> start());
+            pnlOptions.add(btnCreate, CC.xywh(5, 5, 1, 7, CC.DEFAULT, CC.BOTTOM));
+        }
+        contentPane.add(pnlOptions, CC.xy(2, 2, CC.FILL, CC.DEFAULT));
+
+        //======== scrollPane ========
+        {
+
+            //---- memoResult ----
+            memoResult.setEditable(false);
+            memoResult.setTabSize(2);
+            scrollPane.setViewportView(memoResult);
+        }
+        contentPane.add(scrollPane, CC.xy(2, 4, CC.FILL, CC.FILL));
+
+        //---- btnExport ----
+        btnExport.setText(LocaleBundle.getString("TextExportFrame.btnExport.text")); //$NON-NLS-1$
+        btnExport.addActionListener(e -> export());
+        contentPane.add(btnExport, CC.xy(2, 6, CC.RIGHT, CC.DEFAULT));
+        setSize(600, 620);
+        setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    private JPanel pnlOptions;
+    private JLabel lblFormat;
+    private JComboBox<DatabaseTextExporter> cbFormat;
+    private JLabel lblOrder;
+    private JComboBox<TextExportOrder> cbxOrder;
+    private JCheckBox cbxIncludeSeries;
+    private JCheckBox cbxIncludeLanguage;
+    private JCheckBox cbxIncludeYear;
+    private JCheckBox cbxIncludeFormat;
+    private JCheckBox cbxIncludeQuality;
+    private JCheckBox cbxIncludeSize;
+    private JCheckBox cbxIncludeViewed;
+    private JButton btnCreate;
+    private JScrollPane scrollPane;
+    private JTextArea memoResult;
+    private JButton btnExport;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

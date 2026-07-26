@@ -1,0 +1,164 @@
+JFDML JFormDesigner: "8.3" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "TextExportFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, default:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default:grow, linegap, default, unrelgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": new FormMessage( null, "TextExportFrame.this.title" )
+			"defaultCloseOperation": 2
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default, labelcompgap, default:grow, unrelgap, default"
+				"$rowSpecs": "default, linegap, default, unrelgap, default, default, default, default, default, default, default"
+			} ) {
+				name: "pnlOptions"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblFormat"
+					"text": new FormMessage( null, "TextExportFrame.lblFormat.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JComboBox" ) {
+					name: "cbFormat"
+					auxiliary() {
+						"JavaCodeGenerator.typeParameters": "DatabaseTextExporter"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblOrder"
+					"text": new FormMessage( null, "TextExportFrame.lblOrder.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JComboBox" ) {
+					name: "cbxOrder"
+					auxiliary() {
+						"JavaCodeGenerator.typeParameters": "TextExportOrder"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbxIncludeSeries"
+					"text": new FormMessage( null, "TextExportFrame.cbxIncludeSeries.text" )
+					"selected": true
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 5
+					"gridWidth": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbxIncludeLanguage"
+					"text": new FormMessage( null, "TextExportFrame.cbxIncludeLanguage.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 6
+					"gridWidth": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbxIncludeYear"
+					"text": new FormMessage( null, "TextExportFrame.cbxIncludeYear.text" )
+					"selected": true
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 7
+					"gridWidth": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbxIncludeFormat"
+					"text": new FormMessage( null, "TextExportFrame.cbxIncludeFormat.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 8
+					"gridWidth": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbxIncludeQuality"
+					"text": new FormMessage( null, "TextExportFrame.cbxIncludeQuality.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 9
+					"gridWidth": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbxIncludeSize"
+					"text": new FormMessage( null, "TextExportFrame.cbxIncludeSize.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 10
+					"gridWidth": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "cbxIncludeViewed"
+					"text": new FormMessage( null, "TextExportFrame.cbxIncludeViewed.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 11
+					"gridWidth": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnCreate"
+					"text": new FormMessage( null, "TextExportFrame.btnCreate.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "start", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 5
+					"gridHeight": 7
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints BOTTOM
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane"
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "memoResult"
+					"editable": false
+					"tabSize": 2
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnExport"
+				"text": new FormMessage( null, "TextExportFrame.btnExport.text" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "export", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 6
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 600, 620 )
+		} )
+	}
+}
+

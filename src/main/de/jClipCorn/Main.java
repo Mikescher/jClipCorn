@@ -437,7 +437,7 @@ public class Main {
  - [ ] ShowIncompleteFilmSeriesFrame
  - [x] ShowUpdateFrame
  - [x] StatisticsFrame
- - [ ] TextExportFrame
+ - [x] TextExportFrame
  - [X] UpdateCodecFrame
  - [X] UpdateMetadataFrame
  - [X] VLCRobotFrame

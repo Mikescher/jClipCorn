@@ -393,7 +393,7 @@ public class Main {
  - [X] AddSeasonFrame
  - [X] AddSeriesFrame
  - [X] AllRatingsFrame
- - [ ] AutofindRefrenceFrame
+ - [x] AutofindRefrenceFrame
  - [X] BackupManagerFrame
  - [X] BatchEditFrame
  - [X] ChangeScoreFrame

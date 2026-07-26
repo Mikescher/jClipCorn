@@ -1,0 +1,257 @@
+JFDML JFormDesigner: "8.3" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "AutoFindReferencesFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, default, unrelgap, default:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default:grow, unrelgap"
+		} ) {
+			name: "this"
+			"title": new FormMessage( null, "AutoFindReferencesFrame.title" )
+			"defaultCloseOperation": 2
+			"resizable": false
+			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosed", "onClose", false ) )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default, labelcompgap, default:grow"
+				"$rowSpecs": "default:grow, linegap, default, linegap, default"
+			} ) {
+				name: "pnlLeft"
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "list"
+					"preferredSize": new java.awt.Dimension( 300, 0 )
+					add( new FormComponent( "javax.swing.JList" ) {
+						name: "listResults"
+						auxiliary() {
+							"JavaCodeGenerator.typeParameters": "AutoFindRefElement"
+						}
+						addEvent( new FormEvent( "javax.swing.event.ListSelectionListener", "valueChanged", "refreshRightPanel", false ) )
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+					"gridWidth": 3
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnSearch"
+					"text": new FormMessage( null, "AutoFindReferencesFrame.btnSearch" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "startSearch", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+					"gridHeight": 3
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JProgressBar" ) {
+					name: "pbProgress"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblCurrentElement"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 5
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default:grow, unrelgap, default:grow, unrelgap, default:grow"
+				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, default:grow, linegap, default"
+			} ) {
+				name: "pnlRight"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblLocal"
+					"text": new FormMessage( null, "AutoFindReferencesFrame.lblLocal" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblOnline"
+					"text": new FormMessage( null, "AutoFindReferencesFrame.lblTMDB" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblImdb"
+					"text": new FormMessage( null, "AutoFindReferencesFrame.lblImDB" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "edTitleLocal"
+					"editable": false
+					"columns": 10
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "edTitleTmdb"
+					"editable": false
+					"columns": 10
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "edTitleIMDB"
+					"editable": false
+					"columns": 10
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "edYearLocal"
+					"editable": false
+					"columns": 10
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 5
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "edYearTmdb"
+					"editable": false
+					"columns": 10
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 5
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "edYearImDB"
+					"editable": false
+					"columns": 10
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 5
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "edRefLocal"
+					"editable": false
+					"columns": 10
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 7
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "edRefTmdb"
+					"editable": false
+					"columns": 10
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 7
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "edRefIMDB"
+					"editable": false
+					"columns": 10
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 7
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.cover.CoverLabel" ) {
+					name: "cvrLocal"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist, true);"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 9
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.cover.CoverLabel" ) {
+					name: "cvrTmdb"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist, true);"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 9
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "de.jClipCorn.gui.guiComponents.cover.CoverLabel" ) {
+					name: "cvrImDB"
+					auxiliary() {
+						"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist, true);"
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 9
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+					"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnEdit"
+					"text": new FormMessage( null, "AutoFindReferencesFrame.btnEdit" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onEdit", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 11
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints LEFT
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnIgnore"
+					"text": new FormMessage( null, "AutoFindReferencesFrame.btnNext" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "actionIgnore", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 14
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnApplyTmdb"
+					"text": new FormMessage( null, "AutoFindReferencesFrame.btnApply" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "actionApply", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 14
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnApplyImdb"
+					"text": new FormMessage( null, "AutoFindReferencesFrame.btnApplyImDB" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "actionApplyImDB", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 14
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 2
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 900, 460 )
+		} )
+	}
+}

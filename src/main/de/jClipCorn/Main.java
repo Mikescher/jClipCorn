@@ -396,7 +396,7 @@ public class Main {
  - [ ] AutofindRefrenceFrame
  - [X] BackupManagerFrame
  - [X] BatchEditFrame
- - [ ] ChangeScoreFrame
+ - [X] ChangeScoreFrame
  - [ ] ChangeViewedFrame
  - [X] CheckDatabaseFrame
  - [X] CompareDatabaseFrame

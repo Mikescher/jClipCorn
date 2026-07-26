@@ -1,0 +1,224 @@
+JFDML JFormDesigner: "8.3" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "ChangeScoreFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, default, unrelgap, default:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default, unrelgap, default, linegap, default, 16dlu"
+		} ) {
+			name: "this"
+			"title": new FormMessage( null, "ChangedScoreFrame.this.title" )
+			"defaultCloseOperation": 2
+			"resizable": false
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblTitle"
+				"horizontalAlignment": 0
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"gridWidth": 3
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.cover.CoverLabelFullsize" ) {
+				name: "lblCover"
+				auxiliary() {
+					"JavaCodeGenerator.customCreateCode": "new ${field_type}(movielist);"
+				}
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "max(default;50dlu):grow, unrelgap, default"
+				"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, unrelgap, default"
+			} ) {
+				name: "pnlButtons"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnScore0"
+					"text": "(auto)"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onScore0", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblKey1"
+					"text": "(1)"
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnScore1"
+					"text": "(auto)"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onScore1", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblKey2"
+					"text": "(2)"
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 3
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnScore2"
+					"text": "(auto)"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onScore2", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 5
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblKey3"
+					"text": "(3)"
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 5
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnScoreM"
+					"text": "(auto)"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onScoreMid", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 7
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblKey4"
+					"text": "(4)"
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 7
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnScore3"
+					"text": "(auto)"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onScore3", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 9
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblKey5"
+					"text": "(5)"
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 9
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnScore4"
+					"text": "(auto)"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onScore4", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 11
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblKey6"
+					"text": "(6)"
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 11
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnScore5"
+					"text": "(auto)"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onScore5", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 13
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblKey7"
+					"text": "(7)"
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 13
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnScoreNo"
+					"text": "(auto)"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onScoreNo", false ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 15
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblKeyBack"
+					"text": "(BACKSPACE)"
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 15
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblCurrent"
+					"horizontalAlignment": 0
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 17
+					"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 4
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints TOP
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.PropertyCheckbox" ) {
+				name: "cbSkipRated"
+				auxiliary() {
+					"JavaCodeGenerator.customCreateCode": "new ${field_type}(ccprops().PROP_MASSCHANGESCORE_SKIPRATED);"
+				}
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 6
+				"gridWidth": 3
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.PropertyCheckbox" ) {
+				name: "cbOnlyViewed"
+				auxiliary() {
+					"JavaCodeGenerator.customCreateCode": "new ${field_type}(ccprops().PROP_MASSCHANGESCORE_ONLYVIEWED);"
+				}
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 8
+				"gridWidth": 3
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 525, 440 )
+		} )
+	}
+}

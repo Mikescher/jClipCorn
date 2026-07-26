@@ -1,17 +1,20 @@
 package de.jClipCorn.gui.guiComponents;
 
+import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.properties.property.CCBoolProperty;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JCheckBox;
-
-import de.jClipCorn.properties.property.CCBoolProperty;
 
 public class PropertyCheckbox extends JCheckBox implements ActionListener {
 	private static final long serialVersionUID = 4712086332201573643L;
 
 	private CCBoolProperty property;
-	
+
+	@DesignCreate
+	private static PropertyCheckbox designCreate() { return new PropertyCheckbox(null); }
+
 	public PropertyCheckbox(CCBoolProperty property) {
 		super();
 		

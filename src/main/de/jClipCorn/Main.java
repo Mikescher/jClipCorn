@@ -397,7 +397,7 @@ public class Main {
  - [X] BackupManagerFrame
  - [X] BatchEditFrame
  - [X] ChangeScoreFrame
- - [ ] ChangeViewedFrame
+ - [X] ChangeViewedFrame
  - [X] CheckDatabaseFrame
  - [X] CompareDatabaseFrame
  - [X] CoverCropFrame

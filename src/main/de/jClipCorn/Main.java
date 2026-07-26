@@ -434,7 +434,7 @@ public class Main {
  - [x] ScanFolderFrame
  - [X] SearchFrame
  - [/] SettingsFrame
- - [ ] ShowIncompleteFilmSeriesFrame
+ - [x] ShowIncompleteFilmSeriesFrame
  - [x] ShowUpdateFrame
  - [x] StatisticsFrame
  - [x] TextExportFrame

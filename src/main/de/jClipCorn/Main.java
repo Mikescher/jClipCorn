@@ -413,7 +413,7 @@ public class Main {
  - [ ] EditToolbarFrame
  - [ ] ExportElementsFrame
  - [X] ExtendedSettingsFrame
- - [ ] FilenameRulesFrame
+ - [X] FilenameRulesFrame
  - [ ] FindCoverFrame
  - [ ] GenericTextDialog
  - [X] GroupManageFrame

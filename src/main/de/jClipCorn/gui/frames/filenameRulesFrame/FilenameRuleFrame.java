@@ -1,62 +1,33 @@
 package de.jClipCorn.gui.frames.filenameRulesFrame;
 
+import com.jgoodies.forms.factories.*;
+import com.jgoodies.forms.layout.*;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class FilenameRuleFrame extends JCCFrame {
 	private static final long serialVersionUID = 692779597355844596L;
 
-	private JScrollPane scrollPane;
-	private JTextArea memoMain;
-	private JPanel pnlBottom;
-	private JButton btnOK;
-	
 	public FilenameRuleFrame(Component owner, CCMovieList ml) {
 		super(ml);
-		
-		initGUI();
+
+		initComponents();
+		postInit();
+
 		setLocationRelativeTo(owner);
 	}
-	
-	private void initGUI() {
-		setTitle(LocaleBundle.getString("FilenameRulesFrame.btnTitle.text")); //$NON-NLS-1$
-		setSize(new Dimension(750, 500));
 
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
-		scrollPane = new JScrollPane();
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
-		
-		memoMain = new JTextArea();
-		memoMain.setFont(new Font("Courier New", Font.PLAIN, 12)); //$NON-NLS-1$
-		memoMain.setEditable(false);
-		scrollPane.setViewportView(memoMain);
-		
-		pnlBottom = new JPanel();
-		getContentPane().add(pnlBottom, BorderLayout.SOUTH);
-		
-		btnOK = new JButton(LocaleBundle.getString("UIGeneric.btnOK.text")); //$NON-NLS-1$
-		btnOK.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-			}
-		});
-		pnlBottom.add(btnOK);
-
+	private void postInit() {
 		memoMain.setText(getDescription());
 	}
-	
+
 	private String getDescription() {
 		try {
 			String txt = LocaleBundle.getString("FilenameRulesFrame.rules"); //$NON-NLS-1$
@@ -67,4 +38,47 @@ public class FilenameRuleFrame extends JCCFrame {
 			return "??"; //$NON-NLS-1$
 		}
 	}
+
+	private void onOK() {
+		dispose();
+	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		scrollPane = new JScrollPane();
+		memoMain = new JTextArea();
+		btnOK = new JButton();
+
+		//======== this ========
+		setTitle(LocaleBundle.getString("FilenameRulesFrame.btnTitle.text"));
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		Container contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$ugap, default:grow, $ugap",
+			"$ugap, default:grow, $lgap, default, $ugap"));
+
+		//======== scrollPane ========
+		{
+
+			//---- memoMain ----
+			memoMain.setEditable(false);
+			memoMain.setFont(new Font("Courier New", Font.PLAIN, 12));
+			scrollPane.setViewportView(memoMain);
+		}
+		contentPane.add(scrollPane, CC.xy(2, 2, CC.FILL, CC.FILL));
+
+		//---- btnOK ----
+		btnOK.setText(LocaleBundle.getString("UIGeneric.btnOK.text"));
+		btnOK.addActionListener(e -> onOK());
+		contentPane.add(btnOK, CC.xy(2, 4, CC.CENTER, CC.DEFAULT));
+		setSize(750, 500);
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JScrollPane scrollPane;
+	private JTextArea memoMain;
+	private JButton btnOK;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

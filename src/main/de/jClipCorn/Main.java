@@ -417,7 +417,7 @@ public class Main {
  - [X] FindCoverFrame
  - [ ] GenericTextDialog
  - [X] GroupManageFrame
- - [ ] ImportElementsFrame
+ - [x] ImportElementsFrame
  - [x] InitialConfigFrame
  - [x] InputErrorFrame
  - [X] LogFrame

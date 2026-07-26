@@ -1,12 +1,9 @@
 package de.jClipCorn.gui.frames.importElementsFrame;
 
-import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
-import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.serialization.xmlimport.DatabaseXMLImporter;
 import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
@@ -15,52 +12,19 @@ import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.PropertyCheckbox;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.util.exceptions.CCFormatException;
-import de.jClipCorn.util.exceptions.SerializationException;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
 import de.jClipCorn.util.xml.CCXMLParser;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class ImportElementsFrame extends JCCFrame {
 	private static final long serialVersionUID = -7243383487017811810L;
-	
-	private JPanel contentPane;
-	private JPanel pnlTop;
-	private JPanel pnlCenter;
-	private JLabel lblElementsFound;
-	private JButton btnAddAll;
-	private JScrollPane scrollPane;
-	private JList<CCXMLElement> lbContent;
-	private JPanel pnlInfo;
-	private JLabel lblTXT2;
-	private JLabel lblName;
-	private JLabel lblNewLabel;
-	private JLabel lblNewLabel_1;
-	private JLabel lblTXT;
-	private JButton btnAdd;
-	private JPanel pnlTopRight;
-	private JPanel pnlTopRightInner;
-	private PropertyCheckbox chckbxOnlyCover;
-	private JLabel lblCover;
-	private PropertyCheckbox chcbxResetViewed;
-	private PropertyCheckbox chcbxResetScore;
-	private PropertyCheckbox chckbxResetDate;
-	private PropertyCheckbox chckbxResetTags;
-	private JLabel lblViewed;
-	private JLabel lblChilds;
-	private JButton btnEditAdd;
-	
+
 	private DefaultListModel<CCXMLElement> listModel;
 
 	private int data_xmlver = 1;
@@ -69,168 +33,19 @@ public class ImportElementsFrame extends JCCFrame {
 	public ImportElementsFrame(Component owner, String xmlcontent, CCMovieList movielist) {
 		super(movielist);
 
-		initGUI();
+		initComponents();
+		postInit();
+
 		setLocationRelativeTo(owner);
-		
+
 		initData(xmlcontent);
 	}
 
-	private void initGUI() {
-		setTitle(LocaleBundle.getString("ImportElementsFrame.this.title")); //$NON-NLS-1$
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(2, 2, 2, 2));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
-		
-		pnlTop = new JPanel();
-		pnlTop.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.add(pnlTop, BorderLayout.NORTH);
-		pnlTop.setLayout(new BorderLayout(0, 0));
-		
-		lblElementsFound = new JLabel(LocaleBundle.getFormattedString("ImportElementsFrame.lblInfo.text", 0)); //$NON-NLS-1$
-		lblElementsFound.setVerticalAlignment(SwingConstants.TOP);
-		pnlTop.add(lblElementsFound);
-		
-		pnlTopRight = new JPanel();
-		pnlTop.add(pnlTopRight, BorderLayout.EAST);
-		pnlTopRight.setLayout(new BorderLayout(0, 0));
-		
-		btnAddAll = new JButton(LocaleBundle.getString("ImportElementsFrame.btnAddAll.caption")); //$NON-NLS-1$
-		btnAddAll.addActionListener(arg0 ->
-		{
-			try {
-				onAddAll();
-			} catch (Exception e) {
-				DialogHelper.showDispatchError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$ //$NON-NLS-2$
-				CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
-			}
-		});
-		pnlTopRight.add(btnAddAll);
-		
-		pnlTopRightInner = new JPanel();
-		pnlTopRight.add(pnlTopRightInner, BorderLayout.EAST);
-		pnlTopRightInner.setLayout(new BorderLayout(0, 0));
-		
-		chckbxOnlyCover = new PropertyCheckbox(ccprops().PROP_IMPORT_ONLYWITHCOVER);
-		pnlTopRightInner.add(chckbxOnlyCover, BorderLayout.EAST);
-		
-		pnlCenter = new JPanel();
-		contentPane.add(pnlCenter, BorderLayout.CENTER);
-		pnlCenter.setLayout(new BorderLayout(2, 0));
-		
-		scrollPane = new JScrollPane();
-		pnlCenter.add(scrollPane, BorderLayout.CENTER);
-		
-		lbContent = new JList<>();
-		lbContent.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		scrollPane.setViewportView(lbContent);
+	private void postInit() {
 		lbContent.setModel(listModel = new DefaultListModel<>());
 		lbContent.setCellRenderer(new ElementCellRenderer());
-		lbContent.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				updateInfoPanel();
-			}
-		});
-		
-		pnlInfo = new JPanel();
-		pnlInfo.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		pnlCenter.add(pnlInfo, BorderLayout.EAST);
-		pnlInfo.setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(45dlu;default)"), //$NON-NLS-1$
-				ColumnSpec.decode("50dlu"), //$NON-NLS-1$
-				ColumnSpec.decode("5dlu"), //$NON-NLS-1$
-				ColumnSpec.decode("max(50dlu;default)"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("14px"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("default:grow"), //$NON-NLS-1$
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,}));
-		
-		lblTXT2 = new JLabel(LocaleBundle.getString("ImportElementsFrame.lblName.caption")); //$NON-NLS-1$
-		pnlInfo.add(lblTXT2, "2, 2, left, top"); //$NON-NLS-1$
-		
-		lblName = new JLabel();
-		pnlInfo.add(lblName, "4, 2, 4, 1"); //$NON-NLS-1$
-		
-		lblNewLabel = new JLabel(LocaleBundle.getString("ImportElementsFrame.lblCover.caption")); //$NON-NLS-1$
-		pnlInfo.add(lblNewLabel, "2, 4"); //$NON-NLS-1$
-		
-		lblCover = new JLabel();
-		pnlInfo.add(lblCover, "4, 4, 4, 1"); //$NON-NLS-1$
-		
-		lblTXT = new JLabel(LocaleBundle.getString("ImportElementsFrame.lblViewed.caption")); //$NON-NLS-1$
-		pnlInfo.add(lblTXT, "2, 6"); //$NON-NLS-1$
-		
-		lblViewed = new JLabel();
-		pnlInfo.add(lblViewed, "4, 6, 4, 1"); //$NON-NLS-1$
-		
-		lblNewLabel_1 = new JLabel(LocaleBundle.getString("ImportElementsFrame.lblChilds.caption")); //$NON-NLS-1$
-		pnlInfo.add(lblNewLabel_1, "2, 8"); //$NON-NLS-1$
-		
-		lblChilds = new JLabel();
-		pnlInfo.add(lblChilds, "4, 8, 4, 1"); //$NON-NLS-1$
-		
-		btnEditAdd = new JButton(LocaleBundle.getString("ImportElementsFrame.btnEditAndAdd.caption")); //$NON-NLS-1$
-		btnEditAdd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				onEdit();
-			}
-		});
-		btnEditAdd.setEnabled(false);
-		pnlInfo.add(btnEditAdd, "2, 12, 4, 1"); //$NON-NLS-1$
-		
-		btnAdd = new JButton(LocaleBundle.getString("ImportElementsFrame.btnAdd.caption")); //$NON-NLS-1$
-		btnAdd.addActionListener(arg0 ->
-		{
-			try {
-				onAdd();
-			} catch (Exception e) {
-				DialogHelper.showDispatchError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$ //$NON-NLS-2$
-				CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
-			}
-		});
-		btnAdd.setEnabled(false);
-		pnlInfo.add(btnAdd, "7, 12"); //$NON-NLS-1$
-		
-		chckbxResetDate = new PropertyCheckbox(ccprops().PROP_IMPORT_RESETADDDATE);
-		pnlInfo.add(chckbxResetDate, "2, 14, 6, 1"); //$NON-NLS-1$
-		
-		chcbxResetViewed = new PropertyCheckbox(ccprops().PROP_IMPORT_RESETVIEWED);
-		pnlInfo.add(chcbxResetViewed, "2, 16, 6, 1"); //$NON-NLS-1$
-		
-		chcbxResetScore = new PropertyCheckbox(ccprops().PROP_IMPORT_RESETSCORE);
-		pnlInfo.add(chcbxResetScore, "2, 18, 6, 1"); //$NON-NLS-1$
-		
-		chckbxResetTags = new PropertyCheckbox(ccprops().PROP_IMPORT_RESETTAGS);
-		pnlInfo.add(chckbxResetTags, "2, 20, 6, 1"); //$NON-NLS-1$
-		
-		setSize(new Dimension(650, 350));
-		setMinimumSize(new Dimension(550, 250));
+
+		lblElementsFound.setText(LocaleBundle.getFormattedString("ImportElementsFrame.lblInfo.text", 0)); //$NON-NLS-1$
 	}
 
 	@SuppressWarnings("nls")
@@ -255,7 +70,7 @@ public class ImportElementsFrame extends JCCFrame {
 			return;
 		}
 	}
-	
+
 	@SuppressWarnings("nls")
 	private void updateInfoPanel() {
 		try {
@@ -300,21 +115,39 @@ public class ImportElementsFrame extends JCCFrame {
 			CCLog.addError(e);
 		}
 	}
-	
+
+	private void onAddAction() {
+		try {
+			onAdd();
+		} catch (Exception e) {
+			DialogHelper.showDispatchError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$ //$NON-NLS-2$
+			CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
+		}
+	}
+
+	private void onAddAllAction() {
+		try {
+			onAddAll();
+		} catch (Exception e) {
+			DialogHelper.showDispatchError(ImportElementsFrame.this, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.FormatErrorInExport")); //$NON-NLS-1$ //$NON-NLS-2$
+			CCLog.addWarning(LocaleBundle.getString("LogMessage.FormatErrorInExport"), e); //$NON-NLS-1$
+		}
+	}
+
 	private void onAdd() throws Exception {
 		if (lbContent.getSelectedValue() == null) {
 			return;
 		}
-		
+
 		CCXMLElement value = lbContent.getSelectedValue();
-		
+
 		if (value.getName().equalsIgnoreCase("movie")) {  //$NON-NLS-1$
 			onAddMovie(value, lbContent.getSelectedIndex());
 		} else if (value.getName().equalsIgnoreCase("series")) { //$NON-NLS-1$
 			onAddSeries(value, lbContent.getSelectedIndex());
 		}
 	}
-		
+
 	private void onAddMovie(CCXMLElement value, int index) throws Exception {
 		movielist.createNewMovie(mov -> DatabaseXMLImporter.parseSingleMovie(mov, value, f->null, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false))));
 		listModel.remove(index);
@@ -324,20 +157,20 @@ public class ImportElementsFrame extends JCCFrame {
 		movielist.createNewSeries(ser -> DatabaseXMLImporter.parseSingleSeries(ser, value, f->null, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), chckbxResetTags.isSelected(), false))));
 		listModel.remove(index);
 	}
-	
+
 	private void onEdit() {
 		if (lbContent.getSelectedValue() == null) {
 			return;
 		}
-		
+
 		CCXMLElement value = lbContent.getSelectedValue();
-		
+
 		if (! value.getName().equalsIgnoreCase("movie")) { //$NON-NLS-1$
 			return;
 		}
-		
+
 		AddMovieFrame amf = new AddMovieFrame(this, movielist);
-		
+
 		try {
 			CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
 			tmpMov.setDefaultValues(false);
@@ -346,9 +179,9 @@ public class ImportElementsFrame extends JCCFrame {
 			CCLog.addError(e);
 			return;
 		}
-		
+
 		amf.setVisible(true);
-		
+
 		listModel.remove(lbContent.getSelectedIndex());
 	}
 
@@ -356,7 +189,7 @@ public class ImportElementsFrame extends JCCFrame {
 	private void onAddAll() throws Exception {
 		for (int i = listModel.size()-1; i >= 0; i--) {
 			CCXMLElement value = listModel.get(i);
-			
+
 			if ((! chckbxOnlyCover.isSelected()) || value.hasAttribute("coverdata"))
 			{
 				if (value.getName().equalsIgnoreCase("movie"))   //$NON-NLS-1$
@@ -370,4 +203,138 @@ public class ImportElementsFrame extends JCCFrame {
 			}
 		}
 	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+        pnlTop = new JPanel();
+        lblElementsFound = new JLabel();
+        btnAddAll = new JButton();
+        chckbxOnlyCover = new PropertyCheckbox(ccprops().PROP_IMPORT_ONLYWITHCOVER);
+        scrollPane = new JScrollPane();
+        lbContent = new JList<>();
+        pnlInfo = new JPanel();
+        lblTXT2 = new JLabel();
+        lblName = new JLabel();
+        lblNewLabel = new JLabel();
+        lblCover = new JLabel();
+        lblTXT = new JLabel();
+        lblViewed = new JLabel();
+        lblNewLabel_1 = new JLabel();
+        lblChilds = new JLabel();
+        btnEditAdd = new JButton();
+        btnAdd = new JButton();
+        chckbxResetDate = new PropertyCheckbox(ccprops().PROP_IMPORT_RESETADDDATE);
+        chcbxResetViewed = new PropertyCheckbox(ccprops().PROP_IMPORT_RESETVIEWED);
+        chcbxResetScore = new PropertyCheckbox(ccprops().PROP_IMPORT_RESETSCORE);
+        chckbxResetTags = new PropertyCheckbox(ccprops().PROP_IMPORT_RESETTAGS);
+
+        //======== this ========
+        setTitle(LocaleBundle.getString("ImportElementsFrame.this.title")); //$NON-NLS-1$
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setMinimumSize(new Dimension(550, 250));
+        var contentPane = getContentPane();
+        contentPane.setLayout(new FormLayout(
+            "$ugap, default:grow, $rgap, default, $ugap", //$NON-NLS-1$
+            "$ugap, default, $lgap, default:grow, $ugap")); //$NON-NLS-1$
+
+        //======== pnlTop ========
+        {
+            pnlTop.setLayout(new FormLayout(
+                "default:grow, 2*($rgap, default)", //$NON-NLS-1$
+                "default")); //$NON-NLS-1$
+
+            //---- lblElementsFound ----
+            lblElementsFound.setVerticalAlignment(SwingConstants.TOP);
+            pnlTop.add(lblElementsFound, CC.xy(1, 1, CC.FILL, CC.FILL));
+
+            //---- btnAddAll ----
+            btnAddAll.setText(LocaleBundle.getString("ImportElementsFrame.btnAddAll.caption")); //$NON-NLS-1$
+            btnAddAll.addActionListener(e -> onAddAllAction());
+            pnlTop.add(btnAddAll, CC.xy(3, 1));
+            pnlTop.add(chckbxOnlyCover, CC.xy(5, 1));
+        }
+        contentPane.add(pnlTop, CC.xywh(2, 2, 3, 1, CC.FILL, CC.FILL));
+
+        //======== scrollPane ========
+        {
+
+            //---- lbContent ----
+            lbContent.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            lbContent.addListSelectionListener(e -> updateInfoPanel());
+            scrollPane.setViewportView(lbContent);
+        }
+        contentPane.add(scrollPane, CC.xy(2, 4, CC.FILL, CC.FILL));
+
+        //======== pnlInfo ========
+        {
+            pnlInfo.setBorder(new EtchedBorder());
+            pnlInfo.setLayout(new FormLayout(
+                "$lcgap, default, $rgap, [45dlu,default], 50dlu, 5dlu, [50dlu,default], $rgap", //$NON-NLS-1$
+                "$lgap, 14px, 3*($rgap, default), $rgap, default:grow, 5*($rgap, default), $rgap")); //$NON-NLS-1$
+
+            //---- lblTXT2 ----
+            lblTXT2.setText(LocaleBundle.getString("ImportElementsFrame.lblName.caption")); //$NON-NLS-1$
+            pnlInfo.add(lblTXT2, CC.xy(2, 2, CC.LEFT, CC.TOP));
+            pnlInfo.add(lblName, CC.xywh(4, 2, 4, 1));
+
+            //---- lblNewLabel ----
+            lblNewLabel.setText(LocaleBundle.getString("ImportElementsFrame.lblCover.caption")); //$NON-NLS-1$
+            pnlInfo.add(lblNewLabel, CC.xy(2, 4));
+            pnlInfo.add(lblCover, CC.xywh(4, 4, 4, 1));
+
+            //---- lblTXT ----
+            lblTXT.setText(LocaleBundle.getString("ImportElementsFrame.lblViewed.caption")); //$NON-NLS-1$
+            pnlInfo.add(lblTXT, CC.xy(2, 6));
+            pnlInfo.add(lblViewed, CC.xywh(4, 6, 4, 1));
+
+            //---- lblNewLabel_1 ----
+            lblNewLabel_1.setText(LocaleBundle.getString("ImportElementsFrame.lblChilds.caption")); //$NON-NLS-1$
+            pnlInfo.add(lblNewLabel_1, CC.xy(2, 8));
+            pnlInfo.add(lblChilds, CC.xywh(4, 8, 4, 1));
+
+            //---- btnEditAdd ----
+            btnEditAdd.setText(LocaleBundle.getString("ImportElementsFrame.btnEditAndAdd.caption")); //$NON-NLS-1$
+            btnEditAdd.setEnabled(false);
+            btnEditAdd.addActionListener(e -> onEdit());
+            pnlInfo.add(btnEditAdd, CC.xywh(2, 12, 4, 1));
+
+            //---- btnAdd ----
+            btnAdd.setText(LocaleBundle.getString("ImportElementsFrame.btnAdd.caption")); //$NON-NLS-1$
+            btnAdd.setEnabled(false);
+            btnAdd.addActionListener(e -> onAddAction());
+            pnlInfo.add(btnAdd, CC.xy(7, 12));
+            pnlInfo.add(chckbxResetDate, CC.xywh(2, 14, 6, 1));
+            pnlInfo.add(chcbxResetViewed, CC.xywh(2, 16, 6, 1));
+            pnlInfo.add(chcbxResetScore, CC.xywh(2, 18, 6, 1));
+            pnlInfo.add(chckbxResetTags, CC.xywh(2, 20, 6, 1));
+        }
+        contentPane.add(pnlInfo, CC.xy(4, 4, CC.FILL, CC.FILL));
+        setSize(950, 660);
+        setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    private JPanel pnlTop;
+    private JLabel lblElementsFound;
+    private JButton btnAddAll;
+    private PropertyCheckbox chckbxOnlyCover;
+    private JScrollPane scrollPane;
+    private JList<CCXMLElement> lbContent;
+    private JPanel pnlInfo;
+    private JLabel lblTXT2;
+    private JLabel lblName;
+    private JLabel lblNewLabel;
+    private JLabel lblCover;
+    private JLabel lblTXT;
+    private JLabel lblViewed;
+    private JLabel lblNewLabel_1;
+    private JLabel lblChilds;
+    private JButton btnEditAdd;
+    private JButton btnAdd;
+    private PropertyCheckbox chckbxResetDate;
+    private PropertyCheckbox chcbxResetViewed;
+    private PropertyCheckbox chcbxResetScore;
+    private PropertyCheckbox chckbxResetTags;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

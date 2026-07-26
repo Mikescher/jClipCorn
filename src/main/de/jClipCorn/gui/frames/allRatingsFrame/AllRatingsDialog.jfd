@@ -1,0 +1,52 @@
+JFDML JFormDesigner: "8.3" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "AllRatingsFrame"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCDialog", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, default:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default:grow, linegap, default, unrelgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": new FormMessage( null, "AllRatingsFrame.this.title" )
+			"defaultCloseOperation": 2
+			"modal": true
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane"
+				"verticalScrollBarPolicy": 22
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+					name: "panel"
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
+				"alignment": 0
+			} ) {
+				name: "pnlBottom"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblBottom"
+					"text": new FormMessage( null, "AllRatingsFrame.lblAberage.text" )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "lblAverage"
+					"text": "???"
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 450, 300 )
+		} )
+	}
+}

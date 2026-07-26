@@ -392,7 +392,7 @@ public class Main {
  - [X] AddMultiEpisodesFrame
  - [X] AddSeasonFrame
  - [X] AddSeriesFrame
- - [ ] AllRatingsFrame
+ - [X] AllRatingsFrame
  - [ ] AutofindRefrenceFrame
  - [X] BackupManagerFrame
  - [X] BatchEditFrame

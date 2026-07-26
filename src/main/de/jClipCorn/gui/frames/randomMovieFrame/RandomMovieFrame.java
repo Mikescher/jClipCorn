@@ -37,9 +37,8 @@ public class RandomMovieFrame extends JCCFrame implements Runnable {
 	}
 
 	private void postInit() {
-		chooser.set3DMode(true);
-
-		pack();
+		// 3D-mode, circle-radius etc. are configured (and the window packed) in initComponents,
+		// so the frame sizes itself to the cover-carousel automatically.
 	}
 
 	private void onMainButton() {
@@ -112,44 +111,45 @@ public class RandomMovieFrame extends JCCFrame implements Runnable {
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        chooser = new JCoverChooser(movielist, true);
-        pnlBottom = new JPanel();
-        btnMain = new JButton();
+		chooser = new JCoverChooser(movielist, true);
+		pnlBottom = new JPanel();
+		btnMain = new JButton();
 
-        //======== this ========
-        setTitle(LocaleBundle.getString("RandomMovieFrame.this.title")); //$NON-NLS-1$
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        var contentPane = getContentPane();
-        contentPane.setLayout(new FormLayout(
-            "default:grow", //$NON-NLS-1$
-            "default:grow, default")); //$NON-NLS-1$
+		//======== this ========
+		setTitle(LocaleBundle.getString("RandomMovieFrame.this.title"));
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		Container contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"default:grow",
+			"default:grow, default"));
 
-        //---- chooser ----
-        chooser.setCircleRadius(300);
-        chooser.setCoverGap(10);
-        chooser.setEnabled(false);
-        contentPane.add(chooser, CC.xy(1, 1, CC.FILL, CC.FILL));
+		//---- chooser ----
+		chooser.set3DMode(true);
+		chooser.setCircleRadius(300);
+		chooser.setCoverGap(10);
+		chooser.setEnabled(false);
+		contentPane.add(chooser, CC.xy(1, 1, CC.FILL, CC.FILL));
 
-        //======== pnlBottom ========
-        {
-            pnlBottom.setLayout(new FormLayout(
-                "default:grow, default, default:grow", //$NON-NLS-1$
-                "$ugap, default, $ugap")); //$NON-NLS-1$
+		//======== pnlBottom ========
+		{
+			pnlBottom.setLayout(new FormLayout(
+				"default:grow, default, default:grow",
+				"$ugap, default, $ugap"));
 
-            //---- btnMain ----
-            btnMain.setText(LocaleBundle.getString("RandomMovieFrame.btnShuffle.text")); //$NON-NLS-1$
-            btnMain.addActionListener(e -> onMainButton());
-            pnlBottom.add(btnMain, CC.xy(2, 2));
-        }
-        contentPane.add(pnlBottom, CC.xy(1, 2, CC.FILL, CC.DEFAULT));
-        pack();
-        setLocationRelativeTo(getOwner());
+			//---- btnMain ----
+			btnMain.setText(LocaleBundle.getString("RandomMovieFrame.btnShuffle.text"));
+			btnMain.addActionListener(e -> onMainButton());
+			pnlBottom.add(btnMain, CC.xy(2, 2));
+		}
+		contentPane.add(pnlBottom, CC.xy(1, 2, CC.FILL, CC.DEFAULT));
+		pack();
+		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    private JCoverChooser chooser;
-    private JPanel pnlBottom;
-    private JButton btnMain;
+	private JCoverChooser chooser;
+	private JPanel pnlBottom;
+	private JButton btnMain;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

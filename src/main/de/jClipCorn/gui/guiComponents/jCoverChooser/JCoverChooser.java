@@ -134,6 +134,16 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	public void setCircleRadius(int rad) {
 		circleRadius = rad;
 
+		invalidateLayout();
+	}
+
+	// A layout parameter (radius/gap/cover-size/mode) changed - drop the cached transform rectangles.
+	// getExtraCoverCount() clamps against the previously computed rectangles, so stale entries (e.g.
+	// the ones built with the default radius before setCircleRadius() runs) would otherwise wrongly
+	// cap how many covers are shown. Clearing forces a fresh recompute with the current geometry.
+	private void invalidateLayout() {
+		rectangles.clear();
+
 		update();
 	}
 
@@ -144,7 +154,7 @@ public class JCoverChooser extends JComponent implements MouseListener {
 	public void setCoverGap(int gap) {
 		coverGap = gap;
 
-		update();
+		invalidateLayout();
 	}
 
 	public int getCoverGap() {
@@ -276,6 +286,11 @@ public class JCoverChooser extends JComponent implements MouseListener {
 				if (!rectangles.containsKey(i)) return i-1;
 
 				TransformRectangle tr = rectangles.get(i);
+
+				// Once a cover reaches the rim (±circleRadius) its projected right edge starts moving
+				// back left ("folding"), which would paint a mangled sliver on top of the inner covers.
+				// Stop before that - how many covers fit depends on their (full/half) size.
+				if (tr.topRight.x <= tr.topLeft.x) return i-1;
 
 				if (tr.topRight.x > right) return i-1;
 				if (tr.bottomRight.x > right) return i-1;
@@ -476,6 +491,8 @@ public class JCoverChooser extends JComponent implements MouseListener {
 
 	public void setCoverHalfSize(boolean hs) {
 		coverHalfSize = hs;
+
+		invalidateLayout();
 	}
 
 	public boolean getCoverHalfSize() {
@@ -494,6 +511,8 @@ public class JCoverChooser extends JComponent implements MouseListener {
 
 	public void set3DMode(boolean mode3d) {
 		this.mode3d = mode3d;
+
+		invalidateLayout();
 	}
 
 	public boolean get3DMode() {

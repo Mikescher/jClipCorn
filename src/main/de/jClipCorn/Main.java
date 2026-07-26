@@ -411,7 +411,7 @@ public class Main {
  - [X] EditSeriesFrame
  - [ ] EditStringListPropertyFrame
  - [ ] EditToolbarFrame
- - [ ] ExportElementsFrame
+ - [X] ExportElementsFrame
  - [X] ExtendedSettingsFrame
  - [X] FilenameRulesFrame
  - [ ] FindCoverFrame

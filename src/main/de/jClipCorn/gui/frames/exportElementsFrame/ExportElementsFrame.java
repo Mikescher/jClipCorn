@@ -1,81 +1,52 @@
 package de.jClipCorn.gui.frames.exportElementsFrame;
 
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
-import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.DialogHelper;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExportElementsFrame extends JCCFrame {
 	private static final long serialVersionUID = 1568672663044965879L;
-	
+
 	private static ExportElementsFrame instance = null;
-	
-	private JPanel contentPane;
-	private JScrollPane scrollPane;
-	private JList<CCDatabaseElement> lsElements;
+
 	private DefaultListModel<CCDatabaseElement> lsModel;
-	private JPanel pnlBottom;
-	private JButton btnExport;
-	
+
 	public ExportElementsFrame(Component owner, CCMovieList ml) {
 		super(ml);
-		initGUI();
+
+		initComponents();
+		postInit();
+
 		setLocationRelativeTo(owner);
 	}
 
-	private void initGUI() {
-		setTitle(LocaleBundle.getString("ExportElementsFrame.this.title")); //$NON-NLS-1$
+	private void postInit() {
 		setType(Type.UTILITY);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
-		
-		scrollPane = new JScrollPane();
-		contentPane.add(scrollPane, BorderLayout.CENTER);
-		
-		lsElements = new JList<>();
-		lsElements.setModel(lsModel = new DefaultListModel<>());
-		scrollPane.setViewportView(lsElements);
-		
-		pnlBottom = new JPanel();
-		contentPane.add(pnlBottom, BorderLayout.SOUTH);
-		
-		btnExport = new JButton(LocaleBundle.getString("ExportElementsFrame.btnExport.caption")); //$NON-NLS-1$
-		btnExport.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				onExport();
-			}
-		});
-		pnlBottom.add(btnExport);
-		
-		setMinimumSize(new Dimension(250, 300));
-		setSize(new Dimension(300, 350));
+
+		lsModel = new DefaultListModel<>();
+		lsElements.setModel(lsModel);
 	}
-	
+
 	private void onExport() {
 		final List<CCDatabaseElement> list = new ArrayList<>();
-		
+
 		for (int i = 0; i < lsModel.size(); i++) {
 			list.add(lsModel.get(i));
 		}
-		
+
 		final JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(FileChooserHelper.createLocalFileFilter("ExportHelper.filechooser_jmccexport.description", ExportHelper.EXTENSION_MULTIPLEEXPORT)); //$NON-NLS-1$
 		chooser.setCurrentDirectory(FilesystemUtils.getRealSelfDirectory().toFile());
@@ -90,18 +61,18 @@ public class ExportElementsFrame extends JCCFrame {
 			new Thread(() -> ExportHelper.exportDBElements(f, list, includeCover, true), "THREAD_EXPORT_JMCCEXPORT").start(); //$NON-NLS-1$
 		}
 	}
-	
+
 	public void addElement(CCDatabaseElement el) {
 		lsModel.addElement(el);
 	}
-	
+
 	public static ExportElementsFrame getVisibleInstance(Component owner, CCMovieList ml) {
 		if (instance == null) {
 			instance = new ExportElementsFrame(owner, ml);
 			instance.setVisible(true);
 			return instance;
 		}
-		
+
 		if (! instance.isVisible()) {
 			instance.dispose();
 			instance = new ExportElementsFrame(owner, ml);
@@ -115,18 +86,62 @@ public class ExportElementsFrame extends JCCFrame {
 			instance.setVisible(true);
 			return instance;
 		}
-		
+
 		return instance;
 	}
-	
+
 	public static void addElementToList(Component owner, CCDatabaseElement el) {
 		getVisibleInstance(owner, el.getMovieList()).addElement(el);
 	}
-	
+
 	public static void clearAndDispose() {
 		if (instance != null) {
 			instance.dispose();
 			instance = null;
 		}
 	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		scrollPane = new JScrollPane();
+		lsElements = new JList<>();
+		pnlBottom = new JPanel();
+		btnExport = new JButton();
+
+		//======== this ========
+		setTitle(LocaleBundle.getString("ExportElementsFrame.this.title"));
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setMinimumSize(new Dimension(250, 300));
+		Container contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$ugap, default:grow, $ugap",
+			"$ugap, default:grow, $lgap, default, $ugap"));
+
+		//======== scrollPane ========
+		{
+			scrollPane.setViewportView(lsElements);
+		}
+		contentPane.add(scrollPane, CC.xy(2, 2, CC.FILL, CC.FILL));
+
+		//======== pnlBottom ========
+		{
+			pnlBottom.setLayout(new FlowLayout());
+
+			//---- btnExport ----
+			btnExport.setText(LocaleBundle.getString("ExportElementsFrame.btnExport.caption"));
+			btnExport.addActionListener(e -> onExport());
+			pnlBottom.add(btnExport);
+		}
+		contentPane.add(pnlBottom, CC.xy(2, 4, CC.FILL, CC.DEFAULT));
+		setSize(300, 350);
+		setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	private JScrollPane scrollPane;
+	private JList<CCDatabaseElement> lsElements;
+	private JPanel pnlBottom;
+	private JButton btnExport;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

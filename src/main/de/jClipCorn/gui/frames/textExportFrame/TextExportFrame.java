@@ -81,119 +81,119 @@ public class TextExportFrame extends JCCFrame {
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        pnlOptions = new JPanel();
-        lblFormat = new JLabel();
-        cbFormat = new JComboBox<>();
-        lblOrder = new JLabel();
-        cbxOrder = new JComboBox<>();
-        cbxIncludeSeries = new JCheckBox();
-        cbxIncludeLanguage = new JCheckBox();
-        cbxIncludeYear = new JCheckBox();
-        cbxIncludeFormat = new JCheckBox();
-        cbxIncludeQuality = new JCheckBox();
-        cbxIncludeSize = new JCheckBox();
-        cbxIncludeViewed = new JCheckBox();
-        btnCreate = new JButton();
-        scrollPane = new JScrollPane();
-        memoResult = new JTextArea();
-        btnExport = new JButton();
+		pnlOptions = new JPanel();
+		lblFormat = new JLabel();
+		cbFormat = new JComboBox<>();
+		lblOrder = new JLabel();
+		cbxOrder = new JComboBox<>();
+		cbxIncludeSeries = new JCheckBox();
+		cbxIncludeLanguage = new JCheckBox();
+		cbxIncludeYear = new JCheckBox();
+		cbxIncludeFormat = new JCheckBox();
+		cbxIncludeQuality = new JCheckBox();
+		cbxIncludeSize = new JCheckBox();
+		cbxIncludeViewed = new JCheckBox();
+		btnCreate = new JButton();
+		scrollPane = new JScrollPane();
+		memoResult = new JTextArea();
+		btnExport = new JButton();
 
-        //======== this ========
-        setTitle(LocaleBundle.getString("TextExportFrame.this.title")); //$NON-NLS-1$
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        var contentPane = getContentPane();
-        contentPane.setLayout(new FormLayout(
-            "$ugap, default:grow, $ugap", //$NON-NLS-1$
-            "$ugap, default, $lgap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
+		//======== this ========
+		setTitle(LocaleBundle.getString("TextExportFrame.this.title"));
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		Container contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$ugap, default:grow, $ugap",
+			"$ugap, default, $lgap, default:grow, $lgap, default, $ugap"));
 
-        //======== pnlOptions ========
-        {
-            pnlOptions.setLayout(new FormLayout(
-                "default, $lcgap, default:grow, $ugap, default", //$NON-NLS-1$
-                "default, $lgap, default, $ugap, 7*(default)")); //$NON-NLS-1$
+		//======== pnlOptions ========
+		{
+			pnlOptions.setLayout(new FormLayout(
+				"default, $lcgap, default:grow, $ugap, default",
+				"default, $lgap, default, $ugap, 7*(default)"));
 
-            //---- lblFormat ----
-            lblFormat.setText(LocaleBundle.getString("TextExportFrame.lblFormat.text")); //$NON-NLS-1$
-            pnlOptions.add(lblFormat, CC.xy(1, 1));
-            pnlOptions.add(cbFormat, CC.xy(3, 1, CC.FILL, CC.DEFAULT));
+			//---- lblFormat ----
+			lblFormat.setText(LocaleBundle.getString("TextExportFrame.lblFormat.text"));
+			pnlOptions.add(lblFormat, CC.xy(1, 1));
+			pnlOptions.add(cbFormat, CC.xy(3, 1, CC.FILL, CC.DEFAULT));
 
-            //---- lblOrder ----
-            lblOrder.setText(LocaleBundle.getString("TextExportFrame.lblOrder.text")); //$NON-NLS-1$
-            pnlOptions.add(lblOrder, CC.xy(1, 3));
-            pnlOptions.add(cbxOrder, CC.xy(3, 3, CC.FILL, CC.DEFAULT));
+			//---- lblOrder ----
+			lblOrder.setText(LocaleBundle.getString("TextExportFrame.lblOrder.text"));
+			pnlOptions.add(lblOrder, CC.xy(1, 3));
+			pnlOptions.add(cbxOrder, CC.xy(3, 3, CC.FILL, CC.DEFAULT));
 
-            //---- cbxIncludeSeries ----
-            cbxIncludeSeries.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeSeries.text")); //$NON-NLS-1$
-            cbxIncludeSeries.setSelected(true);
-            pnlOptions.add(cbxIncludeSeries, CC.xywh(1, 5, 3, 1, CC.LEFT, CC.DEFAULT));
+			//---- cbxIncludeSeries ----
+			cbxIncludeSeries.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeSeries.text"));
+			cbxIncludeSeries.setSelected(true);
+			pnlOptions.add(cbxIncludeSeries, CC.xywh(1, 5, 3, 1, CC.LEFT, CC.DEFAULT));
 
-            //---- cbxIncludeLanguage ----
-            cbxIncludeLanguage.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeLanguage.text")); //$NON-NLS-1$
-            pnlOptions.add(cbxIncludeLanguage, CC.xywh(1, 6, 3, 1, CC.LEFT, CC.DEFAULT));
+			//---- cbxIncludeLanguage ----
+			cbxIncludeLanguage.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeLanguage.text"));
+			pnlOptions.add(cbxIncludeLanguage, CC.xywh(1, 6, 3, 1, CC.LEFT, CC.DEFAULT));
 
-            //---- cbxIncludeYear ----
-            cbxIncludeYear.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeYear.text")); //$NON-NLS-1$
-            cbxIncludeYear.setSelected(true);
-            pnlOptions.add(cbxIncludeYear, CC.xywh(1, 7, 3, 1, CC.LEFT, CC.DEFAULT));
+			//---- cbxIncludeYear ----
+			cbxIncludeYear.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeYear.text"));
+			cbxIncludeYear.setSelected(true);
+			pnlOptions.add(cbxIncludeYear, CC.xywh(1, 7, 3, 1, CC.LEFT, CC.DEFAULT));
 
-            //---- cbxIncludeFormat ----
-            cbxIncludeFormat.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeFormat.text")); //$NON-NLS-1$
-            pnlOptions.add(cbxIncludeFormat, CC.xywh(1, 8, 3, 1, CC.LEFT, CC.DEFAULT));
+			//---- cbxIncludeFormat ----
+			cbxIncludeFormat.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeFormat.text"));
+			pnlOptions.add(cbxIncludeFormat, CC.xywh(1, 8, 3, 1, CC.LEFT, CC.DEFAULT));
 
-            //---- cbxIncludeQuality ----
-            cbxIncludeQuality.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeQuality.text")); //$NON-NLS-1$
-            pnlOptions.add(cbxIncludeQuality, CC.xywh(1, 9, 3, 1, CC.LEFT, CC.DEFAULT));
+			//---- cbxIncludeQuality ----
+			cbxIncludeQuality.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeQuality.text"));
+			pnlOptions.add(cbxIncludeQuality, CC.xywh(1, 9, 3, 1, CC.LEFT, CC.DEFAULT));
 
-            //---- cbxIncludeSize ----
-            cbxIncludeSize.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeSize.text")); //$NON-NLS-1$
-            pnlOptions.add(cbxIncludeSize, CC.xywh(1, 10, 3, 1, CC.LEFT, CC.DEFAULT));
+			//---- cbxIncludeSize ----
+			cbxIncludeSize.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeSize.text"));
+			pnlOptions.add(cbxIncludeSize, CC.xywh(1, 10, 3, 1, CC.LEFT, CC.DEFAULT));
 
-            //---- cbxIncludeViewed ----
-            cbxIncludeViewed.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeViewed.text")); //$NON-NLS-1$
-            pnlOptions.add(cbxIncludeViewed, CC.xywh(1, 11, 3, 1, CC.LEFT, CC.DEFAULT));
+			//---- cbxIncludeViewed ----
+			cbxIncludeViewed.setText(LocaleBundle.getString("TextExportFrame.cbxIncludeViewed.text"));
+			pnlOptions.add(cbxIncludeViewed, CC.xywh(1, 11, 3, 1, CC.LEFT, CC.DEFAULT));
 
-            //---- btnCreate ----
-            btnCreate.setText(LocaleBundle.getString("TextExportFrame.btnCreate.text")); //$NON-NLS-1$
-            btnCreate.addActionListener(e -> start());
-            pnlOptions.add(btnCreate, CC.xywh(5, 5, 1, 7, CC.DEFAULT, CC.BOTTOM));
-        }
-        contentPane.add(pnlOptions, CC.xy(2, 2, CC.FILL, CC.DEFAULT));
+			//---- btnCreate ----
+			btnCreate.setText(LocaleBundle.getString("TextExportFrame.btnCreate.text"));
+			btnCreate.addActionListener(e -> start());
+			pnlOptions.add(btnCreate, CC.xywh(5, 5, 1, 7, CC.DEFAULT, CC.BOTTOM));
+		}
+		contentPane.add(pnlOptions, CC.xy(2, 2, CC.FILL, CC.DEFAULT));
 
-        //======== scrollPane ========
-        {
+		//======== scrollPane ========
+		{
 
-            //---- memoResult ----
-            memoResult.setEditable(false);
-            memoResult.setTabSize(2);
-            scrollPane.setViewportView(memoResult);
-        }
-        contentPane.add(scrollPane, CC.xy(2, 4, CC.FILL, CC.FILL));
+			//---- memoResult ----
+			memoResult.setEditable(false);
+			memoResult.setTabSize(2);
+			scrollPane.setViewportView(memoResult);
+		}
+		contentPane.add(scrollPane, CC.xy(2, 4, CC.FILL, CC.FILL));
 
-        //---- btnExport ----
-        btnExport.setText(LocaleBundle.getString("TextExportFrame.btnExport.text")); //$NON-NLS-1$
-        btnExport.addActionListener(e -> export());
-        contentPane.add(btnExport, CC.xy(2, 6, CC.RIGHT, CC.DEFAULT));
-        setSize(600, 620);
-        setLocationRelativeTo(getOwner());
+		//---- btnExport ----
+		btnExport.setText(LocaleBundle.getString("TextExportFrame.btnExport.text"));
+		btnExport.addActionListener(e -> export());
+		contentPane.add(btnExport, CC.xy(2, 6, CC.RIGHT, CC.DEFAULT));
+		setSize(600, 620);
+		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    private JPanel pnlOptions;
-    private JLabel lblFormat;
-    private JComboBox<DatabaseTextExporter> cbFormat;
-    private JLabel lblOrder;
-    private JComboBox<TextExportOrder> cbxOrder;
-    private JCheckBox cbxIncludeSeries;
-    private JCheckBox cbxIncludeLanguage;
-    private JCheckBox cbxIncludeYear;
-    private JCheckBox cbxIncludeFormat;
-    private JCheckBox cbxIncludeQuality;
-    private JCheckBox cbxIncludeSize;
-    private JCheckBox cbxIncludeViewed;
-    private JButton btnCreate;
-    private JScrollPane scrollPane;
-    private JTextArea memoResult;
-    private JButton btnExport;
+	private JPanel pnlOptions;
+	private JLabel lblFormat;
+	private JComboBox<DatabaseTextExporter> cbFormat;
+	private JLabel lblOrder;
+	private JComboBox<TextExportOrder> cbxOrder;
+	private JCheckBox cbxIncludeSeries;
+	private JCheckBox cbxIncludeLanguage;
+	private JCheckBox cbxIncludeYear;
+	private JCheckBox cbxIncludeFormat;
+	private JCheckBox cbxIncludeQuality;
+	private JCheckBox cbxIncludeSize;
+	private JCheckBox cbxIncludeViewed;
+	private JButton btnCreate;
+	private JScrollPane scrollPane;
+	private JTextArea memoResult;
+	private JButton btnExport;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

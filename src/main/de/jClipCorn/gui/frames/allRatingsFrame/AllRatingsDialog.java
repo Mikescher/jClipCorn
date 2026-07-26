@@ -58,71 +58,71 @@ public class AllRatingsDialog extends JCCDialog {
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        scrollPane = new JScrollPane();
-        panel = new JPanel();
-        pnlBottom = new JPanel();
-        lblBottom = new JLabel();
-        lblAverage = new JLabel();
+		scrollPane = new JScrollPane();
+		panel = new JPanel();
+		pnlBottom = new JPanel();
+		lblBottom = new JLabel();
+		lblAverage = new JLabel();
 
-        //======== this ========
-        setTitle(LocaleBundle.getString("AllRatingsFrame.this.title")); //$NON-NLS-1$
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setModal(true);
-        var contentPane = getContentPane();
-        contentPane.setLayout(new FormLayout(
-            "$ugap, default:grow, $ugap", //$NON-NLS-1$
-            "$ugap, default:grow, $lgap, default, $ugap")); //$NON-NLS-1$
+		//======== this ========
+		setTitle(LocaleBundle.getString("AllRatingsFrame.this.title"));
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setModal(true);
+		Container contentPane = getContentPane();
+		contentPane.setLayout(new FormLayout(
+			"$ugap, default:grow, $ugap",
+			"$ugap, default:grow, $lgap, default, $ugap"));
 
-        //======== scrollPane ========
-        {
-            scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		//======== scrollPane ========
+		{
+			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-            //======== panel ========
-            {
-                panel.setLayout(null);
+			//======== panel ========
+			{
+				panel.setLayout(null);
 
-                {
-                    // compute preferred size
-                    Dimension preferredSize = new Dimension();
-                    for(int i = 0; i < panel.getComponentCount(); i++) {
-                        Rectangle bounds = panel.getComponent(i).getBounds();
-                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-                    }
-                    Insets insets = panel.getInsets();
-                    preferredSize.width += insets.right;
-                    preferredSize.height += insets.bottom;
-                    panel.setMinimumSize(preferredSize);
-                    panel.setPreferredSize(preferredSize);
-                }
-            }
-            scrollPane.setViewportView(panel);
-        }
-        contentPane.add(scrollPane, CC.xy(2, 2, CC.FILL, CC.FILL));
+				{
+					// compute preferred size
+					Dimension preferredSize = new Dimension();
+					for(int i = 0; i < panel.getComponentCount(); i++) {
+						Rectangle bounds = panel.getComponent(i).getBounds();
+						preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+						preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+					}
+					Insets insets = panel.getInsets();
+					preferredSize.width += insets.right;
+					preferredSize.height += insets.bottom;
+					panel.setMinimumSize(preferredSize);
+					panel.setPreferredSize(preferredSize);
+				}
+			}
+			scrollPane.setViewportView(panel);
+		}
+		contentPane.add(scrollPane, CC.xy(2, 2, CC.FILL, CC.FILL));
 
-        //======== pnlBottom ========
-        {
-            pnlBottom.setLayout(new FlowLayout(FlowLayout.LEFT));
+		//======== pnlBottom ========
+		{
+			pnlBottom.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-            //---- lblBottom ----
-            lblBottom.setText(LocaleBundle.getString("AllRatingsFrame.lblAberage.text")); //$NON-NLS-1$
-            pnlBottom.add(lblBottom);
+			//---- lblBottom ----
+			lblBottom.setText(LocaleBundle.getString("AllRatingsFrame.lblAberage.text"));
+			pnlBottom.add(lblBottom);
 
-            //---- lblAverage ----
-            lblAverage.setText("???"); //$NON-NLS-1$
-            pnlBottom.add(lblAverage);
-        }
-        contentPane.add(pnlBottom, CC.xy(2, 4, CC.FILL, CC.DEFAULT));
-        setSize(450, 300);
-        setLocationRelativeTo(getOwner());
+			//---- lblAverage ----
+			lblAverage.setText("???");
+			pnlBottom.add(lblAverage);
+		}
+		contentPane.add(pnlBottom, CC.xy(2, 4, CC.FILL, CC.DEFAULT));
+		setSize(450, 300);
+		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    private JScrollPane scrollPane;
-    private JPanel panel;
-    private JPanel pnlBottom;
-    private JLabel lblBottom;
-    private JLabel lblAverage;
+	private JScrollPane scrollPane;
+	private JPanel panel;
+	private JPanel pnlBottom;
+	private JLabel lblBottom;
+	private JLabel lblAverage;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

@@ -430,7 +430,7 @@ public class Main {
  - [X] PreviewSeriesFrame
  - [X] QuickAddEpisodeDialog
  - [X] QuickAddMoviesDialog
- - [ ] RandomMovieFrame
+ - [X] RandomMovieFrame
  - [x] ScanFolderFrame
  - [X] SearchFrame
  - [/] SettingsFrame

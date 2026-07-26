@@ -1,5 +1,7 @@
 package de.jClipCorn.gui.frames.randomMovieFrame;
 
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.features.log.CCLog;
@@ -19,53 +21,37 @@ public class RandomMovieFrame extends JCCFrame implements Runnable {
 	private final static int CVRCOUNT = 100;
 	private final static int MAXSPEED = 50;
 
-	private JPanel panel;
-	private JButton btnMain;
-	private JCoverChooser chooser;
-
 	private List<CCMovie> choosableList;
-	
+
 	private boolean isShuffled = false;
 
 	public RandomMovieFrame(Component parent, CCMovieList movielist) {
 		super(movielist);
+
 		generateList();
-		initGUI();
+
+		initComponents();
+		postInit();
+
 		setLocationRelativeTo(parent);
 	}
 
-	private void initGUI() {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-		setTitle(LocaleBundle.getString("RandomMovieFrame.this.title")); //$NON-NLS-1$
-
-		chooser = new JCoverChooser(movielist, true);
+	private void postInit() {
 		chooser.set3DMode(true);
-		chooser.setEnabled(false);
-		chooser.setCoverHalfSize(true);
-		chooser.setCoverGap(10);
-		chooser.setCircleRadius(300);
-		getContentPane().add(chooser, BorderLayout.CENTER);
-
-		panel = new JPanel();
-		getContentPane().add(panel, BorderLayout.SOUTH);
-
-		btnMain = new JButton(LocaleBundle.getString("RandomMovieFrame.btnShuffle.text")); //$NON-NLS-1$
-		btnMain.addActionListener(arg0 ->
-		{
-			if (! isShuffled) {
-			btnMain.setText(LocaleBundle.getString("RandomMovieFrame.btnPlay.text")); //$NON-NLS-1$
-			btnMain.setEnabled(false);
-			new Thread(RandomMovieFrame.this).start();
-			} else {
-				CCMovie m = (CCMovie) chooser.getSelectedObject();
-				m.play(RandomMovieFrame.this, true);
-				dispose();
-			}
-		});
-		panel.add(btnMain);
 
 		pack();
+	}
+
+	private void onMainButton() {
+		if (!isShuffled) {
+			btnMain.setText(LocaleBundle.getString("RandomMovieFrame.btnPlay.text")); //$NON-NLS-1$
+			btnMain.setEnabled(false);
+			new Thread(this).start();
+		} else {
+			CCMovie m = (CCMovie) chooser.getSelectedObject();
+			m.play(this, true);
+			dispose();
+		}
 	}
 
 	private void generateList() {
@@ -90,26 +76,19 @@ public class RandomMovieFrame extends JCCFrame implements Runnable {
 	public void run() {
 		for (int i = 0; i < CVRCOUNT; i++) {
 			if (i > 4) {
-				SwingUtils.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						CCMovie mov = getNextRandMovie();
-						chooser.addCover(mov);
-						chooser.inc();
-						chooser.repaint();
-					}
+				SwingUtils.invokeLater(() -> {
+					CCMovie mov = getNextRandMovie();
+					chooser.addCover(mov);
+					chooser.inc();
+					chooser.repaint();
 				});
 			} else {
-				SwingUtils.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						CCMovie mov = getNextRandMovie();
-						chooser.addCover(mov);
-						chooser.repaint();
-					}
+				SwingUtils.invokeLater(() -> {
+					CCMovie mov = getNextRandMovie();
+					chooser.addCover(mov);
+					chooser.repaint();
 				});
 			}
-			
 
 			try {
 				int speed = (int) (MAXSPEED / getSpeedPercentage((i * 1.0) / CVRCOUNT));
@@ -118,13 +97,10 @@ public class RandomMovieFrame extends JCCFrame implements Runnable {
 				CCLog.addError(e);
 			}
 		}
-		
-		SwingUtils.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				isShuffled = true;
-				btnMain.setEnabled(true);
-			}
+
+		SwingUtils.invokeLater(() -> {
+			isShuffled = true;
+			btnMain.setEnabled(true);
 		});
 	}
 
@@ -133,4 +109,47 @@ public class RandomMovieFrame extends JCCFrame implements Runnable {
 		double r = (((10 * Math.exp(10 * x + 5)) / (Math.pow((Math.exp(10 * x) + Math.exp(5)), 2)))*2)/5;
 		return r;
 	}
+
+	private void initComponents() {
+		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+        chooser = new JCoverChooser(movielist, true);
+        pnlBottom = new JPanel();
+        btnMain = new JButton();
+
+        //======== this ========
+        setTitle(LocaleBundle.getString("RandomMovieFrame.this.title")); //$NON-NLS-1$
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        var contentPane = getContentPane();
+        contentPane.setLayout(new FormLayout(
+            "default:grow", //$NON-NLS-1$
+            "default:grow, default")); //$NON-NLS-1$
+
+        //---- chooser ----
+        chooser.setCircleRadius(300);
+        chooser.setCoverGap(10);
+        chooser.setEnabled(false);
+        contentPane.add(chooser, CC.xy(1, 1, CC.FILL, CC.FILL));
+
+        //======== pnlBottom ========
+        {
+            pnlBottom.setLayout(new FormLayout(
+                "default:grow, default, default:grow", //$NON-NLS-1$
+                "$ugap, default, $ugap")); //$NON-NLS-1$
+
+            //---- btnMain ----
+            btnMain.setText(LocaleBundle.getString("RandomMovieFrame.btnShuffle.text")); //$NON-NLS-1$
+            btnMain.addActionListener(e -> onMainButton());
+            pnlBottom.add(btnMain, CC.xy(2, 2));
+        }
+        contentPane.add(pnlBottom, CC.xy(1, 2, CC.FILL, CC.DEFAULT));
+        pack();
+        setLocationRelativeTo(getOwner());
+		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+	}
+
+	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    private JCoverChooser chooser;
+    private JPanel pnlBottom;
+    private JButton btnMain;
+	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

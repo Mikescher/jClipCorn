@@ -1,5 +1,6 @@
 package de.jClipCorn.gui.frames.findCoverFrame;
 
+import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.gui.guiComponents.WrapFlowLayout;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -24,7 +25,10 @@ public class CoverPanel extends JPanel implements UpdateCallbackListener {
 	private int selctionID = -1;
 	
 	public Func1to0<BufferedImage> onSelectEvent;
-	
+
+	@DesignCreate
+	private static CoverPanel designCreate() { return new CoverPanel(new JScrollPane()); }
+
 	public CoverPanel(JScrollPane pane) {
 		this.scrollpane = pane;
 		setLayout(new WrapFlowLayout(WrapFlowLayout.LEADING, 5, 5));

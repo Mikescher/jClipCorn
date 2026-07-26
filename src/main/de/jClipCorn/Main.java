@@ -414,7 +414,7 @@ public class Main {
  - [X] ExportElementsFrame
  - [X] ExtendedSettingsFrame
  - [X] FilenameRulesFrame
- - [ ] FindCoverFrame
+ - [X] FindCoverFrame
  - [ ] GenericTextDialog
  - [X] GroupManageFrame
  - [ ] ImportElementsFrame

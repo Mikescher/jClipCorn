@@ -1,17 +1,12 @@
 package de.jClipCorn.gui.guiComponents;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
-import java.awt.Image;
-import java.awt.Transparency;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JPanel;
-
+import com.jformdesigner.annotations.DesignCreate;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.helper.ImageUtilities;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /*
  * https://stackoverflow.com/a/14553003/1761622
@@ -22,6 +17,9 @@ public class ScalablePane extends JPanel {
 	private Image master;
 	private boolean toFit;
 	private Image scaled;
+
+	@DesignCreate
+	private static ScalablePane designCreate() { return new ScalablePane(Resources.IMG_COVER_STANDARD.get()); }
 
 	public ScalablePane(Image master) {
 		this(master, true);

@@ -40,7 +40,7 @@ public class JSingleSubReferenceChooser extends JPanel {
 
 	private void initGUI() {
 		setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("20px"), //$NON-NLS-1$
+				ColumnSpec.decode("26px"), //$NON-NLS-1$
 				ColumnSpec.decode("default:grow"), //$NON-NLS-1$
 				ColumnSpec.decode("72px"), //$NON-NLS-1$
 				ColumnSpec.decode("default:grow"),}, //$NON-NLS-1$
@@ -104,15 +104,15 @@ public class JSingleSubReferenceChooser extends JPanel {
 		edID.addActionListener(e -> updateUIControls());
 
 		panel = new JPanel();
-		panel.setBackground(Color.WHITE);
-		panel.setBorder(new EmptyBorder(2, 2, 2, 2));
+		panel.setBackground(new Color(0, 0, 0, 0));
+		panel.setBorder(new EmptyBorder(3, 2, 3, 2));
 		add(panel, "1, 1, left, fill"); //$NON-NLS-1$
 		panel.setLayout(new BorderLayout(0, 0));
-		
+
 		panel_1 = new JPanel();
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_1.setPreferredSize(new Dimension(16, 16));
-		panel_1.setMinimumSize(new Dimension(16, 16));
+		panel_1.setPreferredSize(new Dimension(22, 22));
+		panel_1.setMinimumSize(new Dimension(22, 22));
 		panel.add(panel_1, BorderLayout.NORTH);
 		panel_1.setLayout(new BorderLayout(0, 0));
 

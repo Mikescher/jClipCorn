@@ -81,6 +81,11 @@ public class EnumWrapper<T extends ContinoousEnum<T>> implements IEnumWrapper {
 		throw new EnumValueNotFoundException(strval, defValue.getClass());
 	}
 
+	public T findByTextOrNull(String strval) {
+		for (T val : defValue.evalues()) if (Str.equals(val.asString(), strval)) return val;
+		return null;
+	}
+
 	public String[] getList() {
 		return defValue.getList();
 	}

@@ -55,6 +55,7 @@ public class CCDatabaseHistory {
 			if (tab == DatabaseStructure.TAB_HISTORY) continue;
 			if (tab == DatabaseStructure.TAB_TEMP) continue;
 			if (tab == DatabaseStructure.TAB_FILTERS) continue;
+			if (tab == DatabaseStructure.TAB_PROPERTIES) continue;
 
 			result.add(createTriggerOnAdd(tab));
 			for(CCSQLColDef col : tab.Columns) result.add(createTriggerOnUpdate(tab, col));
@@ -199,13 +200,12 @@ public class CCDatabaseHistory {
 	public void enableTrigger() throws SQLException {
 		List<Tuple<String, String>> triggerDB = _db.listTrigger();
 
-		List<Tuple<String, String>> triggerStatements = createTriggerStatements();
+		// drop all existing auto-history triggers
+		for (Tuple<String, String> dbTrigger : triggerDB) {
+			if (dbTrigger.Item1.startsWith("JCCTRIGGER_")) _db.deleteTrigger(dbTrigger.Item1, false); //$NON-NLS-1$
+		}
 
-		for (Tuple<String, String> trigger : triggerStatements) {
-
-			Tuple<String, String> dbMatch = CCStreams.iterate(triggerDB).firstOrNull(p -> p.Item1.equalsIgnoreCase(trigger.Item1));
-			if (dbMatch != null) _db.deleteTrigger(dbMatch.Item1, false);
-
+		for (Tuple<String, String> trigger : createTriggerStatements()) {
 			_db.createTrigger(trigger.Item2);
 		}
 
@@ -216,14 +216,12 @@ public class CCDatabaseHistory {
 	public void disableTrigger() throws SQLException {
 		List<Tuple<String, String>> triggerDB = _db.listTrigger();
 
-		List<Tuple<String, String>> triggerStatements = createTriggerStatements();
-
 		_db.writeInformationToDB(DatabaseStructure.INFOKEY_HISTORY, "0"); //$NON-NLS-1$
 		_db.getHistoryDatabase().writeInfo(DatabaseStructure.INFOKEY_HISTORY, "0"); //$NON-NLS-1$
 
-		for (Tuple<String, String> trigger : triggerStatements) {
-			Tuple<String, String> dbMatch = CCStreams.iterate(triggerDB).firstOrNull(p -> p.Item1.equalsIgnoreCase(trigger.Item1));
-			if (dbMatch != null) _db.deleteTrigger(dbMatch.Item1, false);
+		// drop all existing auto-history triggers
+		for (Tuple<String, String> dbTrigger : triggerDB) {
+			if (dbTrigger.Item1.startsWith("JCCTRIGGER_")) _db.deleteTrigger(dbTrigger.Item1, false); //$NON-NLS-1$
 		}
 	}
 
@@ -245,7 +243,9 @@ public class CCDatabaseHistory {
 		for (String[] raw : rawdata) {
 			lst.step();
 
-			CCHistoryTable  table     = CCHistoryTable.getWrapper().findByTextOrException(raw[0]);
+			CCHistoryTable  table     = CCHistoryTable.getWrapper().findByTextOrNull(raw[0]);
+			if (table == null) continue; // skip history entries of other tables
+
 			String          id        = raw[1];
 			CCDateTime      timestamp = CCDateTime.createFromUTCSQL(raw[2], TimeZone.getDefault());
 			CCHistoryAction action    = CCHistoryAction.getWrapper().findByTextOrException(raw[3]);

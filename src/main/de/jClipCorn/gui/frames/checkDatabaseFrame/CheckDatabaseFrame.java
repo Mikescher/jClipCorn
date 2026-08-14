@@ -46,6 +46,8 @@ public class CheckDatabaseFrame extends JCCFrame
 	@SuppressWarnings("nls")
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_CHECKDATABASEFRAME.applyOrSkip(this);
+
 		btnFixSelected.setEnabled(false);
 		btnAutofix.setEnabled(false);
 		lsCategories.setCellRenderer(new ErrorTypeListCellRenderer());

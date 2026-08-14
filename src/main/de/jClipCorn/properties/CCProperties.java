@@ -230,6 +230,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCFrameSizeProperty                              PROP_FSIZE_ADDSEASONFRAME;
 	public CCFrameSizeProperty                              PROP_FSIZE_ADDSERIESFRAME;
 	public CCFrameSizeProperty                              PROP_FSIZE_BATCHEDITFRAME;
+	public CCFrameSizeProperty                              PROP_FSIZE_CHECKDATABASEFRAME;
 	public CCFrameSizeProperty                              PROP_FSIZE_COVERCROPFRAME;
 	public CCFrameSizeProperty                              PROP_FSIZE_CREATESERIESFOLDERSTRUCTUREFRAME;
 	public CCFrameSizeProperty                              PROP_FSIZE_DATABASEHISTORYFRAME;
@@ -455,6 +456,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_FSIZE_ADDSEASONFRAME                   = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_ADDSEASONFRAME",                   new FrameSizeVar(600, 410));
 		PROP_FSIZE_ADDSERIESFRAME                   = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_ADDSERIESFRAME",                   new FrameSizeVar(900, 725));
 		PROP_FSIZE_BATCHEDITFRAME                   = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_BATCHEDITFRAME",                   new FrameSizeVar(1250, 850));
+		PROP_FSIZE_CHECKDATABASEFRAME               = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_CHECKDATABASEFRAME",               new FrameSizeVar(1200, 700));
 		PROP_FSIZE_COVERCROPFRAME                   = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_COVERCROPFRAME",                   new FrameSizeVar(1500, 1000));
 		PROP_FSIZE_CREATESERIESFOLDERSTRUCTUREFRAME = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_CREATESERIESFOLDERSTRUCTUREFRAME", new FrameSizeVar(1200, 1000));
 		PROP_FSIZE_DATABASEHISTORYFRAME             = new CCFrameSizeProperty(CAT_FRAMESIZES,   this,   "PROP_FSIZE_DATABASEHISTORYFRAME",             new FrameSizeVar(1400, 1000));

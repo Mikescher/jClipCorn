@@ -9,6 +9,7 @@ import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.addSeriesFrame.AddSeriesFrame;
 import de.jClipCorn.gui.frames.batchEditFrame.BatchEditFrame;
+import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseFrame;
 import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
 import de.jClipCorn.gui.frames.createSeriesFolderStructureFrame.CreateSeriesFolderStructureFrame;
 import de.jClipCorn.gui.frames.databaseHistoryFrame.DatabaseHistoryFrame;
@@ -75,6 +76,7 @@ public class FrameSizesTablePanel extends JPanel {
 		add(properties.PROP_FSIZE_ADDSEASONFRAME,                   AddSeasonFrame.class);
 		add(properties.PROP_FSIZE_ADDSERIESFRAME,                   AddSeriesFrame.class);
 		add(properties.PROP_FSIZE_BATCHEDITFRAME,                   BatchEditFrame.class);
+		add(properties.PROP_FSIZE_CHECKDATABASEFRAME,               CheckDatabaseFrame.class);
 		add(properties.PROP_FSIZE_COVERCROPFRAME,                   CoverCropDialog.class);
 		add(properties.PROP_FSIZE_CREATESERIESFOLDERSTRUCTUREFRAME, CreateSeriesFolderStructureFrame.class);
 		add(properties.PROP_FSIZE_DATABASEHISTORYFRAME,            DatabaseHistoryFrame.class);

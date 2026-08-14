@@ -1602,21 +1602,13 @@ public class CCDatabase {
 			CCLog.addInformation("Starting sync of " + rows.size() + " history rows to history DB");
 
 			// Step 2: Insert into history DB (in a transaction)
-			_historyDb.beginTransaction();
 			try {
+				List<Object[]> insertrows = new ArrayList<>(rows.size());
 				for (Object[] row : rows) {
-					_historyDb.insertHistoryRow(
-						(String) row[1],
-						(String) row[2],
-						(String) row[3],
-						(String) row[4],
-						(String) row[5],
-						row[6],
-						row[7]);
+					insertrows.add(new Object[] { row[1], row[2], row[3], row[4], row[5], row[6], row[7] });
 				}
-				_historyDb.commitTransaction();
+				_historyDb.insertHistoryRows(insertrows);
 			} catch (Exception e) {
-				_historyDb.rollbackTransaction();
 				CCLog.addError("Failed to insert history rows into history DB, rows remain in main DB", e);
 				return;
 			}

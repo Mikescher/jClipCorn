@@ -67,7 +67,7 @@ public class CCHistoryDatabase {
 	 * Connect to (or create) the history database.
 	 * Must be called after the main database is fully connected.
 	 */
-	public boolean tryconnect(CCDatabase mainDb) {
+	public synchronized boolean tryconnect(CCDatabase mainDb) {
 		try {
 			if (inMemory) {
 				openInMemoryConnection();
@@ -213,42 +213,41 @@ public class CCHistoryDatabase {
 				"INSERT OR REPLACE INTO [INFO] ([IKEY], [IVALUE]) VALUES (?, ?)");
 	}
 
-	// ==================== Transaction support ====================
-
-	public void beginTransaction() throws SQLException {
-		connection.setAutoCommit(false);
-	}
-
-	public void commitTransaction() throws SQLException {
-		connection.commit();
-		connection.setAutoCommit(true);
-	}
-
-	public void rollbackTransaction() {
-		try {
-			connection.rollback();
-			connection.setAutoCommit(true);
-		} catch (SQLException e) {
-			CCLog.addError("Failed to rollback history DB transaction", e);
-		}
-	}
-
 	// ==================== History insert ====================
 
-	public void insertHistoryRow(String table, String id, String date, String action, String field, Object oldVal, Object newVal) throws SQLException {
-		insertHistoryStmt.setString(1, table);
-		insertHistoryStmt.setString(2, id);
-		insertHistoryStmt.setString(3, date);
-		insertHistoryStmt.setString(4, action);
-		insertHistoryStmt.setString(5, field);
-		insertHistoryStmt.setObject(6, oldVal);
-		insertHistoryStmt.setObject(7, newVal);
-		insertHistoryStmt.executeUpdate();
+	/**
+	 * Inserts all rows in a single transaction.
+	 * Every row must be an array of [TABLE, ID, DATE, ACTION, FIELD, OLD, NEW].
+	 */
+	public synchronized void insertHistoryRows(List<Object[]> rows) throws SQLException {
+		connection.setAutoCommit(false);
+		try {
+			for (Object[] row : rows) {
+				insertHistoryStmt.setObject(1, row[0]);
+				insertHistoryStmt.setObject(2, row[1]);
+				insertHistoryStmt.setObject(3, row[2]);
+				insertHistoryStmt.setObject(4, row[3]);
+				insertHistoryStmt.setObject(5, row[4]);
+				insertHistoryStmt.setObject(6, row[5]);
+				insertHistoryStmt.setObject(7, row[6]);
+				insertHistoryStmt.executeUpdate();
+			}
+			connection.commit();
+			connection.setAutoCommit(true);
+		} catch (Exception e) {
+			try {
+				connection.rollback();
+				connection.setAutoCommit(true);
+			} catch (SQLException e2) {
+				CCLog.addError("Failed to rollback history DB transaction", e2);
+			}
+			throw e;
+		}
 	}
 
 	// ==================== History queries ====================
 
-	public List<String[]> queryHistory(CCDateTime start, de.jClipCorn.util.datatypes.Opt<Integer> limit, String idfilter) {
+	public synchronized List<String[]> queryHistory(CCDateTime start, de.jClipCorn.util.datatypes.Opt<Integer> limit, String idfilter) {
 		try {
 			ResultSet rs;
 			if (idfilter != null) {
@@ -274,20 +273,23 @@ public class CCHistoryDatabase {
 			}
 
 			List<String[]> result = new ArrayList<>();
-			while (rs.next()) {
-				String[] arr = new String[7];
-				arr[0] = rs.getString(1); // TABLE
-				arr[1] = rs.getString(2); // ID
-				arr[2] = rs.getString(3); // DATE
-				arr[3] = rs.getString(4); // ACTION
-				arr[4] = rs.getString(5); // FIELD
-				arr[5] = rs.getString(6); // OLD
-				arr[6] = rs.getString(7); // NEW
-				result.add(arr);
+			try {
+				while (rs.next()) {
+					String[] arr = new String[7];
+					arr[0] = rs.getString(1); // TABLE
+					arr[1] = rs.getString(2); // ID
+					arr[2] = rs.getString(3); // DATE
+					arr[3] = rs.getString(4); // ACTION
+					arr[4] = rs.getString(5); // FIELD
+					arr[5] = rs.getString(6); // OLD
+					arr[6] = rs.getString(7); // NEW
+					result.add(arr);
 
-				if (limit.isPresent() && result.size() >= limit.get()) break;
+					if (limit.isPresent() && result.size() >= limit.get()) break;
+				}
+			} finally {
+				rs.close();
 			}
-			rs.close();
 			return result;
 
 		} catch (SQLException e) {
@@ -296,12 +298,15 @@ public class CCHistoryDatabase {
 		}
 	}
 
-	public int getHistoryCount() {
+	public synchronized int getHistoryCount() {
 		try {
 			ResultSet rs = countHistoryStmt.executeQuery();
 			int count = 0;
-			if (rs.next()) count = rs.getInt(1);
-			rs.close();
+			try {
+				if (rs.next()) count = rs.getInt(1);
+			} finally {
+				rs.close();
+			}
 			return count;
 		} catch (SQLException e) {
 			CCLog.addError(e);
@@ -315,13 +320,17 @@ public class CCHistoryDatabase {
 		return readInfo(key, null);
 	}
 
-	public String readInfo(CCSQLKVKey key, String defaultValue) {
+	public synchronized String readInfo(CCSQLKVKey key, String defaultValue) {
 		try {
 			readInfoStmt.clearParameters();
 			readInfoStmt.setString(1, key.Key);
 			ResultSet rs = readInfoStmt.executeQuery();
-			String value = rs.next() ? rs.getString(1) : defaultValue;
-			rs.close();
+			String value;
+			try {
+				value = rs.next() ? rs.getString(1) : defaultValue;
+			} finally {
+				rs.close();
+			}
 			return value;
 		} catch (SQLException e) {
 			CCLog.addError(e);
@@ -329,7 +338,7 @@ public class CCHistoryDatabase {
 		}
 	}
 
-	public void writeInfo(CCSQLKVKey key, String value) {
+	public synchronized void writeInfo(CCSQLKVKey key, String value) {
 		try {
 			writeInfoStmt.clearParameters();
 			writeInfoStmt.setString(1, key.Key);
@@ -369,13 +378,13 @@ public class CCHistoryDatabase {
 		}
 	}
 
-	public boolean isConnected() {
+	public synchronized boolean isConnected() {
 		return connection != null;
 	}
 
 	// ==================== Shutdown ====================
 
-	public void disconnect() {
+	public synchronized void disconnect() {
 		try {
 			if (insertHistoryStmt != null) insertHistoryStmt.close();
 			if (queryHistoryAllStmt != null) queryHistoryAllStmt.close();

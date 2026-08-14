@@ -39,6 +39,14 @@ public class TestGeneratedFilenames extends ClipCornBaseTest {
 
 		// Der Herr der Ringe III - year 2003, zyklus "Der Herr der Ringe" (min zyklus year 2001) -> per-movie leaf folder
 		assertEquals(loc("2001/Der Herr der Ringe/Der Herr der Ringe - Die Rückkehr des Königs (2003)/Der Herr der Ringe III - Die Rückkehr des Königs [GER+ENG].mkv"), ml.findDatabaseMovie(10).generateRelativePath(0));
+
+		// Death Proof: Todsicher - year 2007, no zyklus - the directory keeps the *full* title (colon normalized to " - "),
+		// otherwise every "<Something>: <Subtitle>" movie would share the "<Something>" directory
+		assertEquals(loc("2007/Death Proof - Todsicher/Death Proof - Todsicher (Part 1).avi"), ml.findDatabaseMovie(6).generateRelativePath(0));
+		assertEquals(loc("2007/Death Proof - Todsicher/Death Proof - Todsicher (Part 2).avi"), ml.findDatabaseMovie(6).generateRelativePath(1));
+
+		// Prometheus: Dunkle Zeichen - year 2012, zyklus "Alien" -> grouped under the zyklus, own leaf folder
+		assertEquals(loc("2012/Alien/Alien - Prometheus - Dunkle Zeichen (2012)/Alien VII - Prometheus - Dunkle Zeichen [GER+ENG].mkv"), ml.findDatabaseMovie(3).generateRelativePath(0));
 	}
 
 	@Test

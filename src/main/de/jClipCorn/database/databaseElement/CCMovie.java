@@ -419,9 +419,11 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public String generateRelativePath(int part) {
 		var year = getZyklusYear().mapOrElse(String::valueOf, "0000"); //$NON-NLS-1$
 
+		// The full title is used here (with ": " normalized to " - ", same as in generateFilename and
+		// generateFoldername) - truncating at the colon would map different movies onto the same
+		// directory (e.g. "Watchmen: Die Wächter" and "Watchmen: Tales of the Black Freighter").
 		var name = Zyklus.get().isSet() ? Zyklus.get().getTitle() : Title.get();
-		if (name.contains(": ")) name = name.substring(0, name.indexOf(": ")); //$NON-NLS-1$
-		name = FilesystemUtils.fixStringToFilesystemname(name);
+		name = FilesystemUtils.fixStringToFilesystemname(Str.limit(name.replace(": ", " - "), 128)); //$NON-NLS-1$ //$NON-NLS-2$
 
 		var filename = generateFilename(part);
 

@@ -2,7 +2,7 @@ package de.jClipCorn.test;
 
 import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.database.history.CCHistoryTable;
-import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.datatypes.Tuple3;
 import org.junit.Test;
 
 import java.util.List;
@@ -20,12 +20,13 @@ public class TestDatabaseHistoryTrigger extends ClipCornBaseTest {
 	public void testAllTriggeredTablesAreKnownHistoryTables() {
 		final String addPrefix = "JCCTRIGGER_AUTOHISTORY_ADD_";
 
-		List<Tuple<String, String>> triggers = CCDatabaseHistory.createTriggerStatements();
+		List<Tuple3<String, String, String>> triggers = CCDatabaseHistory.createTriggerStatements();
 
 		int checked = 0;
-		for (Tuple<String, String> trigger : triggers) {
+		for (Tuple3<String, String, String> trigger : triggers) {
 			if (!trigger.Item1.startsWith(addPrefix)) continue;
-			String tableName = trigger.Item1.substring(addPrefix.length());
+			// the name is JCCTRIGGER_AUTOHISTORY_ADD_<SCHEMA>_<TABLE>
+			String tableName = trigger.Item1.substring(addPrefix.length()).split("_", 2)[1];
 			assertNotNull("auto-history trigger references table '" + tableName + "' that has no CCHistoryTable value", CCHistoryTable.getWrapper().findByTextOrNull(tableName));
 			checked++;
 		}

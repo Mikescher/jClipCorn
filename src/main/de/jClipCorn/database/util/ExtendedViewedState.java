@@ -94,7 +94,7 @@ public class ExtendedViewedState {
 		if (isNever     && isNotViewed) return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, hist, count, Resources.ICN_TABLE_VIEWED_FALSE_ABORTED);
 		if (isCancelled && isNotViewed) return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, hist, count, Resources.ICN_TABLE_VIEWED_FALSE_ABORTED);
 
-		CCLog.addUndefinied("Invalid ExtendedViewedState error for movie " + elem.getLocalID()); //$NON-NLS-1$
+		CCLog.addUndefinied("Invalid ExtendedViewedState error for movie " + elem.getID()); //$NON-NLS-1$
 		return null;
 	}
 
@@ -146,7 +146,7 @@ public class ExtendedViewedState {
 		if (isNever     && isNotViewed) return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, null, count, Resources.ICN_TABLE_VIEWED_FALSE_ABORTED);
 		if (isCancelled && isNotViewed) return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, null, count, Resources.ICN_TABLE_VIEWED_FALSE_ABORTED);
 
-		CCLog.addUndefinied("Invalid ExtendedViewedState error for series " + elem.getLocalID()); //$NON-NLS-1$
+		CCLog.addUndefinied("Invalid ExtendedViewedState error for series " + elem.getID()); //$NON-NLS-1$
 		return null;
 	}
 
@@ -173,7 +173,7 @@ public class ExtendedViewedState {
 		if (isPartial)       return new ExtendedViewedState(ExtendedViewedStateType.PARTIAL_VIEWED, null, count, Resources.ICN_TABLE_VIEWED_PARTIAL);
 		if (isNotViewed)     return new ExtendedViewedState(ExtendedViewedStateType.NOT_VIEWED,     null, count, Resources.ICN_TABLE_VIEWED_FALSE);
 
-		CCLog.addUndefinied("Invalid ExtendedViewedState error for season " + elem.getLocalID()); //$NON-NLS-1$
+		CCLog.addUndefinied("Invalid ExtendedViewedState error for season " + elem.getID()); //$NON-NLS-1$
 		return null;
 	}
 
@@ -224,7 +224,7 @@ public class ExtendedViewedState {
 		if (isNever     && isNotViewed) return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, hist, count, Resources.ICN_TABLE_VIEWED_FALSE_ABORTED);
 		if (isCancelled && isNotViewed) return new ExtendedViewedState(ExtendedViewedStateType.MARKED_FOR_NEVER, hist, count, Resources.ICN_TABLE_VIEWED_FALSE_ABORTED);
 
-		CCLog.addUndefinied("Invalid ExtendedViewedState error for episode " + elem.getLocalID()); //$NON-NLS-1$
+		CCLog.addUndefinied("Invalid ExtendedViewedState error for episode " + elem.getID()); //$NON-NLS-1$
 		return null;
 	}
 

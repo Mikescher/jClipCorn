@@ -54,7 +54,6 @@ public class DatabaseHistoryFrame extends JCCFrame
 		updateUI(true);
 
 		cbxIgnoreTrivial.setSelected(false);
-		cbxIgnoreIDChanges.setSelected(false);
 
 		if (!Str.isNullOrWhitespace(idfilter)) {
 			edFilter.setText(idfilter);
@@ -117,7 +116,6 @@ public class DatabaseHistoryFrame extends JCCFrame
 				btnDisableTrigger.setEnabled(hactive && !movielist.isReadonly());
 				btnGetHistory.setEnabled(true);
 				cbxDoAgressiveMerges.setEnabled(true);
-				cbxIgnoreIDChanges.setEnabled(true);
 				cbxIgnoreTrivial.setEnabled(true);
 
 			});
@@ -138,7 +136,6 @@ public class DatabaseHistoryFrame extends JCCFrame
 	private void queryHistory(CCDateTime dt, Opt<Integer> limit, boolean stayDisabled)
 	{
 		boolean optTrivial1 = cbxIgnoreTrivial.isSelected();
-		boolean optTrivial2 = cbxIgnoreIDChanges.isSelected();
 		boolean optAggressive = cbxDoAgressiveMerges.isSelected();
 		boolean optUpdatesOnly = cbxUpdatesOnly.isSelected();
 
@@ -153,7 +150,6 @@ public class DatabaseHistoryFrame extends JCCFrame
 					btnEnableTrigger.setEnabled(false);
 					btnDisableTrigger.setEnabled(false);
 					cbxDoAgressiveMerges.setEnabled(false);
-					cbxIgnoreIDChanges.setEnabled(false);
 					cbxIgnoreTrivial.setEnabled(false);
 					edFilter.setEnabled(false);
 				});
@@ -164,7 +160,6 @@ public class DatabaseHistoryFrame extends JCCFrame
 				var queryRes = movielist.getHistory().query(
 						movielist,
 						optTrivial1,
-						optTrivial2,
 						optTrivial1,
 						optAggressive,
 						dt,
@@ -299,7 +294,6 @@ public class DatabaseHistoryFrame extends JCCFrame
 		edTableSize = new ReadableTextField();
 		btnGetHistory = new JSplitButton();
 		cbxIgnoreTrivial = new JCheckBox();
-		cbxIgnoreIDChanges = new JCheckBox();
 		label4 = new JLabel();
 		cbxDoAgressiveMerges = new JCheckBox();
 		edFilter = new JTextField();
@@ -319,7 +313,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
 			"$rgap, default, $lcgap, 100dlu:grow, 3*($lcgap, default), $lcgap, [70dlu,default], $rgap",
-			"$rgap, 7*(default, $lgap), 15dlu, $lgap, default:grow, 2*($lgap, default), $rgap"));
+			"$rgap, 6*(default, $lgap), 15dlu, $lgap, default:grow, 2*($lgap, default), $rgap"));
 
 		//---- label1 ----
 		label1.setText(LocaleBundle.getString("DatabaseHistoryFrame.lblStatus"));
@@ -362,11 +356,6 @@ public class DatabaseHistoryFrame extends JCCFrame
 		cbxIgnoreTrivial.setSelected(true);
 		contentPane.add(cbxIgnoreTrivial, CC.xywh(2, 8, 7, 1));
 
-		//---- cbxIgnoreIDChanges ----
-		cbxIgnoreIDChanges.setText(LocaleBundle.getString("DatabaseHistoryFrame.IgnoreTrivial2"));
-		cbxIgnoreIDChanges.setSelected(true);
-		contentPane.add(cbxIgnoreIDChanges, CC.xywh(2, 10, 7, 1));
-
 		//---- label4 ----
 		label4.setText(LocaleBundle.getString("DatabaseHistoryFrame.Filter"));
 		contentPane.add(label4, CC.xy(12, 10));
@@ -374,13 +363,13 @@ public class DatabaseHistoryFrame extends JCCFrame
 		//---- cbxDoAgressiveMerges ----
 		cbxDoAgressiveMerges.setText(LocaleBundle.getString("DatabaseHistoryFrame.MergeAggressive"));
 		cbxDoAgressiveMerges.setSelected(true);
-		contentPane.add(cbxDoAgressiveMerges, CC.xywh(2, 12, 7, 1));
+		contentPane.add(cbxDoAgressiveMerges, CC.xywh(2, 10, 7, 1));
 		contentPane.add(edFilter, CC.xy(12, 12));
 
 		//---- cbxUpdatesOnly ----
 		cbxUpdatesOnly.setText(LocaleBundle.getString("DatabaseHistoryFrame.cbxUpdatesOnly"));
-		contentPane.add(cbxUpdatesOnly, CC.xywh(2, 14, 7, 1));
-		contentPane.add(progressBar, CC.xywh(2, 16, 11, 1, CC.DEFAULT, CC.FILL));
+		contentPane.add(cbxUpdatesOnly, CC.xywh(2, 12, 7, 1));
+		contentPane.add(progressBar, CC.xywh(2, 14, 11, 1, CC.DEFAULT, CC.FILL));
 
 		//======== splitPane1 ========
 		{
@@ -401,19 +390,19 @@ public class DatabaseHistoryFrame extends JCCFrame
 			}
 			splitPane1.setBottomComponent(tableChanges);
 		}
-		contentPane.add(splitPane1, CC.xywh(2, 18, 11, 1, CC.DEFAULT, CC.FILL));
+		contentPane.add(splitPane1, CC.xywh(2, 16, 11, 1, CC.DEFAULT, CC.FILL));
 
 		//---- label5 ----
 		label5.setText(LocaleBundle.getString("DatabaseHistoryFrame.Table.ColumnOld"));
 		label5.setHorizontalAlignment(SwingConstants.TRAILING);
-		contentPane.add(label5, CC.xy(2, 20));
-		contentPane.add(tfOldValue, CC.xywh(4, 20, 9, 1));
+		contentPane.add(label5, CC.xy(2, 18));
+		contentPane.add(tfOldValue, CC.xywh(4, 18, 9, 1));
 
 		//---- label6 ----
 		label6.setText(LocaleBundle.getString("DatabaseHistoryFrame.Table.ColumnNew"));
 		label6.setHorizontalAlignment(SwingConstants.TRAILING);
-		contentPane.add(label6, CC.xy(2, 22));
-		contentPane.add(tfNewValue, CC.xywh(4, 22, 9, 1));
+		contentPane.add(label6, CC.xy(2, 20));
+		contentPane.add(tfNewValue, CC.xywh(4, 20, 9, 1));
 		setSize(715, 700);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -431,7 +420,6 @@ public class DatabaseHistoryFrame extends JCCFrame
 	private ReadableTextField edTableSize;
 	private JSplitButton btnGetHistory;
 	private JCheckBox cbxIgnoreTrivial;
-	private JCheckBox cbxIgnoreIDChanges;
 	private JLabel label4;
 	private JCheckBox cbxDoAgressiveMerges;
 	private JTextField edFilter;

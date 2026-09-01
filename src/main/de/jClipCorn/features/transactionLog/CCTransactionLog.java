@@ -38,92 +38,92 @@ public class CCTransactionLog {
 			@Override
 			public void onAddDatabaseElement(CCDatabaseElement el) {
 				if (el instanceof CCMovie movie) {
-					logEntry(CCTransactionAction.MOVIE_ADDED, "MOVIE", movie.getLocalID(), movie.getQualifiedTitle(), null, null);
+					logEntry(CCTransactionAction.MOVIE_ADDED, "MOVIE", movie.getID().toString(), movie.getQualifiedTitle(), null, null);
 				} else if (el instanceof CCSeries series) {
-					logEntry(CCTransactionAction.SERIES_ADDED, "SERIES", series.getLocalID(), series.getQualifiedTitle(), null, null);
+					logEntry(CCTransactionAction.SERIES_ADDED, "SERIES", series.getID().toString(), series.getQualifiedTitle(), null, null);
 				}
 			}
 
 			@Override
 			public void onAddSeason(CCSeason el) {
-				logEntry(CCTransactionAction.SEASON_ADDED, "SEASON", el.getLocalID(), el.getQualifiedTitle(), null, null);
+				logEntry(CCTransactionAction.SEASON_ADDED, "SEASON", el.getID().toString(), el.getQualifiedTitle(), null, null);
 			}
 
 			@Override
 			public void onAddEpisode(CCEpisode el) {
-				logEntry(CCTransactionAction.EPISODE_ADDED, "EPISODE", el.getLocalID(), el.getQualifiedTitle(), null, null);
+				logEntry(CCTransactionAction.EPISODE_ADDED, "EPISODE", el.getID().toString(), el.getQualifiedTitle(), null, null);
 			}
 
 			@Override
 			public void onRemDatabaseElement(CCDatabaseElement el) {
 				if (el instanceof CCMovie movie) {
-					logEntry(CCTransactionAction.MOVIE_DELETED, "MOVIE", movie.getLocalID(), movie.getQualifiedTitle(), null, null);
+					logEntry(CCTransactionAction.MOVIE_DELETED, "MOVIE", movie.getID().toString(), movie.getQualifiedTitle(), null, null);
 				} else if (el instanceof CCSeries series) {
-					logEntry(CCTransactionAction.SERIES_DELETED, "SERIES", series.getLocalID(), series.getQualifiedTitle(), null, null);
+					logEntry(CCTransactionAction.SERIES_DELETED, "SERIES", series.getID().toString(), series.getQualifiedTitle(), null, null);
 				}
 			}
 
 			@Override
 			public void onRemSeason(CCSeason el) {
-				logEntry(CCTransactionAction.SEASON_DELETED, "SEASON", el.getLocalID(), el.getQualifiedTitle(), null, null);
+				logEntry(CCTransactionAction.SEASON_DELETED, "SEASON", el.getID().toString(), el.getQualifiedTitle(), null, null);
 			}
 
 			@Override
 			public void onRemEpisode(CCEpisode el) {
-				logEntry(CCTransactionAction.EPISODE_DELETED, "EPISODE", el.getLocalID(), el.getQualifiedTitle(), null, null);
+				logEntry(CCTransactionAction.EPISODE_DELETED, "EPISODE", el.getID().toString(), el.getQualifiedTitle(), null, null);
 			}
 		});
 
 		ml.addMoviePropChangeListener((prop, movie, oldVal, newVal) -> {
 			if ("ViewedHistory".equals(prop.getName())) {
-				logEntry(CCTransactionAction.MOVIE_CHANGE_VIEWED, "MOVIE", movie.getLocalID(), movie.getQualifiedTitle(), oldVal, newVal);
+				logEntry(CCTransactionAction.MOVIE_CHANGE_VIEWED, "MOVIE", movie.getID().toString(), movie.getQualifiedTitle(), oldVal, newVal);
 			} else if ("Score".equals(prop.getName())) {
-				logEntry(CCTransactionAction.MOVIE_USERRATING, "MOVIE", movie.getLocalID(), movie.getQualifiedTitle(), oldVal, newVal);
+				logEntry(CCTransactionAction.MOVIE_USERRATING, "MOVIE", movie.getID().toString(), movie.getQualifiedTitle(), oldVal, newVal);
 			} else if ("ScoreComment".equals(prop.getName())) {
-				logEntry(CCTransactionAction.MOVIE_USERCOMMENT, "MOVIE", movie.getLocalID(), movie.getQualifiedTitle(), oldVal, newVal);
+				logEntry(CCTransactionAction.MOVIE_USERCOMMENT, "MOVIE", movie.getID().toString(), movie.getQualifiedTitle(), oldVal, newVal);
 			}
 		});
 
 		ml.addSeriesPropChangeListener((prop, series, oldVal, newVal) -> {
 			if ("Score".equals(prop.getName())) {
-				logEntry(CCTransactionAction.SERIES_USERRATING, "SERIES", series.getLocalID(), series.getQualifiedTitle(), oldVal, newVal);
+				logEntry(CCTransactionAction.SERIES_USERRATING, "SERIES", series.getID().toString(), series.getQualifiedTitle(), oldVal, newVal);
 			} else if ("ScoreComment".equals(prop.getName())) {
-				logEntry(CCTransactionAction.SERIES_USERCOMMENT, "MOVIE", series.getLocalID(), series.getQualifiedTitle(), oldVal, newVal);
+				logEntry(CCTransactionAction.SERIES_USERCOMMENT, "MOVIE", series.getID().toString(), series.getQualifiedTitle(), oldVal, newVal);
 			}
 		});
 
 		ml.addSeasonPropChangeListener((prop, season, oldVal, newVal) -> {
 			if ("Score".equals(prop.getName())) {
-				logEntry(CCTransactionAction.SEASON_USERRATING, "SEASON", season.getLocalID(), season.getQualifiedTitle(), oldVal, newVal);
+				logEntry(CCTransactionAction.SEASON_USERRATING, "SEASON", season.getID().toString(), season.getQualifiedTitle(), oldVal, newVal);
 			} else if ("ScoreComment".equals(prop.getName())) {
-				logEntry(CCTransactionAction.SEASON_USERCOMMENT, "MOVIE", season.getLocalID(), season.getQualifiedTitle(), oldVal, newVal);
+				logEntry(CCTransactionAction.SEASON_USERCOMMENT, "MOVIE", season.getID().toString(), season.getQualifiedTitle(), oldVal, newVal);
 			}
 		});
 
 		ml.addEpisodePropChangeListener((prop, episode, oldVal, newVal) -> {
 			if ("ViewedHistory".equals(prop.getName())) {
-				logEntry(CCTransactionAction.EPISODE_CHANGE_VIEWED, "EPISODE", episode.getLocalID(), episode.getQualifiedTitle(), oldVal, newVal);
+				logEntry(CCTransactionAction.EPISODE_CHANGE_VIEWED, "EPISODE", episode.getID().toString(), episode.getQualifiedTitle(), oldVal, newVal);
 			} else if ("Score".equals(prop.getName())) {
-				logEntry(CCTransactionAction.EPISODE_USERRATING, "EPISODE", episode.getLocalID(), episode.getQualifiedTitle(), oldVal, newVal);
+				logEntry(CCTransactionAction.EPISODE_USERRATING, "EPISODE", episode.getID().toString(), episode.getQualifiedTitle(), oldVal, newVal);
 			} else if ("ScoreComment".equals(prop.getName())) {
-				logEntry(CCTransactionAction.EPISODE_USERCOMMENT, "MOVIE", episode.getLocalID(), episode.getQualifiedTitle(), oldVal, newVal);
+				logEntry(CCTransactionAction.EPISODE_USERCOMMENT, "MOVIE", episode.getID().toString(), episode.getQualifiedTitle(), oldVal, newVal);
 			}
 		});
 	}
 
 	public void logFilterAdded(int id, String name, String newVal) {
-		logEntry(CCTransactionAction.FILTER_ADDED, "FILTER", id, name, null, newVal);
+		logEntry(CCTransactionAction.FILTER_ADDED, "FILTER", String.valueOf(id), name, null, newVal);
 	}
 
 	public void logFilterDeleted(int id, String name, String oldVal) {
-		logEntry(CCTransactionAction.FILTER_DELETED, "FILTER", id, name, oldVal, null);
+		logEntry(CCTransactionAction.FILTER_DELETED, "FILTER", String.valueOf(id), name, oldVal, null);
 	}
 
 	public void logFilterChanged(int id, String name, String oldVal, String newVal) {
-		logEntry(CCTransactionAction.FILTER_CHANGED, "FILTER", id, name, oldVal, newVal);
+		logEntry(CCTransactionAction.FILTER_CHANGED, "FILTER", String.valueOf(id), name, oldVal, newVal);
 	}
 
-	private void logEntry(CCTransactionAction action, String type, int localId, String name, Object oldVal, Object newVal) {
+	private void logEntry(CCTransactionAction action, String type, String id, String name, Object oldVal, Object newVal) {
 		String ts = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ").format(new Date());
 		String oldStr = objToStr(oldVal);
 		String newStr = objToStr(newVal);
@@ -132,7 +132,7 @@ public class CCTransactionLog {
 			+ "\"ts\":" + JSONObject.quote(ts)
 			+ ",\"action\":" + JSONObject.quote(action.name())
 			+ ",\"type\":" + JSONObject.quote(type)
-			+ ",\"localid\":" + localId
+			+ ",\"id\":" + JSONObject.quote(id)
 			+ ",\"name\":" + JSONObject.quote(name)
 			+ ",\"old\":" + (oldStr != null ? JSONObject.quote(oldStr) : "null")
 			+ ",\"new\":" + (newStr != null ? JSONObject.quote(newStr) : "null")

@@ -141,7 +141,7 @@ public class SeriesNFOWriter {
 		// Add clipcorn internal ID
 		Element clipcornId = new Element("uniqueid");
 		clipcornId.setAttribute("type", "clipcorn");
-		clipcornId.setText(String.valueOf(series.LocalID.get()));
+		clipcornId.setText(series.ID.get().toString());
 		root.addContent(clipcornId);
 	}
 

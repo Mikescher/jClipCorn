@@ -17,20 +17,18 @@ public class CCSQLColDef {
 		return !NonNullable;
 	}
 
+	// identity, not value: the same column name exists in both database files (main.MOVIES.ID and
+	// userdata.MOVIES.ID) and a joined statement has to keep the two apart. Use isEqual() to compare
+	// two definitions by value.
+
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		return isEqual((CCSQLColDef) o);
+		return this == o;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Name != null ? Name.hashCode() : 0;
-		result = 31 * result + (Type != null ? Type.hashCode() : 0);
-		result = 31 * result + (NonNullable ? 1 : 0);
-		return result;
+		return System.identityHashCode(this);
 	}
 
 	@Override

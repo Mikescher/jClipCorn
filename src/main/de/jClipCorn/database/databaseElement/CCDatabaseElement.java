@@ -16,6 +16,7 @@ import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -28,9 +29,9 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 
 	public static final Pattern REGEX_ANIMESEASON = Pattern.compile("^(Spring|Summer|Fall|Winter) ([12][0-9]{3})$");
 
-	public final EIntProp                 LocalID         = new EIntProp(            "LocalID",         -1,                          this, EPropertyType.DATABASE_PRIMARY_ID);
-	public final EIntProp                 CoverID         = new EIntProp(            "CoverID",         -1,                          this, EPropertyType.DATABASE_REF);
-	public final EGroupListProp           Groups          = new EGroupListProp(      "Groups",          CCGroupList.EMPTY,           this, EPropertyType.USER_METADATA, this::onGroupsChanging);
+	public final EUUIDProp                ID              = new EUUIDProp(           "ID",              CCUUID.EMPTY,                this, EPropertyType.DATABASE_PRIMARY_ID);
+	public final EUUIDProp                CoverID         = new EUUIDProp(           "CoverID",         CCUUID.EMPTY,                this, EPropertyType.DATABASE_REF);
+	public final EGroupListProp           Groups          = new EGroupListProp(      "Groups",          CCGroupList.EMPTY,           this, EPropertyType.USER_METADATA, ETargetDatabase.MAIN, this::onGroupsChanging);
 	public final EStringProp              Title           = new EStringProp(         "Title",           Str.Empty,                   this, EPropertyType.OBJECTIVE_METADATA);
 	public final EGenreListProp           Genres          = new EGenreListProp(      "Genres",          CCGenreList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
 	public final EOnlineScorePropPack     OnlineScore     = new EOnlineScorePropPack("OnlineScore",     CCOnlineScore.ZERO_OF_TEN,   this, EPropertyType.OBJECTIVE_METADATA);
@@ -46,8 +47,8 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	protected final CCMovieList movielist;
 	protected boolean isUpdating = false;
 
-	public CCDatabaseElement(CCMovieList ml, int id) {
-		LocalID.setReadonlyPropToInitial(id);
+	public CCDatabaseElement(CCMovieList ml, CCUUID id) {
+		ID.setReadonlyPropToInitial(id);
 
 		this.movielist = ml;
 	}
@@ -68,7 +69,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 				<IEProperty>empty()
 				.append(new IEProperty[]
 				{
-					LocalID,
+					ID,
 					CoverID,
 					Groups,
 					Title,
@@ -135,13 +136,13 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public abstract boolean updateDB();
 
 	@Override
-	public int getLocalID() {
-		return LocalID.get();
+	public CCUUID getID() {
+		return ID.get();
 	}
 
 	public abstract CCDBElementTyp getType();
 
-	public void setCover(int cid) {
+	public void setCover(CCUUID cid) {
 		CoverID.set(cid);
 	}
 
@@ -150,11 +151,11 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 			return;
 		}
 
-		if (CoverID.get() != -1 && cvr.equals(getCover())) {
+		if (!CoverID.get().isEmpty() && cvr.equals(getCover())) {
 			return;
 		}
 		
-		if (CoverID.get() != -1) {
+		if (!CoverID.get().isEmpty()) {
 			movielist.getCoverCache().deleteCover(CoverID.get());
 		}
 
@@ -162,7 +163,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	}
 	
 	@Override
-	public int getCoverID() {
+	public CCUUID getCoverID() {
 		return CoverID.get();
 	}
 

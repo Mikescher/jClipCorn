@@ -69,7 +69,6 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_ADD_MOVIE_RELATIVE_AUTO;
 	public CCEnumProperty<UILanguage>                       PROP_UI_LANG;
 	public CCStringProperty                                 PROP_SELF_DIRECTORY;
-	public CCStringProperty                                 PROP_COVER_PREFIX;
 	public CCStringProperty                                 PROP_COVER_TYPE;
 	public CCBoolProperty                                   PROP_LOADING_LIVEUPDATE;
 	public CCBoolProperty                                   PROP_STATUSBAR_CALC_SERIES_IN_LENGTH;
@@ -327,7 +326,6 @@ public class CCProperties implements ICCPropertySource {
 		PROP_CHARSELECTOR_IGNORENONCHARS            = new CCBoolProperty(CAT_VIEW,              this,   "PROP_CHARSELECTOR_IGNORENONCHARS",            true);
 
 		PROP_SELF_DIRECTORY                         = new CCStringProperty(CAT_DATABASE,        this,   "PROP_SELF_DIRECTORY",                         "");
-		PROP_COVER_PREFIX                           = new CCStringProperty(CAT_DATABASE,        this,   "PROP_COVER_PREFIX",                           "cover_");
 		PROP_COVER_TYPE                             = new CCStringProperty(CAT_DATABASE,        this,   "PROP_COVER_TYPE",                             "png");
 		PROP_DATABASE_COVERCACHESIZE                = new CCPIntProperty(CAT_DATABASE,          this,   "PROP_DATABASE_COVERCACHESIZE",                128);
 		PROP_DATABASE_MAX_COVER_SIZE                = new CCEnumProperty<>(CAT_DATABASE,        this,   "PROP_DATABASE_MAX_COVER_SIZE",                CoverImageSize.BASE_SIZE,           CoverImageSize.getWrapper());

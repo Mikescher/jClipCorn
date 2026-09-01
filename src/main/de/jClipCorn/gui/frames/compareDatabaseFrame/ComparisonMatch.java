@@ -4,6 +4,7 @@ import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.stream.CCStreams;
@@ -45,14 +46,14 @@ public abstract class ComparisonMatch {
 		return getNeedsDelete() || getNeedsDeleteRecursive() || getNeedsUpdateCover() || getNeedsUpdateFile() || getNeedsUpdateMetadata() || getNeedsCreateNew();
 	}
 
-	public Opt<Integer> getLocID()
+	public Opt<CCUUID> getLocID()
 	{
-		return Opt.ofNullable(getLocal()).map(ICCDatabaseStructureElement::getLocalID);
+		return Opt.ofNullable(getLocal()).map(ICCDatabaseStructureElement::getID);
 	}
 
-	public Opt<Integer> getExtID()
+	public Opt<CCUUID> getExtID()
 	{
-		return Opt.ofNullable(getExtern()).map(ICCDatabaseStructureElement::getLocalID);
+		return Opt.ofNullable(getExtern()).map(ICCDatabaseStructureElement::getID);
 	}
 
 	public Opt<String> getLocTitle()

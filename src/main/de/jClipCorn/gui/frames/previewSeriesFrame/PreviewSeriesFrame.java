@@ -236,7 +236,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		if (series == null) return;
 
 		if (Main.DEBUG) {
-			setTitle("<LID:" + series.LocalID.get() + "> " + series.Title.get() + " (" + series.CoverID.get() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			setTitle("<ID:" + series.ID.get().toShortString() + "> " + series.Title.get() + " (" + series.CoverID.get().toShortString() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else {
 			setTitle(series.Title.get());
 		}
@@ -324,7 +324,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			return;
 
 		if (Main.DEBUG) {
-			lblSeason.setText(String.format("<%d> %s (%s) (%s)", s.getLocalID(), s.getTitle(), s.getYear().mapOrElse(String::valueOf, ""), s.getCoverID())); //$NON-NLS-1$ //$NON-NLS-2$
+			lblSeason.setText(String.format("<%s> %s (%s) (%s)", s.getID().toShortString(), s.getTitle(), s.getYear().mapOrElse(String::valueOf, ""), s.getCoverID().toShortString())); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			lblSeason.setText(String.format("%s (%s)", s.getTitle(), s.getYear().mapOrElse(String::valueOf, ""))); //$NON-NLS-1$ //$NON-NLS-2$
 		}

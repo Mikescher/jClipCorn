@@ -17,6 +17,7 @@ import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -48,7 +49,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public final ECCPathListProp         Parts         = new ECCPathListProp(   "Parts",         CCPathList.EMPTY,             this, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
 	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,       this);
 	public final EIntProp                Length        = new EIntProp(          "Length",        0,                            this, EPropertyType.OBJECTIVE_METADATA);
-	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
+	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA, ETargetDatabase.MAIN);
 	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(       "Format",        CCFileFormat.MKV,             this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
 	public final EOptIntProp             Year          = new EOptIntProp(       "Year",          Opt.empty(),                  this, EPropertyType.OBJECTIVE_METADATA);
 	public final EFileSizeProp           FileSize      = new EFileSizeProp(     "FileSize",      CCFileSize.ZERO,              this, EPropertyType.LOCAL_FILE_REF_OBJECTIVE);
@@ -62,7 +63,7 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	public final EStringListProp         AnimeSeason   = new EStringListProp(   "AnimeSeason",   CCStringList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
 	public final EStringListProp         AnimeStudio   = new EStringListProp(   "AnimeStudio",   CCStringList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
 
-	public CCMovie(CCMovieList ml, int id) {
+	public CCMovie(CCMovieList ml, CCUUID id) {
 		super(ml, id);
 	}
 

@@ -6,12 +6,14 @@ import de.jClipCorn.database.covertab.CCDefaultCoverCache;
 import de.jClipCorn.database.covertab.ICoverCache;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
+import de.jClipCorn.database.driver.DatabaseStructure;
 import de.jClipCorn.database.driver.PublicDatabaseInterface;
 import de.jClipCorn.features.nfo.EpisodeNFOWriter;
 import de.jClipCorn.features.nfo.MovieNFOWriter;
 import de.jClipCorn.features.nfo.SeasonNFOWriter;
 import de.jClipCorn.features.nfo.SeriesNFOWriter;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
@@ -134,7 +136,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addMovieValidation(
 				DatabaseErrorType.ERROR_NOCOVERSET,
 				o -> o.ValidateMovies,
-				mov -> mov.getCoverID() == -1,
+				mov -> mov.getCoverID().isEmpty(),
 				mov -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOCOVERSET, mov));
 
 		// no year set
@@ -259,12 +261,12 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				{
 					for (CCMovie imov : movielist.iteratorMovies()) {
 						if (StringUtils.equalsIgnoreCase(imov.getCompleteTitle(), mov.getCompleteTitle()) && (imov.getLanguage().isSubsetOf(mov.getLanguage()) || mov.getLanguage().isSubsetOf(imov.getLanguage()))) {
-							if (mov.getLocalID() != imov.getLocalID()) {
+							if (!mov.getID().equals(imov.getID())) {
 								e.add(DatabaseError.createDouble(
 										movielist,
 										DatabaseErrorType.ERROR_DUPLICATE_TITLE, mov, imov,
-										"Movie1.LocalID", String.valueOf(mov.getLocalID()),
-										"Movie2.LocalID", String.valueOf(imov.getLocalID()),
+										"Movie1.ID", String.valueOf(mov.getID()),
+										"Movie2.ID", String.valueOf(imov.getID()),
 										"Movie1.CompleteTitle", mov.getCompleteTitle(),
 										"Movie2.CompleteTitle", imov.getCompleteTitle()
 										));
@@ -861,7 +863,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addSeriesValidation(
 				DatabaseErrorType.ERROR_NOCOVERSET,
 				o -> o.ValidateSeries,
-				series -> !series.isEmpty() && series.getCoverID() == -1,
+				series -> !series.isEmpty() && series.getCoverID().isEmpty(),
 				series -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOCOVERSET, series));
 
 		// cover not found
@@ -1249,7 +1251,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addSeasonValidation(
 				DatabaseErrorType.ERROR_NOCOVERSET,
 				o -> o.ValidateSeries,
-				season -> !season.isEmpty() && season.getCoverID() == -1,
+				season -> !season.isEmpty() && season.getCoverID().isEmpty(),
 				season -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOCOVERSET, season));
 
 		// no year set (seasons without episodes are allowed to have no year)
@@ -1909,8 +1911,8 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						"Cover2.ID", String.valueOf(cvrList.get(i-1).getCoverID()),
 						"Cover1.Filename", cvrList.get(i).getElement().getCoverInfo().Filename,
 						"Cover2.Filename", cvrList.get(i-1).getElement().getCoverInfo().Filename,
-						"Cover1.Element.ID", String.valueOf(cvrList.get(i).getElement().getLocalID()),
-						"Cover2.Element.ID", String.valueOf(cvrList.get(i-1).getElement().getLocalID()),
+						"Cover1.Element.ID", String.valueOf(cvrList.get(i).getElement().getID()),
+						"Cover2.Element.ID", String.valueOf(cvrList.get(i-1).getElement().getID()),
 						"Cover1.Element.Title", cvrList.get(i).getElement().getQualifiedTitle(),
 						"Cover2.Element.Title", cvrList.get(i-1).getElement().getQualifiedTitle()
 				));
@@ -1921,15 +1923,15 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		// Duplicate/Invalid CoverIDs
 		// ###############################################
 
-		Set<Integer> coverIDsTable = CCStreams.iterate(cc.listCovers()).map(p->p.ID).toSet();
+		Set<CCUUID> coverIDsTable = CCStreams.iterate(cc.listCovers()).map(p->p.ID).toSet();
 
-		HashMap<Integer, ICCCoveredElement> coversDatabase = new HashMap<>();
+		HashMap<CCUUID, ICCCoveredElement> coversDatabase = new HashMap<>();
 
 		for (CCMovie m : movielist.iteratorMovies())
 		{
 			pcl.stepSub(m.getFullDisplayTitle());
 
-			if (m.getCoverID() == -1) continue;
+			if (m.getCoverID().isEmpty()) continue;
 
 			if (coversDatabase.containsKey(m.getCoverID())) {
 				e.add(DatabaseError.createDouble(
@@ -1937,9 +1939,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						DatabaseErrorType.ERROR_DUPLICATE_COVERID, m,
 						coversDatabase.get(m.getCoverID()),
 						"CoverID", String.valueOf(m.getCoverID()),
-						"Element1.ID", String.valueOf(coversDatabase.get(m.getCoverID()).getLocalID()),
+						"Element1.ID", String.valueOf(coversDatabase.get(m.getCoverID()).getID()),
 						"Element1.Title", coversDatabase.get(m.getCoverID()).getQualifiedTitle(),
-						"Element2.ID", String.valueOf(m.getLocalID()),
+						"Element2.ID", String.valueOf(m.getID()),
 						"Element2.Title", m.getQualifiedTitle()
 					));
 				continue;
@@ -1951,7 +1953,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					DatabaseError.createSingle(
 							movielist, DatabaseErrorType.ERROR_COVERID_NOT_FOUND, m,
 							"CoverID", String.valueOf(m.getCoverID()),
-							"SourceElement.ID", String.valueOf(m.getLocalID()),
+							"SourceElement.ID", String.valueOf(m.getID()),
 							"SourceElement.Title", m.getQualifiedTitle()
 						));
 		}
@@ -1960,16 +1962,16 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		{
 			pcl.stepSub(s.getTitle());
 
-			if (s.getCoverID() == -1) continue;
+			if (s.getCoverID().isEmpty()) continue;
 
 			if (coversDatabase.containsKey(s.getCoverID())) {
 				e.add(DatabaseError.createDouble(
 						movielist, DatabaseErrorType.ERROR_DUPLICATE_COVERID, s,
 						coversDatabase.get(s.getCoverID()),
 						"CoverID", String.valueOf(s.getCoverID()),
-						"Element1.ID", String.valueOf(coversDatabase.get(s.getCoverID()).getLocalID()),
+						"Element1.ID", String.valueOf(coversDatabase.get(s.getCoverID()).getID()),
 						"Element1.Title", coversDatabase.get(s.getCoverID()).getQualifiedTitle(),
-						"Element2.ID", String.valueOf(s.getLocalID()),
+						"Element2.ID", String.valueOf(s.getID()),
 						"Element2.Title", s.getQualifiedTitle()
 				));
 				continue;
@@ -1981,7 +1983,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					movielist,
 					DatabaseErrorType.ERROR_COVERID_NOT_FOUND, s,
 					"CoverID", String.valueOf(s.getCoverID()),
-					"SourceElement.ID", String.valueOf(s.getLocalID()),
+					"SourceElement.ID", String.valueOf(s.getID()),
 					"SourceElement.Title", s.getQualifiedTitle()
 					));
 		}
@@ -1990,7 +1992,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		{
 			pcl.stepSub(s.getSeries().getTitle() + " S" + s.getSeasonNumber()); //$NON-NLS-1$
 
-			if (s.getCoverID() == -1) continue;
+			if (s.getCoverID().isEmpty()) continue;
 
 			if (coversDatabase.containsKey(s.getCoverID())) {
 				e.add(DatabaseError.createDouble(
@@ -1998,9 +2000,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						DatabaseErrorType.ERROR_DUPLICATE_COVERID, s,
 						coversDatabase.get(s.getCoverID()),
 						"CoverID", String.valueOf(s.getCoverID()),
-						"Element1.ID", String.valueOf(coversDatabase.get(s.getCoverID()).getLocalID()),
+						"Element1.ID", String.valueOf(coversDatabase.get(s.getCoverID()).getID()),
 						"Element1.Title", coversDatabase.get(s.getCoverID()).getQualifiedTitle(),
-						"Element2.ID", String.valueOf(s.getLocalID()),
+						"Element2.ID", String.valueOf(s.getID()),
 						"Element2.Title", s.getQualifiedTitle()
 					));
 				continue;
@@ -2012,7 +2014,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					movielist,
 					DatabaseErrorType.ERROR_COVERID_NOT_FOUND, s,
 					"CoverID", String.valueOf(s.getCoverID()),
-					"SourceElement.ID", String.valueOf(s.getLocalID()),
+					"SourceElement.ID", String.valueOf(s.getID()),
 					"SourceElement.Title", s.getQualifiedTitle()
 					));
 		}
@@ -2095,7 +2097,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			for (int j = 0; j < cvrList.size(); j++)
 			{
 				CCCoverData cce = cc.getInfoOrNull(cvrList.get(j).getCoverID());
-				found |= cce.Filename.equalsIgnoreCase(cvrname);
+				if (cce != null) found |= cce.Filename.equalsIgnoreCase(cvrname);
 			}
 			if (! found) {
 				if (cc instanceof CCDefaultCoverCache) {
@@ -2194,10 +2196,10 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						movielist,
 						DatabaseErrorType.ERROR_DUPLICATE_FILELINK, flList.get(i-1).getElement(), flList.get(i).getElement(),
 						"Element1.Path",  flList.get(i-1).getPath().toString(),
-						"Element1.ID",    String.valueOf(flList.get(i-1).getElement().getLocalID()),
+						"Element1.ID",    String.valueOf(flList.get(i-1).getElement().getID()),
 						"Element1.Title", flList.get(i-1).getElement().getQualifiedTitle(),
 						"Element2.Path",  flList.get(i-1).getPath().toString(),
-						"Element2.ID",    String.valueOf(flList.get(i-1).getElement().getLocalID()),
+						"Element2.ID",    String.valueOf(flList.get(i-1).getElement().getID()),
 						"Element2.Title", flList.get(i-1).getElement().getQualifiedTitle()
 				));
 			}
@@ -2230,10 +2232,10 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				e.add(DatabaseError.createDouble(
 						movielist,
 						DatabaseErrorType.ERROR_DUPLICATE_FILE, el, xmap.get(key),
-						"Element1.ID", String.valueOf(xmap.get(key).getLocalID()),
+						"Element1.ID", String.valueOf(xmap.get(key).getID()),
 						"Element1.Title", xmap.get(key).getQualifiedTitle(),
 						"Element1.MediaInfo.Checksum", xmap.get(key).mediaInfo().get().Checksum.get(),
-						"Element2.ID", String.valueOf(xmap.get(key).getLocalID()),
+						"Element2.ID", String.valueOf(xmap.get(key).getID()),
 						"Element2.Title", xmap.get(key).getQualifiedTitle(),
 						"Element2.MediaInfo.Checksum", xmap.get(key).mediaInfo().get().Checksum.get()
 				));
@@ -2377,16 +2379,16 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						e.add(DatabaseError.createSingle(
 								movielist,
 								DatabaseErrorType.ERROR_DUPLICATE_REF, el,
-								"Element1+2.ID", String.valueOf(el.getLocalID()),
+								"Element1+2.ID", String.valueOf(el.getID()),
 								"Element1+2.Title", el.getQualifiedTitle()
 								));
 					else
 						e.add(DatabaseError.createDouble(
 								movielist,
 								DatabaseErrorType.ERROR_DUPLICATE_REF, el, el2,
-								"Element1.ID", String.valueOf(el.getLocalID()),
+								"Element1.ID", String.valueOf(el.getID()),
 								"Element1.Title", el.getQualifiedTitle(),
-								"Element2.ID", String.valueOf(el2.getLocalID()),
+								"Element2.ID", String.valueOf(el2.getID()),
 								"Element2.Title", el2.getQualifiedTitle()
 						));
 				}
@@ -2410,15 +2412,15 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 					if (el == el2)
 						e.add(DatabaseError.createSingle(
 								movielist, DatabaseErrorType.ERROR_DUPLICATE_REF, el,
-								"Element1+2.ID", String.valueOf(el.getLocalID()),
+								"Element1+2.ID", String.valueOf(el.getID()),
 								"Element1+2.Title", el.getQualifiedTitle()
 						));
 					else
 						e.add(DatabaseError.createDouble(
 								movielist, DatabaseErrorType.ERROR_DUPLICATE_REF, el, el2,
-								"Element1.ID", String.valueOf(el.getLocalID()),
+								"Element1.ID", String.valueOf(el.getID()),
 								"Element1.Title", el.getQualifiedTitle(),
-								"Element2.ID", String.valueOf(el2.getLocalID()),
+								"Element2.ID", String.valueOf(el2.getID()),
 								"Element2.Title", el2.getQualifiedTitle()
 						));
 				}
@@ -2446,9 +2448,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 
 						e.add(DatabaseError.createDouble(
 								movielist, DatabaseErrorType.ERROR_DUPLICATE_REF, sea, el2,
-								"Element1.ID", String.valueOf(sea.getLocalID()),
+								"Element1.ID", String.valueOf(sea.getID()),
 								"Element1.Title", sea.getQualifiedTitle(),
-								"Element2.ID", String.valueOf(el2.getLocalID()),
+								"Element2.ID", String.valueOf(el2.getID()),
 								"Element2.Title", el2.getQualifiedTitle()
 						));
 					}
@@ -2470,48 +2472,32 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		{
 			pcl.stepSub("Global ID uniqueness");
 
-			List<Integer> ids_mov = db.querySQL("SELECT LOCALID FROM MOVIES",                1, o -> (int)o[0]);
-			List<Integer> ids_ser = db.querySQL("SELECT LOCALID FROM SERIES",                1, o -> (int)o[0]);
-			List<Integer> ids_sea = db.querySQL("SELECT LOCALID FROM SEASONS",               1, o -> (int)o[0]);
-			List<Integer> ids_epi = db.querySQL("SELECT LOCALID FROM EPISODES",              1, o -> (int)o[0]);
+			List<String> ids_mov = db.querySQL("SELECT ID FROM MOVIES",                1, o -> (String)o[0]);
+			List<String> ids_ser = db.querySQL("SELECT ID FROM SERIES",                1, o -> (String)o[0]);
+			List<String> ids_sea = db.querySQL("SELECT ID FROM SEASONS",               1, o -> (String)o[0]);
+			List<String> ids_epi = db.querySQL("SELECT ID FROM EPISODES",              1, o -> (String)o[0]);
 
-			List<Integer> duplicates = CCStreams
+			List<String> duplicates = CCStreams
 					.iterate(ids_mov, ids_ser, ids_sea, ids_epi)
 					.groupBy(p->p)
 					.filter(p->p.getValue().size()>1)
 					.map(Map.Entry::getKey)
 					.enumerate();
 
-			for (int dup : duplicates) {
+			for (String dup : duplicates) {
 				e.add(DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_DB_DUPLICATE_ID, dup,
-						"ID", String.valueOf(dup)
+						"ID", dup
 						));
 			}
 
-			{
-				int last_id = db.querySingleIntSQLThrow("SELECT CAST(IVALUE AS INTEGER) FROM INFO WHERE IKEY='LAST_ID'", 0);
-				for (int tlid : CCStreams.iterate(ids_mov, ids_ser, ids_sea, ids_epi).filter(p -> p > last_id)) {
-					e.add(DatabaseError.createSingle(
-							movielist,
-							DatabaseErrorType.ERROR_DB_TOO_LARGE_ID, tlid,
-							"ID", String.valueOf(tlid),
-							"LAST_ID", String.valueOf(last_id)
-							));
-				}
-			}
-
-			{
-				int last_cid = db.querySingleIntSQLThrow("SELECT CAST(IVALUE AS INTEGER) FROM INFO WHERE IKEY='LAST_COVERID'", 0);
-				for (int tlcid : CCStreams.iterate(movielist.getCoverCache().listCovers()).map(p -> p.ID).filter(p -> p > last_cid)) {
-					e.add(DatabaseError.createSingle(
-							movielist,
-							DatabaseErrorType.ERROR_DB_TOO_LARGE_COVERID, tlcid,
-							"ID", String.valueOf(tlcid),
-							"LAST_COVERID", String.valueOf(last_cid)
-					));
-				}
+			for (String bad : CCStreams.iterate(ids_mov, ids_ser, ids_sea, ids_epi).filter(p -> !CCUUID.isValid(p))) {
+				e.add(DatabaseError.createSingle(
+						movielist,
+						DatabaseErrorType.ERROR_DB_MALFORMED_ID, bad,
+						"ID", String.valueOf(bad)
+						));
 			}
 		}
 		catch (Exception ex)
@@ -2525,13 +2511,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		{
 			pcl.stepSub("Missing series entry");
 
-			List<Integer> errs = db.querySQL("SELECT DISTINCT SEASONS.SERIESID FROM SEASONS LEFT JOIN SERIES ON SEASONS.SERIESID=SERIES.LOCALID WHERE SERIES.LOCALID IS NULL", 1, o -> (int)o[0]);
+			List<String> errs = db.querySQL("SELECT DISTINCT SEASONS.SERIESID FROM SEASONS LEFT JOIN SERIES ON SEASONS.SERIESID=SERIES.ID WHERE SERIES.ID IS NULL", 1, o -> (String)o[0]);
 
-			for (int errid : errs) {
+			for (String errid : errs) {
 				e.add(DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_DB_MISSING_SERIES, errid,
-						"ID", String.valueOf(errid)
+						"ID", errid
 				));
 			}
 		}
@@ -2546,13 +2532,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		{
 			pcl.stepSub("Missing seasons entry");
 
-			List<Integer> errs = db.querySQL("SELECT DISTINCT EPISODES.SEASONID FROM EPISODES LEFT JOIN SEASONS ON EPISODES.SEASONID=SEASONS.LOCALID WHERE SEASONS.LOCALID IS NULL", 1, o -> (int)o[0]);
+			List<String> errs = db.querySQL("SELECT DISTINCT EPISODES.SEASONID FROM EPISODES LEFT JOIN SEASONS ON EPISODES.SEASONID=SEASONS.ID WHERE SEASONS.ID IS NULL", 1, o -> (String)o[0]);
 
-			for (int errid : errs) {
+			for (String errid : errs) {
 				e.add(DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_DB_MISSING_SEASON, errid,
-						"ID", String.valueOf(errid)
+						"ID", errid
 				));
 			}
 		}
@@ -2567,40 +2553,42 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		{
 			pcl.stepSub("Validate CoverIDs");
 
-			List<Integer> cvr1 = db.querySQL("SELECT COVERID FROM MOVIES WHERE COVERID <> -1", 1, o -> (int)o[0]);
-			List<Integer> cvr2 = db.querySQL("SELECT COVERID FROM SERIES WHERE COVERID <> -1", 1, o -> (int)o[0]);
-			List<Integer> cvr3 = db.querySQL("SELECT COVERID FROM SEASONS WHERE COVERID <> -1",  1, o -> (int)o[0]);
+			String nocover = "'" + CCUUID.EMPTY + "'";
 
-			List<Integer> cvrall = db.querySQL("SELECT ID FROM COVERS",  1, o -> (int)o[0]);
+			List<String> cvr1 = db.querySQL("SELECT COVERID FROM MOVIES WHERE COVERID <> " + nocover, 1, o -> (String)o[0]);
+			List<String> cvr2 = db.querySQL("SELECT COVERID FROM SERIES WHERE COVERID <> " + nocover, 1, o -> (String)o[0]);
+			List<String> cvr3 = db.querySQL("SELECT COVERID FROM SEASONS WHERE COVERID <> " + nocover, 1, o -> (String)o[0]);
 
-			List<Integer> duplicates = CCStreams
+			List<String> cvrall = db.querySQL("SELECT ID FROM COVERS",  1, o -> (String)o[0]);
+
+			List<String> duplicates = CCStreams
 					.iterate(cvr1, cvr2, cvr3)
 					.groupBy(p->p)
 					.filter(p->p.getValue().size()>1)
 					.map(Map.Entry::getKey)
 					.enumerate();
 
-			for (int dup : duplicates) {
+			for (String dup : duplicates) {
 				e.add(DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_DB_MULTI_REF_COVER, dup,
-						"ID", String.valueOf(dup)
+						"ID", dup
 				));
 			}
 
-			for (int cvrid : CCStreams.iterate(cvrall).filter(p -> !cvr1.contains(p) && !cvr2.contains(p) && !cvr3.contains(p) )) {
+			for (String cvrid : CCStreams.iterate(cvrall).filter(p -> !cvr1.contains(p) && !cvr2.contains(p) && !cvr3.contains(p) )) {
 				e.add(DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_DB_UNUSED_COVERID, cvrid,
-						"ID", String.valueOf(cvrid)
+						"ID", cvrid
 				));
 			}
 
-			for (int cvrid : CCStreams.iterate(cvr1, cvr2, cvr3).filter(p -> !cvrall.contains(p) )) {
+			for (String cvrid : CCStreams.iterate(cvr1, cvr2, cvr3).filter(p -> !cvrall.contains(p) )) {
 				e.add(DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_DB_DANGLING_COVERID, cvrid,
-						"ID", String.valueOf(cvrid)
+						"ID", cvrid
 				));
 			}
 		}
@@ -2645,7 +2633,8 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		{
 			pcl.stepSub("Check database foreign keys");
 
-			var r = db.querySQL("PRAGMA foreign_key_check;", 4);
+			var r = db.querySQL("PRAGMA main.foreign_key_check;", 4);
+			r.addAll(db.querySQL("PRAGMA userdata.foreign_key_check;", 4));
 
 			if (r.size() > 0) throw new Exception("sqlite::pragma::foreign_key_check returned " + r.size() + " errors");
 		}
@@ -2659,11 +2648,14 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		{
 			pcl.stepSub("Check database foreign keys");
 
-			var r1 = db.querySingleStringSQLThrow("PRAGMA integrity_check;", 0);
-			if (!r1.equalsIgnoreCase("ok")) throw new Exception("sqlite::pragma::integrity_check returned '" + r1 + "'");
+			for (var schema : new String[] { DatabaseStructure.SCHEMA_MAIN, DatabaseStructure.SCHEMA_USERDATA })
+			{
+				var r1 = db.querySingleStringSQLThrow("PRAGMA " + schema + ".integrity_check;", 0);
+				if (!r1.equalsIgnoreCase("ok")) throw new Exception("sqlite::pragma::integrity_check[" + schema + "] returned '" + r1 + "'");
 
-			var r2 = db.querySingleStringSQLThrow("PRAGMA quick_check;", 0);
-			if (!r2.equalsIgnoreCase("ok")) throw new Exception("sqlite::pragma::quick_check returned '" + r2 + "'");
+				var r2 = db.querySingleStringSQLThrow("PRAGMA " + schema + ".quick_check;", 0);
+				if (!r2.equalsIgnoreCase("ok")) throw new Exception("sqlite::pragma::quick_check[" + schema + "] returned '" + r2 + "'");
+			}
 		}
 		catch (Exception ex)
 		{

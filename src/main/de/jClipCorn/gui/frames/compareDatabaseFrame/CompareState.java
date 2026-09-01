@@ -43,69 +43,69 @@ public class CompareState {
 	}
 
 	public MovieMatch addMovieMatch(CCMovie loc, CCMovie ext) {
-		var updateFile = Ruleset.ShouldUpdateFiles(loc.getLocalID(), ext.getLocalID()) &&
+		var updateFile = Ruleset.ShouldUpdateFiles(loc.getID(), ext.getID()) &&
 				         !loc.MediaInfo.get().Checksum.isEqual(ext.MediaInfo.get().Checksum, Str::equals);
 
-		var updateCover = Ruleset.ShouldUpdateCover(loc.getLocalID(), ext.getLocalID()) && !Str.equals(loc.getCoverInfo().Checksum, ext.getCoverInfo().Checksum);
+		var updateCover = Ruleset.ShouldUpdateCover(loc.getID(), ext.getID()) && !Str.equals(loc.getCoverInfo().Checksum, ext.getCoverInfo().Checksum);
 
 		var propLoc = CCStreams.iterate(loc.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 		var propExt = CCStreams.iterate(ext.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 		var diffMeta = CCStreams.zip(propLoc, propExt)
 				                .filter(p -> !Str.equals(p.Item1.serializeToString(), p.Item2.serializeToString()))
-				                .filter(p -> Ruleset.ShouldUpdateMetadata(loc.getLocalID(), ext.getLocalID(), p.Item1, p.Item2))
+				                .filter(p -> Ruleset.ShouldUpdateMetadata(loc.getID(), ext.getID(), p.Item1, p.Item2))
 				                .toList();
 
 		var match = new MovieMatch(this, loc, ext, !diffMeta.isEmpty(), updateCover, updateFile, false, false, diffMeta);
 		Movies.add(match);
-		ProgressCallback.stepSub(2, loc.getLocalID()+"|"+ext.getLocalID());
+		ProgressCallback.stepSub(2, loc.getID()+"|"+ext.getID());
 		return match;
 	}
 
 	public MovieMatch addMovieLocalOnly(CCMovie loc) {
-		var docopy = Ruleset.ShouldAddLocal(loc.getLocalID());
+		var docopy = Ruleset.ShouldAddLocal(loc.getID());
 		var match = new MovieMatch(this, loc, null, false, false, false, docopy, false, new ArrayList<>());
 		Movies.add(match);
-		ProgressCallback.stepSub(1, loc.getLocalID()+"");
+		ProgressCallback.stepSub(1, loc.getID()+"");
 		return match;
 	}
 
 	public MovieMatch addMovieExternOnly(CCMovie ext) {
-		var dodel = Ruleset.ShouldDeleteExtern(ext.getLocalID());
+		var dodel = Ruleset.ShouldDeleteExtern(ext.getID());
 		var match = new MovieMatch(this, null, ext, false, false, false, false, dodel, new ArrayList<>());
 		Movies.add(match);
-		ProgressCallback.stepSub(1, ext.getLocalID()+"");
+		ProgressCallback.stepSub(1, ext.getID()+"");
 		return match;
 	}
 
 	public SeriesMatch addSeriesMatch(CCSeries loc, CCSeries ext) {
-		var updateCover = Ruleset.ShouldUpdateCover(loc.getLocalID(), ext.getLocalID()) && !Str.equals(loc.getCoverInfo().Checksum, ext.getCoverInfo().Checksum);
+		var updateCover = Ruleset.ShouldUpdateCover(loc.getID(), ext.getID()) && !Str.equals(loc.getCoverInfo().Checksum, ext.getCoverInfo().Checksum);
 
 		var propLoc = CCStreams.iterate(loc.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 		var propExt = CCStreams.iterate(ext.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 		var diffMeta = CCStreams.zip(propLoc, propExt)
 								.filter(p -> !Str.equals(p.Item1.serializeToString(), p.Item2.serializeToString()))
-								.filter(p -> Ruleset.ShouldUpdateMetadata(loc.getLocalID(), ext.getLocalID(), p.Item1, p.Item2))
+								.filter(p -> Ruleset.ShouldUpdateMetadata(loc.getID(), ext.getID(), p.Item1, p.Item2))
 								.toList();
 
 		var match = new SeriesMatch(this, loc, ext, !diffMeta.isEmpty(), updateCover, false, false, diffMeta);
 		Series.add(match);
-		ProgressCallback.stepSub(2, loc.getLocalID()+"|"+ext.getLocalID());
+		ProgressCallback.stepSub(2, loc.getID()+"|"+ext.getID());
 		return match;
 	}
 
 	public SeriesMatch addSeriesLocalOnly(CCSeries loc) {
-		var docopy = Ruleset.ShouldAddLocal(loc.getLocalID());
+		var docopy = Ruleset.ShouldAddLocal(loc.getID());
 		var match = new SeriesMatch(this, loc, null, false, false, docopy, false, new ArrayList<>());
 		Series.add(match);
-		ProgressCallback.stepSub(1, loc.getLocalID()+"");
+		ProgressCallback.stepSub(1, loc.getID()+"");
 		return match;
 	}
 
 	public SeriesMatch addSeriesExternOnly(CCSeries ext) {
-		var dodel = Ruleset.ShouldDeleteExtern(ext.getLocalID());
+		var dodel = Ruleset.ShouldDeleteExtern(ext.getID());
 		var match = new SeriesMatch(this, null, ext, false, false, false, dodel, new ArrayList<>());
 		Series.add(match);
-		ProgressCallback.stepSub(1, ext.getLocalID()+"");
+		ProgressCallback.stepSub(1, ext.getID()+"");
 		return match;
 	}
 

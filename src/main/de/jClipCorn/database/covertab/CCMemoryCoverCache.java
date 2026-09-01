@@ -8,12 +8,12 @@ import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.colorquantizer.ColorQuantizer;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.colorquantizer.util.ColorQuantizerConverter;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -21,14 +21,14 @@ import java.io.FileInputStream;
 import java.util.*;
 
 public class CCMemoryCoverCache implements ICoverCache {
-	protected Map<Integer, BufferedImage> _data;
-	protected final HashMap<Integer, CCCoverData> _elements;
+	protected Map<CCUUID, BufferedImage> _data;
+	protected final LinkedHashMap<CCUUID, CCCoverData> _elements;
 
 	protected final CCDatabase _db;
 	protected final CCProperties _ccprops;
 
 	public CCMemoryCoverCache(CCDatabase database, CCProperties ccprops) {
-		_elements = new HashMap<>();
+		_elements = new LinkedHashMap<>(); // listCovers() feeds the (byte-comparable) backup export
 		_data = new HashMap<>();
 		_db = database;
 		_ccprops = ccprops;
@@ -53,7 +53,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 		// do nothing
 	}
 
-	private CCCoverData getFromCache(int cid) {
+	private CCCoverData getFromCache(CCUUID cid) {
 		CCCoverData cce = _elements.get(cid);
 
 		if (cce == null) CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotInCache", cid)); //$NON-NLS-1$
@@ -62,8 +62,8 @@ public class CCMemoryCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public BufferedImage getCover(int cid) {
-		if (cid == -1) return Resources.IMG_COVER_NOTFOUND.get();
+	public BufferedImage getCover(CCUUID cid) {
+		if (cid.isEmpty()) return Resources.IMG_COVER_NOTFOUND.get();
 
 		CCCoverData cce = getFromCache(cid);
 		if (cce == null) return Resources.IMG_COVER_NOTFOUND.get();
@@ -84,11 +84,11 @@ public class CCMemoryCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public int addCover(BufferedImage newCover) {
+	public CCUUID addCover(BufferedImage newCover) {
 		try {
-			int cid = _db.getNewCoverID();
+			CCUUID cid = CCUUID.generate();
 
-			String fname = ccprops().PROP_COVER_PREFIX.getValue() + StringUtils.leftPad(Integer.toString(cid), 5, '0') + '.' + ccprops().PROP_COVER_TYPE.getValue();
+			String fname = cid + "." + ccprops().PROP_COVER_TYPE.getValue(); //$NON-NLS-1$
 
 			FSPath f = SimpleFileUtils.getSystemTempFile(".png"); //$NON-NLS-1$
 			ImageIO.write(newCover, ccprops().PROP_COVER_TYPE.getValue(), f.toFile());
@@ -113,11 +113,11 @@ public class CCMemoryCoverCache implements ICoverCache {
 			return cid;
 		} catch (Exception e) {
 			CCLog.addError(e);
-			return -1;
+			return CCUUID.EMPTY;
 		}
 	}
 
-	private CCCoverData getEntry(int cid) {
+	private CCCoverData getEntry(CCUUID cid) {
 		CCCoverData cce = _elements.get(cid);
 
 		if (cce == null) CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotInCache", cid)); //$NON-NLS-1$
@@ -126,7 +126,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public void deleteCover(int cid) {
+	public void deleteCover(CCUUID cid) {
 
 		CCCoverData cce = getEntry(cid);
 		if (cce == null) return;
@@ -139,30 +139,30 @@ public class CCMemoryCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public CCCoverData getInfoOrNull(int cid) {
+	public CCCoverData getInfoOrNull(CCUUID cid) {
 		CCCoverData cce = _elements.get(cid);
 		return cce;
 	}
 
 	@Override
-	public boolean coverFileExists(int cid) {
+	public boolean coverFileExists(CCUUID cid) {
 		return _data.containsKey(cid);
 	}
 
 	@Override
-	public Tuple<Integer, Integer> getDimensions(int cid) {
+	public Tuple<Integer, Integer> getDimensions(CCUUID cid) {
 		CCCoverData cce = getFromCache(cid);
 		if (cce == null) return Tuple.Create(0, 0);
 		return Tuple.Create(cce.Width, cce.Height);
 	}
 
 	@Override
-	public boolean isCached(int cid) {
+	public boolean isCached(CCUUID cid) {
 		return true;
 	}
 
 	@Override
-	public void preloadCover(int cid) {
+	public void preloadCover(CCUUID cid) {
 		getCover(cid);
 	}
 

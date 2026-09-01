@@ -2,6 +2,7 @@ package de.jClipCorn.database.history;
 
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.stream.CCStreams;
@@ -50,17 +51,6 @@ public class CCCombinedHistoryEntry
 		return true;
 	}
 
-	public boolean isIDChangeOnly() {
-		//if (Action != CCHistoryAction.UPDATE) return false;
-		if (Table != CCHistoryTable.INFO) return false;
-		//if (Changes.size() != 1) return false;
-
-		if (Str.equals(ID, "LAST_ID")) return true; //$NON-NLS-1$
-		if (Str.equals(ID, "LAST_COVERID")) return true; //$NON-NLS-1$
-
-		return false;
-	}
-
 	public boolean isGroupOrderingChange() {
 		if (Action != CCHistoryAction.UPDATE) return false;
 		if (Table != CCHistoryTable.GROUPS) return false;
@@ -71,19 +61,12 @@ public class CCCombinedHistoryEntry
 		return true;
 	}
 
-	public void setSourceLink(HashMap<Integer, ICCDatabaseStructureElement> elements) {
+	public void setSourceLink(HashMap<CCUUID, ICCDatabaseStructureElement> elements) {
 		if (Table == CCHistoryTable.COVERS) return;
 		if (Table == CCHistoryTable.INFO) return;
 		if (Table == CCHistoryTable.GROUPS) return;
 
-		int iid;
-		try	{
-			iid = Integer.parseInt(ID);
-		} catch (NumberFormatException e) {
-			_sourceLink = null;
-			return;
-		}
-		_sourceLink = elements.getOrDefault(iid, null);
+		_sourceLink = elements.getOrDefault(CCUUID.parseOrEmpty(ID), null);
 	}
 
 	public Opt<String> getNewValue(String key) {

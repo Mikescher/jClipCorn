@@ -10,9 +10,11 @@ import de.jClipCorn.database.driver.DatabaseStructure;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.StringComparator;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.listener.ProgressCallbackListener;
@@ -40,7 +42,7 @@ public class CCDatabaseHistory {
 	}
 
 	public boolean isHistoryActive() {
-		String str = _db.readInformationFromDB(DatabaseStructure.INFOKEY_HISTORY, "MISSING_ENTRY"); //$NON-NLS-1$
+		String str = _db.readUserDataInformationFromDB(DatabaseStructure.INFOKEY_HISTORY, "MISSING_ENTRY"); //$NON-NLS-1$
 		if ("0".equals(str)) return false; //$NON-NLS-1$
 		if ("1".equals(str)) return true;  //$NON-NLS-1$
 
@@ -48,14 +50,16 @@ public class CCDatabaseHistory {
 		return false;
 	}
 
-	public static List<Tuple<String, String>> createTriggerStatements() {
-		List<Tuple<String, String>> result = new ArrayList<>();
+	private final static List<CCSQLTableDef> UNTRACKED_TABLES = List.of(
+			DatabaseStructure.TAB_HISTORY,    DatabaseStructure.TAB_UD_HISTORY,
+			DatabaseStructure.TAB_TEMP,       DatabaseStructure.TAB_UD_TEMP,
+			DatabaseStructure.TAB_FILTERS,    DatabaseStructure.TAB_PROPERTIES);
 
-		for(CCSQLTableDef tab : DatabaseStructure.TABLES) {
-			if (tab == DatabaseStructure.TAB_HISTORY) continue;
-			if (tab == DatabaseStructure.TAB_TEMP) continue;
-			if (tab == DatabaseStructure.TAB_FILTERS) continue;
-			if (tab == DatabaseStructure.TAB_PROPERTIES) continue;
+	public static List<Tuple3<String, String, String>> createTriggerStatements() {
+		List<Tuple3<String, String, String>> result = new ArrayList<>();
+
+		for(CCSQLTableDef tab : CCStreams.iterate(DatabaseStructure.TABLES_MAIN).append(DatabaseStructure.TABLES_USERDATA)) {
+			if (UNTRACKED_TABLES.contains(tab)) continue;
 
 			result.add(createTriggerOnAdd(tab));
 			for(CCSQLColDef col : tab.Columns) result.add(createTriggerOnUpdate(tab, col));
@@ -65,9 +69,23 @@ public class CCDatabaseHistory {
 		return result;
 	}
 
+	/**
+	 * SQLite drops the schema qualifier again when it stores the DDL, so the statement that has to be
+	 * executed and the statement {@link #testTrigger} later compares against are not the same string.
+	 */
+	private static Tuple3<String, String, String> withSchema(String name, CCSQLTableDef tab, String sql) {
+		String prefix = "CREATE TRIGGER "; //$NON-NLS-1$
+		return Tuple3.Create(name, prefix + tab.Schema + "." + sql.substring(prefix.length()), sql); //$NON-NLS-1$
+	}
+
+	/** The trigger name has to encode the schema - both files hold a MOVIES table. */
+	private static String triggerName(String action, CCSQLTableDef tab, String suffix) {
+		return Str.format("JCCTRIGGER_AUTOHISTORY_{0}_{1}_{2}{3}", action, tab.Schema.toUpperCase(), tab.Name.toUpperCase(), suffix); //$NON-NLS-1$
+	}
+
 	@SuppressWarnings("nls")
-	private static Tuple<String, String> createTriggerOnAdd(CCSQLTableDef tab) {
-		String triggerName = Str.format("JCCTRIGGER_AUTOHISTORY_ADD_{0}", tab.Name.toUpperCase()); //$NON-NLS-1$
+	private static Tuple3<String, String, String> createTriggerOnAdd(CCSQLTableDef tab) {
+		String triggerName = triggerName("ADD", tab, Str.Empty); //$NON-NLS-1$
 
 		StringBuilder triggerbuilder = new StringBuilder();
 
@@ -87,12 +105,12 @@ public class CCDatabaseHistory {
 		}
 		triggerbuilder.append("END").append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		return Tuple.Create(triggerName, triggerbuilder.toString());
+		return withSchema(triggerName, tab, triggerbuilder.toString());
 	}
 
 	@SuppressWarnings("nls")
-	private static Tuple<String, String> createTriggerOnUpdate(CCSQLTableDef tab, CCSQLColDef col) {
-		String triggerName = Str.format("JCCTRIGGER_AUTOHISTORY_UPD_{0}_{1}", tab.Name.toUpperCase(), col.Name.toUpperCase().replace('.', '-')); //$NON-NLS-1$
+	private static Tuple3<String, String, String> createTriggerOnUpdate(CCSQLTableDef tab, CCSQLColDef col) {
+		String triggerName = triggerName("UPD", tab, "_" + col.Name.toUpperCase().replace('.', '-')); //$NON-NLS-1$ //$NON-NLS-2$
 
 		StringBuilder triggerbuilder = new StringBuilder();
 
@@ -129,12 +147,12 @@ public class CCDatabaseHistory {
 
 		triggerbuilder.append("END").append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		return Tuple.Create(triggerName, triggerbuilder.toString());
+		return withSchema(triggerName, tab, triggerbuilder.toString());
 	}
 
 	@SuppressWarnings("nls")
-	private static Tuple<String, String> createTriggerOnDelete(CCSQLTableDef tab) {
-		String triggerName = Str.format("JCCTRIGGER_AUTOHISTORY_REM_{0}", tab.Name.toUpperCase()); //$NON-NLS-1$
+	private static Tuple3<String, String, String> createTriggerOnDelete(CCSQLTableDef tab) {
+		String triggerName = triggerName("REM", tab, Str.Empty); //$NON-NLS-1$
 
 		StringBuilder triggerbuilder = new StringBuilder();
 
@@ -154,7 +172,7 @@ public class CCDatabaseHistory {
 		}
 		triggerbuilder.append("END").append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		return Tuple.Create(triggerName, triggerbuilder.toString());
+		return withSchema(triggerName, tab, triggerbuilder.toString());
 	}
 
 	@SuppressWarnings("nls")
@@ -164,18 +182,18 @@ public class CCDatabaseHistory {
 
 		try {
 			List<Tuple<String, String>> triggerDB = _db.listTrigger();
-			List<Tuple<String, String>> triggerOK = createTriggerStatements();
+			List<Tuple3<String, String, String>> triggerOK = createTriggerStatements();
 
 			if (active) {
-				for (Tuple<String, String> t : triggerOK) {
+				for (Tuple3<String, String, String> t : triggerOK) {
 					Tuple<String, String> db = CCStreams.iterate(triggerDB).singleOrNull(p -> Str.equals(p.Item1, t.Item1));
 					if (db == null)
 						errors.add(Str.format("Trigger [{0}] not found", t.Item1)); //$NON-NLS-1$
-					else if (!Str.equals(db.Item2.replace("\r", "").trim(), t.Item2.replace("\r", "").trim())) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					else if (!Str.equals(db.Item2.replace("\r", "").trim(), t.Item3.replace("\r", "").trim())) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						errors.add(Str.format("Trigger [{0}] has wrong code", t.Item1)); //$NON-NLS-1$
 				}
 			} else {
-				for (Tuple<String, String> t : triggerOK) {
+				for (Tuple3<String, String, String> t : triggerOK) {
 					Tuple<String, String> db = CCStreams.iterate(triggerDB).singleOrNull(p -> Str.equals(p.Item1, t.Item1));
 					if (db != null) errors.add(Str.format("Trigger [{0}] exists", t.Item1)); //$NON-NLS-1$
 				}
@@ -205,18 +223,18 @@ public class CCDatabaseHistory {
 			if (dbTrigger.Item1.startsWith("JCCTRIGGER_")) _db.deleteTrigger(dbTrigger.Item1, false); //$NON-NLS-1$
 		}
 
-		for (Tuple<String, String> trigger : createTriggerStatements()) {
+		for (Tuple3<String, String, String> trigger : createTriggerStatements()) {
 			_db.createTrigger(trigger.Item2);
 		}
 
-		_db.writeInformationToDB(DatabaseStructure.INFOKEY_HISTORY, "1"); //$NON-NLS-1$
+		_db.writeUserDataInformationToDB(DatabaseStructure.INFOKEY_HISTORY, "1"); //$NON-NLS-1$
 		_db.getHistoryDatabase().writeInfo(DatabaseStructure.INFOKEY_HISTORY, "1"); //$NON-NLS-1$
 	}
 
 	public void disableTrigger() throws SQLException {
 		List<Tuple<String, String>> triggerDB = _db.listTrigger();
 
-		_db.writeInformationToDB(DatabaseStructure.INFOKEY_HISTORY, "0"); //$NON-NLS-1$
+		_db.writeUserDataInformationToDB(DatabaseStructure.INFOKEY_HISTORY, "0"); //$NON-NLS-1$
 		_db.getHistoryDatabase().writeInfo(DatabaseStructure.INFOKEY_HISTORY, "0"); //$NON-NLS-1$
 
 		// drop all existing auto-history triggers
@@ -225,11 +243,11 @@ public class CCDatabaseHistory {
 		}
 	}
 
-	public Tuple<List<CCCombinedHistoryEntry>, Integer> query(CCMovieList ml, boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, Opt<Integer> limit, ProgressCallbackListener lst) throws CCFormatException {
-		return query(ml, excludeViewedOnly, excludeInfoIDChanges, excludeOrderingChanges, mergeAggressive, start, limit, lst, null);
+	public Tuple<List<CCCombinedHistoryEntry>, Integer> query(CCMovieList ml, boolean excludeViewedOnly, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, Opt<Integer> limit, ProgressCallbackListener lst) throws CCFormatException {
+		return query(ml, excludeViewedOnly, excludeOrderingChanges, mergeAggressive, start, limit, lst, null);
 	}
 
-	public Tuple<List<CCCombinedHistoryEntry>, Integer> query(CCMovieList ml, boolean excludeViewedOnly, boolean excludeInfoIDChanges, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, Opt<Integer> limit, ProgressCallbackListener lst, String idfilter) throws CCFormatException {
+	public Tuple<List<CCCombinedHistoryEntry>, Integer> query(CCMovieList ml, boolean excludeViewedOnly, boolean excludeOrderingChanges, boolean mergeAggressive, CCDateTime start, Opt<Integer> limit, ProgressCallbackListener lst, String idfilter) throws CCFormatException {
 		if (lst == null) lst = new ProgressCallbackSink();
 
 		List<CCCombinedHistoryEntry> result  = new ArrayList<>();
@@ -363,13 +381,12 @@ public class CCDatabaseHistory {
 		result.removeIf(p -> p.Changes.size()==0);
 
 		if (excludeViewedOnly)      result.removeIf(CCCombinedHistoryEntry::isTrivialViewedChangesOnly);
-		if (excludeInfoIDChanges)   result.removeIf(CCCombinedHistoryEntry::isIDChangeOnly);
 		if (excludeOrderingChanges) result.removeIf(CCCombinedHistoryEntry::isGroupOrderingChange);
 
-		HashMap<Integer, ICCDatabaseStructureElement> elements = new HashMap<>();
-		for (CCDatabaseElement e : ml.iteratorElements()) elements.put(e.getLocalID(), e);
-		for (CCSeason e : ml.iteratorSeasons()) elements.put(e.getLocalID(), e);
-		for (CCEpisode e : ml.iteratorEpisodes()) elements.put(e.getLocalID(), e);
+		HashMap<CCUUID, ICCDatabaseStructureElement> elements = new HashMap<>();
+		for (CCDatabaseElement e : ml.iteratorElements()) elements.put(e.getID(), e);
+		for (CCSeason e : ml.iteratorSeasons()) elements.put(e.getID(), e);
+		for (CCEpisode e : ml.iteratorEpisodes()) elements.put(e.getID(), e);
 
 		for (CCCombinedHistoryEntry e : result) e.setSourceLink(elements);
 

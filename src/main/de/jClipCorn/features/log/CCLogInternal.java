@@ -5,6 +5,7 @@ import de.jClipCorn.gui.guiComponents.cover.DatabaseElementPreviewLabel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -118,7 +119,7 @@ public class CCLogInternal {
 		triggerSQLChanged(cle);
 	}
 
-	public static void addChange(String rootType, int rootID, String actualType, int actualID, String[] properties) {
+	public static void addChange(String rootType, CCUUID rootID, String actualType, CCUUID actualID, String[] properties) {
 		CCChangeLogElement cle = new CCChangeLogElement(rootType, rootID, actualType, actualID, properties);
 
 		synchronized (_changeLock) {

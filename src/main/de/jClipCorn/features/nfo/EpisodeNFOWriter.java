@@ -66,10 +66,10 @@ public class EpisodeNFOWriter {
 	}
 
 	private static void writeUniqueIds(Element root, CCEpisode episode) {
-		// Add clipcorn internal ID (episode has LocalEpisodeID)
+		// Add clipcorn internal ID
 		Element clipcornId = new Element("uniqueid");
 		clipcornId.setAttribute("type", "clipcorn");
-		clipcornId.setText(String.valueOf(episode.LocalID.get()));
+		clipcornId.setText(episode.ID.get().toString());
 		root.addContent(clipcornId);
 	}
 }

@@ -3,6 +3,7 @@ package de.jClipCorn.test;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.comparator.CCMovieComparator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.stream.CCStreams;
@@ -27,8 +28,8 @@ public class TestIterators extends ClipCornBaseTest {
 		assertEquals(20, ml.iteratorElementsSorted().enumerate().size());
 		assertEquals(20, ml.iteratorElements().unique().count());
 		assertEquals(20, ml.iteratorElementsSorted().unique().count());
-		assertEquals(20, ml.iteratorElements().map(ICCDatabaseStructureElement::getLocalID).unique().count());
-		assertEquals(20, ml.iteratorElementsSorted().map(ICCDatabaseStructureElement::getLocalID).unique().count());
+		assertEquals(20, ml.iteratorElements().map(ICCDatabaseStructureElement::getID).unique().count());
+		assertEquals(20, ml.iteratorElementsSorted().map(ICCDatabaseStructureElement::getID).unique().count());
 	}
 
 	@Test
@@ -41,8 +42,8 @@ public class TestIterators extends ClipCornBaseTest {
 		assertEquals(17, ml.iteratorMoviesSorted().enumerate().size());
 		assertEquals(17, ml.iteratorMovies().unique().count());
 		assertEquals(17, ml.iteratorMoviesSorted().unique().count());
-		assertEquals(17, ml.iteratorMovies().map(ICCDatabaseStructureElement::getLocalID).unique().count());
-		assertEquals(17, ml.iteratorMoviesSorted().map(ICCDatabaseStructureElement::getLocalID).unique().count());
+		assertEquals(17, ml.iteratorMovies().map(ICCDatabaseStructureElement::getID).unique().count());
+		assertEquals(17, ml.iteratorMoviesSorted().map(ICCDatabaseStructureElement::getID).unique().count());
 	}
 
 	@Test
@@ -55,8 +56,8 @@ public class TestIterators extends ClipCornBaseTest {
 		assertEquals(3, ml.iteratorSeriesSorted().enumerate().size());
 		assertEquals(3, ml.iteratorSeries().unique().count());
 		assertEquals(3, ml.iteratorSeriesSorted().unique().count());
-		assertEquals(3, ml.iteratorSeries().map(ICCDatabaseStructureElement::getLocalID).unique().count());
-		assertEquals(3, ml.iteratorSeriesSorted().map(ICCDatabaseStructureElement::getLocalID).unique().count());
+		assertEquals(3, ml.iteratorSeries().map(ICCDatabaseStructureElement::getID).unique().count());
+		assertEquals(3, ml.iteratorSeriesSorted().map(ICCDatabaseStructureElement::getID).unique().count());
 	}
 
 	@Test
@@ -66,7 +67,7 @@ public class TestIterators extends ClipCornBaseTest {
 		assertEquals(86, ml.iteratorEpisodes().count());
 		assertEquals(86, ml.iteratorEpisodes().enumerate().size());
 		assertEquals(86, ml.iteratorEpisodes().unique().count());
-		assertEquals(86, ml.iteratorEpisodes().map(ICCDatabaseStructureElement::getLocalID).unique().count());
+		assertEquals(86, ml.iteratorEpisodes().map(ICCDatabaseStructureElement::getID).unique().count());
 	}
 
 	@Test
@@ -76,7 +77,7 @@ public class TestIterators extends ClipCornBaseTest {
 		assertEquals(7, ml.iteratorSeasons().count());
 		assertEquals(7, ml.iteratorSeasons().enumerate().size());
 		assertEquals(7, ml.iteratorSeasons().unique().count());
-		assertEquals(7, ml.iteratorSeasons().map(ICCDatabaseStructureElement::getLocalID).unique().count());
+		assertEquals(7, ml.iteratorSeasons().map(ICCDatabaseStructureElement::getID).unique().count());
 	}
 
 	@Test
@@ -96,7 +97,7 @@ public class TestIterators extends ClipCornBaseTest {
 		assertEquals(113, ml.iteratorStructureElements().count());
 		assertEquals(113, ml.iteratorStructureElements().enumerate().size());
 		assertEquals(113, ml.iteratorStructureElements().unique().count());
-		assertEquals(113, ml.iteratorStructureElements().map(ICCDatabaseStructureElement::getLocalID).unique().count());
+		assertEquals(113, ml.iteratorStructureElements().map(ICCDatabaseStructureElement::getID).unique().count());
 	}
 
 	@Test
@@ -113,11 +114,11 @@ public class TestIterators extends ClipCornBaseTest {
 	public void testSortedIterator() throws Exception {
 		CCMovieList ml = createExampleDB();
 
-		assertEquals(95, ml.iteratorMovies().sort(new CCMovieComparator()).get(0).getLocalID());
-		assertEquals(6,  ml.iteratorMovies().sort(new CCMovieComparator()).get(1).getLocalID());
-		assertEquals(99, ml.iteratorMovies().sort(new CCMovieComparator()).get(2).getLocalID());
-		assertEquals(1,  ml.iteratorMovies().sort(new CCMovieComparator()).get(3).getLocalID());
-		assertEquals(10, ml.iteratorMovies().sort(new CCMovieComparator()).get(4).getLocalID());
+		assertEquals("Buddy haut den Lukas",    ml.iteratorMovies().sort(new CCMovieComparator()).get(0).getTitle());
+		assertEquals("Death Proof: Todsicher",  ml.iteratorMovies().sort(new CCMovieComparator()).get(1).getTitle());
+		assertEquals("Der Bomber",              ml.iteratorMovies().sort(new CCMovieComparator()).get(2).getTitle());
+		assertEquals("Die Gefährten",           ml.iteratorMovies().sort(new CCMovieComparator()).get(3).getTitle());
+		assertEquals("Die Rückkehr des Königs", ml.iteratorMovies().sort(new CCMovieComparator()).get(4).getTitle());
 	}
 
 	@Test
@@ -142,11 +143,11 @@ public class TestIterators extends ClipCornBaseTest {
 	public void testDirectEpisodesIterator() throws Exception {
 		CCMovieList ml = createExampleDB();
 
-		assertEquals("1;2;3;4;5;6;7;8;9;10", ml.findDatabaseSeries(102).iteratorEpisodes().stringjoin(p -> p.getEpisodeNumber()+"", ";"));
+		assertEquals("1;2;3;4;5;6;7;8;9;10", seriesByTitle(ml, "KonoSuba").iteratorEpisodes().stringjoin(p -> p.getEpisodeNumber()+"", ";"));
 		
-		assertEquals(25, ml.findDatabaseSeries(11).iteratorEpisodes().count());
-		assertEquals(51, ml.findDatabaseSeries(39).iteratorEpisodes().count());
-		assertEquals(10, ml.findDatabaseSeries(102).iteratorEpisodes().count());
+		assertEquals(25, seriesByTitle(ml, "Steins;Gate").iteratorEpisodes().count());
+		assertEquals(51, seriesByTitle(ml, "Soul Eater").iteratorEpisodes().count());
+		assertEquals(10, seriesByTitle(ml, "KonoSuba").iteratorEpisodes().count());
 	}
 
 	@Test
@@ -197,23 +198,17 @@ public class TestIterators extends ClipCornBaseTest {
 	public void testIteratorChains() throws Exception {
 		CCMovieList ml = createExampleDB();
 
-		int x1 = ml
-				.iteratorElements()
-				.map(p -> p.getLocalID())
-				.sort(Integer::compare)
-				.reverse()
-				.filter(p -> p >= 0)
-				.unique()
-				.<Integer>cast().sum(Integer::sum, 0);
-		
-		assertEquals(893, x1);
+		var ids = ml.iteratorElements().map(ICCDatabaseStructureElement::getID).enumerate();
 
-		assertEquals(1, ml.iteratorMovies().map(p -> p.getLocalID()).sort(Integer::compare).firstOrNull().intValue());
-		assertEquals(1, (int)ml.iteratorMovies().map(p -> p.getLocalID()).autoMinOrDefault(-1));
-		assertEquals(101, ml.iteratorMovies().map(p -> p.getLocalID()).sort(Integer::compare).lastOrNull().intValue());
-		assertEquals(101, (int)ml.iteratorMovies().map(p -> p.getLocalID()).autoMaxOrDefault(-1));
-		assertEquals(102, ml.iteratorElements().map(p -> p.getLocalID()).sort(Integer::compare).lastOrNull().intValue());
-		assertEquals(102, (int)ml.iteratorElements().map(p -> p.getLocalID()).autoMaxOrDefault(-1));
+		// elements are inserted in creation order and UUIDv7 sorts by creation time
+		assertEquals(ml.getElementCount(), CCStreams.iterate(ids).unique().count());
+		assertEquals(CCStreams.iterate(ids).stringjoin(Object::toString, ";"), CCStreams.iterate(ids).autosort().stringjoin(Object::toString, ";"));
+
+		assertEquals(ids.get(0),              ml.iteratorElements().map(ICCDatabaseStructureElement::getID).autoMinOrDefault(CCUUID.EMPTY));
+		assertEquals(ids.get(ids.size() - 1), ml.iteratorElements().map(ICCDatabaseStructureElement::getID).autoMaxOrDefault(CCUUID.EMPTY));
+
+		assertEquals(ml.iteratorMovies().firstOrNull().getID(), ml.iteratorMovies().map(ICCDatabaseStructureElement::getID).autoMinOrDefault(CCUUID.EMPTY));
+		assertEquals(ml.iteratorMovies().lastOrNull().getID(),  ml.iteratorMovies().map(ICCDatabaseStructureElement::getID).autoMaxOrDefault(CCUUID.EMPTY));
 	}
 
 	@Test
@@ -224,25 +219,25 @@ public class TestIterators extends ClipCornBaseTest {
 		assertEquals(ml.iteratorElements().stringjoin(p -> p.getTitle(), "|"), ml.iteratorElements().unique().stringjoin(p -> p.getTitle(), "|"));
 		assertEquals(ml.iteratorPlayables().stringjoin(p -> p.title().get(), "|"), ml.iteratorPlayables().unique().stringjoin(p -> p.title().get(), "|"));
 
-		assertEquals(ml.iteratorMovies().map(p -> p.getLocalID()).stringjoin(p -> ""+p, "|"), ml.iteratorMovies().map(p -> p.getLocalID()).unique().stringjoin(p -> ""+p, "|"));
-		assertEquals(ml.iteratorElements().map(p -> p.getLocalID()).stringjoin(p -> ""+p, "|"), ml.iteratorElements().map(p -> p.getLocalID()).unique().stringjoin(p -> ""+p, "|"));
-		assertEquals(ml.iteratorEpisodes().map(p -> p.getLocalID()).stringjoin(p -> ""+p, "|"), ml.iteratorEpisodes().map(p -> p.getLocalID()).unique().stringjoin(p -> ""+p, "|"));
+		assertEquals(ml.iteratorMovies().map(p -> p.getID()).stringjoin(p -> ""+p, "|"), ml.iteratorMovies().map(p -> p.getID()).unique().stringjoin(p -> ""+p, "|"));
+		assertEquals(ml.iteratorElements().map(p -> p.getID()).stringjoin(p -> ""+p, "|"), ml.iteratorElements().map(p -> p.getID()).unique().stringjoin(p -> ""+p, "|"));
+		assertEquals(ml.iteratorEpisodes().map(p -> p.getID()).stringjoin(p -> ""+p, "|"), ml.iteratorEpisodes().map(p -> p.getID()).unique().stringjoin(p -> ""+p, "|"));
 		
 		assertEquals(ml.iteratorMovies().count(), ml.iteratorMovies().unique().count());
 		assertEquals(ml.iteratorElements().count(), ml.iteratorElements().unique().count());
 		assertEquals(ml.iteratorPlayables().count(), ml.iteratorPlayables().unique().count());
 
-		assertEquals(ml.iteratorMovies().count(), ml.iteratorMovies().map(p -> p.getLocalID()).unique().count());
-		assertEquals(ml.iteratorElements().count(), ml.iteratorElements().map(p -> p.getLocalID()).unique().count());
-		assertEquals(ml.iteratorEpisodes().count(), ml.iteratorEpisodes().map(p -> p.getLocalID()).unique().count());
+		assertEquals(ml.iteratorMovies().count(), ml.iteratorMovies().map(p -> p.getID()).unique().count());
+		assertEquals(ml.iteratorElements().count(), ml.iteratorElements().map(p -> p.getID()).unique().count());
+		assertEquals(ml.iteratorEpisodes().count(), ml.iteratorEpisodes().map(p -> p.getID()).unique().count());
 	}
 
 	@Test
 	public void testFlattenIterator() throws Exception {
 		CCMovieList ml = createExampleDB();
 
-		assertEquals(ml.iteratorEpisodes().stringjoin(p -> p.getLocalID()+"", ";"), ml.iteratorSeries().flatten(p -> p.iteratorEpisodes()).stringjoin(p -> p.getLocalID()+"", ";"));
-		assertEquals(ml.iteratorMovies().stringjoin(p -> p.getLocalID()+"", ";"), ml.iteratorMovies().flatten(p -> new SingleStream<>(p)).stringjoin(p -> p.getLocalID()+"", ";"));
+		assertEquals(ml.iteratorEpisodes().stringjoin(p -> p.getID()+"", ";"), ml.iteratorSeries().flatten(p -> p.iteratorEpisodes()).stringjoin(p -> p.getID()+"", ";"));
+		assertEquals(ml.iteratorMovies().stringjoin(p -> p.getID()+"", ";"), ml.iteratorMovies().flatten(p -> new SingleStream<>(p)).stringjoin(p -> p.getID()+"", ";"));
 	}
 
 	@Test

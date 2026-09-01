@@ -4,6 +4,7 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.elementProps.impl.EStringProp;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Tuple;
 
 import java.awt.image.BufferedImage;
@@ -13,10 +14,10 @@ public interface ICCCoveredElement extends ICCDatabaseStructureElement {
 
 	EStringProp title();
 
-	int         getLocalID();
+	CCUUID      getID();
 	String      getQualifiedTitle();
 
-	int getCoverID();
+	CCUUID getCoverID();
 	CCCoverData getCoverInfo();
 
 	BufferedImage getCover();

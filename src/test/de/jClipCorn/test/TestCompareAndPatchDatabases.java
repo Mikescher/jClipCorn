@@ -105,8 +105,9 @@ public class TestCompareAndPatchDatabases extends ClipCornBaseTest {
 		var xml_should = xout.outputString(export_should);
 		var xml_actual = xout.outputString(export_actual);
 
-		xml_should = RegExHelper.replaceAll("(adddate|mediainfo.mdate|mediainfo.cdate|history)=\"[^\"]*\"", xml_should, "...");
-		xml_actual = RegExHelper.replaceAll("(adddate|mediainfo.mdate|mediainfo.cdate|history)=\"[^\"]*\"", xml_actual, "...");
+		// coverid/covername are UUIDs and therefore differ between two independently built databases - coverhash still compares the content
+		xml_should = RegExHelper.replaceAll("(adddate|mediainfo.mdate|mediainfo.cdate|history|coverid|covername)=\"[^\"]*\"", xml_should, "...");
+		xml_actual = RegExHelper.replaceAll("(adddate|mediainfo.mdate|mediainfo.cdate|history|coverid|covername)=\"[^\"]*\"", xml_actual, "...");
 
 		assertEquals(xml_should, xml_actual);
 

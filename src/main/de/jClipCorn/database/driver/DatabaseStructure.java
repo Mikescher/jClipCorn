@@ -5,6 +5,9 @@ import de.jClipCorn.util.sqlwrapper.*;
 @SuppressWarnings("nls")
 public class DatabaseStructure
 {
+	public final static String SCHEMA_MAIN     = "main";
+	public final static String SCHEMA_USERDATA = "userdata";
+
 	private static final boolean NULLABLE = false;
 	private static final boolean NON_NULLABLE = true;
 
@@ -26,7 +29,8 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_HISTORY_OLD           = new CCSQLColDef("OLD",                  CCSQLType.VARCHAR,     NULLABLE);
 	public final static CCSQLColDef COL_HISTORY_NEW           = new CCSQLColDef("NEW",                  CCSQLType.VARCHAR,     NULLABLE);
 
-	public final static CCSQLColDef COL_MOV_LOCALID           = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_ID                = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_UD_MOV_ID             = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_NAME              = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_VIEWEDHISTORY     = new CCSQLColDef("VIEWED_HISTORY",       CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_ZYKLUS            = new CCSQLColDef("ZYKLUS",               CCSQLType.VARCHAR,     NON_NULLABLE);
@@ -57,7 +61,7 @@ public class DatabaseStructure
 	
 	public final static CCSQLColDef COL_MOV_SCORE             = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_SCORECOMMENT      = new CCSQLColDef("SCORECOMMENT",         CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_COVERID           = new CCSQLColDef("COVERID",              CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_COVERID           = new CCSQLColDef("COVERID",              CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_MI_FILESIZE       = new CCSQLColDef("MEDIAINFO.FILESIZE",   CCSQLType.BIGINT,      NULLABLE);
 	public final static CCSQLColDef COL_MOV_MI_CDATE          = new CCSQLColDef("MEDIAINFO.CDATE",      CCSQLType.BIGINT,      NULLABLE);
 	public final static CCSQLColDef COL_MOV_MI_MDATE          = new CCSQLColDef("MEDIAINFO.MDATE",      CCSQLType.BIGINT,      NULLABLE);
@@ -83,7 +87,8 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_MOV_ANIMESEASON       = new CCSQLColDef("ANIMESEASON",          CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_ANIMESTUDIO       = new CCSQLColDef("ANIMESTUDIO",          CCSQLType.VARCHAR,     NON_NULLABLE);
 
-	public final static CCSQLColDef COL_SER_LOCALID           = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_ID                = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_UD_SER_ID             = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_NAME              = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_GENRE             = new CCSQLColDef("GENRE",                CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_ONLINESCORE_NUM   = new CCSQLColDef("ONLINESCORE_NUM",      CCSQLType.TINYINT,     NON_NULLABLE);
@@ -93,23 +98,25 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_SER_GROUPS            = new CCSQLColDef("GROUPS",               CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_SCORE             = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_SCORECOMMENT      = new CCSQLColDef("SCORECOMMENT",         CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SER_COVERID           = new CCSQLColDef("COVERID",              CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_COVERID           = new CCSQLColDef("COVERID",              CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_TAGS              = new CCSQLColDef("TAGS",                 CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_SPECIALVERSION    = new CCSQLColDef("SPECIALVERSION",       CCSQLType.VARCHAR,     NON_NULLABLE);
 
-	public final static CCSQLColDef COL_SEAS_LOCALID          = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SEAS_SERIESID         = new CCSQLColDef("SERIESID",             CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SEAS_ID               = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_UD_SEAS_ID            = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SEAS_SERIESID         = new CCSQLColDef("SERIESID",             CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_YEAR             = new CCSQLColDef("SEASONYEAR",           CCSQLType.SMALLINT,    NULLABLE);
-	public final static CCSQLColDef COL_SEAS_COVERID          = new CCSQLColDef("COVERID",              CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SEAS_COVERID          = new CCSQLColDef("COVERID",              CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_SCORE            = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_SCORECOMMENT     = new CCSQLColDef("SCORECOMMENT",         CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_ONLINEREF        = new CCSQLColDef("ONLINEREF",            CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_ANIMESEASON      = new CCSQLColDef("ANIMESEASON",          CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_ANIMESTUDIO      = new CCSQLColDef("ANIMESTUDIO",          CCSQLType.VARCHAR,     NON_NULLABLE);
 
-	public final static CCSQLColDef COL_EPIS_LOCALID          = new CCSQLColDef("LOCALID",              CCSQLType.INTEGER,     NON_NULLABLE);
-	public final static CCSQLColDef COL_EPIS_SEASONID         = new CCSQLColDef("SEASONID",             CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_EPIS_ID               = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_UD_EPIS_ID            = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_EPIS_SEASONID         = new CCSQLColDef("SEASONID",             CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_EPIS_EPISODE          = new CCSQLColDef("EPISODE",              CCSQLType.SMALLINT,    NON_NULLABLE);
 	public final static CCSQLColDef COL_EPIS_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_EPIS_VIEWEDHISTORY    = new CCSQLColDef("VIEWED_HISTORY",       CCSQLType.VARCHAR,     NON_NULLABLE);
@@ -152,7 +159,7 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_GRPS_PARENT           = new CCSQLColDef("PARENTGROUP",          CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_GRPS_VISIBLE          = new CCSQLColDef("VISIBLE",              CCSQLType.BIT,         NON_NULLABLE);
 
-	public final static CCSQLColDef COL_CVRS_ID               = new CCSQLColDef("ID",                   CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_CVRS_ID               = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_CVRS_FILENAME         = new CCSQLColDef("FILENAME",             CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_CVRS_WIDTH            = new CCSQLColDef("WIDTH",                CCSQLType.INTEGER,     NON_NULLABLE);
 	public final static CCSQLColDef COL_CVRS_HEIGHT           = new CCSQLColDef("HEIGHT",               CCSQLType.INTEGER,     NON_NULLABLE);
@@ -170,15 +177,16 @@ public class DatabaseStructure
 	//--------------------------------------------------------------------------------------------------
 
 	public final static CCSQLTableDef TAB_MOVIES = new CCSQLTableDef(
+			SCHEMA_MAIN,
 			"MOVIES",
-			COL_MOV_LOCALID,
+			COL_MOV_ID,
 			new CCSQLColDef[]
 			{
-				COL_MOV_NAME, COL_MOV_VIEWEDHISTORY, COL_MOV_ZYKLUS, COL_MOV_ZYKLUSNUMBER, COL_MOV_LANGUAGE, COL_MOV_SUBTITLES,
+				COL_MOV_NAME, COL_MOV_ZYKLUS, COL_MOV_ZYKLUSNUMBER, COL_MOV_LANGUAGE, COL_MOV_SUBTITLES,
 				COL_MOV_GENRE, COL_MOV_LENGTH, COL_MOV_ADDDATE, COL_MOV_ONLINESCORE_NUM, COL_MOV_ONLINESCORE_DENOM, COL_MOV_FSK, COL_MOV_FORMAT,
-				COL_MOV_MOVIEYEAR, COL_MOV_ONLINEREF, COL_MOV_GROUPS, COL_MOV_FILESIZE, COL_MOV_TAGS,
+				COL_MOV_MOVIEYEAR, COL_MOV_ONLINEREF, COL_MOV_GROUPS, COL_MOV_FILESIZE,
 				COL_MOV_PARTS,
-				COL_MOV_SCORE, COL_MOV_SCORECOMMENT, COL_MOV_COVERID,
+				COL_MOV_COVERID,
 				COL_MOV_SPECIALVERSION, COL_MOV_ANIMESEASON, COL_MOV_ANIMESTUDIO,
 				COL_MOV_MI_FILESIZE, COL_MOV_MI_CDATE, COL_MOV_MI_MDATE, COL_MOV_MI_AFORMAT, COL_MOV_MI_VFORMAT, COL_MOV_MI_WIDTH,
 				COL_MOV_MI_HEIGHT, COL_MOV_MI_FRAMERATE, COL_MOV_MI_DURATION, COL_MOV_MI_BITDEPTH, COL_MOV_MI_BITRATE,
@@ -191,12 +199,13 @@ public class DatabaseStructure
 			});
 
 	public final static CCSQLTableDef TAB_SERIES = new CCSQLTableDef(
+			SCHEMA_MAIN,
 			"SERIES",
-			COL_SER_LOCALID,
+			COL_SER_ID,
 			new CCSQLColDef[]
 			{
 				COL_SER_NAME, COL_SER_GENRE, COL_SER_ONLINESCORE_NUM, COL_SER_ONLINESCORE_DENOM, COL_SER_FSK, COL_SER_ONLINEREF,
-				COL_SER_GROUPS, COL_SER_SCORE, COL_SER_SCORECOMMENT, COL_SER_COVERID, COL_SER_TAGS,
+				COL_SER_GROUPS, COL_SER_COVERID,
 				COL_SER_SPECIALVERSION
 			},
 			new CCSQLFKey[]
@@ -205,28 +214,29 @@ public class DatabaseStructure
 			});
 
 	public final static CCSQLTableDef TAB_SEASONS = new CCSQLTableDef(
+			SCHEMA_MAIN,
 			"SEASONS",
-			COL_SEAS_LOCALID,
+			COL_SEAS_ID,
 			new CCSQLColDef[]
 			{
 				COL_SEAS_SERIESID,
-				COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERID, COL_SEAS_SCORE, COL_SEAS_SCORECOMMENT, COL_SEAS_ONLINEREF,
+				COL_SEAS_NAME, COL_SEAS_YEAR, COL_SEAS_COVERID, COL_SEAS_ONLINEREF,
 				COL_SEAS_ANIMESEASON, COL_SEAS_ANIMESTUDIO
 			},
 			new CCSQLFKey[]
 			{
-				new CCSQLFKey(COL_SEAS_SERIESID, TAB_SERIES, COL_SER_LOCALID),
+				new CCSQLFKey(COL_SEAS_SERIESID, TAB_SERIES, COL_SER_ID),
 			});
 
 	public final static CCSQLTableDef TAB_EPISODES = new CCSQLTableDef(
+			SCHEMA_MAIN,
 			"EPISODES",
-			COL_EPIS_LOCALID,
+			COL_EPIS_ID,
 			new CCSQLColDef[]
 			{
-				COL_EPIS_SEASONID, COL_EPIS_EPISODE, COL_EPIS_NAME, COL_EPIS_VIEWEDHISTORY,
-				COL_EPIS_LENGTH, COL_EPIS_FORMAT, COL_EPIS_FILESIZE, COL_EPIS_PART_1, COL_EPIS_TAGS,
+				COL_EPIS_SEASONID, COL_EPIS_EPISODE, COL_EPIS_NAME,
+				COL_EPIS_LENGTH, COL_EPIS_FORMAT, COL_EPIS_FILESIZE, COL_EPIS_PART_1,
 				COL_EPIS_ADDDATE, COL_EPIS_LANGUAGE, COL_EPIS_SUBTITLES, COL_EPIS_MI_FILESIZE,
-				COL_EPIS_SCORE, COL_EPIS_SCORECOMMENT,
 				COL_EPIS_MI_CDATE, COL_EPIS_MI_MDATE, COL_EPIS_MI_AFORMAT, COL_EPIS_MI_VFORMAT, COL_EPIS_MI_WIDTH,
 				COL_EPIS_MI_HEIGHT, COL_EPIS_MI_FRAMERATE, COL_EPIS_MI_DURATION, COL_EPIS_MI_BITDEPTH, COL_EPIS_MI_BITRATE,
 				COL_EPIS_MI_FRAMECOUNT, COL_EPIS_MI_ACHANNELS, COL_EPIS_MI_VCODEC, COL_EPIS_MI_ACODEC, COL_EPIS_MI_SAMPLERATE, COL_EPIS_MI_CHECKSUM,
@@ -234,10 +244,11 @@ public class DatabaseStructure
 			},
 			new CCSQLFKey[]
 			{
-				new CCSQLFKey(COL_EPIS_SEASONID, TAB_SEASONS, COL_SEAS_LOCALID)
+				new CCSQLFKey(COL_EPIS_SEASONID, TAB_SEASONS, COL_SEAS_ID)
 			});
 
 	public final static CCSQLTableDef TAB_INFO = new CCSQLTableDef(
+			SCHEMA_MAIN,
 			"INFO",
 			COL_INFO_KEY,
 			new CCSQLColDef[]
@@ -250,6 +261,7 @@ public class DatabaseStructure
 			});
 
 	public final static CCSQLTableDef TAB_GROUPS = new CCSQLTableDef(
+			SCHEMA_MAIN,
 			"GROUPS",
 			COL_GRPS_NAME,
 			new CCSQLColDef[]
@@ -262,6 +274,7 @@ public class DatabaseStructure
 			});
 
 	public final static CCSQLTableDef TAB_COVERS = new CCSQLTableDef(
+			SCHEMA_MAIN,
 			"COVERS",
 			COL_CVRS_ID,
 			new CCSQLColDef[]
@@ -275,6 +288,7 @@ public class DatabaseStructure
 			});
 
 	public final static CCSQLTableDef TAB_HISTORY = new CCSQLTableDef(
+			SCHEMA_MAIN,
 			"HISTORY",
 			null,
 			new CCSQLColDef[]
@@ -288,6 +302,7 @@ public class DatabaseStructure
 			});
 
 	public final static CCSQLTableDef TAB_TEMP = new CCSQLTableDef(
+			SCHEMA_MAIN,
 			"TEMP",
 			COL_TEMP_KEY,
 			new CCSQLColDef[]
@@ -300,6 +315,7 @@ public class DatabaseStructure
 			});
 
 	public final static CCSQLTableDef TAB_FILTERS = new CCSQLTableDef(
+			SCHEMA_USERDATA,
 			"FILTERS",
 			COL_FILT_ID,
 			new CCSQLColDef[]
@@ -312,6 +328,7 @@ public class DatabaseStructure
 			});
 
 	public final static CCSQLTableDef TAB_PROPERTIES = new CCSQLTableDef(
+			SCHEMA_USERDATA,
 			"PROPERTIES",
 			COL_PROP_KEY,
 			new CCSQLColDef[]
@@ -325,9 +342,108 @@ public class DatabaseStructure
 
 	//--------------------------------------------------------------------------------------------------
 
-	public final static CCSQLTableDef[] TABLES = new CCSQLTableDef[]
+	public final static CCSQLTableDef TAB_UD_MOVIES = new CCSQLTableDef(
+			SCHEMA_USERDATA,
+			"MOVIES",
+			COL_UD_MOV_ID,
+			new CCSQLColDef[]
+			{
+				COL_MOV_VIEWEDHISTORY, COL_MOV_TAGS, COL_MOV_SCORE, COL_MOV_SCORECOMMENT
+			},
+			new CCSQLFKey[]
+			{
+
+			});
+
+	public final static CCSQLTableDef TAB_UD_SERIES = new CCSQLTableDef(
+			SCHEMA_USERDATA,
+			"SERIES",
+			COL_UD_SER_ID,
+			new CCSQLColDef[]
+			{
+				COL_SER_TAGS, COL_SER_SCORE, COL_SER_SCORECOMMENT
+			},
+			new CCSQLFKey[]
+			{
+
+			});
+
+	public final static CCSQLTableDef TAB_UD_SEASONS = new CCSQLTableDef(
+			SCHEMA_USERDATA,
+			"SEASONS",
+			COL_UD_SEAS_ID,
+			new CCSQLColDef[]
+			{
+				COL_SEAS_SCORE, COL_SEAS_SCORECOMMENT
+			},
+			new CCSQLFKey[]
+			{
+
+			});
+
+	public final static CCSQLTableDef TAB_UD_EPISODES = new CCSQLTableDef(
+			SCHEMA_USERDATA,
+			"EPISODES",
+			COL_UD_EPIS_ID,
+			new CCSQLColDef[]
+			{
+				COL_EPIS_VIEWEDHISTORY, COL_EPIS_TAGS, COL_EPIS_SCORE, COL_EPIS_SCORECOMMENT
+			},
+			new CCSQLFKey[]
+			{
+
+			});
+
+	public final static CCSQLTableDef TAB_UD_INFO = new CCSQLTableDef(
+			SCHEMA_USERDATA,
+			"INFO",
+			COL_INFO_KEY,
+			new CCSQLColDef[]
+			{
+				COL_INFO_VALUE
+			},
+			new CCSQLFKey[]
+			{
+
+			});
+
+	public final static CCSQLTableDef TAB_UD_TEMP = new CCSQLTableDef(
+			SCHEMA_USERDATA,
+			"TEMP",
+			COL_TEMP_KEY,
+			new CCSQLColDef[]
+			{
+				COL_TEMP_VALUE
+			},
+			new CCSQLFKey[]
+			{
+
+			});
+
+	public final static CCSQLTableDef TAB_UD_HISTORY = new CCSQLTableDef(
+			SCHEMA_USERDATA,
+			"HISTORY",
+			null,
+			new CCSQLColDef[]
+			{
+				COL_HISTORY_TABLE, COL_HISTORY_ID, COL_HISTORY_DATE, COL_HISTORY_ACTION,
+				COL_HISTORY_FIELD, COL_HISTORY_OLD, COL_HISTORY_NEW
+			},
+			new CCSQLFKey[]
+			{
+
+			});
+
+	//--------------------------------------------------------------------------------------------------
+
+	public final static CCSQLTableDef[] TABLES_MAIN = new CCSQLTableDef[]
 	{
-		TAB_MOVIES, TAB_SERIES, TAB_SEASONS, TAB_EPISODES, TAB_INFO, TAB_GROUPS, TAB_COVERS, TAB_HISTORY, TAB_TEMP, TAB_FILTERS, TAB_PROPERTIES
+		TAB_MOVIES, TAB_SERIES, TAB_SEASONS, TAB_EPISODES, TAB_INFO, TAB_GROUPS, TAB_COVERS, TAB_HISTORY, TAB_TEMP
+	};
+
+	public final static CCSQLTableDef[] TABLES_USERDATA = new CCSQLTableDef[]
+	{
+		TAB_UD_MOVIES, TAB_UD_SERIES, TAB_UD_SEASONS, TAB_UD_EPISODES, TAB_UD_INFO, TAB_UD_TEMP, TAB_UD_HISTORY, TAB_FILTERS, TAB_PROPERTIES
 	};
 
 	//--------------------------------------------------------------------------------------------------
@@ -338,14 +454,18 @@ public class DatabaseStructure
 	public final static CCSQLKVKey INFOKEY_USERNAME     = new CCSQLKVKey("CREATION_USERNAME");                      //$NON-NLS-1$
 	public final static CCSQLKVKey INFOKEY_DUUID        = new CCSQLKVKey("DATABASE_UNIVERSALLY_UNIQUE_IDENTIFIER"); //$NON-NLS-1$
 	public final static CCSQLKVKey INFOKEY_HISTORY      = new CCSQLKVKey("HISTORY_ENABLED");                        //$NON-NLS-1$
-	public final static CCSQLKVKey INFOKEY_LASTID       = new CCSQLKVKey("LAST_ID");                                //$NON-NLS-1$
-	public final static CCSQLKVKey INFOKEY_LASTCOVERID  = new CCSQLKVKey("LAST_COVERID");                           //$NON-NLS-1$
-
-	public final static CCSQLKVKey INFOKEY_VERSION_MAINDB = new CCSQLKVKey("VERSION_MAINDB");                       //$NON-NLS-1$
+	public final static CCSQLKVKey INFOKEY_VERSION_MAINDB = new CCSQLKVKey("VERSION_MAINDB");                        //$NON-NLS-1$
+	public final static CCSQLKVKey INFOKEY_MAINDB_DUUID   = new CCSQLKVKey("MAINDB_DUUID");                          //$NON-NLS-1$
 
 	public final static CCSQLKVKey[] INFOKEYS = new CCSQLKVKey[]
 	{
-		INFOKEY_DBVERSION, INFOKEY_DATE, INFOKEY_TIME, INFOKEY_USERNAME, INFOKEY_DUUID, INFOKEY_HISTORY, INFOKEY_LASTID, INFOKEY_LASTCOVERID
+		INFOKEY_DBVERSION, INFOKEY_DATE, INFOKEY_TIME, INFOKEY_USERNAME, INFOKEY_DUUID
+	};
+
+	public final static CCSQLKVKey[] INFOKEYS_USERDATA = new CCSQLKVKey[]
+	{
+		INFOKEY_DBVERSION, INFOKEY_DATE, INFOKEY_TIME, INFOKEY_USERNAME, INFOKEY_DUUID,
+		INFOKEY_HISTORY, INFOKEY_MAINDB_DUUID, INFOKEY_VERSION_MAINDB
 	};
 
 }

@@ -133,7 +133,7 @@ public class UserDataProblem {
 		
 		CCMovie foundM;
 		if (! newdata.getZyklus().getTitle().isEmpty() && (foundM = ml.findfirst(newdata.getZyklus())) != null) {
-			if (movieSource == null || movieSource.getLocalID() != foundM.getLocalID()) {
+			if (movieSource == null || !movieSource.getID().equals(foundM.getID())) {
 				ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUS_ALREADY_EXISTS));
 			}
 		}
@@ -261,7 +261,7 @@ public class UserDataProblem {
 			if (StringUtils.equalsIgnoreCase(imov.getTitle(), newdata.getTitle())
 			&& 	StringUtils.equalsIgnoreCase(imov.getZyklus().getTitle(), newdata.getZyklus().getTitle())
 			&&  imov.getLanguage() == newdata.getLanguage()) {
-				if (movieSource == null || movieSource.getLocalID() != imov.getLocalID()) {
+				if (movieSource == null || !movieSource.getID().equals(imov.getID())) {
 					ret.add(new UserDataProblem(PROBLEM_TITLE_ALREADYEXISTS));
 				}
 				break;
@@ -273,7 +273,7 @@ public class UserDataProblem {
 		for (CCDatabaseElement idel : ml.iteratorElements()) {
 			if (idel.isMovie()) {
 				if (isPathIncluded(idel.asMovie(), p0, p1, p2, p3, p4, p5)) {
-					if (movieSource == null || movieSource.getLocalID() != idel.getLocalID()) {
+					if (movieSource == null || !movieSource.getID().equals(idel.getID())) {
 						ret.add(new UserDataProblem(PROBLEM_FILE_ALREADYEXISTS));
 					}
 					break;

@@ -39,20 +39,20 @@ public class SeriesMatch extends ComparisonMatch {
 	}
 
 	public SeasonMatch addSeasonLocalOnly(CCSeason loc) {
-		var docopy = State.Ruleset.ShouldAddLocal(loc.getLocalID());
+		var docopy = State.Ruleset.ShouldAddLocal(loc.getID());
 		var match = new SeasonMatch(this, loc, null, false, false, docopy, false, false, new ArrayList<>());
 		Seasons.add(match);
 		State.AllSeasons.add(match);
-		State.ProgressCallback.stepSub(1, loc.getLocalID() + "");
+		State.ProgressCallback.stepSub(1, loc.getID() + "");
 		return match;
 	}
 
 	public SeasonMatch addSeasonExternOnly(CCSeason ext) {
-		var dodel = State.Ruleset.ShouldDeleteExtern(ext.getLocalID());
+		var dodel = State.Ruleset.ShouldDeleteExtern(ext.getID());
 		var match = new SeasonMatch(this, null, ext, false, false, false, dodel, false, new ArrayList<>());
 		Seasons.add(match);
 		State.AllSeasons.add(match);
-		State.ProgressCallback.stepSub(1, ext.getLocalID() + "");
+		State.ProgressCallback.stepSub(1, ext.getID() + "");
 		return match;
 	}
 
@@ -60,24 +60,24 @@ public class SeriesMatch extends ComparisonMatch {
 		var match = new SeasonMatch(this, null, ext, false, false, false, false, true, new ArrayList<>());
 		Seasons.add(match);
 		State.AllSeasons.add(match);
-		State.ProgressCallback.stepSub(1, ext.getLocalID() + "");
+		State.ProgressCallback.stepSub(1, ext.getID() + "");
 		return match;
 	}
 
 	public SeasonMatch addSeasonMatch(CCSeason loc, CCSeason ext) {
-		var updateCover = State.Ruleset.ShouldUpdateCover(loc.getLocalID(), ext.getLocalID()) && !Str.equals(loc.getCoverInfo().Checksum, ext.getCoverInfo().Checksum);
+		var updateCover = State.Ruleset.ShouldUpdateCover(loc.getID(), ext.getID()) && !Str.equals(loc.getCoverInfo().Checksum, ext.getCoverInfo().Checksum);
 
 		var propLoc = CCStreams.iterate(loc.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 		var propExt = CCStreams.iterate(ext.getProperties()).filter(e -> e.getValueType() == EPropertyType.OBJECTIVE_METADATA);
 		var diffMeta = CCStreams.zip(propLoc, propExt)
 				                .filter(p -> !Str.equals(p.Item1.serializeToString(), p.Item2.serializeToString()))
-				                .filter(p -> State.Ruleset.ShouldUpdateMetadata(loc.getLocalID(), ext.getLocalID(), p.Item1, p.Item2))
+				                .filter(p -> State.Ruleset.ShouldUpdateMetadata(loc.getID(), ext.getID(), p.Item1, p.Item2))
 				                .toList();
 
 		var match = new SeasonMatch(this, loc, ext, !diffMeta.isEmpty(), updateCover, false, false, false, diffMeta);
 		Seasons.add(match);
 		State.AllSeasons.add(match);
-		State.ProgressCallback.stepSub(2, loc.getLocalID() + "|" + ext.getLocalID());
+		State.ProgressCallback.stepSub(2, loc.getID() + "|" + ext.getID());
 		return match;
 	}
 

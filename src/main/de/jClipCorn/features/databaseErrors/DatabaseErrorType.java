@@ -68,7 +68,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_MEDIAINFO_FILE_CHANGED             = new DatabaseErrorType(61, null);
 	public final static DatabaseErrorType ERROR_DB_EXCEPTION                       = new DatabaseErrorType(62, null);
 	public final static DatabaseErrorType ERROR_DB_DUPLICATE_ID                    = new DatabaseErrorType(63, null);
-	public final static DatabaseErrorType ERROR_DB_TOO_LARGE_ID                    = new DatabaseErrorType(64, null);
+	//public final static DatabaseErrorType ERROR_DB_TOO_LARGE_ID                  = new DatabaseErrorType(64, null);
 	//public final static DatabaseErrorType ERROR_DB_TYPE_SID_MISMATCH             = new DatabaseErrorType(65, null);
 	public final static DatabaseErrorType ERROR_DB_MISSING_SERIES                  = new DatabaseErrorType(66, null);
 	public final static DatabaseErrorType ERROR_DB_MISSING_SEASON                  = new DatabaseErrorType(67, null);
@@ -84,7 +84,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_DUPLICATE_FILE                     = new DatabaseErrorType(77, null);
 	public final static DatabaseErrorType ERROR_INVALID_HASH                       = new DatabaseErrorType(78, null);
 	public final static DatabaseErrorType ERROR_IMPOSSIBLE_HASH                    = new DatabaseErrorType(79, null);
-	public final static DatabaseErrorType ERROR_DB_TOO_LARGE_COVERID               = new DatabaseErrorType(80, null);
+	//public final static DatabaseErrorType ERROR_DB_TOO_LARGE_COVERID             = new DatabaseErrorType(80, null);
 	public final static DatabaseErrorType ERROR_SUBTITLE_MUTED                     = new DatabaseErrorType(81, null);
 	public final static DatabaseErrorType ERROR_INVALID_ONLINESCORE                = new DatabaseErrorType(82, null);
 	public final static DatabaseErrorType ERROR_COMMENT_WITHOUT_RATING             = new DatabaseErrorType(83, null);
@@ -98,6 +98,7 @@ public class DatabaseErrorType {
 	public final static DatabaseErrorType ERROR_POSTER_ORPHANED                    = new DatabaseErrorType(91, DatabaseAutofixer::fixError_OrphanedFile);
 	public final static DatabaseErrorType ERROR_CHECKSUM_MISSING                  = new DatabaseErrorType(92, DatabaseAutofixer::fixError_ChecksumMissing);
 	public final static DatabaseErrorType ERROR_NOYEARSET                         = new DatabaseErrorType(93, null);
+	public final static DatabaseErrorType ERROR_DB_MALFORMED_ID                   = new DatabaseErrorType(94, null);
 
 	private final int type;
 

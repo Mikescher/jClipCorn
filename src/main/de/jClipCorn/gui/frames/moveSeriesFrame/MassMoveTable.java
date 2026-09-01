@@ -10,6 +10,7 @@ import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
+import de.jClipCorn.util.datatypes.CCUUID;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ import java.awt.*;
 public class MassMoveTable extends JCCSimpleTable<MassMoveEntry> {
 
 	@DesignCreate
-	private static MassMoveTable designCreate() { return new MassMoveTable(new MoveSeriesDialog(new JFrame(), new CCSeries(CCMovieList.createStub(), 0)), false, false); }
+	private static MassMoveTable designCreate() { return new MassMoveTable(new MoveSeriesDialog(new JFrame(), new CCSeries(CCMovieList.createStub(), CCUUID.EMPTY)), false, false); }
 
 	public MassMoveTable(@NotNull ICCWindow frame, boolean showMovCol, boolean showSerCol) {
 		super(frame, Tuple.Create(showMovCol, showSerCol));

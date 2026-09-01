@@ -84,7 +84,7 @@ public class CDFWorkerPatch
 
 			if (e.getNeedsCreateNew())
 			{
-				var idvar = "{{created:id:mov:"+e.MovieLocal.LocalID.get()+"}}";
+				var idvar = "{{created:id:mov:"+e.MovieLocal.ID.get()+"}}";
 
 				var xaction = new Element("action");
 				xaction.setAttribute("ctr", String.valueOf(ctr));
@@ -135,7 +135,7 @@ public class CDFWorkerPatch
 					for (int i = 0; i < e.MovieLocal.getPartcount(); i++)
 					{
 						var source = e.MovieLocal.Parts.get(i).toFSPath(state.ccpropsLocal());
-						var newfilename = "m_" + e.MovieLocal.LocalID.get() + "_" + i + "." + source.getExtension();
+						var newfilename = "m_" + e.MovieLocal.ID.get() + "_" + i + "." + source.getExtension();
 						var target = datadir.append(newfilename);
 
 						var cmd = new Element("copyvideo");
@@ -192,7 +192,7 @@ public class CDFWorkerPatch
 				cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 				cmd1.setAttribute("type", "MOVIE");
 				cmd1.setAttribute("deletefiles", noVideo ? "false" : "true");
-				cmd1.setAttribute("id", String.valueOf(e.MovieExtern.getLocalID()));
+				cmd1.setAttribute("id", String.valueOf(e.MovieExtern.getID()));
 				xaction.addContent(cmd1);
 			}
 			else
@@ -212,7 +212,7 @@ public class CDFWorkerPatch
 						var cmd = new Element("set");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "MOVIE");
-						cmd.setAttribute("id", String.valueOf(e.MovieExtern.getLocalID()));
+						cmd.setAttribute("id", String.valueOf(e.MovieExtern.getID()));
 						cmd.setAttribute("prop", meta.Item2.getName());
 						cmd.setAttribute("value_old", meta.Item2.serializeToString());
 						cmd.setAttribute("value_new", meta.Item1.serializeToString());
@@ -240,7 +240,7 @@ public class CDFWorkerPatch
 					var cmd1 = new Element("replacecover");
 					cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 					cmd1.setAttribute("type", "MOVIE");
-					cmd1.setAttribute("id", String.valueOf(e.MovieExtern.getLocalID()));
+					cmd1.setAttribute("id", String.valueOf(e.MovieExtern.getID()));
 					cmd1.setAttribute("source", newfilename);
 					cmd1.setAttribute("sourcehash", coverdata.Checksum);
 					xaction.addContent(cmd1);
@@ -266,20 +266,20 @@ public class CDFWorkerPatch
 						var cmd1 = new Element("clearvideos");
 						cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd1.setAttribute("type", "MOVIE");
-						cmd1.setAttribute("id", String.valueOf(e.MovieExtern.getLocalID()));
+						cmd1.setAttribute("id", String.valueOf(e.MovieExtern.getID()));
 						xaction.addContent(cmd1);
 					}
 
 					for (int i = 0; i < e.MovieLocal.getPartcount(); i++)
 					{
 						var source = e.MovieLocal.Parts.get(i).toFSPath(state.ccpropsLocal());
-						var newfilename = "m_" + e.MovieLocal.LocalID.get() + "_" + i + "." + source.getExtension();
+						var newfilename = "m_" + e.MovieLocal.ID.get() + "_" + i + "." + source.getExtension();
 						var target = datadir.append(newfilename);
 
 						var cmd = new Element("copyvideo");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "MOVIE");
-						cmd.setAttribute("id", String.valueOf(e.MovieExtern.getLocalID()));
+						cmd.setAttribute("id", String.valueOf(e.MovieExtern.getID()));
 						cmd.setAttribute("index", String.valueOf(i));
 						cmd.setAttribute("source", newfilename);
 						cmd.setAttribute("filename", source.getFilenameWithExt());
@@ -300,7 +300,7 @@ public class CDFWorkerPatch
 						var cmd = new Element("set");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "MOVIE");
-						cmd.setAttribute("id", String.valueOf(e.MovieExtern.getLocalID()));
+						cmd.setAttribute("id", String.valueOf(e.MovieExtern.getID()));
 						cmd.setAttribute("prop", prop.Item2.getName());
 						cmd.setAttribute("value_old", prop.Item2.serializeToString());
 						cmd.setAttribute("value_new", prop.Item1.serializeToString());
@@ -312,7 +312,7 @@ public class CDFWorkerPatch
 						var cmd = new Element("calc_mediainfo_subjective");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "MOVIE");
-						cmd.setAttribute("id", String.valueOf(e.MovieExtern.getLocalID()));
+						cmd.setAttribute("id", String.valueOf(e.MovieExtern.getID()));
 						xaction.addContent(cmd);
 					}
 				}
@@ -335,7 +335,7 @@ public class CDFWorkerPatch
 
 			if (e.getNeedsCreateNew())
 			{
-				var idvar = "{{created:id:ser:"+e.SeriesLocal.LocalID.get()+"}}";
+				var idvar = "{{created:id:ser:"+e.SeriesLocal.ID.get()+"}}";
 
 				var xaction = new Element("action");
 				xaction.setAttribute("ctr", String.valueOf(ctr));
@@ -410,7 +410,7 @@ public class CDFWorkerPatch
 				var cmd1 = new Element("delete");
 				cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 				cmd1.setAttribute("type", "SERIES");
-				cmd1.setAttribute("id", String.valueOf(e.SeriesExtern.getLocalID()));
+				cmd1.setAttribute("id", String.valueOf(e.SeriesExtern.getID()));
 				xaction.addContent(cmd1);
 			}
 			else
@@ -430,7 +430,7 @@ public class CDFWorkerPatch
 						var cmd = new Element("set");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "SERIES");
-						cmd.setAttribute("id", String.valueOf(e.SeriesExtern.getLocalID()));
+						cmd.setAttribute("id", String.valueOf(e.SeriesExtern.getID()));
 						cmd.setAttribute("prop", meta.Item2.getName());
 						cmd.setAttribute("value_old", meta.Item2.serializeToString());
 						cmd.setAttribute("value_new", meta.Item1.serializeToString());
@@ -458,7 +458,7 @@ public class CDFWorkerPatch
 					var cmd1 = new Element("replacecover");
 					cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 					cmd1.setAttribute("type", "SERIES");
-					cmd1.setAttribute("id", String.valueOf(e.SeriesExtern.getLocalID()));
+					cmd1.setAttribute("id", String.valueOf(e.SeriesExtern.getID()));
 					cmd1.setAttribute("source", newfilename);
 					cmd1.setAttribute("sourcehash", coverdata.Checksum);
 					xaction.addContent(cmd1);
@@ -488,8 +488,8 @@ public class CDFWorkerPatch
 
 			if (e.getNeedsCreateNew())
 			{
-				var idparent = (e.Parent.SeriesExtern != null) ? String.valueOf(e.Parent.SeriesExtern.LocalID.get()) : ("{{created:id:ser:"+e.Parent.SeriesLocal.LocalID.get()+"}}");
-				var idvar    = "{{created:id:sea:"+e.SeasonLocal.LocalID.get()+"}}";
+				var idparent = (e.Parent.SeriesExtern != null) ? String.valueOf(e.Parent.SeriesExtern.ID.get()) : ("{{created:id:ser:"+e.Parent.SeriesLocal.ID.get()+"}}");
+				var idvar    = "{{created:id:sea:"+e.SeasonLocal.ID.get()+"}}";
 
 				var xaction = new Element("action");
 				xaction.setAttribute("ctr", String.valueOf(ctr));
@@ -550,7 +550,7 @@ public class CDFWorkerPatch
 				var cmd1 = new Element("delete");
 				cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 				cmd1.setAttribute("type", "SEASON");
-				cmd1.setAttribute("id", String.valueOf(e.SeasonExtern.getLocalID()));
+				cmd1.setAttribute("id", String.valueOf(e.SeasonExtern.getID()));
 				xaction.addContent(cmd1);
 			}
 			else
@@ -570,7 +570,7 @@ public class CDFWorkerPatch
 						var cmd = new Element("set");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "SEASON");
-						cmd.setAttribute("id", String.valueOf(e.SeasonExtern.getLocalID()));
+						cmd.setAttribute("id", String.valueOf(e.SeasonExtern.getID()));
 						cmd.setAttribute("prop", meta.Item2.getName());
 						cmd.setAttribute("value_old", meta.Item2.serializeToString());
 						cmd.setAttribute("value_new", meta.Item1.serializeToString());
@@ -598,7 +598,7 @@ public class CDFWorkerPatch
 					var cmd1 = new Element("replacecover");
 					cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 					cmd1.setAttribute("type", "SEASON");
-					cmd1.setAttribute("id", String.valueOf(e.SeasonExtern.getLocalID()));
+					cmd1.setAttribute("id", String.valueOf(e.SeasonExtern.getID()));
 					cmd1.setAttribute("source", newfilename);
 					cmd1.setAttribute("sourcehash", coverdata.Checksum);
 					xaction.addContent(cmd1);
@@ -628,8 +628,8 @@ public class CDFWorkerPatch
 
 			if (e.getNeedsCreateNew())
 			{
-				var idparent = (e.Parent.SeasonExtern != null) ? String.valueOf(e.Parent.SeasonExtern.LocalID.get()) : ("{{created:id:sea:"+e.Parent.SeasonLocal.LocalID.get()+"}}");
-				var idvar = "{{created:id:epi:"+e.EpisodeLocal.LocalID.get()+"}}";
+				var idparent = (e.Parent.SeasonExtern != null) ? String.valueOf(e.Parent.SeasonExtern.ID.get()) : ("{{created:id:sea:"+e.Parent.SeasonLocal.ID.get()+"}}");
+				var idvar = "{{created:id:epi:"+e.EpisodeLocal.ID.get()+"}}";
 
 				var xaction = new Element("action");
 				xaction.setAttribute("ctr", String.valueOf(ctr));
@@ -658,7 +658,7 @@ public class CDFWorkerPatch
 				{
 					{
 						var source = e.EpisodeLocal.getPart().toFSPath(state.ccpropsLocal());
-						var newfilename = "e_" + e.EpisodeLocal.LocalID.get() + "." + source.getExtension();
+						var newfilename = "e_" + e.EpisodeLocal.ID.get() + "." + source.getExtension();
 						var target = datadir.append(newfilename);
 
 						var cmd = new Element("copyvideo");
@@ -714,7 +714,7 @@ public class CDFWorkerPatch
 				cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 				cmd1.setAttribute("type", "EPISODE");
 				cmd1.setAttribute("deletefiles", noVideo ? "false" : "true");
-				cmd1.setAttribute("id", String.valueOf(e.EpisodeExtern.getLocalID()));
+				cmd1.setAttribute("id", String.valueOf(e.EpisodeExtern.getID()));
 				xaction.addContent(cmd1);
 			}
 			else
@@ -734,7 +734,7 @@ public class CDFWorkerPatch
 						var cmd = new Element("set");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "EPISODE");
-						cmd.setAttribute("id", String.valueOf(e.EpisodeExtern.getLocalID()));
+						cmd.setAttribute("id", String.valueOf(e.EpisodeExtern.getID()));
 						cmd.setAttribute("prop", meta.Item2.getName());
 						cmd.setAttribute("value_old", meta.Item2.serializeToString());
 						cmd.setAttribute("value_new", meta.Item1.serializeToString());
@@ -757,19 +757,19 @@ public class CDFWorkerPatch
 						var cmd1 = new Element("clearvideos");
 						cmd1.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd1.setAttribute("type", "EPISODE");
-						cmd1.setAttribute("id", String.valueOf(e.EpisodeExtern.getLocalID()));
+						cmd1.setAttribute("id", String.valueOf(e.EpisodeExtern.getID()));
 						xaction.addContent(cmd1);
 					}
 
 					{
 						var source = e.EpisodeLocal.getPart().toFSPath(state.ccpropsLocal());
-						var newfilename = "e_" + e.EpisodeLocal.LocalID.get() + "." + source.getExtension();
+						var newfilename = "e_" + e.EpisodeLocal.ID.get() + "." + source.getExtension();
 						var target = datadir.append(newfilename);
 
 						var cmd = new Element("copyvideo");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "EPISODE");
-						cmd.setAttribute("id", String.valueOf(e.EpisodeExtern.getLocalID()));
+						cmd.setAttribute("id", String.valueOf(e.EpisodeExtern.getID()));
 						cmd.setAttribute("source", newfilename);
 						cmd.setAttribute("filename", source.getFilenameWithExt());
 						xaction.addContent(cmd);
@@ -789,7 +789,7 @@ public class CDFWorkerPatch
 						var cmd = new Element("set");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "EPISODE");
-						cmd.setAttribute("id", String.valueOf(e.EpisodeExtern.getLocalID()));
+						cmd.setAttribute("id", String.valueOf(e.EpisodeExtern.getID()));
 						cmd.setAttribute("prop", prop.Item2.getName());
 						cmd.setAttribute("value_old", prop.Item2.serializeToString());
 						cmd.setAttribute("value_new", prop.Item1.serializeToString());
@@ -801,7 +801,7 @@ public class CDFWorkerPatch
 						var cmd = new Element("calc_mediainfo_subjective");
 						cmd.setAttribute("ctr", String.valueOf(innerctr++));
 						cmd.setAttribute("type", "EPISODE");
-						cmd.setAttribute("id", String.valueOf(e.EpisodeExtern.getLocalID()));
+						cmd.setAttribute("id", String.valueOf(e.EpisodeExtern.getID()));
 						xaction.addContent(cmd);
 					}
 				}

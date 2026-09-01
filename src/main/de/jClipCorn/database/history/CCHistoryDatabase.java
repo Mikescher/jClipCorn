@@ -165,7 +165,7 @@ public class CCHistoryDatabase {
 		writeInfoDirect(INFOKEY_TIME, CCTime.getCurrentTime().toStringSQL());
 		writeInfoDirect(INFOKEY_USERNAME, ApplicationHelper.getCurrentUsername());
 		writeInfoDirect(INFOKEY_DUUID, mainDb.getInformation_DUUID());
-		writeInfoDirect(INFOKEY_HISTORY, mainDb.readInformationFromDB(INFOKEY_HISTORY, "0"));
+		writeInfoDirect(INFOKEY_HISTORY, mainDb.readUserDataInformationFromDB(INFOKEY_HISTORY, "0"));
 		writeInfoDirect(INFOKEY_VERSION_MAINDB, mainDb.getInformation_DBVersion());
 	}
 
@@ -180,7 +180,7 @@ public class CCHistoryDatabase {
 	private void syncInfoFromMainDb(CCDatabase mainDb) {
 		if (readonly) return;
 		try {
-			writeInfoDirect(INFOKEY_HISTORY, mainDb.readInformationFromDB(INFOKEY_HISTORY, "0"));
+			writeInfoDirect(INFOKEY_HISTORY, mainDb.readUserDataInformationFromDB(INFOKEY_HISTORY, "0"));
 			writeInfoDirect(INFOKEY_VERSION_MAINDB, mainDb.getInformation_DBVersion());
 		} catch (SQLException e) {
 			CCLog.addError("Failed to sync info from main DB to history DB", e);

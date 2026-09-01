@@ -11,8 +11,8 @@ public class EGroupListProp extends EProperty<CCGroupList> {
 
 	private boolean _preventCallbackFunc = false;
 
-	public EGroupListProp(String name, CCGroupList defValue, IPropertyParent p, EPropertyType t, Func1to1<CCGroupList, CCGroupList> icf) {
-		super(name, defValue, p, t);
+	public EGroupListProp(String name, CCGroupList defValue, IPropertyParent p, EPropertyType t, ETargetDatabase td, Func1to1<CCGroupList, CCGroupList> icf) {
+		super(name, defValue, p, t, td);
 		_insertCallbackFunc = icf;
 	}
 

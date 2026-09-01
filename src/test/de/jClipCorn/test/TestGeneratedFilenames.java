@@ -15,12 +15,12 @@ public class TestGeneratedFilenames extends ClipCornBaseTest {
 	public void testMovieFilename() throws Exception {
 		CCMovieList ml = createExampleDB();
 		
-		assertEquals("Super 8.avi", ml.findDatabaseMovie(5).generateFilename(0));
-		assertEquals("Forrest Gump [ENG].mpeg", ml.findDatabaseMovie(101).generateFilename(0));
-		assertEquals("Kill Bill I - Volume I (Part 1).avi", ml.findDatabaseMovie(8).generateFilename(0));
-		assertEquals("Kill Bill I - Volume I (Part 2).avi", ml.findDatabaseMovie(8).generateFilename(1));
-		assertEquals("Buddy haut den Lukas [[SpencerHill]].avi", ml.findDatabaseMovie(95).generateFilename(1));
-		assertEquals("Der Herr der Ringe III - Die Rückkehr des Königs [GER+ENG].mkv", ml.findDatabaseMovie(10).generateFilename(0));
+		assertEquals("Super 8.avi", movieByTitle(ml, "Super 8").generateFilename(0));
+		assertEquals("Forrest Gump [ENG].mpeg", movieByTitle(ml, "Forrest Gump").generateFilename(0));
+		assertEquals("Kill Bill I - Volume I (Part 1).avi", movieByTitle(ml, "Volume I").generateFilename(0));
+		assertEquals("Kill Bill I - Volume I (Part 2).avi", movieByTitle(ml, "Volume I").generateFilename(1));
+		assertEquals("Buddy haut den Lukas [[SpencerHill]].avi", movieByTitle(ml, "Buddy haut den Lukas").generateFilename(1));
+		assertEquals("Der Herr der Ringe III - Die Rückkehr des Königs [GER+ENG].mkv", movieByTitle(ml, "Die Rückkehr des Königs").generateFilename(0));
 	}
 
 	@Test
@@ -28,39 +28,39 @@ public class TestGeneratedFilenames extends ClipCornBaseTest {
 		CCMovieList ml = createExampleDB();
 
 		// Super 8 - year 2011, no zyklus
-		assertEquals(loc("2011/Super 8/Super 8.avi"), ml.findDatabaseMovie(5).generateRelativePath(0));
+		assertEquals(loc("2011/Super 8/Super 8.avi"), movieByTitle(ml, "Super 8").generateRelativePath(0));
 
 		// Forrest Gump - year 1994, no zyklus
-		assertEquals(loc("1994/Forrest Gump/Forrest Gump [ENG].mpeg"), ml.findDatabaseMovie(101).generateRelativePath(0));
+		assertEquals(loc("1994/Forrest Gump/Forrest Gump [ENG].mpeg"), movieByTitle(ml, "Forrest Gump").generateRelativePath(0));
 
 		// Kill Bill I - Volume I - year 2003, zyklus "Kill Bill" (min zyklus year 2003) -> per-movie leaf folder
-		assertEquals(loc("2003/Kill Bill/Kill Bill - Volume I (2003)/Kill Bill I - Volume I (Part 1).avi"), ml.findDatabaseMovie(8).generateRelativePath(0));
-		assertEquals(loc("2003/Kill Bill/Kill Bill - Volume I (2003)/Kill Bill I - Volume I (Part 2).avi"), ml.findDatabaseMovie(8).generateRelativePath(1));
+		assertEquals(loc("2003/Kill Bill/Kill Bill - Volume I (2003)/Kill Bill I - Volume I (Part 1).avi"), movieByTitle(ml, "Volume I").generateRelativePath(0));
+		assertEquals(loc("2003/Kill Bill/Kill Bill - Volume I (2003)/Kill Bill I - Volume I (Part 2).avi"), movieByTitle(ml, "Volume I").generateRelativePath(1));
 
 		// Der Herr der Ringe III - year 2003, zyklus "Der Herr der Ringe" (min zyklus year 2001) -> per-movie leaf folder
-		assertEquals(loc("2001/Der Herr der Ringe/Der Herr der Ringe - Die Rückkehr des Königs (2003)/Der Herr der Ringe III - Die Rückkehr des Königs [GER+ENG].mkv"), ml.findDatabaseMovie(10).generateRelativePath(0));
+		assertEquals(loc("2001/Der Herr der Ringe/Der Herr der Ringe - Die Rückkehr des Königs (2003)/Der Herr der Ringe III - Die Rückkehr des Königs [GER+ENG].mkv"), movieByTitle(ml, "Die Rückkehr des Königs").generateRelativePath(0));
 
 		// Death Proof: Todsicher - year 2007, no zyklus - the directory keeps the *full* title (colon normalized to " - "),
 		// otherwise every "<Something>: <Subtitle>" movie would share the "<Something>" directory
-		assertEquals(loc("2007/Death Proof - Todsicher/Death Proof - Todsicher (Part 1).avi"), ml.findDatabaseMovie(6).generateRelativePath(0));
-		assertEquals(loc("2007/Death Proof - Todsicher/Death Proof - Todsicher (Part 2).avi"), ml.findDatabaseMovie(6).generateRelativePath(1));
+		assertEquals(loc("2007/Death Proof - Todsicher/Death Proof - Todsicher (Part 1).avi"), movieByTitle(ml, "Death Proof: Todsicher").generateRelativePath(0));
+		assertEquals(loc("2007/Death Proof - Todsicher/Death Proof - Todsicher (Part 2).avi"), movieByTitle(ml, "Death Proof: Todsicher").generateRelativePath(1));
 
 		// Prometheus: Dunkle Zeichen - year 2012, zyklus "Alien" -> grouped under the zyklus, own leaf folder
-		assertEquals(loc("2012/Alien/Alien - Prometheus - Dunkle Zeichen (2012)/Alien VII - Prometheus - Dunkle Zeichen [GER+ENG].mkv"), ml.findDatabaseMovie(3).generateRelativePath(0));
+		assertEquals(loc("2012/Alien/Alien - Prometheus - Dunkle Zeichen (2012)/Alien VII - Prometheus - Dunkle Zeichen [GER+ENG].mkv"), movieByTitle(ml, "Prometheus: Dunkle Zeichen").generateRelativePath(0));
 	}
 
 	@Test
 	public void testSeriesFilename() throws Exception {
 		CCMovieList ml = createExampleDB();
 		
-		assertEquals(loc("Steins;Gate/01 - ONA/S01E01 - Prologue of the Beginning and End.mkv"), ml.findDatabaseSeries(11).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
-		assertEquals(loc("Steins;Gate/01 - ONA/S01E06 - Divergence of Butterfly Effect.mkv"), ml.findDatabaseSeries(11).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(5).getRelativeFileForCreatedFolderstructure());
-		assertEquals(loc("Steins;Gate/02 - OVA/S02E25 - Egoistic Poriomania.mkv"), ml.findDatabaseSeries(11).getSeasonByArrayIndex(1).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
-		assertEquals(loc("Steins;Gate/02 - OVA/S02E25 - Egoistic Poriomania.mkv"), ml.findDatabaseSeries(11).getSeasonByArrayIndex(1).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
+		assertEquals(loc("Steins;Gate/01 - ONA/S01E01 - Prologue of the Beginning and End.mkv"), seriesByTitle(ml, "Steins;Gate").getSeasonByArrayIndex(0).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
+		assertEquals(loc("Steins;Gate/01 - ONA/S01E06 - Divergence of Butterfly Effect.mkv"), seriesByTitle(ml, "Steins;Gate").getSeasonByArrayIndex(0).getEpisodeByArrayIndex(5).getRelativeFileForCreatedFolderstructure());
+		assertEquals(loc("Steins;Gate/02 - OVA/S02E25 - Egoistic Poriomania.mkv"), seriesByTitle(ml, "Steins;Gate").getSeasonByArrayIndex(1).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
+		assertEquals(loc("Steins;Gate/02 - OVA/S02E25 - Egoistic Poriomania.mkv"), seriesByTitle(ml, "Steins;Gate").getSeasonByArrayIndex(1).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
 	
-		assertEquals(loc("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E01 - This Self-Proclaimed Goddess and Reincarnation in Another World.mp4"), ml.findDatabaseSeries(102).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
-		assertEquals(loc("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E09 - God's Blessing on This Wonderful Shop.mp4"), ml.findDatabaseSeries(102).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(8).getRelativeFileForCreatedFolderstructure());
-		assertEquals(loc("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E10 - Final Flame for This Over-the-Top Fortress.mp4"), ml.findDatabaseSeries(102).getSeasonByArrayIndex(0).getEpisodeByArrayIndex(9).getRelativeFileForCreatedFolderstructure());
+		assertEquals(loc("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E01 - This Self-Proclaimed Goddess and Reincarnation in Another World.mp4"), seriesByTitle(ml, "KonoSuba").getSeasonByArrayIndex(0).getEpisodeByArrayIndex(0).getRelativeFileForCreatedFolderstructure());
+		assertEquals(loc("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E09 - God's Blessing on This Wonderful Shop.mp4"), seriesByTitle(ml, "KonoSuba").getSeasonByArrayIndex(0).getEpisodeByArrayIndex(8).getRelativeFileForCreatedFolderstructure());
+		assertEquals(loc("KonoSuba [JAP]/Kono Subarashii Sekai ni Shukufuku wo!/S01E10 - Final Flame for This Over-the-Top Fortress.mp4"), seriesByTitle(ml, "KonoSuba").getSeasonByArrayIndex(0).getEpisodeByArrayIndex(9).getRelativeFileForCreatedFolderstructure());
 	}
 
 	private String loc(String s) {

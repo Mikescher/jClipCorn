@@ -16,6 +16,7 @@ import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
 import de.jClipCorn.util.xml.CCXMLParser;
+import de.jClipCorn.util.datatypes.CCUUID;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -172,7 +173,7 @@ public class ImportElementsFrame extends JCCFrame {
 		AddMovieFrame amf = new AddMovieFrame(this, movielist);
 
 		try {
-			CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
+			CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), CCUUID.EMPTY);
 			tmpMov.setDefaultValues(false);
 			DatabaseXMLImporter.parseSingleMovie(tmpMov, value, f->null, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), false, true)));
 		} catch (Exception e) {

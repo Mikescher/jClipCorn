@@ -7,8 +7,8 @@ import de.jClipCorn.util.exceptions.CCFormatException;
 import java.sql.Date;
 
 public class EDateProp extends EProperty<CCDate> {
-	public EDateProp(String name, CCDate defValue, IPropertyParent p, EPropertyType t) {
-		super(name, defValue, p, t);
+	public EDateProp(String name, CCDate defValue, IPropertyParent p, EPropertyType t, ETargetDatabase td) {
+		super(name, defValue, p, t, td);
 	}
 
 	public void set(Date v) {

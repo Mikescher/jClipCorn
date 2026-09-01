@@ -83,7 +83,7 @@ public class CCLog {
 	}
 
 	public static void addMovieListChangeEvent(CCDatabaseElement root, ICCDatabaseStructureElement el, String[] p) {
-		CCLogInternal.addChange(root.getType().asString(), root.getLocalID(), el.getClass().getSimpleName(), el.getLocalID(), p);
+		CCLogInternal.addChange(root.getType().asString(), root.getID(), el.getClass().getSimpleName(), el.getID(), p);
 	}
 
 	public static void addDefaultSwitchError(String owner, Object value) {

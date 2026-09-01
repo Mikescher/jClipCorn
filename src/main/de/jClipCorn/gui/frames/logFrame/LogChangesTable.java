@@ -11,6 +11,7 @@ import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnList;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleColumnPrototype;
 import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.stream.CCStreams;
 
@@ -61,7 +62,7 @@ public class LogChangesTable extends JCCSimpleTable<CCChangeLogElement> {
 		return r;
 	}
 
-	private Opt<ICCDatabaseStructureElement> getElem(int id) {
+	private Opt<ICCDatabaseStructureElement> getElem(CCUUID id) {
 		return _movielist.getAny(id);
 	}
 

@@ -27,18 +27,24 @@ public abstract class EProperty<TType> implements IEProperty {
 	private final List<Func3to0<EProperty<TType>, TType, TType>> _listener = new ArrayList<>();
 
 	public final EPropertyType ValueType;
+	public final ETargetDatabase TargetDatabase;
 	public final String Name;
 	public final TType DefaultValue;
 
 	public EProperty(String name, TType defValue, IPropertyParent p, EPropertyType t) {
+		this(name, defValue, p, t, ETargetDatabase.getDefaultFor(t));
+	}
+
+	public EProperty(String name, TType defValue, IPropertyParent p, EPropertyType t, ETargetDatabase td) {
 		if (defValue == null) CCLog.addUndefinied(Str.format("Default value for [{0}] cannot be NULL", name));
 
-		_value       = defValue;
-		_cls         = defValue.getClass();
-		parent       = p;
-		DefaultValue = defValue;
-		Name         = name;
-		ValueType    = t;
+		_value         = defValue;
+		_cls           = defValue.getClass();
+		parent         = p;
+		DefaultValue   = defValue;
+		Name           = name;
+		ValueType      = t;
+		TargetDatabase = td;
 	}
 
 	protected TType validateValue(TType v) {
@@ -143,6 +149,10 @@ public abstract class EProperty<TType> implements IEProperty {
 		return _value;
 	}
 
+	public boolean isDefault() {
+		return valueEquals(_value, DefaultValue);
+	}
+
 	public boolean isDirty() {
 		return _dirty;
 	}
@@ -159,6 +169,11 @@ public abstract class EProperty<TType> implements IEProperty {
 	@Override
 	public EPropertyType getValueType() {
 		return ValueType;
+	}
+
+	@Override
+	public ETargetDatabase getTargetDatabase() {
+		return TargetDatabase;
 	}
 
 	@Override

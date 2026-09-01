@@ -129,7 +129,7 @@ public class MovieNFOWriter {
 		// Add clipcorn internal ID
 		Element clipcornId = new Element("uniqueid");
 		clipcornId.setAttribute("type", "clipcorn");
-		clipcornId.setText(String.valueOf(movie.LocalID.get()));
+		clipcornId.setText(movie.ID.get().toString());
 		root.addContent(clipcornId);
 	}
 

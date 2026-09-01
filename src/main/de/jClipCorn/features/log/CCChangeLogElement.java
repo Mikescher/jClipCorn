@@ -1,5 +1,6 @@
 package de.jClipCorn.features.log;
 
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datetime.CCTime;
 
 import java.util.Arrays;
@@ -7,13 +8,13 @@ import java.util.Objects;
 
 public class CCChangeLogElement {
 	public final String   RootType;
-	public final int      RootID;
+	public final CCUUID   RootID;
 	public final String   ActualType;
-	public final int      ActualID;
+	public final CCUUID   ActualID;
 	public final String[] Properties;
 	public final CCTime   Time;
 
-	public CCChangeLogElement(String rootType, int rootID, String actualType, int actualID, String[] properties) {
+	public CCChangeLogElement(String rootType, CCUUID rootID, String actualType, CCUUID actualID, String[] properties) {
 		this.RootType   = rootType;
 		this.RootID     = rootID;
 		this.ActualType = actualType;
@@ -30,8 +31,8 @@ public class CCChangeLogElement {
 
 		CCChangeLogElement that = (CCChangeLogElement) o;
 
-		if (RootID != that.RootID) return false;
-		if (ActualID != that.ActualID) return false;
+		if (!RootID.equals(that.RootID)) return false;
+		if (!ActualID.equals(that.ActualID)) return false;
 		if (!Objects.equals(RootType, that.RootType)) return false;
 		if (!Objects.equals(ActualType, that.ActualType)) return false;
 		// Probably incorrect - comparing Object[] arrays with Arrays.equals
@@ -42,9 +43,9 @@ public class CCChangeLogElement {
 	@Override
 	public int hashCode() {
 		int result = RootType != null ? RootType.hashCode() : 0;
-		result = 31 * result + RootID;
+		result = 31 * result + RootID.hashCode();
 		result = 31 * result + (ActualType != null ? ActualType.hashCode() : 0);
-		result = 31 * result + ActualID;
+		result = 31 * result + ActualID.hashCode();
 		result = 31 * result + Arrays.hashCode(Properties);
 		result = 31 * result + (Time != null ? Time.hashCode() : 0);
 		return result;

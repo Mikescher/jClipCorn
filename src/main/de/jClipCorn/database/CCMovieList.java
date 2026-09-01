@@ -333,16 +333,16 @@ public class CCMovieList implements ICCPropertySource {
 		});
 	}
 
-	public CCDatabaseElement findDatabaseElement(int id) {
+	public CCDatabaseElement findDatabaseElement(CCUUID id) {
 		for (CCDatabaseElement m : list) {
-			if (m.getLocalID() == id) {
+			if (m.getID().equals(id)) {
 				return m;
 			}
 		}
 		return null;
 	}
 
-	public CCMovie findDatabaseMovie(int id) {
+	public CCMovie findDatabaseMovie(CCUUID id) {
 		CCDatabaseElement e = findDatabaseElement(id);
 		
 		if (e.isMovie()) return e.asMovie();
@@ -350,7 +350,7 @@ public class CCMovieList implements ICCPropertySource {
 		return null;
 	}
 
-	public CCSeries findDatabaseSeries(int id) {
+	public CCSeries findDatabaseSeries(CCUUID id) {
 		CCDatabaseElement e = findDatabaseElement(id);
 		
 		if (e instanceof CCSeries) return e.asSeries();
@@ -656,14 +656,14 @@ public class CCMovieList implements ICCPropertySource {
 	}
 	
 	public void removeEpisodeFromDatabase(CCEpisode ep) {
-		database.removeFromEpisodes(ep.getLocalID());
+		database.removeFromEpisodes(ep.getID());
 
 		fireOnChangeDatabaseElement(ep.getSeries(), ep.getSeason(), new String[]{"@EPISODES"});  //$NON-NLS-1$
 		fireOnRemEpisode(ep);
 	}
 	
 	public void removeSeasonDatabase(CCSeason s) {
-		database.removeFromSeasons(s.getLocalID());
+		database.removeFromSeasons(s.getID());
 
 		fireOnChangeDatabaseElement(s.getSeries(), s.getSeries(), new String[]{"@SEASONS"});  //$NON-NLS-1$
 		fireOnRemSeason(s);
@@ -722,9 +722,9 @@ public class CCMovieList implements ICCPropertySource {
 
 	private void removeMovie(CCMovie m) {
 		list.remove(m);
-		database.removeFromMovies(m.getLocalID());
+		database.removeFromMovies(m.getID());
 
-		if (m.getCoverID() != -1) {
+		if (!m.getCoverID().isEmpty()) {
 			getCoverCache().deleteCover(m.getCoverID());
 		}
 
@@ -736,9 +736,9 @@ public class CCMovieList implements ICCPropertySource {
 		for (int i = s.getSeasonCount() - 1; i >= 0; i--) {
 			s.deleteSeason(s.getSeasonByArrayIndex(i));
 		}
-		database.removeFromSeries(s.getLocalID());
+		database.removeFromSeries(s.getID());
 		
-		if (s.getCoverID() != -1) {
+		if (!s.getCoverID().isEmpty()) {
 			getCoverCache().deleteCover(s.getCoverID());
 		}
 
@@ -1377,13 +1377,14 @@ public class CCMovieList implements ICCPropertySource {
 	}
 
 	public void sortByIDAfterInitialLoad() {
-		list.sort(Comparator.comparingInt(e -> -1 * e.LocalID.get()));
+		// UUIDv7 sorts in creation order, so descending == newest first
+		list.sort(Comparator.comparing((CCDatabaseElement e) -> e.ID.get()).reversed());
 	}
 
-	public Opt<ICCDatabaseStructureElement> getAny(int id) {
+	public Opt<ICCDatabaseStructureElement> getAny(CCUUID id) {
 		for (var v : iteratorStructureElements())
 		{
-			if (v.getLocalID() == id) return Opt.of(v);
+			if (v.getID().equals(id)) return Opt.of(v);
 		}
 
 		return Opt.empty();

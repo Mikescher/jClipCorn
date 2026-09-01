@@ -10,6 +10,7 @@ import de.jClipCorn.util.colorquantizer.ColorQuantizer;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerException;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.colorquantizer.util.ColorQuantizerConverter;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.CachedHashMap;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -17,13 +18,11 @@ import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.lambda.Func0to1WithIOException;
 import de.jClipCorn.util.sqlwrapper.SQLWrapperException;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.*;
 
 public class CCDefaultCoverCache implements ICoverCache {
@@ -32,9 +31,9 @@ public class CCDefaultCoverCache implements ICoverCache {
 	protected final CCDatabase _db;
 	protected final CCProperties _ccprops;
 
-	protected Map<Integer, BufferedImage> _cache;
+	protected Map<CCUUID, BufferedImage> _cache;
 
-	protected final HashMap<Integer, CCCoverData> _elements;
+	protected final HashMap<CCUUID, CCCoverData> _elements;
 	protected final List<CCCoverData> _elementsList;
 
 	private final FSPath _coverPath;
@@ -72,11 +71,9 @@ public class CCDefaultCoverCache implements ICoverCache {
 		return _coverPath;
 	}
 
+	/** Every file in the cover directory - since the rename to {@code <uuid>.<ext>} there is no name convention left to filter on. */
 	public List<Tuple<String, Func0to1WithIOException<BufferedImage>>> listCoversInFilesystem() {
-		final String prefix = ccprops().PROP_COVER_PREFIX.getValue();
-		final String suffix = "." + ccprops().PROP_COVER_TYPE.getValue();  //$NON-NLS-1$
-
-		var files = getCoverDirectory().listFilenames((path, name) -> name.startsWith(prefix) && name.endsWith(suffix));
+		var files = getCoverDirectory().listFilenames();
 
 		List<Tuple<String, Func0to1WithIOException<BufferedImage>>> result = new ArrayList<>();
 		for (String file : files) {
@@ -88,7 +85,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public boolean coverFileExists(int cid) {
+	public boolean coverFileExists(CCUUID cid) {
 		CCCoverData cce = getEntry(cid);
 		if (cce == null) return false;
 
@@ -96,8 +93,8 @@ public class CCDefaultCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public BufferedImage getCover(int cid) {
-		if (cid == -1) return Resources.IMG_COVER_NOTFOUND.get();
+	public BufferedImage getCover(CCUUID cid) {
+		if (cid.isEmpty()) return Resources.IMG_COVER_NOTFOUND.get();
 
 		CCCoverData cce = getEntry(cid);
 		if (cce == null) return Resources.IMG_COVER_NOTFOUND.get();
@@ -123,7 +120,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 			if (! Main.DEBUG) {
 				CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotFound", cce.ID)); //$NON-NLS-1$
 			} else {
-				CCLog.addDebug(String.format("Cover not found (%d)", cce.ID)); //$NON-NLS-1$
+				CCLog.addDebug(String.format("Cover not found (%s)", cce.ID)); //$NON-NLS-1$
 			}
 			return Resources.IMG_COVER_NOTFOUND.get();
 		}
@@ -132,7 +129,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public void preloadCover(int cid) {
+	public void preloadCover(CCUUID cid) {
 		BufferedImage res = _cache.get(cid);
 		if (res == null) return;
 
@@ -163,12 +160,12 @@ public class CCDefaultCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public int addCover(BufferedImage newCover) {
+	public CCUUID addCover(BufferedImage newCover) {
 
 		try {
-			int cid = _db.getNewCoverID();
+			CCUUID cid = CCUUID.generate();
 
-			String fname = ccprops().PROP_COVER_PREFIX.getValue() + StringUtils.leftPad(Integer.toString(cid), 5, '0') + '.' + ccprops().PROP_COVER_TYPE.getValue();
+			String fname = cid + "." + ccprops().PROP_COVER_TYPE.getValue(); //$NON-NLS-1$
 
 			CCLog.addDebug("addingCoverToFolder: " + fname); //$NON-NLS-1$
 
@@ -200,14 +197,14 @@ public class CCDefaultCoverCache implements ICoverCache {
 			}
 
 			return cid;
-		} catch (IOException | ColorQuantizerException | SQLWrapperException | SQLException e) {
+		} catch (IOException | ColorQuantizerException | SQLWrapperException e) {
 			CCLog.addError("LogMessage.ErrorCreatingCoverFile"); //$NON-NLS-1$
-			return -1;
+			return CCUUID.EMPTY;
 		}
 	}
 
 	@Override
-	public void deleteCover(int cid) {
+	public void deleteCover(CCUUID cid) {
 		_cache.remove(cid);
 
 		CCCoverData cce = getEntry(cid);
@@ -233,7 +230,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 		_elementsList.add(elem);
 	}
 
-	private CCCoverData getEntry(int cid) {
+	private CCCoverData getEntry(CCUUID cid) {
 		CCCoverData cce = _elements.get(cid);
 
 		if (cce == null) CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotInCache", cid)); //$NON-NLS-1$
@@ -242,14 +239,14 @@ public class CCDefaultCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public Tuple<Integer, Integer> getDimensions(int cid) {
+	public Tuple<Integer, Integer> getDimensions(CCUUID cid) {
 		CCCoverData cce = getEntry(cid);
 		if (cce == null) return Tuple.Create(0, 0);
 		return Tuple.Create(cce.Width, cce.Height);
 	}
 
 	@Override
-	public boolean isCached(int cid) {
+	public boolean isCached(CCUUID cid) {
 		return _cache.containsKey(cid);
 	}
 
@@ -259,7 +256,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public CCCoverData getInfoOrNull(int cid) {
+	public CCCoverData getInfoOrNull(CCUUID cid) {
 		return _elements.get(cid);
 	}
 }

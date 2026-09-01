@@ -873,7 +873,7 @@ public class CCActionTree extends UIActionTree implements ICCPropertySource {
 	}
 
 	private void onClickOtherShowHistory(CCTreeActionEvent e) {
-		e.ifStructureElementSource(d -> new DatabaseHistoryFrame(e.SwingOwner, movielist, String.valueOf(d.getLocalID())).setVisible(true));
+		e.ifStructureElementSource(d -> new DatabaseHistoryFrame(e.SwingOwner, movielist, d.getID().toString()).setVisible(true));
 	}
 	
 	private void onClickSwitchTag(CCTreeActionEvent e, CCSingleTag t) {

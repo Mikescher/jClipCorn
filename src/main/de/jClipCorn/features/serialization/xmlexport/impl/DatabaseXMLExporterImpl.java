@@ -26,7 +26,7 @@ public class DatabaseXMLExporterImpl {
 	}
 
 	public static void exportDatabaseElement(Element e, CCDatabaseElement o, ExportOptions s) {
-		if (s.ExportLocalID) e.setAttribute("localid",      o.getLocalID() + "");
+		if (s.ExportLocalID) e.setAttribute("id",           o.getID().toString());
 
 		e.setAttribute("title",          o.getTitle());
 		e.setAttribute("genres",         o.getGenres().serialize());
@@ -40,7 +40,7 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("specialversion", o.SpecialVersion.serializeToString());
 
 		if (! s.CoverData) e.setAttribute("covername", o.getCoverInfo().Filename);
-		if (! s.CoverData) e.setAttribute("coverid", o.getCoverInfo().ID + "");
+		if (! s.CoverData) e.setAttribute("coverid", o.getCoverInfo().ID.toString());
 		if (s.CoverHash) e.setAttribute("coverhash", o.getCoverInfo().Checksum);
 		
 		if (s.CoverData) e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(o.getCover())));
@@ -99,7 +99,7 @@ public class DatabaseXMLExporterImpl {
 	}
 
 	public static void exportSeason(Element e, CCSeason o, ExportOptions s) {
-		if (s.ExportLocalID) e.setAttribute("seasonid", o.getLocalID() + "");
+		if (s.ExportLocalID) e.setAttribute("id",       o.getID().toString());
 
 		e.setAttribute("title",      o.getTitle());
 		o.getYear().ifPresent(v -> e.setAttribute("year", String.valueOf(v)));
@@ -110,7 +110,7 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("animestudio", o.AnimeStudio.serializeToString());
 
 		if (! s.CoverData) e.setAttribute("covername", o.getCoverInfo().Filename);
-		if (! s.CoverData) e.setAttribute("coverid", o.getCoverInfo().ID + "");
+		if (! s.CoverData) e.setAttribute("coverid", o.getCoverInfo().ID.toString());
 
 		if (s.CoverHash) e.setAttribute("coverhash", o.getCoverInfo().Checksum);
 
@@ -118,7 +118,7 @@ public class DatabaseXMLExporterImpl {
 	}
 
 	public static void exportEpisode(Element e, CCEpisode o, ExportOptions s) {
-		if (s.ExportLocalID) e.setAttribute("localid",       o.getLocalID() + "");
+		if (s.ExportLocalID) e.setAttribute("id",            o.getID().toString());
 
 		e.setAttribute("title",         o.getTitle());
 		e.setAttribute("adddate",       o.getAddDate().toStringSQL());

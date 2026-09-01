@@ -17,6 +17,7 @@ import de.jClipCorn.database.elementProps.impl.EOnlineRefListProp;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
 import de.jClipCorn.database.elementProps.impl.EStringListProp;
 import de.jClipCorn.database.elementProps.impl.EStringProp;
+import de.jClipCorn.database.elementProps.impl.EUUIDProp;
 import de.jClipCorn.database.util.*;
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
@@ -25,6 +26,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDate;
@@ -47,8 +49,8 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	private final SeasonCache _cache = new SeasonCache(this);
 
-	public final EIntProp                LocalID      = new EIntProp(   "LocalID",       -1,                    this, EPropertyType.DATABASE_PRIMARY_ID);
-	public final EIntProp                CoverID      = new EIntProp(   "CoverID",       -1,                    this, EPropertyType.DATABASE_REF);
+	public final EUUIDProp               ID           = new EUUIDProp(  "ID",            CCUUID.EMPTY,          this, EPropertyType.DATABASE_PRIMARY_ID);
+	public final EUUIDProp               CoverID      = new EUUIDProp(  "CoverID",       CCUUID.EMPTY,          this, EPropertyType.DATABASE_REF);
 	public final EStringProp             Title        = new EStringProp("Title",         Str.Empty,             this, EPropertyType.OBJECTIVE_METADATA);
 	public final EOptIntProp             Year         = new EOptIntProp("Year",          Opt.empty(),           this, EPropertyType.OBJECTIVE_METADATA);
 	public final EEnumProp<CCUserScore>  Score        = new EEnumProp<>("Score",         CCUserScore.RATING_NO, this, EPropertyType.USER_METADATA);
@@ -66,9 +68,9 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	private boolean isUpdating = false;
 
-	public CCSeason(CCSeries owner, int localID) {
+	public CCSeason(CCSeries owner, CCUUID id) {
 		this.owner    = owner;
-		LocalID.setReadonlyPropToInitial(localID);
+		ID.setReadonlyPropToInitial(id);
 	}
 
 	public void initNfoPaths(CCSeries series) {
@@ -90,7 +92,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	{
 		return new IEProperty[]
 		{
-			LocalID,
+			ID,
 			CoverID,
 			Title,
 			Year,
@@ -185,20 +187,20 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 
 	@Override
-	public int getLocalID() {
-		return LocalID.get();
+	public CCUUID getID() {
+		return ID.get();
 	}
 
-	public void setCover(int cid) {
+	public void setCover(CCUUID cid) {
 		CoverID.set(cid);
 	}
 	
 	public void setCover(BufferedImage cvr) {
-		if (CoverID.get() != -1 && cvr.equals(getCover())) {
+		if (!CoverID.get().isEmpty() && cvr.equals(getCover())) {
 			return;
 		}
 		
-		if (CoverID.get() != -1) {
+		if (!CoverID.get().isEmpty()) {
 			getSeries().getMovieList().getCoverCache().deleteCover(this.CoverID.get());
 		}
 		
@@ -216,7 +218,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 
 	@Override
-	public int getCoverID() {
+	public CCUUID getCoverID() {
 		return CoverID.get();
 	}
 

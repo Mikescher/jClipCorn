@@ -1,5 +1,6 @@
 package de.jClipCorn.database.covertab;
 
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.FSPath;
 
@@ -13,16 +14,16 @@ public interface ICoverCache {
 	void addInternal(CCCoverData elem);
 	void getBackupExclusions(List<String> excludedFolders, List<String> excludedFiles);
 
-	BufferedImage getCover(int cid);
+	BufferedImage getCover(CCUUID cid);
 	BufferedImage getCover(CCCoverData cce);
-	int addCover(BufferedImage newCover);
-	void deleteCover(int cid);
-	CCCoverData getInfoOrNull(int cid);
+	CCUUID addCover(BufferedImage newCover);
+	void deleteCover(CCUUID cid);
+	CCCoverData getInfoOrNull(CCUUID cid);
 
-	boolean coverFileExists(int cid);
-	Tuple<Integer, Integer> getDimensions(int cid);
-	boolean isCached(int cid);
-	void preloadCover(int cid);
+	boolean coverFileExists(CCUUID cid);
+	Tuple<Integer, Integer> getDimensions(CCUUID cid);
+	boolean isCached(CCUUID cid);
+	void preloadCover(CCUUID cid);
 
 	int getCoverCount();
 

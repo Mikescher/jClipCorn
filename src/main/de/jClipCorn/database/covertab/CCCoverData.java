@@ -2,12 +2,13 @@ package de.jClipCorn.database.covertab;
 
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 
 public class CCCoverData {
 
-	public final int ID;
+	public final CCUUID ID;
 	public final String Filename;
 	public final int Width;
 	public final int Height;
@@ -18,7 +19,7 @@ public class CCCoverData {
 
 	private byte[] Preview; // can be null
 
-	public CCCoverData(int id, String fn, int ww, int hh, String cs, CCFileSize fs, byte[] pv, ColorQuantizerMethod pt, CCDateTime ts) {
+	public CCCoverData(CCUUID id, String fn, int ww, int hh, String cs, CCFileSize fs, byte[] pv, ColorQuantizerMethod pt, CCDateTime ts) {
 		this.ID          = id;
 		this.Filename    = fn;
 		this.Width       = ww;
@@ -31,7 +32,7 @@ public class CCCoverData {
 		this.Preview     = pv;
 	}
 
-	public CCCoverData(int id, String fn, int ww, int hh, String cs, CCFileSize fs, byte[] pv, int pt, CCDateTime ts) throws EnumFormatException {
+	public CCCoverData(CCUUID id, String fn, int ww, int hh, String cs, CCFileSize fs, byte[] pv, int pt, CCDateTime ts) throws EnumFormatException {
 		this.ID          = id;
 		this.Filename    = fn;
 		this.Width       = ww;
@@ -44,7 +45,7 @@ public class CCCoverData {
 		this.Preview     = pv;
 	}
 
-	public CCCoverData(int id, String fn, int ww, int hh, String cs, CCFileSize fs, ColorQuantizerMethod pt, CCDateTime ts) {
+	public CCCoverData(CCUUID id, String fn, int ww, int hh, String cs, CCFileSize fs, ColorQuantizerMethod pt, CCDateTime ts) {
 		this.ID          = id;
 		this.Filename    = fn;
 		this.Width       = ww;
@@ -57,7 +58,7 @@ public class CCCoverData {
 		this.Preview     = null;
 	}
 
-	public CCCoverData(int id, String fn, int ww, int hh, String cs, CCFileSize fs, int pt, CCDateTime ts) throws EnumFormatException {
+	public CCCoverData(CCUUID id, String fn, int ww, int hh, String cs, CCFileSize fs, int pt, CCDateTime ts) throws EnumFormatException {
 		this.ID          = id;
 		this.Filename    = fn;
 		this.Width       = ww;

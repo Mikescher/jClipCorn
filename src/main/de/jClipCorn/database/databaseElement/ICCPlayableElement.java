@@ -6,6 +6,7 @@ import de.jClipCorn.database.elementProps.impl.*;
 import de.jClipCorn.database.elementProps.packs.EMediaInfoPropPack;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.properties.types.NamedPathVar;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.filesystem.CCPath;
 
 import java.awt.*;
@@ -26,7 +27,7 @@ public interface ICCPlayableElement {
 	ELanguageSetProp        language();
 	ELanguageListProp       subtitles();
 
-	int               getLocalID();
+	CCUUID            getID();
 	boolean           isViewed();
 	CCQualityCategory getMediaInfoCategory();
 	List<CCPath>      getParts();

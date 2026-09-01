@@ -131,7 +131,7 @@ public class SearchFrame extends JCCFrame
 		{
 			if (searchString.equals("{all}")) { result.add(mov); continue; } //$NON-NLS-1$
 
-			if ((mov.getLocalID() + Str.Empty).equals(searchString)) { result.add(mov); continue; }
+			if (mov.getID().matches(searchString)) { result.add(mov); continue; }
 
 			if (StringUtils.containsIgnoreCase(mov.getTitle(), searchString)) { result.add(mov); continue; }
 

@@ -182,14 +182,14 @@ public class TestChecksumPreservation extends ClipCornBaseTest {
 		ml.markLoadedForUnitTests(); // clear-listener active - proves preservation survives to the DB
 
 		var ep = ml.iteratorEpisodes().get(0);
-		int id = ep.getLocalID();
+		var id = ep.getID();
 		seedEpisodeChecksums(ep, "_DBE");
 
 		var newPath = CCPath.create(ep.getPart().toString() + "_moved");
 		ep.setPartWithoutClearingChecksums(newPath); // updateDB=true -> persisted with preserved checksums
 
 		var ml2 = CCMovieList.recreateRawForUnitTests(ml.getDatabaseForUnitTests(), ml.ccprops(), ml.getCoverCache());
-		var ep2 = ml2.iteratorEpisodes().singleOrNull(e -> e.getLocalID() == id);
+		var ep2 = ml2.iteratorEpisodes().singleOrNull(e -> e.getID().equals(id));
 
 		assertNotNull(ep2);
 		assertEquals(newPath, ep2.getPart());
@@ -202,7 +202,7 @@ public class TestChecksumPreservation extends ClipCornBaseTest {
 		ml.markLoadedForUnitTests(); // clear-listener active - proves preservation survives to the DB
 
 		var mov = ml.iteratorMovies().get(0);
-		int id = mov.getLocalID();
+		var id = mov.getID();
 		seedMovieChecksums(mov, "[\"CRC_A\"]", "[\"MD5_A\"]", "[\"SHA256_A\"]", "[\"SHA512_A\"]");
 
 		var newPath = CCPath.create(mov.Parts.get(0).toString() + "_moved");

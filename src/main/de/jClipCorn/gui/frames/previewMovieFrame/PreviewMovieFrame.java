@@ -114,7 +114,7 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 		if (movie == null) return;
 
 		if (Main.DEBUG) {
-			setTitle("<" + movie.getLocalID() + "> " + movie.getCompleteTitle() + " (" + movie.getCoverID() + ")");
+			setTitle("<" + movie.getID().toShortString() + "> " + movie.getCompleteTitle() + " (" + movie.getCoverID().toShortString() + ")");
 		} else {
 			setTitle(movie.getCompleteTitle());
 		}
@@ -285,7 +285,7 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 
 	private void queryHistory() {
 		try {
-			var data = movielist.getHistory().query(movielist, false, false, false, true, null, Opt.empty(), null, Integer.toString(movie.getLocalID())).Item1;
+			var data = movielist.getHistory().query(movielist, false, false, true, null, Opt.empty(), null, movie.getID().toString()).Item1;
 			tabHistoryEntries.setData(data);
 			tabHistoryChanges.clearData();
 			tabHistoryEntries.autoResize();

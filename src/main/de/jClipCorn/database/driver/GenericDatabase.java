@@ -479,6 +479,10 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 		return lastError;
 	}
 
+	public Connection getConnection() {
+		return connection;
+	}
+
 	public Statement createStatement() throws SQLException {
 		return connection.createStatement();
 	}

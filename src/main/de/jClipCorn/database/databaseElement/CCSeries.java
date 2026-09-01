@@ -15,6 +15,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.comparator.CCSeasonComparator;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple1;
@@ -50,7 +51,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 	private final SeriesCache _cache;
 
-	public CCSeries(CCMovieList ml, int id) {
+	public CCSeries(CCMovieList ml, CCUUID id) {
 		super(ml, id);
 		_cache = new SeriesCache(this);
 	}
@@ -343,7 +344,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		
 		getMovieList().removeSeasonDatabase(season);
 		
-		if (season.getCoverID() != -1) {
+		if (!season.getCoverID().isEmpty()) {
 			getMovieList().getCoverCache().deleteCover(season.getCoverID());
 		}
 		

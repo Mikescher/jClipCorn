@@ -50,7 +50,9 @@ public class DatabaseMigrator {
 			Migration_30_31::new,
 			Migration_31_32::new,
 			Migration_32_33::new,
-			Migration_33_34::new
+			Migration_33_34::new,
+			Migration_34_35::new,
+			Migration_35_36::new
 	);
 
 	private final List<DBMigration> migrations;
@@ -76,14 +78,14 @@ public class DatabaseMigrator {
 	private String getDBVersion() throws SQLException {
 		return db.querySingleStringSQLThrow(String.format("SELECT %s FROM %s WHERE %s = '%s'",  //$NON-NLS-1$
 				COL_INFO_VALUE.Name,
-				TAB_INFO.Name,
+				TAB_INFO.qualifiedName(),
 				COL_INFO_KEY.Name,
 				INFOKEY_DBVERSION.Key), 0);
 	}
 
 	private void setDBVersion(String version) throws SQLException {
 		db.executeSQLThrow(String.format("UPDATE %s SET %s='%s' WHERE %s='%s'",  //$NON-NLS-1$
-				TAB_INFO.Name,
+				TAB_INFO.qualifiedName(),
 				COL_INFO_VALUE.Name,
 				version,
 				COL_INFO_KEY.Name,
@@ -128,7 +130,7 @@ public class DatabaseMigrator {
 			}
 
 			if (restoreTrigger) {
-				if (db.querySingleStringSQL("SELECT IVALUE FROM INFO WHERE IKEY = 'HISTORY_ENABLED'", 0).equals("1"))
+				if ("1".equals(db.querySingleStringSQL("SELECT IVALUE FROM userdata.INFO WHERE IKEY = 'HISTORY_ENABLED'", 0)))
 				{
 					for (var trigger : CCDatabaseHistory.createTriggerStatements()) db.executeSQLThrow(trigger.Item2);
 				}

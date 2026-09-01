@@ -119,7 +119,7 @@ public class SeasonNFOWriter {
 		// Add clipcorn internal ID
 		Element clipcornId = new Element("uniqueid");
 		clipcornId.setAttribute("type", "clipcorn");
-		clipcornId.setText(String.valueOf(season.getLocalID()));
+		clipcornId.setText(season.getID().toString());
 		root.addContent(clipcornId);
 	}
 

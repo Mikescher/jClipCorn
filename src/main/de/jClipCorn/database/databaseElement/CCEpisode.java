@@ -21,6 +21,7 @@ import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.util.MoviePlayer;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -43,7 +44,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	private final EpisodeCache _cache = new EpisodeCache(this);
 
-	public final EIntProp                LocalID       = new EIntProp(          "LocalID",       -1,                           this, EPropertyType.DATABASE_PRIMARY_ID);
+	public final EUUIDProp               ID            = new EUUIDProp(         "ID",            CCUUID.EMPTY,                 this, EPropertyType.DATABASE_PRIMARY_ID);
 	public final EMediaInfoPropPack      MediaInfo     = new EMediaInfoPropPack("MediaInfo",     CCMediaInfo.EMPTY,       this);
 	public final EIntProp                EpisodeNumber = new EIntProp(          "EpisodeNumber", 0,                            this, EPropertyType.OBJECTIVE_METADATA);
 	public final EStringProp             Title         = new EStringProp(       "Title",         Str.Empty,                    this, EPropertyType.OBJECTIVE_METADATA);
@@ -52,7 +53,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	public final EEnumProp<CCFileFormat> Format        = new EEnumProp<>(       "Format",        CCFileFormat.MKV,             this, EPropertyType.OBJECTIVE_METADATA);
 	public final EFileSizeProp           FileSize      = new EFileSizeProp(     "FileSize",      CCFileSize.ZERO,              this, EPropertyType.OBJECTIVE_METADATA);
 	public final ECCPathProp             Part          = new ECCPathProp(       "Part",          CCPath.Empty,                 this, EPropertyType.LOCAL_FILE_REF_SUBJECTIVE);
-	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA);
+	public final EDateProp               AddDate       = new EDateProp(         "AddDate",       CCDate.getMinimumDate(),      this, EPropertyType.USER_METADATA, ETargetDatabase.MAIN);
 	public final EDateTimeListProp       ViewedHistory = new EDateTimeListProp( "ViewedHistory", CCDateTimeList.createEmpty(), this, EPropertyType.USER_METADATA);
 	public final ELanguageSetProp        Language      = new ELanguageSetProp(  "Language",      CCDBLanguageSet.EMPTY,        this, EPropertyType.OBJECTIVE_METADATA);
 	public final ELanguageListProp       Subtitles     = new ELanguageListProp( "Subtitles",     CCDBLanguageList.EMPTY,       this, EPropertyType.OBJECTIVE_METADATA);
@@ -69,9 +70,9 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	private boolean isUpdating = false;
 
-	public CCEpisode(CCSeason owner, int localID) {
+	public CCEpisode(CCSeason owner, CCUUID id) {
 		this.owner   = owner;
-		LocalID.setReadonlyPropToInitial(localID);
+		ID.setReadonlyPropToInitial(id);
 	}
 
 	public void clearChecksums() {
@@ -105,7 +106,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 		return CCStreams.<IEProperty>empty()
 				.append(new IEProperty[]
 				{
-					LocalID,
+					ID,
 					EpisodeNumber,
 					Title,
 					Length,
@@ -340,8 +341,8 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	@Override
-	public int getLocalID() {
-		return LocalID.get();
+	public CCUUID getID() {
+		return ID.get();
 	}
 
 	public int getGlobalEpisodeNumber() {

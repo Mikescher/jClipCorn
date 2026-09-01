@@ -1,6 +1,8 @@
 package de.jClipCorn.test;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.features.databaseErrors.DatabaseError;
 import de.jClipCorn.features.log.CCLog;
@@ -159,6 +161,18 @@ public class ClipCornBaseTest {
 					Tuple3.Create('O', "Network Drive 2", "")
 			);
 		}
+	}
+
+	protected static CCMovie movieByTitle(CCMovieList ml, String title) {
+		var r = ml.iteratorMovies().singleOrNull(p -> Str.equals(p.getTitle(), title));
+		assertNotNull("No (unique) movie with title '" + title + "'", r);
+		return r;
+	}
+
+	protected static CCSeries seriesByTitle(CCMovieList ml, String title) {
+		var r = ml.iteratorSeries().singleOrNull(p -> Str.equals(p.getTitle(), title));
+		assertNotNull("No (unique) series with title '" + title + "'", r);
+		return r;
 	}
 
 	protected void assertImageEquals(BufferedImage a, BufferedImage b) {

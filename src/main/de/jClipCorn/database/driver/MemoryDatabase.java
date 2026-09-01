@@ -4,6 +4,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;
 import de.jClipCorn.util.sqlwrapper.SQLBuilder;
 
 import java.sql.DriverManager;
@@ -30,17 +31,23 @@ public class MemoryDatabase extends GenericDatabase {
 			connection = DriverManager.getConnection(PROTOCOL);
 			connection.setAutoCommit(true);
 
-			for (var tab: DatabaseStructure.TABLES)
-			{
-				var sql = SQLBuilder.createSchema(tab).build(this::createPreparedStatement, new ArrayList<>());
-				sql.execute();
-				sql.tryClose();
-			}
+			executeSQLThrow("PRAGMA recursive_triggers = true");
+
+			executeSQLThrow("ATTACH DATABASE ':memory:' AS " + DatabaseStructure.SCHEMA_USERDATA);
+
+			for (var tab: DatabaseStructure.TABLES_MAIN)     createTable(tab);
+			for (var tab: DatabaseStructure.TABLES_USERDATA) createTable(tab);
 		} catch (Exception e) {
 			lastError = e;
 			return false;
 		}
 		return true;
+	}
+
+	private void createTable(CCSQLTableDef tab) throws Exception {
+		var sql = SQLBuilder.createSchema(tab).build(this::createPreparedStatement, new ArrayList<>());
+		sql.execute();
+		sql.tryClose();
 	}
 
 	@Override
@@ -80,7 +87,9 @@ public class MemoryDatabase extends GenericDatabase {
 
 	@Override
 	public List<String> listTrigger() throws SQLException {
-		return querySQL("SELECT name FROM sqlite_master WHERE type='trigger'", 1, a -> (String)a[0]);
+		var r = querySQL("SELECT name FROM main.sqlite_master WHERE type='trigger'", 1, a -> (String)a[0]);
+		r.addAll(querySQL("SELECT name FROM userdata.sqlite_master WHERE type='trigger'", 1, a -> (String)a[0]));
+		return r;
 	}
 
 	@Override
@@ -90,6 +99,8 @@ public class MemoryDatabase extends GenericDatabase {
 
 	@Override
 	public List<Tuple<String, String>> listTriggerWithStatements() throws SQLException {
-		return querySQL("SELECT [name], [sql] FROM sqlite_master WHERE type='trigger'", 2, a -> Tuple.Create((String)a[0], (String)a[1]));
+		var r = querySQL("SELECT [name], [sql] FROM main.sqlite_master WHERE type='trigger'", 2, a -> Tuple.Create((String)a[0], (String)a[1]));
+		r.addAll(querySQL("SELECT [name], [sql] FROM userdata.sqlite_master WHERE type='trigger'", 2, a -> Tuple.Create((String)a[0], (String)a[1])));
+		return r;
 	}
 }

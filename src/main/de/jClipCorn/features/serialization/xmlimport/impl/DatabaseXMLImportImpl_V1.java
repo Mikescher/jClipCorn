@@ -4,6 +4,7 @@ import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.serialization.xmlimport.IDatabaseXMLImporterImpl;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -31,12 +32,12 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 		if (s.ResetScore) o.Score.set(CCUserScore.RATING_NO);
 
 		if (!s.IgnoreCoverData && e.hasAttribute("coverdata")) {
-			o.setCover(-1); //Damit er nicht probiert was zu löschen
+			o.setCover(CCUUID.EMPTY); //Damit er nicht probiert was zu löschen
 			o.setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValueOrThrow("coverdata"))));
 		} else if (e.hasAttribute("covername")) {
 			BufferedImage img = imgf.invoke(e.getAttributeValueOrThrow("covername"));
 			if (img != null) {
-				o.setCover(-1); //Damit er nicht probiert was zu löschen
+				o.setCover(CCUUID.EMPTY); //Damit er nicht probiert was zu löschen
 				o.setCover(img);
 			}
 		}
@@ -97,12 +98,12 @@ public class DatabaseXMLImportImpl_V1 implements IDatabaseXMLImporterImpl {
 		}
 
 		if (!s.IgnoreCoverData && e.hasAttribute("coverdata")) {
-			o.setCover(-1); //Damit er nicht probiert was zu löschen
+			o.setCover(CCUUID.EMPTY); //Damit er nicht probiert was zu löschen
 			o.setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValueOrThrow("coverdata"))));
 		} else if (e.hasAttribute("covername")) {
 			BufferedImage img = imgf.invoke(e.getAttributeValueOrThrow("covername"));
 			if (img != null) {
-				o.setCover(-1); //Damit er nicht probiert was zu löschen
+				o.setCover(CCUUID.EMPTY); //Damit er nicht probiert was zu löschen
 				o.setCover(img);
 			}
 		}

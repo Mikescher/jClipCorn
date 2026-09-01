@@ -3,27 +3,28 @@ package de.jClipCorn.features.databaseErrors;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
+import de.jClipCorn.util.datatypes.CCUUID;
 
 public class DatabaseCoverElement implements Comparable<DatabaseCoverElement>{
-	private final int coverid;
+	private final CCUUID coverid;
 	private final ICCCoveredElement element;
 	
-	public DatabaseCoverElement(int cvr, CCDatabaseElement el) {
+	public DatabaseCoverElement(CCUUID cvr, CCDatabaseElement el) {
 		this.coverid = cvr;
 		this.element = el;
 	}
 
-	public DatabaseCoverElement(int cvr, CCSeason el) {
+	public DatabaseCoverElement(CCUUID cvr, CCSeason el) {
 		this.coverid = cvr;
 		this.element = el;
 	}
 
 	@Override
 	public int compareTo(DatabaseCoverElement a) {
-		return Integer.compare(coverid, a.coverid);
+		return coverid.compareTo(a.coverid);
 	}
 
-	public int getCoverID() {
+	public CCUUID getCoverID() {
 		return coverid;
 	}
 
@@ -32,6 +33,6 @@ public class DatabaseCoverElement implements Comparable<DatabaseCoverElement>{
 	}
 
 	public boolean equalsCover(DatabaseCoverElement a) {
-		return coverid == a.coverid;
+		return coverid.equals(a.coverid);
 	}
 }

@@ -5,6 +5,8 @@ import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.covertab.*;
 import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.database.elementProps.IEProperty;
+import de.jClipCorn.database.elementProps.impl.ETargetDatabase;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDBLanguageSet;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
@@ -24,7 +26,9 @@ import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datatypes.Tuple3;
 import de.jClipCorn.util.datetime.CCDate;
@@ -36,6 +40,7 @@ import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.sqlwrapper.*;
+import de.jClipCorn.util.stream.CCStreams;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -181,12 +186,18 @@ public class CCDatabase {
 
 			upgrader.tryUpgrade();
 
+			ensureUserDataDatabase();
+
 			stmts.initialize(this);
+
+			if (!validateUserDataBinding()) return false;
 
 			if (!_historyDb.tryconnect(this)) {
 				CCLog.addError("Failed to connect history database"); //$NON-NLS-1$
 				return false;
 			}
+
+			healHistoryTrigger();
 
 			return true;
 		} catch (SQLException e) {
@@ -218,10 +229,14 @@ public class CCDatabase {
 			writeInformationToDB(DatabaseStructure.INFOKEY_DATE,        CCDate.getCurrentDate().toStringSQL());
 			writeInformationToDB(DatabaseStructure.INFOKEY_TIME,        CCTime.getCurrentTime().toStringSQL());
 			writeInformationToDB(DatabaseStructure.INFOKEY_USERNAME,    ApplicationHelper.getCurrentUsername());
-			writeInformationToDB(DatabaseStructure.INFOKEY_HISTORY,     "0"); //$NON-NLS-1$
-			writeInformationToDB(DatabaseStructure.INFOKEY_LASTID,      "0"); //$NON-NLS-1$
-			writeInformationToDB(DatabaseStructure.INFOKEY_LASTCOVERID, "-1"); //$NON-NLS-1$
 			writeInformationToDB(DatabaseStructure.INFOKEY_DUUID,       UUID.randomUUID().toString());
+
+			try {
+				writeInitialUserDataInfo();
+			} catch (SQLException e) {
+				db.setLastError(e);
+				return false;
+			}
 
 			if (!_historyDb.tryconnect(this)) {
 				CCLog.addError("Failed to create history database"); //$NON-NLS-1$
@@ -232,6 +247,13 @@ public class CCDatabase {
 	}
 	
 	public void disconnect(boolean cleanshutdown) {
+		// the staging rows only live in the (shared) main db until they are drained - a sync would destroy them
+		try {
+			syncHistoryToHistoryDb();
+		} catch (Exception e) {
+			CCLog.addError("Could not sync history before disconnect", e); //$NON-NLS-1$
+		}
+
 		try {
 			if (_historyDb.isConnected()) {
 				_historyDb.disconnect();
@@ -258,7 +280,7 @@ public class CCDatabase {
 	}
 
 	private CCMovie createMovieFromDatabase(CCSQLResultSet rs, CCMovieList ml) throws SQLException, CCFormatException, SQLWrapperException {
-		CCMovie mov = new CCMovie(ml, rs.getInt(DatabaseStructure.COL_MOV_LOCALID));
+		CCMovie mov = new CCMovie(ml, CCUUID.parse(rs.getString(DatabaseStructure.COL_MOV_ID)));
 
 		mov.beginUpdating();
 
@@ -273,8 +295,7 @@ public class CCDatabase {
 	}
 
 	private CCSeries createSeriesFromDatabase(CCSQLResultSet rs, CCMovieList ml, boolean fillSeries) throws SQLException, CCFormatException, SQLWrapperException {
-		int lid = rs.getInt(DatabaseStructure.COL_SER_LOCALID);
-		CCSeries ser = new CCSeries(ml, lid);
+		CCSeries ser = new CCSeries(ml, CCUUID.parse(rs.getString(DatabaseStructure.COL_SER_ID)));
 
 		ser.beginUpdating();
 
@@ -291,7 +312,7 @@ public class CCDatabase {
 	}
 
 	private CCSeason createSeasonFromDatabase(CCSQLResultSet rs, CCSeries ser, boolean fillSeason) throws SQLException, CCFormatException, SQLWrapperException {
-		CCSeason seas = new CCSeason(ser, rs.getInt(DatabaseStructure.COL_SEAS_LOCALID));
+		CCSeason seas = new CCSeason(ser, CCUUID.parse(rs.getString(DatabaseStructure.COL_SEAS_ID)));
 
 		seas.beginUpdating();
 
@@ -308,7 +329,7 @@ public class CCDatabase {
 	}
 
 	private CCEpisode createEpisodeFromDatabase(CCSQLResultSet rs, CCSeason se) throws SQLException, CCFormatException, SQLWrapperException {
-		CCEpisode ep = new CCEpisode(se, rs.getInt(DatabaseStructure.COL_EPIS_LOCALID));
+		CCEpisode ep = new CCEpisode(se, CCUUID.parse(rs.getString(DatabaseStructure.COL_EPIS_ID)));
 
 		ep.beginUpdating();
 
@@ -322,20 +343,74 @@ public class CCDatabase {
 		return ep;
 	}
 
+	/**
+	 * The user-data row is optional - after a sync of the shared database most entities do not have
+	 * one yet, and then every user property falls back to its default.
+	 */
+	private void updateEpisodeUserDataFromResultSet(CCSQLResultSet rs, CCEpisode ep) throws SQLException, CCFormatException, SQLWrapperException {
+		if (rs.getNullableString(DatabaseStructure.COL_UD_EPIS_ID) == null) {
+			ep.ViewedHistory.setOnly(ep.ViewedHistory.DefaultValue);
+			ep.Tags.setOnly(ep.Tags.DefaultValue);
+			ep.Score.setOnly(ep.Score.DefaultValue);
+			ep.ScoreComment.setOnly(ep.ScoreComment.DefaultValue);
+			return;
+		}
+
+		ep.ViewedHistory.setOnly(CCDateTimeList.fromJSONArray(rs.getString(DatabaseStructure.COL_EPIS_VIEWEDHISTORY)));
+		ep.Tags.setOnly(rs.getString(DatabaseStructure.COL_EPIS_TAGS));
+		ep.Score.setOnly(rs.getInt(DatabaseStructure.COL_EPIS_SCORE));
+		ep.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_EPIS_SCORECOMMENT));
+	}
+
+	private void updateSeasonUserDataFromResultSet(CCSQLResultSet rs, CCSeason seas) throws SQLException, SQLWrapperException {
+		if (rs.getNullableString(DatabaseStructure.COL_UD_SEAS_ID) == null) {
+			seas.Score.setOnly(seas.Score.DefaultValue);
+			seas.ScoreComment.setOnly(seas.ScoreComment.DefaultValue);
+			return;
+		}
+
+		seas.Score.setOnly(rs.getInt(DatabaseStructure.COL_SEAS_SCORE));
+		seas.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_SEAS_SCORECOMMENT));
+	}
+
+	private void updateSeriesUserDataFromResultSet(CCSQLResultSet rs, CCSeries ser) throws SQLException, CCFormatException, SQLWrapperException {
+		if (rs.getNullableString(DatabaseStructure.COL_UD_SER_ID) == null) {
+			ser.Tags.setOnly(ser.Tags.DefaultValue);
+			ser.Score.setOnly(ser.Score.DefaultValue);
+			ser.ScoreComment.setOnly(ser.ScoreComment.DefaultValue);
+			return;
+		}
+
+		ser.Tags.setOnly(rs.getString(DatabaseStructure.COL_SER_TAGS));
+		ser.Score.setOnly(rs.getInt(DatabaseStructure.COL_SER_SCORE));
+		ser.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_SER_SCORECOMMENT));
+	}
+
+	private void updateMovieUserDataFromResultSet(CCSQLResultSet rs, CCMovie mov) throws SQLException, CCFormatException, SQLWrapperException {
+		if (rs.getNullableString(DatabaseStructure.COL_UD_MOV_ID) == null) {
+			mov.ViewedHistory.setOnly(mov.ViewedHistory.DefaultValue);
+			mov.Tags.setOnly(mov.Tags.DefaultValue);
+			mov.Score.setOnly(mov.Score.DefaultValue);
+			mov.ScoreComment.setOnly(mov.ScoreComment.DefaultValue);
+			return;
+		}
+
+		mov.ViewedHistory.setOnly(CCDateTimeList.fromJSONArray(rs.getString(DatabaseStructure.COL_MOV_VIEWEDHISTORY)));
+		mov.Tags.setOnly(rs.getString(DatabaseStructure.COL_MOV_TAGS));
+		mov.Score.setOnly(rs.getInt(DatabaseStructure.COL_MOV_SCORE));
+		mov.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_MOV_SCORECOMMENT));
+	}
+
 	private void updateEpisodeFromResultSet(CCSQLResultSet rs, CCEpisode ep) throws SQLException, CCFormatException, SQLWrapperException {
 		ep.EpisodeNumber.setOnly(rs.getInt(DatabaseStructure.COL_EPIS_EPISODE));
 		ep.Title.setOnly(rs.getString(DatabaseStructure.COL_EPIS_NAME));
-		ep.ViewedHistory.setOnly(CCDateTimeList.fromJSONArray(rs.getString(DatabaseStructure.COL_EPIS_VIEWEDHISTORY)));
 		ep.Length.setOnly(rs.getInt(DatabaseStructure.COL_EPIS_LENGTH));
 		ep.Format.setOnly(rs.getInt(DatabaseStructure.COL_EPIS_FORMAT));
 		ep.FileSize.setOnly(rs.getLong(DatabaseStructure.COL_EPIS_FILESIZE));
 		ep.Part.setOnly(CCPath.create(rs.getString(DatabaseStructure.COL_EPIS_PART_1)));
 		ep.AddDate.setOnly(rs.getDate(DatabaseStructure.COL_EPIS_ADDDATE));
-		ep.Tags.setOnly(rs.getString(DatabaseStructure.COL_EPIS_TAGS));
 		ep.Language.setOnly(CCDBLanguageSet.fromJSONArray(rs.getString(DatabaseStructure.COL_EPIS_LANGUAGE)));
 		ep.Subtitles.setOnly(CCDBLanguageList.fromJSONArray(rs.getString(DatabaseStructure.COL_EPIS_SUBTITLES)));
-		ep.Score.setOnly(rs.getInt(DatabaseStructure.COL_EPIS_SCORE));
-		ep.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_EPIS_SCORECOMMENT));
 
 		ep.MediaInfo.CDate.setOnly(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_CDATE)));
 		ep.MediaInfo.MDate.setOnly(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_EPIS_MI_MDATE)));
@@ -360,18 +435,20 @@ public class CCDatabase {
 		ep.ChecksumMD5.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_MD5)));
 		ep.ChecksumSHA256.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_SHA256)));
 		ep.ChecksumSHA512.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_EPIS_CHECKSUM_SHA512)));
+
+		updateEpisodeUserDataFromResultSet(rs, ep);
 	}
 
 	private void updateSeasonFromResultSet(CCSQLResultSet rs, CCSeason seas) throws SQLException, CCFormatException, SQLWrapperException {
 		seas.Title.setOnly(rs.getString(DatabaseStructure.COL_SEAS_NAME));
 		seas.Year.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_SEAS_YEAR)));
-		seas.Score.setOnly(rs.getInt(DatabaseStructure.COL_SEAS_SCORE));
-		seas.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_SEAS_SCORECOMMENT));
 		seas.OnlineReference.setOnly(CCOnlineReferenceList.fromJSONArray(rs.getString(DatabaseStructure.COL_SEAS_ONLINEREF)));
 		seas.AnimeSeason.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SEAS_ANIMESEASON)));
 		seas.AnimeStudio.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SEAS_ANIMESTUDIO)));
 
-		seas.CoverID.setOnly(rs.getInt(DatabaseStructure.COL_SEAS_COVERID));
+		seas.CoverID.setOnly(CCUUID.parse(rs.getString(DatabaseStructure.COL_SEAS_COVERID)));
+
+		updateSeasonUserDataFromResultSet(rs, seas);
 	}
 
 	private void updateSeriesFromResultSet(CCSQLResultSet rs, CCSeries ser) throws SQLException, CCFormatException, SQLWrapperException {
@@ -379,19 +456,17 @@ public class CCDatabase {
 		ser.Genres.setOnly(CCGenreList.fromJSONArray(rs.getString(DatabaseStructure.COL_SER_GENRE)));
 		ser.OnlineScore.setOnly(rs.getShort(DatabaseStructure.COL_SER_ONLINESCORE_NUM), rs.getShort(DatabaseStructure.COL_SER_ONLINESCORE_DENOM));
 		ser.FSK.setOnly(rs.getInt(DatabaseStructure.COL_SER_FSK));
-		ser.Score.setOnly(rs.getInt(DatabaseStructure.COL_SER_SCORE));
-		ser.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_SER_SCORECOMMENT));
 		ser.OnlineReference.setOnly(CCOnlineReferenceList.fromJSONArray(rs.getString(DatabaseStructure.COL_SER_ONLINEREF)));
-		ser.Tags.setOnly(rs.getString(DatabaseStructure.COL_SER_TAGS));
 
-		ser.CoverID.setOnly(rs.getInt(DatabaseStructure.COL_SER_COVERID));
+		ser.CoverID.setOnly(CCUUID.parse(rs.getString(DatabaseStructure.COL_SER_COVERID)));
 		ser.Groups.setOnly(CCGroupList.fromJSONArrayWithoutAddingNewGroups(ser.getMovieList(), rs.getString(DatabaseStructure.COL_SER_GROUPS)));
 		ser.SpecialVersion.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_SPECIALVERSION)));
+
+		updateSeriesUserDataFromResultSet(rs, ser);
 	}
 
 	private void updateMovieFromResultSet(CCSQLResultSet rs, CCMovie mov) throws SQLException, CCFormatException, SQLWrapperException {
 		mov.Title.setOnly(rs.getString(DatabaseStructure.COL_MOV_NAME));
-		mov.ViewedHistory.setOnly(CCDateTimeList.fromJSONArray(rs.getString(DatabaseStructure.COL_MOV_VIEWEDHISTORY)));
 		mov.Zyklus.setOnly(rs.getString(DatabaseStructure.COL_MOV_ZYKLUS), rs.getInt(DatabaseStructure.COL_MOV_ZYKLUSNUMBER));
 		mov.Language.setOnly(CCDBLanguageSet.fromJSONArray(rs.getString(DatabaseStructure.COL_MOV_LANGUAGE)));
 		mov.Subtitles.setOnly(CCDBLanguageList.fromJSONArray(rs.getString(DatabaseStructure.COL_MOV_SUBTITLES)));
@@ -404,12 +479,8 @@ public class CCDatabase {
 		mov.Year.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_MOV_MOVIEYEAR)));
 		mov.OnlineReference.setOnly(CCOnlineReferenceList.fromJSONArray(rs.getString(DatabaseStructure.COL_MOV_ONLINEREF)));
 		mov.FileSize.setOnly(rs.getLong(DatabaseStructure.COL_MOV_FILESIZE));
-		mov.Tags.setOnly(rs.getString(DatabaseStructure.COL_MOV_TAGS));
 
 		mov.Parts.setOnly(CCPathList.createFromJSON(rs.getString(DatabaseStructure.COL_MOV_PARTS)));
-
-		mov.Score.setOnly(rs.getInt(DatabaseStructure.COL_MOV_SCORE));
-		mov.ScoreComment.setOnly(rs.getString(DatabaseStructure.COL_MOV_SCORECOMMENT));
 
 		mov.MediaInfo.CDate.setOnly(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_MOV_MI_CDATE)));
 		mov.MediaInfo.MDate.setOnly(Opt.ofNullable(rs.getNullableLong(DatabaseStructure.COL_MOV_MI_MDATE)));
@@ -430,7 +501,7 @@ public class CCDatabase {
 		mov.MediaInfo.AudioSamplerate.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_MOV_MI_SAMPLERATE)));
 		mov.MediaInfo.updateCache();
 
-		mov.CoverID.setOnly(rs.getInt(DatabaseStructure.COL_MOV_COVERID));
+		mov.CoverID.setOnly(CCUUID.parse(rs.getString(DatabaseStructure.COL_MOV_COVERID)));
 		mov.Groups.setOnly(CCGroupList.fromJSONArrayWithoutAddingNewGroups(mov.getMovieList(), rs.getString(DatabaseStructure.COL_MOV_GROUPS)));
 		mov.SpecialVersion.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_SPECIALVERSION)));
 		mov.AnimeSeason.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_ANIMESEASON)));
@@ -440,30 +511,19 @@ public class CCDatabase {
 		mov.ChecksumMD5.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_MD5)));
 		mov.ChecksumSHA256.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_SHA256)));
 		mov.ChecksumSHA512.setOnly(Opt.ofNullable(rs.getNullableString(DatabaseStructure.COL_MOV_CHECKSUM_SHA512)));
-	}
 
-	private int getNewID() {
-		try {
-			// increment
-			stmts.newDatabaseIDStatement1.execute();
-
-			// read back
-			return stmts.newDatabaseIDStatement2.executeQueryInt(this);
-		} catch (SQLException e) {
-			CCLog.addError(LocaleBundle.getString("LogMessage.NoNewDatabaseID"), e); //$NON-NLS-1$
-			return -1;
-		}
+		updateMovieUserDataFromResultSet(rs, mov);
 	}
 
 	@SuppressWarnings("nls")
-	private boolean addEmptyMovieRow(int id) {
+	private boolean addEmptyMovieRow(CCUUID id) {
 		try {
 			CCSQLStatement stmt = stmts.addEmptyMovieTabStatement;
 			stmt.clearParameters();
 
 			for (var col : stmt.getPreparedFields()) {
-				if (col == COL_MOV_LOCALID)         { stmt.setInt(col, id);             continue; }
-				if (col == COL_MOV_COVERID)         { stmt.setInt(col, -1);             continue; }
+				if (col == COL_MOV_ID)              { stmt.setStr(col, id.toString());           continue; }
+				if (col == COL_MOV_COVERID)         { stmt.setStr(col, CCUUID.EMPTY.toString()); continue; }
 				if (col == COL_MOV_ADDDATE)         { stmt.setStr(col, CCDate.MIN_SQL); continue; }
 
 				if (!col.NonNullable)               { stmt.setNull(col);                continue; }
@@ -485,14 +545,14 @@ public class CCDatabase {
 	}
 
 	@SuppressWarnings("nls")
-	private boolean addEmptySeriesRow(int id) {
+	private boolean addEmptySeriesRow(CCUUID id) {
 		try {
 			CCSQLStatement stmt = stmts.addEmptySeriesTabStatement;
 			stmt.clearParameters();
 
 			for (var col : stmt.getPreparedFields()) {
-				if (col == COL_SER_LOCALID)         { stmt.setInt(col, id);        continue; }
-				if (col == COL_SER_COVERID)         { stmt.setInt(col, -1);        continue; }
+				if (col == COL_SER_ID)              { stmt.setStr(col, id.toString());           continue; }
+				if (col == COL_SER_COVERID)         { stmt.setStr(col, CCUUID.EMPTY.toString()); continue; }
 
 				if (!col.NonNullable)               { stmt.setNull(col);           continue; }
 
@@ -513,15 +573,15 @@ public class CCDatabase {
 	}
 
 	@SuppressWarnings("nls")
-	private boolean addEmptySeasonsRow(int seasid, int serid) {
+	private boolean addEmptySeasonsRow(CCUUID seasid, CCUUID serid) {
 		try {
 			CCSQLStatement stmt = stmts.addEmptySeasonTabStatement;
 			stmt.clearParameters();
 
 			for (var col : stmt.getPreparedFields()) {
-				if (col == COL_SEAS_LOCALID)        { stmt.setInt(col, seasid);    continue; }
-				if (col == COL_SEAS_SERIESID)       { stmt.setInt(col, serid);     continue; }
-				if (col == COL_SEAS_COVERID)        { stmt.setInt(col, -1);        continue; }
+				if (col == COL_SEAS_ID)             { stmt.setStr(col, seasid.toString());       continue; }
+				if (col == COL_SEAS_SERIESID)       { stmt.setStr(col, serid.toString());        continue; }
+				if (col == COL_SEAS_COVERID)        { stmt.setStr(col, CCUUID.EMPTY.toString()); continue; }
 
 				if (!col.NonNullable)               { stmt.setNull(col);           continue; }
 
@@ -542,14 +602,14 @@ public class CCDatabase {
 	}
 	
 	@SuppressWarnings("nls")
-	private boolean addEmptyEpisodeRow(int eid, int sid) {
+	private boolean addEmptyEpisodeRow(CCUUID eid, CCUUID sid) {
 		try {
 			CCSQLStatement stmt = stmts.addEmptyEpisodeTabStatement;
 			stmt.clearParameters();
 
 			for (var col : stmt.getPreparedFields()) {
-				if (col == COL_EPIS_LOCALID)        { stmt.setInt(col, eid);            continue; }
-				if (col == COL_EPIS_SEASONID)       { stmt.setInt(col, sid);            continue; }
+				if (col == COL_EPIS_ID)             { stmt.setStr(col, eid.toString()); continue; }
+				if (col == COL_EPIS_SEASONID)       { stmt.setStr(col, sid.toString()); continue; }
 				if (col == COL_EPIS_ADDDATE)        { stmt.setStr(col, CCDate.MIN_SQL); continue; }
 
 				if (!col.NonNullable)               { stmt.setNull(col);                continue; }
@@ -571,11 +631,7 @@ public class CCDatabase {
 	}
 
 	public CCMovie createNewEmptyMovie(CCMovieList list) {
-		int nlid = getNewID();
-
-		if (nlid == -1) {
-			return null;
-		}
+		CCUUID nlid = CCUUID.generate();
 
 		if (! addEmptyMovieRow(nlid)) {
 			return null;
@@ -589,11 +645,7 @@ public class CCDatabase {
 	}
 
 	public CCSeries createNewEmptySeries(CCMovieList list) {
-		int nlid = getNewID();
-
-		if (nlid == -1) {
-			return null;
-		}
+		CCUUID nlid = CCUUID.generate();
 
 		if (! addEmptySeriesRow(nlid)) {
 			return null;
@@ -607,13 +659,9 @@ public class CCDatabase {
 	}
 
 	public CCSeason createNewEmptySeason(CCSeries s) {
-		int sid = getNewID();
+		CCUUID sid = CCUUID.generate();
 
-		if (sid == -1) {
-			return null;
-		}
-
-		if (! addEmptySeasonsRow(sid, s.getLocalID())) {
+		if (! addEmptySeasonsRow(sid, s.getID())) {
 			return null;
 		}
 
@@ -625,13 +673,9 @@ public class CCDatabase {
 	}
 
 	public CCEpisode createNewEmptyEpisode(CCSeason s) {
-		int eid = getNewID();
+		CCUUID eid = CCUUID.generate();
 
-		if (eid == -1) {
-			return null;
-		}
-
-		if (! addEmptyEpisodeRow(eid, s.getLocalID())) {
+		if (! addEmptyEpisodeRow(eid, s.getID())) {
 			return null;
 		}
 
@@ -645,13 +689,14 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	public boolean updateMovieInDatabase(CCMovie mov) {
 		try {
+			beginRowTransaction();
+
 			CCSQLStatement stmt = stmts.updateMovieTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_MOV_LOCALID,       mov.getLocalID());
+			stmt.setStr(DatabaseStructure.COL_MOV_ID,                mov.getID().toString());
 
 			stmt.setStr(DatabaseStructure.COL_MOV_NAME,              mov.Title.get());
-			stmt.setStr(DatabaseStructure.COL_MOV_VIEWEDHISTORY,     mov.ViewedHistory.get().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_MOV_ZYKLUS,            mov.Zyklus.get().getTitle());
 			stmt.setInt(DatabaseStructure.COL_MOV_ZYKLUSNUMBER,      mov.Zyklus.get().getNumber());
 			stmt.setStr(DatabaseStructure.COL_MOV_LANGUAGE,          mov.Language.get().asJSONArray());
@@ -666,16 +711,13 @@ public class CCDatabase {
 			stmt.setNullableInt(DatabaseStructure.COL_MOV_MOVIEYEAR, mov.Year.get().orElse(null));
 			stmt.setStr(DatabaseStructure.COL_MOV_ONLINEREF,         mov.OnlineReference.get().asJSONArray());
 			stmt.setLng(DatabaseStructure.COL_MOV_FILESIZE,          mov.FileSize.get().getBytes());
-			stmt.setStr(DatabaseStructure.COL_MOV_TAGS,              mov.Tags.get().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_MOV_PARTS,             mov.Parts.get().asJSONArray());
-			stmt.setInt(DatabaseStructure.COL_MOV_SCORE,             mov.Score.get().asInt());
-			stmt.setStr(DatabaseStructure.COL_MOV_SCORECOMMENT,      mov.ScoreComment.get());
 
 			stmt.setStr(DatabaseStructure.COL_MOV_GROUPS,            mov.getGroups().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_MOV_SPECIALVERSION,    mov.SpecialVersion.serializeToString());
 			stmt.setStr(DatabaseStructure.COL_MOV_ANIMESEASON,       mov.AnimeSeason.serializeToString());
 			stmt.setStr(DatabaseStructure.COL_MOV_ANIMESTUDIO,       mov.AnimeStudio.serializeToString());
-			stmt.setInt(DatabaseStructure.COL_MOV_COVERID,           mov.getCoverID());
+			stmt.setStr(DatabaseStructure.COL_MOV_COVERID,           mov.getCoverID().toString());
 
 			var mi = mov.MediaInfo.get();
 
@@ -703,11 +745,17 @@ public class CCDatabase {
 			stmt.setNullableStr(DatabaseStructure.COL_MOV_CHECKSUM_SHA512, mov.ChecksumSHA512.get().orElse(null));
 
 			stmt.execute();
+
+			writeMovieUserData(mov);
+
+			commitRowTransaction();
+
 			mov.resetDirty();
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			var msg = LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.Title.get(), mov.getLocalID());
+			rollbackRowTransaction();
+			var msg = LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.Title.get(), mov.getID());
 			CCLog.addError(msg, e);
 			DialogHelper.showDispatchError(MainFrame.getInstance(), LocaleBundle.getString("Dialogs.GenericCaption.Error"), msg);
 			return false;
@@ -717,6 +765,8 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	public boolean updateSeriesInDatabase(CCSeries ser) {
 		try {
+			beginRowTransaction();
+
 			CCSQLStatement stmt = stmts.updateSeriesTabStatement;
 			stmt.clearParameters();
 
@@ -726,22 +776,25 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_SER_ONLINESCORE_DENOM, ser.OnlineScore.Denominator.get());
 			stmt.setInt(DatabaseStructure.COL_SER_FSK,               ser.FSK.get().asInt());
 			stmt.setStr(DatabaseStructure.COL_SER_ONLINEREF,         ser.OnlineReference.get().asJSONArray());
-			stmt.setInt(DatabaseStructure.COL_SER_SCORE,             ser.Score.get().asInt());
-			stmt.setStr(DatabaseStructure.COL_SER_SCORECOMMENT,      ser.ScoreComment.get());
-			stmt.setStr(DatabaseStructure.COL_SER_TAGS,              ser.Tags.get().asJSONArray());
 
-			stmt.setInt(DatabaseStructure.COL_SER_COVERID,           ser.getCoverID());
+			stmt.setStr(DatabaseStructure.COL_SER_COVERID,           ser.getCoverID().toString());
 			stmt.setStr(DatabaseStructure.COL_SER_GROUPS,            ser.getGroups().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_SER_SPECIALVERSION,    ser.SpecialVersion.serializeToString());
 
-			stmt.setInt(DatabaseStructure.COL_SER_LOCALID,           ser.getLocalID());
+			stmt.setStr(DatabaseStructure.COL_SER_ID,                ser.getID().toString());
 
 			stmt.executeUpdate();
+
+			writeSeriesUserData(ser);
+
+			commitRowTransaction();
+
 			ser.resetDirty();
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			var msg = LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.Title.get(), ser.getLocalID());
+			rollbackRowTransaction();
+			var msg = LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.Title.get(), ser.getID());
 			CCLog.addError(msg, e);
 			DialogHelper.showDispatchError(MainFrame.getInstance(), LocaleBundle.getString("Dialogs.GenericCaption.Error"), msg);
 			return false;
@@ -751,29 +804,35 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	public boolean updateSeasonInDatabase(CCSeason sea) {
 		try {
+			beginRowTransaction();
+
 			CCSQLStatement stmt = stmts.updateSeasonTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID,  sea.getSeries().getLocalID());
+			stmt.setStr(DatabaseStructure.COL_SEAS_SERIESID,  sea.getSeries().getID().toString());
 
 			stmt.setStr(DatabaseStructure.COL_SEAS_NAME,         sea.Title.get());
 			stmt.setNullableInt(DatabaseStructure.COL_SEAS_YEAR,  sea.Year.get().orElse(null));
-			stmt.setInt(DatabaseStructure.COL_SEAS_SCORE,        sea.Score.get().asInt());
-			stmt.setStr(DatabaseStructure.COL_SEAS_SCORECOMMENT, sea.ScoreComment.get());
 			stmt.setStr(DatabaseStructure.COL_SEAS_ONLINEREF,    sea.OnlineReference.get().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_SEAS_ANIMESEASON,  sea.AnimeSeason.serializeToString());
 			stmt.setStr(DatabaseStructure.COL_SEAS_ANIMESTUDIO,  sea.AnimeStudio.serializeToString());
 
-			stmt.setInt(DatabaseStructure.COL_SEAS_COVERID,   sea.getCoverID());
+			stmt.setStr(DatabaseStructure.COL_SEAS_COVERID,   sea.getCoverID().toString());
 
-			stmt.setInt(DatabaseStructure.COL_SEAS_LOCALID,   sea.getLocalID());
+			stmt.setStr(DatabaseStructure.COL_SEAS_ID,        sea.getID().toString());
 
 			stmt.executeUpdate();
+
+			writeSeasonUserData(sea);
+
+			commitRowTransaction();
+
 			sea.resetDirty();
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			var msg = LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", sea.Title.get(), sea.getLocalID());
+			rollbackRowTransaction();
+			var msg = LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", sea.Title.get(), sea.getID());
 			CCLog.addError(msg, e);
 			DialogHelper.showDispatchError(MainFrame.getInstance(), LocaleBundle.getString("Dialogs.GenericCaption.Error"), msg);
 			return false;
@@ -783,24 +842,22 @@ public class CCDatabase {
 	@SuppressWarnings("nls")
 	public boolean updateEpisodeInDatabase(CCEpisode ep) {
 		try {
+			beginRowTransaction();
+
 			CCSQLStatement stmt = stmts.updateEpisodeTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_EPIS_SEASONID,      ep.getSeason().getLocalID());
+			stmt.setStr(DatabaseStructure.COL_EPIS_SEASONID,      ep.getSeason().getID().toString());
 
 			stmt.setInt(DatabaseStructure.COL_EPIS_EPISODE,       ep.EpisodeNumber.get());
 			stmt.setStr(DatabaseStructure.COL_EPIS_NAME,          ep.Title.get());
-			stmt.setStr(DatabaseStructure.COL_EPIS_VIEWEDHISTORY, ep.ViewedHistory.get().asJSONArray());
 			stmt.setInt(DatabaseStructure.COL_EPIS_LENGTH,        ep.Length.get());
 			stmt.setInt(DatabaseStructure.COL_EPIS_FORMAT,        ep.Format.get().asInt());
 			stmt.setLng(DatabaseStructure.COL_EPIS_FILESIZE,      ep.FileSize.get().getBytes());
 			stmt.setStr(DatabaseStructure.COL_EPIS_PART_1,        ep.Part.get().toString());
-			stmt.setStr(DatabaseStructure.COL_EPIS_TAGS,          ep.Tags.get().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_EPIS_ADDDATE,       ep.AddDate.get().toStringSQL());
 			stmt.setStr(DatabaseStructure.COL_EPIS_LANGUAGE,      ep.Language.get().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_EPIS_SUBTITLES,     ep.Subtitles.get().asJSONArray());
-			stmt.setInt(DatabaseStructure.COL_EPIS_SCORE,         ep.Score.get().asInt());
-			stmt.setStr(DatabaseStructure.COL_EPIS_SCORECOMMENT,  ep.ScoreComment.get());
 
 			var mi = ep.MediaInfo.get();
 
@@ -827,26 +884,144 @@ public class CCDatabase {
 			stmt.setNullableStr(DatabaseStructure.COL_EPIS_CHECKSUM_SHA256, ep.ChecksumSHA256.get().orElse(null));
 			stmt.setNullableStr(DatabaseStructure.COL_EPIS_CHECKSUM_SHA512, ep.ChecksumSHA512.get().orElse(null));
 
-			stmt.setInt(DatabaseStructure.COL_EPIS_LOCALID,       ep.getLocalID());
+			stmt.setStr(DatabaseStructure.COL_EPIS_ID,            ep.getID().toString());
 
 			stmt.execute();
+
+			writeEpisodeUserData(ep);
+
+			commitRowTransaction();
+
 			ep.resetDirty();
 
 			return true;
 		} catch (SQLException | SQLWrapperException e) {
-			var msg = LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", ep.Title.get(), ep.getLocalID());
+			rollbackRowTransaction();
+			var msg = LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", ep.Title.get(), ep.getID());
 			CCLog.addError(msg, e);
 			DialogHelper.showDispatchError(MainFrame.getInstance(), LocaleBundle.getString("Dialogs.GenericCaption.Error"), msg);
 			return false;
 		}
 	}
 	
+	/**
+	 * The main row and the user-data row live in two files - they have to land together, which SQLite
+	 * only guarantees while no attached database is in WAL mode (see {@code SQLiteDatabase.open}).
+	 */
+	@SuppressWarnings("nls")
+	private void beginRowTransaction() throws SQLException {
+		db.executeSQLThrow("BEGIN TRANSACTION");
+	}
+
+	@SuppressWarnings("nls")
+	private void commitRowTransaction() throws SQLException {
+		db.executeSQLThrow("COMMIT TRANSACTION");
+	}
+
+	@SuppressWarnings("nls")
+	private void rollbackRowTransaction() {
+		try {
+			db.executeSQLThrow("ROLLBACK TRANSACTION");
+		} catch (SQLException e) {
+			// there was no open transaction - the write failed before it started
+		}
+	}
+
+	private static boolean allUserPropertiesAreDefault(ICCDatabaseStructureElement el) {
+		return CCStreams.iterate(el.getProperties()).filter(p -> p.getTargetDatabase() == ETargetDatabase.USERDATA).all(IEProperty::isDefault);
+	}
+
+	/**
+	 * Keeps the user-data database sparse: a row only exists while at least one user property
+	 * differs from its default.
+	 */
+	private void writeMovieUserData(CCMovie mov) throws SQLException, SQLWrapperException {
+		if (allUserPropertiesAreDefault(mov)) {
+			CCSQLStatement del = stmts.deleteMovieUserDataStatement;
+			del.clearParameters();
+			del.setStr(DatabaseStructure.COL_UD_MOV_ID, mov.getID().toString());
+			del.executeUpdate();
+			return;
+		}
+
+		CCSQLStatement stmt = stmts.upsertMovieUserDataStatement;
+		stmt.clearParameters();
+
+		stmt.setStr(DatabaseStructure.COL_UD_MOV_ID,          mov.getID().toString());
+		stmt.setStr(DatabaseStructure.COL_MOV_VIEWEDHISTORY,  mov.ViewedHistory.get().asJSONArray());
+		stmt.setStr(DatabaseStructure.COL_MOV_TAGS,           mov.Tags.get().asJSONArray());
+		stmt.setInt(DatabaseStructure.COL_MOV_SCORE,          mov.Score.get().asInt());
+		stmt.setStr(DatabaseStructure.COL_MOV_SCORECOMMENT,   mov.ScoreComment.get());
+
+		stmt.executeUpdate();
+	}
+
+	private void writeSeriesUserData(CCSeries ser) throws SQLException, SQLWrapperException {
+		if (allUserPropertiesAreDefault(ser)) {
+			CCSQLStatement del = stmts.deleteSeriesUserDataStatement;
+			del.clearParameters();
+			del.setStr(DatabaseStructure.COL_UD_SER_ID, ser.getID().toString());
+			del.executeUpdate();
+			return;
+		}
+
+		CCSQLStatement stmt = stmts.upsertSeriesUserDataStatement;
+		stmt.clearParameters();
+
+		stmt.setStr(DatabaseStructure.COL_UD_SER_ID,        ser.getID().toString());
+		stmt.setStr(DatabaseStructure.COL_SER_TAGS,         ser.Tags.get().asJSONArray());
+		stmt.setInt(DatabaseStructure.COL_SER_SCORE,        ser.Score.get().asInt());
+		stmt.setStr(DatabaseStructure.COL_SER_SCORECOMMENT, ser.ScoreComment.get());
+
+		stmt.executeUpdate();
+	}
+
+	private void writeSeasonUserData(CCSeason sea) throws SQLException, SQLWrapperException {
+		if (allUserPropertiesAreDefault(sea)) {
+			CCSQLStatement del = stmts.deleteSeasonUserDataStatement;
+			del.clearParameters();
+			del.setStr(DatabaseStructure.COL_UD_SEAS_ID, sea.getID().toString());
+			del.executeUpdate();
+			return;
+		}
+
+		CCSQLStatement stmt = stmts.upsertSeasonUserDataStatement;
+		stmt.clearParameters();
+
+		stmt.setStr(DatabaseStructure.COL_UD_SEAS_ID,        sea.getID().toString());
+		stmt.setInt(DatabaseStructure.COL_SEAS_SCORE,        sea.Score.get().asInt());
+		stmt.setStr(DatabaseStructure.COL_SEAS_SCORECOMMENT, sea.ScoreComment.get());
+
+		stmt.executeUpdate();
+	}
+
+	private void writeEpisodeUserData(CCEpisode ep) throws SQLException, SQLWrapperException {
+		if (allUserPropertiesAreDefault(ep)) {
+			CCSQLStatement del = stmts.deleteEpisodeUserDataStatement;
+			del.clearParameters();
+			del.setStr(DatabaseStructure.COL_UD_EPIS_ID, ep.getID().toString());
+			del.executeUpdate();
+			return;
+		}
+
+		CCSQLStatement stmt = stmts.upsertEpisodeUserDataStatement;
+		stmt.clearParameters();
+
+		stmt.setStr(DatabaseStructure.COL_UD_EPIS_ID,         ep.getID().toString());
+		stmt.setStr(DatabaseStructure.COL_EPIS_VIEWEDHISTORY, ep.ViewedHistory.get().asJSONArray());
+		stmt.setStr(DatabaseStructure.COL_EPIS_TAGS,          ep.Tags.get().asJSONArray());
+		stmt.setInt(DatabaseStructure.COL_EPIS_SCORE,         ep.Score.get().asInt());
+		stmt.setStr(DatabaseStructure.COL_EPIS_SCORECOMMENT,  ep.ScoreComment.get());
+
+		stmt.executeUpdate();
+	}
+
 	@SuppressWarnings("nls")
 	public boolean updateMovieFromDatabase(CCMovie mov) {
 		try {
 			CCSQLStatement stmt = stmts.selectSingleMovieTabStatement;
 			stmt.clearParameters();
-			stmt.setInt(DatabaseStructure.COL_MOV_LOCALID, mov.getLocalID());
+			stmt.setStr(DatabaseStructure.COL_MOV_ID, mov.getID().toString());
 			CCSQLResultSet rs = stmt.executeQuery(this);
 		
 			if (rs.next()) { 
@@ -859,7 +1034,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | CCFormatException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.Title.get(), mov.getLocalID()), e);
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateMovie", mov.Title.get(), mov.getID()), e);
 			return false;
 		}
 	}
@@ -869,7 +1044,7 @@ public class CCDatabase {
 		try {
 			CCSQLStatement stmt = stmts.selectSingleSeriesTabStatement;
 			stmt.clearParameters();
-			stmt.setInt(DatabaseStructure.COL_SER_LOCALID, ser.getLocalID());
+			stmt.setStr(DatabaseStructure.COL_SER_ID, ser.getID().toString());
 			CCSQLResultSet rs = stmt.executeQuery(this);
 		
 			if (rs.next()) { 
@@ -882,7 +1057,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | CCFormatException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.Title.get(), ser.getLocalID()), e);
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeries", ser.Title.get(), ser.getID()), e);
 			return false;
 		}
 	}
@@ -892,7 +1067,7 @@ public class CCDatabase {
 		try {
 			CCSQLStatement stmt = stmts.selectSingleSeasonTabStatement;
 			stmt.clearParameters();
-			stmt.setInt(DatabaseStructure.COL_SEAS_LOCALID, sea.getLocalID());
+			stmt.setStr(DatabaseStructure.COL_SEAS_ID, sea.getID().toString());
 			CCSQLResultSet rs = stmt.executeQuery(this);
 		
 			if (rs.next()) { 
@@ -905,7 +1080,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | CCFormatException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", sea.Title.get(), sea.getLocalID()), e);
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateSeason", sea.Title.get(), sea.getID()), e);
 			return false;
 		}
 	}
@@ -915,7 +1090,7 @@ public class CCDatabase {
 		try {
 			CCSQLStatement stmt = stmts.selectSingleEpisodeTabStatement;
 			stmt.clearParameters();
-			stmt.setInt(DatabaseStructure.COL_EPIS_LOCALID, epi.getLocalID());
+			stmt.setStr(DatabaseStructure.COL_EPIS_ID, epi.getID().toString());
 			CCSQLResultSet rs = stmt.executeQuery(this);
 		
 			if (rs.next()) { 
@@ -928,7 +1103,7 @@ public class CCDatabase {
 
 			return true;
 		} catch (SQLException | CCFormatException | SQLWrapperException e) {
-			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", epi.Title.get(), epi.getLocalID()), e);
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CouldNotUpdateEpisode", epi.Title.get(), epi.getID()), e);
 			return false;
 		}
 	}
@@ -949,7 +1124,7 @@ public class CCDatabase {
 					rs1.close();
 				}
 				{
-					CCSQLStatement stmt2 = stmts.selectAllMoviesTabStatement;
+					CCSQLStatement stmt2 = stmts.selectAllSeriesTabStatement;
 					stmt2.clearParameters();
 
 					CCSQLResultSet rs2 = stmt2.executeQuery(this);
@@ -964,7 +1139,7 @@ public class CCDatabase {
 			}
 			else
 			{
-				HashMap<Integer, CCSeries> seriesMap = new HashMap<>();
+				HashMap<CCUUID, CCSeries> seriesMap = new HashMap<>();
 
 				// MOVIES
 				{
@@ -994,14 +1169,14 @@ public class CCDatabase {
 					while (rs.next()) {
 						CCSeries de = createSeriesFromDatabase(rs, ml, false);
 						temp.add(de);
-						if (de.getClass() == CCSeries.class) seriesMap.put(de.getLocalID(), de);
+						if (de.getClass() == CCSeries.class) seriesMap.put(de.getID(), de);
 					}
 					ml.directlyInsert(temp);
 
 					rs.close();
 				}
 
-				HashMap<Integer, CCSeason> seasonMap = new HashMap<>();
+				HashMap<CCUUID, CCSeason> seasonMap = new HashMap<>();
 
 				// SEASONS
 				{
@@ -1012,15 +1187,15 @@ public class CCDatabase {
 
 					CCSQLResultSet rs = stmt.executeQuery(this);
 					while (rs.next()) {
-						int sid = rs.getInt(DatabaseStructure.COL_SEAS_SERIESID);
+						CCUUID sid = CCUUID.parse(rs.getString(DatabaseStructure.COL_SEAS_SERIESID));
 						CCSeries ser = lastSeries;
-						if (ser == null || ser.getLocalID() != sid) ser = seriesMap.get(sid);
+						if (ser == null || !ser.getID().equals(sid)) ser = seriesMap.get(sid);
 						lastSeries = ser;
 
 						ser.beginUpdating();
 						CCSeason season = createSeasonFromDatabase(rs, ser, false);
 						ser.directlyInsertSeason(season);
-						seasonMap.put(season.getLocalID(), season);
+						seasonMap.put(season.getID(), season);
 						ser.abortUpdating();
 					}
 					rs.close();
@@ -1035,9 +1210,9 @@ public class CCDatabase {
 
 					CCSQLResultSet rs = stmt.executeQuery(this);
 					while (rs.next()) {
-						int sid = rs.getInt(DatabaseStructure.COL_EPIS_SEASONID);
+						CCUUID sid = CCUUID.parse(rs.getString(DatabaseStructure.COL_EPIS_SEASONID));
 						CCSeason sea = lastSeason;
-						if (sea == null || sea.getLocalID() != sid) sea = seasonMap.get(sid);
+						if (sea == null || !sea.getID().equals(sid)) sea = seasonMap.get(sid);
 						lastSeason = sea;
 
 						sea.beginUpdating();
@@ -1054,14 +1229,14 @@ public class CCDatabase {
 				// NOTE: Series/Season NFO-paths depend on guessSeriesBasePath(), which iterates the (now attached) episodes, 
 				// so they must be (re)computed *here*, after the episodes are added. 
 				
-				HashMap<Integer, FSPath> seriesBasePaths = new HashMap<>();
+				HashMap<CCUUID, FSPath> seriesBasePaths = new HashMap<>();
 				for (CCSeries s : seriesMap.values()) {
 					FSPath basePath = s.guessSeriesBasePath();
-					seriesBasePaths.put(s.getLocalID(), basePath);
+					seriesBasePaths.put(s.getID(), basePath);
 					s.initNfoPaths(basePath);
 				}
 
-				for (CCSeason s : seasonMap.values()) s.initNfoPaths(s.getSeries(), seriesBasePaths.get(s.getSeries().getLocalID()));
+				for (CCSeason s : seasonMap.values()) s.initNfoPaths(s.getSeries(), seriesBasePaths.get(s.getSeries().getID()));
 
 				ml.sortByIDAfterInitialLoad();
 			}
@@ -1111,7 +1286,7 @@ public class CCDatabase {
 				CCSQLResultSet rs = stmt.executeQuery(this);
 
 				while (rs.next()) {
-					int id        = rs.getInt(DatabaseStructure.COL_CVRS_ID);
+					CCUUID id     = CCUUID.parse(rs.getString(DatabaseStructure.COL_CVRS_ID));
 					String fn     = rs.getString(DatabaseStructure.COL_CVRS_FILENAME);
 					int ww        = rs.getInt(DatabaseStructure.COL_CVRS_WIDTH);
 					int hh        = rs.getInt(DatabaseStructure.COL_CVRS_HEIGHT);
@@ -1133,7 +1308,7 @@ public class CCDatabase {
 				CCSQLResultSet rs = stmt.executeQuery(this);
 
 				while (rs.next()) {
-					int id        = rs.getInt(DatabaseStructure.COL_CVRS_ID);
+					CCUUID id     = CCUUID.parse(rs.getString(DatabaseStructure.COL_CVRS_ID));
 					String fn     = rs.getString(DatabaseStructure.COL_CVRS_FILENAME);
 					int ww        = rs.getInt(DatabaseStructure.COL_CVRS_WIDTH);
 					int hh        = rs.getInt(DatabaseStructure.COL_CVRS_HEIGHT);
@@ -1151,11 +1326,11 @@ public class CCDatabase {
 		}
 	}
 
-	public byte[] getCoverPreviewOrNull(int cid) {
+	public byte[] getCoverPreviewOrNull(CCUUID cid) {
 		try {
 			CCSQLStatement stmt = stmts.selectSingleCoverStatement;
 			stmt.clearParameters();
-			stmt.setInt(DatabaseStructure.COL_CVRS_ID, cid);
+			stmt.setStr(DatabaseStructure.COL_CVRS_ID, cid.toString());
 
 			CCSQLResultSet rs = stmt.executeQuery(this);
 
@@ -1178,7 +1353,7 @@ public class CCDatabase {
 			CCSQLStatement stmt = stmts.selectSeasonTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_SEAS_SERIESID, ser.getLocalID());
+			stmt.setStr(DatabaseStructure.COL_SEAS_SERIESID, ser.getID().toString());
 			
 			CCSQLResultSet rs = stmt.executeQuery(this);
 
@@ -1203,7 +1378,7 @@ public class CCDatabase {
 			CCSQLStatement stmt = stmts.selectEpisodeTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_EPIS_SEASONID, se.getLocalID());
+			stmt.setStr(DatabaseStructure.COL_EPIS_SEASONID, se.getID().toString());
 			
 			CCSQLResultSet rs = stmt.executeQuery(this);
 
@@ -1231,12 +1406,12 @@ public class CCDatabase {
 		return databaseName;
 	}
 
-	public void removeFromMovies(int localID) {
+	public void removeFromMovies(CCUUID id) {
 		try {
 			CCSQLStatement stmt = stmts.deleteMovieTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_MOV_LOCALID, localID);
+			stmt.setStr(DatabaseStructure.COL_MOV_ID, id.toString());
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
@@ -1244,12 +1419,12 @@ public class CCDatabase {
 		}
 	}
 
-	public void removeFromSeries(int localID) {
+	public void removeFromSeries(CCUUID id) {
 		try {
 			CCSQLStatement stmt = stmts.deleteSeriesTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_SER_LOCALID, localID);
+			stmt.setStr(DatabaseStructure.COL_SER_ID, id.toString());
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
@@ -1257,12 +1432,12 @@ public class CCDatabase {
 		}
 	}
 	
-	public void removeFromSeasons(int seasonID) {
+	public void removeFromSeasons(CCUUID seasonID) {
 		try {
 			CCSQLStatement stmt = stmts.deleteSeasonTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_SEAS_LOCALID, seasonID);
+			stmt.setStr(DatabaseStructure.COL_SEAS_ID, seasonID.toString());
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
@@ -1270,12 +1445,12 @@ public class CCDatabase {
 		}
 	}
 	
-	public void removeFromEpisodes(int localID) {
+	public void removeFromEpisodes(CCUUID id) {
 		try {
 			CCSQLStatement stmt = stmts.deleteEpisodeTabStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_EPIS_LOCALID, localID);
+			stmt.setStr(DatabaseStructure.COL_EPIS_ID, id.toString());
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
@@ -1336,6 +1511,137 @@ public class CCDatabase {
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
 			CCLog.addError(e);
+		}
+	}
+
+	public String readUserDataInformationFromDB(CCSQLKVKey key, String defaultValue) {
+		try {
+			String value;
+
+			CCSQLStatement stmt = stmts.readUserDataInfoKeyStatement;
+			stmt.clearParameters();
+			stmt.setStr(DatabaseStructure.COL_INFO_KEY, key.Key);
+
+			CCSQLResultSet rs = stmt.executeQuery(this);
+			if (rs.next())
+				value = rs.getStringDirect(1);
+			else
+				value = defaultValue;
+
+			rs.close();
+
+			return value;
+
+		} catch (SQLException | SQLWrapperException e) {
+			CCLog.addError(e);
+			return defaultValue;
+		}
+	}
+
+	public void writeUserDataInformationToDB(CCSQLKVKey key, String value) {
+		try {
+			CCSQLStatement stmt = stmts.writeUserDataInfoKeyStatement;
+			stmt.clearParameters();
+
+			stmt.setStr(DatabaseStructure.COL_INFO_KEY, key.Key);
+			stmt.setStr(DatabaseStructure.COL_INFO_VALUE, value);
+
+			stmt.executeUpdate();
+		} catch (SQLException | SQLWrapperException e) {
+			CCLog.addError(e);
+		}
+	}
+
+	/**
+	 * Creates the per-user database from scratch when there is none yet - the case for someone who
+	 * only received the shared {@code ClipCornDB.db} (and its covers) from a publisher.
+	 */
+	@SuppressWarnings("nls")
+	private void ensureUserDataDatabase() throws Exception {
+		if (db.querySingleIntSQL("SELECT COUNT(*) FROM userdata.sqlite_master WHERE type='table' AND name='INFO'", 0) > 0) return;
+
+		CCLog.addWarning("No user-data database found - creating an empty one for main database " + readMainDUUIDDirect());
+
+		for (var tab : DatabaseStructure.TABLES_USERDATA) {
+			var sql = SQLBuilder.createSchema(tab).build(this::createPreparedStatement, new ArrayList<>());
+			sql.execute();
+			sql.tryClose();
+		}
+
+		writeInitialUserDataInfo();
+	}
+
+	/** Reads the main DUUID without the prepared statements, which are not built yet on this path. */
+	@SuppressWarnings("nls")
+	private String readMainDUUIDDirect() throws SQLException {
+		var duuid = db.querySingleStringSQLThrow("SELECT IVALUE FROM main.INFO WHERE IKEY='" + DatabaseStructure.INFOKEY_DUUID.Key + "'", 0);
+		if (duuid != null) return duuid;
+
+		duuid = UUID.randomUUID().toString();
+		db.executeSQLThrow("INSERT OR REPLACE INTO main.INFO ([IKEY],[IVALUE]) VALUES ('" + DatabaseStructure.INFOKEY_DUUID.Key + "','" + duuid + "')");
+		return duuid;
+	}
+
+	@SuppressWarnings("nls")
+	private void writeInitialUserDataInfo() throws SQLException {
+		var values = new LinkedHashMap<CCSQLKVKey, String>();
+		values.put(DatabaseStructure.INFOKEY_DBVERSION,      Main.USERDATA_DBVERSION);
+		values.put(DatabaseStructure.INFOKEY_DATE,           CCDate.getCurrentDate().toStringSQL());
+		values.put(DatabaseStructure.INFOKEY_TIME,           CCTime.getCurrentTime().toStringSQL());
+		values.put(DatabaseStructure.INFOKEY_USERNAME,       ApplicationHelper.getCurrentUsername());
+		values.put(DatabaseStructure.INFOKEY_DUUID,          UUID.randomUUID().toString());
+		values.put(DatabaseStructure.INFOKEY_HISTORY,        "0");
+		values.put(DatabaseStructure.INFOKEY_MAINDB_DUUID,   readMainDUUIDDirect());
+		values.put(DatabaseStructure.INFOKEY_VERSION_MAINDB, Main.DBVERSION);
+
+		try (PreparedStatement ps = db.createPreparedStatement("INSERT OR REPLACE INTO userdata.INFO ([IKEY], [IVALUE]) VALUES (?, ?)")) {
+			for (var e : values.entrySet()) {
+				ps.setString(1, e.getKey().Key);
+				ps.setString(2, e.getValue());
+				ps.executeUpdate();
+			}
+		}
+	}
+
+	/**
+	 * The user-data database is bound to exactly one main database. Continuing with a mismatched
+	 * pair would silently attach one user's ratings to another collection.
+	 */
+	@SuppressWarnings("nls")
+	private boolean validateUserDataBinding() {
+		String bound = readUserDataInformationFromDB(DatabaseStructure.INFOKEY_MAINDB_DUUID, null);
+		if (bound == null) return true; // not yet written (fresh user-data db)
+
+		String actual = getInformation_DUUID();
+		if (Str.equals(bound, actual)) return true;
+
+		CCLog.addFatalError(LocaleBundle.getFormattedString("LogMessage.UserDataDUUIDMismatch", bound, actual, actual));
+		return false;
+	}
+
+	/**
+	 * The triggers on `main.*` travel with the shared database, so after a sync they reflect the
+	 * publisher's history setting rather than this installation's.
+	 */
+	@SuppressWarnings("nls")
+	private void healHistoryTrigger() {
+		if (_readonly) return;
+
+		try {
+			var active = _history.isHistoryActive();
+
+			var referror = new RefParam<String>();
+			if (_history.testTrigger(active, referror)) return;
+
+			if (active) {
+				CCLog.addInformation("Recreating missing history trigger: " + referror.Value);
+				_history.enableTrigger();
+			} else {
+				CCLog.addInformation("Removing unexpected history trigger: " + referror.Value);
+				_history.disableTrigger();
+			}
+		} catch (Exception e) {
+			CCLog.addError("Could not repair the history trigger", e);
 		}
 	}
 
@@ -1483,7 +1789,7 @@ public class CCDatabase {
 				CCSQLStatement stmt = stmts.insertCoversStatement;
 				stmt.clearParameters();
 
-				stmt.setInt(DatabaseStructure.COL_CVRS_ID,          cce.ID);
+				stmt.setStr(DatabaseStructure.COL_CVRS_ID,          cce.ID.toString());
 				stmt.setStr(DatabaseStructure.COL_CVRS_FILENAME,    cce.Filename);
 				stmt.setInt(DatabaseStructure.COL_CVRS_WIDTH,       cce.Width);
 				stmt.setInt(DatabaseStructure.COL_CVRS_HEIGHT,      cce.Height);
@@ -1509,7 +1815,7 @@ public class CCDatabase {
 			CCSQLStatement stmt = stmts.removeCoversStatement;
 			stmt.clearParameters();
 
-			stmt.setInt(DatabaseStructure.COL_CVRS_ID, cce.ID);
+			stmt.setStr(DatabaseStructure.COL_CVRS_ID, cce.ID.toString());
 
 			stmt.executeUpdate();
 		} catch (SQLException | SQLWrapperException e) {
@@ -1590,62 +1896,60 @@ public class CCDatabase {
 		if (_readonly) return;
 
 		try {
-			// Step 1: Read all current rows with their rowids from main DB
-			List<Object[]> rows = db.querySQL(
-					"SELECT rowid, [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM HISTORY", 8);
-
-			if (rows.isEmpty()) {
-				CCLog.addInformation("Skipping sync of history - nothing to do");
-				return;
+			int total = 0;
+			for (var tab : new String[] { DatabaseStructure.TAB_HISTORY.qualifiedName(), DatabaseStructure.TAB_UD_HISTORY.qualifiedName() }) {
+				total += drainHistoryTable(tab);
 			}
 
-			CCLog.addInformation("Starting sync of " + rows.size() + " history rows to history DB");
-
-			// Step 2: Insert into history DB (in a transaction)
-			try {
-				List<Object[]> insertrows = new ArrayList<>(rows.size());
-				for (Object[] row : rows) {
-					insertrows.add(new Object[] { row[1], row[2], row[3], row[4], row[5], row[6], row[7] });
-				}
-				_historyDb.insertHistoryRows(insertrows);
-			} catch (Exception e) {
-				CCLog.addError("Failed to insert history rows into history DB, rows remain in main DB", e);
-				return;
-			}
-
-			// Step 3: Delete only the rows we copied, by rowid (batch in chunks of 500)
-			List<Long> rowids = new ArrayList<>();
-			for (Object[] row : rows) {
-				Object rid = row[0];
-				if (rid instanceof Long l)    rowids.add(l);
-				else if (rid instanceof Integer i) rowids.add((long) i);
-				else                          rowids.add(Long.parseLong(rid.toString()));
-			}
-
-			for (int i = 0; i < rowids.size(); i += 500) {
-				int end = Math.min(i + 500, rowids.size());
-				StringBuilder deleteSQL = new StringBuilder("DELETE FROM HISTORY WHERE rowid IN (");
-				for (int j = i; j < end; j++) {
-					if (j > i) deleteSQL.append(",");
-					deleteSQL.append(rowids.get(j));
-				}
-				deleteSQL.append(")");
-				db.executeSQLThrow(deleteSQL.toString());
-			}
-
-			CCLog.addInformation("Synced " + rows.size() + " history rows to history DB");
+			if (total == 0) CCLog.addInformation("Skipping sync of history - nothing to do");
+			else            CCLog.addInformation("Synced " + total + " history rows to history DB");
 
 		} catch (SQLException e) {
 			CCLog.addError("Failed to sync history to history DB", e);
 		}
 	}
 
-	public int getNewCoverID() throws SQLException {
-		// increment
-		stmts.newDatabaseCoverIDStatement1.execute();
+	@SuppressWarnings("nls")
+	private int drainHistoryTable(String table) throws SQLException {
+		// Step 1: Read all current rows with their rowids from the staging table
+		List<Object[]> rows = db.querySQL(
+				"SELECT rowid, [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM " + table, 8);
 
-		// read back
-		return stmts.newDatabaseCoverIDStatement2.executeQueryInt(this);
+		if (rows.isEmpty()) return 0;
+
+		// Step 2: Insert into history DB (in a transaction)
+		try {
+			List<Object[]> insertrows = new ArrayList<>(rows.size());
+			for (Object[] row : rows) {
+				insertrows.add(new Object[] { row[1], row[2], row[3], row[4], row[5], row[6], row[7] });
+			}
+			_historyDb.insertHistoryRows(insertrows);
+		} catch (Exception e) {
+			CCLog.addError("Failed to insert history rows into history DB, rows remain in " + table, e);
+			return 0;
+		}
+
+		// Step 3: Delete only the rows we copied, by rowid (batch in chunks of 500)
+		List<Long> rowids = new ArrayList<>();
+		for (Object[] row : rows) {
+			Object rid = row[0];
+			if (rid instanceof Long l)    rowids.add(l);
+			else if (rid instanceof Integer i) rowids.add((long) i);
+			else                          rowids.add(Long.parseLong(rid.toString()));
+		}
+
+		for (int i = 0; i < rowids.size(); i += 500) {
+			int end = Math.min(i + 500, rowids.size());
+			StringBuilder deleteSQL = new StringBuilder("DELETE FROM " + table + " WHERE rowid IN (");
+			for (int j = i; j < end; j++) {
+				if (j > i) deleteSQL.append(",");
+				deleteSQL.append(rowids.get(j));
+			}
+			deleteSQL.append(")");
+			db.executeSQLThrow(deleteSQL.toString());
+		}
+
+		return rows.size();
 	}
 
 	public boolean isFirstLaunch() {

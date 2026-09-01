@@ -45,8 +45,8 @@ public class CDFWorkerCompare
 
 	private static void compareAndMatchMovies(CCMovieList mlExt, CCMovieList mlLoc, CompareState state)
 	{
-		var movsLoc = mlLoc.iteratorMovies().filter(e -> !state.Ruleset.ShouldSkipLoc(e.LocalID.get())).toList();
-		var movsExt = mlExt.iteratorMovies().filter(e -> !state.Ruleset.ShouldSkipExt(e.LocalID.get())).toList();
+		var movsLoc = mlLoc.iteratorMovies().filter(e -> !state.Ruleset.ShouldSkipLoc(e.ID.get())).toList();
+		var movsExt = mlExt.iteratorMovies().filter(e -> !state.Ruleset.ShouldSkipExt(e.ID.get())).toList();
 
 		if (state.ProgressCallback.isCancelled()) throw new CancelledException();
 
@@ -55,7 +55,7 @@ public class CDFWorkerCompare
 		{
 			var mext = CCStreams.iterate(movsExt).singleOrDefault(m ->
 			{
-				return state.Ruleset.IsMatch(mloc.getLocalID(), m.getLocalID());
+				return state.Ruleset.IsMatch(mloc.getID(), m.getID());
 			}, null, null);
 			if (mext == null) continue;
 
@@ -162,8 +162,8 @@ public class CDFWorkerCompare
 
 	private static void compareAndMatchSeries(CCMovieList mlExt, CCMovieList mlLoc, CompareState state)
 	{
-		var serLoc = mlLoc.iteratorSeries().filter(e -> !state.Ruleset.ShouldSkipLoc(e.LocalID.get())).toList();
-		var serExt = mlExt.iteratorSeries().filter(e -> !state.Ruleset.ShouldSkipExt(e.LocalID.get())).toList();
+		var serLoc = mlLoc.iteratorSeries().filter(e -> !state.Ruleset.ShouldSkipLoc(e.ID.get())).toList();
+		var serExt = mlExt.iteratorSeries().filter(e -> !state.Ruleset.ShouldSkipExt(e.ID.get())).toList();
 
 		if (state.ProgressCallback.isCancelled()) throw new CancelledException();
 
@@ -172,7 +172,7 @@ public class CDFWorkerCompare
 		{
 			var sext = CCStreams.iterate(serExt).singleOrDefault(s ->
 			{
-				return state.Ruleset.IsMatch(sloc.getLocalID(), s.getLocalID());
+				return state.Ruleset.IsMatch(sloc.getID(), s.getID());
 			}, null, null);
 			if (sext == null) continue;
 
@@ -286,15 +286,15 @@ public class CDFWorkerCompare
 
 	private static void compareAndMatchSeasons(SeriesMatch match)
 	{
-		var seaLoc = match.SeriesLocal .iteratorSeasons().filter(e -> !match.State.Ruleset.ShouldSkipLoc(e.LocalID.get())).toList();
-		var seaExt = match.SeriesExtern.iteratorSeasons().filter(e -> !match.State.Ruleset.ShouldSkipExt(e.LocalID.get())).toList();
+		var seaLoc = match.SeriesLocal .iteratorSeasons().filter(e -> !match.State.Ruleset.ShouldSkipLoc(e.ID.get())).toList();
+		var seaExt = match.SeriesExtern.iteratorSeasons().filter(e -> !match.State.Ruleset.ShouldSkipExt(e.ID.get())).toList();
 
 		// Force matched by Ruleset
 		for (var sloc : new ArrayList<>(seaLoc))
 		{
 			var sext = CCStreams.iterate(seaExt).singleOrDefault(s ->
 			{
-				return match.State.Ruleset.IsMatch(sloc.getLocalID(), s.getLocalID());
+				return match.State.Ruleset.IsMatch(sloc.getID(), s.getID());
 			}, null, null);
 			if (sext == null) continue;
 
@@ -375,15 +375,15 @@ public class CDFWorkerCompare
 
 	private static void compareAndMatchEpisodes(SeasonMatch match)
 	{
-		var episLoc = match.SeasonLocal .iteratorEpisodes().filter(e -> !match.State.Ruleset.ShouldSkipLoc(e.LocalID.get())).toList();
-		var episExt = match.SeasonExtern.iteratorEpisodes().filter(e -> !match.State.Ruleset.ShouldSkipExt(e.LocalID.get())).toList();
+		var episLoc = match.SeasonLocal .iteratorEpisodes().filter(e -> !match.State.Ruleset.ShouldSkipLoc(e.ID.get())).toList();
+		var episExt = match.SeasonExtern.iteratorEpisodes().filter(e -> !match.State.Ruleset.ShouldSkipExt(e.ID.get())).toList();
 
 		// Force matched by Ruleset
 		for (var eloc : new ArrayList<>(episLoc))
 		{
 			var eext = CCStreams.iterate(episExt).singleOrDefault(e ->
 			{
-				return match.State.Ruleset.IsMatch(eloc.getLocalID(), e.getLocalID());
+				return match.State.Ruleset.IsMatch(eloc.getID(), e.getID());
 			}, null, null);
 			if (eext == null) continue;
 

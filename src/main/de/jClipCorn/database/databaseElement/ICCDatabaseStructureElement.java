@@ -10,6 +10,7 @@ import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.impl.EEnumProp;
 import de.jClipCorn.database.elementProps.impl.EStringProp;
 import de.jClipCorn.database.util.ExtendedViewedState;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datetime.CCDate;
 
 import java.awt.image.BufferedImage;
@@ -29,7 +30,7 @@ public interface ICCDatabaseStructureElement {
 
 	ExtendedViewedState    getExtendedViewedState();
 	String                 getQualifiedTitle();
-	int                    getLocalID();
+	CCUUID                 getID();
 	CCMovieList            getMovieList();
 
 	ICalculationCache      getCache();

@@ -10,12 +10,14 @@ import java.util.List;
 
 public class CCSQLTableDef {
 
+	public final String Schema; // the ATTACH schema the table lives in ("main" / "userdata")
 	public final String Name;
 	public final CCSQLColDef Primary;
 	public final List<CCSQLColDef> Columns;
 	public final List<CCSQLFKey> ForeignKeys;
 
-	public CCSQLTableDef(String n, CCSQLColDef p, CCSQLColDef[] cols, CCSQLFKey[] fkeys) {
+	public CCSQLTableDef(String schema, String n, CCSQLColDef p, CCSQLColDef[] cols, CCSQLFKey[] fkeys) {
+		Schema  = schema;
 		Name    = n;
 
 		Primary = p;
@@ -24,6 +26,10 @@ public class CCSQLTableDef {
 		if (p != null) Columns.add(0, p);
 
 		ForeignKeys = Arrays.asList(fkeys);
+	}
+
+	public String qualifiedName() {
+		return Schema + "." + SQLBuilderHelper.sqlEscape(Name); //$NON-NLS-1$
 	}
 
 	public CCStream<CCSQLColDef> getNonPrimaryColumns() {
@@ -44,14 +50,15 @@ public class CCSQLTableDef {
 
 	@Override
 	public int hashCode() {
-		int result = Name != null ? Name.hashCode() : 0;
-		result = 31 * result + (Primary != null ? Primary.hashCode() : 0);
-		result = 31 * result + (Columns != null ? Columns.hashCode() : 0);
+		int result = Schema != null ? Schema.hashCode() : 0;
+		result = 31 * result + (Name != null ? Name.hashCode() : 0);
+		result = 31 * result + Columns.size();
 		return result;
 	}
 
 	public boolean isEqual(CCSQLTableDef other) {
 		if (other == null) return false;
+		if (!Str.equals(Schema, other.Schema)) return false;
 		if (!Str.equals(Name, other.Name)) return false;
 
 		if ((Primary==null) != (other.Primary==null)) return false;

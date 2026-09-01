@@ -9,6 +9,7 @@ import de.jClipCorn.features.serialization.xmlimport.DatabaseXMLImporter;
 import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
 import de.jClipCorn.features.serialization.xmlimport.ImportState;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.exceptions.CCFormatException;
@@ -33,6 +34,8 @@ import java.util.concurrent.atomic.AtomicReference;
 @SuppressWarnings("nls")
 public class APFWorker
 {
+	private static final int MIN_PATCH_XMLVERSION = 11;
+
 	public static Tuple<List<ActionVM>, PatchExecState> readPatch(FSPath patchFilePath) throws Exception {
 		var state = new PatchExecState();
 		state.load(FSPath.create(patchFilePath.toString() + ".state"));
@@ -44,6 +47,14 @@ public class APFWorker
 		for (var xelem: doc.getRoot().getAllChildren("action").autosortByProperty(p -> Integer.parseInt(p.getAttributeValueOrDefault("ctr", null))))
 		{
 			actions.add(new ActionVM(xelem, state));
+		}
+
+		// element ids became UUIDs in xmlversion 11 - an older patch would only fail once it is half applied
+		for (var act : actions) {
+			for (var cmd : act.Commands) {
+				int v = cmd.XML.getAttributeIntValueOrDefault("xmlversion", MIN_PATCH_XMLVERSION);
+				if (v < MIN_PATCH_XMLVERSION) throw new Exception("Patch is too old (xmlversion " + v + ", expected at least " + MIN_PATCH_XMLVERSION + ")");
+			}
 		}
 
 		return Tuple.Create(actions, state);
@@ -121,7 +132,7 @@ public class APFWorker
 			for (int i = 0; i < elem.getPartcount(); i++)
 			{
 				var src = elem.Parts.get(i).toFSPath(ml);
-				var dst = opt.DestinationTrashMovies.append("movie_" + elem.getLocalID() + "_" + i + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
+				var dst = opt.DestinationTrashMovies.append("movie_" + elem.getID() + "_" + i + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
 				Files.move(src.toPath(), dst.toPath());
 			}
 
@@ -137,7 +148,7 @@ public class APFWorker
 			if (opt.Porcelain) return;
 
 			var src = elem.getPart().toFSPath(ml);
-			var dst = opt.DestinationTrashSeries.append("episode_" + elem.getLocalID() + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
+			var dst = opt.DestinationTrashSeries.append("episode_" + elem.getID() + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
 			Files.move(src.toPath(), dst.toPath());
 
 			elem.Part.set(CCPath.Empty);
@@ -227,7 +238,7 @@ public class APFWorker
 			if (!valCurr.equals(valOld))
 				throw new Exception(Str.format("Cannot set property {0} of {1} to {2}. Diff on value_old: \"{3}\" <> \"{4}\"",
 					propname,
-					ielem.getLocalID(),
+					ielem.getID(),
 					valNew,
 					valCurr,
 					valOld));
@@ -340,7 +351,7 @@ public class APFWorker
 			var dat = cmd.XML.getFirstChildOrNull("movie");
 			if (dat == null) throw new Exception("Missing data");
 
-			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, "-1"); return; }
+			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, CCUUID.EMPTY.toString()); return; }
 
 			AtomicReference<Exception> _inner = new AtomicReference<>(null);
 			SwingUtils.invokeAndWait(() ->
@@ -356,7 +367,7 @@ public class APFWorker
 						true  // ignoreCoverData
 					))));
 
-					if (idOut != null) state.Variables.put(idOut, String.valueOf(dbelem.getLocalID()));
+					if (idOut != null) state.Variables.put(idOut, String.valueOf(dbelem.getID()));
 				}
 				catch (Exception e)
 				{
@@ -370,7 +381,7 @@ public class APFWorker
 			var dat = cmd.XML.getFirstChildOrNull("series");
 			if (dat == null) throw new Exception("Missing data");
 
-			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, "-1"); return; }
+			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, CCUUID.EMPTY.toString()); return; }
 
 			AtomicReference<Exception> _inner = new AtomicReference<>(null);
 			SwingUtils.invokeAndWait(() ->
@@ -386,7 +397,7 @@ public class APFWorker
 						true  // ignoreCoverData
 					))));
 
-					if (idOut != null) state.Variables.put(idOut, String.valueOf(dbelem.getLocalID()));
+					if (idOut != null) state.Variables.put(idOut, String.valueOf(dbelem.getID()));
 				}
 				catch (Exception e)
 				{
@@ -402,7 +413,7 @@ public class APFWorker
 
 			var parent = (CCSeries)getElement(ml, cmd, state, opt, "parent_id", "parent_type");
 
-			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, "-1"); return; }
+			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, CCUUID.EMPTY.toString()); return; }
 
 			AtomicReference<Exception> _inner = new AtomicReference<>(null);
 			SwingUtils.invokeAndWait(() ->
@@ -418,7 +429,7 @@ public class APFWorker
 						true  // ignoreCoverData
 					))));
 
-					if (idOut != null) state.Variables.put(idOut, String.valueOf(dbelem.getLocalID()));
+					if (idOut != null) state.Variables.put(idOut, String.valueOf(dbelem.getID()));
 				}
 				catch (Exception e)
 				{
@@ -434,7 +445,7 @@ public class APFWorker
 
 			var parent = (CCSeason)getElement(ml, cmd, state, opt, "parent_id", "parent_type");
 
-			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, "-1"); return; }
+			if (opt.Porcelain) { if (idOut != null) state.Variables.put(idOut, CCUUID.EMPTY.toString()); return; }
 
 			AtomicReference<Exception> _inner = new AtomicReference<>(null);
 			SwingUtils.invokeAndWait(() ->
@@ -450,7 +461,7 @@ public class APFWorker
 						true  // ignoreCoverData
 					))));
 
-					if (idOut != null) state.Variables.put(idOut, String.valueOf(dbelem.getLocalID()));
+					if (idOut != null) state.Variables.put(idOut, String.valueOf(dbelem.getID()));
 				}
 				catch (Exception e)
 				{
@@ -482,7 +493,7 @@ public class APFWorker
 				for (int i = 0; i < elem.getPartcount(); i++)
 				{
 					var src = elem.Parts.get(i).toFSPath(ml);
-					var dst = opt.DestinationTrashMovies.append("movie_" + elem.getLocalID() + "_" + i + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
+					var dst = opt.DestinationTrashMovies.append("movie_" + elem.getID() + "_" + i + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
 					Files.move(src.toPath(), dst.toPath());
 				}
 			}
@@ -513,7 +524,7 @@ public class APFWorker
 
 			if (deleteFiles) {
 				var src = elem.getPart().toFSPath(ml);
-				var dst = opt.DestinationTrashSeries.append("episode_" + elem.getLocalID() + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
+				var dst = opt.DestinationTrashSeries.append("episode_" + elem.getID() + "_" + Instant.now().getEpochSecond() + "." + elem.getFormat().asString());
 				Files.move(src.toPath(), dst.toPath());
 			}
 
@@ -535,11 +546,11 @@ public class APFWorker
 		var type  = cmd.XML.getAttributeValueOrThrow(keyType);
 		var idraw = cmd.XML.getAttributeValueOrThrow(keyID);
 
-		int id = Integer.parseInt(state.Variables.getOrDefault(idraw, idraw));
+		CCUUID id = CCUUID.parse(state.Variables.getOrDefault(idraw, idraw));
 
 		if (Str.equals(type.toUpperCase(), "MOVIE"))
 		{
-			var v = ml.iteratorMovies().singleOrNull(e -> e.LocalID.get().equals(id));
+			var v = ml.iteratorMovies().singleOrNull(e -> e.ID.get().equals(id));
 			if (v == null && !Str.equals(state.Variables.getOrDefault(idraw, idraw), idraw) && opt.Porcelain) return ml.iteratorMovies().firstOrNull();
 			if (v == null) throw new Exception("Could not find [MOVIE] with id " + idraw + " ( = " + id + ")");
 			return v;
@@ -547,7 +558,7 @@ public class APFWorker
 
 		if (Str.equals(type.toUpperCase(), "SERIES"))
 		{
-			var v = ml.iteratorSeries().singleOrNull(e -> e.LocalID.get().equals(id));
+			var v = ml.iteratorSeries().singleOrNull(e -> e.ID.get().equals(id));
 			if (v == null && !Str.equals(state.Variables.getOrDefault(idraw, idraw), idraw) && opt.Porcelain) return ml.iteratorSeries().firstOrNull();
 			if (v == null) throw new Exception("Could not find [SERIES] with id " + idraw + " ( = " + id + ")");
 			return v;
@@ -555,7 +566,7 @@ public class APFWorker
 
 		if (Str.equals(type.toUpperCase(), "SEASON"))
 		{
-			var v = ml.iteratorSeasons().singleOrNull(e -> e.LocalID.get().equals(id));
+			var v = ml.iteratorSeasons().singleOrNull(e -> e.ID.get().equals(id));
 			if (v == null && !Str.equals(state.Variables.getOrDefault(idraw, idraw), idraw) && opt.Porcelain) return ml.iteratorSeasons().firstOrNull();
 			if (v == null) throw new Exception("Could not find [SEASON] with id " + idraw + " ( = " + id + ")");
 			return v;
@@ -563,7 +574,7 @@ public class APFWorker
 
 		if (Str.equals(type.toUpperCase(), "EPISODE"))
 		{
-			var v = ml.iteratorEpisodes().singleOrNull(e -> e.LocalID.get().equals(id));
+			var v = ml.iteratorEpisodes().singleOrNull(e -> e.ID.get().equals(id));
 			if (v == null && !Str.equals(state.Variables.getOrDefault(idraw, idraw), idraw) && opt.Porcelain) return ml.iteratorEpisodes().firstOrNull();
 			if (v == null) throw new Exception("Could not find [EPISODE] with id " + idraw + " ( = " + id + ")");
 			return v;

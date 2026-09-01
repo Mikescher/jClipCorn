@@ -62,11 +62,17 @@ public abstract class DBMigration {
 		}
 
 		// ======================================================
-		var actions = run();
+		List<UpgradeAction> actions;
+		try {
+			actions = run();
+		} catch (Exception e) {
+			if (dotransaction) { try { db.executeSQLThrow("ROLLBACK TRANSACTION"); } catch (Exception e2) { /* nothing was open */ } }
+			throw e;
+		}
 		// ======================================================
 
 		db.executeSQLThrow(String.format("UPDATE %s SET %s='%s' WHERE %s='%s'",  //$NON-NLS-1$
-				TAB_INFO.Name,
+				TAB_INFO.qualifiedName(),
 				COL_INFO_VALUE.Name,
 				getToVersion(),
 				COL_INFO_KEY.Name,

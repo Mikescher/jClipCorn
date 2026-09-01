@@ -17,6 +17,7 @@ import de.jClipCorn.gui.guiComponents.jCCSimpleTable.JCCSimpleTable;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.stream.CCStreams;
+import de.jClipCorn.util.datatypes.CCUUID;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -98,10 +99,9 @@ public class DatabaseHistoryTable extends JCCSimpleTable<CCCombinedHistoryEntry>
 		if (dse instanceof CCEpisode) { PreviewSeriesFrame.show(_parent, (CCEpisode)dse, true); return; }
 		
 		if (element.Table == CCHistoryTable.COVERS) {
-			if (!Str.isInteger(element.ID)) return;
-			int cid = Integer.parseInt(element.ID);
+			if (!CCUUID.isValid(element.ID)) return;
 
-			CCCoverData data = _parent.getMovieList().getCoverCache().getInfoOrNull(cid);
+			CCCoverData data = _parent.getMovieList().getCoverCache().getInfoOrNull(CCUUID.parseOrEmpty(element.ID));
 			if (data == null) return;
 
 			Opt<String> hash = element.getNewValue("HASH_FILE"); //$NON-NLS-1$

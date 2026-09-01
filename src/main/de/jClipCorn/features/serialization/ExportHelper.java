@@ -31,6 +31,7 @@ import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.xml.CCXMLElement;
 import de.jClipCorn.util.xml.CCXMLException;
 import de.jClipCorn.util.xml.CCXMLParser;
+import de.jClipCorn.util.datatypes.CCUUID;
 import org.jdom2.Document;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -447,7 +448,7 @@ public class ExportHelper {
 				Tuple3<Integer, CCXMLElement, CCXMLParser> value = CCStreams.iterate(ExportHelper.getAllElementsOfExport(xml)).firstOrNull();
 				if (value != null)
 				{
-					CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), -1);
+					CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), CCUUID.EMPTY);
 					tmpMov.setDefaultValues(false);
 					DatabaseXMLImporter.parseSingleMovie(tmpMov, value.Item2, fn->null, new ImportState(value.Item3, value.Item1, new ImportOptions(resetDate, resetViewed, resetScore, false, true)));
 

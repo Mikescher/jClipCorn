@@ -3,6 +3,7 @@ package de.jClipCorn.database.covertab;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -34,7 +35,7 @@ public class CCStubCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public BufferedImage getCover(int cid) {
+	public BufferedImage getCover(CCUUID cid) {
 		return Resources.IMG_COVER_STANDARD.get();
 	}
 
@@ -44,37 +45,37 @@ public class CCStubCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public int addCover(BufferedImage newCover) {
-		return 0;
+	public CCUUID addCover(BufferedImage newCover) {
+		return CCUUID.generate();
 	}
 
 	@Override
-	public void deleteCover(int cid) {
+	public void deleteCover(CCUUID cid) {
 		//
 	}
 
 	@Override
-	public CCCoverData getInfoOrNull(int cid) {
+	public CCCoverData getInfoOrNull(CCUUID cid) {
 		return new CCCoverData(cid, "", ImageUtilities.BASE_COVER_WIDTH, ImageUtilities.BASE_COVER_HEIGHT, "", new CCFileSize(1024), ColorQuantizerMethod.EMPTY, CCDateTime.getCurrentDateTime()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
-	public boolean coverFileExists(int cid) {
+	public boolean coverFileExists(CCUUID cid) {
 		return true;
 	}
 
 	@Override
-	public Tuple<Integer, Integer> getDimensions(int cid) {
+	public Tuple<Integer, Integer> getDimensions(CCUUID cid) {
 		return Tuple.Create(ImageUtilities.BASE_COVER_WIDTH, ImageUtilities.BASE_COVER_HEIGHT);
 	}
 
 	@Override
-	public boolean isCached(int cid) {
+	public boolean isCached(CCUUID cid) {
 		return false;
 	}
 
 	@Override
-	public void preloadCover(int cid) {
+	public void preloadCover(CCUUID cid) {
 		//
 	}
 

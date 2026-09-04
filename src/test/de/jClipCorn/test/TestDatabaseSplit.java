@@ -413,6 +413,33 @@ public class TestDatabaseSplit extends ClipCornBaseTest {
 		}
 	}
 
+	/** a leftover user-data database is never removed unasked, and no half-created main database survives */
+	@Test
+	public void testLeftoverUserDataDatabaseBlocksTheCreation() throws Exception {
+		var dir = createAutocleanedDir("dbsplit_stale");
+
+		{
+			var ml = CCMovieList.connectAndLoadDirect(CCDatabaseDriver.SQLITE, dir, "ClipCornDB", false, true);
+			ml.createNewMovie(m -> { m.Title.set("Title"); m.Score.set(CCUserScore.RATING_V); });
+			ml.shutdown();
+		}
+
+		var mainDb = dir.append("ClipCornDB", "ClipCornDB.db");
+		var userDb = dir.append("ClipCornDB", "ClipCornUserData.db");
+
+		mainDb.deleteWithException();
+
+		try {
+			CCMovieList.connectAndLoadDirect(CCDatabaseDriver.SQLITE, dir, "ClipCornDB", false, true);
+			fail("Creating a database next to a leftover user-data database must not silently succeed");
+		} catch (Exception e) {
+			// expected - headless, so the confirmation is declined
+		}
+
+		assertTrue("the user-data database must not be deleted without a confirmation", userDb.fileExists());
+		assertFalse("a half-created main database must not survive", mainDb.fileExists());
+	}
+
 	@Test
 	public void testInfoKeysAreSplit() {
 		CCMovieList ml = createEmptyDB();

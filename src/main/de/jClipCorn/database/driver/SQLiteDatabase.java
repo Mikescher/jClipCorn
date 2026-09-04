@@ -1,16 +1,19 @@
 package de.jClipCorn.database.driver;
 
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.FileLockedException;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileLockManager;
+import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;
 import de.jClipCorn.util.sqlwrapper.SQLBuilder;
 import org.sqlite.SQLiteException;
 
+import java.awt.GraphicsEnvironment;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -45,26 +48,80 @@ public class SQLiteDatabase extends GenericDatabase {
 	@Override
 	public boolean createNewDatabase(FSPath dbDir, String dbName) {
 		var dbFilePath = getDatabaseFilePath(dbDir, dbName);
-		
+		var udFilePath = getUserDataFilePath(dbDir, dbName);
+
+		boolean opened = false;
+
 		try {
+			if (_readonly) throw new Exception("Cannot create new DB in readonly mode");
 			if (databaseExists(dbDir, dbName)) throw new FileAlreadyExistsException(dbFilePath.toString());
 			if (FileLockManager.isLocked(dbFilePath)) throw new FileLockedException(dbFilePath.toString());
 
 			dbFilePath.createFolders();
 
+			// a user-data database without its main database is a leftover - creating the user schema
+			// into it would fail halfway through and leave an unusable main database behind
+			if (udFilePath.exists()) {
+				if (! confirmStaleUserDataRemoval(udFilePath, dbFilePath)) {
+					throw new Exception(LocaleBundle.getFormattedString("LogMessage.StaleUserDataDatabaseKept", udFilePath.toString()));
+				}
+				udFilePath.deleteWithException();
+			}
+
 			if (! FileLockManager.tryLockFile(dbFilePath, true)) {
 				throw new Exception("Cannot lock databasefile");
 			}
-			
+
+			opened = true;
 			open(dbDir, dbName, true);
 
 			createSchema(DatabaseStructure.TABLES_MAIN);
 			createSchema(DatabaseStructure.TABLES_USERDATA);
 		} catch (Exception e) {
 			lastError = e;
+			if (opened) removeIncompleteDatabase(dbDir, dbName);
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Both files were created by this call - a half-created main database (schema, but no INFO rows)
+	 * would make every following start fail on the missing version.
+	 */
+	private void removeIncompleteDatabase(FSPath dbDir, String dbName) {
+		try {
+			if (connection != null) {
+				connection.close();
+				connection = null;
+			}
+		} catch (SQLException e) {
+			CCLog.addWarning("Cannot close the incomplete database", e);
+		}
+
+		try {
+			FileLockManager.unlockFile(getDatabaseFilePath(dbDir, dbName));
+		} catch (IOException e) {
+			CCLog.addWarning("Cannot unlock database file", e);
+		}
+
+		for (var p : new FSPath[] { getDatabaseFilePath(dbDir, dbName), getUserDataFilePath(dbDir, dbName) }) {
+			try {
+				if (p.exists()) p.deleteWithException();
+			} catch (IOException e) {
+				CCLog.addWarning("Cannot remove the incomplete database file " + p, e);
+			}
+		}
+	}
+
+	/** The user-data database holds every rating, tag and setting - never delete one we did not create ourselves unasked. */
+	private boolean confirmStaleUserDataRemoval(FSPath udFilePath, FSPath dbFilePath) {
+		if (GraphicsEnvironment.isHeadless()) return false;
+
+		return DialogHelper.showYesNoDlgDefaultNo(
+				null,
+				LocaleBundle.getString("Dialogs.RemoveStaleUserData_caption"),
+				LocaleBundle.getFormattedString("Dialogs.RemoveStaleUserData", udFilePath.toString(), dbFilePath.toString()));
 	}
 
 	public void createSchema(CCSQLTableDef[] tables) throws Exception {

@@ -2204,9 +2204,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						"Element1.Path",  flList.get(i-1).getPath().toString(),
 						"Element1.ID",    String.valueOf(flList.get(i-1).getElement().getID()),
 						"Element1.Title", flList.get(i-1).getElement().getQualifiedTitle(),
-						"Element2.Path",  flList.get(i-1).getPath().toString(),
-						"Element2.ID",    String.valueOf(flList.get(i-1).getElement().getID()),
-						"Element2.Title", flList.get(i-1).getElement().getQualifiedTitle()
+						"Element2.Path",  flList.get(i).getPath().toString(),
+						"Element2.ID",    String.valueOf(flList.get(i).getElement().getID()),
+						"Element2.Title", flList.get(i).getElement().getQualifiedTitle()
 				));
 			}
 
@@ -2238,9 +2238,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				e.add(DatabaseError.createDouble(
 						movielist,
 						DatabaseErrorType.ERROR_DUPLICATE_FILE, el, xmap.get(key),
-						"Element1.ID", String.valueOf(xmap.get(key).getID()),
-						"Element1.Title", xmap.get(key).getQualifiedTitle(),
-						"Element1.MediaInfo.Checksum", xmap.get(key).mediaInfo().get().Checksum.get(),
+						"Element1.ID", String.valueOf(el.getID()),
+						"Element1.Title", el.getQualifiedTitle(),
+						"Element1.MediaInfo.Checksum", el.mediaInfo().get().Checksum.get(),
 						"Element2.ID", String.valueOf(xmap.get(key).getID()),
 						"Element2.Title", xmap.get(key).getQualifiedTitle(),
 						"Element2.MediaInfo.Checksum", xmap.get(key).mediaInfo().get().Checksum.get()

@@ -167,6 +167,27 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 	}
 
 	@Test
+	public void testDatabaseErrorElementsEquals() {
+		CCMovieList ml = createEmptyDB();
+
+		Object el1 = new Object();
+		Object el2 = new Object();
+
+		var double12 = DatabaseError.createDouble(ml, DatabaseErrorType.ERROR_DUPLICATE_FILE, el1, el2);
+		var double21 = DatabaseError.createDouble(ml, DatabaseErrorType.ERROR_DUPLICATE_FILE, el2, el1);
+
+		assertSame(el2, double12.getElement2());
+
+		assertTrue(double12.elementsEquals(DatabaseError.createDouble(ml, DatabaseErrorType.ERROR_DUPLICATE_FILE, el1, el2)));
+		assertFalse(double12.elementsEquals(double21));
+
+		var single1 = DatabaseError.createSingle(ml, DatabaseErrorType.ERROR_TITLE_NOT_SET, el1);
+
+		assertTrue(single1.elementsEquals(DatabaseError.createSingle(ml, DatabaseErrorType.ERROR_NOCOVERSET, el1)));
+		assertFalse(single1.elementsEquals(DatabaseError.createSingle(ml, DatabaseErrorType.ERROR_NOCOVERSET, el2)));
+	}
+
+	@Test
 	@Parameters({ "false", "true" })
 	public void testDatabaseUserDataProblemMovies(boolean dbmode) throws Exception {
 		CCMovieList mle = createEmptyDB();

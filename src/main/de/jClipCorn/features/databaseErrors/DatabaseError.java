@@ -205,7 +205,7 @@ public class DatabaseError {
 	}
 	
 	public Object getElement2() {
-		return Element1;
+		return Element2;
 	}
 	
 	public boolean isSingleError() {

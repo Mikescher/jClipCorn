@@ -231,6 +231,8 @@ public class CCDefaultCoverCache implements ICoverCache {
 	}
 
 	private CCCoverData getEntry(CCUUID cid) {
+		if (cid.isEmpty()) return null; // element without a cover - not a cache miss
+
 		CCCoverData cce = _elements.get(cid);
 
 		if (cce == null) CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotInCache", cid)); //$NON-NLS-1$

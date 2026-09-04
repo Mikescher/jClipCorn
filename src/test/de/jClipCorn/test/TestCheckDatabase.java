@@ -117,6 +117,29 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 	}
 
 	@Test
+	public void testCoverlessElementIsNotReportedAsBrokenCover() throws Exception {
+		CCMovieList ml = createExampleDB();
+
+		var mov = movieByTitle(ml, "Der Bomber");
+		mov.setCover(CCUUID.EMPTY);
+
+		List<DatabaseError> errs = new ArrayList<>();
+
+		var opt = new DatabaseValidatorOptions();
+		opt.ValidateMovies = true;
+		opt.ValidateCoverFiles = true;
+
+		var validator = new CCDatabaseValidator(ml);
+		validator.validate(errs, opt, DoubleProgressCallbackListener.EMPTY);
+
+		assertNull(CCStreams.iterate(errs).firstOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_COVER_TOO_SMALL)));
+		assertNull(CCStreams.iterate(errs).firstOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_COVER_NOT_FOUND)));
+
+		// it is still reported as having no cover at all
+		assertNotNull(CCStreams.iterate(errs).firstOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_NOCOVERSET) && "Der Bomber".equals(p.getElement1RawName())));
+	}
+
+	@Test
 	@Parameters({ "false", "true" })
 	public void testDatabaseUserDataProblemMovies(boolean dbmode) throws Exception {
 		CCMovieList mle = createEmptyDB();

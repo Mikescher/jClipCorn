@@ -53,7 +53,9 @@ public class CCMemoryCoverCache implements ICoverCache {
 		// do nothing
 	}
 
-	private CCCoverData getFromCache(CCUUID cid) {
+	private CCCoverData getEntry(CCUUID cid) {
+		if (cid.isEmpty()) return null; // element without a cover - not a cache miss
+
 		CCCoverData cce = _elements.get(cid);
 
 		if (cce == null) CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotInCache", cid)); //$NON-NLS-1$
@@ -65,7 +67,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 	public BufferedImage getCover(CCUUID cid) {
 		if (cid.isEmpty()) return Resources.IMG_COVER_NOTFOUND.get();
 
-		CCCoverData cce = getFromCache(cid);
+		CCCoverData cce = getEntry(cid);
 		if (cce == null) return Resources.IMG_COVER_NOTFOUND.get();
 
 		return getCover(cce);
@@ -117,14 +119,6 @@ public class CCMemoryCoverCache implements ICoverCache {
 		}
 	}
 
-	private CCCoverData getEntry(CCUUID cid) {
-		CCCoverData cce = _elements.get(cid);
-
-		if (cce == null) CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotInCache", cid)); //$NON-NLS-1$
-
-		return cce;
-	}
-
 	@Override
 	public void deleteCover(CCUUID cid) {
 
@@ -151,7 +145,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 
 	@Override
 	public Tuple<Integer, Integer> getDimensions(CCUUID cid) {
-		CCCoverData cce = getFromCache(cid);
+		CCCoverData cce = getEntry(cid);
 		if (cce == null) return Tuple.Create(0, 0);
 		return Tuple.Create(cce.Width, cce.Height);
 	}

@@ -146,11 +146,11 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				mov -> mov.Year.get().isEmpty(),
 				mov -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOYEARSET, mov));
 
-		// cover not found
+		// cover not found (an element without a cover is ERROR_NOCOVERSET, not a missing cover file)
 		addMovieValidation(
 				DatabaseErrorType.ERROR_COVER_NOT_FOUND,
 				o -> o.ValidateCoverFiles,
-				(mov, movielist) -> !movielist.getCoverCache().coverFileExists(mov.getCoverID()),
+				(mov, movielist) -> !mov.getCoverID().isEmpty() && !movielist.getCoverCache().coverFileExists(mov.getCoverID()),
 				(mov, movielist) -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COVER_NOT_FOUND, mov));
 
 		// no title set
@@ -432,7 +432,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addMovieValidation(
 				DatabaseErrorType.ERROR_COVER_TOO_SMALL,
 				o -> o.ValidateMovies,
-				mov -> mov.getCoverDimensions().Item1 < ImageUtilities.BASE_COVER_WIDTH && mov.getCoverDimensions().Item2 < ImageUtilities.BASE_COVER_HEIGHT,
+				mov -> !mov.getCoverID().isEmpty() && mov.getCoverDimensions().Item1 < ImageUtilities.BASE_COVER_WIDTH && mov.getCoverDimensions().Item2 < ImageUtilities.BASE_COVER_HEIGHT,
 				mov -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_COVER_TOO_SMALL, mov,
@@ -866,11 +866,11 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				series -> !series.isEmpty() && series.getCoverID().isEmpty(),
 				series -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOCOVERSET, series));
 
-		// cover not found
+		// cover not found (an element without a cover is ERROR_NOCOVERSET, not a missing cover file)
 		addSeriesValidation(
 				DatabaseErrorType.ERROR_COVER_NOT_FOUND,
 				o -> o.ValidateCoverFiles,
-				(series, movielist) -> !movielist.getCoverCache().coverFileExists(series.getCoverID()),
+				(series, movielist) -> !series.getCoverID().isEmpty() && !movielist.getCoverCache().coverFileExists(series.getCoverID()),
 				(series, movielist) -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COVER_NOT_FOUND, series));
 
 		// Wrong AddDate
@@ -973,7 +973,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addSeriesValidation(
 				DatabaseErrorType.ERROR_COVER_TOO_SMALL,
 				o -> o.ValidateSeries,
-				series -> series.getCoverDimensions().Item1 < ImageUtilities.BASE_COVER_WIDTH && series.getCoverDimensions().Item2 < ImageUtilities.BASE_COVER_HEIGHT,
+				series -> !series.getCoverID().isEmpty() && series.getCoverDimensions().Item1 < ImageUtilities.BASE_COVER_WIDTH && series.getCoverDimensions().Item2 < ImageUtilities.BASE_COVER_HEIGHT,
 				series -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_COVER_TOO_SMALL, series,
@@ -1261,11 +1261,11 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				season -> !season.isEmpty() && season.Year.get().isEmpty(),
 				season -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_NOYEARSET, season));
 
-		// cover not found
+		// cover not found (an element without a cover is ERROR_NOCOVERSET, not a missing cover file)
 		addSeasonValidation(
 				DatabaseErrorType.ERROR_COVER_NOT_FOUND,
 				o -> o.ValidateCoverFiles,
-				(season, movielist) -> !movielist.getCoverCache().coverFileExists(season.getCoverID()),
+				(season, movielist) -> !season.getCoverID().isEmpty() && !movielist.getCoverCache().coverFileExists(season.getCoverID()),
 				(season, movielist) -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COVER_NOT_FOUND, season));
 
 		// Wrong AddDate
@@ -1305,7 +1305,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addSeasonValidation(
 				DatabaseErrorType.ERROR_COVER_TOO_SMALL,
 				o -> o.ValidateSeasons,
-				season -> season.getCoverDimensions().Item1 < ImageUtilities.BASE_COVER_WIDTH && season.getCoverDimensions().Item2 < ImageUtilities.BASE_COVER_HEIGHT,
+				season -> !season.getCoverID().isEmpty() && season.getCoverDimensions().Item1 < ImageUtilities.BASE_COVER_WIDTH && season.getCoverDimensions().Item2 < ImageUtilities.BASE_COVER_HEIGHT,
 				season -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_COVER_TOO_SMALL, season,

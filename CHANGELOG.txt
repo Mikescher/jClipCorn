@@ -1,3 +1,123 @@
+########################################################################
+############ Fri Sep 4 18:39:00 2025 +0200  1.11.0  RELEASE ############
+########################################################################
+
+
+1.10.12 Bugfix: Fix comparator in CCStream.sortByProperty
+1.10.12 Task: Change empty coverids in DB to null (instead of zero-uuid)
+1.10.12 Task: Apply cache_size and VACUUM to the userdata schema too
+1.10.12 Bugfix: Make listTables and listViews schema-aware
+1.10.12 Bugfix: Never leave a half-created database behind on a failed creation
+1.10.12 Bugfix: Also rebind userdata and history DUUID when regenerating the database DUUID
+1.10.12 Bugfix: Serialize concurrent row writes to the database
+1.10.12 Bugfix: Log changes of the sparse user-data row as element updates
+1.10.12 Bugfix: Resolve the locale key when a cover file cannot be created
+1.10.12 Bugfix: Honor the filename filter in FSPath.listFilenames and only list uuid cover files
+1.10.12 Bugfix: Fix getElement2 and the duplicate-error metadata returning the first element twice
+1.10.12 Feature: Validate the format of all id columns in the database
+1.10.12 Bugfix: Do not report elements without a cover as broken covers
+1.10.12 Bugfix: Fix NPE in cover validation when multiple elements have no cover
+1.10.12 Other: Add create-db-migration skill
+1.10.12 Feature: Add migration path for the user-data database
+1.10.12 Bugfix: Read and refresh VERSION_MAINDB instead of only writing it
+1.10.12 Feature: Allow searching series, seasons and episodes by id
+1.10.12 Bugfix: Fix mismatched format specifiers between locale files
+1.10.12 Bugfix: Update compare-rules example file to UUID element ids
+1.10.12 Bugfix: Fix two unreachable rules in CompareDatabaseRuleset
+1.10.12 Bugfix: Fix NullPointerException when exporting elements without cover
+1.10.12 Bugfix: Fix HeadlessException in --validate-db
+1.10.12 Bugfix: Strictly validate the canonical form in CCUUID.parse
+10.10.12 Feature: Split database into objective and user parts
+1.10.12 Bugfix: Fix error in HistoryFrame
+1.10.12 Feature: Allow customizing of CheckDatabaseFrame
+1.10.12 Bugfix: Fix multiple movies ending up in same directory
+1.10.12 Bugfix: Fix Size of RandomMovieFrame
+1.10.12 Task: [FORMDEV_MIG] Migrate RandomMovieFrame to FormDev
+1.10.12 Task: [FORMDEV_MIG] Migrate ImportElementsFrame to FormDev
+1.10.12 Bugfix: Fix Exception is HistoryFrame
+1.10.12 Task: [FORMDEV_MIG] Migrate FindCoverFrame to FormDev
+1.10.12 Task: [FORMDEV_MIG] Migrate ExportElementsFrame to FormDev
+1.10.12 Task: [FORMDEV_MIG] Migrate FilenameRulesFrame to FormDev
+1.10.12 Task: [FORMDEV_MIG] Migrate AutoFindReferenceFrame to FormDev
+1.10.12 Task: [FORMDEV_MIG] Migrate ChangeViewedFrame to FormDev
+1.10.12 Task: [FORMDEV_MIG] Migrate ChangeScoreFrame to FormDev
+1.10.12 Task: [FORMDEV_MIG] Migrate ShowIncompleteFilmSeriesFrame to FormDev
+1.10.12 Task: [FORMDEV_MIG] Migrate TextExportFrame to FormDev
+1.10.12 Task: [FORMDEV_MIG] Migrate AllRatingsFrame to FormDev
+1.10.12 Bugfix: Fix layout of JSingleSubReferenceChooser
+1.10.12 Bugfix: Fix layout of AddMovieFrame (add scroll pane)
+1.10.12 Bugfix: Fix layout of EditCoverControl
+1.10.12 Bugfix: Fix layout of ReferenceChooserDialog
+1.10.12 Feature: Add languages: AZE+ARM+GEO+KAZ+KIR+ALB
+1.10.12 Feature: Properly handle empty tv shows
+1.10.12 Feature: New Single-Line episode watchdata syntax
+1.10.12 Task: Improve ValidateDatabase Frame
+1.10.12 Task: Autofix invalid episode-paths from DB-Validation
+1.10.12 Task: Do not clear checksums on file-move
+1.10.12 Bugfix: Ignore nfo + poster files in empty-directory detection
+1.10.12 Feature: Add global base-movie and base-series path
+1.10.12 Bugfix: Fix wrong season number in season/series/episode nfo
+1.10.12 Task: Enforce subdirectory per movie (better for jellyfin)
+1.10.12 Bugfix: Fix nfo+poster generation for jellyfin
+1.10.12 Feature: Allow empty years
+1.10.12 Other: Show all refs in PreviewSeriesFrame sidebar
+1.10.12 Bugfix: Fix REGEX_ANIMESEASON
+1.10.12 Task: Add FSDir cache to CCDatabaseValidator
+1.10.12 Task: Refactor DatabaseValidatorOptions + add `--validate-db` cli arg
+1.10.12 Task: Improve CCDatabaseValidator speed
+1.10.12 Task: Add nfo-file (`season.nfo`) per season
+1.10.12 Task: Add icon for rating-comment without user-score
+1.10.12 Task: Better behavior for auto-created anime seasons
+1.10.12 Feature: Add `--ccpath` SyntaxVar overwrites via commandline
+1.10.12 Other: Add vscode launch.json
+1.10.12 Other: Add `make run-local` configuration
+1.10.12 Task: Improve startup time
+1.10.12 Task: Improve startup time
+1.10.12 Task: Improve startup time
+1.10.12 Bugfix: Fix order in JMultiSelectTagField
+1.10.12 Other: Add `run` Makefile targets
+1.10.12 Feature: Add mpv single-instance mode
+1.10.12 Feature: Determine AnimeSeason and AnimeStudio via OnlineRefFrame
+1.10.12 Feature: Move AnimeSeason and AnimeStudio properties to CCSeason
+1.10.12 Other: Improve RefChooserDialog layout
+1.10.12 Bugfix: Fix primary-media player not being used in PopupMenu
+1.10.12 Task: Add setting to configure max-Width of title-column
+1.10.12 Other: Improve `make betaJar` command
+1.10.12 Feature: Run DatabaseAutoFixer in cancel-able background
+1.10.12 Feature: Add `OnlineReference` field to CCSeason
+1.10.12 Other: Fix UnitTests
+1.10.12 Task: [FORMDEV_MIG] Migrate InitialConfigFrame to FormDev
+1.10.12 Feature: Move `jClipcorn.properties` into DB
+1.10.12 Feature: Save VIEWED_HISTORY+SUBTITLES+GENRE+ONLINEREF+GROUPS+LANGUAGE as json in DB
+1.10.12 Feature: Save CustomFilter directly in db
+1.10.12 Feature: Add per-host FrameDimension overrides
+1.10.12 Feature: Add new config `PROP_PLAY_PRIMARY_MEDIAPLAYER`
+1.10.12 Task: Improve loading time - less event trigger on load
+1.10.12 Feature: TransactionLog
+1.10.12 Task: Improve onAdd events - only trigger after data is filled
+1.10.12 Task: Improve clear-checksum logic
+1.10.12 Other: Fix tests
+1.10.12 Task: Upgrade some dependencies and upgrade gradle to 8.14.4
+1.10.12 Feature: Use separate HistoryDB
+1.10.12 Feature: Save Movie+Episode checksums
+1.10.12 Feature: Show more data on cover
+1.10.12 Task: Properly cancel background tasks instead of Thread.stop()
+1.10.12 Feature: Improve `AutoEpisodeLength` for seasons without consens
+1.10.12 Bugfix: Fix JAutoCompleteTextField display with too many values
+1.10.12 Bugfix: Properly sort AnimeSeasons before displaying
+1.10.12 Bugfix: Fix modality of CustomFilterEditDialog
+1.10.12 Feature: Autom create nfo files and coverfiles
+1.10.12 Other: Fix unit-tests
+1.10.12 Feature: Autofix NFO errors
+1.10.12 Feature: Save poster beside nfo file
+1.10.12 Other: Merge branch 'feature/nfo'
+1.10.12 Feature: Sort movies into subfolder
+1.10.12 Other: Merge branch 'master' into feature/nfo
+1.10.12 Task: Re-generate all jfd -> java files
+1.10.12 Task: Add `make jfd` command
+10.10.12 Feature: Create NFO files for movies+series
+1.10.12 Feature: Serialize AnimeStudio|AnimeVersion|SpecialVersion in filenames
+1.10.12 Feature: Add languages [MAC] and [SRP]
 
 
 ########################################################################

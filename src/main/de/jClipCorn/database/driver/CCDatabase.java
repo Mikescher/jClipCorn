@@ -184,6 +184,8 @@ public class CCDatabase {
 
 			db.establishDBConnection(databaseDirectory, databaseName);
 
+			if (!validateUserDataMainVersion()) return false;
+
 			upgrader.tryUpgrade();
 
 			ensureUserDataDatabase();
@@ -191,6 +193,8 @@ public class CCDatabase {
 			stmts.initialize(this);
 
 			if (!validateUserDataBinding()) return false;
+
+			updateUserDataMainVersion();
 
 			if (!_historyDb.tryconnect(this)) {
 				CCLog.addError("Failed to connect history database"); //$NON-NLS-1$
@@ -1617,6 +1621,44 @@ public class CCDatabase {
 
 		CCLog.addFatalError(LocaleBundle.getFormattedString("LogMessage.UserDataDUUIDMismatch", bound, actual, actual));
 		return false;
+	}
+
+	/**
+	 * The user-data database records the main-database version it was last used with. A main database
+	 * that is older than that record was replaced by a file from an outdated installation - migrating
+	 * it again would replay migrations whose result the user database already contains.
+	 */
+	@SuppressWarnings("nls")
+	private boolean validateUserDataMainVersion() throws SQLException {
+		if (db.querySingleIntSQLThrow("SELECT COUNT(*) FROM userdata.sqlite_master WHERE type='table' AND name='INFO'", 0) == 0) return true;
+
+		Integer recorded = parseDBVersion(db.querySingleStringSQLThrow("SELECT IVALUE FROM userdata.INFO WHERE IKEY='" + DatabaseStructure.INFOKEY_VERSION_MAINDB.Key + "'", 0));
+		Integer actual   = parseDBVersion(db.querySingleStringSQLThrow("SELECT IVALUE FROM main.INFO WHERE IKEY='" + DatabaseStructure.INFOKEY_DBVERSION.Key + "'", 0));
+
+		if (recorded == null || actual == null) return true;
+		if (recorded <= actual) return true;
+
+		CCLog.addFatalError(LocaleBundle.getFormattedString("LogMessage.UserDataMainVersionMismatch", recorded, actual));
+		return false;
+	}
+
+	/** Keeps VERSION_MAINDB current - after a migration here, or after a sync brought in an already-migrated main database. */
+	private void updateUserDataMainVersion() {
+		if (_readonly) return;
+
+		String actual = getInformation_DBVersion();
+		if (Str.equals(actual, readUserDataInformationFromDB(DatabaseStructure.INFOKEY_VERSION_MAINDB, null))) return;
+
+		writeUserDataInformationToDB(DatabaseStructure.INFOKEY_VERSION_MAINDB, actual);
+	}
+
+	private static Integer parseDBVersion(String value) {
+		if (value == null) return null;
+		try {
+			return Integer.valueOf(value.trim());
+		} catch (NumberFormatException e) {
+			return null;
+		}
 	}
 
 	/**

@@ -82,7 +82,14 @@ public class MemoryDatabase extends GenericDatabase {
 
 	@Override
 	public List<String> listTables() throws SQLException {
-		return querySQL("SELECT name FROM sqlite_master WHERE type='table'", 1, a -> (String)a[0]);
+		var r = querySQL("SELECT name FROM main.sqlite_master WHERE type='table'", 1, a -> (String)a[0]);
+		r.addAll(querySQL("SELECT name FROM userdata.sqlite_master WHERE type='table'", 1, a -> (String)a[0]));
+		return r;
+	}
+
+	@Override
+	public List<String> listTables(String schema) throws SQLException {
+		return querySQL("SELECT name FROM " + schema + ".sqlite_master WHERE type='table'", 1, a -> (String)a[0]);
 	}
 
 	@Override
@@ -94,7 +101,14 @@ public class MemoryDatabase extends GenericDatabase {
 
 	@Override
 	public List<String> listViews() throws SQLException {
-		return querySQL("SELECT name FROM sqlite_master WHERE type='view'", 1, a -> (String)a[0]);
+		var r = querySQL("SELECT name FROM main.sqlite_master WHERE type='view'", 1, a -> (String)a[0]);
+		r.addAll(querySQL("SELECT name FROM userdata.sqlite_master WHERE type='view'", 1, a -> (String)a[0]));
+		return r;
+	}
+
+	@Override
+	public List<String> listViews(String schema) throws SQLException {
+		return querySQL("SELECT name FROM " + schema + ".sqlite_master WHERE type='view'", 1, a -> (String)a[0]);
 	}
 
 	@Override

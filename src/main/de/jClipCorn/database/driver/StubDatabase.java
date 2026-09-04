@@ -49,12 +49,22 @@ public class StubDatabase extends GenericDatabase {
 	}
 
 	@Override
+	public List<String> listTables(String schema) {
+		return new ArrayList<>();
+	}
+
+	@Override
 	public List<String> listTrigger() {
 		return new ArrayList<>();
 	}
 
 	@Override
 	public List<String> listViews() {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<String> listViews(String schema) {
 		return new ArrayList<>();
 	}
 

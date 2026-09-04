@@ -517,8 +517,10 @@ public abstract class GenericDatabase implements PublicDatabaseInterface {
 	public abstract boolean isInMemory();
 
 	public abstract List<String> listTables() throws SQLException;
+	public abstract List<String> listTables(String schema) throws SQLException;
 	public abstract List<String> listTrigger() throws SQLException;
 	public abstract List<Tuple<String, String>> listTriggerWithStatements() throws SQLException;
 	public abstract List<String> listViews() throws SQLException;
+	public abstract List<String> listViews(String schema) throws SQLException;
 }
 

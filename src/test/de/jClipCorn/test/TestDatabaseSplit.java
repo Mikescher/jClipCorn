@@ -6,6 +6,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.driver.DatabaseStructure;
+import de.jClipCorn.database.driver.MemoryDatabase;
 import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.impl.ETargetDatabase;
 import de.jClipCorn.database.history.CCHistoryAction;
@@ -13,6 +14,7 @@ import de.jClipCorn.database.history.CCHistoryTable;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.sqlwrapper.CCSQLColDef;
 import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;
@@ -438,6 +440,30 @@ public class TestDatabaseSplit extends ClipCornBaseTest {
 
 		assertTrue("the user-data database must not be deleted without a confirmation", userDb.fileExists());
 		assertFalse("a half-created main database must not survive", mainDb.fileExists());
+	}
+
+	@Test
+	public void testListTablesAndViewsSeeBothSchemas() throws Exception {
+		MemoryDatabase db = new MemoryDatabase();
+		assertTrue(db.createNewDatabase(FSPath.Empty, "TEST"));
+
+		db.executeSQLThrow("CREATE VIEW main.V_MAIN     AS SELECT [ID] FROM main.MOVIES");
+		db.executeSQLThrow("CREATE VIEW userdata.V_USER AS SELECT [ID] FROM userdata.MOVIES");
+
+		assertTrue(db.listTables().contains("COVERS"));
+		assertTrue(db.listTables().contains("PROPERTIES"));
+		assertTrue(db.listViews().contains("V_MAIN"));
+		assertTrue(db.listViews().contains("V_USER"));
+
+		assertTrue(db.listTables(DatabaseStructure.SCHEMA_MAIN).contains("COVERS"));
+		assertFalse(db.listTables(DatabaseStructure.SCHEMA_MAIN).contains("PROPERTIES"));
+		assertTrue(db.listTables(DatabaseStructure.SCHEMA_USERDATA).contains("PROPERTIES"));
+
+		assertTrue(db.listViews(DatabaseStructure.SCHEMA_MAIN).contains("V_MAIN"));
+		assertFalse(db.listViews(DatabaseStructure.SCHEMA_MAIN).contains("V_USER"));
+		assertTrue(db.listViews(DatabaseStructure.SCHEMA_USERDATA).contains("V_USER"));
+
+		db.closeDBConnection(FSPath.Empty, "TEST", true);
 	}
 
 	@Test

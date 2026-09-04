@@ -9,6 +9,8 @@ import de.jClipCorn.util.stream.CCStreams;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.jClipCorn.database.driver.DatabaseStructure.SCHEMA_MAIN;
+
 public class Migration_13_14 extends DBMigration {
 
 	public Migration_13_14(GenericDatabase db, FSPath databaseDirectory, String databaseName, boolean readonly) {
@@ -62,7 +64,7 @@ public class Migration_13_14 extends DBMigration {
 
 		db.executeSQLThrow("INSERT INTO INFO (IKEY, IVALUE) VALUES ('HISTORY_ENABLED', '0')");
 
-		if (!db.listTables().contains("HISTORY"))
+		if (!db.listTables(SCHEMA_MAIN).contains("HISTORY"))
 		{
 			db.executeSQLThrow("CREATE TABLE [HISTORY] ([TABLE] VARCHAR(16) NOT NULL, [ID] VARCHAR(256) NOT NULL, [DATE] VARCHAR(32) NOT NULL, [ACTION] VARCHAR(32) NOT NULL, [FIELD] VARCHAR(32) NOT NULL, [OLD] VARCHAR(4096), [NEW] VARCHAR(4096))");
 		}

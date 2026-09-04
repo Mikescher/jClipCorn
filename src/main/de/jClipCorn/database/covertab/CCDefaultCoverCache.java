@@ -198,7 +198,7 @@ public class CCDefaultCoverCache implements ICoverCache {
 
 			return cid;
 		} catch (IOException | ColorQuantizerException | SQLWrapperException e) {
-			CCLog.addError("LogMessage.ErrorCreatingCoverFile"); //$NON-NLS-1$
+			CCLog.addError(LocaleBundle.getString("LogMessage.ErrorCreatingCoverFile"), e); //$NON-NLS-1$
 			return CCUUID.EMPTY;
 		}
 	}

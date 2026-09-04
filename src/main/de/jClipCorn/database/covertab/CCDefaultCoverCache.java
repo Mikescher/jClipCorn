@@ -71,9 +71,9 @@ public class CCDefaultCoverCache implements ICoverCache {
 		return _coverPath;
 	}
 
-	/** Every file in the cover directory - since the rename to {@code <uuid>.<ext>} there is no name convention left to filter on. */
+	/** The {@code <uuid>.<ext>} files in the cover directory - everything else in there (and every subdirectory) is not a cover. */
 	public List<Tuple<String, Func0to1WithIOException<BufferedImage>>> listCoversInFilesystem() {
-		var files = getCoverDirectory().listFilenames();
+		var files = getCoverDirectory().listFilenames((dir, name) -> CCUUID.isValid(FSPath.create(name).getFilenameWithoutExt()));
 
 		List<Tuple<String, Func0to1WithIOException<BufferedImage>>> result = new ArrayList<>();
 		for (String file : files) {

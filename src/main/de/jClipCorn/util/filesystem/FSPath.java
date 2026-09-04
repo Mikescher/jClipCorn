@@ -196,7 +196,7 @@ public class FSPath implements IPath, Comparable<FSPath> {
 	}
 
 	public String[] listFilenames(FilenameFilter ff) {
-		var ls = toFile().list();
+		var ls = toFile().list(ff);
 		if (ls == null) return new String[0];
 		return ls;
 	}

@@ -2074,8 +2074,6 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		List<Tuple<String, Func0to1WithIOException<BufferedImage>>> files = new ArrayList<>();
 		if (cc instanceof CCDefaultCoverCache) files = ((CCDefaultCoverCache)cc).listCoversInFilesystem();
 
-		files = CCStreams.iterate(files).filter(p -> !Str.equals(p.Item1, "Thumbs.db")).toList();
-
 		pcl.setSubMax(files.size() + cc.getCoverCount());
 
 		// ###############################################

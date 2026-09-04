@@ -4,6 +4,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
+import de.jClipCorn.util.stream.CCStreams;
 import junitparams.JUnitParamsRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,19 @@ import static org.junit.Assert.assertEquals;
 @SuppressWarnings("nls")
 @RunWith(JUnitParamsRunner.class)
 public class TestPathIterators extends ClipCornBaseTest {
+
+	@Test
+	public void testListFilenamesWithFilter() throws Exception {
+		var tempPath = createAutocleanedDir("testListFilenamesWithFilter");
+
+		tempPath.append("a.png").touch();
+		tempPath.append("b.png").touch();
+		tempPath.append("c.txt").touch();
+		tempPath.append("sub").mkdirsWithException();
+
+		assertEquals("a.png:b.png:c.txt:sub", CCStreams.iterate(tempPath.listFilenames()).autosort().stringjoin(p -> p, ":"));
+		assertEquals("a.png:b.png",           CCStreams.iterate(tempPath.listFilenames((dir, name) -> name.endsWith(".png"))).autosort().stringjoin(p -> p, ":"));
+	}
 
 	@Test
 	public void testFSPathDepthFirstIterator() throws Exception {

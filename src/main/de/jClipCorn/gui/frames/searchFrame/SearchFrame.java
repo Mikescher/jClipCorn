@@ -212,6 +212,8 @@ public class SearchFrame extends JCCFrame
 
 					if (searchString.equals("{all}")) { result.add(epi); continue; } //$NON-NLS-1$
 
+					if (epi.getID().matches(searchString)) { result.add(epi); continue; }
+
 					if (StringUtils.containsIgnoreCase(epi.getTitle(), searchString)) { result.add(epi); continue; }
 
 					boolean epiFound = false;
@@ -231,10 +233,14 @@ public class SearchFrame extends JCCFrame
 
 				if (searchString.equals("{all}")) { result.add(sea); continue; } //$NON-NLS-1$
 
+				if (sea.getID().matches(searchString)) { result.add(sea); continue; }
+
 				if (StringUtils.containsIgnoreCase(sea.getTitle(), searchString)) { result.add(sea); continue; }
 			}
 
 			if (searchString.equals("{all}")) { result.add(ser); continue; } //$NON-NLS-1$
+
+			if (ser.getID().matches(searchString)) { result.add(ser); continue; }
 
 			if (StringUtils.containsIgnoreCase(ser.getTitle(), searchString)) { result.add(ser); continue; }
 

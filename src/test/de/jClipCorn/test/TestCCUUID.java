@@ -188,4 +188,22 @@ public class TestCCUUID extends ClipCornBaseTest {
 		assertTrue(hi.compareTo(lo) > 0);
 		assertEquals(0, lo.compareTo(lo));
 	}
+
+	@Test
+	public void testMatches() throws CCFormatException {
+		var v = CCUUID.parse("0195c2e4-1f00-7a3e-9b21-4c8d5e6f7a8b");
+
+		assertEquals("5e6f7a8b", v.toShortString());
+
+		assertTrue(v.matches("0195c2e4-1f00-7a3e-9b21-4c8d5e6f7a8b"));
+		assertTrue(v.matches("0195C2E4-1F00-7A3E-9B21-4C8D5E6F7A8B"));
+		assertTrue(v.matches(" 0195c2e4-1f00-7a3e-9b21-4c8d5e6f7a8b "));
+		assertTrue(v.matches(v.toShortString()));
+		assertTrue(v.matches(v.toShortString().toUpperCase()));
+
+		assertFalse(v.matches("0195c2e4"));
+		assertFalse(v.matches("0195c2e4-1f00-7a3e-9b21-4c8d5e6f7a8c"));
+		assertFalse(v.matches(""));
+		assertFalse(v.matches(null));
+	}
 }

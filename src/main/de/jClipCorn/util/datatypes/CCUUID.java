@@ -9,6 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * The identity of a database row (movies, series, seasons, episodes, covers).
@@ -36,6 +37,13 @@ public class CCUUID implements Comparable<CCUUID> {
 
 	private final static String MIGRATION_HASH_PREFIX = "jcc-uuidv7-migration"; //$NON-NLS-1$
 
+	/**
+	 * {@link UUID#fromString} alone is not enough: it also accepts short, overlong and signed groups
+	 * ({@code 1-1-1-1-1}, {@code ...-+0c04fd430c8}) and maps them onto a *different*, perfectly valid
+	 * id. Such an id then silently misses every {@code userdata.X.ID = main.X.ID} join.
+	 */
+	private final static Pattern CANONICAL = Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"); //$NON-NLS-1$
+
 	private final static SecureRandom RANDOM = new SecureRandom();
 
 	private static long _lastTs  = -1;
@@ -53,17 +61,17 @@ public class CCUUID implements Comparable<CCUUID> {
 		return new CCUUID(v);
 	}
 
+	/**
+	 * Upper- and lowercase hex are both accepted; both hex cases and the surrounding whitespace are
+	 * normalised away, so {@code parse(v).toString()} is always the canonical lowercase form.
+	 */
 	public static CCUUID parse(String v) throws UUIDFormatException {
 		if (Str.isNullOrWhitespace(v)) throw new UUIDFormatException("Cannot parse empty string as UUID"); //$NON-NLS-1$
 
 		v = v.trim();
-		if (v.length() != 36) throw new UUIDFormatException("Not a canonical UUID: '" + v + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (!CANONICAL.matcher(v).matches()) throw new UUIDFormatException("Not a canonical UUID: '" + v + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		try {
-			return new CCUUID(UUID.fromString(v));
-		} catch (IllegalArgumentException e) {
-			throw new UUIDFormatException("Not a canonical UUID: '" + v + "'", e); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		return new CCUUID(UUID.fromString(v));
 	}
 
 	/** Parses {@code v}, falling back to {@link #EMPTY} for null/empty/malformed input. */
@@ -76,12 +84,9 @@ public class CCUUID implements Comparable<CCUUID> {
 	}
 
 	public static boolean isValid(String v) {
-		try {
-			parse(v);
-			return true;
-		} catch (UUIDFormatException e) {
-			return false;
-		}
+		if (Str.isNullOrWhitespace(v)) return false;
+
+		return CANONICAL.matcher(v.trim()).matches();
 	}
 
 	/**

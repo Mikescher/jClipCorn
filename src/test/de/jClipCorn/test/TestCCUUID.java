@@ -55,11 +55,41 @@ public class TestCCUUID extends ClipCornBaseTest {
 	}
 
 	@Test
+	public void testParseRejectsMalformed36CharValues() {
+		// all 36 chars long, and UUID.fromString() maps every one of them onto a *different*, valid id
+		for (String v : new String[]
+		{
+			"6ba7b810-9dad-11d1-80b4-+0c04fd430c8", // -> 6ba7b810-9dad-11d1-80b4-00c04fd430c8, a real id
+			"0000000000000000000000000000-0-0-0-0", // -> the nil sentinel
+			"6ba7b8-109dad-11d1-80b4-00c04fd430c8", // -> 006ba7b8-9dad-11d1-80b4-00c04fd430c8
+			"+ba7b810-9dad-11d1-80b4-00c04fd430c8", // -> 0ba7b810-9dad-11d1-80b4-00c04fd430c8
+		})
+		{
+			assertParseFails(v);
+			assertFalse(v, CCUUID.isValid(v));
+			assertEquals(v, CCUUID.EMPTY, CCUUID.parseOrEmpty(v));
+		}
+	}
+
+	@Test
+	public void testParseNormalizesUppercase() throws CCFormatException {
+		// uppercase hex is a legal UUID representation - accepted, but normalized to the canonical form
+		var v = "6BA7B810-9DAD-11D1-80B4-00C04FD430C8";
+
+		assertTrue(CCUUID.isValid(v));
+		assertEquals("6ba7b810-9dad-11d1-80b4-00c04fd430c8", CCUUID.parse(v).toString());
+		assertEquals(CCUUID.parse(v.toLowerCase()), CCUUID.parse(v));
+	}
+
+	@Test
 	public void testRoundtrip() throws CCFormatException {
 		for (int i = 0; i < 128; i++) {
 			var a = CCUUID.generate();
 			assertEquals(a, CCUUID.parse(a.toString()));
 			assertEquals(a.hashCode(), CCUUID.parse(a.toString()).hashCode());
+
+			// the raw SQL joins between the main and the userdata database compare id *strings*
+			assertEquals(a.toString(), CCUUID.parse(a.toString()).toString());
 		}
 	}
 

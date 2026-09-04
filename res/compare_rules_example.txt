@@ -1,32 +1,33 @@
 //
 // Examples:
-//    skip local:8863                // completely skip entry with id=8863 in local database (evtl matching entry in extern will be deleted)
-//    skip extern:9724               // completely skip entry with id=9724 in extern database (evtl entry will be created anew)
+//    skip local:0195c2e4-1f00-7a3e-9b21-4c8d5e6f7a8b     // completely skip this entry in the local database (evtl matching entry in extern will be deleted)
+//    skip extern:0195c2e4-2b40-7c19-8e55-1d2f3a4b5c6d    // completely skip this entry in the extern database (evtl entry will be created anew)
 //
-//    match local:8863 extern:9724   // force the two entries 8863 and 9724 to be linked (if they are seasons/episodes their parents must also be linked)
+//    match local:0195c2e4-1f00-7a3e-9b21-4c8d5e6f7a8b extern:0195c2e4-2b40-7c19-8e55-1d2f3a4b5c6d    // force the two entries to be linked (if they are seasons/episodes their parents must also be linked)
 //
-//    keep_cover extern:9724         // do not update the cover of the entry 9724
-//    keep_cover local:8863          // do not update the cover of the entry that is linked with 8863
-//    keep_cover *                   // do not update any covers (of any entry)
+//    keep_cover extern:0195c2e4-2b40-7c19-8e55-1d2f3a4b5c6d    // do not update the cover of this entry
+//    keep_cover local:0195c2e4-1f00-7a3e-9b21-4c8d5e6f7a8b     // do not update the cover of the entry that is linked with this one
+//    keep_cover *                                              // do not update any covers (of any entry)
 //
-//    keep_files extern:9724         // do not update the video file(s) of the entry 9724
-//    keep_files local:8863          // do not update the video file(s) of the entry that is linked with 8863
-//    keep_files *                   // do not update any video file(s) (of any entry)
+//    keep_files extern:0195c2e4-2b40-7c19-8e55-1d2f3a4b5c6d    // do not update the video file(s) of this entry
+//    keep_files local:0195c2e4-1f00-7a3e-9b21-4c8d5e6f7a8b     // do not update the video file(s) of the entry that is linked with this one
+//    keep_files *                                              // do not update any video file(s) (of any entry)
 //
-//    keep_meta extern:9724         // do not update the metadata of the entry 9724
-//    keep_meta local:8863          // do not update the metadata of the entry that is linked with 8863
-//    keep_meta *                   // do not update any metadata (of any entry)
+//    keep_meta extern:0195c2e4-2b40-7c19-8e55-1d2f3a4b5c6d    // do not update the metadata of this entry
+//    keep_meta local:0195c2e4-1f00-7a3e-9b21-4c8d5e6f7a8b     // do not update the metadata of the entry that is linked with this one
+//    keep_meta *                                              // do not update any metadata (of any entry)
 //
-//    keep_meta genres extern:9724  // do not update the metadata field [genres] of the entry 9724
-//    keep_meta genres local:8863   // do not update the metadata field [genres] of the entry that is linked with 8863
-//    keep_meta genres *            // do not update the metadata field [genres] of any entry
+//    keep_meta genres extern:0195c2e4-2b40-7c19-8e55-1d2f3a4b5c6d    // do not update the metadata field [genres] of this entry
+//    keep_meta genres local:0195c2e4-1f00-7a3e-9b21-4c8d5e6f7a8b     // do not update the metadata field [genres] of the entry that is linked with this one
+//    keep_meta genres *                                              // do not update the metadata field [genres] of any entry
 //
-//    keep_entry extern:9724        // do not delete the entry 9724 from the remote db (if it is missing in local)
-//    keep_entry *                  // do not delete the any entries from the remote db
+//    keep_entry extern:0195c2e4-2b40-7c19-8e55-1d2f3a4b5c6d    // do not delete this entry from the remote db (if it is missing in local)
+//    keep_entry *                                              // do not delete the any entries from the remote db
 //
-//    prevent_entry local:8863      // do not add the entry 8863 to the remote db (if it is missing in remote)
-//    prevent_entry *               // do not add the any entries to the remote db
+//    prevent_entry local:0195c2e4-1f00-7a3e-9b21-4c8d5e6f7a8b    // do not add this entry to the remote db (if it is missing in remote)
+//    prevent_entry *                                             // do not add the any entries to the remote db
 //
 //
 // (one line per command, comments with `//`)
+// (ids are the full 36 character element ids, the field names of `keep_meta` are matched case-insensitive)
 //

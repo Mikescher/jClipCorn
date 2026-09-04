@@ -12,15 +12,18 @@ import de.jClipCorn.gui.frames.applyPatchFrame.APFWorker;
 import de.jClipCorn.gui.frames.applyPatchFrame.PatchExecOptions;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CDFWorkerCompare;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CDFWorkerPatch;
+import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseFrame;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseRuleset;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import de.jClipCorn.util.listener.DoubleProgressCallbackProgressBarHelper;
+import de.jClipCorn.util.stream.CCStreams;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.junit.Test;
@@ -210,6 +213,22 @@ public class TestCompareAndPatchDatabases extends ClipCornBaseTest {
 		assertFalse(ruleset.ShouldUpdateMetadata(uOth, uExt, mov.Genres, mov.Genres));
 		assertTrue(ruleset.ShouldUpdateMetadata(uOth, uOth, mov.Genres, mov.Genres));
 		assertTrue(ruleset.ShouldUpdateMetadata(uOth, uOth, mov.Title, mov.Title));
+	}
+
+	/** Every example line in the shipped rules file must be a rule the parser accepts. */
+	@Test
+	public void testParseRulesetExamples() throws Exception {
+		var txt = SimpleFileUtils.readTextResource("/compare_rules_example.txt", CompareDatabaseFrame.class);
+
+		var rules = CCStreams
+				.iterate(txt.split("\\r?\\n"))
+				.map(p -> RegExHelper.find("^//\\s{4}(\\S.*)$", p, 1))
+				.filter(p -> !Str.isNullOrWhitespace(p))
+				.toList();
+
+		assertEquals(19, rules.size());
+
+		for (var rule : rules) CompareDatabaseRuleset.parse(rule);
 	}
 
 }

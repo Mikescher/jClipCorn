@@ -3,8 +3,6 @@ package de.jClipCorn.features.nfo;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.filesystem.FSPath;
 import org.jdom2.Document;
@@ -52,9 +50,8 @@ public class MovieNFOWriter {
 		// Year
 		movie.Year.get().ifPresent(year -> root.addContent(new Element("year").setText(String.valueOf(year))));
 
-		// Runtime in minutes
-		int runtimeMinutes = movie.Length.get() / 60;
-		root.addContent(new Element("runtime").setText(String.valueOf(runtimeMinutes)));
+		// Runtime - Length is already stored in minutes
+		root.addContent(new Element("runtime").setText(String.valueOf(movie.Length.get())));
 
 		// Genres - each in separate tag
 		for (CCGenre genre : movie.Genres.get().getGenres()) {
@@ -108,29 +105,7 @@ public class MovieNFOWriter {
 	}
 
 	private static void writeUniqueIds(Element root, CCMovie movie) {
-		boolean hasDefault = false;
-
-		for (CCSingleOnlineReference ref : movie.OnlineReference.get()) {
-			if (ref.type == CCOnlineRefType.NONE) continue;
-
-			String typeId = getKodiProviderType(ref.type);
-			if (Str.isNullOrEmpty(typeId)) continue;
-
-			Element uniqueid = new Element("uniqueid");
-			uniqueid.setAttribute("type", typeId);
-			if (!hasDefault) {
-				uniqueid.setAttribute("default", "true");
-				hasDefault = true;
-			}
-			uniqueid.setText(ref.getNfoUniqueId());
-			root.addContent(uniqueid);
-		}
-
-		// Add clipcorn internal ID
-		Element clipcornId = new Element("uniqueid");
-		clipcornId.setAttribute("type", "clipcorn");
-		clipcornId.setText(movie.ID.get().toString());
-		root.addContent(clipcornId);
+		NFOUniqueIdWriter.write(root, movie.OnlineReference.get(), movie.ID.get().toString());
 	}
 
 	private static void writeCoverThumb(Element root, CCMovie movie) {
@@ -144,16 +119,5 @@ public class MovieNFOWriter {
 		thumb.setAttribute("aspect", "poster");
 		thumb.setText(posterPath.getFilenameWithExt());
 		root.addContent(thumb);
-	}
-
-	private static String getKodiProviderType(CCOnlineRefType type) {
-		switch (type) {
-			case IMDB:        return "imdb";
-			case THEMOVIEDB:  return "tmdb";
-			case ANIDB:       return "anidb";
-			case MYANIMELIST: return "myanimelist";
-			case ANILIST:     return "anilist";
-			default:          return null;
-		}
 	}
 }

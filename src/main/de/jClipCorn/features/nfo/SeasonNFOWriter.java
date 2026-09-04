@@ -3,8 +3,6 @@ package de.jClipCorn.features.nfo;
 import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.filesystem.FSPath;
 import org.jdom2.Document;
@@ -98,29 +96,7 @@ public class SeasonNFOWriter {
 	}
 
 	private static void writeUniqueIds(Element root, CCSeason season) {
-		boolean hasDefault = false;
-
-		for (CCSingleOnlineReference ref : season.getOnlineReference()) {
-			if (ref.type == CCOnlineRefType.NONE) continue;
-
-			String typeId = getKodiProviderType(ref.type);
-			if (Str.isNullOrEmpty(typeId)) continue;
-
-			Element uniqueid = new Element("uniqueid");
-			uniqueid.setAttribute("type", typeId);
-			if (!hasDefault) {
-				uniqueid.setAttribute("default", "true");
-				hasDefault = true;
-			}
-			uniqueid.setText(ref.getNfoUniqueId());
-			root.addContent(uniqueid);
-		}
-
-		// Add clipcorn internal ID
-		Element clipcornId = new Element("uniqueid");
-		clipcornId.setAttribute("type", "clipcorn");
-		clipcornId.setText(season.getID().toString());
-		root.addContent(clipcornId);
+		NFOUniqueIdWriter.write(root, season.getOnlineReference(), season.getID().toString());
 	}
 
 	private static void writeCoverThumb(Element root, CCSeries series, CCSeason season) {
@@ -135,16 +111,5 @@ public class SeasonNFOWriter {
 		thumb.setAttribute("aspect", "poster");
 		thumb.setText(posterPath.getFilenameWithExt());
 		root.addContent(thumb);
-	}
-
-	private static String getKodiProviderType(CCOnlineRefType type) {
-		switch (type) {
-			case IMDB:        return "imdb";
-			case THEMOVIEDB:  return "tmdb";
-			case ANIDB:       return "anidb";
-			case MYANIMELIST: return "myanimelist";
-			case ANILIST:     return "anilist";
-			default:          return null;
-		}
 	}
 }

@@ -8,8 +8,11 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.driver.DatabaseStructure;
 import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.impl.ETargetDatabase;
+import de.jClipCorn.database.history.CCHistoryAction;
+import de.jClipCorn.database.history.CCHistoryTable;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.CCUUID;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.sqlwrapper.CCSQLColDef;
 import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;
@@ -245,6 +248,75 @@ public class TestDatabaseSplit extends ClipCornBaseTest {
 
 			ml.shutdown();
 		}
+	}
+
+	/** the sparse row appears and vanishes with the user data, but the element itself was neither added nor removed */
+	@Test
+	public void testCreatingAndDroppingTheUserRowIsLoggedAsUpdate() throws Exception {
+		CCMovieList ml = createEmptyDB();
+
+		CCMovie mov = ml.createNewMovie(m -> m.Title.set("Title"));
+
+		ml.getHistory().enableTrigger();
+
+		mov.Score.set(CCUserScore.RATING_IV);
+
+		var db = ml.getInternalDatabaseDirectly();
+		assertEquals(0, db.querySingleIntSQLThrow("SELECT COUNT(*) FROM userdata.HISTORY WHERE [TABLE]='MOVIES' AND [ACTION]<>'UPDATE'", 0));
+
+		// the missing row stood for the defaults
+		assertEquals(Integer.toString(CCUserScore.RATING_NO.asInt()), db.querySingleStringSQLThrow("SELECT [OLD] FROM userdata.HISTORY WHERE [FIELD]='SCORE'", 0));
+		assertEquals(CCTagList.EMPTY.asJSONArray(),                   db.querySingleStringSQLThrow("SELECT [OLD] FROM userdata.HISTORY WHERE [FIELD]='TAGS'", 0));
+		assertEquals(CCDateTimeList.createEmpty().asJSONArray(),       db.querySingleStringSQLThrow("SELECT [OLD] FROM userdata.HISTORY WHERE [FIELD]='VIEWED_HISTORY'", 0));
+
+		mov.Score.set(CCUserScore.RATING_NO);
+
+		assertEquals(0, db.querySingleIntSQLThrow("SELECT COUNT(*) FROM userdata.HISTORY WHERE [TABLE]='MOVIES' AND [ACTION]<>'UPDATE'", 0));
+		assertEquals(Integer.toString(CCUserScore.RATING_NO.asInt()), db.querySingleStringSQLThrow("SELECT [NEW] FROM userdata.HISTORY WHERE [FIELD]='SCORE' ORDER BY rowid DESC", 0));
+	}
+
+	/** the per-field rows of one user-side edit have to end up in a single entry */
+	@Test
+	public void testFirstUserEditIsOneUpdateEntry() throws Exception {
+		CCMovieList ml = createEmptyDB();
+
+		CCMovie mov = ml.createNewMovie(m -> m.Title.set("Title"));
+
+		ml.getHistory().enableTrigger();
+
+		mov.Score.set(CCUserScore.RATING_IV);
+
+		var entries = CCStreams.iterate(ml.getHistory().query(ml, false, false, false, null, Opt.empty(), null).Item1)
+				.filter(p -> p.Table == CCHistoryTable.MOVIES)
+				.enumerate();
+
+		assertEquals(1, entries.size());
+		assertEquals(CCHistoryAction.UPDATE, entries.get(0).Action);
+		assertSame(mov, entries.get(0).getSourceElement());
+
+		// the three columns that stayed at their default are not a change
+		assertEquals(1, entries.get(0).Changes.size());
+		assertEquals("SCORE", entries.get(0).Changes.get(0).Field);
+	}
+
+	/** the first rating of a just-added element belongs to the add, it is not a separate edit */
+	@Test
+	public void testUserDataOfANewElementFoldsIntoTheAdd() throws Exception {
+		CCMovieList ml = createEmptyDB();
+
+		ml.getHistory().enableTrigger();
+
+		CCMovie mov = ml.createNewMovie(m -> m.Title.set("Title"));
+		Thread.sleep(20); // the merge is order-dependent, and the two writes would otherwise share a timestamp
+		mov.Score.set(CCUserScore.RATING_IV);
+
+		var scored = CCStreams.iterate(ml.getHistory().query(ml, false, false, false, null, Opt.empty(), null).Item1)
+				.filter(p -> p.Table == CCHistoryTable.MOVIES && p.getNewValue("SCORE").isPresent())
+				.enumerate();
+
+		assertEquals(1, scored.size());
+		assertEquals(CCHistoryAction.INSERT, scored.get(0).Action);
+		assertSame(mov, scored.get(0).getSourceElement());
 	}
 
 	/** the user row is upserted, not deleted and re-inserted, or every edit would log a remove+add pair */

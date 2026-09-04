@@ -5,6 +5,9 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
 import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseStructure;
 import de.jClipCorn.features.log.CCLog;
@@ -55,6 +58,14 @@ public class CCDatabaseHistory {
 			DatabaseStructure.TAB_TEMP,       DatabaseStructure.TAB_UD_TEMP,
 			DatabaseStructure.TAB_FILTERS,    DatabaseStructure.TAB_PROPERTIES);
 
+	/**
+	 * These rows exist only while some user property differs from its default - creating or dropping
+	 * one is an update of the element, not an addition/removal of the element.
+	 */
+	private final static List<CCSQLTableDef> SPARSE_TABLES = List.of(
+			DatabaseStructure.TAB_UD_MOVIES,  DatabaseStructure.TAB_UD_SERIES,
+			DatabaseStructure.TAB_UD_SEASONS, DatabaseStructure.TAB_UD_EPISODES);
+
 	public static List<Tuple3<String, String, String>> createTriggerStatements() {
 		List<Tuple3<String, String, String>> result = new ArrayList<>();
 
@@ -83,9 +94,33 @@ public class CCDatabaseHistory {
 		return Str.format("JCCTRIGGER_AUTOHISTORY_{0}_{1}_{2}{3}", action, tab.Schema.toUpperCase(), tab.Name.toUpperCase(), suffix); //$NON-NLS-1$
 	}
 
+	/** The value a missing sparse row stands for, or null for columns that are not part of one. */
+	@SuppressWarnings("nls")
+	private static String sparseDefault(String column) {
+		switch (column) {
+			case "VIEWED_HISTORY": return CCDateTimeList.createEmpty().asJSONArray();
+			case "TAGS":           return CCTagList.EMPTY.asJSONArray();
+			case "SCORE":          return Integer.toString(CCUserScore.RATING_NO.asInt());
+			case "SCORECOMMENT":   return Str.Empty;
+			default:               return null;
+		}
+	}
+
+	@SuppressWarnings("nls")
+	private static String sparseDefaultSQL(CCSQLColDef col) {
+		String value = sparseDefault(col.Name);
+		if (value == null) throw new Error("Unknown sparse default value for column " + col.Name);
+
+		if (col.Type.isCallableAsInteger()) return value;
+
+		return "'" + value.replace("'", "''") + "'";
+	}
+
 	@SuppressWarnings("nls")
 	private static Tuple3<String, String, String> createTriggerOnAdd(CCSQLTableDef tab) {
 		String triggerName = triggerName("ADD", tab, Str.Empty); //$NON-NLS-1$
+
+		boolean sparse = SPARSE_TABLES.contains(tab);
 
 		StringBuilder triggerbuilder = new StringBuilder();
 
@@ -97,9 +132,9 @@ public class CCDatabaseHistory {
 					.append("'").append(tab.Name).append("', ") //$NON-NLS-1$ //$NON-NLS-2$
 					.append("NEW.").append(forceSQLEscape(tab.Primary.Name)).append(", ") //$NON-NLS-1$ //$NON-NLS-2$
 					.append("STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'), ") //$NON-NLS-1$
-					.append("'ADD', ") //$NON-NLS-1$
+					.append(sparse ? "'UPDATE', " : "'ADD', ") //$NON-NLS-1$ //$NON-NLS-2$
 					.append("'").append(col.Name).append("', ") //$NON-NLS-1$ //$NON-NLS-2$
-					.append("NULL, ") //$NON-NLS-1$
+					.append(sparse ? sparseDefaultSQL(col) : "NULL").append(", ") //$NON-NLS-1$ //$NON-NLS-2$
 					.append("NEW.").append(forceSQLEscape(col.Name)) //$NON-NLS-1$
 					.append(");\n"); //$NON-NLS-1$
 		}
@@ -154,6 +189,8 @@ public class CCDatabaseHistory {
 	private static Tuple3<String, String, String> createTriggerOnDelete(CCSQLTableDef tab) {
 		String triggerName = triggerName("REM", tab, Str.Empty); //$NON-NLS-1$
 
+		boolean sparse = SPARSE_TABLES.contains(tab);
+
 		StringBuilder triggerbuilder = new StringBuilder();
 
 		triggerbuilder.append("CREATE TRIGGER ").append(forceSQLEscape(triggerName)).append(" BEFORE DELETE ON ").append(forceSQLEscape(tab.Name)).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -164,10 +201,10 @@ public class CCDatabaseHistory {
 					.append("'").append(tab.Name).append("', ") //$NON-NLS-1$ //$NON-NLS-2$
 					.append("OLD.").append(forceSQLEscape(tab.Primary.Name)).append(", ") //$NON-NLS-1$ //$NON-NLS-2$
 					.append("STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW'), ") //$NON-NLS-1$
-					.append("'DELETE', ") //$NON-NLS-1$
+					.append(sparse ? "'UPDATE', " : "'DELETE', ") //$NON-NLS-1$ //$NON-NLS-2$
 					.append("'").append(col.Name).append("', ") //$NON-NLS-1$ //$NON-NLS-2$
 					.append("OLD.").append(forceSQLEscape(col.Name)).append(", ") //$NON-NLS-1$ //$NON-NLS-2$
-					.append("NULL") //$NON-NLS-1$
+					.append(sparse ? sparseDefaultSQL(col) : "NULL") //$NON-NLS-1$
 					.append(");\n"); //$NON-NLS-1$
 		}
 		triggerbuilder.append("END").append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -425,7 +462,8 @@ public class CCDatabaseHistory {
 
 			if (a_iu)
 			{
-				if (!(Str.isNullOrEmpty(oldValue) || oldValue.equals("0") || oldValue.equals("-1") || oldValue.equals("1900-01-01"))) return false; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				// a sparse row is born holding the defaults, so an update away from one still belongs to the insert
+				if (!(Str.isNullOrEmpty(oldValue) || oldValue.equals("0") || oldValue.equals("-1") || oldValue.equals("1900-01-01") || Str.equals(oldValue, sparseDefault(field)))) return false; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 
 			return true;

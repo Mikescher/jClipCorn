@@ -35,7 +35,7 @@ import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 
 public class Main {
 	public final static String TITLE             = "jClipCorn";                                                             //$NON-NLS-1$
-	public final static String VERSION           = /*<gradle_version_marker>*/"1.11.0.0"/*</gradle_version_marker>*/;     //$NON-NLS-1$
+	public final static String VERSION           = /*<gradle_version_marker>*/"1.11.1.1"/*</gradle_version_marker>*/;     //$NON-NLS-1$
 	public final static String DBVERSION         = "37";                                                                    //$NON-NLS-1$
 	public final static String USERDATA_DBVERSION= "1";                                                                     //$NON-NLS-1$
 	public final static String JXMLVER           = "11";                                                                    //$NON-NLS-1$
@@ -44,7 +44,7 @@ public class Main {
 	public final static String BACKUP_FOLDERNAME = "jClipCorn_backup";                                                      //$NON-NLS-1$
 	
 	public static boolean DEBUG = "true".equals(System.getProperty("ineclipse"));  //$NON-NLS-1$//$NON-NLS-2$
-	public static boolean BETA = false;
+	public static boolean BETA = true;
 
 	// do not use in most cases - use db.isReadonly() or movielist.isReadonly()
 	public static boolean ARG_READONLY = false;

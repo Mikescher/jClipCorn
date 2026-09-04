@@ -1,10 +1,10 @@
 package de.jClipCorn.features.nfo;
 
 import de.jClipCorn.database.covertab.CCCoverData;
+import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
-import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
-import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -12,6 +12,10 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @SuppressWarnings("nls")
 public class SeriesNFOWriter {
@@ -120,29 +124,33 @@ public class SeriesNFOWriter {
 	}
 
 	private static void writeUniqueIds(Element root, CCSeries series) {
-		boolean hasDefault = false;
+		Set<String> skipped = hasIndependentSeasons(series) ? Set.of("tmdb", "imdb") : Collections.emptySet();
 
-		for (CCSingleOnlineReference ref : series.OnlineReference.get()) {
-			if (ref.type == CCOnlineRefType.NONE) continue;
+		NFOUniqueIdWriter.write(root, series.OnlineReference.get(), skipped, series.ID.get().toString());
+	}
 
-			String typeId = getKodiProviderType(ref.type);
-			if (Str.isNullOrEmpty(typeId)) continue;
+	/**
+	 * Whether the seasons of this series are separate works with their own online identity - the usual shape of
+	 * anime that is split into parts, where every part has its own AniDB/MAL/AniList entry.
+	 * <p>
+	 * Jellyfin resolves episode metadata as (series-id, {@code <season>}, {@code <episode>}). Those numbers are
+	 * ClipCorn's own folder index ({@link CCSeason#getIndexForCreatedFolderStructure()}), which only lines up with
+	 * a provider's season layout when the seasons are not independent works - TMDB for instance keeps three parts
+	 * of an anime as one 36-episode season. Writing tmdb/imdb on such a series makes Jellyfin fill every episode
+	 * with the plot of an unrelated one, so those ids are left out and the per-season ids in season.nfo resolve it.
+	 */
+	private static boolean hasIndependentSeasons(CCSeries series) {
+		Set<CCOnlineReferenceList> distinct = new HashSet<>();
 
-			Element uniqueid = new Element("uniqueid");
-			uniqueid.setAttribute("type", typeId);
-			if (!hasDefault) {
-				uniqueid.setAttribute("default", "true");
-				hasDefault = true;
-			}
-			uniqueid.setText(ref.getNfoUniqueId());
-			root.addContent(uniqueid);
+		for (int i = 0; i < series.getSeasonCount(); i++) {
+			CCOnlineReferenceList refs = series.getSeasonByArrayIndex(i).getOnlineReference();
+			if (refs.isEmpty()) continue;
+
+			distinct.add(refs);
+			if (distinct.size() >= 2) return true;
 		}
 
-		// Add clipcorn internal ID
-		Element clipcornId = new Element("uniqueid");
-		clipcornId.setAttribute("type", "clipcorn");
-		clipcornId.setText(series.ID.get().toString());
-		root.addContent(clipcornId);
+		return false;
 	}
 
 	private static void writeCoverThumb(Element root, CCSeries series) {
@@ -156,16 +164,5 @@ public class SeriesNFOWriter {
 		thumb.setAttribute("aspect", "poster");
 		thumb.setText(posterPath.getFilenameWithExt());
 		root.addContent(thumb);
-	}
-
-	private static String getKodiProviderType(CCOnlineRefType type) {
-		switch (type) {
-			case IMDB:        return "imdb";
-			case THEMOVIEDB:  return "tmdb";
-			case ANIDB:       return "anidb";
-			case MYANIMELIST: return "myanimelist";
-			case ANILIST:     return "anilist";
-			default:          return null;
-		}
 	}
 }

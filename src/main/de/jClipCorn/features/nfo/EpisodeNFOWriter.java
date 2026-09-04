@@ -7,6 +7,8 @@ import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import java.util.Collections;
+
 @SuppressWarnings("nls")
 public class EpisodeNFOWriter {
 
@@ -32,9 +34,8 @@ public class EpisodeNFOWriter {
 		int episodeNumber = episode.getEpisodeNumber();
 		root.addContent(new Element("episode").setText(String.valueOf(episodeNumber)));
 
-		// Runtime in minutes
-		int runtimeMinutes = episode.Length.get() / 60;
-		root.addContent(new Element("runtime").setText(String.valueOf(runtimeMinutes)));
+		// Runtime - Length is already stored in minutes
+		root.addContent(new Element("runtime").setText(String.valueOf(episode.Length.get())));
 
 		// User rating (1-10 scale, jClipCorn uses 0-6)
 		int score = episode.Score.get().asInt();
@@ -66,10 +67,7 @@ public class EpisodeNFOWriter {
 	}
 
 	private static void writeUniqueIds(Element root, CCEpisode episode) {
-		// Add clipcorn internal ID
-		Element clipcornId = new Element("uniqueid");
-		clipcornId.setAttribute("type", "clipcorn");
-		clipcornId.setText(episode.ID.get().toString());
-		root.addContent(clipcornId);
+		// Episodes carry no online reference in jClipCorn
+		NFOUniqueIdWriter.write(root, Collections.emptyList(), episode.ID.get().toString());
 	}
 }

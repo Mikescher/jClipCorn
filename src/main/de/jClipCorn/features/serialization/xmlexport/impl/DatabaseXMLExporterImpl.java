@@ -39,11 +39,15 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("tags",           o.getTags().serialize());
 		e.setAttribute("specialversion", o.SpecialVersion.serializeToString());
 
-		if (! s.CoverData) e.setAttribute("covername", o.getCoverInfo().Filename);
-		if (! s.CoverData) e.setAttribute("coverid", o.getCoverInfo().ID.toString());
-		if (s.CoverHash) e.setAttribute("coverhash", o.getCoverInfo().Checksum);
-		
-		if (s.CoverData) e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(o.getCover())));
+		// null for an element without a cover - all cover attributes are then simply absent
+		var cvr = o.getCoverInfo();
+		if (cvr != null) {
+			if (! s.CoverData) e.setAttribute("covername", cvr.Filename);
+			if (! s.CoverData) e.setAttribute("coverid", cvr.ID.toString());
+			if (s.CoverHash) e.setAttribute("coverhash", cvr.Checksum);
+
+			if (s.CoverData) e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(o.getCover())));
+		}
 	}
 
 	public static void exportMovie(Element e, CCMovie o, ExportOptions s) {
@@ -109,12 +113,15 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("animeseason", o.AnimeSeason.serializeToString());
 		e.setAttribute("animestudio", o.AnimeStudio.serializeToString());
 
-		if (! s.CoverData) e.setAttribute("covername", o.getCoverInfo().Filename);
-		if (! s.CoverData) e.setAttribute("coverid", o.getCoverInfo().ID.toString());
+		var cvr = o.getCoverInfo();
+		if (cvr != null) {
+			if (! s.CoverData) e.setAttribute("covername", cvr.Filename);
+			if (! s.CoverData) e.setAttribute("coverid", cvr.ID.toString());
 
-		if (s.CoverHash) e.setAttribute("coverhash", o.getCoverInfo().Checksum);
+			if (s.CoverHash) e.setAttribute("coverhash", cvr.Checksum);
 
-		if (s.CoverData) e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(o.getCover())));
+			if (s.CoverData) e.setAttribute("coverdata", ByteUtilies.byteArrayToHexString(ImageUtilities.imageToByteArray(o.getCover())));
+		}
 	}
 
 	public static void exportEpisode(Element e, CCEpisode o, ExportOptions s) {

@@ -7,6 +7,7 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
@@ -18,6 +19,7 @@ import org.junit.runner.RunWith;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @SuppressWarnings({"nls"})
 @RunWith(JUnitParamsRunner.class)
@@ -281,5 +283,32 @@ public class TestSerialization extends ClipCornBaseTest {
 		tmpfile2.deleteWithException();
 
 		assertEquals(data1, data2);
+	}
+
+	@Test
+	@Parameters({ "false", "true" })
+	public void testRoundtripWithoutCover(boolean includeCover) throws Exception {
+		CCMovieList ml = createEmptyDB();
+
+		ml.createNewMovie(m -> m.Title.set("Movie1"));
+		ml.createNewSeries(s ->
+		{
+			s.Title.set("Series1");
+			s.createNewSeason(sea -> sea.Title.set("Season1"));
+		});
+
+		var tmpfile = SimpleFileUtils.getSystemTempFile("jmccexport");
+		tmpfile.deleteOnExit();
+		ExportHelper.exportDBElements(tmpfile, ml.iteratorElements().enumerate(), includeCover, true);
+		String data = tmpfile.readAsUTF8TextFile();
+		tmpfile.deleteWithException();
+
+		assertFalse(data.contains("cover"));
+
+		CCMovieList ml2 = createEmptyDB();
+		ExportHelper.importElements(ml2, data, new ImportOptions(false, false, false, false, false), -1);
+
+		for (var e : ml2.iteratorElements()) assertEquals(CCUUID.EMPTY, e.getCoverID());
+		for (var e : ml2.iteratorSeasons())  assertEquals(CCUUID.EMPTY, e.getCoverID());
 	}
 }

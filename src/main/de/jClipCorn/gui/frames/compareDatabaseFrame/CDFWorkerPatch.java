@@ -107,10 +107,10 @@ public class CDFWorkerPatch
 					cmd1.addContent(inner);
 				}
 
-				if (!noCover)
+				// null for an element without a cover - there is nothing to copy then
+				var coverdata = noCover ? null : e.MovieLocal.getCoverInfo();
+				if (coverdata != null)
 				{
-					var coverdata = e.MovieLocal.getCoverInfo();
-
 					var source = e.MovieLocal.getMovieList().getCoverCache().getFilepath(coverdata);
 					var newfilename = "c_" + e.MovieLocal.CoverID.get() + "." + source.getExtension();
 					var target = datadir.append(newfilename);
@@ -220,7 +220,8 @@ public class CDFWorkerPatch
 					}
 
 				}
-				if (e.getNeedsUpdateCover() && !noCover)
+				var coverdata = (e.getNeedsUpdateCover() && !noCover) ? e.MovieLocal.getCoverInfo() : null;
+				if (coverdata != null)
 				{
 					var xaction = new Element("action");
 					xaction.setAttribute("ctr", String.valueOf(ctr));
@@ -228,8 +229,6 @@ public class CDFWorkerPatch
 					xaction.setAttribute("type", "COVER");
 					xaction.setAttribute("description", Str.format("Replace cover of movie \"{0}\"", e.MovieExtern.getQualifiedTitle()));
 					xml.addContent(xaction);
-
-					var coverdata = e.MovieLocal.getCoverInfo();
 
 					var source = e.MovieLocal.getMovieList().getCoverCache().getFilepath(coverdata);
 					var newfilename = "c_" + e.MovieLocal.CoverID.get() + "." + source.getExtension();
@@ -358,10 +357,9 @@ public class CDFWorkerPatch
 					cmd1.addContent(inner);
 				}
 
-				if (!noCover)
+				var coverdata = noCover ? null : e.SeriesLocal.getCoverInfo();
+				if (coverdata != null)
 				{
-					var coverdata = e.SeriesLocal.getCoverInfo();
-
 					var source = e.SeriesLocal.getMovieList().getCoverCache().getFilepath(coverdata);
 					var newfilename = "c_" + e.SeriesLocal.CoverID.get() + "." + source.getExtension();
 					var target = datadir.append(newfilename);
@@ -438,7 +436,8 @@ public class CDFWorkerPatch
 					}
 
 				}
-				if (e.getNeedsUpdateCover() && !noCover)
+				var coverdata = (e.getNeedsUpdateCover() && !noCover) ? e.SeriesLocal.getCoverInfo() : null;
+				if (coverdata != null)
 				{
 					var xaction = new Element("action");
 					xaction.setAttribute("ctr", String.valueOf(ctr));
@@ -446,8 +445,6 @@ public class CDFWorkerPatch
 					xaction.setAttribute("type", "COVER");
 					xaction.setAttribute("description", Str.format("Replace cover of series \"{0}\"", e.SeriesExtern.getQualifiedTitle()));
 					xml.addContent(xaction);
-
-					var coverdata = e.SeriesLocal.getCoverInfo();
 
 					var source = e.SeriesLocal.getMovieList().getCoverCache().getFilepath(coverdata);
 					var newfilename = "c_" + e.SeriesLocal.CoverID.get() + "." + source.getExtension();
@@ -514,10 +511,9 @@ public class CDFWorkerPatch
 					cmd1.addContent(inner);
 				}
 
-				if (!noCover)
+				var coverdata = noCover ? null : e.SeasonLocal.getCoverInfo();
+				if (coverdata != null)
 				{
-					var coverdata = e.SeasonLocal.getCoverInfo();
-
 					var source = e.SeasonLocal.getMovieList().getCoverCache().getFilepath(coverdata);
 					var newfilename = "c_" + e.SeasonLocal.CoverID.get() + "." + source.getExtension();
 					var target = datadir.append(newfilename);
@@ -578,7 +574,8 @@ public class CDFWorkerPatch
 					}
 
 				}
-				if (e.getNeedsUpdateCover() && !noCover)
+				var coverdata = (e.getNeedsUpdateCover() && !noCover) ? e.SeasonLocal.getCoverInfo() : null;
+				if (coverdata != null)
 				{
 					var xaction = new Element("action");
 					xaction.setAttribute("ctr", String.valueOf(ctr));
@@ -586,8 +583,6 @@ public class CDFWorkerPatch
 					xaction.setAttribute("type", "COVER");
 					xaction.setAttribute("description", Str.format("Replace cover of season \"{0}\"", e.SeasonExtern.getQualifiedTitle()));
 					xml.addContent(xaction);
-
-					var coverdata = e.SeasonLocal.getCoverInfo();
 
 					var source = e.SeasonLocal.getMovieList().getCoverCache().getFilepath(coverdata);
 					var newfilename = "c_" + e.SeasonLocal.CoverID.get() + "." + source.getExtension();

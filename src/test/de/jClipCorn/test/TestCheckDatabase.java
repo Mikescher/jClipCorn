@@ -5,6 +5,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.driver.GenericDatabase;
 import de.jClipCorn.features.databaseErrors.CCDatabaseValidator;
 import de.jClipCorn.features.databaseErrors.DatabaseError;
 import de.jClipCorn.features.databaseErrors.DatabaseErrorType;
@@ -137,6 +138,32 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 
 		// it is still reported as having no cover at all
 		assertNotNull(CCStreams.iterate(errs).firstOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_NOCOVERSET) && "Der Bomber".equals(p.getElement1RawName())));
+	}
+
+	@Test
+	public void testMalformedIDsInAllIDColumns() throws Exception {
+		CCMovieList ml = createExampleDB();
+
+		var db = (GenericDatabase) ml.getInternalDatabaseDirectly();
+		db.executeSQLThrow("UPDATE COVERS   SET ID       = 'bad-covers-id'   WHERE ID = (SELECT ID FROM COVERS   LIMIT 1)");
+		db.executeSQLThrow("UPDATE MOVIES   SET COVERID  = 'bad-movie-cvrid' WHERE ID = (SELECT ID FROM MOVIES   LIMIT 1)");
+		db.executeSQLThrow("UPDATE SEASONS  SET SERIESID = 'bad-seriesid'    WHERE ID = (SELECT ID FROM SEASONS  LIMIT 1)");
+		db.executeSQLThrow("UPDATE EPISODES SET SEASONID = 'bad-seasonid'    WHERE ID = (SELECT ID FROM EPISODES LIMIT 1)");
+
+		List<DatabaseError> errs = new ArrayList<>();
+
+		var opt = new DatabaseValidatorOptions();
+		opt.ValidateDatabaseConsistence = true;
+
+		var validator = new CCDatabaseValidator(ml);
+		validator.validate(errs, opt, DoubleProgressCallbackListener.EMPTY);
+
+		var malformed = CCStreams.iterate(errs).filter(p -> p.isTypeOf(DatabaseErrorType.ERROR_DB_MALFORMED_ID)).map(DatabaseError::getElement1RawName).toSet();
+
+		assertTrue(malformed.contains("bad-covers-id"));
+		assertTrue(malformed.contains("bad-movie-cvrid"));
+		assertTrue(malformed.contains("bad-seriesid"));
+		assertTrue(malformed.contains("bad-seasonid"));
 	}
 
 	@Test

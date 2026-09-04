@@ -2465,6 +2465,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		}
 	}
 
+	// The nil UUID is a valid value only in a reference column - in COVERID it is the "no cover" sentinel,
+	// in SERIESID/SEASONID it is reported as a missing parent. As a primary key it is always corrupt.
+	private static boolean isValidID(String id, boolean allowNil) {
+		if (!CCUUID.isValid(id)) return false;
+		return allowNil || !CCUUID.parseOrEmpty(id).isEmpty();
+	}
+
 	@Override
 	@SuppressWarnings("nls")
 	protected void findInternalDatabaseErrors(List<DatabaseError> e, DoubleProgressCallbackListener pcl)
@@ -2498,7 +2505,20 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						));
 			}
 
-			for (String bad : CCStreams.iterate(ids_mov, ids_ser, ids_sea, ids_epi).filter(p -> !CCUUID.isValid(p))) {
+			List<String> ids_cvr  = db.querySQL("SELECT ID FROM COVERS",             1, o -> (String)o[0]);
+			List<String> refs_ser = db.querySQL("SELECT DISTINCT SERIESID FROM SEASONS",  1, o -> (String)o[0]);
+			List<String> refs_sea = db.querySQL("SELECT DISTINCT SEASONID FROM EPISODES", 1, o -> (String)o[0]);
+			List<String> refs_cvr = db.querySQL("SELECT COVERID FROM MOVIES UNION SELECT COVERID FROM SERIES UNION SELECT COVERID FROM SEASONS", 1, o -> (String)o[0]);
+
+			for (String bad : CCStreams.iterate(ids_mov, ids_ser, ids_sea, ids_epi, ids_cvr).filter(p -> !isValidID(p, false))) {
+				e.add(DatabaseError.createSingle(
+						movielist,
+						DatabaseErrorType.ERROR_DB_MALFORMED_ID, bad,
+						"ID", String.valueOf(bad)
+						));
+			}
+
+			for (String bad : CCStreams.iterate(refs_ser, refs_sea, refs_cvr).filter(p -> !isValidID(p, true))) {
 				e.add(DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_DB_MALFORMED_ID, bad,

@@ -14,6 +14,7 @@ import de.jClipCorn.gui.frames.compareDatabaseFrame.CDFWorkerCompare;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CDFWorkerPatch;
 import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseRuleset;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("nls")
 public class TestCompareAndPatchDatabases extends ClipCornBaseTest {
@@ -163,6 +166,50 @@ public class TestCompareAndPatchDatabases extends ClipCornBaseTest {
 		assertEquals(mlDiff.getSeriesCount(),  mlBase.getSeriesCount());
 		assertEquals(mlDiff.getSeasonCount(),  mlBase.getSeasonCount());
 		assertEquals(mlDiff.getEpisodeCount(), mlBase.getEpisodeCount());
+	}
+
+	@Test
+	public void testParseRuleset() throws Exception {
+		var idLoc = "0195c2e4-1f00-7a3e-9b21-4c8d5e6f7a8b";
+		var idExt = "0195c2e4-2b40-7c19-8e55-1d2f3a4b5c6d";
+		var idOth = "0195c2e4-3c80-7b02-9f77-2e3a4b5c6d7e";
+
+		var ruleset = CompareDatabaseRuleset.parse(
+				"skip local:"          + idLoc + "\n" +
+				"skip extern:"         + idExt + "\n" +
+				"match local:"         + idLoc + " extern:" + idExt + "\n" +
+				"keep_cover local:"    + idLoc + "\n" +
+				"keep_files extern:"   + idExt + "\n" +
+				"keep_meta local:"     + idLoc + "\n" +
+				"keep_meta genres extern:" + idExt + "\n" +
+				"keep_meta ScoreComment *\n" +
+				"keep_entry extern:"   + idExt + "\n" +
+				"prevent_entry local:" + idLoc + "\n");
+
+		var uLoc = CCUUID.parse(idLoc);
+		var uExt = CCUUID.parse(idExt);
+		var uOth = CCUUID.parse(idOth);
+
+		assertTrue(ruleset.ShouldSkipLoc(uLoc));
+		assertTrue(ruleset.ShouldSkipExt(uExt));
+		assertTrue(ruleset.IsMatch(uLoc, uExt));
+
+		assertFalse(ruleset.ShouldUpdateCover(uLoc, uOth));
+		assertFalse(ruleset.ShouldUpdateFiles(uOth, uExt));
+		assertFalse(ruleset.ShouldDeleteExtern(uExt));
+		assertFalse(ruleset.ShouldAddLocal(uLoc));
+
+		assertTrue(ruleset.ShouldUpdateCover(uOth, uOth));
+		assertTrue(ruleset.ShouldUpdateFiles(uOth, uOth));
+		assertTrue(ruleset.ShouldDeleteExtern(uOth));
+		assertTrue(ruleset.ShouldAddLocal(uOth));
+
+		var mov = createEmptyDB().createNewMovie(m -> m.Title.set("Movie1"));
+
+		assertFalse(ruleset.ShouldUpdateMetadata(uOth, uOth, mov.ScoreComment, mov.ScoreComment));
+		assertFalse(ruleset.ShouldUpdateMetadata(uOth, uExt, mov.Genres, mov.Genres));
+		assertTrue(ruleset.ShouldUpdateMetadata(uOth, uOth, mov.Genres, mov.Genres));
+		assertTrue(ruleset.ShouldUpdateMetadata(uOth, uOth, mov.Title, mov.Title));
 	}
 
 }

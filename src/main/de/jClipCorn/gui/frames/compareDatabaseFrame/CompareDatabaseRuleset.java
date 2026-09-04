@@ -140,7 +140,7 @@ public class CompareDatabaseRuleset {
 
 			else if (split.length == 2 && Str.equals(split[0], "prevent_entry") && split[1].startsWith("local:"))
 			{
-				r.PreventEntryLocal.add(CCUUID.parse(split[1].replace("extern:", "")));
+				r.PreventEntryLocal.add(CCUUID.parse(split[1].replace("local:", "")));
 			}
 			else if (split.length == 2 && Str.equals(split[0], "prevent_entry") && Str.equals(split[1], "*"))
 			{
@@ -192,9 +192,10 @@ public class CompareDatabaseRuleset {
 		if (KeepMetaLocal .contains(locid)) return false;
 		if (KeepMetaExtern.contains(extid)) return false;
 
-		if (KeepSpecificMetaGlobal.contains(locprop.getName())) return false;
-		if (CCStreams.iterate(KeepSpecificMetaLocal) .any(p -> Str.equals(p.Item1, locprop.getName()) && p.Item2.equals(locid))) return false;
-		if (CCStreams.iterate(KeepSpecificMetaExtern).any(p -> Str.equals(p.Item1, extprop.getName()) && p.Item2.equals(extid))) return false;
+		// rule lines are normalized to lowercase, property names are PascalCase
+		if (CCStreams.iterate(KeepSpecificMetaGlobal).any(p -> Str.equalsIgnoreCase(p, locprop.getName()))) return false;
+		if (CCStreams.iterate(KeepSpecificMetaLocal) .any(p -> Str.equalsIgnoreCase(p.Item1, locprop.getName()) && p.Item2.equals(locid))) return false;
+		if (CCStreams.iterate(KeepSpecificMetaExtern).any(p -> Str.equalsIgnoreCase(p.Item1, extprop.getName()) && p.Item2.equals(extid))) return false;
 
 		return true;
 	}

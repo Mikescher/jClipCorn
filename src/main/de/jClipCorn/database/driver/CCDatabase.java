@@ -20,6 +20,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCStringList;
 import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.database.history.CCHistoryDatabase;
 import de.jClipCorn.database.migration.DatabaseMigrator;
+import de.jClipCorn.database.migration.UserDataDatabaseMigrator;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
@@ -55,6 +56,7 @@ public class CCDatabase {
 
 	private final GenericDatabase db;
 	public  final DatabaseMigrator upgrader;
+	public  final UserDataDatabaseMigrator userDataUpgrader;
 	private final Statements stmts;
 	private final CCDatabaseHistory _history;
 	private final CCHistoryDatabase _historyDb;
@@ -97,7 +99,8 @@ public class CCDatabase {
 				? CCHistoryDatabase.createFileBased(databaseDirectory, databaseName, readonly)
 				: CCHistoryDatabase.createInMemory();
 
-		upgrader = new DatabaseMigrator(db, databaseDirectory, databaseName, readonly);
+		upgrader         = new DatabaseMigrator(db, databaseDirectory, databaseName, readonly);
+		userDataUpgrader = new UserDataDatabaseMigrator(db, databaseDirectory, databaseName, readonly);
 
 		stmts = new Statements();
 	}
@@ -189,6 +192,8 @@ public class CCDatabase {
 			upgrader.tryUpgrade();
 
 			ensureUserDataDatabase();
+
+			if (!upgradeUserDataDatabase()) return false;
 
 			stmts.initialize(this);
 
@@ -1620,6 +1625,14 @@ public class CCDatabase {
 		if (Str.equals(bound, actual)) return true;
 
 		CCLog.addFatalError(LocaleBundle.getFormattedString("LogMessage.UserDataDUUIDMismatch", bound, actual, actual));
+		return false;
+	}
+
+	private boolean upgradeUserDataDatabase() {
+		var referror = new RefParam<String>();
+		if (userDataUpgrader.tryUpgrade(referror)) return true;
+
+		CCLog.addFatalError(referror.Value);
 		return false;
 	}
 

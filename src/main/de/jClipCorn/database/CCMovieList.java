@@ -538,6 +538,7 @@ public class CCMovieList implements ICCPropertySource {
 		}
 		
 		database.upgrader.onAfterConnect(this, database);
+		database.userDataUpgrader.onAfterConnect(this, database);
 
 		for (CCDBUpdateListener l : listener) {
 			l.onAfterLoad();

@@ -3,6 +3,7 @@ package de.jClipCorn.database.migration;
 import de.jClipCorn.database.driver.GenericDatabase;
 import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.util.List;
@@ -24,6 +25,11 @@ public abstract class DBMigration {
 
 	public abstract String getFromVersion();
 	public abstract String getToVersion();
+
+	/** The INFO table holding the version this migration bumps - {@code userdata.INFO} for a {@link UserDataMigration}. */
+	protected CCSQLTableDef getInfoTable() {
+		return TAB_INFO; // override me
+	}
 
 	protected boolean backupAndRestoreTrigger() {
 		return false; // override me
@@ -72,7 +78,7 @@ public abstract class DBMigration {
 		// ======================================================
 
 		db.executeSQLThrow(String.format("UPDATE %s SET %s='%s' WHERE %s='%s'",  //$NON-NLS-1$
-				TAB_INFO.qualifiedName(),
+				getInfoTable().qualifiedName(),
 				COL_INFO_VALUE.Name,
 				getToVersion(),
 				COL_INFO_KEY.Name,
@@ -81,7 +87,7 @@ public abstract class DBMigration {
 		if (disableForeignKeys) db.executeSQLThrow("PRAGMA foreign_keys = ON;");
 		if (dotransaction) db.executeSQLThrow("COMMIT TRANSACTION");
 
-		if (vacuum) db.executeSQLThrow("VACUUM");
+		if (vacuum) db.executeSQLThrow("VACUUM " + getInfoTable().Schema);
 
 		return actions;
 	}

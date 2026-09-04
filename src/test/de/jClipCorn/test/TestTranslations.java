@@ -18,7 +18,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -132,6 +134,33 @@ public class TestTranslations extends ClipCornBaseTest
 				}
 			}
 		}
+	}
+
+	@Test
+	public void testConsistentFormatSpecifiers() throws IOException
+	{
+		var rex = Pattern.compile("%(?:\\d+\\$)?[-#+ 0,(]*\\d*(?:\\.\\d+)?[a-zA-Z%]");
+
+		var loc1 = loadFromRes("/de/jClipCorn/gui/localization/locale.properties");
+		var loc2 = loadFromRes("/de/jClipCorn/gui/localization/locale_de_DE.properties");
+		var loc3 = loadFromRes("/de/jClipCorn/gui/localization/locale_dl_DL.properties");
+		var loc4 = loadFromRes("/de/jClipCorn/gui/localization/locale_en_US.properties");
+		var locs = new Properties[]{ loc1, loc2, loc3, loc4 };
+
+		for (var key : loc1.keySet())
+		{
+			var expected = formatSpecifiers(rex, (String)loc1.get(key));
+
+			for (int i = 1; i < locs.length; i++)
+			{
+				var actual = formatSpecifiers(rex, (String)locs[i].get(key));
+				assertEquals(String.format("format specifiers of %s in %d must match the ones in 0", key, i), expected, actual);
+			}
+		}
+	}
+
+	private List<String> formatSpecifiers(Pattern rex, String value) {
+		return rex.matcher(value).results().map(MatchResult::group).collect(Collectors.toList());
 	}
 
 	@Test

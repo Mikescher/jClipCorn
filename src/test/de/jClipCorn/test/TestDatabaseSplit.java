@@ -18,6 +18,8 @@ import de.jClipCorn.util.sqlwrapper.CCSQLColDef;
 import de.jClipCorn.util.sqlwrapper.CCSQLTableDef;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -336,6 +338,52 @@ public class TestDatabaseSplit extends ClipCornBaseTest {
 
 		// only the two fields that actually changed
 		assertEquals(2, db.querySingleIntSQLThrow("SELECT COUNT(*) FROM userdata.HISTORY WHERE [TABLE]='MOVIES'", 0));
+	}
+
+	/** the row-write transaction is connection-global - a second writer must not abort the first one */
+	@Test
+	public void testConcurrentRowWritesDoNotCorruptEachOther() throws Exception {
+		CCMovieList ml = createEmptyDB();
+
+		final int threadCount   = 4;
+		final int moviesPerThread = 4;
+
+		var movies = new ArrayList<CCMovie>();
+		for (int i = 0; i < threadCount * moviesPerThread; i++) {
+			final int n = i;
+			movies.add(ml.createNewMovie(m -> m.Title.set("Movie " + n)));
+		}
+
+		var failures = Collections.synchronizedList(new ArrayList<Throwable>());
+		var threads  = new ArrayList<Thread>();
+
+		for (int t = 0; t < threadCount; t++) {
+			final int base = t * moviesPerThread;
+			var thread = new Thread(() -> {
+				try {
+					for (int r = 0; r < 25; r++) {
+						CCMovie mov = movies.get(base + (r % moviesPerThread));
+						mov.Score.set(CCUserScore.RATING_III);
+						mov.ScoreComment.set("run " + r);
+						mov.Score.set(CCUserScore.RATING_NO);
+						mov.ScoreComment.set("");
+					}
+					for (int i = 0; i < moviesPerThread; i++) movies.get(base + i).Score.set(CCUserScore.RATING_V);
+				} catch (Throwable e) {
+					failures.add(e);
+				}
+			});
+			threads.add(thread);
+			thread.start();
+		}
+		for (var thread : threads) thread.join();
+
+		assertEquals(CCStreams.iterate(failures).stringjoin(Throwable::toString, "\n"), 0, failures.size());
+
+		var db = ml.getInternalDatabaseDirectly();
+		assertEquals(movies.size(), userRowCount(ml, "MOVIES"));
+		assertEquals(0, db.querySingleIntSQLThrow("SELECT COUNT(*) FROM userdata.MOVIES WHERE SCORE <> " + CCUserScore.RATING_V.asInt(), 0));
+		assertEquals(movies.size(), db.querySingleIntSQLThrow("SELECT COUNT(*) FROM main.MOVIES", 0));
 	}
 
 	@Test

@@ -46,6 +46,7 @@ import de.jClipCorn.util.stream.CCStreams;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static de.jClipCorn.database.driver.DatabaseStructure.*;
 
@@ -63,6 +64,10 @@ public class CCDatabase {
 	private final CCDatabaseDriver _driver;
 
 	private final boolean _readonly;
+
+	// BEGIN/COMMIT are connection-global - two threads writing rows at the same time would abort or
+	// roll back each other's transaction. Never call into the UI while this is held (EDT deadlock).
+	private final ReentrantLock _rowWriteLock = new ReentrantLock();
 
 	private boolean firstLaunch = false;
 
@@ -768,6 +773,8 @@ public class CCDatabase {
 			CCLog.addError(msg, e);
 			DialogHelper.showDispatchError(MainFrame.getInstance(), LocaleBundle.getString("Dialogs.GenericCaption.Error"), msg);
 			return false;
+		} finally {
+			endRowTransaction();
 		}
 	}
 
@@ -807,6 +814,8 @@ public class CCDatabase {
 			CCLog.addError(msg, e);
 			DialogHelper.showDispatchError(MainFrame.getInstance(), LocaleBundle.getString("Dialogs.GenericCaption.Error"), msg);
 			return false;
+		} finally {
+			endRowTransaction();
 		}
 	}
 	
@@ -845,6 +854,8 @@ public class CCDatabase {
 			CCLog.addError(msg, e);
 			DialogHelper.showDispatchError(MainFrame.getInstance(), LocaleBundle.getString("Dialogs.GenericCaption.Error"), msg);
 			return false;
+		} finally {
+			endRowTransaction();
 		}
 	}
 	
@@ -910,6 +921,8 @@ public class CCDatabase {
 			CCLog.addError(msg, e);
 			DialogHelper.showDispatchError(MainFrame.getInstance(), LocaleBundle.getString("Dialogs.GenericCaption.Error"), msg);
 			return false;
+		} finally {
+			endRowTransaction();
 		}
 	}
 	
@@ -919,12 +932,17 @@ public class CCDatabase {
 	 */
 	@SuppressWarnings("nls")
 	private void beginRowTransaction() throws SQLException {
+		_rowWriteLock.lock();
 		db.executeSQLThrow("BEGIN TRANSACTION");
 	}
 
 	@SuppressWarnings("nls")
 	private void commitRowTransaction() throws SQLException {
-		db.executeSQLThrow("COMMIT TRANSACTION");
+		try {
+			db.executeSQLThrow("COMMIT TRANSACTION");
+		} finally {
+			endRowTransaction();
+		}
 	}
 
 	@SuppressWarnings("nls")
@@ -933,7 +951,14 @@ public class CCDatabase {
 			db.executeSQLThrow("ROLLBACK TRANSACTION");
 		} catch (SQLException e) {
 			// there was no open transaction - the write failed before it started
+		} finally {
+			endRowTransaction();
 		}
+	}
+
+	/** Releases the row-write lock if this thread still holds it - must stay tolerant of being called twice. */
+	private void endRowTransaction() {
+		if (_rowWriteLock.isHeldByCurrentThread()) _rowWriteLock.unlock();
 	}
 
 	private static boolean allUserPropertiesAreDefault(ICCDatabaseStructureElement el) {

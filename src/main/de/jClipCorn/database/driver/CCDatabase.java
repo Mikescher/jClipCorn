@@ -1507,7 +1507,14 @@ public class CCDatabase {
 	}
 
 	public void resetInformation_DUUID() {
-		writeInformationToDB(DatabaseStructure.INFOKEY_DUUID, UUID.randomUUID().toString());
+		var duuid = UUID.randomUUID().toString();
+
+		writeInformationToDB(DatabaseStructure.INFOKEY_DUUID, duuid);
+
+		// the user-data and the history database are bound to the main DUUID - leaving the old binding
+		// behind makes validateUserDataBinding() abort on the next start
+		writeUserDataInformationToDB(DatabaseStructure.INFOKEY_MAINDB_DUUID, duuid);
+		if (_historyDb.isConnected()) _historyDb.writeInfo(DatabaseStructure.INFOKEY_DUUID, duuid);
 	}
 	
 	public String readInformationFromDB(CCSQLKVKey key, String defaultValue) {

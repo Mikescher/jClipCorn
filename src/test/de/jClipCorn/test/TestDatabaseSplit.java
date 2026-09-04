@@ -386,6 +386,33 @@ public class TestDatabaseSplit extends ClipCornBaseTest {
 		assertEquals(movies.size(), db.querySingleIntSQLThrow("SELECT COUNT(*) FROM main.MOVIES", 0));
 	}
 
+	/** regenerating the main DUUID has to rebind the user-data database, or the next start aborts */
+	@Test
+	public void testResetDUUIDRebindsTheUserDataDatabase() throws Exception {
+		var dir = createAutocleanedDir("dbsplit_duuid");
+
+		{
+			var ml = CCMovieList.connectAndLoadDirect(CCDatabaseDriver.SQLITE, dir, "ClipCornDB", false, true);
+			ml.createNewMovie(m -> { m.Title.set("Title"); m.Score.set(CCUserScore.RATING_V); });
+
+			var db = ml.getDatabaseForUnitTests();
+			var before = db.getInformation_DUUID();
+
+			ml.resetLocalDUUID();
+
+			assertNotEquals(before, db.getInformation_DUUID());
+			assertEquals(db.getInformation_DUUID(), db.readUserDataInformationFromDB(DatabaseStructure.INFOKEY_MAINDB_DUUID, null));
+
+			ml.shutdown();
+		}
+
+		{
+			var ml = CCMovieList.connectAndLoadDirect(CCDatabaseDriver.SQLITE, dir, "ClipCornDB", false, false);
+			assertEquals(CCUserScore.RATING_V, ml.iteratorMovies().firstOrNull().Score.get());
+			ml.shutdown();
+		}
+	}
+
 	@Test
 	public void testInfoKeysAreSplit() {
 		CCMovieList ml = createEmptyDB();

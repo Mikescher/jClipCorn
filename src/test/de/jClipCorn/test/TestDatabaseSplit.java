@@ -14,6 +14,7 @@ import de.jClipCorn.database.history.CCHistoryTable;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
 import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.sqlwrapper.CCSQLColDef;
@@ -321,6 +322,33 @@ public class TestDatabaseSplit extends ClipCornBaseTest {
 		assertEquals(1, scored.size());
 		assertEquals(CCHistoryAction.INSERT, scored.get(0).Action);
 		assertSame(mov, scored.get(0).getSourceElement());
+	}
+
+	/**
+	 * Every column the INSERT filled with a placeholder is updated again right after, so the merge has to
+	 * recognise those values - all of them, not a hardcoded list that misses the ones a schema change added.
+	 */
+	@Test
+	public void testAddingAnElementIsOneEntryWhateverThePlaceholdersAre() throws Exception {
+		CCMovieList ml = createEmptyDB();
+
+		ml.getHistory().enableTrigger();
+
+		CCMovie mov = ml.createNewMovie(m -> {
+			m.Title.set("Title");
+			m.AddDate.set(CCDate.create(23, 9, 2010));
+			m.setCover(CCUUID.generate());
+		});
+
+		var entries = CCStreams.iterate(ml.getHistory().query(ml, false, false, false, null, Opt.empty(), null).Item1)
+				.filter(p -> p.Table == CCHistoryTable.MOVIES)
+				.enumerate();
+
+		assertEquals(1, entries.size());
+		assertEquals(CCHistoryAction.INSERT, entries.get(0).Action);
+		assertSame(mov, entries.get(0).getSourceElement());
+		assertEquals(mov.getCoverID().get().toString(), entries.get(0).getNewValue("COVERID").get());
+		assertEquals("2010-09-23",                entries.get(0).getNewValue("ADDDATE").get());
 	}
 
 	/** the user row is upserted, not deleted and re-inserted, or every edit would log a remove+add pair */

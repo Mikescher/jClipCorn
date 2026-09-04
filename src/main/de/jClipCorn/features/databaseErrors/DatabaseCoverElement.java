@@ -5,6 +5,7 @@ import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.ICCCoveredElement;
 import de.jClipCorn.util.datatypes.CCUUID;
 
+/** An element together with the cover it links to - elements without a cover are not represented. */
 public class DatabaseCoverElement implements Comparable<DatabaseCoverElement>{
 	private final CCUUID coverid;
 	private final ICCCoveredElement element;
@@ -33,7 +34,6 @@ public class DatabaseCoverElement implements Comparable<DatabaseCoverElement>{
 	}
 
 	public boolean equalsCover(DatabaseCoverElement a) {
-		if (coverid.isEmpty()) return false; // two elements without a cover do not share one
 		return coverid.equals(a.coverid);
 	}
 }

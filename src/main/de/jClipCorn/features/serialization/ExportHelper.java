@@ -449,7 +449,6 @@ public class ExportHelper {
 				if (value != null)
 				{
 					CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), CCUUID.EMPTY);
-					tmpMov.setDefaultValues(false);
 					DatabaseXMLImporter.parseSingleMovie(tmpMov, value.Item2, fn->null, new ImportState(value.Item3, value.Item1, new ImportOptions(resetDate, resetViewed, resetScore, false, true)));
 
 					AddMovieFrame amf = new AddMovieFrame(owner, movielist);

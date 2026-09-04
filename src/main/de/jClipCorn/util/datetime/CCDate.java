@@ -23,7 +23,6 @@ public final class CCDate implements Comparable<CCDate>, StringSpecSupplier {
 	
 	private static final CCDate DATE_MIN = new CCDate(1, 1, YEAR_MIN);
 	private static final CCDate DATE_MAX = new CCDate(31, 12, YEAR_MAX);
-	public  static final String MIN_SQL = DATE_MIN.toStringSQL();
 	private static final CCDate UNSPECIFIED = new CCDate(DAY_UNSPECIFIED, MONTH_UNSPECIFIED, YEAR_UNSPECIFIED);
 	
 	private static HashSet<Character> stringSpecifier = null; // { 'y', 'M', 'd' }

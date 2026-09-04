@@ -725,9 +725,7 @@ public class CCMovieList implements ICCPropertySource {
 		list.remove(m);
 		database.removeFromMovies(m.getID());
 
-		if (!m.getCoverID().isEmpty()) {
-			getCoverCache().deleteCover(m.getCoverID());
-		}
+		m.getCoverID().ifPresent(getCoverCache()::deleteCover);
 
 		_cache.bust();
 	}
@@ -739,9 +737,7 @@ public class CCMovieList implements ICCPropertySource {
 		}
 		database.removeFromSeries(s.getID());
 		
-		if (!s.getCoverID().isEmpty()) {
-			getCoverCache().deleteCover(s.getCoverID());
-		}
+		s.getCoverID().ifPresent(getCoverCache()::deleteCover);
 
 		_cache.bust();
 	}

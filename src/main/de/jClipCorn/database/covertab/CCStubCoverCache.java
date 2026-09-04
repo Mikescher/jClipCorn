@@ -4,6 +4,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileSize;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.datatypes.CCUUID;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -45,8 +46,8 @@ public class CCStubCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public CCUUID addCover(BufferedImage newCover) {
-		return CCUUID.generate();
+	public Opt<CCUUID> addCover(BufferedImage newCover) {
+		return Opt.of(CCUUID.generate());
 	}
 
 	@Override

@@ -344,9 +344,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		
 		getMovieList().removeSeasonDatabase(season);
 		
-		if (!season.getCoverID().isEmpty()) {
-			getMovieList().getCoverCache().deleteCover(season.getCoverID());
-		}
+		season.getCoverID().ifPresent(getMovieList().getCoverCache()::deleteCover);
 		
 		_cache.bust();
 	}

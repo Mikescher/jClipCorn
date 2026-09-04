@@ -150,7 +150,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addMovieValidation(
 				DatabaseErrorType.ERROR_COVER_NOT_FOUND,
 				o -> o.ValidateCoverFiles,
-				(mov, movielist) -> !mov.getCoverID().isEmpty() && !movielist.getCoverCache().coverFileExists(mov.getCoverID()),
+				(mov, movielist) -> mov.getCoverID().mapOrElse(cid -> !movielist.getCoverCache().coverFileExists(cid), false),
 				(mov, movielist) -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COVER_NOT_FOUND, mov));
 
 		// no title set
@@ -432,7 +432,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addMovieValidation(
 				DatabaseErrorType.ERROR_COVER_TOO_SMALL,
 				o -> o.ValidateMovies,
-				mov -> !mov.getCoverID().isEmpty() && mov.getCoverDimensions().Item1 < ImageUtilities.BASE_COVER_WIDTH && mov.getCoverDimensions().Item2 < ImageUtilities.BASE_COVER_HEIGHT,
+				mov -> mov.getCoverID().isPresent() && mov.getCoverDimensions().Item1 < ImageUtilities.BASE_COVER_WIDTH && mov.getCoverDimensions().Item2 < ImageUtilities.BASE_COVER_HEIGHT,
 				mov -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_COVER_TOO_SMALL, mov,
@@ -870,7 +870,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addSeriesValidation(
 				DatabaseErrorType.ERROR_COVER_NOT_FOUND,
 				o -> o.ValidateCoverFiles,
-				(series, movielist) -> !series.getCoverID().isEmpty() && !movielist.getCoverCache().coverFileExists(series.getCoverID()),
+				(series, movielist) -> series.getCoverID().mapOrElse(cid -> !movielist.getCoverCache().coverFileExists(cid), false),
 				(series, movielist) -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COVER_NOT_FOUND, series));
 
 		// Wrong AddDate
@@ -973,7 +973,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addSeriesValidation(
 				DatabaseErrorType.ERROR_COVER_TOO_SMALL,
 				o -> o.ValidateSeries,
-				series -> !series.getCoverID().isEmpty() && series.getCoverDimensions().Item1 < ImageUtilities.BASE_COVER_WIDTH && series.getCoverDimensions().Item2 < ImageUtilities.BASE_COVER_HEIGHT,
+				series -> series.getCoverID().isPresent() && series.getCoverDimensions().Item1 < ImageUtilities.BASE_COVER_WIDTH && series.getCoverDimensions().Item2 < ImageUtilities.BASE_COVER_HEIGHT,
 				series -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_COVER_TOO_SMALL, series,
@@ -1265,7 +1265,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addSeasonValidation(
 				DatabaseErrorType.ERROR_COVER_NOT_FOUND,
 				o -> o.ValidateCoverFiles,
-				(season, movielist) -> !season.getCoverID().isEmpty() && !movielist.getCoverCache().coverFileExists(season.getCoverID()),
+				(season, movielist) -> season.getCoverID().mapOrElse(cid -> !movielist.getCoverCache().coverFileExists(cid), false),
 				(season, movielist) -> DatabaseError.createSingle(movielist, DatabaseErrorType.ERROR_COVER_NOT_FOUND, season));
 
 		// Wrong AddDate
@@ -1305,7 +1305,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		addSeasonValidation(
 				DatabaseErrorType.ERROR_COVER_TOO_SMALL,
 				o -> o.ValidateSeasons,
-				season -> !season.getCoverID().isEmpty() && season.getCoverDimensions().Item1 < ImageUtilities.BASE_COVER_WIDTH && season.getCoverDimensions().Item2 < ImageUtilities.BASE_COVER_HEIGHT,
+				season -> season.getCoverID().isPresent() && season.getCoverDimensions().Item1 < ImageUtilities.BASE_COVER_WIDTH && season.getCoverDimensions().Item2 < ImageUtilities.BASE_COVER_HEIGHT,
 				season -> DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_COVER_TOO_SMALL, season,
@@ -1868,7 +1868,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				});
 	}
 
-	// getCoverInfo() is null for an element without a cover (CCUUID.EMPTY) and for a coverid with no COVERS row
+	// getCoverInfo() is null for an element without a cover and for a coverid with no COVERS row
 	private static String getCoverFilename(ICCCoveredElement el) {
 		CCCoverData cvr = el.getCoverInfo();
 		return (cvr == null) ? Str.Empty : cvr.Filename;
@@ -1897,11 +1897,12 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		for (CCDatabaseElement el : movielist.iteratorElements()) {
 			pcl.stepSub(el.getFullDisplayTitle());
 
-			cvrList.add(new DatabaseCoverElement(el.getCoverID(), el));
+			el.getCoverID().ifPresent(cid -> cvrList.add(new DatabaseCoverElement(cid, el)));
 
 			if (el.isSeries()) {
 				for (int j = 0; j < el.asSeries().getSeasonCount(); j++) {
-					cvrList.add(new DatabaseCoverElement(el.asSeries().getSeasonByArrayIndex(j).getCoverID(), el.asSeries().getSeasonByArrayIndex(j)));
+					CCSeason sea = el.asSeries().getSeasonByArrayIndex(j);
+					sea.getCoverID().ifPresent(cid -> cvrList.add(new DatabaseCoverElement(cid, sea)));
 				}
 			}
 		}
@@ -1938,27 +1939,28 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			pcl.stepSub(m.getFullDisplayTitle());
 
 			if (m.getCoverID().isEmpty()) continue;
+			CCUUID cvrid = m.getCoverID().get();
 
-			if (coversDatabase.containsKey(m.getCoverID())) {
+			if (coversDatabase.containsKey(cvrid)) {
 				e.add(DatabaseError.createDouble(
 						movielist,
 						DatabaseErrorType.ERROR_DUPLICATE_COVERID, m,
-						coversDatabase.get(m.getCoverID()),
-						"CoverID", String.valueOf(m.getCoverID()),
-						"Element1.ID", String.valueOf(coversDatabase.get(m.getCoverID()).getID()),
-						"Element1.Title", coversDatabase.get(m.getCoverID()).getQualifiedTitle(),
+						coversDatabase.get(cvrid),
+						"CoverID", String.valueOf(cvrid),
+						"Element1.ID", String.valueOf(coversDatabase.get(cvrid).getID()),
+						"Element1.Title", coversDatabase.get(cvrid).getQualifiedTitle(),
 						"Element2.ID", String.valueOf(m.getID()),
 						"Element2.Title", m.getQualifiedTitle()
 					));
 				continue;
 			}
 
-			coversDatabase.put(m.getCoverID(), m);
+			coversDatabase.put(cvrid, m);
 
-			if (!coverIDsTable.contains(m.getCoverID())) e.add(
+			if (!coverIDsTable.contains(cvrid)) e.add(
 					DatabaseError.createSingle(
 							movielist, DatabaseErrorType.ERROR_COVERID_NOT_FOUND, m,
-							"CoverID", String.valueOf(m.getCoverID()),
+							"CoverID", String.valueOf(cvrid),
 							"SourceElement.ID", String.valueOf(m.getID()),
 							"SourceElement.Title", m.getQualifiedTitle()
 						));
@@ -1969,26 +1971,27 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			pcl.stepSub(s.getTitle());
 
 			if (s.getCoverID().isEmpty()) continue;
+			CCUUID cvrid = s.getCoverID().get();
 
-			if (coversDatabase.containsKey(s.getCoverID())) {
+			if (coversDatabase.containsKey(cvrid)) {
 				e.add(DatabaseError.createDouble(
 						movielist, DatabaseErrorType.ERROR_DUPLICATE_COVERID, s,
-						coversDatabase.get(s.getCoverID()),
-						"CoverID", String.valueOf(s.getCoverID()),
-						"Element1.ID", String.valueOf(coversDatabase.get(s.getCoverID()).getID()),
-						"Element1.Title", coversDatabase.get(s.getCoverID()).getQualifiedTitle(),
+						coversDatabase.get(cvrid),
+						"CoverID", String.valueOf(cvrid),
+						"Element1.ID", String.valueOf(coversDatabase.get(cvrid).getID()),
+						"Element1.Title", coversDatabase.get(cvrid).getQualifiedTitle(),
 						"Element2.ID", String.valueOf(s.getID()),
 						"Element2.Title", s.getQualifiedTitle()
 				));
 				continue;
 			}
 
-			coversDatabase.put(s.getCoverID(), s);
+			coversDatabase.put(cvrid, s);
 
-			if (!coverIDsTable.contains(s.getCoverID())) e.add(DatabaseError.createSingle(
+			if (!coverIDsTable.contains(cvrid)) e.add(DatabaseError.createSingle(
 					movielist,
 					DatabaseErrorType.ERROR_COVERID_NOT_FOUND, s,
-					"CoverID", String.valueOf(s.getCoverID()),
+					"CoverID", String.valueOf(cvrid),
 					"SourceElement.ID", String.valueOf(s.getID()),
 					"SourceElement.Title", s.getQualifiedTitle()
 					));
@@ -1999,27 +2002,28 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			pcl.stepSub(s.getSeries().getTitle() + " S" + s.getSeasonNumber()); //$NON-NLS-1$
 
 			if (s.getCoverID().isEmpty()) continue;
+			CCUUID cvrid = s.getCoverID().get();
 
-			if (coversDatabase.containsKey(s.getCoverID())) {
+			if (coversDatabase.containsKey(cvrid)) {
 				e.add(DatabaseError.createDouble(
 						movielist,
 						DatabaseErrorType.ERROR_DUPLICATE_COVERID, s,
-						coversDatabase.get(s.getCoverID()),
-						"CoverID", String.valueOf(s.getCoverID()),
-						"Element1.ID", String.valueOf(coversDatabase.get(s.getCoverID()).getID()),
-						"Element1.Title", coversDatabase.get(s.getCoverID()).getQualifiedTitle(),
+						coversDatabase.get(cvrid),
+						"CoverID", String.valueOf(cvrid),
+						"Element1.ID", String.valueOf(coversDatabase.get(cvrid).getID()),
+						"Element1.Title", coversDatabase.get(cvrid).getQualifiedTitle(),
 						"Element2.ID", String.valueOf(s.getID()),
 						"Element2.Title", s.getQualifiedTitle()
 					));
 				continue;
 			}
 
-			coversDatabase.put(s.getCoverID(), s);
+			coversDatabase.put(cvrid, s);
 
-			if (!coverIDsTable.contains(s.getCoverID())) e.add(DatabaseError.createSingle(
+			if (!coverIDsTable.contains(cvrid)) e.add(DatabaseError.createSingle(
 					movielist,
 					DatabaseErrorType.ERROR_COVERID_NOT_FOUND, s,
-					"CoverID", String.valueOf(s.getCoverID()),
+					"CoverID", String.valueOf(cvrid),
 					"SourceElement.ID", String.valueOf(s.getID()),
 					"SourceElement.Title", s.getQualifiedTitle()
 					));
@@ -2083,11 +2087,12 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		List<DatabaseCoverElement> cvrList = new ArrayList<>();
 
 		for (CCDatabaseElement el : movielist.iteratorElements()) {
-			cvrList.add(new DatabaseCoverElement(el.getCoverID(), el));
+			el.getCoverID().ifPresent(cid -> cvrList.add(new DatabaseCoverElement(cid, el)));
 
 			if (el.isSeries()) {
 				for (int j = 0; j < el.asSeries().getSeasonCount(); j++) {
-					cvrList.add(new DatabaseCoverElement(el.asSeries().getSeasonByArrayIndex(j).getCoverID(), el.asSeries().getSeasonByArrayIndex(j)));
+					CCSeason sea = el.asSeries().getSeasonByArrayIndex(j);
+					sea.getCoverID().ifPresent(cid -> cvrList.add(new DatabaseCoverElement(cid, sea)));
 				}
 			}
 		}
@@ -2463,11 +2468,10 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		}
 	}
 
-	// The nil UUID is a valid value only in a reference column - in COVERID it is the "no cover" sentinel,
-	// in SERIESID/SEASONID it is reported as a missing parent. As a primary key it is always corrupt.
-	private static boolean isValidID(String id, boolean allowNil) {
+	// The nil UUID is corrupt data everywhere - "no cover" is a NULL COVERID, not a nil uuid.
+	private static boolean isValidID(String id) {
 		if (!CCUUID.isValid(id)) return false;
-		return allowNil || !CCUUID.parseOrEmpty(id).isEmpty();
+		return !CCUUID.parseOrEmpty(id).isEmpty();
 	}
 
 	@Override
@@ -2506,17 +2510,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			List<String> ids_cvr  = db.querySQL("SELECT ID FROM COVERS",             1, o -> (String)o[0]);
 			List<String> refs_ser = db.querySQL("SELECT DISTINCT SERIESID FROM SEASONS",  1, o -> (String)o[0]);
 			List<String> refs_sea = db.querySQL("SELECT DISTINCT SEASONID FROM EPISODES", 1, o -> (String)o[0]);
-			List<String> refs_cvr = db.querySQL("SELECT COVERID FROM MOVIES UNION SELECT COVERID FROM SERIES UNION SELECT COVERID FROM SEASONS", 1, o -> (String)o[0]);
+			List<String> refs_cvr = db.querySQL("SELECT COVERID FROM MOVIES WHERE COVERID IS NOT NULL UNION SELECT COVERID FROM SERIES WHERE COVERID IS NOT NULL UNION SELECT COVERID FROM SEASONS WHERE COVERID IS NOT NULL", 1, o -> (String)o[0]);
 
-			for (String bad : CCStreams.iterate(ids_mov, ids_ser, ids_sea, ids_epi, ids_cvr).filter(p -> !isValidID(p, false))) {
-				e.add(DatabaseError.createSingle(
-						movielist,
-						DatabaseErrorType.ERROR_DB_MALFORMED_ID, bad,
-						"ID", String.valueOf(bad)
-						));
-			}
-
-			for (String bad : CCStreams.iterate(refs_ser, refs_sea, refs_cvr).filter(p -> !isValidID(p, true))) {
+			for (String bad : CCStreams.iterate(ids_mov, ids_ser, ids_sea, ids_epi, ids_cvr, refs_ser, refs_sea, refs_cvr).filter(p -> !isValidID(p))) {
 				e.add(DatabaseError.createSingle(
 						movielist,
 						DatabaseErrorType.ERROR_DB_MALFORMED_ID, bad,
@@ -2577,11 +2573,9 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 		{
 			pcl.stepSub("Validate CoverIDs");
 
-			String nocover = "'" + CCUUID.EMPTY + "'";
-
-			List<String> cvr1 = db.querySQL("SELECT COVERID FROM MOVIES WHERE COVERID <> " + nocover, 1, o -> (String)o[0]);
-			List<String> cvr2 = db.querySQL("SELECT COVERID FROM SERIES WHERE COVERID <> " + nocover, 1, o -> (String)o[0]);
-			List<String> cvr3 = db.querySQL("SELECT COVERID FROM SEASONS WHERE COVERID <> " + nocover, 1, o -> (String)o[0]);
+			List<String> cvr1 = db.querySQL("SELECT COVERID FROM MOVIES WHERE COVERID IS NOT NULL", 1, o -> (String)o[0]);
+			List<String> cvr2 = db.querySQL("SELECT COVERID FROM SERIES WHERE COVERID IS NOT NULL", 1, o -> (String)o[0]);
+			List<String> cvr3 = db.querySQL("SELECT COVERID FROM SEASONS WHERE COVERID IS NOT NULL", 1, o -> (String)o[0]);
 
 			List<String> cvrall = db.querySQL("SELECT ID FROM COVERS",  1, o -> (String)o[0]);
 

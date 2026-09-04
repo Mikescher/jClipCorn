@@ -7,7 +7,6 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.features.serialization.xmlimport.ImportOptions;
-import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
@@ -20,6 +19,7 @@ import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings({"nls"})
 @RunWith(JUnitParamsRunner.class)
@@ -308,7 +308,7 @@ public class TestSerialization extends ClipCornBaseTest {
 		CCMovieList ml2 = createEmptyDB();
 		ExportHelper.importElements(ml2, data, new ImportOptions(false, false, false, false, false), -1);
 
-		for (var e : ml2.iteratorElements()) assertEquals(CCUUID.EMPTY, e.getCoverID());
-		for (var e : ml2.iteratorSeasons())  assertEquals(CCUUID.EMPTY, e.getCoverID());
+		for (var e : ml2.iteratorElements()) assertTrue(e.getCoverID().isEmpty());
+		for (var e : ml2.iteratorSeasons())  assertTrue(e.getCoverID().isEmpty());
 	}
 }

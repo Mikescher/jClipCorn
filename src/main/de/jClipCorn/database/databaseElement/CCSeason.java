@@ -13,6 +13,7 @@ import de.jClipCorn.database.elementProps.IPropertyParent;
 import de.jClipCorn.database.elementProps.impl.EEnumProp;
 import de.jClipCorn.database.elementProps.impl.EIntProp;
 import de.jClipCorn.database.elementProps.impl.EOptIntProp;
+import de.jClipCorn.database.elementProps.impl.EOptUUIDProp;
 import de.jClipCorn.database.elementProps.impl.EOnlineRefListProp;
 import de.jClipCorn.database.elementProps.impl.EPropertyType;
 import de.jClipCorn.database.elementProps.impl.EStringListProp;
@@ -22,6 +23,7 @@ import de.jClipCorn.database.util.*;
 import de.jClipCorn.features.actionTree.CCActionElement;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
 import de.jClipCorn.features.nfo.SeasonNFOWriter;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.ICCPropertySource;
@@ -50,7 +52,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	private final SeasonCache _cache = new SeasonCache(this);
 
 	public final EUUIDProp               ID           = new EUUIDProp(  "ID",            CCUUID.EMPTY,          this, EPropertyType.DATABASE_PRIMARY_ID);
-	public final EUUIDProp               CoverID      = new EUUIDProp(  "CoverID",       CCUUID.EMPTY,          this, EPropertyType.DATABASE_REF);
+	public final EOptUUIDProp            CoverID      = new EOptUUIDProp("CoverID",      Opt.empty(),           this, EPropertyType.DATABASE_REF);
 	public final EStringProp             Title        = new EStringProp("Title",         Str.Empty,             this, EPropertyType.OBJECTIVE_METADATA);
 	public final EOptIntProp             Year         = new EOptIntProp("Year",          Opt.empty(),           this, EPropertyType.OBJECTIVE_METADATA);
 	public final EEnumProp<CCUserScore>  Score        = new EEnumProp<>("Score",         CCUserScore.RATING_NO, this, EPropertyType.USER_METADATA);
@@ -126,16 +128,6 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 		return CCDBStructureElementTyp.SEASON;
 	}
 
-	public void setDefaultValues(boolean updateDB) {
-		try {
-			beginUpdating();
-
-			for (IEProperty prop : getProperties()) if (!prop.isReadonly()) prop.resetToDefault();
-		} finally {
-			if (updateDB) endUpdating(); else abortUpdating();
-		}
-	}
-
 	public boolean isDirty() {
 		for (var p : getProperties()) if (p.isDirty()) return true;
 		return false;
@@ -192,19 +184,28 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 
 	public void setCover(CCUUID cid) {
-		CoverID.set(cid);
+		CoverID.set(Opt.of(cid));
 	}
-	
+
+	public void clearCover() {
+		CoverID.set(Opt.empty());
+	}
+
 	public void setCover(BufferedImage cvr) {
-		if (!CoverID.get().isEmpty() && cvr.equals(getCover())) {
+		if (cvr == null) {
 			return;
 		}
-		
-		if (!CoverID.get().isEmpty()) {
-			getSeries().getMovieList().getCoverCache().deleteCover(this.CoverID.get());
+
+		if (CoverID.get().isPresent() && cvr.equals(getCover())) {
+			return;
 		}
-		
-		this.CoverID.set(getSeries().getMovieList().getCoverCache().addCover(cvr));
+
+		Opt<CCUUID> ncid = getMovieList().getCoverCache().addCover(cvr);
+		if (ncid.isEmpty()) return; // addCover already logged - keep the old cover instead of dropping the reference
+
+		CoverID.get().ifPresent(getMovieList().getCoverCache()::deleteCover);
+
+		CoverID.set(ncid);
 	}
 
 	@Override
@@ -218,7 +219,7 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 	}
 
 	@Override
-	public CCUUID getCoverID() {
+	public Opt<CCUUID> getCoverID() {
 		return CoverID.get();
 	}
 
@@ -234,17 +235,19 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	@Override
 	public BufferedImage getCover() {
-		return owner.getMovieList().getCoverCache().getCover(CoverID.get());
+		if (CoverID.get().isEmpty()) return Resources.IMG_COVER_NOTFOUND.get();
+		return owner.getMovieList().getCoverCache().getCover(CoverID.get().get());
 	}
 
 	@Override
 	public Tuple<Integer, Integer> getCoverDimensions() {
-		return owner.getMovieList().getCoverCache().getDimensions(CoverID.get());
+		if (CoverID.get().isEmpty()) return Tuple.Create(0, 0);
+		return owner.getMovieList().getCoverCache().getDimensions(CoverID.get().get());
 	}
 
 	@Override
 	public CCCoverData getCoverInfo() {
-		return owner.getMovieList().getCoverCache().getInfoOrNull(CoverID.get());
+		return CoverID.get().mapOrElse(owner.getMovieList().getCoverCache()::getInfoOrNull, null);
 	}
 	
 	public boolean isViewed() { // All parts viewed

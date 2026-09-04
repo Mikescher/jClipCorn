@@ -13,6 +13,7 @@ import de.jClipCorn.database.elementProps.packs.EOnlineScorePropPack;
 import de.jClipCorn.database.util.CCQualityCategory;
 import de.jClipCorn.database.util.ExtendedViewedState;
 import de.jClipCorn.features.actionTree.IActionSourceObject;
+import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.ICCPropertySource;
 import de.jClipCorn.util.Str;
@@ -30,7 +31,7 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public static final Pattern REGEX_ANIMESEASON = Pattern.compile("^(Spring|Summer|Fall|Winter) ([12][0-9]{3})$");
 
 	public final EUUIDProp                ID              = new EUUIDProp(           "ID",              CCUUID.EMPTY,                this, EPropertyType.DATABASE_PRIMARY_ID);
-	public final EUUIDProp                CoverID         = new EUUIDProp(           "CoverID",         CCUUID.EMPTY,                this, EPropertyType.DATABASE_REF);
+	public final EOptUUIDProp             CoverID         = new EOptUUIDProp(        "CoverID",         Opt.empty(),                 this, EPropertyType.DATABASE_REF);
 	public final EGroupListProp           Groups          = new EGroupListProp(      "Groups",          CCGroupList.EMPTY,           this, EPropertyType.USER_METADATA, ETargetDatabase.MAIN, this::onGroupsChanging);
 	public final EStringProp              Title           = new EStringProp(         "Title",           Str.Empty,                   this, EPropertyType.OBJECTIVE_METADATA);
 	public final EGenreListProp           Genres          = new EGenreListProp(      "Genres",          CCGenreList.EMPTY,           this, EPropertyType.OBJECTIVE_METADATA);
@@ -95,16 +96,6 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public ETagListProp             tags()            { return Tags;            }
 	public EStringListProp          specialVersion()  { return SpecialVersion;  }
 
-	public void setDefaultValues(boolean updateDB) {
-		try {
-			beginUpdating();
-
-			for (IEProperty prop : getProperties()) if (!prop.isReadonly()) prop.resetToDefault();
-		} finally {
-			if (updateDB) endUpdating(); else abortUpdating();
-		}
-	}
-
 	public boolean isDirty() {
 		for (var p : getProperties()) if (p.isDirty()) return true;
 		return false;
@@ -143,7 +134,11 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 	public abstract CCDBElementTyp getType();
 
 	public void setCover(CCUUID cid) {
-		CoverID.set(cid);
+		CoverID.set(Opt.of(cid));
+	}
+
+	public void clearCover() {
+		CoverID.set(Opt.empty());
 	}
 
 	public void setCover(BufferedImage cvr) {
@@ -151,35 +146,38 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 			return;
 		}
 
-		if (!CoverID.get().isEmpty() && cvr.equals(getCover())) {
+		if (CoverID.get().isPresent() && cvr.equals(getCover())) {
 			return;
 		}
-		
-		if (!CoverID.get().isEmpty()) {
-			movielist.getCoverCache().deleteCover(CoverID.get());
-		}
 
-		CoverID.set(movielist.getCoverCache().addCover(cvr));
+		Opt<CCUUID> ncid = movielist.getCoverCache().addCover(cvr);
+		if (ncid.isEmpty()) return; // addCover already logged - keep the old cover instead of dropping the reference
+
+		CoverID.get().ifPresent(movielist.getCoverCache()::deleteCover);
+
+		CoverID.set(ncid);
 	}
-	
+
 	@Override
-	public CCUUID getCoverID() {
+	public Opt<CCUUID> getCoverID() {
 		return CoverID.get();
 	}
 
 	@Override
 	public BufferedImage getCover() {
-		return movielist.getCoverCache().getCover(CoverID.get());
+		if (CoverID.get().isEmpty()) return Resources.IMG_COVER_NOTFOUND.get();
+		return movielist.getCoverCache().getCover(CoverID.get().get());
 	}
 
 	@Override
 	public Tuple<Integer, Integer> getCoverDimensions() {
-		return movielist.getCoverCache().getDimensions(CoverID.get());
+		if (CoverID.get().isEmpty()) return Tuple.Create(0, 0);
+		return movielist.getCoverCache().getDimensions(CoverID.get().get());
 	}
 
 	@Override
 	public CCCoverData getCoverInfo() {
-		return movielist.getCoverCache().getInfoOrNull(CoverID.get());
+		return CoverID.get().mapOrElse(movielist.getCoverCache()::getInfoOrNull, null);
 	}
 
 	private CCGroupList onGroupsChanging(CCGroupList value)

@@ -187,21 +187,29 @@ public class CCHistoryDatabase {
 		}
 	}
 
+	/**
+	 * [DATE] only has millisecond resolution, so the rows of one write can share it. rowid is the
+	 * insertion order and breaks the tie - without it the INSERT and the UPDATE of a newly created
+	 * element can reach the merge in the wrong order and no longer combine. The direction has to
+	 * match [DATE] (newest first, so a limit keeps the newest rows) because the reader reverses.
+	 */
+	private static final String HISTORY_ORDER = " ORDER BY [DATE] DESC, rowid DESC";
+
 	private void prepareStatements() throws SQLException {
 		insertHistoryStmt = connection.prepareStatement(
 				"INSERT INTO [HISTORY] ([TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW]) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
 		queryHistoryAllStmt = connection.prepareStatement(
-				"SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY] ORDER BY [DATE] DESC");
+				"SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY]" + HISTORY_ORDER);
 
 		queryHistoryFilteredStmt = connection.prepareStatement(
-				"SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY] WHERE [ID] = ? ORDER BY [DATE] ASC");
+				"SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY] WHERE [ID] = ?" + HISTORY_ORDER);
 
 		queryHistoryLimitedStmt = connection.prepareStatement(
-				"SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY] WHERE [DATE] > ? ORDER BY [DATE] DESC");
+				"SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY] WHERE [DATE] > ?" + HISTORY_ORDER);
 
 		queryHistoryFilteredLimitedStmt = connection.prepareStatement(
-				"SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY] WHERE ([ID] = ?) AND ([DATE] > ?) ORDER BY [DATE] DESC");
+				"SELECT [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM [HISTORY] WHERE ([ID] = ?) AND ([DATE] > ?)" + HISTORY_ORDER);
 
 		countHistoryStmt = connection.prepareStatement(
 				"SELECT COUNT(*) FROM [HISTORY]");

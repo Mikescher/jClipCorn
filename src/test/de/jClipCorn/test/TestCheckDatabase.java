@@ -98,8 +98,8 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 		var cvr1 = mov1.getCoverInfo().Filename;
 		var cvr2 = mov2.getCoverInfo().Filename;
 
-		mov1.setCover(CCUUID.EMPTY);
-		mov2.setCover(CCUUID.EMPTY);
+		mov1.clearCover();
+		mov2.clearCover();
 
 		List<DatabaseError> errs = new ArrayList<>();
 
@@ -122,7 +122,7 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 		CCMovieList ml = createExampleDB();
 
 		var mov = movieByTitle(ml, "Der Bomber");
-		mov.setCover(CCUUID.EMPTY);
+		mov.clearCover();
 
 		List<DatabaseError> errs = new ArrayList<>();
 

@@ -36,6 +36,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.formatter.FileSizeFormatter;
@@ -236,7 +237,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		if (series == null) return;
 
 		if (Main.DEBUG) {
-			setTitle("<ID:" + series.ID.get().toShortString() + "> " + series.Title.get() + " (" + series.CoverID.get().toShortString() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			setTitle("<ID:" + series.ID.get().toShortString() + "> " + series.Title.get() + " (" + series.CoverID.get().mapOrElse(CCUUID::toShortString, "") + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		} else {
 			setTitle(series.Title.get());
 		}
@@ -324,7 +325,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			return;
 
 		if (Main.DEBUG) {
-			lblSeason.setText(String.format("<%s> %s (%s) (%s)", s.getID().toShortString(), s.getTitle(), s.getYear().mapOrElse(String::valueOf, ""), s.getCoverID().toShortString())); //$NON-NLS-1$ //$NON-NLS-2$
+			lblSeason.setText(String.format("<%s> %s (%s) (%s)", s.getID().toShortString(), s.getTitle(), s.getYear().mapOrElse(String::valueOf, ""), s.getCoverID().mapOrElse(CCUUID::toShortString, ""))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} else {
 			lblSeason.setText(String.format("%s (%s)", s.getTitle(), s.getYear().mapOrElse(String::valueOf, ""))); //$NON-NLS-1$ //$NON-NLS-2$
 		}

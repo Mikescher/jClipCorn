@@ -51,7 +51,7 @@ public abstract class EOptProperty<TTypeInner> extends EProperty<Opt<TTypeInner>
 
 	protected abstract String serializeInnerToString(TTypeInner v);
 	protected abstract Object serializeInnerToDatabaseValue(TTypeInner v);
-	protected abstract TTypeInner deserializeInnerFromString(String v);
-	protected abstract TTypeInner deserializeInnerFromDatabaseValue(Object v);
+	protected abstract TTypeInner deserializeInnerFromString(String v) throws CCFormatException;
+	protected abstract TTypeInner deserializeInnerFromDatabaseValue(Object v) throws CCFormatException;
 	protected abstract boolean valueInnerEquals(TTypeInner a, TTypeInner b);
 }

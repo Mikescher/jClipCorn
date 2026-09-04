@@ -240,7 +240,10 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 	public void setModeCover(CCDatabaseElement el) {
 		if (movielist.ccprops().PROP_MAINFRAME_ASYNC_COVER_LOADING.getValue()) {
 
-			if (el.getMovieList().getCoverCache().isCached(el.getCoverID()))
+			var cid = el.getCoverID();
+
+			// an element without a cover resolves to the placeholder image - there is nothing to load off-thread
+			if (cid.isEmpty() || el.getMovieList().getCoverCache().isCached(cid.get()))
 				setModeCoverSync(el);
 			else
 				setModeCoverAsync(el);

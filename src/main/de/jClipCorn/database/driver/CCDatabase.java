@@ -453,6 +453,12 @@ public class CCDatabase {
 		updateEpisodeUserDataFromResultSet(rs, ep);
 	}
 
+	/** NULL is "this element has no cover" - it is not a missing value. */
+	private static Opt<CCUUID> readCoverID(CCSQLResultSet rs, CCSQLColDef col) throws SQLException, SQLWrapperException, CCFormatException {
+		String v = rs.getNullableString(col);
+		return (v == null) ? Opt.empty() : Opt.of(CCUUID.parse(v));
+	}
+
 	private void updateSeasonFromResultSet(CCSQLResultSet rs, CCSeason seas) throws SQLException, CCFormatException, SQLWrapperException {
 		seas.Title.setOnly(rs.getString(DatabaseStructure.COL_SEAS_NAME));
 		seas.Year.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_SEAS_YEAR)));
@@ -460,7 +466,7 @@ public class CCDatabase {
 		seas.AnimeSeason.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SEAS_ANIMESEASON)));
 		seas.AnimeStudio.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SEAS_ANIMESTUDIO)));
 
-		seas.CoverID.setOnly(CCUUID.parse(rs.getString(DatabaseStructure.COL_SEAS_COVERID)));
+		seas.CoverID.setOnly(readCoverID(rs, DatabaseStructure.COL_SEAS_COVERID));
 
 		updateSeasonUserDataFromResultSet(rs, seas);
 	}
@@ -472,7 +478,7 @@ public class CCDatabase {
 		ser.FSK.setOnly(rs.getInt(DatabaseStructure.COL_SER_FSK));
 		ser.OnlineReference.setOnly(CCOnlineReferenceList.fromJSONArray(rs.getString(DatabaseStructure.COL_SER_ONLINEREF)));
 
-		ser.CoverID.setOnly(CCUUID.parse(rs.getString(DatabaseStructure.COL_SER_COVERID)));
+		ser.CoverID.setOnly(readCoverID(rs, DatabaseStructure.COL_SER_COVERID));
 		ser.Groups.setOnly(CCGroupList.fromJSONArrayWithoutAddingNewGroups(ser.getMovieList(), rs.getString(DatabaseStructure.COL_SER_GROUPS)));
 		ser.SpecialVersion.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_SPECIALVERSION)));
 
@@ -515,7 +521,7 @@ public class CCDatabase {
 		mov.MediaInfo.AudioSamplerate.setOnly(Opt.ofNullable(rs.getNullableInt(DatabaseStructure.COL_MOV_MI_SAMPLERATE)));
 		mov.MediaInfo.updateCache();
 
-		mov.CoverID.setOnly(CCUUID.parse(rs.getString(DatabaseStructure.COL_MOV_COVERID)));
+		mov.CoverID.setOnly(readCoverID(rs, DatabaseStructure.COL_MOV_COVERID));
 		mov.Groups.setOnly(CCGroupList.fromJSONArrayWithoutAddingNewGroups(mov.getMovieList(), rs.getString(DatabaseStructure.COL_MOV_GROUPS)));
 		mov.SpecialVersion.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_SPECIALVERSION)));
 		mov.AnimeSeason.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_MOV_ANIMESEASON)));
@@ -536,9 +542,9 @@ public class CCDatabase {
 			stmt.clearParameters();
 
 			for (var col : stmt.getPreparedFields()) {
-				if (col == COL_MOV_ID)              { stmt.setStr(col, id.toString());           continue; }
-				if (col == COL_MOV_COVERID)         { stmt.setStr(col, CCUUID.EMPTY.toString()); continue; }
-				if (col == COL_MOV_ADDDATE)         { stmt.setStr(col, CCDate.MIN_SQL); continue; }
+				if (col == COL_MOV_ID)              { stmt.setStr(col, id.toString());   continue; }
+				// the row exists as of now, so that is its add-date - a placeholder here is what CCDatabaseValidator reports as ERROR_WRONG_ADDDATE
+				if (col == COL_MOV_ADDDATE)         { stmt.setStr(col, CCDate.getCurrentDate().toStringSQL()); continue; }
 
 				if (!col.NonNullable)               { stmt.setNull(col);                continue; }
 
@@ -565,8 +571,7 @@ public class CCDatabase {
 			stmt.clearParameters();
 
 			for (var col : stmt.getPreparedFields()) {
-				if (col == COL_SER_ID)              { stmt.setStr(col, id.toString());           continue; }
-				if (col == COL_SER_COVERID)         { stmt.setStr(col, CCUUID.EMPTY.toString()); continue; }
+				if (col == COL_SER_ID)              { stmt.setStr(col, id.toString()); continue; }
 
 				if (!col.NonNullable)               { stmt.setNull(col);           continue; }
 
@@ -593,9 +598,8 @@ public class CCDatabase {
 			stmt.clearParameters();
 
 			for (var col : stmt.getPreparedFields()) {
-				if (col == COL_SEAS_ID)             { stmt.setStr(col, seasid.toString());       continue; }
-				if (col == COL_SEAS_SERIESID)       { stmt.setStr(col, serid.toString());        continue; }
-				if (col == COL_SEAS_COVERID)        { stmt.setStr(col, CCUUID.EMPTY.toString()); continue; }
+				if (col == COL_SEAS_ID)             { stmt.setStr(col, seasid.toString()); continue; }
+				if (col == COL_SEAS_SERIESID)       { stmt.setStr(col, serid.toString());  continue; }
 
 				if (!col.NonNullable)               { stmt.setNull(col);           continue; }
 
@@ -624,7 +628,8 @@ public class CCDatabase {
 			for (var col : stmt.getPreparedFields()) {
 				if (col == COL_EPIS_ID)             { stmt.setStr(col, eid.toString()); continue; }
 				if (col == COL_EPIS_SEASONID)       { stmt.setStr(col, sid.toString()); continue; }
-				if (col == COL_EPIS_ADDDATE)        { stmt.setStr(col, CCDate.MIN_SQL); continue; }
+				// the row exists as of now, so that is its add-date - a placeholder here is what CCDatabaseValidator reports as ERROR_WRONG_ADDDATE
+				if (col == COL_EPIS_ADDDATE)        { stmt.setStr(col, CCDate.getCurrentDate().toStringSQL()); continue; }
 
 				if (!col.NonNullable)               { stmt.setNull(col);                continue; }
 
@@ -652,7 +657,6 @@ public class CCDatabase {
 		}
 
 		CCMovie result = new CCMovie(list, nlid);
-		result.setDefaultValues(false);
 		result.resetDirty();
 
 		return result;
@@ -666,7 +670,6 @@ public class CCDatabase {
 		}
 
 		CCSeries result = new CCSeries(list, nlid);
-		result.setDefaultValues(false);
 		result.resetDirty();
 
 		return result;
@@ -680,7 +683,6 @@ public class CCDatabase {
 		}
 
 		CCSeason result = new CCSeason(s, sid);
-		result.setDefaultValues(false);
 		result.resetDirty();
 
 		return result;
@@ -694,7 +696,6 @@ public class CCDatabase {
 		}
 
 		CCEpisode result = new CCEpisode(s, eid);
-		result.setDefaultValues(false);
 		result.resetDirty();
 
 		return result;
@@ -731,7 +732,7 @@ public class CCDatabase {
 			stmt.setStr(DatabaseStructure.COL_MOV_SPECIALVERSION,    mov.SpecialVersion.serializeToString());
 			stmt.setStr(DatabaseStructure.COL_MOV_ANIMESEASON,       mov.AnimeSeason.serializeToString());
 			stmt.setStr(DatabaseStructure.COL_MOV_ANIMESTUDIO,       mov.AnimeStudio.serializeToString());
-			stmt.setStr(DatabaseStructure.COL_MOV_COVERID,           mov.getCoverID().toString());
+			stmt.setNullableStr(DatabaseStructure.COL_MOV_COVERID,   mov.getCoverID().mapOrElse(CCUUID::toString, null));
 
 			var mi = mov.MediaInfo.get();
 
@@ -793,7 +794,7 @@ public class CCDatabase {
 			stmt.setInt(DatabaseStructure.COL_SER_FSK,               ser.FSK.get().asInt());
 			stmt.setStr(DatabaseStructure.COL_SER_ONLINEREF,         ser.OnlineReference.get().asJSONArray());
 
-			stmt.setStr(DatabaseStructure.COL_SER_COVERID,           ser.getCoverID().toString());
+			stmt.setNullableStr(DatabaseStructure.COL_SER_COVERID,   ser.getCoverID().mapOrElse(CCUUID::toString, null));
 			stmt.setStr(DatabaseStructure.COL_SER_GROUPS,            ser.getGroups().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_SER_SPECIALVERSION,    ser.SpecialVersion.serializeToString());
 
@@ -835,7 +836,7 @@ public class CCDatabase {
 			stmt.setStr(DatabaseStructure.COL_SEAS_ANIMESEASON,  sea.AnimeSeason.serializeToString());
 			stmt.setStr(DatabaseStructure.COL_SEAS_ANIMESTUDIO,  sea.AnimeStudio.serializeToString());
 
-			stmt.setStr(DatabaseStructure.COL_SEAS_COVERID,   sea.getCoverID().toString());
+			stmt.setNullableStr(DatabaseStructure.COL_SEAS_COVERID, sea.getCoverID().mapOrElse(CCUUID::toString, null));
 
 			stmt.setStr(DatabaseStructure.COL_SEAS_ID,        sea.getID().toString());
 

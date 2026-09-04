@@ -9,6 +9,7 @@ import de.jClipCorn.util.colorquantizer.ColorQuantizer;
 import de.jClipCorn.util.colorquantizer.ColorQuantizerMethod;
 import de.jClipCorn.util.colorquantizer.util.ColorQuantizerConverter;
 import de.jClipCorn.util.datatypes.CCUUID;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -54,8 +55,6 @@ public class CCMemoryCoverCache implements ICoverCache {
 	}
 
 	private CCCoverData getEntry(CCUUID cid) {
-		if (cid.isEmpty()) return null; // element without a cover - not a cache miss
-
 		CCCoverData cce = _elements.get(cid);
 
 		if (cce == null) CCLog.addError(LocaleBundle.getFormattedString("LogMessage.CoverNotInCache", cid)); //$NON-NLS-1$
@@ -65,8 +64,6 @@ public class CCMemoryCoverCache implements ICoverCache {
 
 	@Override
 	public BufferedImage getCover(CCUUID cid) {
-		if (cid.isEmpty()) return Resources.IMG_COVER_NOTFOUND.get();
-
 		CCCoverData cce = getEntry(cid);
 		if (cce == null) return Resources.IMG_COVER_NOTFOUND.get();
 
@@ -86,7 +83,7 @@ public class CCMemoryCoverCache implements ICoverCache {
 	}
 
 	@Override
-	public CCUUID addCover(BufferedImage newCover) {
+	public Opt<CCUUID> addCover(BufferedImage newCover) {
 		try {
 			CCUUID cid = CCUUID.generate();
 
@@ -112,10 +109,10 @@ public class CCMemoryCoverCache implements ICoverCache {
 
 			f.deleteSafe();
 
-			return cid;
+			return Opt.of(cid);
 		} catch (Exception e) {
 			CCLog.addError(e);
-			return CCUUID.EMPTY;
+			return Opt.empty();
 		}
 	}
 

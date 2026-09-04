@@ -27,6 +27,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -114,7 +115,7 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 		if (movie == null) return;
 
 		if (Main.DEBUG) {
-			setTitle("<" + movie.getID().toShortString() + "> " + movie.getCompleteTitle() + " (" + movie.getCoverID().toShortString() + ")");
+			setTitle("<" + movie.getID().toShortString() + "> " + movie.getCompleteTitle() + " (" + movie.getCoverID().mapOrElse(CCUUID::toShortString, "") + ")");
 		} else {
 			setTitle(movie.getCompleteTitle());
 		}

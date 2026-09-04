@@ -112,7 +112,7 @@ public class CDFWorkerPatch
 				if (coverdata != null)
 				{
 					var source = e.MovieLocal.getMovieList().getCoverCache().getFilepath(coverdata);
-					var newfilename = "c_" + e.MovieLocal.CoverID.get() + "." + source.getExtension();
+					var newfilename = "c_" + coverdata.ID + "." + source.getExtension();
 					var target = datadir.append(newfilename);
 
 					var cmd1 = new Element("replacecover");
@@ -231,7 +231,7 @@ public class CDFWorkerPatch
 					xml.addContent(xaction);
 
 					var source = e.MovieLocal.getMovieList().getCoverCache().getFilepath(coverdata);
-					var newfilename = "c_" + e.MovieLocal.CoverID.get() + "." + source.getExtension();
+					var newfilename = "c_" + coverdata.ID + "." + source.getExtension();
 					var target = datadir.append(newfilename);
 
 					var innerctr = 1;
@@ -361,7 +361,7 @@ public class CDFWorkerPatch
 				if (coverdata != null)
 				{
 					var source = e.SeriesLocal.getMovieList().getCoverCache().getFilepath(coverdata);
-					var newfilename = "c_" + e.SeriesLocal.CoverID.get() + "." + source.getExtension();
+					var newfilename = "c_" + coverdata.ID + "." + source.getExtension();
 					var target = datadir.append(newfilename);
 
 					var cmd1 = new Element("replacecover");
@@ -447,7 +447,7 @@ public class CDFWorkerPatch
 					xml.addContent(xaction);
 
 					var source = e.SeriesLocal.getMovieList().getCoverCache().getFilepath(coverdata);
-					var newfilename = "c_" + e.SeriesLocal.CoverID.get() + "." + source.getExtension();
+					var newfilename = "c_" + coverdata.ID + "." + source.getExtension();
 					var target = datadir.append(newfilename);
 
 					var innerctr = 1;
@@ -515,7 +515,7 @@ public class CDFWorkerPatch
 				if (coverdata != null)
 				{
 					var source = e.SeasonLocal.getMovieList().getCoverCache().getFilepath(coverdata);
-					var newfilename = "c_" + e.SeasonLocal.CoverID.get() + "." + source.getExtension();
+					var newfilename = "c_" + coverdata.ID + "." + source.getExtension();
 					var target = datadir.append(newfilename);
 
 					var cmd1 = new Element("replacecover");
@@ -585,7 +585,7 @@ public class CDFWorkerPatch
 					xml.addContent(xaction);
 
 					var source = e.SeasonLocal.getMovieList().getCoverCache().getFilepath(coverdata);
-					var newfilename = "c_" + e.SeasonLocal.CoverID.get() + "." + source.getExtension();
+					var newfilename = "c_" + coverdata.ID + "." + source.getExtension();
 					var target = datadir.append(newfilename);
 
 					var innerctr = 1;

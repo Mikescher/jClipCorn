@@ -61,7 +61,7 @@ public class DatabaseStructure
 	
 	public final static CCSQLColDef COL_MOV_SCORE             = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
 	public final static CCSQLColDef COL_MOV_SCORECOMMENT      = new CCSQLColDef("SCORECOMMENT",         CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_MOV_COVERID           = new CCSQLColDef("COVERID",              CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_MOV_COVERID           = new CCSQLColDef("COVERID",              CCSQLType.VARCHAR,     NULLABLE);
 	public final static CCSQLColDef COL_MOV_MI_FILESIZE       = new CCSQLColDef("MEDIAINFO.FILESIZE",   CCSQLType.BIGINT,      NULLABLE);
 	public final static CCSQLColDef COL_MOV_MI_CDATE          = new CCSQLColDef("MEDIAINFO.CDATE",      CCSQLType.BIGINT,      NULLABLE);
 	public final static CCSQLColDef COL_MOV_MI_MDATE          = new CCSQLColDef("MEDIAINFO.MDATE",      CCSQLType.BIGINT,      NULLABLE);
@@ -98,7 +98,7 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_SER_GROUPS            = new CCSQLColDef("GROUPS",               CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_SCORE             = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_SCORECOMMENT      = new CCSQLColDef("SCORECOMMENT",         CCSQLType.VARCHAR,     NON_NULLABLE);
-	public final static CCSQLColDef COL_SER_COVERID           = new CCSQLColDef("COVERID",              CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_COVERID           = new CCSQLColDef("COVERID",              CCSQLType.VARCHAR,     NULLABLE);
 	public final static CCSQLColDef COL_SER_TAGS              = new CCSQLColDef("TAGS",                 CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_SPECIALVERSION    = new CCSQLColDef("SPECIALVERSION",       CCSQLType.VARCHAR,     NON_NULLABLE);
 
@@ -107,7 +107,7 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_SEAS_SERIESID         = new CCSQLColDef("SERIESID",             CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_YEAR             = new CCSQLColDef("SEASONYEAR",           CCSQLType.SMALLINT,    NULLABLE);
-	public final static CCSQLColDef COL_SEAS_COVERID          = new CCSQLColDef("COVERID",              CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SEAS_COVERID          = new CCSQLColDef("COVERID",              CCSQLType.VARCHAR,     NULLABLE);
 	public final static CCSQLColDef COL_SEAS_SCORE            = new CCSQLColDef("SCORE",                CCSQLType.TINYINT,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_SCORECOMMENT     = new CCSQLColDef("SCORECOMMENT",         CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SEAS_ONLINEREF        = new CCSQLColDef("ONLINEREF",            CCSQLType.VARCHAR,     NON_NULLABLE);

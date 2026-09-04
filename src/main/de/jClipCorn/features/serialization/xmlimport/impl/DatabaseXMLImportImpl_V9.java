@@ -34,12 +34,12 @@ public class DatabaseXMLImportImpl_V9 implements IDatabaseXMLImporterImpl
 		if (s.ResetScore) o.ScoreComment.set(Str.Empty);
 
 		if (!s.IgnoreCoverData && e.hasAttribute("coverdata")) {
-			o.setCover(CCUUID.EMPTY); //Damit er nicht probiert was zu löschen
+			o.clearCover(); //Damit er nicht probiert was zu löschen
 			o.setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValueOrThrow("coverdata"))));
 		} else if (e.hasAttribute("covername")) {
 			BufferedImage img = imgf.invoke(e.getAttributeValueOrThrow("covername"));
 			if (img != null) {
-				o.setCover(CCUUID.EMPTY); //Damit er nicht probiert was zu löschen
+				o.clearCover(); //Damit er nicht probiert was zu löschen
 				o.setCover(img);
 			}
 		}
@@ -124,12 +124,12 @@ public class DatabaseXMLImportImpl_V9 implements IDatabaseXMLImporterImpl
 		}
 
 		if (!s.IgnoreCoverData && e.hasAttribute("coverdata")) {
-			o.setCover(CCUUID.EMPTY); //Damit er nicht probiert was zu löschen
+			o.clearCover(); //Damit er nicht probiert was zu löschen
 			o.setCover(ImageUtilities.byteArrayToImage(ByteUtilies.hexStringToByteArray(e.getAttributeValueOrThrow("coverdata"))));
 		} else if (e.hasAttribute("covername")) {
 			BufferedImage img = imgf.invoke(e.getAttributeValueOrThrow("covername"));
 			if (img != null) {
-				o.setCover(CCUUID.EMPTY); //Damit er nicht probiert was zu löschen
+				o.clearCover(); //Damit er nicht probiert was zu löschen
 				o.setCover(img);
 			}
 		}

@@ -5,6 +5,7 @@ import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.elementProps.impl.EStringProp;
 import de.jClipCorn.util.datatypes.CCUUID;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 
 import java.awt.image.BufferedImage;
@@ -17,7 +18,10 @@ public interface ICCCoveredElement extends ICCDatabaseStructureElement {
 	CCUUID      getID();
 	String      getQualifiedTitle();
 
-	CCUUID getCoverID();
+	/** empty for an element without a cover */
+	Opt<CCUUID> getCoverID();
+
+	/** null both for an element without a cover and for a cover id with no COVERS row */
 	CCCoverData getCoverInfo();
 
 	BufferedImage getCover();

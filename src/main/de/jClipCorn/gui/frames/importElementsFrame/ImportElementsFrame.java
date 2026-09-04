@@ -174,7 +174,6 @@ public class ImportElementsFrame extends JCCFrame {
 
 		try {
 			CCMovie tmpMov = new CCMovie(CCMovieList.createStub(), CCUUID.EMPTY);
-			tmpMov.setDefaultValues(false);
 			DatabaseXMLImporter.parseSingleMovie(tmpMov, value, f->null, new ImportState(document, data_xmlver, new ImportOptions(chckbxResetDate.isSelected(), chcbxResetViewed.isSelected(), chcbxResetScore.isSelected(), false, true)));
 		} catch (Exception e) {
 			CCLog.addError(e);

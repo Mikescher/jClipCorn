@@ -12,7 +12,6 @@ import de.jClipCorn.database.driver.CCDatabase;
 import de.jClipCorn.database.driver.DatabaseStructure;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.util.Str;
-import de.jClipCorn.util.comparator.StringComparator;
 import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.RefParam;
@@ -92,6 +91,16 @@ public class CCDatabaseHistory {
 	/** The trigger name has to encode the schema - both files hold a MOVIES table. */
 	private static String triggerName(String action, CCSQLTableDef tab, String suffix) {
 		return Str.format("JCCTRIGGER_AUTOHISTORY_{0}_{1}_{2}{3}", action, tab.Schema.toUpperCase(), tab.Name.toUpperCase(), suffix); //$NON-NLS-1$
+	}
+
+	/**
+	 * The value {@code field} was born with, as recorded by the ADD trigger (which writes OLD=NULL),
+	 * or null if this entry holds no insert for it. Never a literal list of defaults - whatever
+	 * {@code CCDatabase.addEmptyXRow} writes has to stay mergeable without a second place to update.
+	 */
+	private static String insertedValue(CCCombinedHistoryEntry base, String field) {
+		CCHistorySingleChange c = CCStreams.iterate(base.Changes).firstOrNull(p -> Str.equals(p.Field, field) && p.OldValue == null);
+		return (c == null) ? null : c.NewValue;
 	}
 
 	/** The value a missing sparse row stands for, or null for columns that are not part of one. */
@@ -292,7 +301,8 @@ public class CCDatabaseHistory {
 
 		List<String[]> rawdata = _db.queryHistory(start, limit, idfilter);
 
-		rawdata = CCStreams.iterate(rawdata).reverse().sortByProperty(p -> p[2], new StringComparator(true)).enumerate();
+		// the query returns newest-first (so a limit keeps the newest rows), the merge walks oldest-first
+		rawdata = CCStreams.iterate(rawdata).reverse().autosortByProperty(p -> p[2]).enumerate();
 
 		lst.setMax( rawdata.size() + (mergeAggressive?rawdata.size():0) );
 		for (String[] raw : rawdata) {
@@ -462,8 +472,8 @@ public class CCDatabaseHistory {
 
 			if (a_iu)
 			{
-				// a sparse row is born holding the defaults, so an update away from one still belongs to the insert
-				if (!(Str.isNullOrEmpty(oldValue) || oldValue.equals("0") || oldValue.equals("-1") || oldValue.equals("1900-01-01") || Str.equals(oldValue, sparseDefault(field)))) return false; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				// a row is born holding placeholder values, so an update away from one still belongs to the insert
+				if (!(Str.isNullOrEmpty(oldValue) || Str.equals(oldValue, insertedValue(base, field)) || Str.equals(oldValue, sparseDefault(field)))) return false;
 			}
 
 			return true;

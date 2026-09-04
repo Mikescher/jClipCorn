@@ -20,7 +20,11 @@ import java.util.regex.Pattern;
  */
 public class CCUUID implements Comparable<CCUUID> {
 
-	/** nil UUID - the "unset"/"no reference" sentinel (e.g. an element without a cover) */
+	/**
+	 * nil UUID - the placeholder for an id that has not been assigned yet, and the fallback of
+	 * {@link #parseOrEmpty}. It is never a value a database row may hold: an absent reference is NULL
+	 * in the database and {@code Opt.empty()} in the element.
+	 */
 	public final static CCUUID EMPTY = new CCUUID(new UUID(0, 0));
 
 	private final static long VERSION_7    = 0x7000L;

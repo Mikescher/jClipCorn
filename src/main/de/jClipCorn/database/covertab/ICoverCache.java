@@ -1,6 +1,7 @@
 package de.jClipCorn.database.covertab;
 
 import de.jClipCorn.util.datatypes.CCUUID;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.FSPath;
 
@@ -16,7 +17,8 @@ public interface ICoverCache {
 
 	BufferedImage getCover(CCUUID cid);
 	BufferedImage getCover(CCCoverData cce);
-	CCUUID addCover(BufferedImage newCover);
+	/** empty when the cover could not be written - the error is already logged */
+	Opt<CCUUID> addCover(BufferedImage newCover);
 	void deleteCover(CCUUID cid);
 	CCCoverData getInfoOrNull(CCUUID cid);
 

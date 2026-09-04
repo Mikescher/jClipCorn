@@ -198,11 +198,13 @@ public class SQLiteDatabase extends GenericDatabase {
 		//       save writes to both `main` and `userdata`.
 
 		// Read-performance pragmas (connection-level, do NOT change the on-disk format - safe with file-locking & file-copy backups)
-		executeSQLThrow("PRAGMA mmap_size = 268435456"); // 256MB memory-mapped I/O - speeds up (cold) reads by avoiding read() syscalls
-		executeSQLThrow("PRAGMA cache_size = -65536");   // 64MB page-cache (default is ~2MB)
-		executeSQLThrow("PRAGMA temp_store = MEMORY");   // keep temp b-trees (ORDER BY / sorter) in RAM
+		executeSQLThrow("PRAGMA mmap_size = 268435456");    // 256MB memory-mapped I/O - speeds up (cold) reads by avoiding read() syscalls
+		executeSQLThrow("PRAGMA main.cache_size = -65536"); // 64MB page-cache (default is ~2MB)
+		executeSQLThrow("PRAGMA temp_store = MEMORY");      // keep temp b-trees (ORDER BY / sorter) in RAM
 
 		attachUserData(dbDir, dbName);
+
+		executeSQLThrow("PRAGMA userdata.cache_size = -65536"); // cache_size is per-schema, so it has to be repeated after the ATTACH
 
 		try
 		{

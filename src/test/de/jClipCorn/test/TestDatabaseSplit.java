@@ -466,6 +466,20 @@ public class TestDatabaseSplit extends ClipCornBaseTest {
 		db.closeDBConnection(FSPath.Empty, "TEST", true);
 	}
 
+	/** cache_size is per-schema, so the ATTACHed user-data database needs its own */
+	@Test
+	public void testCacheSizeIsSetOnBothSchemas() throws Exception {
+		var dir = createAutocleanedDir("dbsplit_pragma");
+
+		var ml = CCMovieList.connectAndLoadDirect(CCDatabaseDriver.SQLITE, dir, "ClipCornDB", false, true);
+		var db = ml.getInternalDatabaseDirectly();
+
+		assertEquals(-65536, db.querySingleIntSQLThrow("PRAGMA main.cache_size", 0));
+		assertEquals(-65536, db.querySingleIntSQLThrow("PRAGMA userdata.cache_size", 0));
+
+		ml.shutdown();
+	}
+
 	@Test
 	public void testInfoKeysAreSplit() {
 		CCMovieList ml = createEmptyDB();

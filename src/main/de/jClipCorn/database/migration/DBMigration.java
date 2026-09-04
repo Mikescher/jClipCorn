@@ -87,7 +87,11 @@ public abstract class DBMigration {
 		if (disableForeignKeys) db.executeSQLThrow("PRAGMA foreign_keys = ON;");
 		if (dotransaction) db.executeSQLThrow("COMMIT TRANSACTION");
 
-		if (vacuum) db.executeSQLThrow("VACUUM " + getInfoTable().Schema);
+		if (vacuum) {
+			// VACUUM without a schema only ever touches `main`
+			db.executeSQLThrow("VACUUM " + SCHEMA_MAIN);
+			db.executeSQLThrow("VACUUM " + SCHEMA_USERDATA);
+		}
 
 		return actions;
 	}

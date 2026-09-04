@@ -5,12 +5,15 @@ import de.jClipCorn.database.databaseElement.*;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.comparator.CCMovieComparator;
+import de.jClipCorn.util.comparator.StringComparator;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.stream.SingleStream;
 import junitparams.JUnitParamsRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -192,6 +195,18 @@ public class TestIterators extends ClipCornBaseTest {
 
 		assertEquals(ml.iteratorPlayables().minOrDefault(p -> p.addDate().get(), CCDate::compare, null), ml.iteratorPlayables().map(p -> p.addDate().get()).sort(CCDate::compare).firstOrNull());
 		assertEquals(ml.iteratorPlayables().maxOrDefault(p -> p.addDate().get(), CCDate::compare, null), ml.iteratorPlayables().map(p -> p.addDate().get()).sort(CCDate::compare).lastOrNull());
+	}
+
+	/** sortByProperty once ignored its comparator and always sorted the property ascending */
+	@Test
+	public void testSortByPropertyUsesTheGivenComparator() {
+		var words = List.of("bbb", "a", "cccc", "dd");
+
+		// sorted by length, so neither result is the natural order of the elements themselves
+		assertEquals("a;dd;bbb;cccc", CCStreams.iterate(words).sortByProperty(String::length, Integer::compare).stringjoin(p -> p, ";"));
+		assertEquals("cccc;bbb;dd;a", CCStreams.iterate(words).sortByProperty(String::length, (a, b) -> Integer.compare(b, a)).stringjoin(p -> p, ";"));
+
+		assertEquals("dd;cccc;bbb;a", CCStreams.iterate(words).sortByProperty(p -> p, new StringComparator(true)).stringjoin(p -> p, ";"));
 	}
 
 	@Test

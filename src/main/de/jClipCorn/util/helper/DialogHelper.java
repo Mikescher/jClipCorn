@@ -41,27 +41,36 @@ public class DialogHelper {
 	public static void showLocalError(Component frame, String id) {
 		String text = LocaleBundle.getString(id);
 		String caption = LocaleBundle.getString(id + "_caption"); //$NON-NLS-1$
-		SwingUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.ERROR_MESSAGE));
+		showMessageBox(frame, caption, text, JOptionPane.ERROR_MESSAGE);
 	}
 
 	public static void showLocalTextFormattedError(Component frame, String id, Object... args) {
 		String text = LocaleBundle.getFormattedString(id, args);
 		String caption = LocaleBundle.getString(id + "_caption"); //$NON-NLS-1$
-		SwingUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.ERROR_MESSAGE));
+		showMessageBox(frame, caption, text, JOptionPane.ERROR_MESSAGE);
 	}
 
 	public static void showDispatchLocalInformation(Component frame, String id) {
 		String text = LocaleBundle.getString(id);
 		String caption = LocaleBundle.getString(id + "_caption"); //$NON-NLS-1$
-		SwingUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.INFORMATION_MESSAGE));
+		showMessageBox(frame, caption, text, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	public static void showDispatchInformation(Component frame, String caption, String text) {
-		SwingUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.INFORMATION_MESSAGE));
+		showMessageBox(frame, caption, text, JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public static void showDispatchError(Component frame, final String caption, final String text) {
-		SwingUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, JOptionPane.ERROR_MESSAGE));
+		showMessageBox(frame, caption, text, JOptionPane.ERROR_MESSAGE);
+	}
+
+	// in a headless jvm (eg "--validate-db") there is no dialog to show - the message must not get lost
+	private static void showMessageBox(Component frame, String caption, String text, int messageType) {
+		if (GraphicsEnvironment.isHeadless()) {
+			System.out.println(caption + ": " + text); //$NON-NLS-1$
+			return;
+		}
+		SwingUtils.invokeAndWaitConditional(() -> JOptionPane.showMessageDialog(frame==null?new JFrame():frame, text, caption, messageType));
 	}
 	
 	public static int showOptions(Component frame, String caption, String text, String option1, String option2, int standard) {

@@ -13,7 +13,6 @@ import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.lambda.Func4to1;
 
-import javax.swing.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +100,7 @@ public class DatabaseMigrator {
 
 			CCLog.addInformation("Migrate from " + version + " to " + Main.DBVERSION);
 
-			DialogHelper.showDispatchLocalInformation(MainFrame.getInstance() != null ? MainFrame.getInstance() : new JFrame(), "Dialogs.DatabaseMigration");
+			DialogHelper.showDispatchLocalInformation(MainFrame.getInstance(), "Dialogs.DatabaseMigration");
 			
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.DatabaseUpgradeStarted"));
 
@@ -143,7 +142,7 @@ public class DatabaseMigrator {
 			
 			CCLog.addInformation(LocaleBundle.getString("LogMessage.DatabaseUpgradeSucess"));
 			
-			DialogHelper.showDispatchLocalInformation(MainFrame.getInstance() != null ? MainFrame.getInstance() : new JFrame(), "Dialogs.DatabaseMigrationSucess");
+			DialogHelper.showDispatchLocalInformation(MainFrame.getInstance(), "Dialogs.DatabaseMigrationSucess");
 			
 		} catch (Exception e) {
 			CCLog.addFatalError(LocaleBundle.getString("LogMessage.DatabaseUpgradeFailed"), e);

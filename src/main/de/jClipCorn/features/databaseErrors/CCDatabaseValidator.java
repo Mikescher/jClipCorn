@@ -1868,6 +1868,12 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				});
 	}
 
+	// getCoverInfo() is null for an element without a cover (CCUUID.EMPTY) and for a coverid with no COVERS row
+	private static String getCoverFilename(ICCCoveredElement el) {
+		CCCoverData cvr = el.getCoverInfo();
+		return (cvr == null) ? Str.Empty : cvr.Filename;
+	}
+
 	@Override
 	@SuppressWarnings("nls")
 	protected void findCoverErrors(List<DatabaseError> e, DoubleProgressCallbackListener pcl)
@@ -1909,8 +1915,8 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 						DatabaseErrorType.ERROR_DUPLICATE_COVERLINK, cvrList.get(i-1).getElement(), cvrList.get(i).getElement(),
 						"Cover1.ID", String.valueOf(cvrList.get(i).getCoverID()),
 						"Cover2.ID", String.valueOf(cvrList.get(i-1).getCoverID()),
-						"Cover1.Filename", cvrList.get(i).getElement().getCoverInfo().Filename,
-						"Cover2.Filename", cvrList.get(i-1).getElement().getCoverInfo().Filename,
+						"Cover1.Filename", getCoverFilename(cvrList.get(i).getElement()),
+						"Cover2.Filename", getCoverFilename(cvrList.get(i-1).getElement()),
 						"Cover1.Element.ID", String.valueOf(cvrList.get(i).getElement().getID()),
 						"Cover2.Element.ID", String.valueOf(cvrList.get(i-1).getElement().getID()),
 						"Cover1.Element.Title", cvrList.get(i).getElement().getQualifiedTitle(),

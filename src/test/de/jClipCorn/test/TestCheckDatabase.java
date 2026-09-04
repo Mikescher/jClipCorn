@@ -10,6 +10,7 @@ import de.jClipCorn.features.databaseErrors.DatabaseError;
 import de.jClipCorn.features.databaseErrors.DatabaseErrorType;
 import de.jClipCorn.features.databaseErrors.DatabaseValidatorOptions;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 import de.jClipCorn.util.stream.CCStreams;
 import junitparams.JUnitParamsRunner;
@@ -84,6 +85,35 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 		errs.removeIf(p -> p.isTypeOf(DatabaseErrorType.ERROR_CHECKSUM_MISSING));
 
 		assertEmptyErrors(errs);
+	}
+
+	@Test
+	public void testCoverValidationWithMultipleCoverlessElements() throws Exception {
+		CCMovieList ml = createExampleDB();
+
+		var mov1 = movieByTitle(ml, "Der Bomber");
+		var mov2 = movieByTitle(ml, "Forrest Gump");
+
+		var cvr1 = mov1.getCoverInfo().Filename;
+		var cvr2 = mov2.getCoverInfo().Filename;
+
+		mov1.setCover(CCUUID.EMPTY);
+		mov2.setCover(CCUUID.EMPTY);
+
+		List<DatabaseError> errs = new ArrayList<>();
+
+		var opt = new DatabaseValidatorOptions();
+		opt.ValidateCovers = true;
+
+		var validator = new CCDatabaseValidator(ml);
+		validator.validate(errs, opt, DoubleProgressCallbackListener.EMPTY);
+
+		assertNull(CCStreams.iterate(errs).firstOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_DUPLICATE_COVERLINK)));
+		assertNull(CCStreams.iterate(errs).firstOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_DB_EXCEPTION)));
+
+		// the cover pass ran to completion and still sees the two now unreferenced covers
+		assertNotNull(CCStreams.iterate(errs).firstOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_UNUSED_COVER_ENTRY) && cvr1.equals(p.getElement1RawName())));
+		assertNotNull(CCStreams.iterate(errs).firstOrNull(p -> p.isTypeOf(DatabaseErrorType.ERROR_UNUSED_COVER_ENTRY) && cvr2.equals(p.getElement1RawName())));
 	}
 
 	@Test

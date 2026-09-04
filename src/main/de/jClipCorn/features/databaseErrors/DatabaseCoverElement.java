@@ -33,6 +33,7 @@ public class DatabaseCoverElement implements Comparable<DatabaseCoverElement>{
 	}
 
 	public boolean equalsCover(DatabaseCoverElement a) {
+		if (coverid.isEmpty()) return false; // two elements without a cover do not share one
 		return coverid.equals(a.coverid);
 	}
 }

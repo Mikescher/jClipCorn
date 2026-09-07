@@ -91,6 +91,7 @@ public class CCHistoryDatabase {
 					new HistoryDatabaseMigrator(connection, readonly).tryUpgrade();
 					validateDUUID(mainDb);
 					syncInfoFromMainDb(mainDb);
+					ensureDateIndex();
 				}
 			}
 
@@ -157,6 +158,14 @@ public class CCHistoryDatabase {
 			sql.tryClose();
 		}
 		for (var s : stmtList) s.tryClose();
+
+		ensureDateIndex();
+	}
+
+	/** Every read of this table is ordered or ranged by [DATE]; without the index they are full scans. */
+	private void ensureDateIndex() throws SQLException {
+		if (readonly) return;
+		executeSQLDirect("CREATE INDEX IF NOT EXISTS IDX_HISTORY_DATE ON [HISTORY]([DATE])");
 	}
 
 	private void writeInitialInfo(CCDatabase mainDb) throws SQLException {

@@ -14,12 +14,10 @@ import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYDataset;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.ICCPlayableElement;
-import de.jClipCorn.features.statistics.StatisticsHelper;
 import de.jClipCorn.features.statistics.StatisticsTypeFilter;
+import de.jClipCorn.features.statistics.snapshots.StatSnapshotSeries;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.stream.CCStream;
 
 public class StatisticsLengthOverTimeChart extends StatisticsChart {
 
@@ -69,31 +67,27 @@ public class StatisticsLengthOverTimeChart extends StatisticsChart {
 	}
 	
 	private XYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCStream<ICCPlayableElement> it = source.iterator(movielist).cast();
-		
-		CCDate mindate = StatisticsHelper.getFirstAddDate(movielist.iteratorPlayables());
-		long minMilliecs = mindate.asMilliseconds();
-		CCDate maxdate = StatisticsHelper.getLastAddDate(movielist.iteratorPlayables());
-		int daycount = mindate.getDayDifferenceTo(maxdate) + 1;
-		
+		StatSnapshotSeries snapshots = StatSnapshotSeries.load(movielist, source);
+
 		DefaultXYDataset dataset = new DefaultXYDataset();
-		
-		int[] allpos = StatisticsHelper.getCumulativeMinuteCountForAllDates(mindate, daycount, it);
-		
+
+		long  minMilliecs = snapshots.firstDay().asMilliseconds();
+		int[] allpos      = snapshots.minutes();
+
 		double[][] series = new double[2][allpos.length];
-		
+
 		for (int i = 0; i < allpos.length; i++) {
 			series[0][i] = minMilliecs + i * CCDate.MILLISECONDS_PER_DAY;
 			series[1][i] = allpos[i];
 		}
-		
+
         dataset.addSeries("Series0", series); //$NON-NLS-1$
 
-        domainTotalRangeMin = (long)series[0][0];
-        domainTotalRangeMax = (long)series[0][allpos.length - 1];
-        
+        domainTotalRangeMin = minMilliecs;
+        domainTotalRangeMax = (allpos.length == 0) ? minMilliecs : (long)series[0][allpos.length - 1];
+
         if (domainTotalRangeMin == domainTotalRangeMax) domainTotalRangeMax++;
-        
+
         return dataset;
 	}
 

@@ -22,6 +22,8 @@ import de.jClipCorn.database.history.CCHistoryDatabase;
 import de.jClipCorn.database.migration.DatabaseMigrator;
 import de.jClipCorn.database.migration.UserDataDatabaseMigrator;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.statistics.snapshots.CCStatSnapshot;
+import de.jClipCorn.features.statistics.snapshots.StatSnapshotSQL;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
@@ -44,6 +46,7 @@ import de.jClipCorn.util.sqlwrapper.*;
 import de.jClipCorn.util.stream.CCStreams;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
@@ -1976,6 +1979,45 @@ public class CCDatabase {
 		syncHistoryToHistoryDb();
 		return _historyDb.queryHistory(start, limit, idfilter);
 	}
+
+	/**
+	 * The whole statistics time-series, oldest first. Rows are sparse - a day without a row carries the
+	 * values of the newest row before it.
+	 */
+	public List<CCStatSnapshot> readStatSnapshots() throws SQLException {
+		List<CCStatSnapshot> res = new ArrayList<>();
+
+		try (PreparedStatement ps = db.createPreparedStatement(StatSnapshotSQL.SELECT_ALL_SQL); ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) res.add(StatSnapshotSQL.read(rs));
+		}
+
+		return res;
+	}
+
+	public CCStatSnapshot readLastStatSnapshot() throws SQLException {
+		try (PreparedStatement ps = db.createPreparedStatement(StatSnapshotSQL.SELECT_LAST_SQL); ResultSet rs = ps.executeQuery()) {
+			return rs.next() ? StatSnapshotSQL.read(rs) : null;
+		}
+	}
+
+	public void writeStatSnapshot(CCStatSnapshot snapshot) throws SQLException {
+		if (_readonly) return;
+
+		try {
+			beginRowTransaction();
+
+			try (PreparedStatement ps = db.createPreparedStatement(StatSnapshotSQL.UPSERT_SQL)) {
+				StatSnapshotSQL.bind(ps, snapshot);
+				ps.executeUpdate();
+			}
+
+			commitRowTransaction();
+		} catch (SQLException e) {
+			rollbackRowTransaction();
+			throw e;
+		}
+	}
+
 
 	@SuppressWarnings("nls")
 	public synchronized void syncHistoryToHistoryDb() {

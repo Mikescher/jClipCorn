@@ -21,13 +21,13 @@ import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.util.ShapeUtilities;
 
 import de.jClipCorn.database.CCMovieList;
-import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.features.statistics.StatisticsHelper;
 import de.jClipCorn.features.statistics.StatisticsTypeFilter;
+import de.jClipCorn.features.statistics.snapshots.StatSnapshotSeries;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
-import de.jClipCorn.util.stream.CCStream;
+import de.jClipCorn.util.stream.CCStreams;
 
 public class StatisticsFormatOverTimeChart extends StatisticsChart {
 
@@ -96,39 +96,36 @@ public class StatisticsFormatOverTimeChart extends StatisticsChart {
 	}
 	
 	private List<DefaultXYDataset> getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
-		CCStream<ICCPlayableElement> it = source.iterator(movielist).cast();
-		
-		CCDate mindate = StatisticsHelper.getFirstAddDate(movielist.iteratorPlayables());
-		long minMilliecs = mindate.asMilliseconds();
-		CCDate maxdate = StatisticsHelper.getLastAddDate(movielist.iteratorPlayables());
-		int daycount = mindate.getDayDifferenceTo(maxdate) + 1;
+		StatSnapshotSeries snapshots = StatSnapshotSeries.load(movielist, source);
 
 		List<CCFileFormat> formats = Arrays.asList(CCFileFormat.values());
-		int[][] allLen = StatisticsHelper.getCumulativeFormatCountForAllDates(mindate, daycount, it);
-		
+
+		// the snapshot histogram is already the absolute per-format count of that day, there is nothing to sum up
+		int[][] counts = snapshots.histogram("FORMAT", CCStreams.iterate(formats).map(f -> String.valueOf(f.asInt())).enumerate()); //$NON-NLS-1$
+
+		long minMilliecs = snapshots.firstDay().asMilliseconds();
+		int  daycount    = snapshots.dayCount();
+
 		List<DefaultXYDataset> result = new ArrayList<>();
 		for (int ifmt = 0; ifmt < formats.size(); ifmt++) {
 			double[][] series = new double[2][daycount];
-	
-			int fmtSum = 0;
+
 			for (int i = 0; i < daycount; i++) {
-				fmtSum += allLen[i][ifmt];
-				
 				series[0][i] = minMilliecs + i * CCDate.MILLISECONDS_PER_DAY;
-				series[1][i] = fmtSum;
+				series[1][i] = counts[i][ifmt];
 			}
 
 			DefaultXYDataset dataset = new DefaultXYDataset();
 	        dataset.addSeries("" + formats.get(ifmt), series); //$NON-NLS-1$
-			
+
 			result.add(dataset);
 		}
 
-        domainTotalRangeMin = mindate.asMilliseconds();
-        domainTotalRangeMax = maxdate.asMilliseconds();
-		
+        domainTotalRangeMin = minMilliecs;
+        domainTotalRangeMax = (daycount == 0) ? minMilliecs : (minMilliecs + (daycount - 1) * CCDate.MILLISECONDS_PER_DAY);
+
         if (domainTotalRangeMin == domainTotalRangeMax) domainTotalRangeMax++;
-        
+
 		return result;
 	}
 

@@ -174,6 +174,21 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_FILT_NAME             = new CCSQLColDef("NAME",                 CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_FILT_DEFINITION       = new CCSQLColDef("DEFINITION",           CCSQLType.VARCHAR,     NON_NULLABLE);
 
+	public final static CCSQLColDef COL_SNAP_DATE             = new CCSQLColDef("DATE",                 CCSQLType.DATE,        NON_NULLABLE);
+	public final static CCSQLColDef COL_SNAP_EXACT            = new CCSQLColDef("EXACT",                CCSQLType.BIT,         NON_NULLABLE);
+	public final static CCSQLColDef COL_SNAP_MOV_COUNT        = new CCSQLColDef("MOV_COUNT",            CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SNAP_MOV_BYTES        = new CCSQLColDef("MOV_BYTES",            CCSQLType.BIGINT,      NON_NULLABLE);
+	public final static CCSQLColDef COL_SNAP_MOV_MINUTES      = new CCSQLColDef("MOV_MINUTES",          CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SNAP_SER_COUNT        = new CCSQLColDef("SER_COUNT",            CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SNAP_SEA_COUNT        = new CCSQLColDef("SEA_COUNT",            CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SNAP_EPI_COUNT        = new CCSQLColDef("EPI_COUNT",            CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SNAP_EPI_BYTES        = new CCSQLColDef("EPI_BYTES",            CCSQLType.BIGINT,      NON_NULLABLE);
+	public final static CCSQLColDef COL_SNAP_EPI_MINUTES      = new CCSQLColDef("EPI_MINUTES",          CCSQLType.INTEGER,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SNAP_MOV_HISTOGRAMS   = new CCSQLColDef("MOV_HISTOGRAMS",       CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SNAP_SER_HISTOGRAMS   = new CCSQLColDef("SER_HISTOGRAMS",       CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SNAP_SEA_HISTOGRAMS   = new CCSQLColDef("SEA_HISTOGRAMS",       CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SNAP_EPI_HISTOGRAMS   = new CCSQLColDef("EPI_HISTOGRAMS",       CCSQLType.VARCHAR,     NON_NULLABLE);
+
 	//--------------------------------------------------------------------------------------------------
 
 	public final static CCSQLTableDef TAB_MOVIES = new CCSQLTableDef(
@@ -407,6 +422,30 @@ public class DatabaseStructure
 
 			});
 
+	/**
+	 * A daily time-series of the collection - one row per day, holding the state at the *end* of that day.
+	 *
+	 * Sparse: a day without a row has the values of the newest row before it. Deliberately not tracked by
+	 * the history triggers (see CCDatabaseHistory.UNTRACKED_TABLES) - this is derived data and every write
+	 * would otherwise append a dozen rows to the change archive.
+	 */
+	public final static CCSQLTableDef TAB_STATSNAPSHOTS = new CCSQLTableDef(
+			SCHEMA_MAIN,
+			"STATSNAPSHOTS",
+			COL_SNAP_DATE,
+			new CCSQLColDef[]
+			{
+				COL_SNAP_EXACT,
+				COL_SNAP_MOV_COUNT, COL_SNAP_MOV_BYTES, COL_SNAP_MOV_MINUTES,
+				COL_SNAP_SER_COUNT, COL_SNAP_SEA_COUNT,
+				COL_SNAP_EPI_COUNT, COL_SNAP_EPI_BYTES, COL_SNAP_EPI_MINUTES,
+				COL_SNAP_MOV_HISTOGRAMS, COL_SNAP_SER_HISTOGRAMS, COL_SNAP_SEA_HISTOGRAMS, COL_SNAP_EPI_HISTOGRAMS
+			},
+			new CCSQLFKey[]
+			{
+
+			});
+
 	public final static CCSQLTableDef TAB_UD_TEMP = new CCSQLTableDef(
 			SCHEMA_USERDATA,
 			"TEMP",
@@ -438,7 +477,8 @@ public class DatabaseStructure
 
 	public final static CCSQLTableDef[] TABLES_MAIN = new CCSQLTableDef[]
 	{
-		TAB_MOVIES, TAB_SERIES, TAB_SEASONS, TAB_EPISODES, TAB_INFO, TAB_GROUPS, TAB_COVERS, TAB_HISTORY, TAB_TEMP
+		TAB_MOVIES, TAB_SERIES, TAB_SEASONS, TAB_EPISODES, TAB_INFO, TAB_GROUPS, TAB_COVERS, TAB_HISTORY, TAB_TEMP,
+		TAB_STATSNAPSHOTS
 	};
 
 	public final static CCSQLTableDef[] TABLES_USERDATA = new CCSQLTableDef[]

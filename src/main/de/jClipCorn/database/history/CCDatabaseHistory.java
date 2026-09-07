@@ -55,7 +55,8 @@ public class CCDatabaseHistory {
 	private final static List<CCSQLTableDef> UNTRACKED_TABLES = List.of(
 			DatabaseStructure.TAB_HISTORY,    DatabaseStructure.TAB_UD_HISTORY,
 			DatabaseStructure.TAB_TEMP,       DatabaseStructure.TAB_UD_TEMP,
-			DatabaseStructure.TAB_FILTERS,    DatabaseStructure.TAB_PROPERTIES);
+			DatabaseStructure.TAB_FILTERS,    DatabaseStructure.TAB_PROPERTIES,
+			DatabaseStructure.TAB_STATSNAPSHOTS);
 
 	/**
 	 * These rows exist only while some user property differs from its default - creating or dropping
@@ -105,7 +106,7 @@ public class CCDatabaseHistory {
 
 	/** The value a missing sparse row stands for, or null for columns that are not part of one. */
 	@SuppressWarnings("nls")
-	private static String sparseDefault(String column) {
+	public static String sparseDefault(String column) {
 		switch (column) {
 			case "VIEWED_HISTORY": return CCDateTimeList.createEmpty().asJSONArray();
 			case "TAGS":           return CCTagList.EMPTY.asJSONArray();

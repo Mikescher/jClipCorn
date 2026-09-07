@@ -50,7 +50,7 @@ public class UpdateCodecFrame extends JCCFrame
 
 	private void postInit()
 	{
-		//
+		ccprops().PROP_FSIZE_UPDATECODECFRAME.applyOrSkip(this);
 	}
 
 	private void showMediaInfo() {

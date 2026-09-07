@@ -6,23 +6,50 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
+import de.jClipCorn.gui.frames.addMultiEpisodesFrame.AddMultiEpisodesFrame;
 import de.jClipCorn.gui.frames.addSeasonFrame.AddSeasonFrame;
 import de.jClipCorn.gui.frames.addSeriesFrame.AddSeriesFrame;
+import de.jClipCorn.gui.frames.applyPatchFrame.ApplyPatchFrame;
+import de.jClipCorn.gui.frames.backupManagerFrame.BackupsManagerFrame;
 import de.jClipCorn.gui.frames.batchEditFrame.BatchEditFrame;
 import de.jClipCorn.gui.frames.checkDatabaseFrame.CheckDatabaseFrame;
+import de.jClipCorn.gui.frames.compareDatabaseFrame.CompareDatabaseFrame;
 import de.jClipCorn.gui.frames.coverCropFrame.CoverCropDialog;
+import de.jClipCorn.gui.frames.createNFOFrame.CreateNFOFrame;
 import de.jClipCorn.gui.frames.createSeriesFolderStructureFrame.CreateSeriesFolderStructureFrame;
+import de.jClipCorn.gui.frames.customFilterEditDialog.CustomFilterEditDialog;
 import de.jClipCorn.gui.frames.databaseHistoryFrame.DatabaseHistoryFrame;
+import de.jClipCorn.gui.frames.editMediaInfoDialog.EditMediaInfoDialog;
 import de.jClipCorn.gui.frames.editMovieFrame.EditMovieFrame;
 import de.jClipCorn.gui.frames.editScoreFrame.EditScoreFrame;
 import de.jClipCorn.gui.frames.editSeriesFrame.EditSeriesFrame;
+import de.jClipCorn.gui.frames.exportElementsFrame.ExportElementsFrame;
+import de.jClipCorn.gui.frames.extendedSettingsFrame.ExtendedSettingsFrame;
+import de.jClipCorn.gui.frames.filenameRulesFrame.FilenameRuleFrame;
+import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
+import de.jClipCorn.gui.frames.groupManageFrame.GroupManageFrame;
+import de.jClipCorn.gui.frames.importElementsFrame.ImportElementsFrame;
 import de.jClipCorn.gui.frames.logFrame.LogFrame;
+import de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveMoviesDialog;
+import de.jClipCorn.gui.frames.moveSeriesFrame.MassMoveSeriesDialog;
 import de.jClipCorn.gui.frames.moveSeriesFrame.MoveSeriesDialog;
+import de.jClipCorn.gui.frames.omniParserFrame.OmniParserFrame;
+import de.jClipCorn.gui.frames.organizeFilterFrame.OrganizeFilterDialog;
 import de.jClipCorn.gui.frames.parseOnlineFrame.ParseOnlineDialog;
+import de.jClipCorn.gui.frames.parseWatchDataFrame.ParseWatchDataFrame;
 import de.jClipCorn.gui.frames.previewMovieFrame.PreviewMovieFrame;
 import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
+import de.jClipCorn.gui.frames.quickAddEpisodeDialog.QuickAddEpisodeDialog;
+import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
+import de.jClipCorn.gui.frames.randomMovieFrame.RandomMovieFrame;
 import de.jClipCorn.gui.frames.scanFolderFrame.ScanFolderFrame;
+import de.jClipCorn.gui.frames.searchFrame.SearchFrame;
+import de.jClipCorn.gui.frames.showIncompleteFilmSeriesFrame.ShowIncompleteFilmSeriesFrame;
 import de.jClipCorn.gui.frames.statisticsFrame.StatisticsFrame;
+import de.jClipCorn.gui.frames.textExportFrame.TextExportFrame;
+import de.jClipCorn.gui.frames.updateCodecFrame.UpdateCodecFrame;
+import de.jClipCorn.gui.frames.updateMetadataFrame.UpdateMetadataFrame;
+import de.jClipCorn.gui.frames.vlcRobot.VLCRobotFrame;
 import de.jClipCorn.gui.frames.watchHistoryFrame.WatchHistoryFrame;
 import de.jClipCorn.gui.guiComponents.JCCFrameDimensionInput;
 import de.jClipCorn.gui.guiComponents.referenceChooser.ReferenceChooserDialog;
@@ -57,6 +84,7 @@ public class FrameSizesTablePanel extends JPanel {
 	private final List<Class<? extends Window>> rowFrameClasses = new ArrayList<>();
 
 	private final List<JTextField>                 hostHeaders   = new ArrayList<>();
+	private final List<JLabel>                     rowLabels     = new ArrayList<>();
 	private final List<JCCFrameDimensionInput>     defaultInputs = new ArrayList<>();
 	private final List<List<JCCFrameDimensionInput>> hostInputs  = new ArrayList<>(); // [row][hostColumn]
 
@@ -93,6 +121,33 @@ public class FrameSizesTablePanel extends JPanel {
 		add(properties.PROP_FSIZE_STATISTICSFRAME,                  StatisticsFrame.class);
 		add(properties.PROP_FSIZE_WATCHHISTORYFRAME,                WatchHistoryFrame.class);
 		add(properties.PROP_FSIZE_REFERENCECHOOSERDIALOG,           ReferenceChooserDialog.class);
+		add(properties.PROP_FSIZE_ADDMULTIEPISODESFRAME,            AddMultiEpisodesFrame.class);
+		add(properties.PROP_FSIZE_APPLYPATCHFRAME,                  ApplyPatchFrame.class);
+		add(properties.PROP_FSIZE_BACKUPSMANAGERFRAME,              BackupsManagerFrame.class);
+		add(properties.PROP_FSIZE_COMPAREDATABASEFRAME,             CompareDatabaseFrame.class);
+		add(properties.PROP_FSIZE_CREATENFOFRAME,                   CreateNFOFrame.class);
+		add(properties.PROP_FSIZE_CUSTOMFILTEREDITDIALOG,           CustomFilterEditDialog.class);
+		add(properties.PROP_FSIZE_EDITMEDIAINFODIALOG,              EditMediaInfoDialog.class);
+		add(properties.PROP_FSIZE_EXPORTELEMENTSFRAME,              ExportElementsFrame.class);
+		add(properties.PROP_FSIZE_EXTENDEDSETTINGSFRAME,            ExtendedSettingsFrame.class);
+		add(properties.PROP_FSIZE_FILENAMERULEFRAME,                FilenameRuleFrame.class);
+		add(properties.PROP_FSIZE_FINDCOVERDIALOG,                  FindCoverDialog.class);
+		add(properties.PROP_FSIZE_GROUPMANAGEFRAME,                 GroupManageFrame.class);
+		add(properties.PROP_FSIZE_IMPORTELEMENTSFRAME,              ImportElementsFrame.class);
+		add(properties.PROP_FSIZE_MASSMOVEMOVIESDIALOG,             MassMoveMoviesDialog.class);
+		add(properties.PROP_FSIZE_MASSMOVESERIESDIALOG,             MassMoveSeriesDialog.class);
+		add(properties.PROP_FSIZE_OMNIPARSERFRAME,                  OmniParserFrame.class);
+		add(properties.PROP_FSIZE_ORGANIZEFILTERDIALOG,             OrganizeFilterDialog.class);
+		add(properties.PROP_FSIZE_PARSEWATCHDATAFRAME,              ParseWatchDataFrame.class);
+		add(properties.PROP_FSIZE_QUICKADDEPISODEDIALOG,            QuickAddEpisodeDialog.class);
+		add(properties.PROP_FSIZE_QUICKADDMOVIESDIALOG,             QuickAddMoviesDialog.class);
+		add(properties.PROP_FSIZE_RANDOMMOVIEFRAME,                 RandomMovieFrame.class);
+		add(properties.PROP_FSIZE_SEARCHFRAME,                      SearchFrame.class);
+		add(properties.PROP_FSIZE_SHOWINCOMPLETEFILMSERIESFRAME,    ShowIncompleteFilmSeriesFrame.class);
+		add(properties.PROP_FSIZE_TEXTEXPORTFRAME,                  TextExportFrame.class);
+		add(properties.PROP_FSIZE_UPDATECODECFRAME,                 UpdateCodecFrame.class);
+		add(properties.PROP_FSIZE_UPDATEMETADATAFRAME,              UpdateMetadataFrame.class);
+		add(properties.PROP_FSIZE_VLCROBOTFRAME,                    VLCRobotFrame.class);
 	}
 
 	private void add(CCFrameSizeProperty prop, Class<? extends Window> frameClass) {
@@ -172,7 +227,9 @@ public class FrameSizesTablePanel extends JPanel {
 			var prop = rowProps.get(i);
 			int rowY = 4 + i * 2;
 
-			add(new JLabel(prop.getDescription()), CC.xy(2, rowY));
+			var lblRow = new JLabel(prop.getDescription());
+			rowLabels.add(lblRow);
+			add(lblRow, CC.xy(2, rowY));
 
 			var defInput = new JCCFrameDimensionInput(false);
 			defInput.setCaptureAction(() -> doCapture(rowIdx, defInput));
@@ -219,6 +276,19 @@ public class FrameSizesTablePanel extends JPanel {
 					rowInputs.get(j).setValue(val.Default, false);
 				}
 			}
+		}
+
+		refreshOpenFrameHighlight();
+	}
+
+	/** Bold-print the rows whose frame is currently open - only there can the capture button read a size. */
+	public void refreshOpenFrameHighlight() {
+		for (int i = 0; i < rowLabels.size(); i++) {
+			var lbl    = rowLabels.get(i);
+			var isOpen = findOpenWindow(rowFrameClasses.get(i)) != null;
+
+			lbl.setFont(lbl.getFont().deriveFont(isOpen ? Font.BOLD : Font.PLAIN));
+			lbl.setToolTipText(isOpen ? LocaleBundle.getString("FrameSizesTable.openFrame.tooltip") : null); //$NON-NLS-1$
 		}
 	}
 

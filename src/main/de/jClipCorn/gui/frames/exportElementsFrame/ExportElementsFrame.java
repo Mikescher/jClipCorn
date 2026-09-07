@@ -34,6 +34,8 @@ public class ExportElementsFrame extends JCCFrame {
 	}
 
 	private void postInit() {
+		ccprops().PROP_FSIZE_EXPORTELEMENTSFRAME.applyOrSkip(this);
+
 		setType(Type.UTILITY);
 
 		lsModel = new DefaultListModel<>();

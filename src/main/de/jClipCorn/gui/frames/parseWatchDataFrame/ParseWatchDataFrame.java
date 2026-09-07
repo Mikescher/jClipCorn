@@ -33,6 +33,8 @@ public class ParseWatchDataFrame extends JCCFrame
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_PARSEWATCHDATAFRAME.applyOrSkip(this);
+
 		memoData.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::dataUpdated));;
 	}
 

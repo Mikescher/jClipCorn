@@ -41,6 +41,8 @@ public class SearchFrame extends JCCFrame
 	@SuppressWarnings("nls")
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_SEARCHFRAME.applyOrSkip(this);
+
 		lsMain.setModel(listModel = new DefaultListModel<>());
 		lsMain.setCellRenderer(new LambdaListCellRenderer<ICCDatabaseStructureElement>(v ->
 		{

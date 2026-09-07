@@ -82,6 +82,8 @@ public class QuickAddEpisodeDialog extends JCCDialog
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_QUICKADDEPISODEDIALOG.applyOrSkip(this);
+
 		edTarget.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {

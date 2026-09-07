@@ -43,6 +43,8 @@ public class ImportElementsFrame extends JCCFrame {
 	}
 
 	private void postInit() {
+		ccprops().PROP_FSIZE_IMPORTELEMENTSFRAME.applyOrSkip(this);
+
 		lbContent.setModel(listModel = new DefaultListModel<>());
 		lbContent.setCellRenderer(new ElementCellRenderer());
 

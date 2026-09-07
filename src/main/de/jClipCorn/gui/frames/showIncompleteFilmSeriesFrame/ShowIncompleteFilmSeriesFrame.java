@@ -33,6 +33,8 @@ public class ShowIncompleteFilmSeriesFrame extends JCCDialog {
 
 	private void postInit() {
 		setMinimumSize(new Dimension(350, 350));
+
+		ccprops().PROP_FSIZE_SHOWINCOMPLETEFILMSERIESFRAME.applyOrSkip(this);
 	}
 
 	private void scan() {

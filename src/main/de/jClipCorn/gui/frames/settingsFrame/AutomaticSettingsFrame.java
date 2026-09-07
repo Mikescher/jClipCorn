@@ -23,6 +23,8 @@ import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +56,14 @@ public abstract class AutomaticSettingsFrame extends JCCFrame {
 		setLocationRelativeTo(owner);
 
 		ccprops().PROP_FSIZE_SETTINGSFRAME.applyOrSkip(this);
-		
+
+		addWindowFocusListener(new WindowAdapter() {
+			@Override
+			public void windowGainedFocus(WindowEvent e) {
+				if (frameSizesPanel != null) frameSizesPanel.refreshOpenFrameHighlight();
+			}
+		});
+
 		setValues();
 	}
 	

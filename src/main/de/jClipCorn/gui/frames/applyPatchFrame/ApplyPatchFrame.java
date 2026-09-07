@@ -57,6 +57,8 @@ public class ApplyPatchFrame extends JCCFrame
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_APPLYPATCHFRAME.applyOrSkip(this);
+
 		edPathDestMovies.setPath(movielist.getMoviesRoot().toFSPath(this));
 		edPathDestSeries.setPath(movielist.getSeriesRoot().toFSPath(this));
 

@@ -35,6 +35,8 @@ public class GroupManageFrame extends JCCFrame {
 	}
 
 	private void postInit() {
+		ccprops().PROP_FSIZE_GROUPMANAGEFRAME.applyOrSkip(this);
+
 		edFilter.getDocument().addDocumentListener(new DocumentLambdaAdapter(this::onFilter));
 		tabGroups.addListSelectionListener(e -> updateElementList());
 

@@ -49,6 +49,8 @@ public class CustomFilterEditDialog extends JCCDialog {
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_CUSTOMFILTEREDITDIALOG.applyOrSkip(this);
+
 		root = new CustomFilterEditTreeNode(filterObject.getFilter());
 		treeMain.setModel(new DefaultTreeModel(root));
 		treeMain.setCellRenderer(new CustomFilterEditTreeRenderer());

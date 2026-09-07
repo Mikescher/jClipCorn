@@ -43,6 +43,8 @@ public class CompareDatabaseFrame extends JCCFrame
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_COMPAREDATABASEFRAME.applyOrSkip(this);
+
 		setTitle(LocaleBundle.getString("CompareDatabaseFrame.this.title")); //$NON-NLS-1$
 
 		edDatabaseName.setText(Main.DATABASE_NAME);

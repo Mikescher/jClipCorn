@@ -38,6 +38,8 @@ public class CreateNFOFrame extends JCCFrame {
 
     private void postInit()
     {
+        ccprops().PROP_FSIZE_CREATENFOFRAME.applyOrSkip(this);
+
         // Nothing special needed
     }
 

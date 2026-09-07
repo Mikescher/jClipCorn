@@ -45,7 +45,8 @@ public class OrganizeFilterDialog extends JCCDialog {
 		this.action = okAction;
 
 		setSize(350, 300);
-		
+		ccprops().PROP_FSIZE_ORGANIZEFILTERDIALOG.applyOrSkip(this);
+
 		initGUI();
 		setLocationRelativeTo(owner);
 		

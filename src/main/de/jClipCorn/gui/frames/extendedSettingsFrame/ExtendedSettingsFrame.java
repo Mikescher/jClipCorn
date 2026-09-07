@@ -36,14 +36,16 @@ public class ExtendedSettingsFrame extends JCCFrame
 		this.properties = properties;
 
 		initComponents();
+		setMinimumSize(getSize()); // must be taken from the packed size, before postInit() applies a stored size
 		postInit();
 
 		setLocationRelativeTo(owner);
-		setMinimumSize(getSize());
 	}
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_EXTENDEDSETTINGSFRAME.applyOrPack(this);
+
 		if (! LookAndFeelManager.isExternal())
 		{
 			edKey.setBackground(Color.WHITE);

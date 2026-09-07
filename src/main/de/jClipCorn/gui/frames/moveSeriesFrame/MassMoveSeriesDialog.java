@@ -43,6 +43,8 @@ public class MassMoveSeriesDialog extends JCCDialog
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_MASSMOVESERIESDIALOG.applyOrSkip(this);
+
 		edSearch.setText(movielist.getSeriesRoot().toString());
 		edReplace.setText(movielist.getSeriesRoot().toString());
 

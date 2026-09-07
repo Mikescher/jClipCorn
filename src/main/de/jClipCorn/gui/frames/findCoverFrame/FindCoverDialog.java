@@ -39,6 +39,8 @@ public class FindCoverDialog extends JCCDialog {
 	}
 
 	private void postInit() {
+		ccprops().PROP_FSIZE_FINDCOVERDIALOG.applyOrSkip(this);
+
 		setModal(true);
 
 		edSearchTerm.setText(handler.getFullTitle());

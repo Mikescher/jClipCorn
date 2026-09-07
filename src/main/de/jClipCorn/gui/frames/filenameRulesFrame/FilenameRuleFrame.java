@@ -25,6 +25,8 @@ public class FilenameRuleFrame extends JCCFrame {
 	}
 
 	private void postInit() {
+		ccprops().PROP_FSIZE_FILENAMERULEFRAME.applyOrSkip(this);
+
 		memoMain.setText(getDescription());
 	}
 

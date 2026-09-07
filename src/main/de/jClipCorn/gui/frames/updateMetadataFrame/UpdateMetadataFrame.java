@@ -46,6 +46,8 @@ public class UpdateMetadataFrame extends JCCFrame
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_UPDATEMETADATAFRAME.applyOrSkip(this);
+
 		initTable();
 
 		tableMain.DeleteLocalAnimeSeason = cbReplaceAnimeSeason.isSelected();

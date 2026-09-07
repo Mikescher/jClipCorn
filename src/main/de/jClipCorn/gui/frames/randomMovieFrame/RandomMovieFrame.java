@@ -37,8 +37,7 @@ public class RandomMovieFrame extends JCCFrame implements Runnable {
 	}
 
 	private void postInit() {
-		// 3D-mode, circle-radius etc. are configured (and the window packed) in initComponents,
-		// so the frame sizes itself to the cover-carousel automatically.
+		ccprops().PROP_FSIZE_RANDOMMOVIEFRAME.applyOrPack(this);
 	}
 
 	private void onMainButton() {

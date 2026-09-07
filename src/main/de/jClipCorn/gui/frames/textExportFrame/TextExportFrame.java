@@ -27,6 +27,8 @@ public class TextExportFrame extends JCCFrame {
 	}
 
 	private void postInit() {
+		ccprops().PROP_FSIZE_TEXTEXPORTFRAME.applyOrSkip(this);
+
 		cbFormat.setModel(new DefaultComboBoxModel<>(new DatabaseTextExporter[] {
 				new DatabasePlainTextExporter(),
 				new DatabaseJSONExporter(),

@@ -64,6 +64,8 @@ public class AddMultiEpisodesFrame extends JCCFrame
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_ADDMULTIEPISODESFRAME.applyOrSkip(this);
+
 		var cPathStart = target.getSeries().getCommonPathStart(true);
 		massVideoFileChooser = new JFileChooser(cPathStart.toFSPath(this).toFile());
 		massVideoFileChooser.setMultiSelectionEnabled(true);

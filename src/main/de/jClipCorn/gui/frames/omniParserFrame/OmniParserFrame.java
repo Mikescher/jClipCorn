@@ -51,6 +51,8 @@ public class OmniParserFrame extends JCCDialog
 
 	private void postInit(boolean modal, String initial)
 	{
+		ccprops().PROP_FSIZE_OMNIPARSERFRAME.applyOrSkip(this);
+
 		(new VerticalScrollPaneSynchronizer(scrlPnlFormattedText, scrlPnlParsedText)).start();
 		setModal(modal);
 

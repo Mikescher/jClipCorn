@@ -82,6 +82,8 @@ public class EditMediaInfoDialog extends JCCDialog
 
 	private void postInit(FSPath path, CCMediaInfo r, MediaInfoResultHandler h)
 	{
+		ccprops().PROP_FSIZE_EDITMEDIAINFODIALOG.applyOrSkip(this);
+
 		colOK = lblVideoBitdepth.getForeground();
 		colErr = Color.RED;
 

@@ -38,6 +38,8 @@ public class BackupsManagerFrame extends JCCFrame
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_BACKUPSMANAGERFRAME.applyOrSkip(this);
+
 		updateList();
 		updateInfo();
 	}

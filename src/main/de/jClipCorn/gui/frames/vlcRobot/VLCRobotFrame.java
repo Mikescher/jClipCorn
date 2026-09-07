@@ -49,6 +49,8 @@ public class VLCRobotFrame extends JCCFrame {
 	}
 
 	private void postInit() {
+		ccprops().PROP_FSIZE_VLCROBOTFRAME.applyOrSkip(this);
+
 		lsData.autoResize();
 
 		cbxKeepPosition.setEnabled(ApplicationHelper.isWindows());

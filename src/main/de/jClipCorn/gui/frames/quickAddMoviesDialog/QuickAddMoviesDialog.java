@@ -45,6 +45,8 @@ public class QuickAddMoviesDialog extends JCCDialog
 
 	private void postInit()
 	{
+		ccprops().PROP_FSIZE_QUICKADDMOVIESDIALOG.applyOrSkip(this);
+
 		edRoot.setPath(movielist.getMoviesRoot().toFSPath(this));
 		if (edRoot.getPath().isEmpty()) {
 			CCMovie m = movielist.iteratorMovies().lastOrNull();

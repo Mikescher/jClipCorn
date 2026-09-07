@@ -1,6 +1,5 @@
 package de.jClipCorn.features.statistics.charts;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import de.jClipCorn.features.statistics.StatisticsChart;
@@ -19,60 +18,63 @@ import de.jClipCorn.features.statistics.snapshots.StatSnapshotSeries;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.datetime.CCDate;
 
-public class StatisticsLengthOverTimeChart extends StatisticsChart {
+/**
+ * How many elements the collection held on each day.
+ *
+ * Not the same as summing up {@link StatisticsAddDateChart}: this one is read from the recorded snapshots,
+ * so it goes back down again when something was deleted.
+ */
+public class StatisticsCountOverTimeChart extends StatisticsChart {
 
 	private long domainTotalRangeMin;
 	private long domainTotalRangeMax;
 	private ValueAxis domainAxis;
 
-	public StatisticsLengthOverTimeChart(CCMovieList ml, StatisticsTypeFilter _source) {
+	public StatisticsCountOverTimeChart(CCMovieList ml, StatisticsTypeFilter _source) {
 		super(ml, _source);
 	}
 
 	@Override
 	protected JFreeChart createChart(CCMovieList movielist, StatisticsTypeFilter source) {
 		DateAxis dateAxis = new DateAxis(""); //$NON-NLS-1$
+		dateAxis.setDateFormatOverride(new SimpleDateFormat("dd.MM.yyyy")); //$NON-NLS-1$
 
-	    DateFormat chartFormatter = new SimpleDateFormat("dd.MM.yyyy"); //$NON-NLS-1$
-	    dateAxis.setDateFormatOverride(chartFormatter);
+		NumberAxis valueAxis = new NumberAxis(""); //$NON-NLS-1$
 
-	    NumberAxis valueAxis = new NumberAxis(""); //$NON-NLS-1$
+		StandardXYItemRenderer renderer = new StandardXYItemRenderer(StandardXYItemRenderer.LINES, null, null);
 
-	    StandardXYItemRenderer renderer = new StandardXYItemRenderer(StandardXYItemRenderer.LINES, null, null);
-	    
-	    XYPlot plot = new XYPlot(getDataSet(movielist, source), dateAxis, valueAxis, renderer);
-	    
+		XYPlot plot = new XYPlot(getDataSet(movielist, source), dateAxis, valueAxis, renderer);
+
 		plot.getRenderer().setSeriesPaint(0, XYCHART_COLOR);
-		
+
 		plot.setBackgroundPaint(XYBACKGROUND_COLOR);
 		plot.setDomainGridlinePaint(GRIDLINECOLOR);
 		plot.setRangeGridlinePaint(GRIDLINECOLOR);
-	    
-	    JFreeChart chart = new JFreeChart(plot);
-	    chart.removeLegend();
-	    
-	    chart.setBackgroundPaint(null);
-	    plot.getDomainAxis().setTickLabelPaint(TEXT_FOREGROUND);
-	    plot.getRangeAxis().setTickLabelPaint(TEXT_FOREGROUND);
-	    
-		plot.getRangeAxis().setLabel(LocaleBundle.getString("StatisticsFrame.chartAxis.Mins")); //$NON-NLS-1$
+
+		JFreeChart chart = new JFreeChart(plot);
+		chart.removeLegend();
+
+		chart.setBackgroundPaint(null);
+		plot.getDomainAxis().setTickLabelPaint(TEXT_FOREGROUND);
+		plot.getRangeAxis().setTickLabelPaint(TEXT_FOREGROUND);
+
 		plot.getDomainAxis().setLabel(LocaleBundle.getString("StatisticsFrame.chartAxis.Date")); //$NON-NLS-1$
-		
+
 		plot.getRangeAxis().setLabelPaint(TEXT_FOREGROUND);
 		plot.getDomainAxis().setLabelPaint(TEXT_FOREGROUND);
-	    
-	    domainAxis = plot.getDomainAxis();
-	    
-	    return chart;
+
+		domainAxis = plot.getDomainAxis();
+
+		return chart;
 	}
-	
+
 	private XYDataset getDataSet(CCMovieList movielist, StatisticsTypeFilter source) {
 		StatSnapshotSeries snapshots = StatSnapshotSeries.load(movielist, source);
 
 		DefaultXYDataset dataset = new DefaultXYDataset();
 
 		long  minMilliecs = snapshots.firstDay().asMilliseconds();
-		int[] allpos      = snapshots.minutes();
+		int[] allpos      = snapshots.count();
 
 		double[][] series = new double[2][allpos.length];
 
@@ -81,19 +83,19 @@ public class StatisticsLengthOverTimeChart extends StatisticsChart {
 			series[1][i] = allpos[i];
 		}
 
-        dataset.addSeries("Series0", series); //$NON-NLS-1$
+		dataset.addSeries("Series0", series); //$NON-NLS-1$
 
-        domainTotalRangeMin = minMilliecs;
-        domainTotalRangeMax = (allpos.length == 0) ? minMilliecs : (long)series[0][allpos.length - 1];
+		domainTotalRangeMin = minMilliecs;
+		domainTotalRangeMax = (allpos.length == 0) ? minMilliecs : (long)series[0][allpos.length - 1];
 
-        if (domainTotalRangeMin == domainTotalRangeMax) domainTotalRangeMax++;
+		if (domainTotalRangeMin == domainTotalRangeMax) domainTotalRangeMax++;
 
-        return dataset;
+		return dataset;
 	}
 
 	@Override
 	public String createTitle() {
-		return LocaleBundle.getString("StatisticsFrame.charttitles.hoursOverTime"); //$NON-NLS-1$
+		return LocaleBundle.getString("StatisticsFrame.charttitles.countOverTime"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -105,7 +107,7 @@ public class StatisticsLengthOverTimeChart extends StatisticsChart {
 	public boolean usesFilterableYearRange() {
 		return true;
 	}
-	
+
 	@Override
 	protected void onFilterYearRange(int year) {
 		if (year == -1) {

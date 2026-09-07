@@ -42,6 +42,7 @@ public final class ClipCornStatistics {
 
 		// ======== PROPERTIES PLOTTED OVER TIME =========
 
+		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsCountOverTimeChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsLengthOverTimeChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsViewedOverTimeChart(ml, s)));
 		STATISTICS.add(ml -> new StatisticsGroup(s -> new StatisticsSizeOverTimeChart(ml, s)));

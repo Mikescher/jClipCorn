@@ -6,6 +6,8 @@ import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCDatedElement;
 import de.jClipCorn.database.databaseElement.ICCPlayableElement;
 import de.jClipCorn.features.statistics.StatisticsHelper;
+import de.jClipCorn.features.statistics.StatisticsTypeFilter;
+import de.jClipCorn.features.statistics.snapshots.StatSnapshotSeries;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDatespan;
 import de.jClipCorn.util.stream.CCStream;
@@ -15,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestStatistics extends ClipCornBaseTest {
 
@@ -89,34 +92,19 @@ public class TestStatistics extends ClipCornBaseTest {
 	}
 
 	@Test
-	public void testStatisticsHelperGetAddedForAllDatesNoException() throws Exception {
+	public void testStatisticsSnapshotSeriesNoException() throws Exception {
 		CCMovieList ml = createExampleDB();
 
-		{
-			CCDate mf = StatisticsHelper.getFirstAddDate(ml.iteratorMovies().cast());
-			int mdc = StatisticsHelper.getFirstAddDate(ml.iteratorMovies().cast()).getDayDifferenceTo(StatisticsHelper.getLastAddDate(ml.iteratorMovies().cast())) + 1;
-			
-			StatisticsHelper.getCumulativeByteCountForAllDates(mf, mdc, ml.iteratorMovies().cast());
-			StatisticsHelper.getCumulativeMinuteCountForAllDates(mf, mdc, ml.iteratorMovies().cast());
-			StatisticsHelper.getCumulativeFormatCountForAllDates(mf, mdc, ml.iteratorMovies().cast());
-		}
+		for (StatisticsTypeFilter f : new StatisticsTypeFilter[]{StatisticsTypeFilter.STF_MOVIES, StatisticsTypeFilter.STF_EPISODES, StatisticsTypeFilter.STF_MOVIES_AND_EPISODES}) {
+			StatSnapshotSeries s = StatSnapshotSeries.load(ml, f);
 
-		{
-			CCDate sf = StatisticsHelper.getFirstAddDate(ml.iteratorEpisodes().cast());
-			int sdc = StatisticsHelper.getFirstAddDate(ml.iteratorEpisodes().cast()).getDayDifferenceTo(StatisticsHelper.getLastAddDate(ml.iteratorEpisodes().cast())) + 1;
-	
-			StatisticsHelper.getCumulativeMinuteCountForAllDates(sf, sdc, ml.iteratorEpisodes().cast());
-			StatisticsHelper.getCumulativeMinuteCountForAllDates(sf, sdc, ml.iteratorEpisodes().cast());
-			StatisticsHelper.getCumulativeFormatCountForAllDates(sf, sdc, ml.iteratorEpisodes().cast());
-		}
-		
-		{
-			CCDate pf = StatisticsHelper.getFirstAddDate(ml.iteratorPlayables().cast());
-			int pdc = StatisticsHelper.getFirstAddDate(ml.iteratorPlayables().cast()).getDayDifferenceTo(StatisticsHelper.getLastAddDate(ml.iteratorPlayables().cast())) + 1;
-			
-			StatisticsHelper.getCumulativeMinuteCountForAllDates(pf, pdc, ml.iteratorPlayables().cast());
-			StatisticsHelper.getCumulativeMinuteCountForAllDates(pf, pdc, ml.iteratorPlayables().cast());
-			StatisticsHelper.getCumulativeFormatCountForAllDates(pf, pdc, ml.iteratorPlayables().cast());
+			assertEquals(s.dayCount(), s.bytes().length);
+			assertEquals(s.dayCount(), s.minutes().length);
+			assertEquals(s.dayCount(), s.count().length);
+
+			// nothing was ever deleted in the example database, so the estimate has to grow monotonically
+			long[] bytes = s.bytes();
+			for (int i = 1; i < bytes.length; i++) assertTrue(bytes[i] >= bytes[i-1]);
 		}
 	}
 

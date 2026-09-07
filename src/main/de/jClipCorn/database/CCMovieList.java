@@ -18,6 +18,8 @@ import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.iterators.*;
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.features.statistics.snapshots.CCStatSnapshot;
+import de.jClipCorn.features.statistics.snapshots.StatSnapshotWriter;
 import de.jClipCorn.features.nfo.NFOAutoUpdateListener;
 import de.jClipCorn.features.serialization.xmlexport.DatabaseXMLExporter;
 import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
@@ -55,6 +57,7 @@ import org.jdom2.Element;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
 
@@ -69,6 +72,7 @@ public class CCMovieList implements ICCPropertySource {
 
 	
 	private CCDatabase  database;
+	private StatSnapshotWriter statSnapshots = null;
 	private ICoverCache coverCache;
 
 	private final List<CCGroup> databaseGroups;
@@ -106,6 +110,11 @@ public class CCMovieList implements ICCPropertySource {
 		if (!Main.ARG_READONLY && !database.isInMemory() && ccprops.PROP_DATABASE_TRANSACTION_LOG.getValue()) {
 			transactionLog = new CCTransactionLog(this);
 			transactionLog.register(this);
+		}
+
+		// snapshotting an in-memory test database would make the chart tests depend on the current date
+		if (!Main.ARG_READONLY && !database.isInMemory()) {
+			statSnapshots = new StatSnapshotWriter(this, database);
 		}
 	}
 
@@ -223,6 +232,16 @@ public class CCMovieList implements ICCPropertySource {
 				try { Thread.sleep(15_000); } catch (InterruptedException e) { return; } //$NON-NLS-1$
 				try { database.syncHistoryToHistoryDb(); } catch (Exception e) { CCLog.addError(e); } //$NON-NLS-1$
 			}, "THREAD_HISTORY_SYNC").start(); //$NON-NLS-1$
+
+			// Record today's statistics snapshot - after the history sync, so the two never contend for
+			// the row-write lock
+			if (statSnapshots != null) {
+				new Thread(() ->
+				{
+					try { Thread.sleep(30_000); } catch (InterruptedException e) { return; }
+					try { statSnapshots.updateToday(); } catch (Exception e) { CCLog.addError(e); }
+				}, "THREAD_STAT_SNAPSHOT").start(); //$NON-NLS-1$
+			}
 
 		}, "THREAD_LOAD_DATABASE").start(); //$NON-NLS-1$
 	}
@@ -877,6 +896,9 @@ public class CCMovieList implements ICCPropertySource {
 	}
 
 	public void shutdown() {
+		// has to flush before the connection goes away
+		if (statSnapshots != null) statSnapshots.shutdown();
+
 		if (database != null) { // Close even after Intialize AV's
 			database.disconnect(ccprops().PROP_DATABASE_CLEANSHUTDOWN.getValue());
 		}
@@ -1148,6 +1170,11 @@ public class CCMovieList implements ICCPropertySource {
 	public void resetLocalDUUID() {
 		database.resetInformation_DUUID();
 		_cache.bust();
+	}
+
+	/** The recorded statistics time-series, oldest first; empty until a rebuild has run. */
+	public List<CCStatSnapshot> readStatSnapshots() throws SQLException {
+		return database.readStatSnapshots();
 	}
 
 	public void syncHistoryToHistoryDb() {

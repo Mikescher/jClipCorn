@@ -304,66 +304,6 @@ public class StatisticsHelper {
 		return result;
 	}
 	
-	private static int[] getMinuteCountForAllDates(CCDate startDate, int count, CCStream<ICCPlayableElement> it) {
-		int[] ls = new int[count];
-		
-		for (int i = 0; i < count; i++) {
-			ls[i] = 0;
-		}
-		
-		for (ICCPlayableElement m : it) {
-			int pos = startDate.getDayDifferenceTo(m.addDate().get());
-			
-			ls[pos] += m.length().get();
-		}
-		
-		return ls;
-	}
-	
-	private static long[] getByteCountForAllDates(CCDate startDate, int count, CCStream<ICCPlayableElement> it) {
-		long[] ls = new long[count];
-		
-		for (int i = 0; i < count; i++) {
-			ls[i] = 0;
-		}
-
-		for (ICCPlayableElement m : it) {
-			int pos = startDate.getDayDifferenceTo(m.addDate().get());
-			
-			ls[pos] += m.fileSize().get().getBytes();
-		}
-		
-		return ls;
-	}
-	
-	public static int[] getCumulativeMinuteCountForAllDates(CCDate startDate, int count, CCStream<ICCPlayableElement> it) {
-		int[] ls = getMinuteCountForAllDates(startDate, count, it);
-		int[] ns = new int[count];
-		
-		int curr = 0;
-		
-		for (int i = 0; i < count; i++) {
-			curr += ls[i];
-			ns[i] = curr;
-		}
-		
-		return ns;
-	}
-	
-	public static long[] getCumulativeByteCountForAllDates(CCDate startDate, int count, CCStream<ICCPlayableElement> it) {
-		long[] ls = getByteCountForAllDates(startDate, count, it);
-		long[] ns = new long[count];
-		
-		long curr = 0;
-		
-		for (int i = 0; i < count; i++) {
-			curr += ls[i];
-			ns[i] = curr;
-		}
-		
-		return ns;
-	}
-	
 	public static CCDate getFirstWatchedDate(CCStream<ICCPlayableElement> it) {
 		return it.map(m -> m.viewedHistory().get().getLastDateOrInvalid()).filter(p -> !p.isMinimum()).minOrDefault(CCDate::compare, CCDate.getUnspecified());
 	}
@@ -423,26 +363,6 @@ public class StatisticsHelper {
 		result.sort((o1, o2) -> CCDate.compare(o1.getViewedHistoryLast(), o2.getViewedHistoryLast()));
 		
 		return result;
-	}
-	
-	public static int[][] getCumulativeFormatCountForAllDates(CCDate startDate, int count, CCStream<ICCPlayableElement> it) {
-		List<CCFileFormat> formats = Arrays.asList(CCFileFormat.values());
-		
-		int[][] ls = new int[count][formats.size()];
-		
-		for (int i = 0; i < count; i++) {
-			for (int j = 0; j < formats.size(); j++) {
-				ls[i][j] = 0;
-			}
-		}
-		
-		for (ICCPlayableElement m : it) {
-			int pos = startDate.getDayDifferenceTo(m.addDate().get());
-
-			ls[pos][formats.indexOf(m.format().get())] += 1;
-		}
-		
-		return ls;
 	}
 	
 	public static List<CCDatespan> getDatespanFromSeries(CCSeries series, int gravity, OrderMode omode) {

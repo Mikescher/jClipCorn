@@ -100,7 +100,7 @@ public class NewEpisodeVM implements IEpisodeData, ICCPropertySource {
 		}
 
 		var root = TargetRoot;
-		if (root.isEmpty()) root = season.getMovieList().getSeriesRootDir();
+		if (root.isEmpty()) root = season.getSeries().getSeriesRootDir();
 		if (root.isEmpty()) root = globalSeriesRoot;
 
 		if (root.isEmpty()) {

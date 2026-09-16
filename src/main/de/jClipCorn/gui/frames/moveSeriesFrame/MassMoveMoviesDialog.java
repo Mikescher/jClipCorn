@@ -46,8 +46,8 @@ public class MassMoveMoviesDialog extends JCCDialog
 	{
 		ccprops().PROP_FSIZE_MASSMOVEMOVIESDIALOG.applyOrSkip(this);
 
-		edSearch.setText(movielist.getMoviesRoot().toString());
-		edReplace.setText(movielist.getMoviesRoot().toString());
+		edSearch.setText(movielist.getMoviesRoot(false).toString());
+		edReplace.setText(movielist.getMoviesRoot(false).toString());
 
 		edSearch.getDocument().addDocumentListener(new DocumentLambdaAdapter(() -> btnOK.setEnabled(false)));
 		edReplace.getDocument().addDocumentListener(new DocumentLambdaAdapter(() -> btnOK.setEnabled(false)));

@@ -1,6 +1,5 @@
 package de.jClipCorn.test;
 
-import de.jClipCorn.Main;
 import de.jClipCorn.database.driver.MemoryDatabase;
 import de.jClipCorn.database.migration.Migration_35_36;
 import de.jClipCorn.util.datatypes.CCUUID;
@@ -144,7 +143,7 @@ public class TestSplitMigration extends ClipCornBaseTest {
 		MemoryDatabase db = migrated();
 
 		assertEquals("36", db.querySingleStringSQLThrow("SELECT IVALUE FROM main.INFO WHERE IKEY='VERSION_DB'", 0));
-		assertEquals(Main.USERDATA_DBVERSION, db.querySingleStringSQLThrow("SELECT IVALUE FROM userdata.INFO WHERE IKEY='VERSION_DB'", 0));
+		assertEquals("1", db.querySingleStringSQLThrow("SELECT IVALUE FROM userdata.INFO WHERE IKEY='VERSION_DB'", 0));
 
 		// the user database is bound to the main database it was split off from
 		assertEquals("5cb2e19c-6d1b-4d78-9dd6-2c3d78d5a3aa", db.querySingleStringSQLThrow("SELECT IVALUE FROM userdata.INFO WHERE IKEY='MAINDB_DUUID'", 0));

@@ -7,6 +7,7 @@ import de.jClipCorn.features.metadata.exceptions.InnerMediaQueryException;
 import de.jClipCorn.features.metadata.impl.MediaInfoRunner;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.PathSyntaxVar;
+import de.jClipCorn.properties.types.PathSyntaxVarList;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
@@ -24,6 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @SuppressWarnings("nls")
 public class DatabaseSeeder {
@@ -68,8 +70,9 @@ public class DatabaseSeeder {
 		var pathMov = dir.append("mov"); pathMov.mkdirsWithException();
 		var pathSer = dir.append("ser"); pathSer.mkdirsWithException();
 
-		prop.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar(Str.Empty, "mov", CCPath.createFromFSPath(pathMov, Opt.False, ml)));
-		prop.PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar(Str.Empty, "ser", CCPath.createFromFSPath(pathSer, Opt.False, ml)));
+		prop.PROP_PATHSYNTAX_VARIABLES.setValue(new PathSyntaxVarList(List.of(
+			new PathSyntaxVar(Str.Empty, "mov", CCPath.createFromFSPath(pathMov, Opt.False, ml)),
+			new PathSyntaxVar(Str.Empty, "ser", CCPath.createFromFSPath(pathSer, Opt.False, ml)))));
 
 		// The seeded movies/series live directly under the mov/ser dirs, so those are the configured
 		// collection roots (mirrors a properly-configured install).

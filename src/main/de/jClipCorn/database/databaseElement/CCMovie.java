@@ -438,11 +438,11 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 	}
 
 	// The full, deterministic expected absolute path of this movie part: the configured
-	// movie-collection root with the generated relative path (year/name[/movie]/file) appended.
+	// movie-collection root (anime or regular, by genre) with the generated relative path (year/name[/movie]/file) appended.
 	// If no (valid) movie root is configured this returns FSPath.Empty - callers must treat that as
 	// "unknown" and skip path-dependent behaviour (location verification, auto-move).
 	public FSPath generateExpectedAbsolutePath(int part)  {
-		FSPath basePath = getMovieList().getMoviesRootDir();
+		FSPath basePath = getMovieList().getMoviesRootDir(getGenres().includesAnime());
 		if (basePath.isEmpty()) return FSPath.Empty;
 
 		return basePath.append(generateRelativePath(part));

@@ -9,6 +9,7 @@ import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.DialogHelper;
@@ -73,6 +74,14 @@ public class ScanFolderFrame extends JCCFrame
 		folderchooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY);
 	}
 
+	private void addRootMenuItem(JPopupMenu popupMenu, String localeKey, CCPath root) {
+		if (root.isEmpty()) return;
+		var fspath = root.toFSPath(ccprops()).toAbsolutePathString();
+		var menuitem = new JMenuItem(LocaleBundle.getFormattedString(localeKey, fspath));
+		menuitem.addActionListener(e -> edPath.setText(fspath));
+		popupMenu.add(menuitem);
+	}
+
 	@SuppressWarnings("nls")
 	private void initFindButton() {
 
@@ -89,23 +98,10 @@ public class ScanFolderFrame extends JCCFrame
 
 			popupMenu.addSeparator();
 
-			{
-				var p0 = getMovieList().getMoviesRoot();
-				if (!p0.isEmpty()) {
-					var menuitem = new JMenuItem("Movies (" + p0.toFSPath(ccprops()).toAbsolutePathString() + ")");
-					menuitem.addActionListener(e -> edPath.setText(p0.toFSPath(ccprops()).toAbsolutePathString()));
-					popupMenu.add(menuitem);
-				}
-			}
-
-			{
-				var p0 = getMovieList().getSeriesRoot();
-				if (!p0.isEmpty()) {
-					var menuitem = new JMenuItem("Series (" + p0.toFSPath(ccprops()).toAbsolutePathString() + ")");
-					menuitem.addActionListener(e -> edPath.setText(p0.toFSPath(ccprops()).toAbsolutePathString()));
-					popupMenu.add(menuitem);
-				}
-			}
+			addRootMenuItem(popupMenu, "ScanFolderFrame.mnuRootMovies",      ccprops().PROP_PATHSYNTAX_MOVIEROOT.getValue());
+			addRootMenuItem(popupMenu, "ScanFolderFrame.mnuRootSeries",      ccprops().PROP_PATHSYNTAX_SERIESROOT.getValue());
+			addRootMenuItem(popupMenu, "ScanFolderFrame.mnuRootAnimeMovies", ccprops().PROP_PATHSYNTAX_ANIMEMOVIEROOT.getValue());
+			addRootMenuItem(popupMenu, "ScanFolderFrame.mnuRootAnimeSeries", ccprops().PROP_PATHSYNTAX_ANIMESERIESROOT.getValue());
 
 			popupMenu.addSeparator();
 			

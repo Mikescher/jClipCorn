@@ -21,7 +21,11 @@ public class PathSyntaxVar {
 		return "[" + Hostname + "]" + Key + " := " + Value; //$NON-NLS-1$
 	}
 
-	public String serialize() {
-		return Str.toBase64(this.Hostname) + ";" + Str.toBase64(this.Key) + ";" + Str.toBase64(this.Value.toString());
+	public boolean isEmpty() {
+		return Str.isNullOrWhitespace(Hostname) && Str.isNullOrWhitespace(Key) && Value.isEmpty();
+	}
+
+	public boolean isActiveOn(String hostname) {
+		return !Str.isNullOrWhitespace(Key) && (Str.isNullOrWhitespace(Hostname) || Hostname.equalsIgnoreCase(hostname));
 	}
 }

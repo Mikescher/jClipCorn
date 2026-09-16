@@ -59,11 +59,11 @@ public class ApplyPatchFrame extends JCCFrame
 	{
 		ccprops().PROP_FSIZE_APPLYPATCHFRAME.applyOrSkip(this);
 
-		edPathDestMovies.setPath(movielist.getMoviesRoot().toFSPath(this));
-		edPathDestSeries.setPath(movielist.getSeriesRoot().toFSPath(this));
+		edPathDestMovies.setPath(movielist.getMoviesRoot(false).toFSPath(this));
+		edPathDestSeries.setPath(movielist.getSeriesRoot(false).toFSPath(this));
 
-		edPathDestTrashMov.setPath(movielist.getMoviesRoot().toFSPath(this).getParent().append("trash")); //$NON-NLS-1$
-		edPathDestTrashSer.setPath(movielist.getSeriesRoot().toFSPath(this).getParent().append("trash")); //$NON-NLS-1$
+		edPathDestTrashMov.setPath(movielist.getMoviesRoot(false).toFSPath(this).getParent().append("trash")); //$NON-NLS-1$
+		edPathDestTrashSer.setPath(movielist.getSeriesRoot(false).toFSPath(this).getParent().append("trash")); //$NON-NLS-1$
 	}
 
 	private void updateUI()

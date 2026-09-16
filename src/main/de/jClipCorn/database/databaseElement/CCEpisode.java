@@ -457,7 +457,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	public FSPath getPathForCreatedFolderstructure() {
-		var root = getMovieList().getSeriesRootDir();
+		var root = getSeries().getSeriesRootDir();
 		return getPathForCreatedFolderstructure(root);
 	}
 
@@ -475,7 +475,7 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 	}
 
 	public boolean checkFolderStructure() {
-		var expected = getPathForCreatedFolderstructure(); // anchored at getSeriesRootDir()
+		var expected = getPathForCreatedFolderstructure(); // anchored at CCSeries.getSeriesRootDir()
 		if (expected == null || expected.isEmpty()) return true; // series-root not configured -> cannot validate, treat as OK
 
 		return getPart().toFSPath(this).equalsOnFilesystem(expected);

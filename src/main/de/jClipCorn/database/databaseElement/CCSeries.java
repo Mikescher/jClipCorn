@@ -531,6 +531,14 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		return guide.toString();
 	}
 	
+	public CCPath getSeriesRoot() {
+		return getMovieList().getSeriesRoot(getGenres().includesAnime());
+	}
+
+	public FSPath getSeriesRootDir() {
+		return getMovieList().getSeriesRootDir(getGenres().includesAnime());
+	}
+
 	public CCPath getCommonPathStart(boolean extendedSearch) {
 		return _cache.get(SeriesCache.COMMON_PATH_START, Tuple1.Create(extendedSearch), ser->
 		{
@@ -544,7 +552,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 			var common = CCPath.getCommonPath(all);
 
-			if (extendedSearch && common.isEmpty()) common = movielist.getSeriesRoot();
+			if (extendedSearch && common.isEmpty()) common = getSeriesRoot();
 
 			return common;
 		});
@@ -557,7 +565,7 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	public FSPath guessSeriesBasePath() {
 		return _cache.get(SeriesCache.SERIES_BASE_PATH, null, ser->
 		{
-			FSPath root = getMovieList().getSeriesRootDir();
+			FSPath root = getSeriesRootDir();
 			if (root.isEmpty()) return FSPath.Empty;
 
 			// vote across episodes to stay robust against the odd misplaced file

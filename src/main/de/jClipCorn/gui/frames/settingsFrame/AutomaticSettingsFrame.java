@@ -13,6 +13,7 @@ import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.CCPropertyCategory;
 import de.jClipCorn.properties.property.CCFrameSizeProperty;
+import de.jClipCorn.properties.property.CCPathVarListProperty;
 import de.jClipCorn.properties.property.CCProperty;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.datatypes.Opt;
@@ -325,39 +326,21 @@ public abstract class AutomaticSettingsFrame extends JCCFrame {
 
 		// pin the host-label column to the exact width the "Host" label occupies in the normal rows,
 		// so the Key/Value columns line up with the editable variables above
-		int hostLabelWidth = new JLabel(LocaleBundle.getString("CCPathVarProperty.Host")).getPreferredSize().width;
+		int hostLabelWidth = new JLabel(LocaleBundle.getString("CCPathVarListProperty.Host")).getPreferredSize().width;
 
 		pnl.setLayout(new FormLayout(
-			new ColumnSpec[]
-			{
-				FormSpecs.UNRELATED_GAP_COLSPEC,              //
-				ColumnSpec.decode(hostLabelWidth + "px"),    // (host label slot)
-				FormSpecs.UNRELATED_GAP_COLSPEC,              //
-				ColumnSpec.decode("110px"),                  // (host field slot)
-				FormSpecs.UNRELATED_GAP_COLSPEC,              //
-				ColumnSpec.decode("default"),                // "Key" label
-				FormSpecs.UNRELATED_GAP_COLSPEC,              //
-				ColumnSpec.decode("80px"),                   // key field
-				FormSpecs.UNRELATED_GAP_COLSPEC,             //
-				ColumnSpec.decode("default"),                // "Value" label
-				FormSpecs.UNRELATED_GAP_COLSPEC,             //
-				ColumnSpec.decode("default:grow"),           // value field
-				FormSpecs.UNRELATED_GAP_COLSPEC,             //
-			},
-			new RowSpec[]
-			{
-				FormSpecs.PREF_ROWSPEC,
-			}));
+			CCPathVarListProperty.createRowColumnSpecs(ColumnSpec.decode(hostLabelWidth + "px")),
+			new RowSpec[] { FormSpecs.PREF_ROWSPEC }));
 
 		// where the "Host" label + host input field normally are, show the source marker instead (spans both columns)
 		pnl.add(new JLabel(LocaleBundle.getString("Settingsframe.cmdlinePathVarSource")), "2, 1, 3, 1, left, default");
 
-		pnl.add(new JLabel(LocaleBundle.getString("CCPathVarProperty.Key")), "6, 1, fill, default");
+		pnl.add(new JLabel(LocaleBundle.getString("CCPathVarListProperty.Key")), "6, 1, fill, default");
 		var fldKey = new JTextField(key);
 		fldKey.setEditable(false);
 		pnl.add(fldKey, "8, 1, fill, default");
 
-		pnl.add(new JLabel(LocaleBundle.getString("CCPathVarProperty.Value")), "10, 1, fill, default");
+		pnl.add(new JLabel(LocaleBundle.getString("CCPathVarListProperty.Value")), "10, 1, fill, default");
 		var fldValue = new JTextField(value);
 		fldValue.setEditable(false);
 		pnl.add(fldValue, "12, 1, fill, default");

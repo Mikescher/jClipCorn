@@ -6,8 +6,13 @@ import de.jClipCorn.database.driver.MemoryDatabase;
 import de.jClipCorn.database.migration.UpgradeAction;
 import de.jClipCorn.database.migration.UserDataDatabaseMigrator;
 import de.jClipCorn.database.migration.UserDataMigration;
+import de.jClipCorn.database.migration.UserDataMigration_01_02;
+import de.jClipCorn.properties.CCProperties;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.RefParam;
+import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
+import org.json.JSONArray;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -16,9 +21,8 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * The user-database migration chain is still empty, so these drive the migrator itself: the two
- * paths that do nothing, the two that refuse, and a throwaway {@link UserDataMigration} for the
- * machinery the first real one will use.
+ * Drives the migrator itself: the two paths that do nothing, the two that refuse, and a throwaway
+ * {@link UserDataMigration} for the shared machinery. The real migrations are tested further down.
  */
 @SuppressWarnings("nls")
 public class TestUserDataMigration extends ClipCornBaseTest {
@@ -107,6 +111,78 @@ public class TestUserDataMigration extends ClipCornBaseTest {
 
 		assertEquals("1", userDataVersion(db));
 		assertEquals(0, db.querySingleIntSQLThrow("SELECT COUNT(*) FROM userdata.sqlite_master WHERE name='DUMMY'", 0));
+	}
+
+	private static String legacyVar(String host, String key, String value) {
+		return Str.toBase64(host) + ";" + Str.toBase64(key) + ";" + Str.toBase64(value);
+	}
+
+	private static void insertProperty(MemoryDatabase db, String key, String value) throws Exception {
+		db.executeSQLThrow("INSERT INTO userdata.PROPERTIES (PKEY, PVALUE, LAST_CHANGED) VALUES ('" + key + "', '" + value + "', '2020-01-01 00:00:00')");
+	}
+
+	private static String property(MemoryDatabase db, String key) throws Exception {
+		return db.querySingleStringSQLThrow("SELECT PVALUE FROM userdata.PROPERTIES WHERE PKEY='" + key + "'", 0);
+	}
+
+	@Test
+	public void testMigration_01_02_MergesPathVariables() throws Exception {
+		MemoryDatabase db = createDatabase("1");
+
+		insertProperty(db, "PROP_PATHSYNTAX_VAR1",  legacyVar("", "mov", "/data/mov"));
+		insertProperty(db, "PROP_PATHSYNTAX_VAR2",  ";;");
+		insertProperty(db, "PROP_PATHSYNTAX_VAR7",  Str.toBase64("ser") + ";" + Str.toBase64("/data/ser"));
+		insertProperty(db, "PROP_PATHSYNTAX_VAR8",  "garbage");
+		insertProperty(db, "PROP_PATHSYNTAX_VAR10", legacyVar("myhost", "k'e\"y", "/da;ta/x"));
+		insertProperty(db, "PROP_PATHSYNTAX_SELF",  "true");
+
+		new UserDataMigration_01_02(db, FSPath.Empty, "ClipCornDB", false).migrate();
+
+		assertEquals("2", userDataVersion(db));
+
+		var jarr = new JSONArray(property(db, "PROP_PATHSYNTAX_VARIABLES"));
+		assertEquals(3, jarr.length());
+		assertEquals("",          jarr.getJSONObject(0).getString("host"));
+		assertEquals("mov",       jarr.getJSONObject(0).getString("key"));
+		assertEquals("/data/mov", jarr.getJSONObject(0).getString("value"));
+		assertEquals("",          jarr.getJSONObject(1).getString("host"));
+		assertEquals("ser",       jarr.getJSONObject(1).getString("key"));
+		assertEquals("myhost",    jarr.getJSONObject(2).getString("host"));
+		assertEquals("k'e\"y",   jarr.getJSONObject(2).getString("key"));
+		assertEquals("/da;ta/x",  jarr.getJSONObject(2).getString("value"));
+
+		assertEquals(0, db.querySingleIntSQLThrow("SELECT COUNT(*) FROM userdata.PROPERTIES WHERE PKEY LIKE 'PROP_PATHSYNTAX_VAR_%' AND PKEY <> 'PROP_PATHSYNTAX_VARIABLES'", 0));
+		assertEquals("true", property(db, "PROP_PATHSYNTAX_SELF"));
+
+		var props = CCProperties.createInMemory();
+		props.setProperty("PROP_PATHSYNTAX_VARIABLES", property(db, "PROP_PATHSYNTAX_VARIABLES"));
+		var vars = props.PROP_PATHSYNTAX_VARIABLES.getValue().Values;
+		assertEquals(3, vars.size());
+		assertEquals(CCPath.create("/data/mov"), vars.get(0).Value);
+		assertEquals("myhost", vars.get(2).Hostname);
+	}
+
+	@Test
+	public void testMigration_01_02_WithoutPathVariables() throws Exception {
+		MemoryDatabase db = createDatabase("1");
+
+		insertProperty(db, "PROP_PATHSYNTAX_SELF", "true");
+
+		new UserDataMigration_01_02(db, FSPath.Empty, "ClipCornDB", false).migrate();
+
+		assertEquals("2", userDataVersion(db));
+		assertNull(property(db, "PROP_PATHSYNTAX_VARIABLES"));
+		assertEquals("true", property(db, "PROP_PATHSYNTAX_SELF"));
+	}
+
+	@Test
+	public void testChainUpgradesVersion1() throws Exception {
+		MemoryDatabase db = createDatabase("1");
+
+		var referror = new RefParam<String>();
+		assertTrue(migrator(db).tryUpgrade(referror));
+		assertNull(referror.Value);
+		assertEquals(Main.USERDATA_DBVERSION, userDataVersion(db));
 	}
 
 	private static class DummyMigration extends UserDataMigration {

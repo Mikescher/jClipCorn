@@ -941,35 +941,54 @@ public class CCMovieList implements ICCPropertySource {
 	}
 
 	public FSPath getCommonPathForMovieFileChooser() {
-		var p = getMoviesRoot().toFSPath(this);
-		if (p.isEmpty()) p = getSeriesRoot().toFSPath(this);
+		var p = getMoviesRootDir(false);
+		if (p.isEmpty()) p = getSeriesRootDir(false);
 		if (p.isEmpty()) p = FilesystemUtils.getRealSelfDirectory();
 		if (p.isEmpty()) p = FilesystemUtils.getAbsoluteSelfDirectory(ccprops());
 		return p;
 	}
 
 	public FSPath getCommonPathForSeriesFileChooser() {
-		var p = getSeriesRoot().toFSPath(this);
-		if (p.isEmpty()) p = getMoviesRoot().toFSPath(this);
+		var p = getSeriesRootDir(false);
+		if (p.isEmpty()) p = getMoviesRootDir(false);
 		if (p.isEmpty()) p = FilesystemUtils.getRealSelfDirectory();
 		if (p.isEmpty()) p = FilesystemUtils.getAbsoluteSelfDirectory(ccprops());
 		return p;
 	}
 
-	public CCPath getSeriesRoot() {
+	// An unset anime root falls back to the regular root
+	public CCPath getSeriesRoot(boolean anime) {
+		if (anime) {
+			var p = ccprops().PROP_PATHSYNTAX_ANIMESERIESROOT.getValue();
+			if (!p.isEmpty()) return p;
+		}
 		return ccprops().PROP_PATHSYNTAX_SERIESROOT.getValue();
 	}
 
-	public FSPath getSeriesRootDir() {
-		return ccprops().PROP_PATHSYNTAX_SERIESROOT.getValue().toFSPath(this);
+	public FSPath getSeriesRootDir(boolean anime) {
+		return getSeriesRoot(anime).toFSPath(this);
 	}
 
-	public CCPath getMoviesRoot() {
+	// An unset anime root falls back to the regular root
+	public CCPath getMoviesRoot(boolean anime) {
+		if (anime) {
+			var p = ccprops().PROP_PATHSYNTAX_ANIMEMOVIEROOT.getValue();
+			if (!p.isEmpty()) return p;
+		}
 		return ccprops().PROP_PATHSYNTAX_MOVIEROOT.getValue();
 	}
 
-	public FSPath getMoviesRootDir() {
-		return ccprops().PROP_PATHSYNTAX_MOVIEROOT.getValue().toFSPath(this);
+	public FSPath getMoviesRootDir(boolean anime) {
+		return getMoviesRoot(anime).toFSPath(this);
+	}
+
+	public List<FSPath> getAllRootDirs() {
+		var r = new ArrayList<FSPath>();
+		for (var p : List.of(getMoviesRootDir(false), getMoviesRootDir(true), getSeriesRootDir(false), getSeriesRootDir(true))) {
+			if (p.isEmpty() || r.contains(p)) continue;
+			r.add(p);
+		}
+		return r;
 	}
 
 	public Map<String, List<CCMovie>> listAllZyklus() {

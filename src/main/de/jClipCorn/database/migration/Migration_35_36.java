@@ -1,6 +1,5 @@
 package de.jClipCorn.database.migration;
 
-import de.jClipCorn.Main;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCTagList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCUserScore;
@@ -153,7 +152,7 @@ public class Migration_35_36 extends DBMigration {
 		}
 		String history = db.querySingleStringSQL("SELECT IVALUE FROM main.INFO WHERE IKEY='HISTORY_ENABLED'", 0);
 
-		writeInfo("VERSION_DB",                              Main.USERDATA_DBVERSION);
+		writeInfo("VERSION_DB",                              "1"); // the user-data chain continues from here
 		writeInfo("CREATION_DATE",                           CCDate.getCurrentDate().toStringSQL());
 		writeInfo("CREATION_TIME",                           CCTime.getCurrentTime().toStringSQL());
 		writeInfo("CREATION_USERNAME",                       ApplicationHelper.getCurrentUsername());

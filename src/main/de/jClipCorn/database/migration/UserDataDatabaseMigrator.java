@@ -29,7 +29,7 @@ import static de.jClipCorn.database.driver.DatabaseStructure.*;
 public class UserDataDatabaseMigrator {
 
 	private static final List<Func4to1<GenericDatabase, FSPath, String, Boolean, DBMigration>> MIGRATION_LIST = List.of(
-			// UserDataMigration_01_02::new
+			UserDataMigration_01_02::new
 	);
 
 	private final List<DBMigration> migrations;

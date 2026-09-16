@@ -10,6 +10,7 @@ import de.jClipCorn.features.serialization.ExportHelper;
 import de.jClipCorn.features.userdataProblem.UserDataProblem;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.types.PathSyntaxVar;
+import de.jClipCorn.properties.types.PathSyntaxVarList;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.*;
 import de.jClipCorn.util.datetime.CCDateTime;
@@ -135,8 +136,9 @@ public class ClipCornBaseTest {
 	{
 		if (ApplicationHelper.isWindows())
 		{
-			props.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar(Str.Empty, "mov", CCPath.create("C:/tmpfs/jcc/mov/")));
-			props.PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar(Str.Empty, "ser", CCPath.create("C:/tmpfs/jcc/ser/")));
+			props.PROP_PATHSYNTAX_VARIABLES.setValue(new PathSyntaxVarList(List.of(
+				new PathSyntaxVar(Str.Empty, "mov", CCPath.create("C:/tmpfs/jcc/mov/")),
+				new PathSyntaxVar(Str.Empty, "ser", CCPath.create("C:/tmpfs/jcc/ser/")))));
 
 			props.getDriveMap().initForTests(
 				Tuple3.Create('C', "Local Disk",      ""),
@@ -149,8 +151,9 @@ public class ClipCornBaseTest {
 		}
 		else
 		{
-			props.PROP_PATHSYNTAX_VAR1.setValue(new PathSyntaxVar(Str.Empty, "mov", CCPath.create("/tmpfs/jcc/mov/")));
-			props.PROP_PATHSYNTAX_VAR2.setValue(new PathSyntaxVar(Str.Empty, "ser", CCPath.create("/tmpfs/jcc/ser/")));
+			props.PROP_PATHSYNTAX_VARIABLES.setValue(new PathSyntaxVarList(List.of(
+				new PathSyntaxVar(Str.Empty, "mov", CCPath.create("/tmpfs/jcc/mov/")),
+				new PathSyntaxVar(Str.Empty, "ser", CCPath.create("/tmpfs/jcc/ser/")))));
 
 			props.getDriveMap().initForTests(
 					Tuple3.Create('C', "Local Disk",      ""),

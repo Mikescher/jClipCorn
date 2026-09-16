@@ -49,17 +49,24 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 	}
 
 	private List<FSPath> collectFilesystemRoots() {
-		var roots = new ArrayList<FSPath>();
-
 		// Walk-roots come from the configured movie/series collection roots. An unset/invalid or
 		// non-existent root simply contributes no walk-root (the empty-dir / orphaned-file scans
 		// then have nothing to walk instead of failing).
-		var movieDir = movielist.getMoviesRootDir();
-		if (movieDir.directoryExists()) roots.add(movieDir);
+		var dirs = CCStreams.iterate(movielist.getAllRootDirs()).filter(FSPath::directoryExists).enumerate();
+		var norm = CCStreams.iterate(dirs).map(p -> p.toPath().toAbsolutePath().normalize()).enumerate();
 
-		var seriesDir = movielist.getSeriesRootDir();
-		if (seriesDir.directoryExists()) roots.add(seriesDir);
-
+		// a root nested inside (or equal to) another root would be walked - and its files reported - twice
+		var roots = new ArrayList<FSPath>();
+		for (int i = 0; i < dirs.size(); i++) {
+			var self = norm.get(i);
+			boolean redundant = false;
+			for (int k = 0; k < dirs.size(); k++) {
+				if (k == i) continue;
+				var other = norm.get(k);
+				if (self.equals(other) ? (k < i) : self.startsWith(other)) { redundant = true; break; }
+			}
+			if (!redundant) roots.add(dirs.get(i));
+		}
 		return roots;
 	}
 

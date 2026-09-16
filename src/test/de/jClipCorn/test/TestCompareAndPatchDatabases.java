@@ -87,8 +87,8 @@ public class TestCompareAndPatchDatabases extends ClipCornBaseTest {
 		var opt_patch = new PatchExecOptions(
 				patchFilePath,
 				FSPath.create(apf_data+".state"),
-				mlBase.getMoviesRoot().toFSPath(mlBase),
-				mlBase.getSeriesRoot().toFSPath(mlBase),
+				mlBase.getMoviesRootDir(false),
+				mlBase.getSeriesRootDir(false),
 				/* autoDestSeries */ true,
 				trashDir,
 				trashDir,

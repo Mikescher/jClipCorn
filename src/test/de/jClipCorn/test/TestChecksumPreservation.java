@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 
 /**
  * Verifies that a pure file *move* (path changes, content unchanged) keeps the saved
- * file-checksums (CRC32/MD5/SHA256/SHA512) via {@code setPartKeepChecksums(...)}, while a normal
+ * file-checksums (CRC32/MD5/SHA256/SHA512) via {@code setPartWithoutClearingChecksums(...)}, while a normal
  * path change (repoint to a possibly different file) still clears them (the safety net).
  */
 @SuppressWarnings("nls")

@@ -11,6 +11,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.MediaInfoHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 
 import javax.swing.*;
@@ -118,6 +119,8 @@ public class MoveSeriesDialog extends JCCDialog
 				var newValue = replacePath(edSearch.getText(), edReplace.getText(), cbxRegex.isSelected(), ep.getPart());
 
 				ep.setPartWithoutClearingChecksums(newValue); // file relocated, content unchanged -> keep checksums
+
+				MediaInfoHelper.refreshMediaInfoFileDates(this, ep);
 			}
 		}
 

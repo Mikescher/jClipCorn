@@ -18,6 +18,7 @@ import de.jClipCorn.util.datatypes.Tuple;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.MediaInfoHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.stream.CCStreams;
 import org.apache.commons.lang.StringUtils;
@@ -192,9 +193,14 @@ public class CreateSeriesFolderStructureFrame extends JCCFrame
 								}
 							}
 
+							episode.setPartWithoutClearingChecksums(CCPath.createFromFSPath(newfile, this)); // file moved, content unchanged -> keep checksums
+
+							MediaInfoHelper.refreshMediaInfoFileDates(this, episode);
+
 							{
 								var oldNFO = episode.NfoPath;
 
+								// derive the new NFO path AFTER Part is updated (EpisodeNFOWriter.getNFOPath reads episode.Part)
 								var newNFO = EpisodeNFOWriter.getNFOPath(episode);
 
 								if (!oldNFO.isEmpty() && !oldNFO.equalsOnFilesystem(newNFO) && oldNFO.exists() && !newNFO.exists()) {
@@ -202,8 +208,6 @@ public class CreateSeriesFolderStructureFrame extends JCCFrame
 									if (ok) episode.NfoPath = newNFO;
 								}
 							}
-
-							episode.setPartWithoutClearingChecksums(CCPath.createFromFSPath(newfile, this)); // file moved, content unchanged -> keep checksums
 
 							final int _v = curr++;
 							SwingUtils.invokeLater(() -> this.progress.setValue(_v));

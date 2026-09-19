@@ -19,6 +19,7 @@ import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.helper.ChecksumHelper;
+import de.jClipCorn.util.helper.MediaInfoHelper;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.helper.ThreadUtils;
 import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
@@ -270,27 +271,28 @@ public class DatabaseAutofixer {
 				var oldCov = mov.NfoCoverPath;
 
 				boolean succ = actulalPath.renameToSafe(expectedPath);
+				if (! succ) return false; // the file is still at the old location - do not repoint the database at it
+
 				mov.setPartWithoutClearingChecksums(i, CCPath.createFromFSPath(expectedPath, ml)); // file moved, content unchanged -> keep checksums
 
+				// derive the new NFO/cover paths AFTER Parts is updated (MovieNFOWriter reads mov.Parts)
 				var newNFO = MovieNFOWriter.getNFOPath(mov);
 				var newCov = MovieNFOWriter.getPosterPath(mov);
 
-				boolean succ2 = true;
-				if (succ && !oldNFO.isEmpty() && !oldNFO.equalsOnFilesystem(newNFO) && oldNFO.exists() && !newNFO.exists()) {
-					succ2 = oldNFO.renameToSafe(newNFO);
-					if (succ2) mov.NfoPath = newNFO;
+				if (!oldNFO.isEmpty() && !oldNFO.equalsOnFilesystem(newNFO) && oldNFO.exists() && !newNFO.exists()) {
+					boolean succ2 = oldNFO.renameToSafe(newNFO);
+					if (! succ2) return false;
+					mov.NfoPath = newNFO;
 				}
 
-				boolean succ3 = true;
-				if (succ && !oldCov.isEmpty() && !oldCov.equalsOnFilesystem(newCov) && oldCov.exists() && !newCov.exists()) {
-					succ3 = oldCov.renameToSafe(newCov);
-					if (succ3) mov.NfoCoverPath = newCov;
+				if (!oldCov.isEmpty() && !oldCov.equalsOnFilesystem(newCov) && oldCov.exists() && !newCov.exists()) {
+					boolean succ3 = oldCov.renameToSafe(newCov);
+					if (! succ3) return false;
+					mov.NfoCoverPath = newCov;
 				}
-
-				if (! succ) return false;
-				if (! succ2) return false;
-				if (! succ3) return false;
 			}
+
+			MediaInfoHelper.refreshMediaInfoFileDates(ml, mov);
 
 			return true;
 		} else if (err.getElement1() instanceof CCSeries) {
@@ -327,7 +329,9 @@ public class DatabaseAutofixer {
 
 			boolean succ = actualPath.renameToSafe(expectedPath);
 			if (! succ) return false;
-			episode.Part.set(CCPath.createFromFSPath(expectedPath, ml));
+			episode.setPartWithoutClearingChecksums(CCPath.createFromFSPath(expectedPath, ml)); // file moved, content unchanged -> keep checksums
+
+			MediaInfoHelper.refreshMediaInfoFileDates(ml, episode);
 
 			// derive the new NFO path AFTER Part is updated (EpisodeNFOWriter.getNFOPath reads episode.Part)
 			var newNFO = EpisodeNFOWriter.getNFOPath(episode);

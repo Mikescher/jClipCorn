@@ -23,6 +23,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.DocumentLambdaAdapter;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.MediaInfoHelper;
 import de.jClipCorn.util.helper.RegExHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 
@@ -113,6 +114,8 @@ public class MassMoveMoviesDialog extends JCCDialog
 
 				mov.setPartWithoutClearingChecksums(i, newValue); // file relocated, content unchanged -> keep checksums
 			}
+
+			MediaInfoHelper.refreshMediaInfoFileDates(this, mov);
 		}
 
 		dispose();

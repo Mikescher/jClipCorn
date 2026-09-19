@@ -29,7 +29,15 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 4
 				"gridY": 2
-				"gridWidth": 3
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbFilter"
+				"text": new FormMessage( null, "CreateNFOFrame.cbFilter" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onChangeFilter", true ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 2
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
 			} )
 			add( new FormContainer( "de.jClipCorn.gui.frames.createNFOFrame.NFOEntryTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "tableMain"

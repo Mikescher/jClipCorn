@@ -31,6 +31,7 @@ import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.MediaInfoHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.listener.UpdateCallbackListener;
 import de.jClipCorn.util.parser.EpisodeFilenameParserResult;
@@ -276,6 +277,9 @@ public class QuickAddEpisodeDialog extends JCCDialog
 						newEp.beginUpdating();
 						newEp.Part.set(CCPath.createFromFSPath(dst, this));
 						newEp.endUpdating();
+
+						// MediaInfo was read from the source file - after the copy the timestamps belong to the new file
+						MediaInfoHelper.refreshMediaInfoFileDates(this, newEp);
 
 						if (ucListener != null) ucListener.onUpdate(newEp);
 						dispose();

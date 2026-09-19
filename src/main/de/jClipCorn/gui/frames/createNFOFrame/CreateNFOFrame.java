@@ -65,6 +65,14 @@ public class CreateNFOFrame extends JCCFrame {
         }
     }
 
+    private void onChangeFilter(ActionEvent ae) {
+        if (cbFilter.isSelected()) {
+            tableMain.setFilter(p -> p.getStatus() != NFOStatus.UNCHANGED);
+        } else {
+            tableMain.resetFilter();
+        }
+    }
+
     private void onGenerate(ActionEvent ae) {
         if (activeThread != null) {
             updateUI();
@@ -192,6 +200,7 @@ public class CreateNFOFrame extends JCCFrame {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		btnGenerate = new JButton();
 		lblSummary = new JLabel();
+		cbFilter = new JCheckBox();
 		tableMain = new NFOEntryTable(this);
 		btnApply = new JButton();
 		progressBar = new JProgressBar();
@@ -213,7 +222,12 @@ public class CreateNFOFrame extends JCCFrame {
 
 		//---- lblSummary ----
 		lblSummary.setText(" ");
-		contentPane.add(lblSummary, CC.xywh(4, 2, 3, 1));
+		contentPane.add(lblSummary, CC.xy(4, 2));
+
+		//---- cbFilter ----
+		cbFilter.setText(LocaleBundle.getString("CreateNFOFrame.cbFilter"));
+		cbFilter.addActionListener(e -> onChangeFilter(e));
+		contentPane.add(cbFilter, CC.xy(6, 2, CC.RIGHT, CC.DEFAULT));
 		contentPane.add(tableMain, CC.xywh(2, 4, 5, 1, CC.FILL, CC.FILL));
 
 		//---- btnApply ----
@@ -235,6 +249,7 @@ public class CreateNFOFrame extends JCCFrame {
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	private JButton btnGenerate;
 	private JLabel lblSummary;
+	private JCheckBox cbFilter;
 	private NFOEntryTable tableMain;
 	private JButton btnApply;
 	private JProgressBar progressBar;

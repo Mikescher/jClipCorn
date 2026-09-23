@@ -1,6 +1,5 @@
 package de.jClipCorn.features.nfo;
 
-import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.util.Str;
@@ -65,9 +64,6 @@ public class MovieNFOWriter {
 			}
 		}
 
-		// Thumb (cover image)
-		writeCoverThumb(root, movie);
-
 		// Movie set (Zyklus)
 		if (!movie.Zyklus.get().isEmpty()) {
 			Element set = new Element("set");
@@ -106,18 +102,5 @@ public class MovieNFOWriter {
 
 	private static void writeUniqueIds(Element root, CCMovie movie) {
 		NFOUniqueIdWriter.write(root, movie.OnlineReference.get(), movie.ID.get().toString());
-	}
-
-	private static void writeCoverThumb(Element root, CCMovie movie) {
-		FSPath posterPath = getPosterPath(movie);
-		if (posterPath.isEmpty()) return;
-
-		CCCoverData coverData = movie.getCoverInfo();
-		if (coverData == null) return;
-
-		Element thumb = new Element("thumb");
-		thumb.setAttribute("aspect", "poster");
-		thumb.setText(posterPath.getFilenameWithExt());
-		root.addContent(thumb);
 	}
 }

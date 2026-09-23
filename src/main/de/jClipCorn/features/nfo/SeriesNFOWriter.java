@@ -1,6 +1,5 @@
 package de.jClipCorn.features.nfo;
 
-import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
@@ -76,9 +75,6 @@ public class SeriesNFOWriter {
 			}
 		}
 
-		// Thumb (cover image)
-		writeCoverThumb(root, series);
-
 		// User rating (1-10 scale, jClipCorn uses 0-6)
 		int score = series.Score.get().asInt();
 		if (score > 0) {
@@ -151,18 +147,5 @@ public class SeriesNFOWriter {
 		}
 
 		return false;
-	}
-
-	private static void writeCoverThumb(Element root, CCSeries series) {
-		FSPath posterPath = getPosterPath(series);
-		if (posterPath.isEmpty()) return;
-
-		CCCoverData coverData = series.getCoverInfo();
-		if (coverData == null) return;
-
-		Element thumb = new Element("thumb");
-		thumb.setAttribute("aspect", "poster");
-		thumb.setText(posterPath.getFilenameWithExt());
-		root.addContent(thumb);
 	}
 }

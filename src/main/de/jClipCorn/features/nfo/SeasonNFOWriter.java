@@ -1,6 +1,5 @@
 package de.jClipCorn.features.nfo;
 
-import de.jClipCorn.database.covertab.CCCoverData;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.util.Str;
@@ -75,9 +74,6 @@ public class SeasonNFOWriter {
 			}
 		}
 
-		// Thumb (season poster)
-		writeCoverThumb(root, series, season);
-
 		// User rating (1-10 scale, jClipCorn uses 0-6)
 		int score = season.getScore().asInt();
 		if (score > 0) {
@@ -97,19 +93,5 @@ public class SeasonNFOWriter {
 
 	private static void writeUniqueIds(Element root, CCSeason season) {
 		NFOUniqueIdWriter.write(root, season.getOnlineReference(), season.getID().toString());
-	}
-
-	private static void writeCoverThumb(Element root, CCSeries series, CCSeason season) {
-		FSPath posterPath = getPosterPath(series, season);
-		if (posterPath.isEmpty()) return;
-
-		CCCoverData coverData = season.getCoverInfo();
-		if (coverData == null) return;
-
-		// The season poster lives in the same folder as the season.nfo
-		Element thumb = new Element("thumb");
-		thumb.setAttribute("aspect", "poster");
-		thumb.setText(posterPath.getFilenameWithExt());
-		root.addContent(thumb);
 	}
 }

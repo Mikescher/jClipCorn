@@ -35,22 +35,7 @@ validate-local-quick:
 # sets beta flag in Main.java and increases version number
 # afterwards, copy the created jar to the Kreios NFS share (only if build succeeded, share is mounted and target dir exists)
 betaJar:
-	./gradlew betaJar
-	@echo ""; \
-	dest1="/home/mike/mounts/Melkor_NFS/Kreios/ClipCorn/"; \
-	dest2="/home/mike/mounts/Melkor_WG/Kreios/ClipCorn/"; \
-	mnt1="/home/mike/mounts/Melkor_NFS/Kreios"; \
-	mnt2="/home/mike/mounts/Melkor_WG/Kreios"; \
-	jar=$$(ls -t _mybuilds/*.jar 2>/dev/null | head -n1); \
-	if mountpoint -q "$$mnt1" && [ -d "$$dest1" ]; then \
-		echo "Copying '$$jar' to file://$$dest1"; \
-		cp "$$jar" "$$dest1"; \
-	elif mountpoint -q "$$mnt2" && [ -d "$$dest2" ]; then \
-		echo "Copying '$$jar' to file://$$dest2"; \
-		cp "$$jar" "$$dest2"; \
-	else \
-		echo "Skip copy: '$$mnt1'/'$$mnt2' not mounted or '$$dest1'/'$$dest2' does not exist"; \
-	fi
+	@_setup/betajar.sh
 
 
 # create release, first set the version and beta-flag in Main.java

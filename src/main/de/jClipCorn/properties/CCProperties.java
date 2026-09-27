@@ -11,6 +11,7 @@ import de.jClipCorn.properties.impl.*;
 import de.jClipCorn.properties.property.*;
 import de.jClipCorn.properties.property.CCEnumSetProperty.EnumSetValue;
 import de.jClipCorn.properties.property.CCFSPathProperty.CCPathPropertyMode;
+import de.jClipCorn.properties.types.CCPathList;
 import de.jClipCorn.properties.types.FrameSizeVar;
 import de.jClipCorn.properties.types.NamedPathVar;
 import de.jClipCorn.properties.types.PathSyntaxVar;
@@ -171,6 +172,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_PATHSYNTAX_DRIVELABEL;
 	public CCBoolProperty                                   PROP_PATHSYNTAX_SELFDIR;
 	public CCBoolProperty                                   PROP_PATHSYNTAX_NETDRIVE;
+	public CCCCPathListProperty                             PROP_PATHSYNTAX_SCANFOLDER_PATHS;
 	public CCPathVarListProperty                            PROP_PATHSYNTAX_VARIABLES;
 	public CCPIntProperty                                   PROP_MIN_DRIVEMAP_RESCAN_TIME;
 	public CCBoolProperty                                   PROP_STATBAR_DRIVESCAN;
@@ -529,6 +531,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_PATHSYNTAX_DRIVELABEL                  = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_DRIVELABEL",                  true);
 		PROP_PATHSYNTAX_SELFDIR                     = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_SELFDIR",                     true);
 		PROP_PATHSYNTAX_NETDRIVE                    = new CCBoolProperty(CAT_PATHSYNTAX,        this,   "PROP_PATHSYNTAX_NETDRIVE",                    true);
+		PROP_PATHSYNTAX_SCANFOLDER_PATHS            = new CCCCPathListProperty(CAT_PATHSYNTAX,  this,   "PROP_PATHSYNTAX_SCANFOLDER_PATHS",            new CCPathList(List.of(CCPath.create("<?self>"))));
 		PROP_PATHSYNTAX_VARIABLES                   = new CCPathVarListProperty(CAT_PATHSYNTAX, this,   "PROP_PATHSYNTAX_VARIABLES",                   PathSyntaxVarList.EMPTY);
 	}
 

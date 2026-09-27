@@ -3,6 +3,7 @@ package de.jClipCorn.gui.mainFrame.table;
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.CCQualityCategory;
@@ -86,11 +87,11 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			Str.Empty,
 			"auto",
 			LocaleBundle.getString("ClipTableModel.Score"),
-			(r,v) -> r.setIcon(v.Score.get().getIcon(!Str.isNullOrWhitespace(v.ScoreComment.get()))),
+			(r,v) -> r.setIcon(v.Score.get().getIcon(!Str.isNullOrWhitespace(v.ScoreComment.get()) || (v.isSeries() && v.asSeries().hasSeasonOrEpisodeRating()))),
 			(r) -> false,
 			(v1,v2) -> CCUserScore.compare(v1.Score.get(), v2.Score.get()),
 			true,
-			(v,row) -> formatScoreTooltip(v.Score.get(), v.ScoreComment.get()),
+			(v,row) -> formatScoreTooltip(v),
 			(v) -> ccprops().PROP_MAINFRAME_CLICKABLESCORE.getValue() && v.Score.get() != CCUserScore.RATING_NO,
 			(v) -> setRowFilter(CustomUserScoreFilter.create(owner.getMovielist(), v.Score.get()), RowFilterSource.TABLE_CLICKED, false),
 			() -> false
@@ -435,6 +436,48 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 		));
 
 		return ccr;
+	}
+
+	private String formatScoreTooltip(CCDatabaseElement v) {
+		if (v.isSeries() && v.asSeries().hasSeasonOrEpisodeRating()) return formatSeriesScoreTooltip(v.asSeries());
+
+		return formatScoreTooltip(v.Score.get(), v.ScoreComment.get());
+	}
+
+	private String formatSeriesScoreTooltip(CCSeries ser) {
+		var sb = new StringBuilder();
+
+		sb.append("<html>");
+
+		if (ser.hasUserRating())
+			appendScoreTooltipBlock(sb, ser);
+		else
+			sb.append("<i>").append(HTMLFormatter.escape(LocaleBundle.getString("ClipTableModel.SeriesNotCommented"))).append("</i>").append("<br/>");
+
+		for (var season : ser.getSeasonsSorted()) {
+			if (!season.hasUserRating()) continue;
+			sb.append("<br/>").append("<b><u>").append(HTMLFormatter.escape("# " + season.getTitle())).append("</u></b>").append("<br/>");
+			appendScoreTooltipBlock(sb, season);
+		}
+
+		for (var episode : ser.getSortedEpisodeList()) {
+			if (!episode.hasUserRating()) continue;
+			sb.append("<br/>").append("<b><u>").append(HTMLFormatter.escape("# " + episode.getShortQualifiedTitle())).append("</u></b>").append("<br/>");
+			appendScoreTooltipBlock(sb, episode);
+		}
+
+		sb.append("</html>");
+
+		return sb.toString();
+	}
+
+	private void appendScoreTooltipBlock(StringBuilder sb, ICCDatabaseStructureElement elem) {
+		var score = elem.score().get();
+		var comm  = Str.trim(elem.scoreComment().get());
+
+		if (score != CCUserScore.RATING_NO) sb.append("<b>").append(HTMLFormatter.escape(score.asString())).append("</b>").append("<br/>");
+		if (score != CCUserScore.RATING_NO && !Str.isNullOrWhitespace(comm)) sb.append("<br/>");
+		if (!Str.isNullOrWhitespace(comm)) HTMLFormatter.appendLines(sb, comm);
 	}
 
 	private String formatScoreTooltip(CCUserScore score, String comm) {

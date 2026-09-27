@@ -15,15 +15,23 @@ public class HTMLFormatter
 
 		sb.append("<html>");
 		{
-			if (headerLine != null) sb.append("<b>").append(StringEscapeUtils.escapeHtml4(headerLine)).append("</b>").append("<br/>").append("<br/>");
-			for (var line : SimpleFileUtils.splitLines(v))
-			{
-				sb.append(StringEscapeUtils.escapeHtml4(line).replaceAll(" ", "&nbsp;")).append("<br/>").append("\n");
-			}
+			if (headerLine != null) sb.append("<b>").append(escape(headerLine)).append("</b>").append("<br/>").append("<br/>");
+			appendLines(sb, v);
 		}
 		sb.append("</html>");
 
 		return sb.toString();
+	}
+
+	public static String escape(String v) {
+		return StringEscapeUtils.escapeHtml4(v);
+	}
+
+	public static void appendLines(StringBuilder sb, String v) {
+		for (var line : SimpleFileUtils.splitLines(v))
+		{
+			sb.append(escape(line).replaceAll(" ", "&nbsp;")).append("<br/>").append("\n");
+		}
 	}
 
 }

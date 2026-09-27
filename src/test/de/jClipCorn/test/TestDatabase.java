@@ -223,25 +223,30 @@ public class TestDatabase extends ClipCornBaseTest {
 		assertEquals(3, ml.getSeriesCount());
 	}
 
+	private static int historyRowCount(CCMovieList ml) throws SQLException {
+		var sizes = ml.getHistory().getTableSizes();
+		return sizes.Item1 + sizes.Item2 + sizes.Item3;
+	}
+
 	@Test
 	public void testTrigger() throws SQLException {
 		CCMovieList ml = createEmptyDB();
 
 		assertTrue(ml.getHistory().testTrigger(false, new RefParam<>()));
 		assertFalse(ml.getHistory().isHistoryActive());
-		assertEquals(0, ml.getHistory().getCount());
+		assertEquals(0, historyRowCount(ml));
 
 		ml.getHistory().enableTrigger();
 
 		assertTrue(ml.getHistory().testTrigger(true, new RefParam<>()));
 		assertTrue(ml.getHistory().isHistoryActive());
-		assertEquals(1, ml.getHistory().getCount());
+		assertEquals(1, historyRowCount(ml));
 
 		ml.getHistory().disableTrigger();
 
 		assertTrue(ml.getHistory().testTrigger(false, new RefParam<>()));
 		assertFalse(ml.getHistory().isHistoryActive());
-		assertEquals(2, ml.getHistory().getCount());
+		assertEquals(2, historyRowCount(ml));
 	}
 
 	@Test

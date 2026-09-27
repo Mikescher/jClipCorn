@@ -1954,8 +1954,13 @@ public class CCDatabase {
 		return _historyDb;
 	}
 
-	public int getHistoryCount() {
-		syncHistoryToHistoryDb();
+	/** Rows the triggers wrote into the staging table of {@code tab}'s schema that are not yet moved into the history database. */
+	@SuppressWarnings("nls")
+	public int getUnsyncedHistoryCount(CCSQLTableDef tab) throws SQLException {
+		return db.querySingleIntSQLThrow("SELECT COUNT(*) FROM " + tab.qualifiedName(), 0);
+	}
+
+	public int getSyncedHistoryCount() {
 		return _historyDb.getHistoryCount();
 	}
 
@@ -2039,47 +2044,49 @@ public class CCDatabase {
 		}
 	}
 
+	/**
+	 * Runs as a row transaction: rows a concurrent (uncommitted) row write inserted must not be copied,
+	 * and the copied rows are removed in one statement because every autocommit DELETE costs a journal
+	 * sync, which is slow on a network share.
+	 */
 	@SuppressWarnings("nls")
 	private int drainHistoryTable(String table) throws SQLException {
-		// Step 1: Read all current rows with their rowids from the staging table
-		List<Object[]> rows = db.querySQL(
-				"SELECT rowid, [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM " + table, 8);
-
-		if (rows.isEmpty()) return 0;
-
-		// Step 2: Insert into history DB (in a transaction)
 		try {
+			beginRowTransaction();
+
+			List<Object[]> rows = db.querySQL("SELECT rowid, [TABLE], [ID], [DATE], [ACTION], [FIELD], [OLD], [NEW] FROM " + table + " ORDER BY rowid", 8);
+
+			if (rows.isEmpty()) {
+				commitRowTransaction();
+				return 0;
+			}
+
 			List<Object[]> insertrows = new ArrayList<>(rows.size());
 			for (Object[] row : rows) {
 				insertrows.add(new Object[] { row[1], row[2], row[3], row[4], row[5], row[6], row[7] });
 			}
-			_historyDb.insertHistoryRows(insertrows);
-		} catch (Exception e) {
-			CCLog.addError("Failed to insert history rows into history DB, rows remain in " + table, e);
-			return 0;
-		}
 
-		// Step 3: Delete only the rows we copied, by rowid (batch in chunks of 500)
-		List<Long> rowids = new ArrayList<>();
-		for (Object[] row : rows) {
-			Object rid = row[0];
-			if (rid instanceof Long l)    rowids.add(l);
-			else if (rid instanceof Integer i) rowids.add((long) i);
-			else                          rowids.add(Long.parseLong(rid.toString()));
-		}
-
-		for (int i = 0; i < rowids.size(); i += 500) {
-			int end = Math.min(i + 500, rowids.size());
-			StringBuilder deleteSQL = new StringBuilder("DELETE FROM " + table + " WHERE rowid IN (");
-			for (int j = i; j < end; j++) {
-				if (j > i) deleteSQL.append(",");
-				deleteSQL.append(rowids.get(j));
+			try {
+				_historyDb.insertHistoryRows(insertrows);
+			} catch (Exception e) {
+				CCLog.addError("Failed to insert history rows into history DB, rows remain in " + table, e);
+				rollbackRowTransaction();
+				return 0;
 			}
-			deleteSQL.append(")");
-			db.executeSQLThrow(deleteSQL.toString());
-		}
 
-		return rows.size();
+			// new rows always get a rowid above the current maximum, so this removes exactly the copied rows
+			long maxRowid = Long.parseLong(rows.get(rows.size() - 1)[0].toString());
+			db.executeSQLThrow("DELETE FROM " + table + " WHERE rowid <= " + maxRowid);
+
+			commitRowTransaction();
+
+			return rows.size();
+		} catch (SQLException e) {
+			rollbackRowTransaction();
+			throw e;
+		} finally {
+			endRowTransaction();
+		}
 	}
 
 	public boolean isFirstLaunch() {

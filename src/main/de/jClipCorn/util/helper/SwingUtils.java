@@ -6,6 +6,7 @@ package de.jClipCorn.util.helper;
  */
 
 import de.jClipCorn.features.log.CCLog;
+import de.jClipCorn.util.Str;
 
 import javax.swing.*;
 import java.awt.*;
@@ -445,6 +446,11 @@ public final class SwingUtils {
 		} else {
 			r.run();
 		}
+	}
+
+	public static void trimText(JTextField tf) {
+		var txt = tf.getText();
+		if (txt != null && Str.isUntrimmed(txt)) tf.setText(txt.trim());
 	}
 
 }

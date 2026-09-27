@@ -158,6 +158,9 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 	private void onBtnOK(boolean check, boolean move) throws Exception {
 		_pendingMove = move;
 
+		SwingUtils.trimText(edTitle);
+		SwingUtils.trimText(edZyklus);
+
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserData(problems);

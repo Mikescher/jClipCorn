@@ -373,6 +373,9 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	}
 
 	private void onBtnOK(boolean check) {
+		SwingUtils.trimText(edTitle);
+		SwingUtils.trimText(edZyklus);
+
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserData(problems);

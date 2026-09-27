@@ -24,6 +24,7 @@ import de.jClipCorn.gui.guiComponents.onlinescore.*;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
 
@@ -89,6 +90,8 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 	}
 
 	private void onBtnOK(boolean check) throws Exception {
+		SwingUtils.trimText(edTitle);
+
 		java.util.List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserData(problems);

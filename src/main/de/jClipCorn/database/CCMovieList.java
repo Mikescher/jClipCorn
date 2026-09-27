@@ -26,6 +26,7 @@ import de.jClipCorn.features.serialization.xmlexport.ExportOptions;
 import de.jClipCorn.features.transactionLog.CCTransactionLog;
 import de.jClipCorn.gui.frames.initialConfigFrame.InitialConfigFrame;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.listener.ProgressCallbackMessageStepListener;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.ICCPropertySource;
@@ -896,11 +897,18 @@ public class CCMovieList implements ICCPropertySource {
 	}
 
 	public void shutdown() {
+		shutdown(msg -> {});
+	}
+
+	public void shutdown(ProgressCallbackMessageStepListener onStep) {
 		// has to flush before the connection goes away
-		if (statSnapshots != null) statSnapshots.shutdown();
+		if (statSnapshots != null) {
+			onStep.step(LocaleBundle.getString("ShutdownFrame.step.StatSnapshots")); //$NON-NLS-1$
+			statSnapshots.shutdown();
+		}
 
 		if (database != null) { // Close even after Intialize AV's
-			database.disconnect(ccprops().PROP_DATABASE_CLEANSHUTDOWN.getValue());
+			database.disconnect(ccprops().PROP_DATABASE_CLEANSHUTDOWN.getValue(), onStep);
 		}
 	}
 

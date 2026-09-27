@@ -17,6 +17,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.table.filter.customFilter.CustomSearchFilter;
 import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
+import de.jClipCorn.gui.frames.shutdownFrame.ShutdownFrame;
 import de.jClipCorn.gui.guiComponents.FileDrop;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.cover.DatabaseElementPreviewLabel;
@@ -34,8 +35,10 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.UpdateConnector;
 import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
 import de.jClipCorn.util.filesystem.FSPath;
+import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.listener.ProgressCallbackMessageStepListener;
 import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
@@ -45,6 +48,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRootFrame
 {
@@ -160,11 +164,46 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 	}
 
 	/**
-	 * does not terminate - is called onClose
+	 * Hides every window and shows a ShutdownFrame instead, while the database is closed on a new thread (the
+	 * EDT has to stay free to paint it). That thread calls System.exit at the end - afterShutdown runs right
+	 * before, once the database is closed.
 	 */
-	public void terminate() {
-		CCLog.save();
-		movielist.shutdown();
+	public Thread startShutdown(int errorcode, Runnable afterShutdown) {
+		var frame = new AtomicReference<ShutdownFrame>();
+
+		SwingUtils.invokeLater(() ->
+		{
+			var f = new ShutdownFrame(this, movielist);
+			for (Window w : Window.getWindows()) if (w.isVisible()) w.setVisible(false);
+			f.setVisible(true);
+			frame.set(f);
+		});
+
+		// queued after the frame creation above, so frame is always set when these run
+		ProgressCallbackMessageStepListener onStep = msg ->
+		{
+			long now = System.nanoTime();
+			SwingUtils.invokeLater(() -> frame.get().step(msg, now));
+		};
+
+		var thread = new Thread(() ->
+		{
+			try {
+				onStep.step(LocaleBundle.getString("ShutdownFrame.step.SaveLog")); //$NON-NLS-1$
+				CCLog.save();
+
+				movielist.shutdown(onStep);
+
+				if (afterShutdown != null) afterShutdown.run();
+			} catch (Throwable e) {
+				e.printStackTrace();
+			} finally {
+				System.exit(errorcode);
+			}
+		}, "THREAD_SHUTDOWN"); //$NON-NLS-1$
+
+		thread.start();
+		return thread;
 	}
 
 	public void startSearch() {
@@ -307,11 +346,7 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 	}
 
 	private void onWindowClosing() {
-		if (tryTerminate()) {
-			dispose();
-			terminate();
-			System.exit(0);
-		}
+		ApplicationHelper.exitApplication(false);
 	}
 
 	private void onWindowClosed() {

@@ -10,6 +10,7 @@ import de.jClipCorn.util.datatypes.Tuple4;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.stream.CCStreams;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,9 @@ public class ApplicationHelper {
 
 	private static String os_property = null;
 	private static String os_hostname = null;
+
+	private static final Object _shutdownLock = new Object();
+	private static Thread _shutdownThread = null;
 
 	@SuppressWarnings("nls")
 	public static boolean restartApplication() { //Will fail in Eclipse, cause there is no .jar File
@@ -46,14 +50,16 @@ public class ApplicationHelper {
 		command.add(currentJar.getPath());
 
 		final ProcessBuilder builder = new ProcessBuilder(command);
-		try {
-			builder.start();
-		} catch (IOException e) {
-			CCLog.addError(e);
-			return false;
-		}
-		
-		exitApplication(true);
+
+		// the new instance may only start once the database is closed, otherwise it finds it still locked
+		exitApplication(0, true, () ->
+		{
+			try {
+				builder.start();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 		
 		return true;
 	}
@@ -63,23 +69,35 @@ public class ApplicationHelper {
 	}
 
 	public static void exitApplication(int errorcode, boolean force) {
-		if (force) {
-			MainFrame inst = MainFrame.getInstance();
-			if (inst != null) {
-				inst.terminate();
-				inst.dispose();
-			}
-			System.exit(errorcode);
-		} else {
+		exitApplication(errorcode, force, null);
+	}
 
-			MainFrame inst = MainFrame.getInstance();
-			if (inst != null) {
-				if (!inst.tryTerminate()) return;
-				inst.terminate();
-				inst.dispose();
-			}
-
+	/**
+	 * Returns immediately on the EDT (the shutdown continues in the background and ends with System.exit),
+	 * on every other thread (except the shutdown thread itself) it does not return at all.
+	 */
+	public static void exitApplication(int errorcode, boolean force, Runnable afterShutdown) {
+		MainFrame inst = MainFrame.getInstance();
+		if (inst == null) {
+			if (afterShutdown != null) afterShutdown.run();
 			System.exit(errorcode);
+			return;
+		}
+
+		if (!force && !inst.tryTerminate()) return;
+
+		Thread thread;
+		synchronized (_shutdownLock) {
+			if (_shutdownThread == null) _shutdownThread = inst.startShutdown(errorcode, afterShutdown);
+			thread = _shutdownThread;
+		}
+
+		if (SwingUtilities.isEventDispatchThread() || thread == Thread.currentThread()) return;
+
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
 		}
 	}
 

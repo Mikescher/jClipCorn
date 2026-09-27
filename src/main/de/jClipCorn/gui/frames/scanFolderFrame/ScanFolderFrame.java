@@ -4,14 +4,13 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.gui.frames.addMovieFrame.AddMovieFrame;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
 import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
-import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
-import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.ExtendedFocusTraversalOnArray;
 import de.jClipCorn.util.helper.SwingUtils;
@@ -32,6 +31,7 @@ public class ScanFolderFrame extends JCCFrame
 	private final MainFrame owner;
 
 	private DefaultListModel<FSPath> lsModel;
+	private boolean scanCompleted = false;
 
 	public ScanFolderFrame(MainFrame owner, CCMovieList ml)
 	{
@@ -74,82 +74,56 @@ public class ScanFolderFrame extends JCCFrame
 		folderchooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY);
 	}
 
-	private void addRootMenuItem(JPopupMenu popupMenu, String localeKey, CCPath root) {
-		if (root.isEmpty()) return;
-		var fspath = root.toFSPath(ccprops()).toAbsolutePathString();
-		var menuitem = new JMenuItem(LocaleBundle.getFormattedString(localeKey, fspath));
-		menuitem.addActionListener(e -> edPath.setText(fspath));
-		popupMenu.add(menuitem);
-	}
-
-	@SuppressWarnings("nls")
 	private void initFindButton() {
-
 		var popupMenu = new JPopupMenu();
-		{
-			{
-				var p0 = FilesystemUtils.getAbsoluteSelfDirectory(ccprops());
-				if (!p0.isEmpty()) {
-					var menuitem = new JMenuItem("Self (" + p0.toAbsolutePathString() + ")");
-					menuitem.addActionListener(e -> edPath.setText(p0.toAbsolutePathString()));
-					popupMenu.add(menuitem);
-				}
-			}
 
-			popupMenu.addSeparator();
-
-			addRootMenuItem(popupMenu, "ScanFolderFrame.mnuRootMovies",      ccprops().PROP_PATHSYNTAX_MOVIEROOT.getValue());
-			addRootMenuItem(popupMenu, "ScanFolderFrame.mnuRootSeries",      ccprops().PROP_PATHSYNTAX_SERIESROOT.getValue());
-			addRootMenuItem(popupMenu, "ScanFolderFrame.mnuRootAnimeMovies", ccprops().PROP_PATHSYNTAX_ANIMEMOVIEROOT.getValue());
-			addRootMenuItem(popupMenu, "ScanFolderFrame.mnuRootAnimeSeries", ccprops().PROP_PATHSYNTAX_ANIMESERIESROOT.getValue());
-
-			popupMenu.addSeparator();
-			
-			for (var path : ccprops().getActivePathVariables()) {
-				var fspath = path.Value.toFSPath(ccprops());
-				var menuitem = new JMenuItem("Path<"+path.Key+"> (" + fspath.toAbsolutePathString() + ")");
-				menuitem.addActionListener(e -> edPath.setText(fspath.toAbsolutePathString()));
-				popupMenu.add(menuitem);
-			}
+		for (var ccpath : ccprops().PROP_PATHSYNTAX_SCANFOLDER_PATHS.getValue().Values) {
+			var fspath = ccpath.toFSPath(ccprops()).toAbsolutePathString();
+			var text = fspath.equals(ccpath.toString()) ? fspath : (ccpath + "  (" + fspath + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+			var menuitem = new JMenuItem(text);
+			menuitem.addActionListener(e -> edPath.setText(fspath));
+			popupMenu.add(menuitem);
 		}
 
 		btnDialog.setPopupMenu(popupMenu);
-	} 
-	
+	}
+
 	private void runThread(FSPath dir, boolean includeSeries, boolean excludeIfos) {
-		SwingUtils.invokeLater(() -> {
-			btnOpenFolder.setEnabled(false);
-			btnDialog.setEnabled(false);
-			lsModel.clear();
-			progressBar.setIndeterminate(true);
-		});
-
-		// List of Files in Directory
 		var filelist = new ArrayList<FSPath>();
-		searchFiles(dir, filelist, excludeIfos);
 
-		// List of Files in in Database
-		var movielist = owner.getMovielist().getAbsolutePathList(includeSeries);
+		try {
+			// List of Files in Directory
+			searchFiles(dir, filelist, excludeIfos);
 
-		filelist.removeAll(movielist);
+			// List of Files in in Database
+			var movielist = owner.getMovielist().getAbsolutePathList(includeSeries);
 
-		for (var f : filelist) {
-			addToList(f);
+			filelist.removeAll(movielist);
+		} catch (Exception e) {
+			CCLog.addError(e);
+			SwingUtils.invokeLater(this::reset);
+			return;
 		}
 
 		SwingUtils.invokeLater(() ->
 		{
+			for (var f : filelist) lsModel.addElement(f);
+
+			scanCompleted = true;
+			btnOpenFolder.setText(LocaleBundle.getString("ScanFolderFrame.btnReset.text")); //$NON-NLS-1$
+			btnOpenFolder.setEnabled(true);
 			btnRemoveAdditionalParts.setEnabled(true);
 			btnAddAll.setEnabled(true);
-			cbIncludeSeries.setEnabled(false);
-			cbExcludeIfo.setEnabled(false);
 			progressBar.setIndeterminate(false);
 			updateCount();
 		});
 	}
 
 	private void scan(ActionEvent e) {
+		if (scanCompleted) reset(); else startScan();
+	}
 
+	private void startScan() {
 		var includeSeries = cbIncludeSeries.isSelected();
 		var excludeIfos = cbExcludeIfo.isSelected();
 
@@ -160,8 +134,36 @@ public class ScanFolderFrame extends JCCFrame
 			return;
 		}
 
+		setInputEnabled(false);
+		btnOpenFolder.setEnabled(false);
+		lsModel.clear();
+		progressBar.setIndeterminate(true);
+
 		Thread run = new Thread(() -> this.runThread(dir, includeSeries, excludeIfos), "THREAD_SCAN_FOLDER_FOR_MOVIES"); //$NON-NLS-1$
 		run.start();
+	}
+
+	private void reset() {
+		scanCompleted = false;
+
+		lsModel.clear();
+		progressBar.setIndeterminate(false);
+
+		btnRemoveAdditionalParts.setEnabled(false);
+		btnAddAll.setEnabled(false);
+		btnAddAll.setText(LocaleBundle.getString("ScanFolderFrame.btnAddAll.text")); //$NON-NLS-1$
+
+		btnOpenFolder.setText(LocaleBundle.getString("ScanFolderFrame.btnChooseFolder.text")); //$NON-NLS-1$
+		btnOpenFolder.setEnabled(true);
+
+		setInputEnabled(true);
+	}
+
+	private void setInputEnabled(boolean enabled) {
+		edPath.setEnabled(enabled);
+		btnDialog.setEnabled(enabled);
+		cbIncludeSeries.setEnabled(enabled);
+		cbExcludeIfo.setEnabled(enabled);
 	}
 
 	private void searchFiles(FSPath dir, java.util.List<FSPath> filelist, boolean excludeIfos) {
@@ -182,10 +184,6 @@ public class ScanFolderFrame extends JCCFrame
 				filelist.add(f);
 			}
 		}
-	}
-
-	private void addToList(final FSPath f) {
-		SwingUtils.invokeLater(() -> lsModel.addElement(f));
 	}
 
 	private void removeAdditional(ActionEvent e) {

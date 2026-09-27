@@ -258,8 +258,12 @@ public class CCDatabaseHistory {
 		}
 	}
 
-	public int getCount() {
-		return _db.getHistoryCount();
+	/** Row counts of the main staging table, the user-data staging table and the history database. */
+	public Tuple3<Integer, Integer, Integer> getTableSizes() throws SQLException {
+		return Tuple3.Create(
+				_db.getUnsyncedHistoryCount(DatabaseStructure.TAB_HISTORY),
+				_db.getUnsyncedHistoryCount(DatabaseStructure.TAB_UD_HISTORY),
+				_db.getSyncedHistoryCount());
 	}
 
 	public void enableTrigger() throws SQLException {

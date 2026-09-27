@@ -18,7 +18,7 @@ import de.jClipCorn.util.datatypes.RefParam;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
-import de.jClipCorn.util.listener.ProgressCallbackProgressBarHelper;
+import de.jClipCorn.util.lambda.Func0to0WithException;
 import de.jClipCorn.util.stream.CCStreams;
 
 import javax.swing.*;
@@ -29,8 +29,7 @@ import java.util.Collections;
 public class DatabaseHistoryFrame extends JCCFrame
 {
 	private String _triggerError = Str.Empty;
-	private int _tcount;
-	private int _processedRowCount;
+	private Boolean _historyActive = null;
 
 	public DatabaseHistoryFrame(Component owner, CCMovieList mlist) {
 		super(mlist);
@@ -40,7 +39,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 
 		setLocationRelativeTo(owner);
 
-		updateUI(true);
+		execute(this::loadStatus);
 	}
 
 	public DatabaseHistoryFrame(Component owner, CCMovieList mlist, String idfilter) {
@@ -51,150 +50,175 @@ public class DatabaseHistoryFrame extends JCCFrame
 
 		setLocationRelativeTo(owner);
 
-		updateUI(true);
-
 		cbxIgnoreTrivial.setSelected(false);
 
-		if (!Str.isNullOrWhitespace(idfilter)) {
+		if (Str.isNullOrWhitespace(idfilter)) {
+			execute(this::loadStatus);
+		} else {
 			edFilter.setText(idfilter);
-			queryHistory(null, Opt.empty(), true);
+			var q = readQueryOptions(null, Opt.empty());
+			execute(() -> { loadStatus(); runQuery(q); });
 		}
 	}
 
 	private void postInit()
 	{
 		ccprops().PROP_FSIZE_DATABASEHISTORYFRAME.applyOrSkip(this);
-	}
-
-	private void updateUI(boolean updateCount)
-	{
-		CCDatabaseHistory h = movielist.getHistory();
-
-		btnTriggerMore.setEnabled(false);
-		btnEnableTrigger.setEnabled(false);
-		btnDisableTrigger.setEnabled(false);
-		btnGetHistory.setEnabled(false);
 
 		edStatus.setText("..."); //$NON-NLS-1$
 		edTrigger.setText("..."); //$NON-NLS-1$
-		edTrigger.setBackground(Color.WHITE);
-		edTrigger.setForeground(Color.BLACK);
-
-		if (updateCount)
-		{
-			edTableSize.setText("..."); //$NON-NLS-1$
-		}
-
-		new Thread(() ->
-		{
-			var hactive = h.isHistoryActive();
-			SwingUtils.invokeAndWaitSafe(() ->
-			{
-				if (hactive) {
-					edStatus.setText(LocaleBundle.getString("DatabaseHistoryFrame.Active")); //$NON-NLS-1$
-				} else {
-					edStatus.setText(LocaleBundle.getString("DatabaseHistoryFrame.Inactive")); //$NON-NLS-1$
-				}
-
-				RefParam<String> err = new RefParam<>();
-				boolean ok = h.testTrigger(hactive, err);
-				if (ok) {
-					edTrigger.setText(LocaleBundle.getString("DatabaseHistoryFrame.Okay")); //$NON-NLS-1$
-					edTrigger.setBackground(Color.GREEN);
-					edTrigger.setForeground(Color.BLACK);
-					btnTriggerMore.setEnabled(false);
-					_triggerError = Str.Empty;
-				} else {
-					edTrigger.setText(LocaleBundle.getString("DatabaseHistoryFrame.Error")); //$NON-NLS-1$
-					edTrigger.setBackground(Color.RED);
-					edTrigger.setForeground(Color.BLACK);
-					btnTriggerMore.setEnabled(true);
-					_triggerError = err.Value;
-				}
-
-				btnEnableTrigger.setEnabled(!hactive && !movielist.isReadonly());
-				btnDisableTrigger.setEnabled(hactive && !movielist.isReadonly());
-				btnGetHistory.setEnabled(true);
-				cbxDoAgressiveMerges.setEnabled(true);
-				cbxIgnoreTrivial.setEnabled(true);
-
-			});
-
-			if (updateCount) {
-
-				var hcount  = h.getCount();
-				SwingUtils.invokeAndWaitSafe(() -> edTableSize.setText(Integer.toString(_tcount = hcount)));
-
-			}
-		}).start();
+		edTableSize.setText("..."); //$NON-NLS-1$
 	}
 
-	private void queryHistory() { queryHistory(null, Opt.of(4096), false); }
-
-	private void queryHistory(CCDateTime dt) { queryHistory(dt, Opt.empty(), false); }
-
-	private void queryHistory(CCDateTime dt, Opt<Integer> limit, boolean stayDisabled)
+	/** Runs {@code action} off the EDT with all controls disabled - the actions must not overlap. */
+	private void execute(Func0to0WithException<Exception> action)
 	{
-		boolean optTrivial1 = cbxIgnoreTrivial.isSelected();
-		boolean optAggressive = cbxDoAgressiveMerges.isSelected();
-		boolean optUpdatesOnly = cbxUpdatesOnly.isSelected();
+		setBusy(true);
 
 		new Thread(() ->
 		{
 			try
 			{
-				SwingUtils.invokeLater(() ->
-				{
-					btnGetHistory.setEnabled(false);
-					btnTriggerMore.setEnabled(false);
-					btnEnableTrigger.setEnabled(false);
-					btnDisableTrigger.setEnabled(false);
-					cbxDoAgressiveMerges.setEnabled(false);
-					cbxIgnoreTrivial.setEnabled(false);
-					edFilter.setEnabled(false);
-				});
-
-				String filter = edFilter.getText();
-				if (Str.isNullOrWhitespace(filter)) filter = null;
-
-				var queryRes = movielist.getHistory().query(
-						movielist,
-						optTrivial1,
-						optTrivial1,
-						optAggressive,
-						dt,
-						limit,
-						new ProgressCallbackProgressBarHelper(progressBar, 100),
-						filter);
-
-				var data = queryRes.Item1;
-
-				if (optUpdatesOnly) data = CCStreams.iterate(data).filter(p -> p.Action == CCHistoryAction.UPDATE).toList();
-
-				Collections.reverse(data);
-
-				final var _data = data;
-
-				SwingUtils.invokeLater(() ->
-				{
-					tableEntries.setData(_data);
-					_processedRowCount = queryRes.Item2;
-
-					tableEntries.autoResize();
-					updateUI(false);
-					if (!stayDisabled)
-					{
-						btnGetHistory.setEnabled(true);
-						edFilter.setEnabled(true);
-					}
-					edTableSize.setText(_tcount + " (" + _processedRowCount + " -> " + tableEntries.getDataDirect().size() + ")");
-				});
-
-			} catch (Throwable e) {
+				action.invoke();
+			}
+			catch (Throwable e)
+			{
 				CCLog.addError(e);
 				DialogHelper.showLocalError(this, "Dialogs.GenericError"); //$NON-NLS-1$
 			}
-		}, "HISTORY_QUERY").start(); //$NON-NLS-1$
+			finally
+			{
+				SwingUtils.invokeLater(() -> setBusy(false));
+			}
+		}, "HISTORY_FRAME").start(); //$NON-NLS-1$
+	}
+
+	private void setBusy(boolean busy)
+	{
+		boolean ro = movielist.isReadonly();
+
+		btnGetHistory.setEnabled(!busy);
+		btnEnableTrigger.setEnabled(!busy && !ro && Boolean.FALSE.equals(_historyActive));
+		btnDisableTrigger.setEnabled(!busy && !ro && Boolean.TRUE.equals(_historyActive));
+		btnTriggerMore.setEnabled(!busy && !Str.isNullOrEmpty(_triggerError));
+		cbxIgnoreTrivial.setEnabled(!busy);
+		cbxDoAgressiveMerges.setEnabled(!busy);
+		cbxUpdatesOnly.setEnabled(!busy);
+		edFilter.setEnabled(!busy);
+	}
+
+	private void loadStatus()
+	{
+		CCDatabaseHistory h = movielist.getHistory();
+
+		boolean active = h.isHistoryActive();
+
+		RefParam<String> err = new RefParam<>();
+		boolean triggerOk = h.testTrigger(active, err);
+
+		SwingUtils.invokeLater(() ->
+		{
+			_historyActive = active;
+			_triggerError  = triggerOk ? Str.Empty : err.Value;
+
+			edStatus.setText(LocaleBundle.getString(active ? "DatabaseHistoryFrame.Active" : "DatabaseHistoryFrame.Inactive")); //$NON-NLS-1$ //$NON-NLS-2$
+
+			edTrigger.setText(LocaleBundle.getString(triggerOk ? "DatabaseHistoryFrame.Okay" : "DatabaseHistoryFrame.Error")); //$NON-NLS-1$ //$NON-NLS-2$
+			edTrigger.setBackground(triggerOk ? Color.GREEN : Color.RED);
+			edTrigger.setForeground(Color.BLACK);
+		});
+
+		showTableSizes(Str.Empty);
+	}
+
+	private void showTableSizes(String suffix)
+	{
+		String text;
+		try
+		{
+			var sizes = movielist.getHistory().getTableSizes();
+			text = sizes.Item1 + " + " + sizes.Item2 + " + " + sizes.Item3 + suffix; //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		catch (SQLException e)
+		{
+			CCLog.addError(e);
+			text = LocaleBundle.getString("DatabaseHistoryFrame.Error"); //$NON-NLS-1$
+		}
+
+		final String _text = text;
+		SwingUtils.invokeLater(() -> edTableSize.setText(_text));
+	}
+
+	private static class QueryOptions
+	{
+		public CCDateTime Start;
+		public Opt<Integer> Limit;
+		public boolean IgnoreTrivial;
+		public boolean MergeAggressive;
+		public boolean UpdatesOnly;
+		public String Filter;
+	}
+
+	private QueryOptions readQueryOptions(CCDateTime start, Opt<Integer> limit)
+	{
+		var q = new QueryOptions();
+		q.Start           = start;
+		q.Limit           = limit;
+		q.IgnoreTrivial   = cbxIgnoreTrivial.isSelected();
+		q.MergeAggressive = cbxDoAgressiveMerges.isSelected();
+		q.UpdatesOnly     = cbxUpdatesOnly.isSelected();
+		q.Filter          = Str.isNullOrWhitespace(edFilter.getText()) ? null : edFilter.getText().trim();
+		return q;
+	}
+
+	private void queryHistory() { queryHistory(null, Opt.of(4096)); }
+
+	private void queryHistory(CCDateTime dt) { queryHistory(dt, Opt.empty()); }
+
+	private void queryHistory(CCDateTime dt, Opt<Integer> limit)
+	{
+		var q = readQueryOptions(dt, limit);
+		execute(() -> runQuery(q));
+	}
+
+	private void runQuery(QueryOptions q) throws Exception
+	{
+		SwingUtils.invokeLater(() -> progressBar.setIndeterminate(true));
+
+		boolean success = false;
+		try
+		{
+			var queryRes = movielist.getHistory().query(movielist, q.IgnoreTrivial, q.IgnoreTrivial, q.MergeAggressive, q.Start, q.Limit, null, q.Filter);
+
+			var data = queryRes.Item1;
+
+			if (q.UpdatesOnly) data = CCStreams.iterate(data).filter(p -> p.Action == CCHistoryAction.UPDATE).toList();
+
+			Collections.reverse(data);
+
+			final var _data = data;
+
+			SwingUtils.invokeLater(() ->
+			{
+				tableEntries.setData(_data);
+				tableEntries.autoResize();
+				tableChanges.clearData();
+			});
+
+			showTableSizes(" (" + queryRes.Item2 + " -> " + data.size() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+			success = true;
+		}
+		finally
+		{
+			final boolean _success = success;
+			SwingUtils.invokeLater(() ->
+			{
+				progressBar.setIndeterminate(false);
+				progressBar.setMaximum(1);
+				progressBar.setValue(_success ? 1 : 0);
+			});
+		}
 	}
 
 	public void showChanges(CCCombinedHistoryEntry elem)
@@ -208,27 +232,16 @@ public class DatabaseHistoryFrame extends JCCFrame
 	}
 
 	private void enableTrigger() {
-		try {
-			movielist.getHistory().enableTrigger();
-			tableEntries.clearData();
-			_processedRowCount = 0;
-			updateUI(false);
-		} catch (SQLException e) {
-			CCLog.addError(e);
-			DialogHelper.showLocalError(this, "Dialogs.GenericError"); //$NON-NLS-1$
-		}
+		execute(() -> { movielist.getHistory().enableTrigger(); onTriggerChanged(); });
 	}
 
 	private void disableTrigger() {
-		try {
-			movielist.getHistory().disableTrigger();
-			tableEntries.clearData();
-			_processedRowCount = 0;
-			updateUI(false);
-		} catch (SQLException e) {
-			CCLog.addError(e);
-			DialogHelper.showLocalError(this, "Dialogs.GenericError"); //$NON-NLS-1$
-		}
+		execute(() -> { movielist.getHistory().disableTrigger(); onTriggerChanged(); });
+	}
+
+	private void onTriggerChanged() {
+		SwingUtils.invokeLater(() -> { tableEntries.clearData(); tableChanges.clearData(); });
+		loadStatus();
 	}
 
 	private JPopupMenu getQueryPopupMenu() {
@@ -312,7 +325,7 @@ public class DatabaseHistoryFrame extends JCCFrame
 		setTitle(LocaleBundle.getString("DatabaseHistoryFrame.title"));
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"$rgap, default, $lcgap, 100dlu:grow, 3*($lcgap, default), $lcgap, [70dlu,default], $rgap",
+			"$rgap, default, $lcgap, 100dlu:grow, 3*($lcgap, default), $lcgap, [76dlu,default], $rgap",
 			"$rgap, 6*(default, $lgap), 15dlu, $lgap, default:grow, 2*($lgap, default), $rgap"));
 
 		//---- label1 ----

@@ -225,7 +225,7 @@ public class UserDataProblem {
 		
 		//################################################################################################################
 		
-		if (Str.isUntrimmed(newdata.getTitle()) || Str.isUntrimmed(newdata.getTitle())) {
+		if (Str.isUntrimmed(newdata.getTitle()) || Str.isUntrimmed(newdata.getZyklus().getTitle())) {
 			ret.add(new UserDataProblem(UserDataProblem.PROBLEM_ZYKLUSORTITLE_HAS_LEADINGORTRAILING_SPACES));
 		}
 		

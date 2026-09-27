@@ -43,6 +43,7 @@ import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.guiComponents.tags.TagPanel;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
@@ -710,6 +711,8 @@ public class EditSeriesFrame extends JCCFrame
 	}
 
 	private boolean onOKSeries(boolean check) {
+		SwingUtils.trimText(edSeriesTitle);
+
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserDataSeries(problems);
@@ -901,6 +904,8 @@ public class EditSeriesFrame extends JCCFrame
 
 		if (_currentEpisodeMemory != null && _isDirtyEpisode) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeEpisodeButDirty")) return; //$NON-NLS-1$
 
+		SwingUtils.trimText(edSeasonTitle);
+
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserDataSeason(problems);
@@ -1004,6 +1009,8 @@ public class EditSeriesFrame extends JCCFrame
 		if (episode == null) return;
 
 		if (_isDirtySeason) if (!DialogHelper.showLocaleYesNoDefaultNo(EditSeriesFrame.this, "Dialogs.ChangeSeasonButDirty")) return; //$NON-NLS-1$
+
+		SwingUtils.trimText(edEpisodeTitle);
 
 		List<UserDataProblem> problems = new ArrayList<>();
 

@@ -186,7 +186,7 @@ new FormModel {
 					name: "chckbxSplitLines"
 					"text": new FormMessage( null, "OmniParserFrame.chkbxSplit.text" )
 					"selected": true
-					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "onPlainTextChanged", false ) )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onPlainTextChanged", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
 					"gridY": 1
@@ -194,7 +194,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "chckbxRepUmlauts"
 					"text": new FormMessage( null, "OmniParserFrame.chkbxReplUmlauts.text" )
-					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "onFormattedTextChanged", false ) )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFormattedTextChanged", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
 					"gridY": 3
@@ -203,7 +203,7 @@ new FormModel {
 					name: "chckbxRemInforStrings"
 					"text": new FormMessage( null, "OmniParserFrame.chkbxRemInfoStr.text" )
 					"selected": true
-					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "onFormattedTextChanged", false ) )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFormattedTextChanged", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
 					"gridY": 5
@@ -212,7 +212,7 @@ new FormModel {
 					name: "chckbxRecogSpaceChars"
 					"text": new FormMessage( null, "OmniParserFrame.chkbxRecogSpace.text" )
 					"selected": true
-					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "onFormattedTextChanged", false ) )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFormattedTextChanged", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
 					"gridY": 7
@@ -221,7 +221,7 @@ new FormModel {
 					name: "chckbxRemRepStrings"
 					"text": new FormMessage( null, "OmniParserFrame.chkbxRemRepPhrases.text" )
 					"selected": true
-					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "onFormattedTextChanged", false ) )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onFormattedTextChanged", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
 					"gridY": 9
@@ -229,7 +229,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JCheckBox" ) {
 					name: "cbxAllowMismatchedSizes"
 					"text": new FormMessage( null, "OmniParserFrame.cbxAllowMismatchedSizes" )
-					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "onFormattedTextChanged", false ) )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onParsedTextChanged", false ) )
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 2
 					"gridY": 11

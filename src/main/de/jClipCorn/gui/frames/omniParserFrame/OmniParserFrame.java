@@ -347,35 +347,35 @@ public class OmniParserFrame extends JCCDialog
 			//---- chckbxSplitLines ----
 			chckbxSplitLines.setText(LocaleBundle.getString("OmniParserFrame.chkbxSplit.text"));
 			chckbxSplitLines.setSelected(true);
-			chckbxSplitLines.addChangeListener(e -> onPlainTextChanged());
+			chckbxSplitLines.addActionListener(e -> onPlainTextChanged());
 			panel7.add(chckbxSplitLines, CC.xy(2, 1));
 
 			//---- chckbxRepUmlauts ----
 			chckbxRepUmlauts.setText(LocaleBundle.getString("OmniParserFrame.chkbxReplUmlauts.text"));
-			chckbxRepUmlauts.addChangeListener(e -> onFormattedTextChanged());
+			chckbxRepUmlauts.addActionListener(e -> onFormattedTextChanged());
 			panel7.add(chckbxRepUmlauts, CC.xy(2, 3));
 
 			//---- chckbxRemInforStrings ----
 			chckbxRemInforStrings.setText(LocaleBundle.getString("OmniParserFrame.chkbxRemInfoStr.text"));
 			chckbxRemInforStrings.setSelected(true);
-			chckbxRemInforStrings.addChangeListener(e -> onFormattedTextChanged());
+			chckbxRemInforStrings.addActionListener(e -> onFormattedTextChanged());
 			panel7.add(chckbxRemInforStrings, CC.xy(2, 5));
 
 			//---- chckbxRecogSpaceChars ----
 			chckbxRecogSpaceChars.setText(LocaleBundle.getString("OmniParserFrame.chkbxRecogSpace.text"));
 			chckbxRecogSpaceChars.setSelected(true);
-			chckbxRecogSpaceChars.addChangeListener(e -> onFormattedTextChanged());
+			chckbxRecogSpaceChars.addActionListener(e -> onFormattedTextChanged());
 			panel7.add(chckbxRecogSpaceChars, CC.xy(2, 7));
 
 			//---- chckbxRemRepStrings ----
 			chckbxRemRepStrings.setText(LocaleBundle.getString("OmniParserFrame.chkbxRemRepPhrases.text"));
 			chckbxRemRepStrings.setSelected(true);
-			chckbxRemRepStrings.addChangeListener(e -> onFormattedTextChanged());
+			chckbxRemRepStrings.addActionListener(e -> onFormattedTextChanged());
 			panel7.add(chckbxRemRepStrings, CC.xy(2, 9));
 
 			//---- cbxAllowMismatchedSizes ----
 			cbxAllowMismatchedSizes.setText(LocaleBundle.getString("OmniParserFrame.cbxAllowMismatchedSizes"));
-			cbxAllowMismatchedSizes.addChangeListener(e -> onFormattedTextChanged());
+			cbxAllowMismatchedSizes.addActionListener(e -> onParsedTextChanged());
 			panel7.add(cbxAllowMismatchedSizes, CC.xy(2, 11));
 		}
 		contentPane.add(panel7, CC.xy(8, 6, CC.DEFAULT, CC.FILL));

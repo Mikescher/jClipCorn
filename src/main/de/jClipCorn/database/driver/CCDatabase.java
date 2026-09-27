@@ -25,6 +25,7 @@ import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.statistics.snapshots.CCStatSnapshot;
 import de.jClipCorn.features.statistics.snapshots.StatSnapshotSQL;
 import de.jClipCorn.gui.localization.LocaleBundle;
+import de.jClipCorn.util.listener.ProgressCallbackMessageStepListener;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.CCDatabaseDriver;
@@ -264,8 +265,13 @@ public class CCDatabase {
 	}
 	
 	public void disconnect(boolean cleanshutdown) {
+		disconnect(cleanshutdown, msg -> {});
+	}
+
+	public void disconnect(boolean cleanshutdown, ProgressCallbackMessageStepListener onStep) {
 		// the staging rows only live in the (shared) main db until they are drained - a sync would destroy them
 		try {
+			onStep.step(LocaleBundle.getString("ShutdownFrame.step.SyncHistory")); //$NON-NLS-1$
 			syncHistoryToHistoryDb();
 		} catch (Exception e) {
 			CCLog.addError("Could not sync history before disconnect", e); //$NON-NLS-1$
@@ -273,6 +279,7 @@ public class CCDatabase {
 
 		try {
 			if (_historyDb.isConnected()) {
+				onStep.step(LocaleBundle.getString("ShutdownFrame.step.CloseHistoryDB")); //$NON-NLS-1$
 				_historyDb.disconnect();
 			}
 		} catch (Exception e) {
@@ -281,6 +288,7 @@ public class CCDatabase {
 
 		try {
 			if (db.isConnected()) {
+				onStep.step(LocaleBundle.getString("ShutdownFrame.step.CloseDB")); //$NON-NLS-1$
 				stmts.shutdown();
 				db.closeDBConnection(databaseDirectory, databaseName, cleanshutdown);
 				CCLog.addInformation(LocaleBundle.getFormattedString("LogMessage.DBDisconnect", getDBPath()));

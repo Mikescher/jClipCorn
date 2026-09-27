@@ -237,6 +237,7 @@ public class NFOGenerator {
 	public static FSPath applyPosterForMovie(CCMovie movie) {
 		FSPath posterPath = MovieNFOWriter.getPosterPath(movie);
 		if (posterPath.isEmpty()) return FSPath.Empty;
+		if (!movie.Parts.get(0).toFSPath(movie.getMovieList().ccprops()).fileExists()) return FSPath.Empty;
 
 		ICoverCache coverCache = movie.getMovieList().getCoverCache();
 		CCCoverData coverData = movie.getCoverInfo();

@@ -56,6 +56,7 @@ public class UserDataProblem {
 	public final static int PROBLEM_MEDIAINFO_WRONG_FILESIZE = 32;
 	public final static int PROBLEM_MEDIAINFO_WRONG_DATA = 33;
 	public final static int PROBLEM_COMMENT_WITHOUT_RATING = 34;
+	public final static int PROBLEM_NO_MOVIE_ROOT = 35;
 
 	private final int pid; // Problem ID
 	private final Object[] additional; // Problem ID

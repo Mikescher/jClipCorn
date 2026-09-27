@@ -19,6 +19,22 @@ import java.awt.*;
  */
 public class JScrollablePanel extends JPanel implements Scrollable {
 
+	private boolean fillViewportHeight = false;
+
+	/**
+	 * If set, the panel is stretched to the viewport height as long as its preferred height fits
+	 * (so growing rows can use the free space) and only falls back to its preferred height
+	 * (with a vertical scrollbar) once the content no longer fits.
+	 */
+	public void setFillViewportHeight(boolean v) {
+		fillViewportHeight = v;
+		revalidate();
+	}
+
+	public boolean getFillViewportHeight() {
+		return fillViewportHeight;
+	}
+
 	@Override
 	public Dimension getPreferredScrollableViewportSize() {
 		return getPreferredSize();
@@ -41,6 +57,8 @@ public class JScrollablePanel extends JPanel implements Scrollable {
 
 	@Override
 	public boolean getScrollableTracksViewportHeight() {
+		if (fillViewportHeight && getParent() instanceof JViewport vp) return vp.getHeight() >= getPreferredSize().height;
+
 		return false; // keep natural height -> constant gaps + correct vertical scrollbar timing
 	}
 }

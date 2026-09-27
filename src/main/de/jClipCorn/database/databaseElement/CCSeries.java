@@ -1137,6 +1137,10 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 		return _cache.get(SeriesCache.MAX_EPISODE_NUMBER, null, ser-> iteratorEpisodes().map(p -> p.EpisodeNumber.get()).autoMax());
 	}
 
+	public boolean hasSeasonOrEpisodeRating() {
+		return _cache.getBool(SeriesCache.HAS_SEASON_OR_EPISODE_RATING, null, ser-> iteratorSeasons().any(CCSeason::hasUserRating) || iteratorEpisodes().any(CCEpisode::hasUserRating));
+	}
+
 	public Opt<String> guessNextSeasonTitle() {
 		var seasonTitles = this.iteratorSeasons().map(p -> p.Title.get()).enumerate();
 		if (seasonTitles.isEmpty()) return Opt.empty();

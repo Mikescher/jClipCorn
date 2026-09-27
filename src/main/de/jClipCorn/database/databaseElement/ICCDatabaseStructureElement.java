@@ -10,6 +10,7 @@ import de.jClipCorn.database.elementProps.IEProperty;
 import de.jClipCorn.database.elementProps.impl.EEnumProp;
 import de.jClipCorn.database.elementProps.impl.EStringProp;
 import de.jClipCorn.database.util.ExtendedViewedState;
+import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datetime.CCDate;
 
@@ -22,6 +23,10 @@ public interface ICCDatabaseStructureElement {
 
 	EEnumProp<CCUserScore> score();
 	EStringProp            scoreComment();
+
+	default boolean hasUserRating() {
+		return score().get() != CCUserScore.RATING_NO || !Str.isNullOrWhitespace(scoreComment().get());
+	}
 
 	CCTagList              getTags();
 

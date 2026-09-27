@@ -40,13 +40,17 @@ import de.jClipCorn.gui.guiComponents.onlinescore.OnlineScoreControl;
 import de.jClipCorn.gui.guiComponents.referenceChooser.JReferenceChooser;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.exceptions.EnumValueNotFoundException;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
+import de.jClipCorn.util.filesystem.SimpleFileUtils;
 import de.jClipCorn.util.helper.DialogHelper;
+import de.jClipCorn.util.helper.MediaInfoHelper;
 import de.jClipCorn.util.helper.SwingUtils;
+import de.jClipCorn.util.listener.ProgressCallbackProgressMonitorHelper;
 import de.jClipCorn.util.parser.FilenameParser;
 import de.jClipCorn.util.parser.FilenameParserResult;
 import de.jClipCorn.util.stream.CCStreams;
@@ -72,6 +76,10 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 	private volatile boolean _isDirtyLanguage = false;
 	private volatile boolean _isDirtyMediaInfo = false;
 	private volatile boolean _isDirtySubtitles = false;
+
+	private boolean _pendingMove = false;
+
+	private record PartMove(int part, FSPath src, FSPath dst) {}
 
 	public AddMovieFrame(Component owner, CCMovieList mlist) {
 		this(owner, mlist, null);
@@ -147,7 +155,9 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		firstChooseClick = false;
 	}
 
-	private void onBtnOK(boolean check) throws Exception {
+	private void onBtnOK(boolean check, boolean move) throws Exception {
+		_pendingMove = move;
+
 		List<UserDataProblem> problems = new ArrayList<>();
 
 		boolean probvalue = !check || checkUserData(problems);
@@ -166,31 +176,131 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 			fatalErr = true;
 		}
 
+		List<PartMove> moves = new ArrayList<>();
+		if (move) {
+			List<UserDataProblem> moveProblems = new ArrayList<>();
+			moves = getPartMoves(moveProblems);
+			if (!moveProblems.isEmpty()) {
+				problems.addAll(moveProblems);
+				probvalue = false;
+				fatalErr = true;
+			}
+		}
+
 		if (! probvalue) {
 			InputErrorDialog amied = new InputErrorDialog(this, movielist, problems, this, !fatalErr);
 			amied.setVisible(true);
 			return;
 		}
 
-		movielist.createNewMovie(newM -> {
+		if (moves.isEmpty()) {
+			createMovie(moves);
+			dispose();
+		} else {
+			moveFilesAndCreateMovie(moves);
+		}
+	}
+
+	private List<PartMove> getPartMoves(List<UserDataProblem> problems) {
+		// never persisted - only used to derive the expected paths from the current input
+		var tmp = new CCMovie(movielist, CCUUID.EMPTY);
+		tmp.beginUpdating();
+		try {
+			applyPathRelevantValues(tmp);
+
+			List<PartMove> result = new ArrayList<>();
+			for (int i = 0; i < CCMovie.PARTCOUNT_MAX; i++) {
+				if (CCPath.isNullOrEmpty(tmp.Parts.get(i))) continue;
+
+				var src = tmp.Parts.get(i).toFSPath(this);
+				var dst = tmp.generateExpectedAbsolutePath(i);
+
+				if (dst.isEmpty()) {
+					problems.add(new UserDataProblem(UserDataProblem.PROBLEM_NO_MOVIE_ROOT));
+					return new ArrayList<>();
+				}
+
+				if (src.equalsOnFilesystem(dst)) continue;
+
+				if (!src.fileExists()) problems.add(new UserDataProblem(UserDataProblem.PROBLEM_INPUT_FILE_NOT_FOUND));
+				else if (dst.exists()) problems.add(new UserDataProblem(UserDataProblem.PROBLEM_DESTINTAION_FILE_ALREADY_EXISTS));
+
+				result.add(new PartMove(i, src, dst));
+			}
+			return result;
+		} finally {
+			tmp.abortUpdating();
+		}
+	}
+
+	private void moveFilesAndCreateMovie(List<PartMove> moves) {
+		setEnabledAll(false);
+
+		var monitor = DialogHelper.getLocalPersistentProgressMonitor(this, "AddMovieFrame.moveRunning"); //$NON-NLS-1$
+		var progress = new ProgressCallbackProgressMonitorHelper(monitor, true);
+		progress.setMax(CCStreams.iterate(moves).sumLong(m -> m.src().filesize().getBytes()));
+
+		new Thread(() ->
+		{
+			List<PartMove> done = new ArrayList<>();
+			try
+			{
+				for (var m : moves) {
+					var last = new long[] { 0 };
+					SimpleFileUtils.moveWithProgress(m.src(), m.dst(), (val, max) -> { progress.step(val - last[0]); last[0] = val; });
+					done.add(m);
+				}
+			}
+			catch (Exception e)
+			{
+				CCLog.addError(e);
+
+				for (var m : done) {
+					try {
+						SimpleFileUtils.moveWithProgress(m.dst(), m.src(), (val, max) -> {});
+					} catch (Exception e2) {
+						CCLog.addError(e2);
+					}
+				}
+
+				SwingUtils.invokeLater(() ->
+				{
+					monitor.close();
+					setEnabledAll(true);
+					DialogHelper.showDispatchError(this, LocaleBundle.getString("AddMovieFrame.dialogs.moveError_caption"), LocaleBundle.getString("AddMovieFrame.dialogs.moveError")); //$NON-NLS-1$ //$NON-NLS-2$
+				});
+				return;
+			}
+
+			SwingUtils.invokeLater(() ->
+			{
+				monitor.close();
+				try {
+					createMovie(moves);
+					dispose();
+				} catch (Exception e) {
+					CCLog.addError(e);
+					setEnabledAll(true);
+				}
+			});
+		}, "ADDMOVIE_MOVE").start(); //$NON-NLS-1$
+	}
+
+	/**
+	 * The movie is created with the original paths and only then pointed at the moved files,
+	 * so the history keeps the original location. The files must already be moved at this point
+	 * (otherwise NFO+poster would be written next to the original files).
+	 */
+	private void createMovie(List<PartMove> moves) throws Exception {
+		var mov = movielist.createNewMovie(newM -> {
 
 			//#####################################################################################
 
 			if (forceViewedHistory != null) newM.setViewedHistoryFromUI(forceViewedHistory);
 
-			newM.Parts.set(0, edPart0.getPath());
-			newM.Parts.set(1, edPart1.getPath());
-			newM.Parts.set(2, edPart2.getPath());
-			newM.Parts.set(3, edPart3.getPath());
-			newM.Parts.set(4, edPart4.getPath());
-			newM.Parts.set(5, edPart5.getPath());
-
-			newM.Title.set(edTitle.getText());
-			newM.Zyklus.setTitle(edZyklus.getText());
-			newM.Zyklus.setNumber((int) spnZyklus.getValue());
+			applyPathRelevantValues(newM);
 
 			newM.MediaInfo.set(ctrlMediaInfo.getValue());
-			newM.Language.set(cbxLanguage.getValue());
 			newM.Subtitles.set(cbxSubtitles.getValue());
 
 			newM.Length.set((int) spnLength.getValue());
@@ -200,27 +310,11 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 			newM.OnlineScore.set(spnOnlineScore.getValue());
 
 			newM.FSK.set(cbxFSK.getSelectedEnum().asFSK());
-			newM.Format.set(cbxFormat.getSelectedEnum());
 
-			newM.Year.set(spnYear.getValueOpt());
 			newM.FileSize.set(spnSize.getValue());
-
-			newM.Genres.set(cbxGenre0.getSelectedEnum(), 0);
-			newM.Genres.set(cbxGenre1.getSelectedEnum(), 1);
-			newM.Genres.set(cbxGenre2.getSelectedEnum(), 2);
-			newM.Genres.set(cbxGenre3.getSelectedEnum(), 3);
-			newM.Genres.set(cbxGenre4.getSelectedEnum(), 4);
-			newM.Genres.set(cbxGenre5.getSelectedEnum(), 5);
-			newM.Genres.set(cbxGenre6.getSelectedEnum(), 6);
-			newM.Genres.set(cbxGenre7.getSelectedEnum(), 7);
 
 			newM.Score.set(cbxScore.getSelectedEnum());
 			newM.OnlineReference.set(edReference.getValue());
-			newM.Groups.set(edGroups.getValue());
-
-			newM.SpecialVersion.set(CCStringList.create(edSpecialVersion.getValues()));
-			newM.AnimeSeason.set(CCStringList.create(edAnimeSeason.getValues()));
-			newM.AnimeStudio.set(CCStringList.create(edAnimeStudio.getValues()));
 
 			// Set tags
 			var tags = CCTagList.EMPTY;
@@ -233,7 +327,49 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 			//#####################################################################################
 		});
 
-		dispose();
+		if (moves.isEmpty()) return;
+
+		mov.beginUpdating();
+		try {
+			for (var m : moves) mov.Parts.set(m.part(), CCPath.createFromFSPath(m.dst(), this));
+
+			// MediaInfo was read at the original location - the move changes the file timestamps
+			MediaInfoHelper.refreshMediaInfoFileDates(this, mov);
+		} finally {
+			mov.endUpdating();
+		}
+	}
+
+	private void applyPathRelevantValues(CCMovie m) {
+		m.Parts.set(0, edPart0.getPath());
+		m.Parts.set(1, edPart1.getPath());
+		m.Parts.set(2, edPart2.getPath());
+		m.Parts.set(3, edPart3.getPath());
+		m.Parts.set(4, edPart4.getPath());
+		m.Parts.set(5, edPart5.getPath());
+
+		m.Title.set(edTitle.getText());
+		m.Zyklus.setTitle(edZyklus.getText());
+		m.Zyklus.setNumber((int) spnZyklus.getValue());
+
+		m.Language.set(cbxLanguage.getValue());
+		m.Format.set(cbxFormat.getSelectedEnum());
+		m.Year.set(spnYear.getValueOpt());
+
+		m.Genres.set(cbxGenre0.getSelectedEnum(), 0);
+		m.Genres.set(cbxGenre1.getSelectedEnum(), 1);
+		m.Genres.set(cbxGenre2.getSelectedEnum(), 2);
+		m.Genres.set(cbxGenre3.getSelectedEnum(), 3);
+		m.Genres.set(cbxGenre4.getSelectedEnum(), 4);
+		m.Genres.set(cbxGenre5.getSelectedEnum(), 5);
+		m.Genres.set(cbxGenre6.getSelectedEnum(), 6);
+		m.Genres.set(cbxGenre7.getSelectedEnum(), 7);
+
+		m.Groups.set(edGroups.getValue());
+
+		m.SpecialVersion.set(CCStringList.create(edSpecialVersion.getValues()));
+		m.AnimeSeason.set(CCStringList.create(edAnimeSeason.getValues()));
+		m.AnimeStudio.set(CCStringList.create(edAnimeStudio.getValues()));
 	}
 
 	private void cancel() {
@@ -293,6 +429,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		spnYear.setEnabled(e);
 		spnSize.setEnabled(e);
 		btnOK.setEnabled(e);
+		btnOKMove.setEnabled(e);
 		btnCancel.setEnabled(e);
 		edTitle.setEnabled(e);
 		spnZyklus.setEnabled(e);
@@ -597,7 +734,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 	public void onAMIEDIgnoreClicked()
 	{
 		try {
-			onBtnOK(false);
+			onBtnOK(false, _pendingMove);
 		} catch (Exception e) {
 			CCLog.addError(e);
 		}
@@ -1029,7 +1166,16 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 
 	private void onOkay() {
 		try {
-			onBtnOK(true);
+			onBtnOK(true, false);
+		}
+		catch (Exception e1) {
+			CCLog.addError(e1);
+		}
+	}
+
+	private void onOkayMove() {
+		try {
+			onBtnOK(true, true);
 		}
 		catch (Exception e1) {
 			CCLog.addError(e1);
@@ -1142,6 +1288,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		edCvrControl = new EditCoverControl(this, this);
 		pnlBottom = new JPanel();
 		btnOK = new JButton();
+		btnOKMove = new JButton();
 		btnCancel = new JButton();
 
 		//======== this ========
@@ -1508,6 +1655,12 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 			btnOK.addActionListener(e -> onOkay());
 			pnlBottom.add(btnOK);
 
+			//---- btnOKMove ----
+			btnOKMove.setText(LocaleBundle.getString("AddMovieFrame.btnOKMove.text"));
+			btnOKMove.setToolTipText(LocaleBundle.getString("AddMovieFrame.btnOKMove.tooltip"));
+			btnOKMove.addActionListener(e -> onOkayMove());
+			pnlBottom.add(btnOKMove);
+
 			//---- btnCancel ----
 			btnCancel.setText(LocaleBundle.getString("UIGeneric.btnCancel.text"));
 			btnCancel.addActionListener(e -> cancel());
@@ -1619,6 +1772,7 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 	private EditCoverControl edCvrControl;
 	private JPanel pnlBottom;
 	private JButton btnOK;
+	private JButton btnOKMove;
 	private JButton btnCancel;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

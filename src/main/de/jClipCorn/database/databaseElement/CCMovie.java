@@ -257,6 +257,9 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 				.map(Opt::get)
 				.enumerate();
 
+		// this movie is not yet part of the list while it is being added
+		if (Year.get().isPresent()) years.add(Year.get().get());
+
 		if (years.isEmpty()) return Year.get();
 		return Opt.of(Collections.min(years));
 	}

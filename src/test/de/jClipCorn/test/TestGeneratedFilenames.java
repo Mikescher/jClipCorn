@@ -1,12 +1,17 @@
 package de.jClipCorn.test;
 
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.database.databaseElement.CCMovie;
+import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
+import de.jClipCorn.util.datatypes.CCUUID;
+import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import org.junit.Test;
 
 import java.io.File;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("nls")
 public class TestGeneratedFilenames extends ClipCornBaseTest {
@@ -47,6 +52,26 @@ public class TestGeneratedFilenames extends ClipCornBaseTest {
 
 		// Prometheus: Dunkle Zeichen - year 2012, zyklus "Alien" -> grouped under the zyklus, own leaf folder
 		assertEquals(loc("2012/Alien/Alien - Prometheus - Dunkle Zeichen (2012)/Alien VII - Prometheus - Dunkle Zeichen [GER+ENG].mkv"), movieByTitle(ml, "Prometheus: Dunkle Zeichen").generateRelativePath(0));
+	}
+
+	@Test
+	public void testUnsavedZyklusMovieRelativePath() throws Exception {
+		CCMovieList ml = createExampleDB();
+
+		// not part of the movielist (like the preview in AddMovieFrame) but older than all "Kill Bill" movies in it
+		var mov = new CCMovie(ml, CCUUID.EMPTY);
+		mov.beginUpdating();
+		mov.Title.set("Volume 0");
+		mov.Zyklus.setTitle("Kill Bill");
+		mov.Zyklus.setNumber(0);
+		mov.Year.set(Opt.of(1999));
+		mov.Format.set(CCFileFormat.MKV);
+		mov.Parts.set(0, "movie.mkv");
+
+		assertEquals(Opt.of(1999), mov.getZyklusYear());
+		assertTrue(mov.generateRelativePath(0).startsWith(loc("1999/Kill Bill/")));
+
+		mov.abortUpdating();
 	}
 
 	@Test

@@ -6,7 +6,10 @@ import de.jClipCorn.util.lambda.Func2to0;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,20 +138,59 @@ public class SimpleFileUtils {
 			return;
 		}
 
-		FileInputStream fis  = new FileInputStream(src.toFile());
-		FileOutputStream fos = new FileOutputStream(dst.toFile());
-
-		byte[] buf = new byte[1024*1024*32];
-		int size = 0;
-		long flag = 0;
-		while ((size = fis.read(buf)) != -1)
+		try (FileInputStream fis = new FileInputStream(src.toFile()); FileOutputStream fos = new FileOutputStream(dst.toFile()))
 		{
-			fos.write(buf, 0, size);
-			flag += size;
-			feedback.invoke(flag, fullsize);
+			byte[] buf = new byte[1024*1024*32];
+			int size = 0;
+			long flag = 0;
+			while ((size = fis.read(buf)) != -1)
+			{
+				fos.write(buf, 0, size);
+				flag += size;
+				feedback.invoke(flag, fullsize);
+			}
+		}
+	}
+
+	/**
+	 * Moves a file and never overwrites an existing target.
+	 * Across filesystems this is a copy+delete: the source is only deleted after the copy is complete and
+	 * a partial copy is removed on failure, so the file is always either fully moved or untouched.
+	 */
+	public static void moveWithProgress(FSPath src, FSPath dst, Func2to0<Long, Long> feedback) throws IOException
+	{
+		if (!src.fileExists()) throw new FileNotFoundException(src.toString());
+		if (dst.exists()) throw new FileAlreadyExistsException(dst.toString());
+
+		long fullsize = src.filesize().getBytes();
+
+		dst.createFolders();
+
+		try
+		{
+			Files.move(src.toPath(), dst.toPath(), StandardCopyOption.ATOMIC_MOVE);
+			feedback.invoke(fullsize, fullsize);
+			return;
+		}
+		catch (AtomicMoveNotSupportedException e)
+		{
+			// different filesystem - fall through to copy+delete
 		}
 
-		fis.close();
-		fos.close();
+		try
+		{
+			copyWithProgress(src, dst, feedback);
+
+			if (dst.filesize().getBytes() != fullsize) throw new IOException("Filesize of copied file '"+dst+"' does not match the source"); //$NON-NLS-1$ //$NON-NLS-2$
+
+			Files.setLastModifiedTime(dst.toPath(), Files.getLastModifiedTime(src.toPath()));
+
+			Files.delete(src.toPath());
+		}
+		catch (IOException | RuntimeException e)
+		{
+			if (src.fileExists()) Files.deleteIfExists(dst.toPath());
+			throw e;
+		}
 	}
 }

@@ -13,6 +13,7 @@ import de.jClipCorn.gui.guiComponents.jCCPrimaryTable.JCCPrimaryTable;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.table.ClipTable;
 import de.jClipCorn.properties.enumerations.SeriesFrameColumn;
+import de.jClipCorn.properties.types.OrderedEnumSet;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
@@ -36,13 +37,26 @@ public class SerTable extends JCCPrimaryTable<CCEpisode, SeriesFrameColumn> {
 	private boolean hasScore = true;
 	private boolean hasTags = true;
 
+	private OrderedEnumSet<SeriesFrameColumn> columnConfig;
+
 	@DesignCreate
 	private static ClipTable designCreate() { return new ClipTable(CCMovieList.createStub(), null); }
 
 	public SerTable(@NotNull CCMovieList ml, @Nullable PreviewSeriesFrame owner) {
 		super(ml, ml.ccprops().PROP_SERIESTABLE_INSTANTTOOLTIPS.getValue(), ml.ccprops().PROP_SERIESTABLE_INFINITETOOLTIPS.getValue());
 		this.owner = owner;
+		applyColumnConfig(ml.ccprops().PROP_SERIESFRAME_VISIBLE_COLUMNS.getValue());
+	}
+
+	public void applyColumnConfig(OrderedEnumSet<SeriesFrameColumn> cfg) {
+		this.columnConfig = cfg;
+		applyColumnOrder(cfg.Order);
 		autoResize();
+	}
+
+	@Override
+	protected boolean isColumnEnabled(SeriesFrameColumn id) {
+		return columnConfig.isEnabled(id);
 	}
 
 	@Override

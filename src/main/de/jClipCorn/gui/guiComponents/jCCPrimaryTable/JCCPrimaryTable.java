@@ -184,12 +184,16 @@ public abstract class JCCPrimaryTable<TData, TEnum> extends JScrollPane
 		return table.getRowSorter().getViewRowCount();
 	}
 
+	protected boolean isColumnEnabled(TEnum id) {
+		return true;
+	}
+
 	protected String getDefaultAdjusterConfig() {
 		String[] cfg = new String[config.size()];
 		Arrays.fill(cfg, "auto"); //$NON-NLS-1$
 
 		for (var idx=0; idx < config.size(); idx++) {
-			if (config.get(idx).HideColumn.invoke())
+			if (config.get(idx).HideColumn.invoke() || !isColumnEnabled(config.get(idx).Identifier))
 				cfg[idx] = "hide";
 			else
 				cfg[idx] = config.get(idx).AdjusterConfig;

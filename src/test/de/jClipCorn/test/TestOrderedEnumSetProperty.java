@@ -2,6 +2,7 @@ package de.jClipCorn.test;
 
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.properties.enumerations.MainFrameColumn;
+import de.jClipCorn.properties.enumerations.SeriesFrameColumn;
 import de.jClipCorn.properties.types.OrderedEnumSet;
 import org.junit.Test;
 
@@ -23,6 +24,16 @@ public class TestOrderedEnumSetProperty extends ClipCornBaseTest {
 		assertEquals(MainFrameColumn.getWrapper().allDisplayValuesSorted(), v.Order);
 		assertTrue(v.isEnabled(MainFrameColumn.TITLE));
 		assertFalse(v.isEnabled(MainFrameColumn.GENRES));
+	}
+
+	@Test
+	public void testSeriesFrameDefault() {
+		var props = CCProperties.createInMemory();
+
+		var v = props.PROP_SERIESFRAME_VISIBLE_COLUMNS.getValue();
+
+		assertEquals(SeriesFrameColumn.getWrapper().allDisplayValuesSorted(), v.Order);
+		assertEquals(v.Order, v.getEnabledInOrder());
 	}
 
 	@Test

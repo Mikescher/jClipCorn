@@ -34,6 +34,8 @@ import de.jClipCorn.gui.guiComponents.language.LanguageSetDisplay;
 import de.jClipCorn.gui.guiComponents.tags.TagDisplay;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.properties.enumerations.SeriesFrameColumn;
+import de.jClipCorn.properties.types.OrderedEnumSet;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
 import de.jClipCorn.util.datatypes.CCUUID;
@@ -173,6 +175,10 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		new FileDrop(tabSeason, true, this::onFilesDropped);
 
 		edSearch.requestFocus();
+	}
+
+	public static void applyColumnConfigToAll(OrderedEnumSet<SeriesFrameColumn> cfg) {
+		for (var f : _activeFrames) f.Item2.tabSeason.applyColumnConfig(cfg);
 	}
 
 	public static void show(Component owner, CCSeries data, boolean forceNoSingleton) {

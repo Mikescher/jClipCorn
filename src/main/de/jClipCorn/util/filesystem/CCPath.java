@@ -65,6 +65,13 @@ public class CCPath implements IPath, Comparable<CCPath> {
 	}
 
 	public static CCPath createFromFSPath(FSPath p, Opt<Boolean> makeRelative, ICCPropertySource ccps) {
+		return createFromFSPath(p, makeRelative, true, ccps);
+	}
+
+	/**
+	 * @param insertVariables false when creating the value of a path-syntax variable itself (variables are only resolved one level deep)
+	 */
+	public static CCPath createFromFSPath(FSPath p, Opt<Boolean> makeRelative, boolean insertVariables, ICCPropertySource ccps) {
 		if (p.isEmpty()) return CCPath.Empty;
 
 		var ccprops = ccps.ccprops();
@@ -78,7 +85,7 @@ public class CCPath implements IPath, Comparable<CCPath> {
 		var mkSelf   = makeRelative.orElse(ccprops.PROP_PATHSYNTAX_SELF.getValue());
 		var mkSDir   = makeRelative.orElse(ccprops.PROP_PATHSYNTAX_SELFDIR.getValue());
 		var mkDLabel = makeRelative.orElse(ccprops.PROP_PATHSYNTAX_DRIVELABEL.getValue());
-		var mkVars   = makeRelative.orElse(ccprops.getActivePathVariables().size()>0);
+		var mkVars   = insertVariables && makeRelative.orElse(ccprops.getActivePathVariables().size()>0);
 
 		if (! mkBase) return CCPath.create(aPath);
 

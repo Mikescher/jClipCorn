@@ -49,12 +49,11 @@ public class CCPathVarListProperty extends CCProperty<PathSyntaxVarList> {
 
 	/**
 	 * Column layout of a single variable row, shared with the readonly commandline-override rows in the settings frame
-	 * (host label: 2, host: 4, key label: 6, key: 8, value label: 10, value: 12, remove: 14, add: 16)
+	 * (host label: 2, host: 4, key label: 6, key: 8, value label: 10, value: 12, choose: 14, remove: 16, add: 18)
 	 */
 	@SuppressWarnings("nls")
 	public static ColumnSpec[] createRowColumnSpecs(ColumnSpec hostLabelColumn) {
-		return new ColumnSpec[]
-		{
+		return CCCCPathProperty.withButtonColumns(
 			FormSpecs.UNRELATED_GAP_COLSPEC,
 			hostLabelColumn,
 			FormSpecs.UNRELATED_GAP_COLSPEC,
@@ -66,13 +65,7 @@ public class CCPathVarListProperty extends CCProperty<PathSyntaxVarList> {
 			FormSpecs.UNRELATED_GAP_COLSPEC,
 			FormSpecs.DEFAULT_COLSPEC,
 			FormSpecs.UNRELATED_GAP_COLSPEC,
-			ColumnSpec.decode("default:grow"),
-			FormSpecs.RELATED_GAP_COLSPEC,
-			ColumnSpec.decode("24dlu"),
-			FormSpecs.RELATED_GAP_COLSPEC,
-			ColumnSpec.decode("24dlu"),
-			FormSpecs.UNRELATED_GAP_COLSPEC,
-		};
+			ColumnSpec.decode("default:grow"));
 	}
 
 	@Override
@@ -124,6 +117,7 @@ public class CCPathVarListProperty extends CCProperty<PathSyntaxVarList> {
 		comp.add(row.Key, "8, "+r+", fill, default");
 		comp.add(new JLabel(LocaleBundle.getString("CCPathVarListProperty.Value")), "10, "+r+", fill, default");
 		comp.add(row.Value, "12, "+r+", fill, default");
+		comp.add(CCCCPathProperty.createChooseFolderButton(properties, row.Value, false), "14, "+r+", fill, default");
 
 		var btnRemove = new JButton("-");
 		btnRemove.addActionListener(e ->
@@ -131,7 +125,7 @@ public class CCPathVarListProperty extends CCProperty<PathSyntaxVarList> {
 			var values = CCStreams.iterate(comp.Rows).filter(p -> p != row).map(CCPathVarRow::get).enumerate();
 			rebuild(comp, values);
 		});
-		comp.add(btnRemove, "14, "+r+", fill, default");
+		comp.add(btnRemove, "16, "+r+", fill, default");
 
 		if (first) {
 			var btnAdd = new JButton("+");
@@ -141,7 +135,7 @@ public class CCPathVarListProperty extends CCProperty<PathSyntaxVarList> {
 				values.add(PathSyntaxVar.EMPTY);
 				rebuild(comp, values);
 			});
-			comp.add(btnAdd, "16, "+r+", fill, default");
+			comp.add(btnAdd, "18, "+r+", fill, default");
 		}
 
 		comp.Rows.add(row);

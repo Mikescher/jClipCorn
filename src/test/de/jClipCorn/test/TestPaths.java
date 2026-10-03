@@ -273,6 +273,7 @@ public class TestPaths extends ClipCornBaseTest {
 		else
 		{
 			assertEquals("/tmpfs/jcc/mov/fname.ext", CCPath.createFromFSPath(FSPath.create("/tmpfs/jcc/mov/fname.ext"), Opt.False, ccprops).toString());
+			assertEquals("/tmpfs/jcc/mov/fname.ext", CCPath.createFromFSPath(FSPath.create("/tmpfs/jcc/mov/fname.ext"), Opt.True, false, ccprops).toString());
 		}
 	}
 

@@ -39,14 +39,7 @@ public class CCCCPathListProperty extends CCProperty<CCPathList> {
 	@SuppressWarnings("nls")
 	public Component getComponent() {
 		var pnl = new CCPathListPropertyPanel();
-		pnl.Layout = new FormLayout(new ColumnSpec[]
-		{
-			ColumnSpec.decode("default:grow"),
-			FormSpecs.RELATED_GAP_COLSPEC,
-			ColumnSpec.decode("24dlu"),
-			FormSpecs.RELATED_GAP_COLSPEC,
-			ColumnSpec.decode("24dlu"),
-		}, new RowSpec[0]);
+		pnl.Layout = new FormLayout(CCCCPathProperty.withButtonColumns(ColumnSpec.decode("default:grow")), new RowSpec[0]);
 		pnl.setLayout(pnl.Layout);
 		return pnl;
 	}
@@ -84,13 +77,15 @@ public class CCCCPathListProperty extends CCProperty<CCPathList> {
 		row.setPath(value);
 		comp.add(row, "1, "+r+", fill, default");
 
+		comp.add(CCCCPathProperty.createChooseFolderButton(properties, row, true), "3, "+r+", fill, default");
+
 		var btnRemove = new JButton("-");
 		btnRemove.addActionListener(e ->
 		{
 			var values = CCStreams.iterate(comp.Rows).filter(p -> p != row).map(JValidatingCCPathTextField::getPath).enumerate();
 			rebuild(comp, values);
 		});
-		comp.add(btnRemove, "3, "+r+", fill, default");
+		comp.add(btnRemove, "5, "+r+", fill, default");
 
 		if (first) {
 			var btnAdd = new JButton("+");
@@ -100,7 +95,7 @@ public class CCCCPathListProperty extends CCProperty<CCPathList> {
 				values.add(CCPath.Empty);
 				rebuild(comp, values);
 			});
-			comp.add(btnAdd, "5, "+r+", fill, default");
+			comp.add(btnAdd, "7, "+r+", fill, default");
 		}
 
 		comp.Rows.add(row);

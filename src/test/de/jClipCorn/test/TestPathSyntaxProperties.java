@@ -80,4 +80,23 @@ public class TestPathSyntaxProperties extends ClipCornBaseTest {
 		assertTrue(mov.generateExpectedAbsolutePath(0).toString().startsWith(animeMovDir.toString()));
 		assertTrue(ser.getSeriesRootDir().equalsOnFilesystem(animeSerDir));
 	}
+
+	@Test
+	public void testLoadWithUnresolvablePaths() throws Exception {
+		var ml = createEmptyDB();
+		ml.ccprops().PROP_PATHSYNTAX_SERIESROOT.setValue(CCPath.create("/series"));
+
+		var ser = ml.createNewSeries(s -> s.Title.set("Series"));
+		var sea = ser.createNewSeason(s -> s.Title.set("Season"));
+		sea.createNewEpisode(e ->
+		{
+			e.Title.set("Episode");
+			// NUL is rejected by Path.of() on every OS, like the '<' of an unresolved <?[var]> placeholder on windows
+			e.Part.set(CCPath.create("/series/in\0valid/S01/E01.mkv"));
+		});
+
+		ml.forceReconnectAndReloadForTests();
+
+		assertEquals(1, ml.iteratorEpisodes().count());
+	}
 }

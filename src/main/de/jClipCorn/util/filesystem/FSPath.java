@@ -110,7 +110,11 @@ public class FSPath implements IPath, Comparable<FSPath> {
 	}
 
 	public BasicFileAttributes readFileAttr() throws IOException {
-		return Files.readAttributes(toPath(), BasicFileAttributes.class);
+		try {
+			return Files.readAttributes(toPath(), BasicFileAttributes.class);
+		} catch (InvalidPathException e) {
+			throw new IOException(e);
+		}
 	}
 
 	public boolean exists() {
@@ -475,7 +479,12 @@ public class FSPath implements IPath, Comparable<FSPath> {
 	}
 
 	public String toNormalizedAndAbsolutePathString() {
-		return toPath().normalize().toAbsolutePath().toString();
+		try {
+			return toPath().normalize().toAbsolutePath().toString();
+		} catch (InvalidPathException e) {
+			// e.g. a CCPath whose <?[var]> placeholder could not be resolved ('<' is invalid on windows)
+			return _path;
+		}
 	}
 
 	public static boolean isNullOrEmpty(FSPath p) {

@@ -44,6 +44,7 @@ import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ApplicationHelper;
 import de.jClipCorn.util.helper.ChecksumHelper;
+import de.jClipCorn.util.helper.DialogHelper;
 import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.http.WebConnectionLayer;
 import de.jClipCorn.util.lambda.Func0to0;
@@ -184,37 +185,44 @@ public class CCMovieList implements ICCPropertySource {
 
 				mf.beginBlockingIntermediate();
 
-				testDatabaseVersion();
+				// an exception must not leave the frame blocked, the user could not even reach the settings to fix its cause
+				try {
+					testDatabaseVersion();
 
-				Globals.TIMINGS.start(Globals.TIMING_LOAD_DATABASE);
-				{
-					Globals.TIMINGS.start(Globals.TIMING_LOAD_FILTERS);
+					Globals.TIMINGS.start(Globals.TIMING_LOAD_DATABASE);
 					{
-						mf.loadFilters();
-					}
-					Globals.TIMINGS.stop(Globals.TIMING_LOAD_FILTERS);
+						Globals.TIMINGS.start(Globals.TIMING_LOAD_FILTERS);
+						{
+							mf.loadFilters();
+						}
+						Globals.TIMINGS.stop(Globals.TIMING_LOAD_FILTERS);
 
-					Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_GROUPS);
-					{
-						database.fillGroups(CCMovieList.this);
-					}
-					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_GROUPS);
+						Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_GROUPS);
+						{
+							database.fillGroups(CCMovieList.this);
+						}
+						Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_GROUPS);
 
-					Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_ELEMENTS);
-					{
-						database.fillMovieList(CCMovieList.this);
-					}
-					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_ELEMENTS);
+						Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_ELEMENTS);
+						{
+							database.fillMovieList(CCMovieList.this);
+						}
+						Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_ELEMENTS);
 
-					Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
-					{
-						database.fillCoverCache(coverCache, ccprops().PROP_DATABASE_LOAD_ALL_COVERDATA.getValue());
+						Globals.TIMINGS.start(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
+						{
+							database.fillCoverCache(coverCache, ccprops().PROP_DATABASE_LOAD_ALL_COVERDATA.getValue());
+						}
+						Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
 					}
-					Globals.TIMINGS.stop(Globals.TIMING_LOAD_MOVIELIST_FILL_COVERS);
+					Globals.TIMINGS.stop(Globals.TIMING_LOAD_DATABASE);
+
+					fireOnAfterLoad();
+				} catch (Throwable e) {
+					// not addFatalError(), that would terminate the application
+					CCLog.addError(LocaleBundle.getString("LogMessage.ErrorLoadDB"), e); //$NON-NLS-1$
+					DialogHelper.showDispatchError(mf, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.ErrorLoadDB")); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-				Globals.TIMINGS.stop(Globals.TIMING_LOAD_DATABASE);
-
-				fireOnAfterLoad();
 
 				if (postInit != null) SwingUtils.invokeLater(postInit::invoke);
 

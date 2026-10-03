@@ -8,6 +8,7 @@ import de.jClipCorn.util.helper.ApplicationHelper;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -70,6 +71,18 @@ public class TestPaths extends ClipCornBaseTest {
 		assertTrue(FSPath.create(loc("")).isEmpty());
 		assertTrue(FSPath.Empty.isEmpty());
 		assertFalse(FSPath.create(loc("F:/dir1/dir2/file.txt")).isEmpty());
+	}
+
+	@Test
+	public void testFSPathInvalidOnFilesystem() {
+		// NUL is rejected by Path.of() on every OS, like the '<' of an unresolved <?[var]> placeholder on windows
+		var invalid = FSPath.create(loc("F:/dir1/\0dir2/file.txt"));
+
+		assertEquals(loc("F:/dir1/\0dir2/file.txt"), invalid.toNormalizedAndAbsolutePathString());
+		assertFalse(invalid.equalsOnFilesystem(FSPath.create(loc("F:/dir1/dir2/file.txt"))));
+		assertFalse(invalid.getParent().equalsOnFilesystem(FSPath.create(loc("F:/dir1"))));
+		assertTrue(invalid.equalsOnFilesystem(FSPath.create(loc("F:/dir1/\0dir2/file.txt"))));
+		assertThrows(IOException.class, invalid::readFileAttr);
 	}
 
 	private String loc(String s) {

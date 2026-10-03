@@ -89,7 +89,7 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 
 		ccprops().PROP_FSIZE_MAINFRAME.applyOrPack(this);
 
-		clipTable.configureColumnVisibility(ccprops().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), true);
+		clipTable.applyColumnConfig(ccprops().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), true);
 
 		new FileDrop(clipTable, true, this);
 
@@ -330,8 +330,9 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 	{
 		if (CCStreams.iterate(changes).any(c -> Str.equals(c, ccprops().PROP_MAINFRAME_VISIBLE_COLUMNS.getIdentifier()) || Str.equals(c, ccprops().PROP_MAINFRAME_TITLE_COLUMN_MAXWIDTH.getIdentifier())))
 		{
-			clipTable.configureColumnVisibility(ccprops().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), false);
+			clipTable.applyColumnConfig(ccprops().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), false);
 			clipTable.autoResize();
+			clipTable.storeColumnSizeCache();
 		}
 
 		if (CCStreams.iterate(changes).any(c -> Str.equals(c, ccprops().PROP_TOOLBAR_ELEMENTS.getIdentifier())))

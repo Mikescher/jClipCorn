@@ -105,6 +105,10 @@ public class JCheckBoxList<T> extends JList<JCheckBox> {
 		innermodel.addElement(cb);
 	}
 	
+	public void moveElement(int from, int to) {
+		innermodel.add(to, innermodel.remove(from));
+	}
+
 	public boolean getChecked(T value) {
 		for (Tuple<T, JCheckBox> tuple : map) {
 			if (tuple.Item1 == value) return tuple.Item2.isSelected();

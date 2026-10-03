@@ -14,7 +14,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public abstract class JCCPrimaryTable<TData, TEnum> extends JScrollPane
@@ -36,7 +38,7 @@ public abstract class JCCPrimaryTable<TData, TEnum> extends JScrollPane
 
 		this.movielist = ml;
 
-		this.config = configureColumns();
+		this.config = new ArrayList<>(configureColumns());
 
 		this.model = new JCCPrimaryTableModel<>(this);
 		this.table = new JCCPrimarySFixTable<>(this);
@@ -194,6 +196,42 @@ public abstract class JCCPrimaryTable<TData, TEnum> extends JScrollPane
 		}
 
 		return CCStreams.iterate(cfg).stringjoin(e->e, "|"); //$NON-NLS-1$
+	}
+
+	/**
+	 * Columns missing in order are kept at the end.
+	 * A changed order recreates all TableColumns (resetting their widths), sort keys and selection are preserved.
+	 *
+	 * @return true if the column order was changed
+	 */
+	protected boolean applyColumnOrder(List<TEnum> order) {
+		var sorted = new ArrayList<>(config);
+		sorted.sort(Comparator.comparingInt(c -> order.contains(c.Identifier) ? order.indexOf(c.Identifier) : Integer.MAX_VALUE));
+
+		if (sorted.equals(config)) return false;
+
+		var sortKeys = CCStreams.iterate(table.getRowSorter().getSortKeys()).map(k -> Tuple.Create(config.get(k.getColumn()).Identifier, k.getSortOrder())).toList();
+		var selectedModelRow = table.getSelectedRowInModelIndex();
+
+		config.clear();
+		config.addAll(sorted);
+
+		model.fireTableStructureChanged();
+		table.initSorter();
+
+		table.getRowSorter().setSortKeys(CCStreams.iterate(sortKeys).map(k -> new RowSorter.SortKey(getColumnModelIndex(k.Item1), k.Item2)).toList());
+
+		if (selectedModelRow >= 0 && selectedModelRow < model.getRowCount()) {
+			var viewRow = table.convertRowIndexToView(selectedModelRow);
+			if (viewRow >= 0) table.setRowSelectionInterval(viewRow, viewRow);
+		}
+
+		return true;
+	}
+
+	private int getColumnModelIndex(TEnum id) {
+		for (int i = 0; i < config.size(); i++) if (config.get(i).Identifier == id) return i;
+		return -1;
 	}
 
 	public void setSelectedRow(int visualrow) {

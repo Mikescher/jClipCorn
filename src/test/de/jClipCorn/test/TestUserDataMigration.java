@@ -7,6 +7,7 @@ import de.jClipCorn.database.migration.UpgradeAction;
 import de.jClipCorn.database.migration.UserDataDatabaseMigrator;
 import de.jClipCorn.database.migration.UserDataMigration;
 import de.jClipCorn.database.migration.UserDataMigration_01_02;
+import de.jClipCorn.database.migration.UserDataMigration_02_03;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.RefParam;
@@ -173,6 +174,63 @@ public class TestUserDataMigration extends ClipCornBaseTest {
 		assertEquals("2", userDataVersion(db));
 		assertNull(property(db, "PROP_PATHSYNTAX_VARIABLES"));
 		assertEquals("true", property(db, "PROP_PATHSYNTAX_SELF"));
+	}
+
+	@Test
+	public void testMigration_02_03_SplitsTableSettings() throws Exception {
+		MemoryDatabase db = createDatabase("2");
+
+		insertProperty(db, "PROP_TABLE_MAX_SUBTITLE_COUNT", "3");
+		insertProperty(db, "PROP_MAINFRAME_SHOW_VIEWCOUNT", "false");
+		insertProperty(db, "PROP_PATHSYNTAX_SELF",          "true");
+
+		new UserDataMigration_02_03(db, FSPath.Empty, "ClipCornDB", false).migrate();
+
+		assertEquals("3", userDataVersion(db));
+
+		assertNull(property(db, "PROP_TABLE_MAX_SUBTITLE_COUNT"));
+		assertEquals("3",     property(db, "PROP_MAINFRAME_MAX_SUBTITLE_COUNT"));
+		assertEquals("3",     property(db, "PROP_SERIESFRAME_MAX_SUBTITLE_COUNT"));
+		assertEquals("false", property(db, "PROP_MAINFRAME_SHOW_VIEWCOUNT"));
+		assertEquals("false", property(db, "PROP_SERIESFRAME_SHOW_VIEWCOUNT"));
+		assertEquals("true",  property(db, "PROP_PATHSYNTAX_SELF"));
+
+		var props = CCProperties.createInMemory();
+		for (var key : List.of("PROP_MAINFRAME_MAX_SUBTITLE_COUNT", "PROP_SERIESFRAME_MAX_SUBTITLE_COUNT", "PROP_MAINFRAME_SHOW_VIEWCOUNT", "PROP_SERIESFRAME_SHOW_VIEWCOUNT")) {
+			props.setProperty(key, property(db, key));
+		}
+		assertEquals(3, (int)props.PROP_MAINFRAME_MAX_SUBTITLE_COUNT.getValue());
+		assertEquals(3, (int)props.PROP_SERIESFRAME_MAX_SUBTITLE_COUNT.getValue());
+		assertFalse(props.PROP_MAINFRAME_SHOW_VIEWCOUNT.getValue());
+		assertFalse(props.PROP_SERIESFRAME_SHOW_VIEWCOUNT.getValue());
+	}
+
+	@Test
+	public void testMigration_02_03_WithoutStoredSettings() throws Exception {
+		MemoryDatabase db = createDatabase("2");
+
+		insertProperty(db, "PROP_PATHSYNTAX_SELF", "true");
+
+		new UserDataMigration_02_03(db, FSPath.Empty, "ClipCornDB", false).migrate();
+
+		assertEquals("3", userDataVersion(db));
+		assertNull(property(db, "PROP_MAINFRAME_MAX_SUBTITLE_COUNT"));
+		assertNull(property(db, "PROP_SERIESFRAME_MAX_SUBTITLE_COUNT"));
+		assertNull(property(db, "PROP_SERIESFRAME_SHOW_VIEWCOUNT"));
+		assertEquals(1, db.querySingleIntSQLThrow("SELECT COUNT(*) FROM userdata.PROPERTIES", 0));
+	}
+
+	@Test
+	public void testMigration_02_03_KeepsAlreadyStoredTargets() throws Exception {
+		MemoryDatabase db = createDatabase("2");
+
+		insertProperty(db, "PROP_MAINFRAME_SHOW_VIEWCOUNT",   "false");
+		insertProperty(db, "PROP_SERIESFRAME_SHOW_VIEWCOUNT", "true");
+
+		new UserDataMigration_02_03(db, FSPath.Empty, "ClipCornDB", false).migrate();
+
+		assertEquals("false", property(db, "PROP_MAINFRAME_SHOW_VIEWCOUNT"));
+		assertEquals("true",  property(db, "PROP_SERIESFRAME_SHOW_VIEWCOUNT"));
 	}
 
 	@Test

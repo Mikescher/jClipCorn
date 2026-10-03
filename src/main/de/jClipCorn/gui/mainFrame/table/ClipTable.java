@@ -123,7 +123,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			Str.Empty,
 			"auto",
 			LocaleBundle.getString("ClipTableModel.Viewed"),
-			(r,v) -> r.setIcon(v.getExtendedViewedState().getIconTable(r.getMovieList())),
+			(r,v) -> r.setIcon(v.getExtendedViewedState(ccprops().PROP_MAINFRAME_SHOW_VIEWCOUNT.getValue()).getIconTable(r.getMovieList())),
 			(r) -> false,
 			(v1,v2) -> compareCoalesce(v1.getExtendedViewedState().getType().compareTo(v2.getExtendedViewedState().getType()), Integer.compare(v2.getExtendedViewedState().getViewCount(), v1.getExtendedViewedState().getViewCount())),
 			true,
@@ -240,7 +240,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 			LocaleBundle.getString("ClipTableModel.Subtitle"),
 			"auto",
 			LocaleBundle.getString("ClipTableModel.Subtitle"),
-			(r,v) -> { r.setHorizontalAlignment(SwingConstants.LEFT); r.setIcon((v.isMovie() ? v.asMovie().Subtitles.get() : v.asSeries().getAllSubtitles()).getIcon(ccprops().PROP_TABLE_MAX_SUBTITLE_COUNT.getValue())); } ,
+			(r,v) -> { r.setHorizontalAlignment(SwingConstants.LEFT); r.setIcon((v.isMovie() ? v.asMovie().Subtitles.get() : v.asSeries().getAllSubtitles()).getIcon(ccprops().PROP_MAINFRAME_MAX_SUBTITLE_COUNT.getValue())); } ,
 			(r) -> true,
 			(v1,v2) ->
 			{

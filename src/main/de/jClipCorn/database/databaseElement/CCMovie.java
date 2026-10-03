@@ -497,7 +497,12 @@ public class CCMovie extends CCDatabaseElement implements ICCPlayableElement, IC
 
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
-		return ExtendedViewedState.create(this);
+		return getExtendedViewedState(true);
+	}
+
+	@Override
+	public ExtendedViewedState getExtendedViewedState(boolean showViewCount) {
+		return ExtendedViewedState.create(this, showViewCount);
 	}
 
 	@Override

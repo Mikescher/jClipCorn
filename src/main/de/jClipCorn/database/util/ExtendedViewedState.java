@@ -46,7 +46,7 @@ public class ExtendedViewedState {
 		_icon    = icon;
 	}
 
-	public static ExtendedViewedState create(CCMovie elem) {
+	public static ExtendedViewedState create(CCMovie elem, boolean showViewCount) {
 		var hist = elem.ViewedHistory.get();
 
 		var count = hist.count();
@@ -62,7 +62,7 @@ public class ExtendedViewedState {
 		var isCancelled = elem.Tags.get().getTag(CCSingleTag.TAG_WATCH_CANCELLED);
 		var isNoTag     = (!isLater && !isNever && !isCancelled);
 
-		if (!elem.ccprops().PROP_MAINFRAME_SHOW_VIEWCOUNT.getValue() && isViewed) {
+		if (!showViewCount && isViewed) {
 			// force non-ctr icon
 			isViewedUnknown = false;
 			isViewedTooMany = false;
@@ -98,7 +98,7 @@ public class ExtendedViewedState {
 		return null;
 	}
 
-	public static ExtendedViewedState create(CCSeries elem) {
+	public static ExtendedViewedState create(CCSeries elem, boolean showViewCount) {
 		if (elem.isEmpty()) return new ExtendedViewedState(ExtendedViewedStateType.EMPTY, null, 0, Resources.ICN_TABLE_VIEWED_EMPTY);
 
 		var count = elem.getFullViewCount();
@@ -114,7 +114,7 @@ public class ExtendedViewedState {
 		var isCancelled = elem.Tags.get().getTag(CCSingleTag.TAG_WATCH_CANCELLED);
 		var isNoTag     = (!isLater && !isNever && !isCancelled);
 
-		if (!elem.ccprops().PROP_MAINFRAME_SHOW_VIEWCOUNT.getValue() && isViewed) {
+		if (!showViewCount && isViewed) {
 			// force non-ctr icon
 			isViewedTooMany = false;
 			isViewedSingle  = true;
@@ -150,7 +150,7 @@ public class ExtendedViewedState {
 		return null;
 	}
 
-	public static ExtendedViewedState create(CCSeason elem) {
+	public static ExtendedViewedState create(CCSeason elem, boolean showViewCount) {
 		if (elem.isEmpty()) return new ExtendedViewedState(ExtendedViewedStateType.EMPTY, null, 0, Resources.ICN_TABLE_VIEWED_EMPTY);
 
 		var count = elem.getFullViewCount();
@@ -161,7 +161,7 @@ public class ExtendedViewedState {
 		var isViewedTooMany = count >= Resources.ICN_TABLE_VIEWED_TRUE_CTR.length;
 		var isViewedSingle  = isViewed && (count == 1);
 
-		if (!elem.ccprops().PROP_MAINFRAME_SHOW_VIEWCOUNT.getValue() && isViewed) {
+		if (!showViewCount && isViewed) {
 			// force non-ctr icon
 			isViewedTooMany = false;
 			isViewedSingle  = true;
@@ -177,7 +177,7 @@ public class ExtendedViewedState {
 		return null;
 	}
 
-	public static ExtendedViewedState create(CCEpisode elem) {
+	public static ExtendedViewedState create(CCEpisode elem, boolean showViewCount) {
 		var hist = elem.ViewedHistory.get();
 
 		var count = hist.count();
@@ -193,7 +193,7 @@ public class ExtendedViewedState {
 		var isCancelled = elem.Tags.get().getTag(CCSingleTag.TAG_WATCH_CANCELLED);
 		var isNoTag     = (!isLater && !isNever && !isCancelled);
 
-		if (!elem.ccprops().PROP_MAINFRAME_SHOW_VIEWCOUNT.getValue() && isViewed) {
+		if (!showViewCount && isViewed) {
 			// force non-ctr icon
 			isViewedTooMany = false;
 			isViewedSingle  = true;

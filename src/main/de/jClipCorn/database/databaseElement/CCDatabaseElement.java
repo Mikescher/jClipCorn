@@ -292,6 +292,8 @@ public abstract class CCDatabaseElement implements ICCDatabaseStructureElement, 
 
 	@Override
 	public abstract ExtendedViewedState getExtendedViewedState();
+	@Override
+	public abstract ExtendedViewedState getExtendedViewedState(boolean showViewCount);
 	
 	public abstract int getFirstYear();
 

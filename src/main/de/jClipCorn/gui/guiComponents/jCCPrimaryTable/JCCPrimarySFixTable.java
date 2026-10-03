@@ -23,7 +23,7 @@ public class JCCPrimarySFixTable<TData, TEnum> extends SFixTable {
 		sorter = new TableRowSorter<>(owner.model);
 		setRowSorter(sorter);
 
-		init();
+		initSorter();
 
 		getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "null"); //$NON-NLS-1$
 		getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK), "null"); //$NON-NLS-1$
@@ -31,7 +31,8 @@ public class JCCPrimarySFixTable<TData, TEnum> extends SFixTable {
 		this.getTableHeader().setReorderingAllowed(false);
 	}
 
-	private void init() {
+	// must be re-run after every structure change of the model, the sorter drops comparators and sortable flags then
+	void initSorter() {
 		for (var col=0; col<owner.config.size(); col++)
 		{
 			sorter.setSortable(col, owner.config.get(col).IsSortable);

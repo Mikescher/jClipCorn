@@ -19,6 +19,7 @@ import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.mainFrame.MainFrame;
 import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.properties.enumerations.MainFrameColumn;
+import de.jClipCorn.properties.types.OrderedEnumSet;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.adapter.CCDBUpdateAdapter;
 import de.jClipCorn.util.datatypes.Opt;
@@ -72,6 +73,9 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 	public ClipTable(CCMovieList ml, MainFrame owner) {
 		super(ml, ml.ccprops().PROP_MAINTABLE_INSTANTTOOLTIPS.getValue(), ml.ccprops().PROP_MAINTABLE_INFINITETOOLTIPS.getValue());
 		this.owner = owner;
+
+		// before postInit(), so the cached column widths are applied to the columns in the order they were cached in
+		applyColumnOrder(ccprops().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue().Order);
 
 		postInit();
 	}
@@ -530,8 +534,7 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 					table.setSortKey(getInitialSortKey());
 					autoResize();
 
-					var columnconfig = adjuster.getCurrentStateAsConfig();
-					ccprops().PROP_MAINFRAME_COLUMN_SIZE_CACHE.setValueIfDiff(columnconfig);
+					storeColumnSizeCache();
 				}
 			});
 		}
@@ -626,13 +629,15 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 		owner.getStatusBar().updateLables_Movies();
 	}
 
-	public void configureColumnVisibility(Set<MainFrameColumn> data, boolean initial) {
+	public void applyColumnConfig(OrderedEnumSet<MainFrameColumn> data, boolean initial) {
+		applyColumnOrder(data.Order);
+
 		String[] cfg = new String[config.size()];
 		Arrays.fill(cfg, "auto"); //$NON-NLS-1$
 
 		for (var idx=0; idx < config.size(); idx++) {
 			var ccfg = config.get(idx);
-			if (data.contains(ccfg.Identifier)) {
+			if (data.isEnabled(ccfg.Identifier)) {
 				cfg[idx] = getAdjusterConfig(ccfg);
 
 				if (initial) continue;
@@ -666,6 +671,10 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 
 	public void autoResize() {
 		adjuster.adjustColumns(_adjusterConfig);
+	}
+
+	public void storeColumnSizeCache() {
+		ccprops().PROP_MAINFRAME_COLUMN_SIZE_CACHE.setValueIfDiff(adjuster.getCurrentStateAsConfig());
 	}
 
 	public void shuffle() {

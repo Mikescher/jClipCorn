@@ -28,17 +28,20 @@ public class CBListModel extends AbstractListModel<JCheckBox> {
         _source.addListDataListener(new ListDataListener() {
             @Override
 			public void intervalRemoved(ListDataEvent e) {
-                doFilter();
+                if (_filter == null) fireIntervalRemoved(CBListModel.this, e.getIndex0(), e.getIndex1());
+                else doFilter();
             }
 
             @Override
 			public void intervalAdded(ListDataEvent e) {
-                doFilter();
+                if (_filter == null) fireIntervalAdded(CBListModel.this, e.getIndex0(), e.getIndex1());
+                else doFilter();
             }
 
             @Override
 			public void contentsChanged(ListDataEvent e) {
-                doFilter();
+                if (_filter == null) fireContentsChanged(CBListModel.this, e.getIndex0(), e.getIndex1());
+                else doFilter();
             }
         });
     }

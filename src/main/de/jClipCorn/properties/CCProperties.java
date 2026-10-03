@@ -187,7 +187,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_DATABASE_LOAD_ALL_COVERDATA;
 	public CCEnumProperty<ColorQuantizerMethod>             PROP_DATABASE_COVER_QUANTIZER;
 	public CCStringSetProperty                              PROP_CHECKDATABASE_OPTIONS;
-	public CCEnumSetProperty<MainFrameColumn>               PROP_MAINFRAME_VISIBLE_COLUMNS;
+	public CCOrderedEnumSetProperty<MainFrameColumn>        PROP_MAINFRAME_VISIBLE_COLUMNS;
 	public CCBoolProperty                                   PROP_VLC_ROBOT_ENABLED;
 	public CCRIntProperty                                   PROP_VLC_ROBOT_PORT;
 	public CCStringProperty                                 PROP_VLC_ROBOT_PASSWORD;
@@ -340,7 +340,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_MAINFRAME_SHOW_ANIMESEASON             = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_ANIMESEASON",             false);
 		PROP_MAINFRAME_ASYNC_COVER_LOADING          = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_ASYNC_COVER_LOADING",          false);
 		PROP_MAINFRAME_SHOW_VIEWCOUNT               = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_VIEWCOUNT",               true);
-		PROP_MAINFRAME_VISIBLE_COLUMNS              = new CCEnumSetProperty<>(CAT_VIEW,         this,   "PROP_MAINFRAME_VISIBLE_COLUMNS",              getDefColumns(),                   MainFrameColumn.getWrapper());
+		PROP_MAINFRAME_VISIBLE_COLUMNS              = new CCOrderedEnumSetProperty<>(CAT_VIEW,  this,   "PROP_MAINFRAME_VISIBLE_COLUMNS",              getDefColumns(),                   MainFrameColumn.getWrapper());
 		PROP_CHARSELECTOR_DYNAMIC_OPACTITY          = new CCBoolProperty(CAT_VIEW,              this,   "PROP_CHARSELECTOR_DYNAMIC_OPACTITY",          true);
 		PROP_TABLE_MAX_SUBTITLE_COUNT               = new CCRIntProperty(CAT_VIEW,              this,   "PROP_TABLE_MAX_SUBTITLE_COUNT",               8,                                  -1, 16384);
 		PROP_CHARSELECTOR_MATCHMODE                 = new CCEnumProperty<>(CAT_VIEW,            this,   "PROP_CHARSELECTOR_MATCHMODE",                 CharListMatchType.WORD_START,         CharListMatchType.getWrapper());

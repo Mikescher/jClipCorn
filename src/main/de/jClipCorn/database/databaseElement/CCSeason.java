@@ -676,7 +676,12 @@ public class CCSeason implements ICCDatedElement, ICCDatabaseStructureElement, I
 
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
-		return ExtendedViewedState.create(this);
+		return getExtendedViewedState(true);
+	}
+
+	@Override
+	public ExtendedViewedState getExtendedViewedState(boolean showViewCount) {
+		return ExtendedViewedState.create(this, showViewCount);
 	}
 
 	public int getFullViewCount() {

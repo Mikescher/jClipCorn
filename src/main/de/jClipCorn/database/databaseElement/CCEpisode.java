@@ -471,7 +471,12 @@ public class CCEpisode implements ICCPlayableElement, ICCDatabaseStructureElemen
 
 	@Override
 	public ExtendedViewedState getExtendedViewedState() {
-		return ExtendedViewedState.create(this);
+		return getExtendedViewedState(true);
+	}
+
+	@Override
+	public ExtendedViewedState getExtendedViewedState(boolean showViewCount) {
+		return ExtendedViewedState.create(this, showViewCount);
 	}
 
 	public boolean checkFolderStructure() {

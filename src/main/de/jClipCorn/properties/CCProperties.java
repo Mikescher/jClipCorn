@@ -34,23 +34,25 @@ public class CCProperties implements ICCPropertySource {
 
 	public final static CCPropertyCategory NONVISIBLE        = new CCPropertyCategory();
 	public final static CCPropertyCategory CAT_COMMON        = new CCPropertyCategory(0,  "COMMON");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_VIEW          = new CCPropertyCategory(1,  "VIEW");         //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_DATABASE      = new CCPropertyCategory(2,  "DATABASE");     //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_PARSER        = new CCPropertyCategory(3,  "PARSER");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_MOVIES        = new CCPropertyCategory(4,  "MOVIES");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_SERIES        = new CCPropertyCategory(5,  "SERIES");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_PLAY          = new CCPropertyCategory(6,  "PLAY");         //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_TOOLS         = new CCPropertyCategory(7,  "TOOLS");        //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_BACKUP        = new CCPropertyCategory(8,  "BACKUP");       //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_STATUSBAR     = new CCPropertyCategory(9,  "STATUSBAR");    //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_PATHSYNTAX    = new CCPropertyCategory(10, "PATHSYNTAX");   //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_OTHERFRAMES   = new CCPropertyCategory(11, "OTHERFRAMES");  //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_FRAMESIZES    = new CCPropertyCategory(12, "FRAMESIZES");  //$NON-NLS-1$
-	public final static CCPropertyCategory CAT_KEYSTROKES    = new CCPropertyCategory(13, "KEYSTROKES");   //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_MAINFRAME     = new CCPropertyCategory(1,  "MAINFRAME");    //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_SERIESFRAME   = new CCPropertyCategory(2,  "SERIESFRAME");  //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_DATABASE      = new CCPropertyCategory(3,  "DATABASE");     //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_PARSER        = new CCPropertyCategory(4,  "PARSER");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_MOVIES        = new CCPropertyCategory(5,  "MOVIES");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_SERIES        = new CCPropertyCategory(6,  "SERIES");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_PLAY          = new CCPropertyCategory(7,  "PLAY");         //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_TOOLS         = new CCPropertyCategory(8,  "TOOLS");        //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_BACKUP        = new CCPropertyCategory(9,  "BACKUP");       //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_STATUSBAR     = new CCPropertyCategory(10, "STATUSBAR");    //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_PATHSYNTAX    = new CCPropertyCategory(11, "PATHSYNTAX");   //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_OTHERFRAMES   = new CCPropertyCategory(12, "OTHERFRAMES");  //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_FRAMESIZES    = new CCPropertyCategory(13, "FRAMESIZES");  //$NON-NLS-1$
+	public final static CCPropertyCategory CAT_KEYSTROKES    = new CCPropertyCategory(14, "KEYSTROKES");   //$NON-NLS-1$
 	
 	public final static CCPropertyCategory[] CATEGORIES = {
 		CAT_COMMON,
-		CAT_VIEW,
+		CAT_MAINFRAME,
+		CAT_SERIESFRAME,
 		CAT_DATABASE,
 		CAT_PARSER,
 		CAT_MOVIES,
@@ -210,7 +212,9 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_PLAY_FAILONMISSINGFILES;
 	public CCBoolProperty                                   PROP_RESET_SORT_ON_FILTERCLEAR;
 	public CCBoolProperty                                   PROP_CHARSELECTOR_DYNAMIC_OPACTITY;
-	public CCRIntProperty                                   PROP_TABLE_MAX_SUBTITLE_COUNT;
+	public CCRIntProperty                                   PROP_MAINFRAME_MAX_SUBTITLE_COUNT;
+	public CCRIntProperty                                   PROP_SERIESFRAME_MAX_SUBTITLE_COUNT;
+	public CCBoolProperty                                   PROP_SERIESFRAME_SHOW_VIEWCOUNT;
 	public CCEnumProperty<CharListMatchType>                PROP_CHARSELECTOR_MATCHMODE;
 	public CCEnumProperty<ElemFieldMatchType>               PROP_CHARSELECTOR_SELMODE;
 	public CCBoolProperty                                   PROP_CHARSELECTOR_EXCLUSIONS;
@@ -313,41 +317,51 @@ public class CCProperties implements ICCPropertySource {
 	private void createProperties() {
 		PROP_UI_LANG                                = new CCEnumProperty<>(CAT_COMMON,          this,   "PROP_UI_LANG",                                getDefLanguage(),                   UILanguage.getWrapper());
 		PROP_UI_DATETIME_FORMAT                     = new CCEnumProperty<>(CAT_COMMON,          this,   "PROP_UI_DATETIME_FORMAT",                     getDefDTFormat(),                   CCDateTimeFormat.getWrapper());
+		PROP_UI_APPTHEME                            = new CCLookAndFeelProperty(CAT_COMMON,     this,   "PROP_UI_APPTHEME",                            getDefTheme());
 		PROP_LOADING_PRELOADRESOURCES               = new CCEnumProperty<>(CAT_COMMON,          this,   "PROP_LOADING_PRELOADRESOURCES",               ResourcePreloadMode.SYNC_PRELOAD,   ResourcePreloadMode.getWrapper());
 		PROP_LOADING_INITBACKUPMANAGERASYNC         = new CCBoolProperty(CAT_COMMON,            this,   "PROP_LOADING_INITBACKUPMANAGERASYNC",         false);
+		PROP_MAINFRAME_ASYNC_COVER_LOADING          = new CCBoolProperty(CAT_COMMON,            this,   "PROP_MAINFRAME_ASYNC_COVER_LOADING",          false);
 		PROP_USE_INTELLISORT                        = new CCBoolProperty(CAT_COMMON,            this,   "PROP_USE_INTELLISORT",                        false);
 		PROP_COMMON_CHECKFORUPDATES                 = new CCBoolProperty(CAT_COMMON,            this,   "PROP_COMMON_CHECKFORUPDATES",                 true);
 		PROP_COMMON_PRESCANFILESYSTEM               = new CCBoolProperty(CAT_COMMON,            this,   "PROP_COMMON_PRESCANFILESYSTEM",               true);
 		PROP_DATABASE_CLEANSHUTDOWN                 = new CCBoolProperty(CAT_COMMON,            this,   "PROP_DATABASE_CLEANSHUTDOWN",                 false);
 
-		PROP_UI_APPTHEME                            = new CCLookAndFeelProperty(CAT_VIEW,       this,   "PROP_UI_APPTHEME",                            getDefTheme());
-		PROP_MAINFRAME_TABLEBACKGROUND              = new CCEnumProperty<>(CAT_VIEW,            this,   "PROP_MAINFRAME_TABLEBACKGROUND",              UITableBackground.WHITE,            UITableBackground.getWrapper());
-		PROP_LOADING_LIVEUPDATE                     = new CCBoolProperty(CAT_VIEW,              this,   "PROP_LOADING_LIVEUPDATE",                     false);
-		PROP_MAINFRAME_SCROLLSPEED                  = new CCPIntProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SCROLLSPEED",                  3);
-		PROP_MAINFRAME_TITLE_COLUMN_MAXWIDTH        = new CCRIntProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_TITLE_COLUMN_MAXWIDTH",        800,                                -1, 16384);
-		PROP_VIEW_DB_START_SORT                     = new CCEnumProperty<>(CAT_VIEW,            this,   "PROP_VIEW_DB_START_SORT",                     InitalSortingColumn.LOCALID,        InitalSortingColumn.getWrapper());
-		PROP_TOOLBAR_ELEMENTS                       = new CCToolbarProperty(CAT_VIEW,           this,   "PROP_TOOLBAR_ELEMENTS",                       ClipToolbar.STANDARD_CONFIG);
-		PROP_MAINFRAME_CLICKABLEZYKLUS              = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_CLICKABLEZYKLUS",              false);
-		PROP_MAINFRAME_CLICKABLESCORE               = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_CLICKABLESCORE",               false);
-		PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR        = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR",        false);
-		PROP_MAINFRAME_SHOWTAGS                     = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOWTAGS",                     true);
-		PROP_MAINFRAME_SHOWGROUPS                   = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOWGROUPS",                   true);
-		PROP_MAINFRAME_SHOWCOVERCORNER              = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOWCOVERCORNER",              true);
-		PROP_MAINFRAME_DONT_FILTER_WATCHNEVER       = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_DONT_FILTER_WATCHNEVER",       true);
-		PROP_MAINFRAME_SORT_GENRES                  = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SORT_GENRES",                  true);
-		PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER     = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER",     false);
-		PROP_MAINFRAME_SHOW_SPECIALVERSION          = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_SPECIALVERSION",          false);
-		PROP_MAINFRAME_SHOW_ANIMESTUDIO             = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_ANIMESTUDIO",             false);
-		PROP_MAINFRAME_SHOW_ANIMESEASON             = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_ANIMESEASON",             false);
-		PROP_MAINFRAME_ASYNC_COVER_LOADING          = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_ASYNC_COVER_LOADING",          false);
-		PROP_MAINFRAME_SHOW_VIEWCOUNT               = new CCBoolProperty(CAT_VIEW,              this,   "PROP_MAINFRAME_SHOW_VIEWCOUNT",               true);
-		PROP_MAINFRAME_VISIBLE_COLUMNS              = new CCOrderedEnumSetProperty<>(CAT_VIEW,  this,   "PROP_MAINFRAME_VISIBLE_COLUMNS",              getDefColumns(),                   MainFrameColumn.getWrapper());
-		PROP_CHARSELECTOR_DYNAMIC_OPACTITY          = new CCBoolProperty(CAT_VIEW,              this,   "PROP_CHARSELECTOR_DYNAMIC_OPACTITY",          true);
-		PROP_TABLE_MAX_SUBTITLE_COUNT               = new CCRIntProperty(CAT_VIEW,              this,   "PROP_TABLE_MAX_SUBTITLE_COUNT",               8,                                  -1, 16384);
-		PROP_CHARSELECTOR_MATCHMODE                 = new CCEnumProperty<>(CAT_VIEW,            this,   "PROP_CHARSELECTOR_MATCHMODE",                 CharListMatchType.WORD_START,         CharListMatchType.getWrapper());
-		PROP_CHARSELECTOR_SELMODE                   = new CCEnumProperty<>(CAT_VIEW,            this,   "PROP_CHARSELECTOR_SELMODE",                   ElemFieldMatchType.TITLE_AND_ZYKLUS,  ElemFieldMatchType.getWrapper());
-		PROP_CHARSELECTOR_EXCLUSIONS                = new CCBoolProperty(CAT_VIEW,              this,   "PROP_CHARSELECTOR_EXCLUSIONS",                true);
-		PROP_CHARSELECTOR_IGNORENONCHARS            = new CCBoolProperty(CAT_VIEW,              this,   "PROP_CHARSELECTOR_IGNORENONCHARS",            true);
+		PROP_MAINFRAME_TABLEBACKGROUND              = new CCEnumProperty<>(CAT_MAINFRAME,       this,   "PROP_MAINFRAME_TABLEBACKGROUND",              UITableBackground.WHITE,            UITableBackground.getWrapper());
+		PROP_LOADING_LIVEUPDATE                     = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_LOADING_LIVEUPDATE",                     false);
+		PROP_MAINFRAME_SCROLLSPEED                  = new CCPIntProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_SCROLLSPEED",                  3);
+		PROP_MAINFRAME_TITLE_COLUMN_MAXWIDTH        = new CCRIntProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_TITLE_COLUMN_MAXWIDTH",        800,                                -1, 16384);
+		PROP_VIEW_DB_START_SORT                     = new CCEnumProperty<>(CAT_MAINFRAME,       this,   "PROP_VIEW_DB_START_SORT",                     InitalSortingColumn.LOCALID,        InitalSortingColumn.getWrapper());
+		PROP_MAINFRAME_VISIBLE_COLUMNS              = new CCOrderedEnumSetProperty<>(CAT_MAINFRAME, this,   "PROP_MAINFRAME_VISIBLE_COLUMNS",              getDefColumns(),                   MainFrameColumn.getWrapper());
+		PROP_MAINFRAME_SHOW_VIEWCOUNT               = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_SHOW_VIEWCOUNT",               true);
+		PROP_MAINFRAME_MAX_SUBTITLE_COUNT           = new CCRIntProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_MAX_SUBTITLE_COUNT",           8,                                  -1, 16384);
+		PROP_TOOLBAR_ELEMENTS                       = new CCToolbarProperty(CAT_MAINFRAME,      this,   "PROP_TOOLBAR_ELEMENTS",                       ClipToolbar.STANDARD_CONFIG);
+		PROP_MAINFRAME_CLICKABLEZYKLUS              = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_CLICKABLEZYKLUS",              false);
+		PROP_MAINFRAME_CLICKABLESCORE               = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_CLICKABLESCORE",               false);
+		PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR        = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_DONTCHANGEZYKLUSCOLOR",        false);
+		PROP_MAINFRAME_SORT_GENRES                  = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_SORT_GENRES",                  true);
+		PROP_MAINFRAME_DONT_FILTER_WATCHNEVER       = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_DONT_FILTER_WATCHNEVER",       true);
+		PROP_SHOW_PARTIAL_VIEWED_STATE              = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_SHOW_PARTIAL_VIEWED_STATE",              false);
+		PROP_MAINFRAME_SHOWTAGS                     = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_SHOWTAGS",                     true);
+		PROP_MAINFRAME_SHOWGROUPS                   = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_SHOWGROUPS",                   true);
+		PROP_MAINFRAME_SHOWCOVERCORNER              = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_SHOWCOVERCORNER",              true);
+		PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER     = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_SHOW_GROUP_ONLY_ON_HOVER",     false);
+		PROP_MAINFRAME_SHOW_SPECIALVERSION          = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_SHOW_SPECIALVERSION",          false);
+		PROP_MAINFRAME_SHOW_ANIMESTUDIO             = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_SHOW_ANIMESTUDIO",             false);
+		PROP_MAINFRAME_SHOW_ANIMESEASON             = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_SHOW_ANIMESEASON",             false);
+		PROP_CHARSELECTOR_DYNAMIC_OPACTITY          = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_CHARSELECTOR_DYNAMIC_OPACTITY",          true);
+		PROP_CHARSELECTOR_MATCHMODE                 = new CCEnumProperty<>(CAT_MAINFRAME,       this,   "PROP_CHARSELECTOR_MATCHMODE",                 CharListMatchType.WORD_START,         CharListMatchType.getWrapper());
+		PROP_CHARSELECTOR_SELMODE                   = new CCEnumProperty<>(CAT_MAINFRAME,       this,   "PROP_CHARSELECTOR_SELMODE",                   ElemFieldMatchType.TITLE_AND_ZYKLUS,  ElemFieldMatchType.getWrapper());
+		PROP_CHARSELECTOR_EXCLUSIONS                = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_CHARSELECTOR_EXCLUSIONS",                true);
+		PROP_CHARSELECTOR_IGNORENONCHARS            = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_CHARSELECTOR_IGNORENONCHARS",            true);
+
+		PROP_PREVIEWSERIES_SINGLETON                = new CCBoolProperty(CAT_SERIESFRAME,       this,   "PROP_PREVIEWSERIES_SINGLETON",                true);
+		PROP_SERIESFRAME_VISIBLE_COLUMNS            = new CCOrderedEnumSetProperty<>(CAT_SERIESFRAME, this,  "PROP_SERIESFRAME_VISIBLE_COLUMNS",            SeriesFrameColumn.getWrapper().allValues(), SeriesFrameColumn.getWrapper());
+		PROP_SERIESFRAME_SHOW_VIEWCOUNT             = new CCBoolProperty(CAT_SERIESFRAME,       this,   "PROP_SERIESFRAME_SHOW_VIEWCOUNT",             true);
+		PROP_SERIESFRAME_MAX_SUBTITLE_COUNT         = new CCRIntProperty(CAT_SERIESFRAME,       this,   "PROP_SERIESFRAME_MAX_SUBTITLE_COUNT",         8,                                  -1, 16384);
+		PROP_SERIES_DISPLAYED_DATE                  = new CCEnumProperty<>(CAT_SERIESFRAME,     this,   "PROP_SERIES_DISPLAYED_DATE",                  DisplayDateAlgorithm.LAST_VIEWED,   DisplayDateAlgorithm.getWrapper());
+		PROP_PREVSERIES_3DCOVER                     = new CCBoolProperty(CAT_SERIESFRAME,       this,   "PROP_PREVSERIES_3DCOVER",                     true);
+		PROP_PREVSERIES_SMALLER_COVER               = new CCBoolProperty(CAT_SERIESFRAME,       this,   "PROP_PREVSERIES_SMALLERCOVER",                true);
+		PROP_PREVSERIES_COVERBORDER                 = new CCBoolProperty(CAT_SERIESFRAME,       this,   "PROP_PREVSERIES_COVERBORDER",                 true);
 
 		PROP_SELF_DIRECTORY                         = new CCStringProperty(CAT_DATABASE,        this,   "PROP_SELF_DIRECTORY",                         "");
 		PROP_COVER_TYPE                             = new CCStringProperty(CAT_DATABASE,        this,   "PROP_COVER_TYPE",                             "png");
@@ -371,17 +385,10 @@ public class CCProperties implements ICCPropertySource {
 		PROP_STATUSBAR_CALC_SERIES_IN_LENGTH        = new CCBoolProperty(CAT_SERIES,            this,   "PROP_STATUSBAR_CALC_SERIES_IN_LENGTH",        false);
 		PROP_STATUSBAR_CALC_SERIES_IN_SIZE          = new CCBoolProperty(CAT_SERIES,            this,   "PROP_STATUSBAR_CALC_SERIES_IN_SIZE",          false);
 		PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT          = new CCBoolProperty(CAT_SERIES,            this,   "PROP_INCLUDE_SERIES_IN_VIEWEDCOUNT",          false);
-		PROP_PREVSERIES_3DCOVER                     = new CCBoolProperty(CAT_SERIES,            this,   "PROP_PREVSERIES_3DCOVER",                     true);
-		PROP_PREVSERIES_SMALLER_COVER               = new CCBoolProperty(CAT_SERIES,            this,   "PROP_PREVSERIES_SMALLERCOVER",                true);
-		PROP_PREVSERIES_COVERBORDER                 = new CCBoolProperty(CAT_SERIES,            this,   "PROP_PREVSERIES_COVERBORDER",                 true);
 		PROP_SERIES_ADDDATECALCULATION              = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_ADDDATECALCULATION",              AddDateAlgorithm.NEWEST_DATE,       AddDateAlgorithm.getWrapper());
-		PROP_SERIES_DISPLAYED_DATE                  = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_DISPLAYED_DATE",                  DisplayDateAlgorithm.LAST_VIEWED,   DisplayDateAlgorithm.getWrapper());
-		PROP_SHOW_PARTIAL_VIEWED_STATE              = new CCBoolProperty(CAT_SERIES,            this,   "PROP_SHOW_PARTIAL_VIEWED_STATE",              false);
 		PROP_SEASON_INDEX_REGEXPRESSIONS            = new CCSeasonRegexListProperty(CAT_SERIES, this,   "PROP_SEASON_INDEX_REGEXPRESSIONS",            getDefSeasonRegex());
 		PROP_SERIES_NEXT_EPISODE_HEURISTIC          = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_NEXT_EPISODE_HEURISTIC",          NextEpisodeHeuristic.AUTOMATIC,     NextEpisodeHeuristic.getWrapper());
-		PROP_PREVIEWSERIES_SINGLETON                = new CCBoolProperty(CAT_SERIES,            this,   "PROP_PREVIEWSERIES_SINGLETON",                true);
 		PROP_SERIES_VIEWCOUNT_MODE                  = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_VIEWCOUNT_MODE",                  SeriesViewCountMode.AGGREGATE_MIN,  SeriesViewCountMode.getWrapper());
-		PROP_SERIESFRAME_VISIBLE_COLUMNS            = new CCOrderedEnumSetProperty<>(CAT_SERIES, this,  "PROP_SERIESFRAME_VISIBLE_COLUMNS",            SeriesFrameColumn.getWrapper().allValues(), SeriesFrameColumn.getWrapper());
 
 		PROP_PLAY_PRIMARY_MEDIAPLAYER               = new CCExecutableProperty(CAT_PLAY,        this,   "PROP_PLAY_PRIMARY_MEDIAPLAYER",               FSPath.Empty,                       MediaPlayerPathConf.INST);
 		PROP_PLAY_VLC_PATH                          = new CCExecutableProperty(CAT_PLAY,        this,   "PROP_PLAY_VLC_PATH",                          FSPath.Empty,                       VLCPathConf.INST);

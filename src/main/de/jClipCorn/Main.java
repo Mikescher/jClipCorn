@@ -26,18 +26,18 @@ import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 //
 // ========== GRADLE ==========
 //
-// $ gradlew betaJar                 // for local release
+// $ make betaJar                 // for local release
 //
-// $ gradlew manualReleaseJar        // full (local) release  (add tag first for proper vers number)
+// $ make manualReleaseJar        // full (local) release  (add tag first for proper vers number)
 //
 // ============================
 //
 
 public class Main {
 	public final static String TITLE             = "jClipCorn";                                                             //$NON-NLS-1$
-	public final static String VERSION           = /*<gradle_version_marker>*/"1.11.1.8"/*</gradle_version_marker>*/;     //$NON-NLS-1$
+	public final static String VERSION           = /*<gradle_version_marker>*/"1.11.1.9"/*</gradle_version_marker>*/;     //$NON-NLS-1$
 	public final static String DBVERSION         = "38";                                                                    //$NON-NLS-1$
-	public final static String USERDATA_DBVERSION= "2";                                                                     //$NON-NLS-1$
+	public final static String USERDATA_DBVERSION= "3";                                                                     //$NON-NLS-1$
 	public final static String JXMLVER           = "11";                                                                    //$NON-NLS-1$
 	public final static String DATABASE_NAME     = "ClipCornDB";                                                            //$NON-NLS-1$
 	public final static String LOG_PATH          = "jClipcorn.log";                                                         //$NON-NLS-1$

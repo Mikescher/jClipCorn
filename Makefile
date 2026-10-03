@@ -38,10 +38,10 @@ betaJar:
 	@_setup/betajar.sh
 
 
-# create release, first set the version and beta-flag in Main.java
-# does not inc version number, build the currently specified version
-anyReleaseJar:
-	./gradlew anyReleaseJar
+# full (local) release | create a new release, based on the latest tag version
+# (add tag first for proper vers number)
+manualReleaseJar:
+	./gradlew manualReleaseJar
 
 
 # create changelog

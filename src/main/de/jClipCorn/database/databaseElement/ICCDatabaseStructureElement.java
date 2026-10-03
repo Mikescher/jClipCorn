@@ -34,6 +34,7 @@ public interface ICCDatabaseStructureElement {
 	CCDate                 getAddDate();
 
 	ExtendedViewedState    getExtendedViewedState();
+	ExtendedViewedState    getExtendedViewedState(boolean showViewCount);
 	String                 getQualifiedTitle();
 	CCUUID                 getID();
 	CCMovieList            getMovieList();

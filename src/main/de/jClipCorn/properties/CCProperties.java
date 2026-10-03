@@ -188,6 +188,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCEnumProperty<ColorQuantizerMethod>             PROP_DATABASE_COVER_QUANTIZER;
 	public CCStringSetProperty                              PROP_CHECKDATABASE_OPTIONS;
 	public CCOrderedEnumSetProperty<MainFrameColumn>        PROP_MAINFRAME_VISIBLE_COLUMNS;
+	public CCOrderedEnumSetProperty<SeriesFrameColumn>      PROP_SERIESFRAME_VISIBLE_COLUMNS;
 	public CCBoolProperty                                   PROP_VLC_ROBOT_ENABLED;
 	public CCRIntProperty                                   PROP_VLC_ROBOT_PORT;
 	public CCStringProperty                                 PROP_VLC_ROBOT_PASSWORD;
@@ -380,6 +381,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_SERIES_NEXT_EPISODE_HEURISTIC          = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_NEXT_EPISODE_HEURISTIC",          NextEpisodeHeuristic.AUTOMATIC,     NextEpisodeHeuristic.getWrapper());
 		PROP_PREVIEWSERIES_SINGLETON                = new CCBoolProperty(CAT_SERIES,            this,   "PROP_PREVIEWSERIES_SINGLETON",                true);
 		PROP_SERIES_VIEWCOUNT_MODE                  = new CCEnumProperty<>(CAT_SERIES,          this,   "PROP_SERIES_VIEWCOUNT_MODE",                  SeriesViewCountMode.AGGREGATE_MIN,  SeriesViewCountMode.getWrapper());
+		PROP_SERIESFRAME_VISIBLE_COLUMNS            = new CCOrderedEnumSetProperty<>(CAT_SERIES, this,  "PROP_SERIESFRAME_VISIBLE_COLUMNS",            SeriesFrameColumn.getWrapper().allValues(), SeriesFrameColumn.getWrapper());
 
 		PROP_PLAY_PRIMARY_MEDIAPLAYER               = new CCExecutableProperty(CAT_PLAY,        this,   "PROP_PLAY_PRIMARY_MEDIAPLAYER",               FSPath.Empty,                       MediaPlayerPathConf.INST);
 		PROP_PLAY_VLC_PATH                          = new CCExecutableProperty(CAT_PLAY,        this,   "PROP_PLAY_VLC_PATH",                          FSPath.Empty,                       VLCPathConf.INST);

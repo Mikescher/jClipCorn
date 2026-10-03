@@ -15,6 +15,7 @@ import de.jClipCorn.features.actionTree.menus.impl.ClipMoviePopup;
 import de.jClipCorn.features.actionTree.menus.impl.ClipSeriesPopup;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.table.filter.customFilter.CustomSearchFilter;
+import de.jClipCorn.gui.frames.previewSeriesFrame.PreviewSeriesFrame;
 import de.jClipCorn.gui.frames.quickAddMoviesDialog.QuickAddMoviesDialog;
 import de.jClipCorn.gui.frames.showUpdateFrame.ShowUpdateFrame;
 import de.jClipCorn.gui.frames.shutdownFrame.ShutdownFrame;
@@ -333,6 +334,11 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 			clipTable.applyColumnConfig(ccprops().PROP_MAINFRAME_VISIBLE_COLUMNS.getValue(), false);
 			clipTable.autoResize();
 			clipTable.storeColumnSizeCache();
+		}
+
+		if (CCStreams.iterate(changes).any(c -> Str.equals(c, ccprops().PROP_SERIESFRAME_VISIBLE_COLUMNS.getIdentifier())))
+		{
+			PreviewSeriesFrame.applyColumnConfigToAll(ccprops().PROP_SERIESFRAME_VISIBLE_COLUMNS.getValue());
 		}
 
 		if (CCStreams.iterate(changes).any(c -> Str.equals(c, ccprops().PROP_TOOLBAR_ELEMENTS.getIdentifier())))

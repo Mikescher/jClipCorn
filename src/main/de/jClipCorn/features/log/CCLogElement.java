@@ -72,6 +72,15 @@ public class CCLogElement {
 		}
 	}
 	
+	/** Like FORMAT_LEVEL_FULL, but informations only carry their caller instead of the whole stack trace. */
+	public String getFormattedForFile() {
+		if (type == CCLogType.LOG_ELEM_INFORMATION) {
+			return getTypeStringRepresentation() + ": " + text + "\n" + getCallerTrace(); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		return getFormatted(FORMAT_LEVEL_FULL);
+	}
+
 	public String getFirstLine() {
 		int i = text.indexOf('\n');
 		if (i == -1) {
@@ -117,6 +126,8 @@ public class CCLogElement {
 	}
 
 	private String getCallerTrace() {
+		if (sTrace.isEmpty()) return ""; //$NON-NLS-1$
+
 		for (StackTraceElement ste : sTrace) {
 			if (! ste.getClassName().endsWith("." + EXCLUSION_CLASS)) { //$NON-NLS-1$
 				return formatStackTraceElement(ste, true);

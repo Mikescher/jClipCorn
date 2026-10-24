@@ -367,7 +367,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_COVER_TYPE                             = new CCStringProperty(CAT_DATABASE,        this,   "PROP_COVER_TYPE",                             "png");
 		PROP_DATABASE_COVERCACHESIZE                = new CCPIntProperty(CAT_DATABASE,          this,   "PROP_DATABASE_COVERCACHESIZE",                128);
 		PROP_DATABASE_MAX_COVER_SIZE                = new CCEnumProperty<>(CAT_DATABASE,        this,   "PROP_DATABASE_MAX_COVER_SIZE",                CoverImageSize.BASE_SIZE,           CoverImageSize.getWrapper());
-		PROP_LOG_MAX_LINECOUNT                      = new CCPIntProperty(CAT_DATABASE,          this,   "PROP_LOG_MAX_LINECOUNT",                      1048576); // 2^20
+		PROP_LOG_MAX_LINECOUNT                      = new CCPIntProperty(CAT_DATABASE,          this,   "PROP_LOG_MAX_LINECOUNT",                      100000);
 		PROP_DATABASE_LOAD_ALL_COVERDATA            = new CCBoolProperty(CAT_DATABASE,          this,   "PROP_DATABASE_LOAD_ALL_COVERDATA",            false);
 		PROP_DATABASE_COVER_QUANTIZER               = new CCEnumProperty<>(CAT_DATABASE,        this,   "PROP_DATABASE_COVER_QUANTIZER",               ColorQuantizerMethod.HSL_DISTINCT_SELECTION, ColorQuantizerMethod.getWrapper());
 		PROP_DATABASE_TRANSACTION_LOG               = new CCBoolProperty(CAT_DATABASE,          this,   "PROP_DATABASE_TRANSACTION_LOG",               true);

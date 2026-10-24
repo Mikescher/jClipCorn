@@ -15,13 +15,27 @@ import de.jClipCorn.util.sqlwrapper.StatementType;
 import javax.swing.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * New log elements are appended to the log file in the background while the application runs, so a crash
+ * loses at most FLUSH_DELAY_MILLIS of log and the shutdown only has to write the last few elements.
+ * <p>
+ * Once the file exceeds PROP_LOG_MAX_LINECOUNT it is cut down to TRIM_TO_RATIO of the limit - cutting
+ * rewrites the whole file, which is slow on a network share, so it must not happen on every write.
+ */
 public class CCLogInternal {
-	private static final boolean LOG_APPEND = true; // Log lasts over multiple Sessions
+	private static final long   FLUSH_DELAY_MILLIS = 2000;
+	private static final double TRIM_TO_RATIO      = 0.75;
 
 	private static List<CCLogElement>         log       = new Vector<>();
 	private static List<CCLogChangedListener> listener  = new Vector<>();
@@ -44,6 +58,18 @@ public class CCLogInternal {
 	private static final Object _obsLock    = new Object();
 	private static final Object _sqlLock    = new Object();
 	private static final Object _changeLock = new Object();
+	private static final Object _flushLock  = new Object();
+
+	// guarded by _flushLock
+	private static ScheduledExecutorService _flushExec = null;
+	private static boolean _flushScheduled = false;
+	private static boolean _shutdownHookRegistered = false;
+
+	// guarded by _fileLock
+	private static int     _writtenCount = 0;     // elements of `log` that are already in the file
+	private static boolean _headerWritten = false;
+	private static long    _fileLineCount = -1;   // -1 = not counted yet
+	private static boolean _writeErrorReported = false;
 
 	private static final AtomicBoolean hasUnwatchedInformation = new AtomicBoolean(false);
 	private static final AtomicBoolean hasUnwatchedWarnings    = new AtomicBoolean(false);
@@ -66,6 +92,16 @@ public class CCLogInternal {
 
 	public static void setPath(String p) {
 		path = p;
+
+		synchronized (_flushLock) {
+			if (!_shutdownHookRegistered) {
+				// covers every System.exit and SIGTERM - must not report errors, that would block on the EDT
+				Runtime.getRuntime().addShutdownHook(new Thread(() -> flush(false), "THREAD_LOG_SHUTDOWN_FLUSH")); //$NON-NLS-1$
+				_shutdownHookRegistered = true;
+			}
+		}
+
+		scheduleFlush(false);
 	}
 
 	public static void setCCProps(CCProperties ccp) {
@@ -80,6 +116,8 @@ public class CCLogInternal {
 		synchronized (_dataLock) {
 			log.add(cle);
 		}
+
+		scheduleFlush(type == CCLogType.LOG_ELEM_ERROR || type == CCLogType.LOG_ELEM_FATALERROR || type == CCLogType.LOG_ELEM_UNDEFINED);
 
 		if (isUnitTest)
 		{
@@ -138,90 +176,139 @@ public class CCLogInternal {
 		}
 	}
 
+	/** Writes all elements that are not yet in the log file - synchronously, on the calling thread. */
 	public static void save() {
-		if (isUnitTest) return;
+		flush(true);
+	}
 
-		if (Main.ARG_READONLY) {
-			CCLog.addInformation(LocaleBundle.getString("LogMessage.OperationFailedDueToReadOnly")); //$NON-NLS-1$
-			return;
-		}
+	private static void scheduleFlush(boolean immediate) {
+		if (isUnitTest || Main.ARG_READONLY) return;
 
-		synchronized (_fileLock) {
-			FileWriter file = null;
-			PrintWriter out = null;
-			try {
-				file = new FileWriter(path, LOG_APPEND);
-				out = new PrintWriter(file);
+		synchronized (_flushLock) {
+			if (_flushScheduled && !immediate) return;
+			_flushScheduled = true;
 
-				if (LOG_APPEND) {
-					out.print('\n');
-					out.print("--------------------------------  " + CCDate.getCurrentDate().toStringSerialize() + "  --------------------------------" + '\n'); //$NON-NLS-1$ //$NON-NLS-2$
-					out.print('\n');
-				}
-
-				synchronized (_dataLock) {
-					for (CCLogElement el : log) {
-						out.print(el.getFormatted(CCLogElement.FORMAT_LEVEL_FULL) + '\n');
-					}
-				}
-			} catch (IOException e) {
-				add(e.toString(), CCLogType.LOG_ELEM_ERROR, e.getStackTrace());
-			} finally {
-				if (out != null) {
-					out.close();
-				}
-				if (file != null) {
-					try {
-						file.close();
-					} catch (IOException e) {
-						add(e.toString(), CCLogType.LOG_ELEM_ERROR, e.getStackTrace());
-					}
-				}
+			if (_flushExec == null) {
+				_flushExec = Executors.newSingleThreadScheduledExecutor(r ->
+				{
+					Thread t = new Thread(r, "THREAD_LOG_WRITER"); //$NON-NLS-1$
+					t.setDaemon(true);
+					return t;
+				});
 			}
 
-			if (LOG_APPEND && ccprops != null) {
-				try {
-					BufferedReader reader = new BufferedReader(new FileReader(path));
-					int lines = 0;
-					while (reader.readLine() != null) {
-						lines++;
-					}
-					reader.close();
-
-					lines -= ccprops.PROP_LOG_MAX_LINECOUNT.getValue();
-
-					removeFirstNLine(new File(path), lines);
-				} catch (IOException e) {
-					add(e.toString(), CCLogType.LOG_ELEM_ERROR, e.getStackTrace());
-				}
-			}
+			_flushExec.schedule(CCLogInternal::runScheduledFlush, immediate ? 0 : FLUSH_DELAY_MILLIS, TimeUnit.MILLISECONDS);
 		}
 	}
 
-	private static void removeFirstNLine(File f, int toRemove) throws IOException {
-		RandomAccessFile raf = new RandomAccessFile(f, "rw"); //$NON-NLS-1$
-
-		long writePos = raf.getFilePointer();
-
-		for (int i = 0; i < toRemove; i++) {
-			raf.readLine();
+	private static void runScheduledFlush() {
+		synchronized (_flushLock) {
+			_flushScheduled = false;
 		}
 
-		raf.readLine();
-		long readPos = raf.getFilePointer();
+		flush(true);
+	}
 
-		byte[] buf = new byte[2048];
-		int bufbyte;
-		while (-1 != (bufbyte = raf.read(buf))) {
-			raf.seek(writePos);
-			raf.write(buf, 0, bufbyte);
-			readPos += bufbyte;
-			writePos += bufbyte;
-			raf.seek(readPos);
+	private static void flush(boolean reportErrors) {
+		if (isUnitTest || Main.ARG_READONLY || path == null) return;
+
+		IOException error = null;
+
+		synchronized (_fileLock) {
+			List<CCLogElement> pending;
+			synchronized (_dataLock) {
+				if (_writtenCount >= log.size()) return;
+				pending = new ArrayList<>(log.subList(_writtenCount, log.size()));
+			}
+
+			try {
+				File file = new File(path);
+
+				if (_fileLineCount < 0) _fileLineCount = countLines(file);
+
+				long newLines = 0;
+				try (Writer out = new BufferedWriter(new FileWriter(file, true))) {
+					if (!_headerWritten) {
+						String header = "\n--------------------------------  " + CCDate.getCurrentDate().toStringSerialize() + "  --------------------------------\n\n"; //$NON-NLS-1$ //$NON-NLS-2$
+						out.write(header);
+						newLines += countLines(header);
+					}
+
+					for (CCLogElement el : pending) {
+						String str = el.getFormattedForFile() + '\n';
+						out.write(str);
+						newLines += countLines(str);
+					}
+				}
+
+				_headerWritten = true;
+				_writtenCount += pending.size();
+				_fileLineCount += newLines;
+				_writeErrorReported = false;
+
+				if (ccprops != null) {
+					int maxLines = ccprops.PROP_LOG_MAX_LINECOUNT.getValue();
+					if (_fileLineCount > maxLines) {
+						long keep = (long) (maxLines * TRIM_TO_RATIO);
+						removeFirstLines(file, _fileLineCount - keep);
+						_fileLineCount = keep;
+					}
+				}
+			} catch (IOException e) {
+				// reported once - the error element itself triggers the next flush, which would fail again
+				if (!_writeErrorReported) error = e;
+				_writeErrorReported = true;
+			}
 		}
 
-		raf.setLength(writePos);
-		raf.close();
+		if (error != null) {
+			if (reportErrors) add(error.toString(), CCLogType.LOG_ELEM_ERROR, error.getStackTrace());
+			else error.printStackTrace();
+		}
+	}
+
+	private static long countLines(String str) {
+		long n = 0;
+		for (int i = 0; i < str.length(); i++) if (str.charAt(i) == '\n') n++;
+		return n;
+	}
+
+	public static long countLines(File f) throws IOException {
+		if (!f.exists()) return 0;
+
+		long n = 0;
+		byte[] buf = new byte[64 * 1024];
+		try (InputStream in = new FileInputStream(f)) {
+			int len;
+			while ((len = in.read(buf)) != -1) {
+				for (int i = 0; i < len; i++) if (buf[i] == '\n') n++;
+			}
+		}
+		return n;
+	}
+
+	/** Rewrites the file without its first `count` lines - into a temp file that then replaces the original. */
+	public static void removeFirstLines(File f, long count) throws IOException {
+		if (count <= 0) return;
+
+		File tmp = new File(f.getPath() + ".tmp"); //$NON-NLS-1$
+		try {
+			try (InputStream in = new BufferedInputStream(new FileInputStream(f), 64 * 1024); OutputStream out = new BufferedOutputStream(new FileOutputStream(tmp), 64 * 1024)) {
+				int b;
+				while (count > 0 && (b = in.read()) != -1) {
+					if (b == '\n') count--;
+				}
+				in.transferTo(out);
+			}
+
+			try {
+				Files.move(tmp.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+			} catch (AtomicMoveNotSupportedException e) {
+				Files.move(tmp.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			}
+		} finally {
+			Files.deleteIfExists(tmp.toPath());
+		}
 	}
 
 	public static int getCount(CCLogType type) {

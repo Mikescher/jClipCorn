@@ -190,10 +190,10 @@ public class MainFrame extends JCCFrame implements FileDrop.Listener, IActionRoo
 		var thread = new Thread(() ->
 		{
 			try {
+				movielist.shutdown(onStep);
+
 				onStep.step(LocaleBundle.getString("ShutdownFrame.step.SaveLog")); //$NON-NLS-1$
 				CCLog.save();
-
-				movielist.shutdown(onStep);
 
 				if (afterShutdown != null) afterShutdown.run();
 			} catch (Throwable e) {

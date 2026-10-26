@@ -57,6 +57,21 @@ public enum CCUserScore implements ContinoousEnum<CCUserScore> {
 
 	public int getOrder() { return order; }
 
+	/** NFO &lt;userrating&gt; on a 1-10 scale, or 0 for RATING_NO */
+	public int asNfoUserRating() {
+		switch (this) {
+			case RATING_0:   return 1;
+			case RATING_I:   return 3;
+			case RATING_II:  return 4;
+			case RATING_MID: return 6;
+			case RATING_III: return 7;
+			case RATING_IV:  return 9;
+			case RATING_V:   return 10;
+			case RATING_NO:  return 0;
+			default:         return 0;
+		}
+	}
+
 	public static int compare(CCUserScore s1, CCUserScore s2) {
 		return Integer.compare(s1.getOrder(), s2.getOrder());
 	}

@@ -74,11 +74,9 @@ public class SeasonNFOWriter {
 			}
 		}
 
-		// User rating (1-10 scale, jClipCorn uses 0-6)
-		int score = season.getScore().asInt();
-		if (score > 0) {
-			// Convert from 0-6 scale to 1-10 scale
-			int userRating = (int) Math.round(score * 10.0 / 6.0);
+		// User rating (1-10 scale)
+		int userRating = season.getScore().asNfoUserRating();
+		if (userRating > 0) {
 			root.addContent(new Element("userrating").setText(String.valueOf(userRating)));
 		}
 

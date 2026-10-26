@@ -75,11 +75,9 @@ public class SeriesNFOWriter {
 			}
 		}
 
-		// User rating (1-10 scale, jClipCorn uses 0-6)
-		int score = series.Score.get().asInt();
-		if (score > 0) {
-			// Convert from 0-6 scale to 1-10 scale
-			int userRating = (int) Math.round(score * 10.0 / 6.0);
+		// User rating (1-10 scale)
+		int userRating = series.Score.get().asNfoUserRating();
+		if (userRating > 0) {
 			root.addContent(new Element("userrating").setText(String.valueOf(userRating)));
 		}
 

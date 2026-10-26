@@ -38,7 +38,7 @@ public class EDateTimeListProp extends EProperty<CCDateTimeList> {
 	}
 
 	@Override
-	public void deserializeFromDatabaseValue(Object v) {
+	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set(CCDateTimeList.fromJSONArray((String)v));
 	}
 

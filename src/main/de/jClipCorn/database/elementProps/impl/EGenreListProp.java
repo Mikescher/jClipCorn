@@ -49,7 +49,7 @@ public class EGenreListProp extends EProperty<CCGenreList> {
 	}
 
 	@Override
-	public void deserializeFromDatabaseValue(Object v) {
+	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set(CCGenreList.fromJSONArray((String)v));
 	}
 

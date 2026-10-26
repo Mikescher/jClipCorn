@@ -1,6 +1,8 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.JSONListFormatException;
 import de.jClipCorn.util.exceptions.TagNotFoundException;
 import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
@@ -31,7 +33,7 @@ public class CCTagList implements CCIterable<CCSingleTag>
 		this.tags = Collections.unmodifiableSet(new HashSet<>(tagSet));
 	}
 
-	public static CCTagList fromJSONArray(String jsonString) {
+	public static CCTagList fromJSONArray(String jsonString) throws CCFormatException {
 		if (Str.isNullOrWhitespace(jsonString) || jsonString.equals("[]")) {
 			return EMPTY;
 		}
@@ -48,8 +50,7 @@ public class CCTagList implements CCIterable<CCSingleTag>
 			
 			return new CCTagList(tagSet);
 		} catch (JSONException | TagNotFoundException e) {
-			// Return empty on parse error
-			return EMPTY;
+			throw new JSONListFormatException(jsonString, e);
 		}
 	}
 

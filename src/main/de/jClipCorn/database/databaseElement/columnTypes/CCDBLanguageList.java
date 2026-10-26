@@ -5,6 +5,7 @@ import de.jClipCorn.gui.resources.Resources;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.IntParseException;
+import de.jClipCorn.util.exceptions.JSONListFormatException;
 import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
@@ -88,7 +89,7 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 		return arr.toString();
 	}
 
-	public static CCDBLanguageList fromJSONArray(String json) {
+	public static CCDBLanguageList fromJSONArray(String json) throws CCFormatException {
 		if (Str.isNullOrWhitespace(json) || json.equals("[]")) return EMPTY;
 
 		try {
@@ -97,7 +98,7 @@ public class CCDBLanguageList implements CCIterable<CCDBLanguage> {
 			for (int i = 0; i < arr.length(); i++) r.add(CCDBLanguage.getWrapper().findOrException(arr.getInt(i)));
 			return new CCDBLanguageList(r);
 		} catch (JSONException | CCFormatException e) {
-			return EMPTY;
+			throw new JSONListFormatException(json, e);
 		}
 	}
 

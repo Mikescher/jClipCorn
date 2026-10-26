@@ -33,7 +33,7 @@ public class EOnlineRefListProp extends EProperty<CCOnlineReferenceList> {
 	}
 
 	@Override
-	public void deserializeFromDatabaseValue(Object v) {
+	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set(CCOnlineReferenceList.fromJSONArray((String)v));
 	}
 

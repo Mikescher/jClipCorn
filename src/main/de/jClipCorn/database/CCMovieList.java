@@ -39,6 +39,7 @@ import de.jClipCorn.util.comparator.CCMovieComparator;
 import de.jClipCorn.util.comparator.CCSeriesComparator;
 import de.jClipCorn.util.datatypes.*;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.filesystem.CCPath;
 import de.jClipCorn.util.filesystem.FSPath;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
@@ -51,6 +52,7 @@ import de.jClipCorn.util.lambda.Func0to0;
 import de.jClipCorn.util.lambda.Func1to0WithGenericException;
 import de.jClipCorn.util.lambda.Func4to0;
 import de.jClipCorn.util.sqlwrapper.CCSQLKVKey;
+import de.jClipCorn.util.sqlwrapper.SQLWrapperException;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.CCStreams;
 import de.jClipCorn.util.stream.IterableStream;
@@ -128,9 +130,7 @@ public class CCMovieList implements ICCPropertySource {
 		var ml = new CCMovieList(db, ccprops);
 		ml.coverCache = coverCache;
 
-		db.fillGroups(ml);
-		db.fillMovieList(ml);
-		db.fillCoverCache(ml.coverCache, true);
+		ml.fillForTests();
 		
 		return ml;
 	}
@@ -145,9 +145,7 @@ public class CCMovieList implements ICCPropertySource {
 		
 		var ml = new CCMovieList(db, ccprops);
 
-		db.fillGroups(ml);
-		db.fillMovieList(ml);
-		db.fillCoverCache(ml.coverCache, true);
+		ml.fillForTests();
 
 		return ml;
 	}
@@ -219,6 +217,9 @@ public class CCMovieList implements ICCPropertySource {
 
 					fireOnAfterLoad();
 				} catch (Throwable e) {
+					// a partially loaded list would hide the error and invite edits on incomplete data
+					discardLoadedData();
+
 					// not addFatalError(), that would terminate the application
 					CCLog.addError(LocaleBundle.getString("LogMessage.ErrorLoadDB"), e); //$NON-NLS-1$
 					DialogHelper.showDispatchError(mf, LocaleBundle.getString("Dialogs.GenericCaption.Error"), LocaleBundle.getString("LogMessage.ErrorLoadDB")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -263,10 +264,32 @@ public class CCMovieList implements ICCPropertySource {
 
 		((CCMemoryCoverCache)coverCache).resetForTestReload();
 
-		// refill
-		database.fillGroups(CCMovieList.this);
-		database.fillMovieList(CCMovieList.this);
+		fillForTests();
+	}
+
+	private void fillForTests() {
+		try {
+			database.fillGroups(this);
+			database.fillMovieList(this);
+		} catch (SQLException | CCFormatException | SQLWrapperException e) {
+			throw new Error(e);
+		}
 		database.fillCoverCache(coverCache, true);
+	}
+
+	/** Memory only - the database rows stay untouched. */
+	private void discardLoadedData() {
+		try {
+			SwingUtils.invokeAndWaitConditionalThrow(() ->
+			{
+				list.clear();
+				databaseGroups.clear();
+				_cache.bust();
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			CCLog.addError(e);
+		}
+		fireOnRefresh();
 	}
 
 	public CCProperties ccprops() {

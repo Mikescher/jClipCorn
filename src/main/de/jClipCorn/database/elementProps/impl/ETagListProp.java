@@ -15,11 +15,11 @@ public class ETagListProp extends EProperty<CCTagList> {
 		super(name, defValue, p, t);
 	}
 
-	public void set(String jsonString) {
+	public void set(String jsonString) throws CCFormatException {
 		set(CCTagList.fromJSONArray(jsonString));
 	}
 
-	public void setOnly(String jsonString) {
+	public void setOnly(String jsonString) throws CCFormatException {
 		setOnly(CCTagList.fromJSONArray(jsonString));
 	}
 
@@ -77,7 +77,7 @@ public class ETagListProp extends EProperty<CCTagList> {
 	}
 
 	@Override
-	public void deserializeFromDatabaseValue(Object v) {
+	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set(CCTagList.fromJSONArray((String)v));
 	}
 

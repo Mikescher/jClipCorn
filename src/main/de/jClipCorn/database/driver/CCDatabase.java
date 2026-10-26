@@ -1154,171 +1154,160 @@ public class CCDatabase {
 		}
 	}
 
-	public void fillMovieList(CCMovieList ml) {
-		try
+	public void fillMovieList(CCMovieList ml) throws SQLException, CCFormatException, SQLWrapperException {
+		if (ml.ccprops().PROP_LOADING_LIVEUPDATE.getValue())
 		{
-			if (ml.ccprops().PROP_LOADING_LIVEUPDATE.getValue())
 			{
-				{
-					CCSQLStatement stmt1 = stmts.selectAllMoviesTabStatement;
-					stmt1.clearParameters();
+				CCSQLStatement stmt1 = stmts.selectAllMoviesTabStatement;
+				stmt1.clearParameters();
 
-					CCSQLResultSet rs1 = stmt1.executeQuery(this);
+				CCSQLResultSet rs1 = stmt1.executeQuery(this);
 
-					while (rs1.next()) ml.directlyInsert(createMovieFromDatabase(rs1, ml));
+				while (rs1.next()) ml.directlyInsert(createMovieFromDatabase(rs1, ml));
 
-					rs1.close();
-				}
-				{
-					CCSQLStatement stmt2 = stmts.selectAllSeriesTabStatement;
-					stmt2.clearParameters();
-
-					CCSQLResultSet rs2 = stmt2.executeQuery(this);
-
-					while (rs2.next()) {
-						CCSeries de = createSeriesFromDatabase(rs2, ml, true);
-						ml.directlyInsert(de);
-					}
-
-					rs2.close();
-				}
+				rs1.close();
 			}
-			else
 			{
-				HashMap<CCUUID, CCSeries> seriesMap = new HashMap<>();
+				CCSQLStatement stmt2 = stmts.selectAllSeriesTabStatement;
+				stmt2.clearParameters();
 
-				// MOVIES
-				{
-					CCSQLStatement stmt = stmts.selectAllMoviesTabStatement;
-					stmt.clearParameters();
+				CCSQLResultSet rs2 = stmt2.executeQuery(this);
 
-					CCSQLResultSet rs = stmt.executeQuery(this);
-
-					List<CCDatabaseElement> temp = new ArrayList<>();
-					while (rs.next()) {
-						CCMovie de = createMovieFromDatabase(rs, ml);
-						temp.add(de);
-					}
-					ml.directlyInsert(temp);
-
-					rs.close();
+				while (rs2.next()) {
+					CCSeries de = createSeriesFromDatabase(rs2, ml, true);
+					ml.directlyInsert(de);
 				}
 
-				// SERIES
-				{
-					CCSQLStatement stmt = stmts.selectAllSeriesTabStatement;
-					stmt.clearParameters();
-
-					CCSQLResultSet rs = stmt.executeQuery(this);
-
-					List<CCDatabaseElement> temp = new ArrayList<>();
-					while (rs.next()) {
-						CCSeries de = createSeriesFromDatabase(rs, ml, false);
-						temp.add(de);
-						if (de.getClass() == CCSeries.class) seriesMap.put(de.getID(), de);
-					}
-					ml.directlyInsert(temp);
-
-					rs.close();
-				}
-
-				HashMap<CCUUID, CCSeason> seasonMap = new HashMap<>();
-
-				// SEASONS
-				{
-					CCSQLStatement stmt = stmts.selectAllSeasonTabStatement;
-					stmt.clearParameters();
-
-					CCSeries lastSeries = null;
-
-					CCSQLResultSet rs = stmt.executeQuery(this);
-					while (rs.next()) {
-						CCUUID sid = CCUUID.parse(rs.getString(DatabaseStructure.COL_SEAS_SERIESID));
-						CCSeries ser = lastSeries;
-						if (ser == null || !ser.getID().equals(sid)) ser = seriesMap.get(sid);
-						lastSeries = ser;
-
-						ser.beginUpdating();
-						CCSeason season = createSeasonFromDatabase(rs, ser, false);
-						ser.directlyInsertSeason(season);
-						seasonMap.put(season.getID(), season);
-						ser.abortUpdating();
-					}
-					rs.close();
-				}
-
-				// EPISODES
-				{
-					CCSQLStatement stmt = stmts.selectAllEpisodeTabStatement;
-					stmt.clearParameters();
-
-					CCSeason lastSeason = null;
-
-					CCSQLResultSet rs = stmt.executeQuery(this);
-					while (rs.next()) {
-						CCUUID sid = CCUUID.parse(rs.getString(DatabaseStructure.COL_EPIS_SEASONID));
-						CCSeason sea = lastSeason;
-						if (sea == null || !sea.getID().equals(sid)) sea = seasonMap.get(sid);
-						lastSeason = sea;
-
-						sea.beginUpdating();
-						CCEpisode episode = createEpisodeFromDatabase(rs, sea);
-						sea.directlyInsertEpisode(episode);
-						sea.abortUpdating();
-					}
-					rs.close();
-				}
-
-				for (CCSeason s : seasonMap.values()) s.enforceOrder();
-				for (CCSeries s : seriesMap.values()) s.enforceOrder();
-
-				// NOTE: Series/Season NFO-paths depend on guessSeriesBasePath(), which iterates the (now attached) episodes, 
-				// so they must be (re)computed *here*, after the episodes are added. 
-				
-				HashMap<CCUUID, FSPath> seriesBasePaths = new HashMap<>();
-				for (CCSeries s : seriesMap.values()) {
-					FSPath basePath = s.guessSeriesBasePath();
-					seriesBasePaths.put(s.getID(), basePath);
-					s.initNfoPaths(basePath);
-				}
-
-				for (CCSeason s : seasonMap.values()) s.initNfoPaths(s.getSeries(), seriesBasePaths.get(s.getSeries().getID()));
-
-				ml.sortByIDAfterInitialLoad();
+				rs2.close();
 			}
-		} catch (SQLException | CCFormatException | SQLWrapperException e) {
-			CCLog.addError(e);
+		}
+		else
+		{
+			HashMap<CCUUID, CCSeries> seriesMap = new HashMap<>();
+
+			// MOVIES
+			{
+				CCSQLStatement stmt = stmts.selectAllMoviesTabStatement;
+				stmt.clearParameters();
+
+				CCSQLResultSet rs = stmt.executeQuery(this);
+
+				List<CCDatabaseElement> temp = new ArrayList<>();
+				while (rs.next()) {
+					CCMovie de = createMovieFromDatabase(rs, ml);
+					temp.add(de);
+				}
+				ml.directlyInsert(temp);
+
+				rs.close();
+			}
+
+			// SERIES
+			{
+				CCSQLStatement stmt = stmts.selectAllSeriesTabStatement;
+				stmt.clearParameters();
+
+				CCSQLResultSet rs = stmt.executeQuery(this);
+
+				List<CCDatabaseElement> temp = new ArrayList<>();
+				while (rs.next()) {
+					CCSeries de = createSeriesFromDatabase(rs, ml, false);
+					temp.add(de);
+					if (de.getClass() == CCSeries.class) seriesMap.put(de.getID(), de);
+				}
+				ml.directlyInsert(temp);
+
+				rs.close();
+			}
+
+			HashMap<CCUUID, CCSeason> seasonMap = new HashMap<>();
+
+			// SEASONS
+			{
+				CCSQLStatement stmt = stmts.selectAllSeasonTabStatement;
+				stmt.clearParameters();
+
+				CCSeries lastSeries = null;
+
+				CCSQLResultSet rs = stmt.executeQuery(this);
+				while (rs.next()) {
+					CCUUID sid = CCUUID.parse(rs.getString(DatabaseStructure.COL_SEAS_SERIESID));
+					CCSeries ser = lastSeries;
+					if (ser == null || !ser.getID().equals(sid)) ser = seriesMap.get(sid);
+					lastSeries = ser;
+
+					ser.beginUpdating();
+					CCSeason season = createSeasonFromDatabase(rs, ser, false);
+					ser.directlyInsertSeason(season);
+					seasonMap.put(season.getID(), season);
+					ser.abortUpdating();
+				}
+				rs.close();
+			}
+
+			// EPISODES
+			{
+				CCSQLStatement stmt = stmts.selectAllEpisodeTabStatement;
+				stmt.clearParameters();
+
+				CCSeason lastSeason = null;
+
+				CCSQLResultSet rs = stmt.executeQuery(this);
+				while (rs.next()) {
+					CCUUID sid = CCUUID.parse(rs.getString(DatabaseStructure.COL_EPIS_SEASONID));
+					CCSeason sea = lastSeason;
+					if (sea == null || !sea.getID().equals(sid)) sea = seasonMap.get(sid);
+					lastSeason = sea;
+
+					sea.beginUpdating();
+					CCEpisode episode = createEpisodeFromDatabase(rs, sea);
+					sea.directlyInsertEpisode(episode);
+					sea.abortUpdating();
+				}
+				rs.close();
+			}
+
+			for (CCSeason s : seasonMap.values()) s.enforceOrder();
+			for (CCSeries s : seriesMap.values()) s.enforceOrder();
+
+			// NOTE: Series/Season NFO-paths depend on guessSeriesBasePath(), which iterates the (now attached) episodes, 
+			// so they must be (re)computed *here*, after the episodes are added. 
+			
+			HashMap<CCUUID, FSPath> seriesBasePaths = new HashMap<>();
+			for (CCSeries s : seriesMap.values()) {
+				FSPath basePath = s.guessSeriesBasePath();
+				seriesBasePaths.put(s.getID(), basePath);
+				s.initNfoPaths(basePath);
+			}
+
+			for (CCSeason s : seasonMap.values()) s.initNfoPaths(s.getSeries(), seriesBasePaths.get(s.getSeries().getID()));
+
+			ml.sortByIDAfterInitialLoad();
 		}
 	}
 
-	public void fillGroups(CCMovieList ml) {
-		try
-		{
-			// GROUPS
+	public void fillGroups(CCMovieList ml) throws SQLException, SQLWrapperException {
+		// GROUPS
 
-			CCSQLStatement stmt = stmts.selectGroupsStatement;
-			stmt.clearParameters();
+		CCSQLStatement stmt = stmts.selectGroupsStatement;
+		stmt.clearParameters();
 
-			CCSQLResultSet rs = stmt.executeQuery(this);
+		CCSQLResultSet rs = stmt.executeQuery(this);
 
-			while (rs.next()) {
+		while (rs.next()) {
 
-				String gn  = rs.getString(DatabaseStructure.COL_GRPS_NAME);
-				int go     = rs.getInt(DatabaseStructure.COL_GRPS_ORDER);
-				String gc  = rs.getString(DatabaseStructure.COL_GRPS_COLOR);
-				boolean gs = rs.getBoolean(DatabaseStructure.COL_GRPS_SERIALIZE);
-				String gp  = rs.getString(DatabaseStructure.COL_GRPS_PARENT);
-				boolean gv = rs.getBoolean(DatabaseStructure.COL_GRPS_VISIBLE);
-				if (gp == null) gp = Str.Empty;
+			String gn  = rs.getString(DatabaseStructure.COL_GRPS_NAME);
+			int go     = rs.getInt(DatabaseStructure.COL_GRPS_ORDER);
+			String gc  = rs.getString(DatabaseStructure.COL_GRPS_COLOR);
+			boolean gs = rs.getBoolean(DatabaseStructure.COL_GRPS_SERIALIZE);
+			String gp  = rs.getString(DatabaseStructure.COL_GRPS_PARENT);
+			boolean gv = rs.getBoolean(DatabaseStructure.COL_GRPS_VISIBLE);
+			if (gp == null) gp = Str.Empty;
 
-				ml.addGroupInternal(CCGroup.create(gn, go, gc, gs, gp, gv));
-			}
-
-			rs.close();
-
-		} catch (SQLException | SQLWrapperException e) {
-			CCLog.addError(e);
+			ml.addGroupInternal(CCGroup.create(gn, go, gc, gs, gp, gv));
 		}
+
+		rs.close();
 	}
 
 	public void fillCoverCache(ICoverCache coverCache, boolean loadAll) {
@@ -1394,54 +1383,44 @@ public class CCDatabase {
 		}
 	}
 
-	private void fillSeries(CCSeries ser) {
-		try {
-			CCSQLStatement stmt = stmts.selectSeasonTabStatement;
-			stmt.clearParameters();
+	private void fillSeries(CCSeries ser) throws SQLException, CCFormatException, SQLWrapperException {
+		CCSQLStatement stmt = stmts.selectSeasonTabStatement;
+		stmt.clearParameters();
 
-			stmt.setStr(DatabaseStructure.COL_SEAS_SERIESID, ser.getID().toString());
-			
-			CCSQLResultSet rs = stmt.executeQuery(this);
+		stmt.setStr(DatabaseStructure.COL_SEAS_SERIESID, ser.getID().toString());
+		
+		CCSQLResultSet rs = stmt.executeQuery(this);
 
-			ser.beginUpdating();
+		ser.beginUpdating();
 
-			while (rs.next()) {
-				ser.directlyInsertSeason(createSeasonFromDatabase(rs, ser, true));
-			}
-
-			ser.abortUpdating();
-			ser.enforceOrder();
-
-			rs.close();
-
-		} catch (SQLException | CCFormatException | SQLWrapperException e) {
-			CCLog.addError(e);
+		while (rs.next()) {
+			ser.directlyInsertSeason(createSeasonFromDatabase(rs, ser, true));
 		}
+
+		ser.abortUpdating();
+		ser.enforceOrder();
+
+		rs.close();
 	}
 
-	private void fillSeason(CCSeason se) {
-		try {
-			CCSQLStatement stmt = stmts.selectEpisodeTabStatement;
-			stmt.clearParameters();
+	private void fillSeason(CCSeason se) throws SQLException, CCFormatException, SQLWrapperException {
+		CCSQLStatement stmt = stmts.selectEpisodeTabStatement;
+		stmt.clearParameters();
 
-			stmt.setStr(DatabaseStructure.COL_EPIS_SEASONID, se.getID().toString());
-			
-			CCSQLResultSet rs = stmt.executeQuery(this);
+		stmt.setStr(DatabaseStructure.COL_EPIS_SEASONID, se.getID().toString());
+		
+		CCSQLResultSet rs = stmt.executeQuery(this);
 
-			se.beginUpdating();
+		se.beginUpdating();
 
-			while (rs.next()) {
-				se.directlyInsertEpisode(createEpisodeFromDatabase(rs, se));
-			}
-
-			se.abortUpdating();
-			se.enforceOrder();
-			
-			rs.close();
-			
-		} catch (SQLException | CCFormatException | SQLWrapperException e) {
-			CCLog.addError(e);
+		while (rs.next()) {
+			se.directlyInsertEpisode(createEpisodeFromDatabase(rs, se));
 		}
+
+		se.abortUpdating();
+		se.enforceOrder();
+		
+		rs.close();
 	}
 
 	public FSPath getDBPath() {

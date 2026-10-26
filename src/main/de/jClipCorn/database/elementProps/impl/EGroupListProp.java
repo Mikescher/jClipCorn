@@ -75,7 +75,7 @@ public class EGroupListProp extends EProperty<CCGroupList> {
 	}
 
 	@Override
-	public void deserializeFromDatabaseValue(Object v) {
+	public void deserializeFromDatabaseValue(Object v) throws CCFormatException {
 		set(CCGroupList.fromJSONArrayWithoutAddingNewGroups(parent.getMovieList(), (String)v));
 	}
 

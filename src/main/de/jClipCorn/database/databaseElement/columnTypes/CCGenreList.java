@@ -5,6 +5,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.EnumFormatException;
 import de.jClipCorn.util.exceptions.GenreOverflowException;
+import de.jClipCorn.util.exceptions.JSONListFormatException;
 import de.jClipCorn.util.stream.CCStream;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -357,7 +358,7 @@ public class CCGenreList {
 		return arr.toString();
 	}
 
-	public static CCGenreList fromJSONArray(String json) {
+	public static CCGenreList fromJSONArray(String json) throws CCFormatException {
 		if (Str.isNullOrWhitespace(json) || json.equals("[]")) return EMPTY;
 
 		try {
@@ -366,7 +367,7 @@ public class CCGenreList {
 			for (int i = 0; i < arr.length(); i++) lst.add(CCGenre.getWrapper().findOrException(arr.getInt(i)));
 			return new CCGenreList(lst);
 		} catch (JSONException | CCFormatException e) {
-			return EMPTY;
+			throw new JSONListFormatException(json, e);
 		}
 	}
 

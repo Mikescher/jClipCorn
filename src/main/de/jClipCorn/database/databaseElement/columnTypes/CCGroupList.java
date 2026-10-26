@@ -2,7 +2,9 @@ package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.exceptions.GroupFormatException;
+import de.jClipCorn.util.exceptions.JSONListFormatException;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
@@ -139,7 +141,7 @@ public class CCGroupList implements CCIterable<CCGroup> {
 		return arr.toString();
 	}
 
-	public static CCGroupList fromJSONArrayWithoutAddingNewGroups(CCMovieList ml, String json) {
+	public static CCGroupList fromJSONArrayWithoutAddingNewGroups(CCMovieList ml, String json) throws CCFormatException {
 		if (Str.isNullOrWhitespace(json) || json.equals("[]")) return new CCGroupList();
 
 		try {
@@ -147,7 +149,7 @@ public class CCGroupList implements CCIterable<CCGroup> {
 			List<CCGroup> gl = new ArrayList<>();
 			for (int i = 0; i < arr.length(); i++) {
 				String name = arr.getString(i);
-				if (! CCGroup.isValidGroupName(name)) continue;
+				if (! CCGroup.isValidGroupName(name)) throw new GroupFormatException(name, json);
 
 				CCGroup g = ml.getGroupOrNull(name);
 				if (g == null) g = CCGroup.create(name);
@@ -156,7 +158,7 @@ public class CCGroupList implements CCIterable<CCGroup> {
 			}
 			return new CCGroupList(gl);
 		} catch (JSONException e) {
-			return new CCGroupList();
+			throw new JSONListFormatException(json, e);
 		}
 	}
 

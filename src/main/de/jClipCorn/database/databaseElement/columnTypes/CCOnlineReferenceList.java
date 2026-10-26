@@ -1,6 +1,8 @@
 package de.jClipCorn.database.databaseElement.columnTypes;
 
 import de.jClipCorn.util.Str;
+import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.JSONListFormatException;
 import de.jClipCorn.util.exceptions.OnlineRefFormatException;
 import de.jClipCorn.util.helper.ObjectUtils;
 import de.jClipCorn.util.stream.CCIterable;
@@ -154,7 +156,7 @@ public class CCOnlineReferenceList implements CCIterable<CCSingleOnlineReference
 	}
 
 	@SuppressWarnings("nls")
-	public static CCOnlineReferenceList fromJSONArray(String json) {
+	public static CCOnlineReferenceList fromJSONArray(String json) throws CCFormatException {
 		if (Str.isNullOrWhitespace(json) || json.equals("[]")) return EMPTY;
 
 		try {
@@ -172,7 +174,7 @@ public class CCOnlineReferenceList implements CCIterable<CCSingleOnlineReference
 			if (main == null) main = CCSingleOnlineReference.EMPTY;
 			return new CCOnlineReferenceList(main, lst);
 		} catch (JSONException | OnlineRefFormatException e) {
-			return EMPTY;
+			throw new JSONListFormatException(json, e);
 		}
 	}
 

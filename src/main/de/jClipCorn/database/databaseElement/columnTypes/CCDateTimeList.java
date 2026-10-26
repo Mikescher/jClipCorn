@@ -4,6 +4,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datetime.CCDate;
 import de.jClipCorn.util.datetime.CCDateTime;
 import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.exceptions.JSONListFormatException;
 import de.jClipCorn.util.stream.CCIterable;
 import de.jClipCorn.util.stream.CCStream;
 import de.jClipCorn.util.stream.IterableStream;
@@ -120,7 +121,7 @@ public class CCDateTimeList implements CCIterable<CCDateTime> {
 		return arr.toString();
 	}
 
-	public static CCDateTimeList fromJSONArray(String json) {
+	public static CCDateTimeList fromJSONArray(String json) throws CCFormatException {
 		if (Str.isNullOrWhitespace(json) || json.equals("[]")) return new CCDateTimeList();
 
 		try {
@@ -129,7 +130,7 @@ public class CCDateTimeList implements CCIterable<CCDateTime> {
 			for (int i = 0; i < arr.length(); i++) lst.add(CCDateTime.createFromSQL(arr.getString(i)));
 			return new CCDateTimeList(lst);
 		} catch (JSONException | CCFormatException e) {
-			return new CCDateTimeList();
+			throw new JSONListFormatException(json, e);
 		}
 	}
 

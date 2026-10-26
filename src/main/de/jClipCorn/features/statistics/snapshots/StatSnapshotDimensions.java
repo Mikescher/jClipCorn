@@ -4,6 +4,8 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.util.CCQualityCategoryType;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.Opt;
+import de.jClipCorn.util.exceptions.CCFormatException;
+import de.jClipCorn.util.lambda.Func0to1WithGenericException;
 
 import java.util.*;
 
@@ -73,23 +75,23 @@ public final class StatSnapshotDimensions {
 		// ---- JSON list columns -----------------------------------------------------------------------
 
 		new StatSnapshotDimension("LANGUAGE",   classes(MOVIE, EPISODE), cols("LANGUAGE"),
-				r -> ids(CCDBLanguageSet.fromJSONArray(nz(r.get("LANGUAGE"))).ccstream().map(CCDBLanguage::asInt).enumerate())),
+				r -> ids(lenient(() -> CCDBLanguageSet.fromJSONArray(nz(r.get("LANGUAGE"))), CCDBLanguageSet.EMPTY).ccstream().map(CCDBLanguage::asInt).enumerate())),
 
 		new StatSnapshotDimension("SUBTITLE",   classes(MOVIE, EPISODE), cols("SUBTITLES"),
-				r -> ids(CCDBLanguageList.fromJSONArray(nz(r.get("SUBTITLES"))).ccstream().map(CCDBLanguage::asInt).enumerate())),
+				r -> ids(lenient(() -> CCDBLanguageList.fromJSONArray(nz(r.get("SUBTITLES"))), CCDBLanguageList.EMPTY).ccstream().map(CCDBLanguage::asInt).enumerate())),
 
 		new StatSnapshotDimension("GENRE",      classes(MOVIE, SERIES), cols("GENRE"),
 				r -> {
 					List<String> res = new ArrayList<>();
-					for (CCGenre g : CCGenreList.fromJSONArray(nz(r.get("GENRE"))).getGenres()) res.add(String.valueOf(g.asInt()));
+					for (CCGenre g : genres(r).getGenres()) res.add(String.valueOf(g.asInt()));
 					return res;
 				}),
 
 		new StatSnapshotDimension("TAG",        classes(MOVIE, SERIES, EPISODE), cols("TAGS"),
-				r -> ids(CCTagList.fromJSONArray(nz(r.get("TAGS"))).ccstream().map(CCSingleTag::asInt).enumerate())),
+				r -> ids(lenient(() -> CCTagList.fromJSONArray(nz(r.get("TAGS"))), CCTagList.EMPTY).ccstream().map(CCSingleTag::asInt).enumerate())),
 
 		new StatSnapshotDimension("PROVIDER",   classes(MOVIE, SERIES, SEASON), cols("ONLINEREF"),
-				r -> CCOnlineReferenceList.fromJSONArray(nz(r.get("ONLINEREF"))).ccstream().map(p -> p.type.asString()).enumerate()),
+				r -> lenient(() -> CCOnlineReferenceList.fromJSONArray(nz(r.get("ONLINEREF"))), CCOnlineReferenceList.EMPTY).ccstream().map(p -> p.type.asString()).enumerate()),
 
 		// free-form (user-defined) bucket keys - these are names, not ids
 		new StatSnapshotDimension("GROUP",          classes(MOVIE, SERIES), cols("GROUPS"),         r -> jsonStrings(r.get("GROUPS"))),
@@ -100,10 +102,10 @@ public final class StatSnapshotDimensions {
 		// ---- userdata ---------------------------------------------------------------------------------
 
 		new StatSnapshotDimension("VIEWED",     classes(MOVIE, EPISODE), cols("VIEWED_HISTORY"),
-				r -> one(CCDateTimeList.fromJSONArray(nz(r.get("VIEWED_HISTORY"))).count() > 0 ? "1" : "0")),
+				r -> one(viewedHistory(r).count() > 0 ? "1" : "0")),
 
 		new StatSnapshotDimension("WATCHCOUNT", classes(MOVIE, EPISODE), cols("VIEWED_HISTORY"),
-				r -> one(String.valueOf(CCDateTimeList.fromJSONArray(nz(r.get("VIEWED_HISTORY"))).count())))
+				r -> one(String.valueOf(viewedHistory(r).count())))
 	);
 
 	/** Every column any dimension or scalar of this element kind reads - the single source of truth for
@@ -184,6 +186,23 @@ public final class StatSnapshotDimensions {
 		}
 	}
 
+	/** The archive replays historic column values - a single unparseable one must not abort the snapshot. */
+	private static <T> T lenient(Func0to1WithGenericException<T, CCFormatException> parse, T fallback) {
+		try {
+			return parse.invoke();
+		} catch (CCFormatException e) {
+			return fallback;
+		}
+	}
+
+	private static CCGenreList genres(StatSnapshotRawRow r) {
+		return lenient(() -> CCGenreList.fromJSONArray(nz(r.get("GENRE"))), CCGenreList.EMPTY);
+	}
+
+	private static CCDateTimeList viewedHistory(StatSnapshotRawRow r) {
+		return lenient(() -> CCDateTimeList.fromJSONArray(nz(r.get("VIEWED_HISTORY"))), CCDateTimeList.createEmpty());
+	}
+
 	private static int qualityCategoryId(StatSnapshotRawRow r) {
 		CCMediaInfo mi = CCMediaInfo.create(
 				Opt.empty(), Opt.empty(), Opt.empty(), Opt.empty(),
@@ -192,7 +211,7 @@ public final class StatSnapshotDimensions {
 				Opt.empty(), Opt.empty(), Opt.empty(),
 				Opt.empty(), Opt.empty(), Opt.empty(), Opt.empty());
 
-		return mi.getCategory(CCGenreList.fromJSONArray(nz(r.get("GENRE"))))
+		return mi.getCategory(genres(r))
 				 .map(p -> p.getCategoryType().asInt())
 				 .orElse(CCQualityCategoryType.UNKOWN.asInt());
 	}

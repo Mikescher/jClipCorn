@@ -5,6 +5,7 @@ import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
 import de.jClipCorn.database.databaseElement.CCSeries;
+import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.driver.GenericDatabase;
 import de.jClipCorn.features.databaseErrors.CCDatabaseValidator;
 import de.jClipCorn.features.databaseErrors.DatabaseError;
@@ -164,6 +165,75 @@ public class TestCheckDatabase extends ClipCornBaseTest {
 		assertTrue(malformed.contains("bad-movie-cvrid"));
 		assertTrue(malformed.contains("bad-seriesid"));
 		assertTrue(malformed.contains("bad-seasonid"));
+	}
+
+	@Test
+	public void testDuplicateOnlineRefWithDifferentLanguages() throws Exception {
+		CCMovieList ml = createExampleDB();
+
+		var mov1 = movieByTitle(ml, "Der Bomber");
+		var mov2 = movieByTitle(ml, "Forrest Gump");
+
+		mov1.OnlineReference.set(CCOnlineReferenceList.create(CCSingleOnlineReference.createTMDB("movie/13"), new ArrayList<>()));
+		mov2.OnlineReference.set(CCOnlineReferenceList.create(CCSingleOnlineReference.createTMDB("movie/13"), new ArrayList<>()));
+		mov1.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN));
+		mov2.Language.set(CCDBLanguageSet.create(CCDBLanguage.ENGLISH));
+
+		assertEquals(1, countErrors(ml, DatabaseErrorType.ERROR_DUPLICATE_REF));
+	}
+
+	@Test
+	public void testDuplicateOnlineRefWithDifferentDescriptions() throws Exception {
+		CCMovieList ml = createExampleDB();
+
+		var mov1 = movieByTitle(ml, "Der Bomber");
+		var mov2 = movieByTitle(ml, "Forrest Gump");
+
+		mov1.OnlineReference.set(CCOnlineReferenceList.create(CCSingleOnlineReference.createTMDB("movie/13"), new ArrayList<>()));
+		mov2.OnlineReference.set(CCOnlineReferenceList.create(new CCSingleOnlineReference(CCOnlineRefType.THEMOVIEDB, "movie/13", "Extended Cut"), new ArrayList<>()));
+
+		assertEquals(1, countErrors(ml, DatabaseErrorType.ERROR_DUPLICATE_REF));
+	}
+
+	@Test
+	public void testDuplicateOnlineRefWithinOneElement() throws Exception {
+		CCMovieList ml = createExampleDB();
+
+		var mov = movieByTitle(ml, "Der Bomber");
+
+		mov.OnlineReference.set(CCOnlineReferenceList.create(CCSingleOnlineReference.createTMDB("movie/13"), List.of(new CCSingleOnlineReference(CCOnlineRefType.THEMOVIEDB, "movie/13", "Teil 1"))));
+		assertEquals(0, countErrors(ml, DatabaseErrorType.ERROR_DUPLICATE_REF));
+
+		mov.OnlineReference.set(CCOnlineReferenceList.create(CCSingleOnlineReference.createTMDB("movie/13"), List.of(CCSingleOnlineReference.createTMDB("movie/13"))));
+		assertEquals(1, countErrors(ml, DatabaseErrorType.ERROR_DUPLICATE_REF));
+	}
+
+	@Test
+	public void testDuplicateTitleWithDifferentLanguages() throws Exception {
+		CCMovieList ml = createExampleDB();
+
+		var mov1 = movieByTitle(ml, "Der Bomber");
+		var mov2 = movieByTitle(ml, "Forrest Gump");
+
+		mov2.Title.set(mov1.getTitle());
+		mov2.Zyklus.set(mov1.getZyklus());
+		mov1.Language.set(CCDBLanguageSet.create(CCDBLanguage.GERMAN));
+		mov2.Language.set(CCDBLanguageSet.create(CCDBLanguage.ENGLISH));
+
+		assertEquals(1, countErrors(ml, DatabaseErrorType.ERROR_DUPLICATE_TITLE));
+	}
+
+	private static int countErrors(CCMovieList ml, DatabaseErrorType type) {
+		List<DatabaseError> errs = new ArrayList<>();
+
+		var opt = new DatabaseValidatorOptions();
+		opt.ValidateMovies = true;
+		opt.ValidateOnlineReferences = true;
+
+		var validator = new CCDatabaseValidator(ml);
+		validator.validate(errs, opt, DoubleProgressCallbackListener.EMPTY);
+
+		return CCStreams.iterate(errs).filter(p -> p.isTypeOf(type)).toList().size();
 	}
 
 	@Test

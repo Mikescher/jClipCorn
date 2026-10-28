@@ -267,7 +267,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				(mov, movielist, e) ->
 				{
 					for (CCMovie imov : movielist.iteratorMovies()) {
-						if (StringUtils.equalsIgnoreCase(imov.getCompleteTitle(), mov.getCompleteTitle()) && (imov.getLanguage().isSubsetOf(mov.getLanguage()) || mov.getLanguage().isSubsetOf(imov.getLanguage()))) {
+						if (StringUtils.equalsIgnoreCase(imov.getCompleteTitle(), mov.getCompleteTitle())) {
 							if (!mov.getID().equals(imov.getID())) {
 								e.add(DatabaseError.createDouble(
 										movielist,
@@ -2381,9 +2381,11 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 
 		for (CCMovie el : movielist.iteratorMovies())
 		{
+			var ownRefs = new HashSet<CCSingleOnlineReference>();
 			for(CCSingleOnlineReference soref : el.getOnlineReference())
 			{
-				var key = el.getLanguage().serializeToLong() + '_' + soref.toSerializationString();
+				var exactOwnDuplicate = !ownRefs.add(soref);
+				var key = duplicateRefKey(soref);
 				if (!refSet.containsKey(key))
 				{
 					refSet.put(key, el);
@@ -2392,12 +2394,15 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				{
 					var el2 = refSet.get(key);
 					if (el == el2)
-						e.add(DatabaseError.createSingle(
+					{
+						// within one element the same id may repeat under another description (= its menu group)
+						if (exactOwnDuplicate) e.add(DatabaseError.createSingle(
 								movielist,
 								DatabaseErrorType.ERROR_DUPLICATE_REF, el,
 								"Element1+2.ID", String.valueOf(el.getID()),
 								"Element1+2.Title", el.getQualifiedTitle()
 								));
+					}
 					else
 						e.add(DatabaseError.createDouble(
 								movielist,
@@ -2415,9 +2420,11 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 
 		for (CCSeries el : movielist.iteratorSeries())
 		{
+			var ownRefs = new HashSet<CCSingleOnlineReference>();
 			for(CCSingleOnlineReference soref : el.getOnlineReference())
 			{
-				var key = el.getSemiCommonLanguages().serializeToLong() + '_' + soref.toSerializationString();
+				var exactOwnDuplicate = !ownRefs.add(soref);
+				var key = duplicateRefKey(soref);
 				if (!refSet.containsKey(key))
 				{
 					refSet.put(key, el);
@@ -2426,11 +2433,13 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				{
 					var el2 = refSet.get(key);
 					if (el == el2)
-						e.add(DatabaseError.createSingle(
+					{
+						if (exactOwnDuplicate) e.add(DatabaseError.createSingle(
 								movielist, DatabaseErrorType.ERROR_DUPLICATE_REF, el,
 								"Element1+2.ID", String.valueOf(el.getID()),
 								"Element1+2.Title", el.getQualifiedTitle()
 						));
+					}
 					else
 						e.add(DatabaseError.createDouble(
 								movielist, DatabaseErrorType.ERROR_DUPLICATE_REF, el, el2,
@@ -2451,7 +2460,7 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 			{
 				for(CCSingleOnlineReference soref : sea.getOnlineReference())
 				{
-					var key = ser.getSemiCommonLanguages().serializeToLong() + '_' + soref.toSerializationString();
+					var key = duplicateRefKey(soref);
 					if (!refSet.containsKey(key))
 					{
 						// store the parent series as owner - duplicates within the same series (series<->season, season<->season) are allowed
@@ -2473,6 +2482,11 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 				}
 			}
 		}
+	}
+
+	// Only type+id identify a reference - the description is just a menu-group label.
+	private static String duplicateRefKey(CCSingleOnlineReference soref) {
+		return soref.type.getIdentifier() + ":" + soref.id; //$NON-NLS-1$
 	}
 
 	// The nil UUID is corrupt data everywhere - "no cover" is a NULL COVERID, not a nil uuid.

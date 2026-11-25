@@ -1,4 +1,4 @@
-FROM amazoncorretto:20
+FROM amazoncorretto:17
 
 COPY . /source
 

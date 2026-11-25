@@ -31,7 +31,7 @@ git log -1 --format=%s --grep='^[0-9]\+\.[0-9]\+\.[0-9]\+ RELEASE$'   # previous
   - `V` equals that prefix → the normal case.
   - `V` is a minor/major jump above it (commits `1.10.12`, released as `1.11.0`) → fine, that happened before.
   - anything else (e.g. commits `1.11.1`, asked `1.11.2`) → ask once which version is meant, showing the prefix and the previous release.
-- `Main.VERSION` (`X.Y.Z.N`) normally counts betas from the previous release (`1.10.10.8` → release `1.10.11`), so it usually lags one patch behind `V`. Do not derive `V` from it (after 1.11.0 the betas jumped to `1.11.1.N` by hand), only stop if `V` < `X.Y.Z`.
+- `Main.VERSION` (`X.Y.Z.N`) counts betas from the previous release (`1.10.10.8` → release `1.10.11`), so it lags one patch behind `V`. `V` must be strictly greater than `X.Y.Z`: the jar `V.0` has to sort after every beta jar already shipped. If not (betas `1.11.1.1–14` with commits `1.11.1`), stop and propose `V = X.Y.(Z+1)` with the commit prefixes rewritten to `V` (filter-branch `--msg-filter`, keeps dates; needs a force push), and let the user decide.
 
 ## 2. Tests
 
@@ -53,18 +53,30 @@ If the build fails: `git tag -d "vV"`, `git checkout -- src/main/de/jClipCorn/Ma
 
 ## 4. Commit, changelog, tag
 
+The commit-msg hook regex is case-sensitive and rejects `V RELEASE`; the user has to approve `--no-verify` for these two commits.
+
 ```bash
 git add src/main/de/jClipCorn/Main.java CHANGELOG.txt
-git commit -m "V RELEASE"
+git commit --no-verify -m "V RELEASE"
+git show HEAD~1:CHANGELOG.txt > /tmp/cl_old.txt
 make changelog                       # now includes the RELEASE header
+```
+
+`make changelog` regenerates the whole file and also rewrites the headers of older releases (dates/widths differ from the committed file). Old parts of the changelog must stay untouched: keep only the new `V RELEASE` section (from the top down to the line before the previous release's `####` block) and append `/tmp/cl_old.txt` unchanged. Check with `git diff HEAD~1 -- CHANGELOG.txt`: insertions only, no `-` lines.
+
+```bash
 git add CHANGELOG.txt
-git commit --amend --no-edit
+git commit --no-verify --amend --no-edit
 git tag -f "vV"                      # move the tag from the pre-release commit to the RELEASE commit
 ```
 
-Check: `head -5 CHANGELOG.txt` shows the `V  RELEASE` header; `git show --stat HEAD` touches only those two files; `git tag --points-at HEAD` lists `vV`.
+Check: `head -5 CHANGELOG.txt` shows the `V RELEASE` header; `git show --stat HEAD` touches only those two files and CHANGELOG.txt has insertions only; `git tag --points-at HEAD` lists `vV`.
 
 Look at the entries of this release (header down to the next `####` block). Their prefixes should equal `V` (or the pre-jump version on a minor/major jump, like the `1.10.12 …` lines in 1.11.0); point out others, e.g. typos like `10.11.1` for `1.11.1`. Only report them, do not rewrite history.
+
+## 4b. Copy to the Kreios share
+
+`manualReleaseJar` does not copy the jar (only `_setup/betajar.sh` does). Copy `_mybuilds/jClipCorn V.0.jar` like that script: to `~/mounts/Melkor_NFS/Kreios/ClipCorn/` if `Melkor_NFS/Kreios` is a mountpoint, else to `~/mounts/Melkor_WG/Kreios/ClipCorn/`. If neither is mounted, give the user the `cp` command.
 
 ## 5. Release notes
 
@@ -89,7 +101,7 @@ and the GitHub release to create at https://github.com/Mikescher/jClipCorn/relea
 
 ## After the release
 
-The next beta (skill `beta-release`) turns `V.0` into `V.1`. Commits after the release use the prefix `X.Y.(Z+1)` (the next release).
+The next beta (skill `beta-release`) turns `V.0` into `V.1`. Commits after the release use the prefix `X.Y.(Z+1)` (the next release). Never bump the betas to `X.Y.(Z+1).N` by hand.
 
 ## Report
 

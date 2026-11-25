@@ -19,6 +19,25 @@ Inside the ccc container the app can be started on a headless desktop (`ccc-disp
 After UI changes (new columns, dialogs, settings, filter entries, cover overlays) start the app and look at the result before committing.
 Follow the `run-local` skill (`.claude/skills/run-local/SKILL.md`): it runs on a *copy* of `_local/`, because `_local/` is the user's real local database and starting on it can migrate it.
 
+## Versions and commit messages
+
+`CHANGELOG.txt` is generated from the commit messages, and jar names / version sorting depend on `Main.VERSION`, so both numbers have to follow one scheme:
+
+| | Format | Example after release 1.11.2 |
+|---|---|---|
+| Release | tag `vX.Y.Z`, `Main.VERSION = "X.Y.Z.0"`, commit `X.Y.Z RELEASE` | `1.11.2.0` |
+| Betas | `Main.VERSION = "X.Y.Z.N"`, N counts up from the last release (skill `beta-release`) | `1.11.2.1`, `1.11.2.2`, … |
+| Commits | prefix = the *next* release `X.Y.(Z+1)` | `1.11.3 Feature: …` |
+| Next release | `X.Y.(Z+1)` (or a minor/major jump) | `1.11.3.0` |
+
+- Commit message format (enforced by the commit-msg hook): one line `X.Y.Z <Type>: <text>`, Type one of `Feature`, `Bugfix`, `Task`, `Update`, `Documentation`, … (see the hook regex). No body, no trailers (no Co-Authored-By): every line ends up in the changelog.
+- Take the prefix from `git log -1 --format=%s` of the last non-release commit, or `X.Y.(Z+1)` right after an `X.Y.Z RELEASE` commit.
+- Never change the `X.Y.Z` part of `Main.VERSION` by hand; only the `beta-release` and `release` skills touch it.
+- Before every commit, check and warn the user (do not silently fix) if:
+  - the prefix is not `X.Y.(Z+1)` relative to `X.Y.Z` in `Main.VERSION` (e.g. `Main.VERSION = 1.11.2.3` but prefix `1.11.2` or `1.11.4`),
+  - the prefix looks like a typo (`10.11.3` instead of `1.11.3`),
+  - `Main.VERSION`'s `X.Y.Z` is not the last release tag (`git describe --tags --abbrev=0`).
+
 ## Code Architecture
 
 ### Package Structure

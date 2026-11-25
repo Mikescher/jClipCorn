@@ -156,7 +156,7 @@ public class Resources {
 
 	public final static IconRef ICN_TABLE_VIEWED_LATER 		     = register16HScaledIcon(registerCombinedImage(registerImage("/icons/viewed/watched_none.png"),    registerImage("/icons/viewed/overlay_later.png")));
 	public final static IconRef ICN_TABLE_VIEWED_NEVER 		     = register16HScaledIcon(registerCombinedImage(registerImage("/icons/viewed/watched_none.png"),    registerImage("/icons/viewed/overlay_later.png")));
-	public final static IconRef ICN_TABLE_VIEWED_AGAIN		     = register16HScaledIcon(registerCombinedImage(registerImage("/icons/viewed/watched_none.png"),    registerImage("/icons/viewed/overlay_again.png")));
+	public final static IconRef ICN_TABLE_VIEWED_AGAIN		     = register16HScaledIcon(registerCombinedImage(registerImage("/icons/viewed/watched_full.png"),    registerImage("/icons/viewed/overlay_again.png")));
 	public final static IconRef ICN_TABLE_VIEWED_CONTINUE        = register16HScaledIcon(registerCombinedImage(registerImage("/icons/viewed/watched_partial.png"), registerImage("/icons/viewed/overlay_halflater.png"), registerImage("/icons/viewed/overlay_continue.png")));
 	public final static IconRef ICN_TABLE_VIEWED_PARTIAL_ABORTED = register16HScaledIcon(registerCombinedImage(registerImage("/icons/viewed/watched_partial.png"), registerImage("/icons/viewed/overlay_aborted.png")));
 	public final static IconRef ICN_TABLE_VIEWED_TRUE_ABORTED    = register16HScaledIcon(registerCombinedImage(registerImage("/icons/viewed/watched_full.png"),    registerImage("/icons/viewed/overlay_aborted.png")));

@@ -1,3 +1,42 @@
+
+
+########################################################################
+############ Wed Nov 25 14:54:56 2026 +0100  1.11.2 RELEASE ############
+########################################################################
+
+
+1.11.2 Task: Release skills
+1.11.2 Feature: Comments for viewed-history entries (e.g. Kino)
+1.11.2 Feature: Add ShowStatus property to CCSeries
+1.11.2 Task: Load covers in EditCoverControl asynchronously
+1.11.2 Bugfix: Use filled eye for watch-again icon without view counter
+1.11.2 Task: Set toolchainVersion to java17
+1.11.2 Feature: Tighten ERROR_DUPLICATE_TITLE and ERROR_DUPLICATE_REF
+1.11.2 Task: Properly fail to load on invalid database values
+1.11.2 Bugfix: Fix UserRating in NFO files
+1.11.2 Task: Improve shutdown performance (log file writing)
+1.11.2 Task: Separate settings tabs for the main window and the series window
+1.11.2 Feature: Configurable visible columns and column order for the PreviewSeriesFrame table
+1.11.2 Feature: Configurable column order for the MainFrame table
+1.11.2 Bugfix: Fix CC failing to boot on missing path-vars
+1.11.2 Task: Directory-Chooser in Path-Settings
+1.11.2 Task: Auto-renew lockfile of running jcc
+1.11.2 Feature: Auto-Trim titles on create+edit elements
+1.11.2 Bugfix: Fix wrong listener in OmniParserFrame (would clear input on hover)
+1.11.2 Feature: User-definable paths for DB-Scanner
+1.11.2 Task: Improve visual feedback on shutdown
+1.11.2 Bugfix: Fix some bugs in DatabaseHistoryFrame
+1.11.2 Feature: Implement Add+Move for Movies
+1.11.2 Feature: Show season rating-comments in maintable
+1.11.2 Bugfix: Fix invalid <thumb> entries in NFO files
+1.11.2 Bugfix: Fix checksums on moved movies/episodes
+1.11.2 Feature: Filter Create-NFO list
+1.11.2 Feature: Custom paths for anime
+1.11.2 Feature: Better Historical data tracking (for statistics)
+1.11.2 Feature: Allow setting custom-frame sizes for more frames
+1.11.2 Bugfix: Fix NFO uniqueid's for shows with per-season refs
+
+
 ########################################################################
 ############ Fri Sep 4 18:39:00 2025 +0200  1.11.0  RELEASE ############
 ########################################################################

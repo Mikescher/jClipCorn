@@ -51,6 +51,12 @@ public class WatchHistoryTable extends JCCSimpleTable<WatchHistoryElement> {
 		 .withText(e -> e.getTimestamp().toStringUIShort())
 		 .withTooltip(e -> e.getTimestamp().toStringUINormal())
 		 .sortable();
+
+		r.add("WatchHistoryFrame.tableHeaders.Comment")
+		 .withSize("auto,max=200")
+		 .withText(WatchHistoryElement::getComment)
+		 .withTooltip(WatchHistoryElement::getComment)
+		 .sortable();
 		
 		r.add("ClipTableModel.Quality")
 		 .withSize("auto")

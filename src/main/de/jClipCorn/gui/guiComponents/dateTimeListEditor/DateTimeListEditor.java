@@ -5,7 +5,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCViewedEntry;
 import de.jClipCorn.gui.LookAndFeelManager;
+import de.jClipCorn.gui.frames.editViewedEntryDialog.EditViewedEntryDialog;
 import de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner;
 import de.jClipCorn.gui.guiComponents.jCCTimeSpinner.JCCTimeSpinner;
 import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
@@ -24,8 +26,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 public class DateTimeListEditor extends JPanel {
@@ -44,6 +44,7 @@ public class DateTimeListEditor extends JPanel {
 	private JCCTimeSpinner spnrTime;
 	private JCheckBox cbDate;
 	private JCheckBox cbTime;
+	private JTextField edComment;
 	private JPopupMenu splitPopup;
 
 	private       Color defaultPanelBackground = COLOR_TRANSPARENT;
@@ -51,7 +52,7 @@ public class DateTimeListEditor extends JPanel {
 	private final Color hlPanelBackground  = LookAndFeelManager.isDark() ? new Color(0x2b, 0x2b, 0x6e) : Color.CYAN;            //$NON-NLS-1$
 
 	private final List<JPanel> listPanels = new ArrayList<>();
-	private final List<CCDateTime> data;
+	private final List<CCViewedEntry> data;
 
 	public DateTimeListEditor() {
 		initGUI();
@@ -64,7 +65,7 @@ public class DateTimeListEditor extends JPanel {
 	public DateTimeListEditor(CCDateTimeList lst) {
 		initGUI();
 
-		data = lst.ccstream().enumerate();
+		data = lst.entries().enumerate();
 		
 		updateContentList(null);
 	}
@@ -131,6 +132,8 @@ public class DateTimeListEditor extends JPanel {
 				RowSpec.decode("21px"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("21px"), //$NON-NLS-1$
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("21px"), //$NON-NLS-1$
 				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		pnlInput.add(cbDate, "1, 2, right, top"); //$NON-NLS-1$
 		
@@ -157,13 +160,18 @@ public class DateTimeListEditor extends JPanel {
 		//spnrTime.addChangeListener(new ChangeLambdaAdapter(this::triggerOnChanged));
 		spnrTime.addChangeListener(e -> { focusPanel(null); });
 		pnlInput.add(spnrTime, "3, 4, fill, top"); //$NON-NLS-1$
+
+		edComment = new JTextField();
+		edComment.setToolTipText(LocaleBundle.getString("CCDate.Editor.Comment")); //$NON-NLS-1$
+		edComment.putClientProperty("JTextField.placeholderText", LocaleBundle.getString("CCDate.Editor.Comment")); //$NON-NLS-1$ //$NON-NLS-2$
+		pnlInput.add(edComment, "1, 6, 3, 1, fill, top"); //$NON-NLS-1$
 		
 		btnAdd = new JSplitButton("+"); //$NON-NLS-1$
 		btnAdd.setHorizontalAlignment(SwingConstants.LEFT);
 		btnAdd.addButtonClickedActionListener(this::onAdd);
 		btnAdd.setFont(new Font("Tahoma", Font.BOLD, 11)); //$NON-NLS-1$
 		btnAdd.setPopupMenu(splitPopup);
-		pnlInput.add(btnAdd, "5, 2, 1, 3, fill, center"); //$NON-NLS-1$
+		pnlInput.add(btnAdd, "5, 2, 1, 5, fill, center"); //$NON-NLS-1$
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -187,40 +195,63 @@ public class DateTimeListEditor extends JPanel {
 	}
 
 	private void resortList() {
-		HashSet<CCDateTime> hash = new HashSet<>(data);
-	    
-	    List<CCDateTime> list = new ArrayList<>(hash);
-	    Collections.sort(list);
-	    
-	    data.clear();
+		// several UNSPECIFIED entries are several real viewings - only identical specified entries are duplicates
+		List<CCViewedEntry> list = new ArrayList<>();
+		for (CCViewedEntry e : data) {
+			if (!e.datetime.isUnspecifiedDateTime() && list.stream().anyMatch(e::isExactEqual)) continue;
+			list.add(e);
+		}
+		list.sort(CCViewedEntry::compare);
+
+		data.clear();
 		data.addAll(list);
-	    
-	    lblCount.setText(Integer.toString(data.size()));
+
+		lblCount.setText(Integer.toString(data.size()));
 	}
-	
+
 	public void setValue(CCDateTimeList dtlist) {
 		var diff = dtlist.isEqual(getValue());
 
 		data.clear();
-		data.addAll(dtlist.ccstream().enumerate());
-		
+		data.addAll(dtlist.entries().enumerate());
+
 		updateContentList(null);
 
 		if (diff) triggerOnChanged();
 	}
 
 	public CCDateTimeList getValue() {
-		return CCDateTimeList.create(data);
+		return CCDateTimeList.createFromEntries(data);
 	}
-	
+
 	private void onAdd(ActionEvent e) {
-		CCDateTime v = getCurrentInputValue();
-		
-		data.add(getCurrentInputValue());
-		
+		CCViewedEntry v = CCViewedEntry.create(getCurrentInputValue(), edComment.getText().trim());
+
+		data.add(v);
+
 		updateContentList(v);
-		
+
 		triggerOnChanged();
+	}
+
+	private void onEdit(CCViewedEntry element) {
+		new EditViewedEntryDialog(this, element, newValue -> {
+			int idx = indexOf(element);
+			if (idx < 0) return;
+
+			data.set(idx, newValue);
+			updateContentList(newValue);
+
+			triggerOnChanged();
+		}).setVisible(true);
+	}
+
+	private int indexOf(CCViewedEntry element) {
+		if (element == null) return -1;
+		for (int i = 0; i < data.size(); i++) {
+			if (element.isExactEqual(data.get(i))) return i;
+		}
+		return -1;
 	}
 	
 	private CCDateTime getCurrentInputValue() {
@@ -261,19 +292,21 @@ public class DateTimeListEditor extends JPanel {
 		//triggerOnChanged();
 	}
 
-	private void onRemove(CCDateTime element) {
-		for (int i = 0; i < data.size(); i++) {
-			if (element.isExactEqual(data.get(i))) {
-				data.remove(i);
-				updateContentList(null);
-				break;
-			}
+	private void onRemove(CCViewedEntry element) {
+		int idx = indexOf(element);
+		if (idx >= 0) {
+			data.remove(idx);
+			updateContentList(null);
 		}
-		
+
 		triggerOnChanged();
 	}
 
-	private void onDisplay(CCDateTime element) {
+	private void onDisplay(CCViewedEntry entry) {
+		CCDateTime element = entry.datetime;
+
+		edComment.setText(entry.comment);
+
 		if (element.isUnspecifiedDateTime()) {
 			cbDate.setSelected(false);
 			cbTime.setSelected(false);
@@ -318,7 +351,7 @@ public class DateTimeListEditor extends JPanel {
 		}
 	}
 	
-	private void updateContentList(CCDateTime selector) {
+	private void updateContentList(CCViewedEntry selector) {
 		resortList();
 		
 		listPanels.clear();
@@ -327,31 +360,45 @@ public class DateTimeListEditor extends JPanel {
 		
 		JPanel afterSelPanel = null;
 		int idx = 0;
-		for (CCDateTime element : data) {
+		for (CCViewedEntry element : data) {
 			JPanel pnl = new JPanel(new BorderLayout());
 
 			JLabel lbl = new JLabel(element.toStringUINormal());
+			JLabel btnEdit = new JLabel(Resources.ICN_FRAMES_EDIT.get16x16());
 			JLabel btn = new JLabel(Resources.ICN_FRAMES_DELETE.get16x16());
-			
-			btn.setHorizontalAlignment(SwingConstants.CENTER);
-			btn.setVerticalAlignment(SwingConstants.CENTER);
-			btn.setBorder(new EmptyBorder(0, 2, 0, 2));
-			
+
+			for (JLabel b : new JLabel[] { btnEdit, btn }) {
+				b.setHorizontalAlignment(SwingConstants.CENTER);
+				b.setVerticalAlignment(SwingConstants.CENTER);
+				b.setBorder(new EmptyBorder(0, 2, 0, 2));
+				b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			}
+
 			lbl.addMouseListener(new MouseAdapter() {
 				@Override
-				public void mousePressed(MouseEvent e) { focusPanel(pnl); onDisplay(element); }
-				
+				public void mousePressed(MouseEvent e) { onDisplay(element); focusPanel(pnl); }
+
 				@Override
-				public void mouseReleased(MouseEvent e) { focusPanel(pnl); onDisplay(element); }
+				public void mouseReleased(MouseEvent e) { onDisplay(element); focusPanel(pnl); }
 			});
-			
+
+			btnEdit.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) { onEdit(element); }
+			});
+
 			btn.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) { onRemove(element); }
 			});
-			
+
+			JPanel pnlButtons = new JPanel(new BorderLayout());
+			pnlButtons.setOpaque(false);
+			pnlButtons.add(btnEdit, BorderLayout.WEST);
+			pnlButtons.add(btn, BorderLayout.EAST);
+
 			pnl.add(lbl, BorderLayout.CENTER);
-			pnl.add(btn, BorderLayout.EAST);
+			pnl.add(pnlButtons, BorderLayout.EAST);
 			
 			defaultPanelBackground = pnl.getBackground();
 			pnl.setBackground((idx++ % 2 == 0) ? defaultPanelBackground : altPanelBackground);
@@ -378,7 +425,7 @@ public class DateTimeListEditor extends JPanel {
 		
 		if (afterSelPanel != null) focusPanel(afterSelPanel);
 	}
-	
+
 	private void focusPanel(JPanel pnl) {
 		int idx2 = 0;
 		for (JPanel other : listPanels) {

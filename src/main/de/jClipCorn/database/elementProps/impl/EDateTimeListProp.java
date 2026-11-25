@@ -10,10 +10,12 @@ public class EDateTimeListProp extends EProperty<CCDateTimeList> {
 		super(name, defValue, p, t);
 	}
 
+	/** legacy comma separated format, see {@link CCDateTimeList#parse} */
 	public void set(String v) throws CCFormatException {
 		set(CCDateTimeList.parse(v));
 	}
 
+	/** legacy comma separated format, see {@link CCDateTimeList#parse} */
 	public void setOnly(String v) throws CCFormatException {
 		setOnly(CCDateTimeList.parse(v));
 	}
@@ -22,9 +24,13 @@ public class EDateTimeListProp extends EProperty<CCDateTimeList> {
 		set(get().add(v));
 	}
 
+	public void add(CCDateTime v, String comment) {
+		set(get().add(v, comment));
+	}
+
 	@Override
 	public String serializeToString() {
-		return get().toSerializationString();
+		return get().asJSONArray();
 	}
 
 	@Override
@@ -34,7 +40,7 @@ public class EDateTimeListProp extends EProperty<CCDateTimeList> {
 
 	@Override
 	public void deserializeFromString(String v) throws CCFormatException {
-		set(CCDateTimeList.parse(v));
+		set(CCDateTimeList.fromJSONArray(v));
 	}
 
 	@Override

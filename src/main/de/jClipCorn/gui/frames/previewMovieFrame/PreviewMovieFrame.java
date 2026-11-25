@@ -193,8 +193,8 @@ public class PreviewMovieFrame extends JCCFrame implements UpdateCallbackListene
 
 		DefaultListModel<String> dlsmViewed;
 		lsHistory.setModel(dlsmViewed = new DefaultListModel<>());
-		for (CCDateTime dt : movie.ViewedHistory.get().ccstream()) {
-			dlsmViewed.addElement(dt.toStringUINormal());
+		for (var entry : movie.ViewedHistory.get().entries()) {
+			dlsmViewed.addElement(entry.toStringUINormal());
 		}
 
 		btnOnlineRef.setValue(movie.OnlineReference.get());

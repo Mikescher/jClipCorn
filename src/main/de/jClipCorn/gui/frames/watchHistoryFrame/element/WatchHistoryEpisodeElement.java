@@ -16,17 +16,24 @@ import java.text.MessageFormat;
 public class WatchHistoryEpisodeElement extends WatchHistoryElement {
 	public final int Counter;
 	public final CCDateTime Timestamp;
+	public final String Comment;
 	public final CCEpisode Episode;
 	
-	public WatchHistoryEpisodeElement(int _c, CCDateTime _timestamp, CCEpisode _episode) {
+	public WatchHistoryEpisodeElement(int _c, CCViewedEntry _entry, CCEpisode _episode) {
 		Counter = _c;
-		Timestamp = _timestamp;
+		Timestamp = _entry.datetime;
+		Comment = _entry.comment;
 		Episode = _episode;
 	}
 
 	@Override
 	public CCDateTime getTimestamp() {
 		return Timestamp;
+	}
+
+	@Override
+	public String getComment() {
+		return Comment;
 	}
 
 	@Override

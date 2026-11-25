@@ -68,7 +68,7 @@ public class DatabaseXMLExporterImpl {
 			if (!p.isEmpty()) e.setAttribute("part_"+i, p.toString());
 		}
 
-		e.setAttribute("history",      o.ViewedHistory.get().toSerializationString());
+		e.setAttribute("history",      o.ViewedHistory.get().asJSONArray());
 		o.getYear().ifPresent(v -> e.setAttribute("year", String.valueOf(v)));
 		e.setAttribute("zyklus",       o.getZyklus().getTitle());
 		e.setAttribute("zyklusnumber", String.valueOf((o.getZyklus().getNumber())));
@@ -132,7 +132,7 @@ public class DatabaseXMLExporterImpl {
 		e.setAttribute("episodenumber", o.getEpisodeNumber() + "");
 		e.setAttribute("filesize",      o.getFilesize().getBytes() + "");
 		e.setAttribute("format",        o.getFormat().asInt() + "");
-		e.setAttribute("history",       o.ViewedHistory.get().toSerializationString());
+		e.setAttribute("history",       o.ViewedHistory.get().asJSONArray());
 		e.setAttribute("length",        o.getLength() + "");
 		e.setAttribute("part",          o.getPart().toString());
 		e.setAttribute("tags",          o.getTags().serialize());

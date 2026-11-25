@@ -30,7 +30,8 @@ public class UserDataDatabaseMigrator {
 
 	private static final List<Func4to1<GenericDatabase, FSPath, String, Boolean, DBMigration>> MIGRATION_LIST = List.of(
 			UserDataMigration_01_02::new,
-			UserDataMigration_02_03::new
+			UserDataMigration_02_03::new,
+			UserDataMigration_03_04::new
 	);
 
 	private final List<DBMigration> migrations;

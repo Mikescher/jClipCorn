@@ -1,0 +1,88 @@
+JFDML JFormDesigner: "8.1.1.0.298" Java: "17.0.7" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.bundlePackage": "de.jClipCorn.gui.localization"
+	"i18n.bundleName": "locale"
+	"i18n.keyPrefix": "EditViewedEntryDialog"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCDialog", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, default, labelcompgap, default:grow, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default, unrelgap, default, unrelgap"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			"title": new FormMessage( null, "EditViewedEntryDialog.this.title" )
+			"defaultCloseOperation": 2
+			"modal": true
+			"resizable": false
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbDate"
+				"text": new FormMessage( null, "EditViewedEntryDialog.cbDate.text" )
+				addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "updateEnabledStates", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 2
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.jCCDateSpinner.JCCDateSpinner" ) {
+				name: "spnrDate"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 2
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbTime"
+				"text": new FormMessage( null, "EditViewedEntryDialog.cbTime.text" )
+				addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "updateEnabledStates", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 4
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.jCCTimeSpinner.JCCTimeSpinner" ) {
+				name: "spnrTime"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 4
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblComment"
+				"text": new FormMessage( null, "EditViewedEntryDialog.lblComment.text" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 6
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "edComment"
+				"columns": 20
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOkay", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 6
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
+				"alignment": 2
+				"hgap": 5
+				"vgap": 0
+			} ) {
+				name: "pnlButtons"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnOkay"
+					"text": new FormMessage( null, "UIGeneric.btnOK.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onOkay", false ) )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "btnCancel"
+					"text": new FormMessage( null, "UIGeneric.btnCancel.text" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onCancel", false ) )
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 8
+				"gridWidth": 3
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+		} )
+	}
+}

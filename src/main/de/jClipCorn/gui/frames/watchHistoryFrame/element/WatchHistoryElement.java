@@ -12,6 +12,7 @@ import de.jClipCorn.util.datetime.CCDateTime;
 public abstract class WatchHistoryElement implements Comparable<WatchHistoryElement> {
 	
 	public abstract CCDateTime getTimestamp();
+	public abstract String getComment();
 	public abstract String getName();
 	public abstract BufferedImage getCover();
 	public abstract CCQualityCategory getMediaInfoCategory();

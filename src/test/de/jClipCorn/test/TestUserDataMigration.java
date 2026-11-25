@@ -1,13 +1,16 @@
 package de.jClipCorn.test;
 
 import de.jClipCorn.Main;
+import de.jClipCorn.database.databaseElement.columnTypes.CCDateTimeList;
 import de.jClipCorn.database.driver.GenericDatabase;
 import de.jClipCorn.database.driver.MemoryDatabase;
+import de.jClipCorn.database.history.CCDatabaseHistory;
 import de.jClipCorn.database.migration.UpgradeAction;
 import de.jClipCorn.database.migration.UserDataDatabaseMigrator;
 import de.jClipCorn.database.migration.UserDataMigration;
 import de.jClipCorn.database.migration.UserDataMigration_01_02;
 import de.jClipCorn.database.migration.UserDataMigration_02_03;
+import de.jClipCorn.database.migration.UserDataMigration_03_04;
 import de.jClipCorn.properties.CCProperties;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.RefParam;
@@ -231,6 +234,66 @@ public class TestUserDataMigration extends ClipCornBaseTest {
 
 		assertEquals("false", property(db, "PROP_MAINFRAME_SHOW_VIEWCOUNT"));
 		assertEquals("true",  property(db, "PROP_SERIESFRAME_SHOW_VIEWCOUNT"));
+	}
+
+	private static void insertHistory(MemoryDatabase db, String table, String id, String history) throws Exception {
+		try (var stmt = db.createPreparedStatement("INSERT INTO userdata." + table + " (ID, VIEWED_HISTORY, TAGS, SCORE, SCORECOMMENT) VALUES (?, ?, '[]', 6, '')")) {
+			stmt.setString(1, id);
+			stmt.setString(2, history);
+			stmt.executeUpdate();
+		}
+	}
+
+	private static String history(MemoryDatabase db, String table, String id) throws Exception {
+		return db.querySingleStringSQLThrow("SELECT VIEWED_HISTORY FROM userdata." + table + " WHERE ID='" + id + "'", 0);
+	}
+
+	@Test
+	public void testMigration_03_04_AddsHistoryComments() throws Exception {
+		MemoryDatabase db = createDatabase("3");
+
+		insertHistory(db, "MOVIES",   "m1", "[\"UNSPECIFIED\",\"2016-11-27 16:48:30\",\"2018-10-21\",\"2023-11-05 11:00:00.500\"]");
+		insertHistory(db, "MOVIES",   "m2", "[]");
+		insertHistory(db, "MOVIES",   "m3", "[\"2016-09-07\",\"invalid\"]");
+		insertHistory(db, "MOVIES",   "m4", "[\"2016-09-07\",42]");
+		insertHistory(db, "EPISODES", "e1", "[\"2020-08-14 20:21:00\",\"UNSPECIFIED\"]");
+		insertHistory(db, "EPISODES", "e2", "[{\"d\":\"2020-08-14 20:21:00\",\"c\":\"Kino\"},\"2021-01-01\"]");
+
+		new UserDataMigration_03_04(db, FSPath.Empty, "ClipCornDB", false).migrate();
+
+		assertEquals("4", userDataVersion(db));
+
+		assertEquals("[{\"d\":\"UNSPECIFIED\",\"c\":\"\"},{\"d\":\"2016-11-27 16:48:30\",\"c\":\"\"},{\"d\":\"2018-10-21\",\"c\":\"\"},{\"d\":\"2023-11-05 11:00:00.500\",\"c\":\"\"}]", history(db, "MOVIES", "m1"));
+		assertEquals("[]", history(db, "MOVIES", "m2"));
+		assertEquals("[{\"d\":\"2016-09-07\",\"c\":\"\"},{\"d\":\"invalid\",\"c\":\"\"}]", history(db, "MOVIES", "m3")); // the loader reports the invalid datetime
+		assertEquals("[\"2016-09-07\",42]", history(db, "MOVIES", "m4"));
+		assertEquals("[{\"d\":\"2020-08-14 20:21:00\",\"c\":\"\"},{\"d\":\"UNSPECIFIED\",\"c\":\"\"}]", history(db, "EPISODES", "e1"));
+		assertEquals("[{\"d\":\"2020-08-14 20:21:00\",\"c\":\"Kino\"},{\"d\":\"2021-01-01\",\"c\":\"\"}]", history(db, "EPISODES", "e2"));
+
+		var m1 = CCDateTimeList.fromJSONArray(history(db, "MOVIES", "m1"));
+		assertEquals(4, m1.count());
+		assertEquals("", m1.entries().get(1).comment);
+		assertEquals(m1.asJSONArray().replace(".500", ""), CCDateTimeList.fromJSONArray(m1.asJSONArray()).asJSONArray());
+	}
+
+	@Test
+	public void testMigration_03_04_DoesNotLogIntoHistory() throws Exception {
+		MemoryDatabase db = createDatabase("3");
+		db.executeSQLThrow("UPDATE userdata.INFO SET IVALUE='1' WHERE IKEY='HISTORY_ENABLED'");
+
+		insertHistory(db, "MOVIES", "m1", "[\"2016-11-27 16:48:30\"]");
+		for (var trigger : CCDatabaseHistory.createTriggerStatements()) db.executeSQLThrow(trigger.Item2);
+		int triggerCount = db.listTrigger().size();
+		assertTrue(triggerCount > 0);
+
+		var referror = new RefParam<String>();
+		assertTrue(migrator(db).tryUpgrade(referror));
+		assertNull(referror.Value);
+
+		assertEquals(Main.USERDATA_DBVERSION, userDataVersion(db));
+		assertEquals("[{\"d\":\"2016-11-27 16:48:30\",\"c\":\"\"}]", history(db, "MOVIES", "m1"));
+		assertEquals(0, db.querySingleIntSQLThrow("SELECT COUNT(*) FROM userdata.HISTORY", 0));
+		assertEquals(triggerCount, db.listTrigger().size());
 	}
 
 	@Test

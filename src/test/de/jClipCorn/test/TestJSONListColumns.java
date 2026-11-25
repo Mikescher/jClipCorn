@@ -18,12 +18,27 @@ public class TestJSONListColumns extends ClipCornBaseTest {
 		assertTrue(CCDateTimeList.fromJSONArray("[]").isEmpty());
 		assertTrue(CCDateTimeList.fromJSONArray("").isEmpty());
 
-		String json = "[\"UNSPECIFIED\",\"2016-09-07\",\"2016-09-08 12:13:14\"]";
+		String json = "[{\"d\":\"UNSPECIFIED\",\"c\":\"\"},{\"d\":\"2016-09-07\",\"c\":\"Kino\"},{\"d\":\"2016-09-08 12:13:14\",\"c\":\"\"}]";
 		assertEquals(json, CCDateTimeList.fromJSONArray(json).asJSONArray());
+		assertEquals("Kino", CCDateTimeList.fromJSONArray(json).entries().get(1).comment);
+
+		String legacy = "[\"UNSPECIFIED\",\"2016-09-07\",\"2016-09-08 12:13:14\"]";
+		assertEquals(json.replace("Kino", ""), CCDateTimeList.fromJSONArray(legacy).asJSONArray());
+
+		String mixed = "[\"2016-09-08 12:13:14\",{\"d\":\"2016-09-07\"},{\"c\":\"x\",\"d\":\"UNSPECIFIED\"}]";
+		assertEquals("[{\"d\":\"UNSPECIFIED\",\"c\":\"x\"},{\"d\":\"2016-09-07\",\"c\":\"\"},{\"d\":\"2016-09-08 12:13:14\",\"c\":\"\"}]", CCDateTimeList.fromJSONArray(mixed).asJSONArray());
+
+		var special = CCDateTimeList.createEmpty().add(CCDateTime.createFromSQL("2016-09-07"), "a\"b\\c</d\nä");
+		assertEquals("[{\"d\":\"2016-09-07\",\"c\":\"a\\\"b\\\\c<\\/d\\nä\"}]", special.asJSONArray());
+		assertEquals(special, CCDateTimeList.fromJSONArray(special.asJSONArray()));
+
+		assertNotEquals(CCDateTimeList.fromJSONArray(json), CCDateTimeList.fromJSONArray(legacy));
 
 		assertThrows(JSONListFormatException.class, () -> CCDateTimeList.fromJSONArray("[\"2016-09-07\",\"invalid\"]"));
 		assertThrows(JSONListFormatException.class, () -> CCDateTimeList.fromJSONArray("[\"2016-09-07\""));
 		assertThrows(JSONListFormatException.class, () -> CCDateTimeList.fromJSONArray("[\"2016-09-07\",42]"));
+		assertThrows(JSONListFormatException.class, () -> CCDateTimeList.fromJSONArray("[{\"c\":\"x\"}]"));
+		assertThrows(JSONListFormatException.class, () -> CCDateTimeList.fromJSONArray("[{\"d\":\"2016-09-07\",\"c\":5}]"));
 	}
 
 	@Test

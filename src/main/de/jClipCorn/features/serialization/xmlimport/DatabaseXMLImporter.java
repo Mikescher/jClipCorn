@@ -69,6 +69,7 @@ public class DatabaseXMLImporter {
 		if (s.XMLVersion == 9) return new DatabaseXMLImportImpl_V9();
 		if (s.XMLVersion == 10) return new DatabaseXMLImportImpl_V10();
 		if (s.XMLVersion == 11) return new DatabaseXMLImportImpl_V11();
+		if (s.XMLVersion == 12) return new DatabaseXMLImportImpl_V12();
 
 		throw new SerializationException("Unknown XMLVersion: " + s.XMLVersion);
 	}

@@ -7,6 +7,7 @@ import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCEpisode;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
+import de.jClipCorn.database.databaseElement.columnTypes.CCViewedEntry;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryElement;
 import de.jClipCorn.gui.frames.watchHistoryFrame.element.WatchHistoryEpisodeElement;
@@ -123,14 +124,14 @@ public class WatchHistoryFrame extends JCCFrame {
 		data.clear();
 
 		for (CCMovie mov : movielist.iteratorMovies()) {
-			for (var e : mov.ViewedHistory.get().ccstream().index()) {
-				if (!e.Value.isUnspecifiedDateTime()) data.add(new WatchHistoryMovieElement(e.Index+1, e.Value, mov));
+			for (var e : mov.ViewedHistory.get().entries().index()) {
+				if (!e.Value.datetime.isUnspecifiedDateTime()) data.add(new WatchHistoryMovieElement(e.Index+1, e.Value, mov));
 			}
 		}
 
 		for (CCEpisode episode : movielist.iteratorEpisodes()) {
-			for (var e : episode.ViewedHistory.get().ccstream().index()) {
-				if (!e.Value.isUnspecifiedDateTime()) data.add(new WatchHistoryEpisodeElement(e.Index+1, e.Value, episode));
+			for (var e : episode.ViewedHistory.get().entries().index()) {
+				if (!e.Value.datetime.isUnspecifiedDateTime()) data.add(new WatchHistoryEpisodeElement(e.Index+1, e.Value, episode));
 			}
 		}
 
@@ -200,8 +201,8 @@ public class WatchHistoryFrame extends JCCFrame {
 		edName2.setText(elem.getFullNamePart2());
 		edName3.setText(elem.getFullNamePart3());
 
-		DefaultListModel<CCDateTime> dt = new DefaultListModel<>();
-		for (CCDateTime stamp : elem.getHistory().ccstream()) dt.addElement(stamp);
+		DefaultListModel<CCViewedEntry> dt = new DefaultListModel<>();
+		for (CCViewedEntry entry : elem.getHistory().entries()) dt.addElement(entry);
 
 		listHistory.setModel(dt);
 	}
@@ -322,7 +323,7 @@ public class WatchHistoryFrame extends JCCFrame {
 	private ReadableTextField edName3;
 	private JLabel label2;
 	private JScrollPane scrollPane1;
-	private JList<CCDateTime> listHistory;
+	private JList<CCViewedEntry> listHistory;
 	private CoverLabelFullsize lblCover;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

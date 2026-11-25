@@ -161,7 +161,7 @@ public class CCTransactionLog {
 
 		if (o instanceof String s) return s;
 
-		if (o instanceof CCDateTimeList v) return v.toSerializationString();
+		if (o instanceof CCDateTimeList v) return v.asJSONArray();
 		if (o instanceof CCDBLanguageList v) return v.serializeToLongString();
 		if (o instanceof CCDBLanguageSet v) return v.serializeToString();
 		if (o instanceof CCFileSize v) return v.getFormatted();

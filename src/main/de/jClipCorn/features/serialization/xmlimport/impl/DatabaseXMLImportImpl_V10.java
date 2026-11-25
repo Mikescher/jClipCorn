@@ -8,6 +8,7 @@ import de.jClipCorn.util.Str;
 import de.jClipCorn.util.datatypes.CCUUID;
 import de.jClipCorn.util.datatypes.Opt;
 import de.jClipCorn.util.datetime.CCDate;
+import de.jClipCorn.util.exceptions.CCFormatException;
 import de.jClipCorn.util.helper.ByteUtilies;
 import de.jClipCorn.util.helper.ImageUtilities;
 import de.jClipCorn.util.lambda.Func1to1;
@@ -77,7 +78,7 @@ public class DatabaseXMLImportImpl_V10 implements IDatabaseXMLImporterImpl
 		e.execIfIntAttrExists("year", v -> o.Year.set(Opt.of(v)));
 		e.execIfAttrExists("zyklus", o.Zyklus::setTitle);
 		e.execIfIntAttrExists("zyklusnumber", o.Zyklus::setNumber);
-		e.execIfAttrExists("history", o.ViewedHistory::set);
+		e.execIfAttrExists("history", v -> o.ViewedHistory.set(parseHistory(v)));
 
 		if (s.ResetViewed) o.ViewedHistory.set(CCDateTimeList.createEmpty());
 
@@ -159,7 +160,7 @@ public class DatabaseXMLImportImpl_V10 implements IDatabaseXMLImporterImpl
 		e.execIfLongAttrExists("filesize", o.FileSize::set);
 		e.execIfIntAttrExists("format", o.Format::set);
 
-		e.execIfAttrExists("history", v -> o.ViewedHistory.set(CCDateTimeList.parse(v)));
+		e.execIfAttrExists("history", v -> o.ViewedHistory.set(parseHistory(v)));
 
 		e.execIfIntAttrExists("length", o.Length::set);
 		e.execIfAttrExists("part", o.Part::set);
@@ -196,5 +197,9 @@ public class DatabaseXMLImportImpl_V10 implements IDatabaseXMLImporterImpl
 				e.getAttributeShortValueOpt("mediainfo.audiochannels"),
 				e.getAttributeValueOpt("mediainfo.audiocodec"),
 				e.getAttributeIntValueOpt("mediainfo.audiosamplerate")));
+	}
+
+	protected CCDateTimeList parseHistory(String v) throws CCFormatException {
+		return CCDateTimeList.parse(v);
 	}
 }

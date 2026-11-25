@@ -14,17 +14,24 @@ import java.awt.image.BufferedImage;
 public class WatchHistoryMovieElement extends WatchHistoryElement{
 	public final int Counter;
 	public final CCDateTime Timestamp;
+	public final String Comment;
 	public final CCMovie Movie;
 	
-	public WatchHistoryMovieElement(int _c, CCDateTime _timestamp, CCMovie _movie) {
+	public WatchHistoryMovieElement(int _c, CCViewedEntry _entry, CCMovie _movie) {
 		Counter = _c;
-		Timestamp = _timestamp;
+		Timestamp = _entry.datetime;
+		Comment = _entry.comment;
 		Movie = _movie;
 	}
 
 	@Override
 	public CCDateTime getTimestamp() {
 		return Timestamp;
+	}
+
+	@Override
+	public String getComment() {
+		return Comment;
 	}
 
 	@Override

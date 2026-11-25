@@ -91,7 +91,7 @@ new FormModel {
 							name: "listHistory"
 							"visibleRowCount": 4
 							auxiliary() {
-								"JavaCodeGenerator.typeParameters": "CCDateTime"
+								"JavaCodeGenerator.typeParameters": "CCViewedEntry"
 							}
 						} )
 					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {

@@ -141,8 +141,7 @@ tasks.register("manualReleaseJar") {
 		def mainContent = new File('src/main/de/jClipCorn/Main.java').text
 		def currVersion = mainContent.findAll(rexMainVers())[0]
 
-		tagVersion  = make3Dot(tagVersion)
-		currVersion = make3Dot(currVersion)
+		tagVersion  = make3Dot(tagVersion) + ".0"
 
 		println "Version (Tag):  " + tagVersion
 		println "Version (Code): " + currVersion
@@ -151,6 +150,12 @@ tasks.register("manualReleaseJar") {
 		mainContent = mainContent.replaceFirst(rexMainBeta(), "false");
 
 		new File('src/main/de/jClipCorn/Main.java').write mainContent
+
+		// anyReleaseJar computed its file name at configuration time, from the pre-release version
+		project.appversion = extractProjectVersion()
+		version = extractProjectVersion()
+		anyReleaseJar.archiveVersion  = extractProjectVersion()
+		anyReleaseJar.archiveFileName = "jClipCorn ${extractProjectVersion()}.jar"
 	}
 }
 manualReleaseJar.finalizedBy anyReleaseJar

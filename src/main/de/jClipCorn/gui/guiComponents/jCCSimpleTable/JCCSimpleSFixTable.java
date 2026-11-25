@@ -46,11 +46,9 @@ public class JCCSimpleSFixTable<TData> extends SFixTable {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected String getTooltip(int column, int row, Object value) {
-		column = convertColumnIndexToModel(column); // So you can move the positions of the Columns ...
-		
+	protected String getTooltip(int modelcol, int modelrow, Object value) {
 		TData el = (TData)value;
 		
-		return columns.get(column).GetTooltip.invoke(el);
+		return columns.get(modelcol).GetTooltip.invoke(el);
 	}
 }

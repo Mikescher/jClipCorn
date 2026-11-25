@@ -13,13 +13,16 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings("restriction")
 public abstract class JCCSimpleTable<TData> extends JScrollPane implements IJCCSimpleTable, ListSelectionListener, MouseListener {
@@ -32,6 +35,9 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements IJCCS
 
 	private String _autoResizeConfig;
 	private TableColumnAdjuster adjuster;
+
+	private List<TableColumn> allTableColumns;
+	private final Set<String> hiddenGroups = new HashSet<>();
 
 	protected final CCMovieList movielist;
 	protected final ITuple initOptions;
@@ -82,11 +88,43 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements IJCCS
 
 		this.setViewportView(table);
 
-		_autoResizeConfig = CCStreams.iterate(columns).stringjoin(e -> e.AutoResizeConfig, "|"); //$NON-NLS-1$
-
 		adjuster = new TableColumnAdjuster(this, table);
 
+		captureTableColumns();
+		applyColumnVisibility();
+	}
+
+	private void captureTableColumns() {
+		var tcm = table.getColumnModel();
+		allTableColumns = new ArrayList<>();
+		for (int i = 0; i < tcm.getColumnCount(); i++) allTableColumns.add(tcm.getColumn(i));
+	}
+
+	private boolean isColumnVisible(JCCSimpleColumnPrototype<TData> col) {
+		return col.Group == null || !hiddenGroups.contains(col.Group);
+	}
+
+	public void setGroupVisible(String group, boolean visible) {
+		boolean changed = visible ? hiddenGroups.remove(group) : hiddenGroups.add(group);
+		if (changed) applyColumnVisibility();
+	}
+
+	public boolean isGroupVisible(String group) {
+		return !hiddenGroups.contains(group);
+	}
+
+	private void applyColumnVisibility() {
+		var tcm = table.getColumnModel();
+		while (tcm.getColumnCount() > 0) tcm.removeColumn(tcm.getColumn(0));
+		for (int i = 0; i < columns.size(); i++) {
+			if (isColumnVisible(columns.get(i))) tcm.addColumn(allTableColumns.get(i));
+		}
+
+		// the adjuster config is positional over the *visible* columns
+		_autoResizeConfig = CCStreams.iterate(columns).filter(this::isColumnVisible).stringjoin(e -> e.AutoResizeConfig, "|"); //$NON-NLS-1$
+
 		autoResize();
+		getHorizontalScrollBar().setValue(0);
 	}
 
 	private void configureTable() {
@@ -239,7 +277,9 @@ public abstract class JCCSimpleTable<TData> extends JScrollPane implements IJCCS
 	}
 	
 	public void forceFullRedraw() {
-		model.fireTableStructureChanged();
+		model.fireTableStructureChanged(); // recreates all TableColumns from the model
+		captureTableColumns();
+		applyColumnVisibility();
 	}
 	
 	public void forceDataChangedRedraw() {

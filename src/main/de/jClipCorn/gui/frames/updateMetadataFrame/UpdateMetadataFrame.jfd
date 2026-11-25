@@ -7,8 +7,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-			"$columnSpecs": "unrelgap, default, labelcompgap, default:grow, labelcompgap, max(default;75dlu), labelcompgap, max(default;75dlu), unrelgap"
-			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default:grow, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, unrelgap"
+			"$columnSpecs": "unrelgap, default, labelcompgap, default:grow, labelcompgap, default, labelcompgap, max(default;75dlu), labelcompgap, max(default;75dlu), unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default:grow, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, unrelgap"
 		} ) {
 			name: "this"
 			"$sizePolicy": 1
@@ -35,7 +35,7 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
 				"gridY": 2
-				"gridWidth": 3
+				"gridWidth": 5
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
@@ -44,7 +44,7 @@ new FormModel {
 				"text": new FormMessage( null, "UpdateMetadataFrame.filterBtn" )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "filterInput", false ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 6
+				"gridX": 8
 				"gridY": 2
 				"gridWidth": 3
 			} )
@@ -64,13 +64,21 @@ new FormModel {
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbAllColumns"
+				"text": new FormMessage( null, "UpdateMetadataFrame.cbAllColumns.text" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onChangeAllColumns", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 6
+				"gridY": 4
+			} )
 			add( new FormComponent( "javax.swing.JToggleButton" ) {
 				name: "btnShowAll"
 				"text": new FormMessage( null, "UpdateMetadataFrame.SwitchFilter1" )
 				"selected": true
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showAll", false ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 6
+				"gridX": 8
 				"gridY": 4
 			} )
 			add( new FormComponent( "javax.swing.JToggleButton" ) {
@@ -78,7 +86,7 @@ new FormModel {
 				"text": new FormMessage( null, "UpdateMetadataFrame.SwitchFilter2" )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showFiltered", false ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 8
+				"gridX": 10
 				"gridY": 4
 			} )
 			add( new FormContainer( "de.jClipCorn.gui.frames.updateMetadataFrame.UpdateMetadataTable", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -89,7 +97,7 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
 				"gridY": 6
-				"gridWidth": 7
+				"gridWidth": 9
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
@@ -108,7 +116,7 @@ new FormModel {
 				"enabled": false
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateAllOnlineScore", false ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 8
+				"gridX": 10
 				"gridY": 8
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -134,7 +142,7 @@ new FormModel {
 				"enabled": false
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateAllGenres", false ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 8
+				"gridX": 10
 				"gridY": 10
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -160,7 +168,7 @@ new FormModel {
 				"enabled": false
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateAllOnlineReferences", false ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 8
+				"gridX": 10
 				"gridY": 12
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -187,7 +195,7 @@ new FormModel {
 				"enabled": false
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateAllAnimeSeason", false ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 8
+				"gridX": 10
 				"gridY": 14
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -214,7 +222,7 @@ new FormModel {
 				"enabled": false
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateAllAnimeStudio", false ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 8
+				"gridX": 10
 				"gridY": 16
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -240,8 +248,29 @@ new FormModel {
 				"enabled": false
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateAllShowStatus", false ) )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 8
+				"gridX": 10
 				"gridY": 18
+			} )
+			add( new FormComponent( "javax.swing.JProgressBar" ) {
+				name: "pbUpdate"
+				"stringPainted": true
+				"string": ""
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 20
+				"gridWidth": 7
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnCancelUpdate"
+				"text": new FormMessage( null, "UpdateMetadataFrame.btnCancelUpdate.text" )
+				"enabled": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cancelUpdate", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 10
+				"gridY": 20
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

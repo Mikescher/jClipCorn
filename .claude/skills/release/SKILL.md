@@ -21,7 +21,7 @@ The RELEASE commit message gets **no body and no trailers** (no Co-Authored-By e
 ```bash
 git branch --show-current            # master
 git status --short                   # clean
-git tag -l "vV"; git ls-remote --tags github "refs/tags/vV"   # both empty
+git tag -l "vV"; git ls-remote --tags origin "refs/tags/vV"   # both empty
 git log -1 --format=%s --grep='^[0-9]\+\.[0-9]\+\.[0-9]\+ RELEASE$'   # previous release, e.g. "1.11.0 RELEASE"
 ```
 
@@ -94,7 +94,7 @@ Write `_mybuilds/release-notes-vV.md` (`_mybuilds/` is gitignored), same format 
 The container has no push credentials and no `gh`, so do not push. Give the user:
 
 ```bash
-git push github master "vV" && git push gitea master "vV"
+git push origin master "vV"
 ```
 
 and the GitHub release to create at https://github.com/Mikescher/jClipCorn/releases/new: tag `vV`, title `jClipCorn vV`, body = the notes file, asset = `_mybuilds/jClipCorn V.0.jar`.

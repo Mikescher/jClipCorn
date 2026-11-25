@@ -25,6 +25,8 @@ public class JCCSimpleColumnPrototype<TData> {
 
 	public boolean IsSortable;
 
+	public String Group;
+
 	public JCCSimpleColumnPrototype(IJCCSimpleTable o, String _captionIdent) {
 		super();
 
@@ -36,6 +38,7 @@ public class JCCSimpleColumnPrototype<TData> {
 		CustomCellRenderer = false;
 		GetTooltip = (e -> null);
 		IsSortable = false;
+		Group = null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -75,6 +78,12 @@ public class JCCSimpleColumnPrototype<TData> {
 
 	public JCCSimpleColumnPrototype<TData> withTooltip(Func1to1<TData, String> v) {
 		this.GetTooltip = (v == null) ? (e -> null) : (v);
+		return this;
+	}
+
+	/** Columns of a group can be hidden/shown together via {@link JCCSimpleTable#setGroupVisible}. */
+	public JCCSimpleColumnPrototype<TData> inGroup(String group) {
+		this.Group = group;
 		return this;
 	}
 

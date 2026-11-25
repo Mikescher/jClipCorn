@@ -224,6 +224,10 @@ public class TMDBParser extends Metadataparser {
 				result.Genres = new CCGenreList(genres);
 			}
 			
+			if (ref.id.startsWith("tv/")) {
+				result.ShowStatus = CCTVShowStatus.fromTMDbStatus(root.optString("status", null));
+			}
+
 			if (hasString(root, "imdb_id")) {
 				result.AltRef = CCSingleOnlineReference.createIMDB(root.getString("imdb_id"));
 			}
@@ -348,6 +352,21 @@ public class TMDBParser extends Metadataparser {
 		}
 	}
 	
+	/** One request (no language variants, no appended responses) - for series whose main reference is not TMDb. */
+	@SuppressWarnings("nls")
+	public CCTVShowStatus getTVShowStatus(CCSingleOnlineReference ref) {
+		if (!ref.id.startsWith("tv/")) return null;
+
+		String json = HTTPUtilities.getRateLimitedHTML(movielist, URL_BASE + ref.id + "?api_key=" + API_KEY, false, false);
+		try {
+			JSONObject root = new JSONObject(new JSONTokener(json));
+			return CCTVShowStatus.fromTMDbStatus(root.optString("status", null));
+		} catch (Exception e) {
+			CCLog.addError(LocaleBundle.getFormattedString("LogMessage.TMDBApiError", json), e);
+			return null;
+		}
+	}
+
 	private static boolean hasString(JSONObject obj, String ident) {
 		return obj.has(ident) && !obj.isNull(ident) && !obj.getString(ident).isEmpty();
 	}

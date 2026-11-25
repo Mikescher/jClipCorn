@@ -3,6 +3,8 @@ package de.jClipCorn.gui.guiComponents.cover;
 import com.jformdesigner.annotations.DesignCreate;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
+import de.jClipCorn.database.databaseElement.columnTypes.CCStringList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTVShowStatus;
 import de.jClipCorn.features.actionTree.ActionSource;
 import de.jClipCorn.features.actionTree.CCActionTree;
 import de.jClipCorn.gui.frames.coverPreviewFrame.CoverPreviewFrame;
@@ -110,8 +112,9 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 		boolean drawSpecVer = movielist.ccprops().PROP_MAINFRAME_SHOW_SPECIALVERSION.getValue() && !el.getSpecialVersion().isEmpty();
 		boolean drawStudio  = movielist.ccprops().PROP_MAINFRAME_SHOW_ANIMESTUDIO.getValue()    && !el.getAnimeStudio().isEmpty();
 		boolean drawSeason  = movielist.ccprops().PROP_MAINFRAME_SHOW_ANIMESEASON.getValue()    && !el.getAnimeSeason().isEmpty();
+		boolean drawStatus  = movielist.ccprops().PROP_MAINFRAME_SHOW_SHOWSTATUS.getValue()     && el.isSeries() && el.asSeries().ShowStatus.get() != CCTVShowStatus.UNKNOWN;
 
-		if (drawSCorner || drawTag || drawGroups || drawSpecVer || drawStudio || drawSeason) {
+		if (drawSCorner || drawTag || drawGroups || drawSpecVer || drawStudio || drawSeason || drawStatus) {
 			BufferedImage biorig = el.getCover();
 
 			BufferedImage bi = ImageUtilities.resizeCoverImageForFullSizeUI(biorig);
@@ -141,6 +144,11 @@ public class DatabaseElementPreviewLabel extends CoverLabel {
 
 			if (drawSeason) {
 				vertOffset += el.getAnimeSeason().drawOnImage(bi, alpha, COLOR_ANIME_SEASON, vertOffset);
+			}
+
+			if (drawStatus) {
+				var status = el.asSeries().ShowStatus.get();
+				vertOffset += CCStringList.create(status.asString()).drawOnImage(bi, alpha, status.getOverlayColor(), vertOffset);
 			}
 
 			return bi;

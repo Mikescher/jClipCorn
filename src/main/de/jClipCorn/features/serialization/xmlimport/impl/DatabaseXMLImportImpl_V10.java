@@ -106,6 +106,8 @@ public class DatabaseXMLImportImpl_V10 implements IDatabaseXMLImporterImpl
 	{
 		importDatabaseElement(o, e, imgf, s);
 
+		e.execIfIntAttrExists("showstatus", o.ShowStatus::set);
+
 		for (CCXMLElement xchild : e.getAllChildren("season"))
 		{
 			o.createNewSeason(seas -> importSeason(seas, xchild, imgf, s));

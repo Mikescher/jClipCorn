@@ -99,7 +99,7 @@ public class DatabaseXMLExporterImpl {
 	public static void exportSeries(Element e, CCSeries o, ExportOptions s) {
 		exportDatabaseElement(e, o, s);
 
-		// series has no more attributes than CCDatabaseElement - for now
+		e.setAttribute("showstatus", String.valueOf(o.ShowStatus.get().asInt()));
 	}
 
 	public static void exportSeason(Element e, CCSeason o, ExportOptions s) {

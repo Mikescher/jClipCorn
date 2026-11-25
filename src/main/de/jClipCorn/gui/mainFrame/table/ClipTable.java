@@ -388,6 +388,22 @@ public class ClipTable extends JCCPrimaryTable<CCDatabaseElement, MainFrameColum
 
 		ccr.add(new JCCPrimaryColumnPrototype<>
 		(
+			MainFrameColumn.SHOWSTATUS,
+			Str.Empty,
+			"auto",
+			LocaleBundle.getString("ClipTableModel.ShowStatus"),
+			(r,v) -> r.setIcon(v.isSeries() ? v.asSeries().ShowStatus.get().getIcon() : null),
+			(r) -> false,
+			(v1,v2) -> Integer.compare(v1.isSeries() ? v1.asSeries().ShowStatus.get().asInt() : -1, v2.isSeries() ? v2.asSeries().ShowStatus.get().asInt() : -1),
+			true,
+			(v,row) -> v.isSeries() ? v.asSeries().ShowStatus.get().asString() : null,
+			(v) -> false,
+			(v) -> noop(),
+			() -> false
+		));
+
+		ccr.add(new JCCPrimaryColumnPrototype<>
+		(
 			MainFrameColumn.FORMAT,
 			LocaleBundle.getString("ClipTableModel.Format"),
 			"auto",

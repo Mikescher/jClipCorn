@@ -8,7 +8,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "relgap, default, unrelgap, default:grow, labelcompgap, 13dlu, default, labelcompgap, default, labelcompgap, default:grow, labelcompgap"
-			"$rowSpecs": "relgap, default, relgap, default, linegap, default, 20dlu, 1dlu, 20dlu, unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 10dlu, linegap, default, linegap, default, linegap, 0dlu:grow, default, linegap"
+			"$rowSpecs": "relgap, default, relgap, default, linegap, default, 20dlu, 1dlu, 20dlu, unrelgap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, 10dlu, linegap, default, linegap, default, linegap, default, linegap, 0dlu:grow, default, linegap"
 		} ) {
 			name: "this"
 			"title": new FormMessage( null, "AddSeriesFrame.this.title" )
@@ -298,6 +298,23 @@ new FormModel {
 				"gridX": 4
 				"gridY": 31
 			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "lblShowStatus"
+				"text": new FormMessage( null, "AddSeriesFrame.lblShowStatus.text" )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 33
+			} )
+			add( new FormComponent( "de.jClipCorn.gui.guiComponents.enumComboBox.CCEnumComboBox" ) {
+				name: "cbxShowStatus"
+				auxiliary() {
+					"JavaCodeGenerator.typeParameters": "CCTVShowStatus"
+					"JavaCodeGenerator.customCreateCode": "new ${field_type}(CCTVShowStatus.getWrapper());"
+				}
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 33
+			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
 				name: "panel1"
 				add( new FormComponent( "javax.swing.JButton" ) {
@@ -312,7 +329,7 @@ new FormModel {
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 2
-				"gridY": 34
+				"gridY": 36
 				"gridWidth": 10
 			} )
 		}, new FormLayoutConstraints( null ) {

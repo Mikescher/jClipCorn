@@ -11,7 +11,13 @@ It uses SQLite for database storage.
 make build              # Build the project
 make run-tests          # Run all tests
 make jformdesigner      # Generate Java UI code from .jfd files (critical for UI changes, run after every change to jfd files)
+make run-local          # Run the app on the local test database in _local/
 ```
+
+### Running the app and checking UI changes visually
+Inside the ccc container the app can be started on a headless desktop (`ccc-display`), screenshotted and clicked.
+After UI changes (new columns, dialogs, settings, filter entries, cover overlays) start the app and look at the result before committing.
+Follow the `run-local` skill (`.claude/skills/run-local/SKILL.md`): it runs on a *copy* of `_local/`, because `_local/` is the user's real local database and starting on it can migrate it.
 
 ## Code Architecture
 

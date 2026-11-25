@@ -9,6 +9,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.online.metadata.Metadataparser;
 import de.jClipCorn.features.online.metadata.OnlineMetadata;
+import de.jClipCorn.features.online.metadata.tmdb.TMDBParser;
 import de.jClipCorn.features.table.filter.AbstractCustomFilter;
 import de.jClipCorn.gui.frames.genericTextDialog.GenericTextDialog;
 import de.jClipCorn.gui.guiComponents.JCCFrame;
@@ -52,6 +53,7 @@ public class UpdateMetadataFrame extends JCCFrame
 
 		tableMain.DeleteLocalAnimeSeason = cbReplaceAnimeSeason.isSelected();
 		tableMain.DeleteLocalAnimeStudio = cbReplaceAnimeStudio.isSelected();
+		tableMain.OverwriteLocalShowStatus = cbOverwriteShowStatus.isSelected();
 
 		var defBackground = statusInputFilter.getBackground();
 		edInputFilter.getDocument().addDocumentListener(new DocumentLambdaAdapter(() -> {
@@ -113,6 +115,8 @@ public class UpdateMetadataFrame extends JCCFrame
 		if (d == null) return false;
 
 		if (!d.Processed) return false;
+
+		if (tableMain.isShowStatusChange(d)) return true;
 
 		OnlineMetadata md = d.OnlineMeta;
 
@@ -194,33 +198,52 @@ public class UpdateMetadataFrame extends JCCFrame
 				btnUpdateSelectedAnimeSeason.setEnabled(false);
 				btnUpdateAllAnimeStudio.setEnabled(false);
 				btnUpdateSelectedAnimeStudio.setEnabled(false);
+				btnUpdateAllShowStatus.setEnabled(false);
+				btnUpdateSelectedShowStatus.setEnabled(false);
 				btnInputFilter.setEnabled(false);
 			});
 			ThreadUtils.setProgressbarAndWait(progressBar, 0, 0, data.size()+1);
+
+			TMDBParser tmdb = new TMDBParser(movielist);
 
 			int i = 1;
 			for (UpdateMetadataTableElement elem : data) {
 				ThreadUtils.setProgressbarAndWait(progressBar, i);
 				i++;
 
-				CCSingleOnlineReference ref = elem.getOnlineReference().Main;
-				if (! ref.isSet()) continue;
-
 				if (elem.OnlineMeta != null) continue;
 
-				Metadataparser mp = ref.getMetadataParser(movielist);
-				if (mp == null) continue;
+				CCSingleOnlineReference ref = elem.getOnlineReference().Main;
+				Metadataparser mp = ref.isSet() ? ref.getMetadataParser(movielist) : null;
+
+				CCSingleOnlineReference tvref = elem.supportsShowStatus() ? elem.getTMDbTVReference() : null;
+
+				if (mp == null && tvref == null) continue;
 
 				OnlineMetadata md = null;
-				try {
-					md = mp.getMetadata(ref, false);
-
-				} catch (Exception e) {
-					CCLog.addDebug(e.toString());
+				if (mp != null) {
+					try {
+						md = mp.getMetadata(ref, false);
+					} catch (Exception e) {
+						CCLog.addDebug(e.toString());
+					}
 				}
 				if (md != null) {
 					elem.OnlineMeta = md;
 				}
+
+				if (tvref != null && elem.OnlineShowStatus == null) {
+					if (md != null && md.ShowStatus != null) {
+						elem.OnlineShowStatus = md.ShowStatus;
+					} else if (!tvref.equals(ref)) {
+						try {
+							elem.OnlineShowStatus = tmdb.getTVShowStatus(tvref);
+						} catch (Exception e) {
+							CCLog.addDebug(e.toString());
+						}
+					}
+				}
+
 				elem.Processed = true;
 				SwingUtils.invokeAndWaitSafe(() -> tableMain.changeData(elem, elem));
 
@@ -242,6 +265,8 @@ public class UpdateMetadataFrame extends JCCFrame
 				btnUpdateSelectedAnimeSeason.setEnabled(!movielist.isReadonly());
 				btnUpdateAllAnimeStudio.setEnabled(!movielist.isReadonly());
 				btnUpdateSelectedAnimeStudio.setEnabled(!movielist.isReadonly());
+				btnUpdateAllShowStatus.setEnabled(!movielist.isReadonly());
+				btnUpdateSelectedShowStatus.setEnabled(!movielist.isReadonly());
 				btnInputFilter.setEnabled(false);
 			});
 			collThread = null;
@@ -294,6 +319,19 @@ public class UpdateMetadataFrame extends JCCFrame
 
 	private void updateAllAnimeStudio() {
 		UpdateAnimeStudioInDatabase(false);
+	}
+
+	private void updateSelectedShowStatus() {
+		UpdateShowStatusInDatabase(true);
+	}
+
+	private void updateAllShowStatus() {
+		UpdateShowStatusInDatabase(false);
+	}
+
+	private void onChangeAllowShowStatusOverwrite() {
+		tableMain.OverwriteLocalShowStatus = cbOverwriteShowStatus.isSelected();
+		tableMain.forceDataChangedRedraw();
 	}
 
 	private void onChangeAllowGenreDelete() {
@@ -449,6 +487,25 @@ public class UpdateMetadataFrame extends JCCFrame
 		tableMain.forceDataChangedRedraw();
 	}
 
+	private void UpdateShowStatusInDatabase(boolean onlySelected) {
+		if (movielist.isReadonly()) return;
+
+		List<UpdateMetadataTableElement> data = onlySelected ? tableMain.getSelectedDataCopy() : tableMain.getDataCopy();
+
+		int count = 0;
+
+		for (UpdateMetadataTableElement elem : data) {
+			if (!tableMain.isShowStatusChange(elem)) continue;
+
+			elem.setShowStatus(elem.OnlineShowStatus);
+			count++;
+		}
+
+		DialogHelper.showDispatchInformation(this, LocaleBundle.getString("Dialogs.MetadataUpdateSuccess_caption"), LocaleBundle.getFormattedString("Dialogs.MetadataUpdateSuccess", count)); //$NON-NLS-1$ //$NON-NLS-2$
+
+		tableMain.forceDataChangedRedraw();
+	}
+
 	/**
 	 * Merges the online string-list into the local one and returns the new value, or {@code null} if nothing changed.
 	 * With {@code replace == true} the online list fully replaces the local one (if different).
@@ -501,6 +558,9 @@ public class UpdateMetadataFrame extends JCCFrame
 		btnUpdateSelectedAnimeStudio = new JButton();
 		cbReplaceAnimeStudio = new JCheckBox();
 		btnUpdateAllAnimeStudio = new JButton();
+		btnUpdateSelectedShowStatus = new JButton();
+		cbOverwriteShowStatus = new JCheckBox();
+		btnUpdateAllShowStatus = new JButton();
 
 		//======== this ========
 		setTitle(LocaleBundle.getString("UpdateMetadataFrame.title"));
@@ -509,7 +569,7 @@ public class UpdateMetadataFrame extends JCCFrame
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
 			"$ugap, default, $lcgap, default:grow, 2*($lcgap, [75dlu,default]), $ugap",
-			"$ugap, 2*(default, $lgap), default:grow, 5*($lgap, default), $ugap"));
+			"$ugap, 2*(default, $lgap), default:grow, 6*($lgap, default), $ugap"));
 
 		//======== statusInputFilter ========
 		{
@@ -648,6 +708,23 @@ public class UpdateMetadataFrame extends JCCFrame
 		btnUpdateAllAnimeStudio.setEnabled(false);
 		btnUpdateAllAnimeStudio.addActionListener(e -> updateAllAnimeStudio());
 		contentPane.add(btnUpdateAllAnimeStudio, CC.xy(8, 16));
+
+		//---- btnUpdateSelectedShowStatus ----
+		btnUpdateSelectedShowStatus.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate11"));
+		btnUpdateSelectedShowStatus.setEnabled(false);
+		btnUpdateSelectedShowStatus.addActionListener(e -> updateSelectedShowStatus());
+		contentPane.add(btnUpdateSelectedShowStatus, CC.xy(2, 18));
+
+		//---- cbOverwriteShowStatus ----
+		cbOverwriteShowStatus.setText(LocaleBundle.getString("UpdateMetadataFrame.CBOverwriteShowStatus"));
+		cbOverwriteShowStatus.addActionListener(e -> onChangeAllowShowStatusOverwrite());
+		contentPane.add(cbOverwriteShowStatus, CC.xy(4, 18));
+
+		//---- btnUpdateAllShowStatus ----
+		btnUpdateAllShowStatus.setText(LocaleBundle.getString("UpdateMetadataFrame.BtnUpdate12"));
+		btnUpdateAllShowStatus.setEnabled(false);
+		btnUpdateAllShowStatus.addActionListener(e -> updateAllShowStatus());
+		contentPane.add(btnUpdateAllShowStatus, CC.xy(8, 18));
 		setSize(1200, 650);
 		setLocationRelativeTo(getOwner());
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -677,5 +754,8 @@ public class UpdateMetadataFrame extends JCCFrame
 	private JButton btnUpdateSelectedAnimeStudio;
 	private JCheckBox cbReplaceAnimeStudio;
 	private JButton btnUpdateAllAnimeStudio;
+	private JButton btnUpdateSelectedShowStatus;
+	private JCheckBox cbOverwriteShowStatus;
+	private JButton btnUpdateAllShowStatus;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

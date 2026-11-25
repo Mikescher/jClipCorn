@@ -63,6 +63,7 @@ public abstract class AbstractCustomFilter {
 	public final static int CUSTOMFILTERID_SPECIALVERSION   = 40;
 	public final static int CUSTOMFILTERID_ANIMESEASON      = 41;
 	public final static int CUSTOMFILTERID_ANIMESTUDIO      = 42;
+	public final static int CUSTOMFILTERID_SHOWSTATUS       = 43;
 		
 	public abstract String getName();
 	public abstract String getPrecreateName();
@@ -205,6 +206,7 @@ public abstract class AbstractCustomFilter {
 			new CustomSpecialVersionFilter(ml),
 			new CustomAnimeSeasonFilter(ml),
 			new CustomAnimeStudioFilter(ml),
+			new CustomShowStatusFilter(ml),
 		};
 	}
 	

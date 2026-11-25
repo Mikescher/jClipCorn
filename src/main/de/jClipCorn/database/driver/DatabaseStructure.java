@@ -101,6 +101,7 @@ public class DatabaseStructure
 	public final static CCSQLColDef COL_SER_COVERID           = new CCSQLColDef("COVERID",              CCSQLType.VARCHAR,     NULLABLE);
 	public final static CCSQLColDef COL_SER_TAGS              = new CCSQLColDef("TAGS",                 CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_SER_SPECIALVERSION    = new CCSQLColDef("SPECIALVERSION",       CCSQLType.VARCHAR,     NON_NULLABLE);
+	public final static CCSQLColDef COL_SER_SHOWSTATUS        = new CCSQLColDef("SHOWSTATUS",           CCSQLType.TINYINT,     NON_NULLABLE);
 
 	public final static CCSQLColDef COL_SEAS_ID               = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
 	public final static CCSQLColDef COL_UD_SEAS_ID            = new CCSQLColDef("ID",                   CCSQLType.VARCHAR,     NON_NULLABLE);
@@ -221,7 +222,7 @@ public class DatabaseStructure
 			{
 				COL_SER_NAME, COL_SER_GENRE, COL_SER_ONLINESCORE_NUM, COL_SER_ONLINESCORE_DENOM, COL_SER_FSK, COL_SER_ONLINEREF,
 				COL_SER_GROUPS, COL_SER_COVERID,
-				COL_SER_SPECIALVERSION
+				COL_SER_SPECIALVERSION, COL_SER_SHOWSTATUS
 			},
 			new CCSQLFKey[]
 			{

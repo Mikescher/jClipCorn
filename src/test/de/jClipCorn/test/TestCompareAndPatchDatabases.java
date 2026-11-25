@@ -3,6 +3,7 @@ package de.jClipCorn.test;
 import de.jClipCorn.database.CCMovieList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCFSK;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTVShowStatus;
 import de.jClipCorn.features.databaseErrors.CCDatabaseValidator;
 import de.jClipCorn.features.databaseErrors.DatabaseError;
 import de.jClipCorn.features.databaseErrors.DatabaseValidatorOptions;
@@ -55,6 +56,10 @@ public class TestCompareAndPatchDatabases extends ClipCornBaseTest {
 		var m4 = mlDiff.iteratorMovies().singleOrNull(e -> Str.equals(e.OnlineReference.get().Main.id, "movie/1573"));
 		m4.FSK.set(CCFSK.RATING_0);
 		m4.Genres.tryAddGenre(CCGenre.GENRE_038);
+
+		// [3b] change show-status 'Neon Genesis Evangelion'
+		var m4b = mlDiff.iteratorSeries().singleOrNull(e -> Str.equals(e.Title.get(), "Neon Genesis Evangelion"));
+		m4b.ShowStatus.set(CCTVShowStatus.FINISHED);
 
 		// [4] add file 'S01E03 - Ein neuer Schüler'
 		// (by removing one episode from base)

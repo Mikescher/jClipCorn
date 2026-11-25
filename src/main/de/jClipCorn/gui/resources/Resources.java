@@ -283,6 +283,11 @@ public class Resources {
 	public final static IconRef ICN_TABLE_FSK_3 			= register16x16Icon("/icons/table/fsk/fsk_3.png");
 	public final static IconRef ICN_TABLE_FSK_4 			= register16x16Icon("/icons/table/fsk/fsk_4.png");
 
+	public final static MultiSizeIconRef ICN_TABLE_SHOWSTATUS_UNKNOWN    = registerMultisizeIcon("/icons/table/showstatus/unknown.png");
+	public final static MultiSizeIconRef ICN_TABLE_SHOWSTATUS_UNFINISHED = registerMultisizeIcon("/icons/table/showstatus/unfinished.png");
+	public final static MultiSizeIconRef ICN_TABLE_SHOWSTATUS_FINISHED   = registerMultisizeIcon("/icons/table/showstatus/finished.png");
+	public final static MultiSizeIconRef ICN_TABLE_SHOWSTATUS_CANCELLED  = registerMultisizeIcon("/icons/table/showstatus/cancelled.png");
+
 	public final static IconRef ICN_TABLE_LANG_MASK_TR 		= register16x16Icon("/icons/table/language/mask_tl.png");
 	public final static IconRef ICN_TABLE_LANG_MASK_BL 		= register16x16Icon("/icons/table/language/mask_br.png");
 
@@ -479,6 +484,7 @@ public class Resources {
 	public final static MultiSizeIconRef ICN_SIDEBAR_ANIMESEASON    = registerMultisizeIcon("/icons/sidebar/calendar_view_month.png");
 	public final static MultiSizeIconRef ICN_SIDEBAR_ANIMESTUDIO    = registerMultisizeIcon("/icons/sidebar/cpanel_branding.png");
 	public final static MultiSizeIconRef ICN_SIDEBAR_SPECIALVERSION = registerMultisizeIcon("/icons/sidebar/global_telecom.png");
+	public final static MultiSizeIconRef ICN_SIDEBAR_SHOWSTATUS     = registerMultisizeIcon("/icons/sidebar/traffic_lights.png");
 	// #############################################  </SIDEBAR>  ###########################################
 
 

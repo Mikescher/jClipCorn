@@ -8,6 +8,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCFileFormat;
 import de.jClipCorn.database.databaseElement.columnTypes.CCGenre;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineRefType;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTVShowStatus;
 import de.jClipCorn.database.util.CCDBUpdateListener;
 import de.jClipCorn.database.util.NextEpisodeHelper;
 import de.jClipCorn.features.actionTree.ActionSource;
@@ -280,6 +281,9 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		lblFSK.setText(Str.Empty);
 		lblFSK.setIcon(series.FSK.get().getIcon());
 
+		lblShowStatus.setText(series.ShowStatus.get().asString());
+		lblShowStatus.setIcon(series.ShowStatus.get().getIcon());
+
 		lblCover.setModeCover(series);
 
 		btnOnline.setValue(series.OnlineReference.get(),
@@ -527,6 +531,8 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		ctrlSubs = new LanguageListDisplay();
 		label5 = new JLabel();
 		lblFSK = new JLabel();
+		labelShowStatus = new JLabel();
+		lblShowStatus = new JLabel();
 		label9 = new JLabel();
 		ctrlTags = new TagDisplay();
 		label6 = new JLabel();
@@ -626,7 +632,7 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 		{
 			pnlInfo.setLayout(new FormLayout(
 				"default, $lcgap, 0dlu:grow",
-				"default, $lgap, default, $ugap, 4*(default, $lgap), 2*(pref, $lgap), 2*(default, $lgap), 5*(pref, $lgap), default:grow, $lgap, pref"));
+				"default, $lgap, default, $ugap, 4*(default, $lgap), 2*(pref, $lgap), 3*(default, $lgap), 5*(pref, $lgap), default:grow, $lgap, pref"));
 
 			//---- lblCover ----
 			lblCover.setNoOverlay(true);
@@ -720,69 +726,81 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 			lblFSK.setFont(lblFSK.getFont().deriveFont(12f));
 			pnlInfo.add(lblFSK, CC.xy(3, 17, CC.LEFT, CC.DEFAULT));
 
+			//---- labelShowStatus ----
+			labelShowStatus.setText(LocaleBundle.getString("PreviewSeriesFrame.lblShowStatus.text"));
+			labelShowStatus.setVerticalAlignment(SwingConstants.TOP);
+			labelShowStatus.setVerticalTextPosition(SwingConstants.TOP);
+			labelShowStatus.setFont(labelShowStatus.getFont().deriveFont(12f));
+			pnlInfo.add(labelShowStatus, CC.xy(1, 19, CC.DEFAULT, CC.TOP));
+
+			//---- lblShowStatus ----
+			lblShowStatus.setText("<dynamic>");
+			lblShowStatus.setFont(lblShowStatus.getFont().deriveFont(12f));
+			pnlInfo.add(lblShowStatus, CC.xy(3, 19, CC.LEFT, CC.DEFAULT));
+
 			//---- label9 ----
 			label9.setText(LocaleBundle.getString("PreviewSeriesFrame.lblTags.text"));
 			label9.setVerticalAlignment(SwingConstants.TOP);
 			label9.setVerticalTextPosition(SwingConstants.TOP);
 			label9.setFont(label9.getFont().deriveFont(12f));
-			pnlInfo.add(label9, CC.xy(1, 19, CC.DEFAULT, CC.TOP));
-			pnlInfo.add(ctrlTags, CC.xy(3, 19, CC.FILL, CC.FILL));
+			pnlInfo.add(label9, CC.xy(1, 21, CC.DEFAULT, CC.TOP));
+			pnlInfo.add(ctrlTags, CC.xy(3, 21, CC.FILL, CC.FILL));
 
 			//---- label6 ----
 			label6.setText(LocaleBundle.getString("PreviewSeriesFrame.lblGroups"));
 			label6.setVerticalAlignment(SwingConstants.TOP);
 			label6.setVerticalTextPosition(SwingConstants.TOP);
 			label6.setFont(label6.getFont().deriveFont(12f));
-			pnlInfo.add(label6, CC.xy(1, 21, CC.DEFAULT, CC.TOP));
+			pnlInfo.add(label6, CC.xy(1, 23, CC.DEFAULT, CC.TOP));
 
 			//---- lblGroups ----
 			lblGroups.setLabelFont(lblGroups.getLabelFont().deriveFont(12f));
-			pnlInfo.add(lblGroups, CC.xy(3, 21, CC.FILL, CC.FILL));
+			pnlInfo.add(lblGroups, CC.xy(3, 23, CC.FILL, CC.FILL));
 
 			//---- label8 ----
 			label8.setText(LocaleBundle.getString("PreviewSeriesFrame.lblGenres.text"));
 			label8.setVerticalAlignment(SwingConstants.TOP);
 			label8.setVerticalTextPosition(SwingConstants.TOP);
 			label8.setFont(label8.getFont().deriveFont(12f));
-			pnlInfo.add(label8, CC.xy(1, 23, CC.DEFAULT, CC.TOP));
+			pnlInfo.add(label8, CC.xy(1, 25, CC.DEFAULT, CC.TOP));
 
 			//---- lblGenres ----
 			lblGenres.setLabelFont(lblGenres.getLabelFont().deriveFont(12f));
-			pnlInfo.add(lblGenres, CC.xy(3, 23, CC.FILL, CC.FILL));
+			pnlInfo.add(lblGenres, CC.xy(3, 25, CC.FILL, CC.FILL));
 
 			//---- labelSpecialVersion ----
 			labelSpecialVersion.setText(LocaleBundle.getString("PreviewSeriesFrame.labelSpecialVersion.text"));
 			labelSpecialVersion.setVerticalAlignment(SwingConstants.TOP);
 			labelSpecialVersion.setVerticalTextPosition(SwingConstants.TOP);
 			labelSpecialVersion.setFont(labelSpecialVersion.getFont().deriveFont(12f));
-			pnlInfo.add(labelSpecialVersion, CC.xy(1, 25, CC.DEFAULT, CC.TOP));
+			pnlInfo.add(labelSpecialVersion, CC.xy(1, 27, CC.DEFAULT, CC.TOP));
 
 			//---- lblSpecialVersion ----
 			lblSpecialVersion.setLabelFont(lblSpecialVersion.getLabelFont().deriveFont(12f));
-			pnlInfo.add(lblSpecialVersion, CC.xy(3, 25, CC.FILL, CC.FILL));
+			pnlInfo.add(lblSpecialVersion, CC.xy(3, 27, CC.FILL, CC.FILL));
 
 			//---- labelAnimeSeason ----
 			labelAnimeSeason.setText(LocaleBundle.getString("PreviewSeriesFrame.labelAnimeSeason.text"));
 			labelAnimeSeason.setVerticalAlignment(SwingConstants.TOP);
 			labelAnimeSeason.setVerticalTextPosition(SwingConstants.TOP);
 			labelAnimeSeason.setFont(labelAnimeSeason.getFont().deriveFont(12f));
-			pnlInfo.add(labelAnimeSeason, CC.xy(1, 27, CC.DEFAULT, CC.TOP));
+			pnlInfo.add(labelAnimeSeason, CC.xy(1, 29, CC.DEFAULT, CC.TOP));
 
 			//---- lblAnimeSeason ----
 			lblAnimeSeason.setLabelFont(lblAnimeSeason.getLabelFont().deriveFont(12f));
-			pnlInfo.add(lblAnimeSeason, CC.xy(3, 27, CC.FILL, CC.FILL));
+			pnlInfo.add(lblAnimeSeason, CC.xy(3, 29, CC.FILL, CC.FILL));
 
 			//---- labelAnimeStudio ----
 			labelAnimeStudio.setText(LocaleBundle.getString("PreviewSeriesFrame.labelAnimeStudio.text"));
 			labelAnimeStudio.setVerticalAlignment(SwingConstants.TOP);
 			labelAnimeStudio.setVerticalTextPosition(SwingConstants.TOP);
 			labelAnimeStudio.setFont(labelAnimeStudio.getFont().deriveFont(12f));
-			pnlInfo.add(labelAnimeStudio, CC.xy(1, 29, CC.DEFAULT, CC.TOP));
+			pnlInfo.add(labelAnimeStudio, CC.xy(1, 31, CC.DEFAULT, CC.TOP));
 
 			//---- lblAnimeStudio ----
 			lblAnimeStudio.setLabelFont(lblAnimeStudio.getLabelFont().deriveFont(12f));
-			pnlInfo.add(lblAnimeStudio, CC.xy(3, 29, CC.FILL, CC.FILL));
-			pnlInfo.add(btnOnline, CC.xywh(1, 33, 3, 1, CC.RIGHT, CC.DEFAULT));
+			pnlInfo.add(lblAnimeStudio, CC.xy(3, 31, CC.FILL, CC.FILL));
+			pnlInfo.add(btnOnline, CC.xywh(1, 35, 3, 1, CC.RIGHT, CC.DEFAULT));
 		}
 		contentPane.add(pnlInfo, CC.xy(2, 4, CC.FILL, CC.FILL));
 
@@ -844,6 +862,8 @@ public class PreviewSeriesFrame extends JCCFrame implements UpdateCallbackListen
 	private LanguageListDisplay ctrlSubs;
 	private JLabel label5;
 	private JLabel lblFSK;
+	private JLabel labelShowStatus;
+	private JLabel lblShowStatus;
 	private JLabel label9;
 	private TagDisplay ctrlTags;
 	private JLabel label6;

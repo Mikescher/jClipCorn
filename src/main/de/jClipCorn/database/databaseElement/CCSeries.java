@@ -7,6 +7,8 @@ import de.jClipCorn.database.databaseElement.caches.SeriesCache;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.databaseElement.datapacks.ISeriesData;
 import de.jClipCorn.database.elementProps.IEProperty;
+import de.jClipCorn.database.elementProps.impl.EEnumProp;
+import de.jClipCorn.database.elementProps.impl.EPropertyType;
 import de.jClipCorn.database.util.*;
 import de.jClipCorn.database.util.iterators.DirectEpisodesIterator;
 import de.jClipCorn.database.util.iterators.DirectSeasonsIterator;
@@ -51,6 +53,8 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 
 	private final SeriesCache _cache;
 
+	public final EEnumProp<CCTVShowStatus> ShowStatus = new EEnumProp<>("ShowStatus", CCTVShowStatus.UNKNOWN, this, EPropertyType.OBJECTIVE_METADATA); //$NON-NLS-1$
+
 	public CCSeries(CCMovieList ml, CCUUID id) {
 		super(ml, id);
 		_cache = new SeriesCache(this);
@@ -68,8 +72,13 @@ public class CCSeries extends CCDatabaseElement implements IEpisodeOwner, ISerie
 	@Override
 	protected IEProperty[] listProperties()
 	{
-		return super.listProperties();
+		return CCStreams
+				.iterate(super.listProperties())
+				.append(new IEProperty[] { ShowStatus })
+				.toArray(new IEProperty[0]);
 	}
+
+	public EEnumProp<CCTVShowStatus> showStatus() { return ShowStatus; }
 
 	@Override
 	public boolean updateDB() {

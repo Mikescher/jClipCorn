@@ -8,7 +8,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "de.jClipCorn.gui.guiComponents.JCCFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "unrelgap, default, labelcompgap, default:grow, labelcompgap, max(default;75dlu), labelcompgap, max(default;75dlu), unrelgap"
-			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default:grow, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, unrelgap"
+			"$rowSpecs": "unrelgap, default, linegap, default, linegap, default:grow, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, unrelgap"
 		} ) {
 			name: "this"
 			"$sizePolicy": 1
@@ -216,6 +216,32 @@ new FormModel {
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 8
 				"gridY": 16
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnUpdateSelectedShowStatus"
+				"text": new FormMessage( null, "UpdateMetadataFrame.BtnUpdate11" )
+				"enabled": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateSelectedShowStatus", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 2
+				"gridY": 18
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "cbOverwriteShowStatus"
+				"text": new FormMessage( null, "UpdateMetadataFrame.CBOverwriteShowStatus" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "onChangeAllowShowStatusOverwrite", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 4
+				"gridY": 18
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnUpdateAllShowStatus"
+				"text": new FormMessage( null, "UpdateMetadataFrame.BtnUpdate12" )
+				"enabled": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "updateAllShowStatus", false ) )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 8
+				"gridY": 18
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

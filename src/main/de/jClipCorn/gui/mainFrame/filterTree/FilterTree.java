@@ -86,6 +86,8 @@ public class FilterTree extends AbstractFilterTree {
 		initScore(addNode(null, Resources.ICN_SIDEBAR_SCORE, LocaleBundle.getString("FilterTree.Score"), this::parentClicked)); //$NON-NLS-1$
 		
 		initFSK(addNode(null, Resources.ICN_TABLE_FSK_2, LocaleBundle.getString("FilterTree.FSK"), this::parentClicked)); //$NON-NLS-1$
+
+		initShowStatus(addNode(null, Resources.ICN_SIDEBAR_SHOWSTATUS, LocaleBundle.getString("FilterTree.ShowStatus"), this::parentClicked)); //$NON-NLS-1$
 		
 		initYear(addNode(null, Resources.ICN_SIDEBAR_YEAR, LocaleBundle.getString("FilterTree.Year"), this::parentClicked)); //$NON-NLS-1$
 		
@@ -171,6 +173,12 @@ public class FilterTree extends AbstractFilterTree {
 		addNodeF(parent, Resources.ICN_SIDEBAR_NEVER.get16x16(), LocaleBundle.getString("FilterTree.Viewed.Never"), () -> CustomExtendedViewedFilter.create(movielist, ExtendedViewedStateType.MARKED_FOR_NEVER)); //$NON-NLS-1$
 	}
 	
+	private void initShowStatus(DefaultMutableTreeNode parent) {
+		for (final CCTVShowStatus status : CCTVShowStatus.getWrapper().allDisplayValuesSorted()) {
+			addNodeF(parent, status.getIconRef().get16x16(), status.asString(), () -> CustomShowStatusFilter.create(movielist, status));
+		}
+	}
+
 	private void initFSK(DefaultMutableTreeNode parent) {
 		for (final CCFSK fsk : CCFSK.getWrapper().allDisplayValuesSorted()) {
 			addNodeF(parent, fsk.getIcon(), fsk.asString(), () -> CustomFSKFilter.create(movielist, fsk));

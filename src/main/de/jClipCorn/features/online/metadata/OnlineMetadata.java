@@ -9,6 +9,7 @@ import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineReferenceList;
 import de.jClipCorn.database.databaseElement.columnTypes.CCOnlineScore;
 import de.jClipCorn.database.databaseElement.columnTypes.CCSingleOnlineReference;
 import de.jClipCorn.database.databaseElement.columnTypes.CCStringList;
+import de.jClipCorn.database.databaseElement.columnTypes.CCTVShowStatus;
 
 public class OnlineMetadata {
 
@@ -26,6 +27,7 @@ public class OnlineMetadata {
 	public CCSingleOnlineReference AltRef = null;
 	public CCStringList AnimeSeason = null;
 	public CCStringList AnimeStudio = null;
+	public CCTVShowStatus ShowStatus = null;
 	
 	public OnlineMetadata(CCSingleOnlineReference source) {
 		super();
@@ -44,6 +46,7 @@ public class OnlineMetadata {
 		if (this.AltRef == null || this.AltRef.isUnset()) this.AltRef = base.AltRef;
 		if (this.AnimeSeason == null || this.AnimeSeason.isEmpty()) this.AnimeSeason = base.AnimeSeason;
 		if (this.AnimeStudio == null || this.AnimeStudio.isEmpty()) this.AnimeStudio = base.AnimeStudio;
+		if (this.ShowStatus == null) this.ShowStatus = base.ShowStatus;
 	}
 
 	public CCOnlineReferenceList getFullReference() {

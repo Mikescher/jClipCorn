@@ -164,6 +164,7 @@ public class CCProperties implements ICCPropertySource {
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_SPECIALVERSION;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_ANIMESTUDIO;
 	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_ANIMESEASON;
+	public CCBoolProperty                                   PROP_MAINFRAME_SHOW_SHOWSTATUS;
 	public CCBoolProperty                                   PROP_MAINFRAME_ASYNC_COVER_LOADING;
 	public CCEnumProperty<AniListTitleLang>                 PROP_ANILIST_PREFERRED_TITLE_LANG;
 	public CCCCPathProperty                                 PROP_PATHSYNTAX_MOVIEROOT;
@@ -348,6 +349,7 @@ public class CCProperties implements ICCPropertySource {
 		PROP_MAINFRAME_SHOW_SPECIALVERSION          = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_SHOW_SPECIALVERSION",          false);
 		PROP_MAINFRAME_SHOW_ANIMESTUDIO             = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_SHOW_ANIMESTUDIO",             false);
 		PROP_MAINFRAME_SHOW_ANIMESEASON             = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_SHOW_ANIMESEASON",             false);
+		PROP_MAINFRAME_SHOW_SHOWSTATUS              = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_MAINFRAME_SHOW_SHOWSTATUS",              false);
 		PROP_CHARSELECTOR_DYNAMIC_OPACTITY          = new CCBoolProperty(CAT_MAINFRAME,         this,   "PROP_CHARSELECTOR_DYNAMIC_OPACTITY",          true);
 		PROP_CHARSELECTOR_MATCHMODE                 = new CCEnumProperty<>(CAT_MAINFRAME,       this,   "PROP_CHARSELECTOR_MATCHMODE",                 CharListMatchType.WORD_START,         CharListMatchType.getWrapper());
 		PROP_CHARSELECTOR_SELMODE                   = new CCEnumProperty<>(CAT_MAINFRAME,       this,   "PROP_CHARSELECTOR_SELMODE",                   ElemFieldMatchType.TITLE_AND_ZYKLUS,  ElemFieldMatchType.getWrapper());
@@ -562,6 +564,7 @@ public class CCProperties implements ICCPropertySource {
 		set.remove(MainFrameColumn.GENRES);
 		set.remove(MainFrameColumn.LASTVIEWED);
 		set.remove(MainFrameColumn.SUBTITLES);
+		set.remove(MainFrameColumn.SHOWSTATUS);
 
 		return set;
 	}

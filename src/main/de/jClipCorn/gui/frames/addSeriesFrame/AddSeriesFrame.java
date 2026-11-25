@@ -133,6 +133,8 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 
 			s.FSK.set(cbxFSK.getSelectedEnum().asFSK());
 
+			s.ShowStatus.set(cbxShowStatus.getSelectedEnum());
+
 			s.OnlineReference.set(edReference.getValue());
 
 			s.Genres.set(cbxGenre0.getSelectedEnum(), 0);
@@ -343,6 +345,8 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		edAnimeSeason = new JAutoCompleteTextField(() -> movielist.getAnimeSeasonList(), true);
 		lblAnimeStudio = new JLabel();
 		edAnimeStudio = new JAutoCompleteTextField(() -> movielist.getAnimeStudioList(), true);
+		lblShowStatus = new JLabel();
+		cbxShowStatus = new CCEnumComboBox<CCTVShowStatus>(CCTVShowStatus.getWrapper());
 		panel1 = new JPanel();
 		button1 = new JButton();
 		button2 = new JButton();
@@ -354,7 +358,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
 			"$rgap, default, $ugap, default:grow, $lcgap, 13dlu, 2*(default, $lcgap), default:grow, $lcgap",
-			"2*($rgap, default), $lgap, default, 20dlu, 1dlu, 20dlu, $ugap, 8*(default, $lgap), 10dlu, 2*($lgap, default), $lgap, 0dlu:grow, default, $lgap"));
+			"2*($rgap, default), $lgap, default, 20dlu, 1dlu, 20dlu, $ugap, 8*(default, $lgap), 10dlu, 3*($lgap, default), $lgap, 0dlu:grow, default, $lgap"));
 
 		//---- label1 ----
 		label1.setText(LocaleBundle.getString("AddMovieFrame.label_1.text"));
@@ -449,6 +453,11 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 		edAnimeStudio.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
 		contentPane.add(edAnimeStudio, CC.xy(4, 31));
 
+		//---- lblShowStatus ----
+		lblShowStatus.setText(LocaleBundle.getString("AddSeriesFrame.lblShowStatus.text"));
+		contentPane.add(lblShowStatus, CC.xy(2, 33));
+		contentPane.add(cbxShowStatus, CC.xy(4, 33));
+
 		//======== panel1 ========
 		{
 			panel1.setLayout(new FlowLayout());
@@ -463,7 +472,7 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 			button2.addActionListener(e -> onCancel(e));
 			panel1.add(button2);
 		}
-		contentPane.add(panel1, CC.xywh(2, 34, 10, 1));
+		contentPane.add(panel1, CC.xywh(2, 36, 10, 1));
 		setSize(700, 640);
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -502,6 +511,8 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 	private JAutoCompleteTextField edAnimeSeason;
 	private JLabel lblAnimeStudio;
 	private JAutoCompleteTextField edAnimeStudio;
+	private JLabel lblShowStatus;
+	private CCEnumComboBox<CCTVShowStatus> cbxShowStatus;
 	private JPanel panel1;
 	private JButton button1;
 	private JButton button2;

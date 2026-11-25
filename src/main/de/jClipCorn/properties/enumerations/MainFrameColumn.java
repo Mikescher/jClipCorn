@@ -28,7 +28,8 @@ public enum MainFrameColumn implements ContinoousEnum<MainFrameColumn> {
 	YEAR(        14, 116 ),
 	FILESIZE(    15, 117 ),
 	LASTVIEWED(  16, 103 ),
-	SUBTITLES(   17, 107 );
+	SUBTITLES(   17, 107 ),
+	SHOWSTATUS(  18, 118 );
 
 	private final static String[] NAMES = {
 		LocaleBundle.getString("ClipTableModel.Score"),
@@ -49,6 +50,7 @@ public enum MainFrameColumn implements ContinoousEnum<MainFrameColumn> {
 		LocaleBundle.getString("ClipTableModel.Size"),
 		LocaleBundle.getString("ClipTableModel.LastViewed"),
 		LocaleBundle.getString("ClipTableModel.Subtitles"),
+		LocaleBundle.getString("ClipTableModel.ShowStatus"),
 	};
 
 	private final int id;

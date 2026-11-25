@@ -492,6 +492,7 @@ public class CCDatabase {
 		ser.CoverID.setOnly(readCoverID(rs, DatabaseStructure.COL_SER_COVERID));
 		ser.Groups.setOnly(CCGroupList.fromJSONArrayWithoutAddingNewGroups(ser.getMovieList(), rs.getString(DatabaseStructure.COL_SER_GROUPS)));
 		ser.SpecialVersion.setOnly(CCStringList.deserialize(rs.getString(DatabaseStructure.COL_SER_SPECIALVERSION)));
+		ser.ShowStatus.setOnly(rs.getInt(DatabaseStructure.COL_SER_SHOWSTATUS));
 
 		updateSeriesUserDataFromResultSet(rs, ser);
 	}
@@ -808,6 +809,7 @@ public class CCDatabase {
 			stmt.setNullableStr(DatabaseStructure.COL_SER_COVERID,   ser.getCoverID().mapOrElse(CCUUID::toString, null));
 			stmt.setStr(DatabaseStructure.COL_SER_GROUPS,            ser.getGroups().asJSONArray());
 			stmt.setStr(DatabaseStructure.COL_SER_SPECIALVERSION,    ser.SpecialVersion.serializeToString());
+			stmt.setInt(DatabaseStructure.COL_SER_SHOWSTATUS,        ser.ShowStatus.get().asInt());
 
 			stmt.setStr(DatabaseStructure.COL_SER_ID,                ser.getID().toString());
 

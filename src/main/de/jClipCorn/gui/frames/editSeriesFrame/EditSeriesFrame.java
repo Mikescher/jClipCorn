@@ -519,6 +519,7 @@ public class EditSeriesFrame extends JCCFrame
 			spnSeriesOnlineScore.setValue(series.getOnlinescore());
 			cbxSeriesFSK.setSelectedEnum(series.getFSK());
 			cbxSeriesScore.setSelectedEnum(series.Score.get());
+			cbxSeriesShowStatus.setSelectedEnum(series.ShowStatus.get());
 			memoSeriesComment.setText(series.ScoreComment.get());
 
 			cbxSeriesGenre_0.setSelectedEnum(series.Genres.get().getGenre(0));
@@ -754,6 +755,7 @@ public class EditSeriesFrame extends JCCFrame
 		series.OnlineScore.set(spnSeriesOnlineScore.getValue());
 		series.FSK.set(cbxSeriesFSK.getSelectedEnum());
 		series.Score.set(cbxSeriesScore.getSelectedEnum());
+		series.ShowStatus.set(cbxSeriesShowStatus.getSelectedEnum());
 		series.ScoreComment.set(memoSeriesComment.getText());
 
 		series.Genres.set(cbxSeriesGenre_0.getSelectedEnum(), 0);
@@ -1364,6 +1366,8 @@ public class EditSeriesFrame extends JCCFrame
 		cbxSeriesFSK = new CCEnumComboBox<CCFSK>(CCFSK.getWrapper());
 		label12 = new JLabel();
 		cbxSeriesScore = new CCEnumComboBox<CCUserScore>(CCUserScore.getWrapper());
+		lblShowStatus = new JLabel();
+		cbxSeriesShowStatus = new CCEnumComboBox<CCTVShowStatus>(CCTVShowStatus.getWrapper());
 		label33 = new JLabel();
 		scrollPane3 = new JScrollPane();
 		memoSeriesComment = new JTextArea();
@@ -1534,7 +1538,7 @@ public class EditSeriesFrame extends JCCFrame
 			{
 				panel5.setLayout(new FormLayout(
 					"default, $lcgap, 0dlu:grow",
-					"14dlu, 3*($lgap, pref), $lgap, 32dlu, 4*($lgap, pref)"));
+					"14dlu, 4*($lgap, pref), $lgap, 32dlu, 4*($lgap, pref)"));
 
 				//---- label9 ----
 				label9.setText(LocaleBundle.getString("AddMovieFrame.label_1.text"));
@@ -1569,39 +1573,44 @@ public class EditSeriesFrame extends JCCFrame
 				panel5.add(label12, CC.xy(1, 7));
 				panel5.add(cbxSeriesScore, CC.xy(3, 7));
 
+				//---- lblShowStatus ----
+				lblShowStatus.setText(LocaleBundle.getString("EditSeriesFrame.lblShowStatus.text"));
+				panel5.add(lblShowStatus, CC.xy(1, 9));
+				panel5.add(cbxSeriesShowStatus, CC.xy(3, 9));
+
 				//---- label33 ----
 				label33.setText(LocaleBundle.getString("EditSeriesFrame.lblComment"));
 				label33.setBorder(new EmptyBorder(5, 0, 0, 0));
-				panel5.add(label33, CC.xy(1, 9, CC.DEFAULT, CC.TOP));
+				panel5.add(label33, CC.xy(1, 11, CC.DEFAULT, CC.TOP));
 
 				//======== scrollPane3 ========
 				{
 					scrollPane3.setViewportView(memoSeriesComment);
 				}
-				panel5.add(scrollPane3, CC.xy(3, 9, CC.DEFAULT, CC.FILL));
+				panel5.add(scrollPane3, CC.xy(3, 11, CC.DEFAULT, CC.FILL));
 
 				//---- label13 ----
 				label13.setText(LocaleBundle.getString("AddMovieFrame.lblOnlineID.text"));
-				panel5.add(label13, CC.xy(1, 11));
-				panel5.add(edSeriesReference, CC.xy(3, 11));
+				panel5.add(label13, CC.xy(1, 13));
+				panel5.add(edSeriesReference, CC.xy(3, 13));
 
 				//---- label14 ----
 				label14.setText(LocaleBundle.getString("EditSeriesFrame.lblGroups.text"));
-				panel5.add(label14, CC.xy(1, 13));
-				panel5.add(edSeriesGroups, CC.xy(3, 13));
+				panel5.add(label14, CC.xy(1, 15));
+				panel5.add(edSeriesGroups, CC.xy(3, 15));
 
 				//---- label15 ----
 				label15.setText(LocaleBundle.getString("EditSeriesFrame.lblTags.text"));
-				panel5.add(label15, CC.xy(1, 15));
-				panel5.add(edSeriesTags, CC.xy(3, 15));
+				panel5.add(label15, CC.xy(1, 17));
+				panel5.add(edSeriesTags, CC.xy(3, 17));
 
 				//---- lblSpecialVersion ----
 				lblSpecialVersion.setText(LocaleBundle.getString("EditSeriesFrame.lblSpecialVersion.text"));
-				panel5.add(lblSpecialVersion, CC.xy(1, 17));
+				panel5.add(lblSpecialVersion, CC.xy(1, 19));
 
 				//---- edSpecialVersion ----
 				edSpecialVersion.setOverFlowMode(de.jClipCorn.gui.guiComponents.OverFlowMode.WRAP);
-				panel5.add(edSpecialVersion, CC.xy(3, 17));
+				panel5.add(edSpecialVersion, CC.xy(3, 19));
 			}
 			pnlEditSeries.add(panel5, CC.xy(2, 4, CC.FILL, CC.FILL));
 
@@ -1959,6 +1968,8 @@ public class EditSeriesFrame extends JCCFrame
 	private CCEnumComboBox<CCFSK> cbxSeriesFSK;
 	private JLabel label12;
 	private CCEnumComboBox<CCUserScore> cbxSeriesScore;
+	private JLabel lblShowStatus;
+	private CCEnumComboBox<CCTVShowStatus> cbxSeriesShowStatus;
 	private JLabel label33;
 	private JScrollPane scrollPane3;
 	private JTextArea memoSeriesComment;

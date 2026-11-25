@@ -19,6 +19,7 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 	public boolean DeleteLocalReferences;
 	public boolean DeleteLocalAnimeSeason;
 	public boolean DeleteLocalAnimeStudio;
+	public boolean OverwriteLocalShowStatus;
 
 	@DesignCreate
 	private static UpdateMetadataTable designCreate() { return new UpdateMetadataTable(new UpdateMetadataFrame(ICCWindow.Dummy.frame(), CCMovieList.createStub())); }
@@ -68,6 +69,12 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 		 .withSize("auto")
 		 .withText(this::getAnimeStudioChange)
 		 .withTransparency(p -> getAnimeStudioChange(p).equals("N/A") ? 0.5 : null)
+		 .sortable();
+
+		r.add("UpdateMetadataFrame.Table.ColumnChangedShowStatus")
+		 .withSize("auto")
+		 .withText(this::getShowStatusChange)
+		 .withTransparency(p -> (isShowStatusChange(p) || getShowStatusChange(p).equals("-")) ? null : 0.5)
 		 .sortable();
 
 		r.add("UpdateMetadataFrame.Table.ColumnLocalScore")
@@ -122,7 +129,38 @@ public class UpdateMetadataTable extends JCCSimpleTable<UpdateMetadataTableEleme
 		 .withText(e -> (e.OnlineMeta != null && e.OnlineMeta.AnimeStudio != null && !e.OnlineMeta.AnimeStudio.isEmpty()) ? e.OnlineMeta.AnimeStudio.toString() : null)
 		 .sortable();
 
+		r.add("UpdateMetadataFrame.Table.ColumnLocalShowStatus")
+		 .withSize("auto")
+		 .withText(e -> e.supportsShowStatus() ? e.getLocalShowStatus().asString() : null)
+		 .sortable();
+
+		r.add("UpdateMetadataFrame.Table.ColumnOnlineShowStatus")
+		 .withSize("auto")
+		 .withText(e -> (e.OnlineShowStatus != null) ? e.OnlineShowStatus.asString() : null)
+		 .sortable();
+
 		return r;
+	}
+
+	/** Whether updating the show-status would change this element, honoring {@link #OverwriteLocalShowStatus}. */
+	public boolean isShowStatusChange(UpdateMetadataTableElement e) {
+		if (!e.supportsShowStatus() || e.OnlineShowStatus == null) return false;
+
+		var local = e.getLocalShowStatus();
+		if (local == e.OnlineShowStatus) return false;
+
+		return OverwriteLocalShowStatus || local == CCTVShowStatus.UNKNOWN;
+	}
+
+	@SuppressWarnings("nls")
+	private String getShowStatusChange(UpdateMetadataTableElement e) {
+		if (!e.supportsShowStatus() || e.OnlineShowStatus == null) return "";
+
+		var local = e.getLocalShowStatus();
+		if (local == e.OnlineShowStatus) return "-";
+
+		String change = local.asString() + " -> " + e.OnlineShowStatus.asString();
+		return isShowStatusChange(e) ? change : "(" + change + ")";
 	}
 
 	@SuppressWarnings("nls")

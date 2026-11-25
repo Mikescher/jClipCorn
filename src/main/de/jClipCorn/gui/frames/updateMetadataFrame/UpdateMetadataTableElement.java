@@ -3,6 +3,7 @@ package de.jClipCorn.gui.frames.updateMetadataFrame;
 import de.jClipCorn.database.databaseElement.CCDatabaseElement;
 import de.jClipCorn.database.databaseElement.CCMovie;
 import de.jClipCorn.database.databaseElement.CCSeason;
+import de.jClipCorn.database.databaseElement.CCSeries;
 import de.jClipCorn.database.databaseElement.ICCDatabaseStructureElement;
 import de.jClipCorn.database.databaseElement.columnTypes.*;
 import de.jClipCorn.database.elementProps.impl.EStringListProp;
@@ -21,6 +22,7 @@ import javax.swing.*;
  *   <li>Score / Genres: movies and series only</li>
  *   <li>Online-References: all types</li>
  *   <li>Anime-Season / Anime-Studio: movies and seasons only (series only aggregate them read-only)</li>
+ *   <li>Show-Status: series only, always from TMDb (MAL/AniList entries describe a single season)</li>
  * </ul>
  */
 public class UpdateMetadataTableElement {
@@ -30,6 +32,9 @@ public class UpdateMetadataTableElement {
 	public OnlineMetadata OnlineMeta = null;
 
 	public boolean Processed = false;
+
+	/** Separate from OnlineMeta - it can come from an additional TMDb reference instead of the main one. */
+	public CCTVShowStatus OnlineShowStatus = null;
 
 	public UpdateMetadataTableElement(ICCDatabaseStructureElement el) {
 		super();
@@ -107,6 +112,21 @@ public class UpdateMetadataTableElement {
 	public void setAnimeSeason(CCStringList value) { animeSeasonProp().set(value); }
 
 	public void setAnimeStudio(CCStringList value) { animeStudioProp().set(value); }
+
+	// === Show-Status (series) ===
+
+	public boolean supportsShowStatus() { return Element instanceof CCSeries; }
+
+	public CCTVShowStatus getLocalShowStatus() { return ((CCSeries) Element).ShowStatus.get(); }
+
+	public void setShowStatus(CCTVShowStatus value) { ((CCSeries) Element).ShowStatus.set(value); }
+
+	public CCSingleOnlineReference getTMDbTVReference() {
+		for (CCSingleOnlineReference ref : getOnlineReference()) {
+			if (ref.type == CCOnlineRefType.THEMOVIEDB && ref.id.startsWith("tv/")) return ref; //$NON-NLS-1$
+		}
+		return null;
+	}
 
 	public void preview(JFrame owner) {
 		if (Element instanceof CCDatabaseElement) {

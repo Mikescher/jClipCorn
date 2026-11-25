@@ -10,15 +10,17 @@ import de.jClipCorn.gui.frames.findCoverFrame.FindCoverDialog;
 import de.jClipCorn.gui.guiComponents.cover.CoverLabel;
 import de.jClipCorn.gui.guiComponents.ICCWindow;
 import de.jClipCorn.gui.guiComponents.jSplitButton.JSplitButton;
-import de.jClipCorn.gui.guiComponents.tags.TagsChangedListener;
 import de.jClipCorn.gui.localization.LocaleBundle;
 import de.jClipCorn.gui.resources.Resources;
+import de.jClipCorn.gui.resources.reftypes.IconRef;
 import de.jClipCorn.util.Str;
 import de.jClipCorn.util.filesystem.FileChooserHelper;
 import de.jClipCorn.util.filesystem.FilesystemUtils;
 import de.jClipCorn.util.helper.ClipboardUtilities;
 import de.jClipCorn.util.helper.ImageUtilities;
+import de.jClipCorn.util.helper.SwingUtils;
 import de.jClipCorn.util.http.HTTPUtilities;
+import de.jClipCorn.util.lambda.Func0to1WithException;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -28,7 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.io.File;
 
 public class EditCoverControl extends AbstractEditCoverControl {
 	private static final long serialVersionUID = -4086336311809789696L;
@@ -47,6 +49,14 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	private int ctrlHeight;
 
 	private BufferedImage fullImage;
+	private BufferedImage storageImage;
+
+	// incremented by every cover change; a background load only applies its result if it is still the latest
+	private int loadGeneration = 0;
+	private boolean loading = false;
+	private int loadingFrame = 0;
+	private Icon[] loadingIcons;
+	private final Timer loadingTimer = new Timer(100, e -> nextLoadingFrame());
 
 	private final ParseResultHandler owner;
 	private final JFileChooser coverFileChooser;
@@ -57,6 +67,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 	private JSplitButton btnFind;
 	private JButton btnCrop;
 	private JLabel lblResolution;
+	private JLabel lblLoading;
 	private JPopupMenu popupMenu;
 	private JMenuItem mntmFind;
 	private JMenuItem mntmOpen;
@@ -79,7 +90,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 
 		initGUI();
 
-		btnCrop.setEnabled(isEnabled() && isCoverSet());
+		updateButtonState();
 	}
 
 	private void initGUI() {
@@ -104,7 +115,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		lblCover.addMouseListener(new MouseAdapter() {
 		    @Override
 			public void mouseEntered(MouseEvent e) { 
-		    	lblResolution.setVisible(true); 
+		    	lblResolution.setVisible(!loading);
 		    }
 
 		    @Override
@@ -156,6 +167,11 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		int coverY = Math.max(scale(34), barHeight + scale(6));
 		lblCover.setPosition(0, coverY);
 
+		lblLoading = new JLabel();
+		lblLoading.setBounds(0, coverY, coverW, coverH);
+		lblLoading.setVisible(false);
+		add(lblLoading, 0);
+
 		ctrlWidth = coverW;
 		ctrlHeight = coverY + coverH;
 
@@ -178,7 +194,14 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		listenerList.add(CoverChangedListener.class, l);
 	}
 	public void removeCoverChangedListener(final CoverChangedListener l) {
-		listenerList.add(CoverChangedListener.class, l);
+		listenerList.remove(CoverChangedListener.class, l);
+	}
+
+	public void addCoverLoadingListener(final CoverLoadingListener l) {
+		listenerList.add(CoverLoadingListener.class, l);
+	}
+	public void removeCoverLoadingListener(final CoverLoadingListener l) {
+		listenerList.remove(CoverLoadingListener.class, l);
 	}
 
 	@Override
@@ -208,12 +231,8 @@ public class EditCoverControl extends AbstractEditCoverControl {
 			return;
 		}
 
-		try {
-			BufferedImage read = ImageIO.read(coverFileChooser.getSelectedFile());
-			setCover(read);
-		} catch (IOException e) {
-			CCLog.addError(e);
-		}
+		File file = coverFileChooser.getSelectedFile();
+		loadCoverAsync(() -> ImageIO.read(file));
 	}
 
 	private void showFindCoverDialog() {
@@ -227,35 +246,27 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		(new CoverCropDialog(this, ownerWindow.getMovieList(), fullImage, this)).setVisible(true);
 	}
 
-	private boolean parseURL() {
-		String url = ClipboardUtilities.getURL();
-
-		if (url == null)
-			return false;
-
-		BufferedImage img = HTTPUtilities.getImage(ownerWindow.getMovieList(), url);
-
-		if (img == null)
-			return false;
-
-		setCover(img);
-
-		return true;
+	private void parseURL() {
+		loadCoverAsync(() -> {
+			String url = ClipboardUtilities.getURL();
+			if (url == null) return null;
+			return HTTPUtilities.getImage(ownerWindow.getMovieList(), url);
+		});
 	}
 
-	private boolean parseImage() {
-		BufferedImage img = ClipboardUtilities.getImage();
-
-		if (img == null)
-			return false;
-
-		setCover(img);
-
-		return true;
+	private void parseImage() {
+		loadCoverAsync(ClipboardUtilities::getImage);
 	}
 
 	public boolean isCoverSet() {
 		return fullImage != null;
+	}
+
+	/**
+	 * true while a cover is fetched/prepared in the background - the shown cover is not the final one yet
+	 */
+	public boolean isLoading() {
+		return loading;
 	}
 
 	public BufferedImage getFullImage() {
@@ -266,7 +277,9 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		if (!isCoverSet())
 			return null;
 
-		return ImageUtilities.resizeCoverImageForStorage(getFullImage(), ownerWindow.ccprops());
+		if (storageImage == null) storageImage = ImageUtilities.resizeCoverImageForStorage(getFullImage(), ownerWindow.ccprops());
+
+		return storageImage;
 	}
 
 	@Override
@@ -279,35 +292,147 @@ public class EditCoverControl extends AbstractEditCoverControl {
 		return owner.getTitleForParser();
 	}
 
+	/**
+	 * Prepares the cover in a background thread, {@link #isLoading()} until it is applied.
+	 * Use {@link #setCoverImmediate} for already stored (small) covers, it fires no delayed change event.
+	 */
 	@Override
 	public void setCover(BufferedImage nci) {
-		if (nci != null) {
-			this.fullImage = nci;
+		if (nci == null) { setCoverImmediate(null); return; }
 
-			BufferedImage resized = ImageUtilities.resizeCoverImageForFullSizeUI(nci, scale(ImageUtilities.BASE_COVER_WIDTH), scale(ImageUtilities.BASE_COVER_HEIGHT));
+		loadCoverAsync(() -> nci);
+	}
 
-			if (!ImageUtilities.isImageRatioAcceptable(nci.getWidth(), nci.getHeight())) {
-				Point tr = ImageUtilities.getTopRightNonTransparentPixel(resized);
-				
-				resized.getGraphics().drawImage(Resources.ICN_WARNING_TRIANGLE.getImage32x32(), tr.x - 32 - 2, tr.y + 2, null);
+	/**
+	 * Sets the cover synchronously and cancels any pending background load.
+	 */
+	public void setCoverImmediate(BufferedImage nci) {
+		loadGeneration++;
+		setLoading(false);
+
+		applyCover(nci == null ? null : prepareCover(nci, Resources.ICN_WARNING_TRIANGLE.getImage32x32(), false));
+	}
+
+	/**
+	 * A supplier result of null keeps the current cover.
+	 */
+	private void loadCoverAsync(Func0to1WithException<BufferedImage> supplier) {
+		final int gen = ++loadGeneration;
+		setLoading(true);
+
+		// CachedResourceLoader is not thread-safe
+		final BufferedImage warnIcon = Resources.ICN_WARNING_TRIANGLE.getImage32x32();
+
+		Thread t = new Thread(() ->
+		{
+			PreparedCover result = null;
+			try {
+				BufferedImage img = supplier.invoke();
+				if (img != null) result = prepareCover(img, warnIcon, true);
+			} catch (Throwable e) {
+				CCLog.addError(e);
 			}
-					
-			lblCover.setCoverDirect(resized, nci);
 
-			lblResolution.setText(nci.getWidth() + " x " + nci.getHeight()); //$NON-NLS-1$
-			Point tl = ImageUtilities.getTopLeftNonTransparentPixel(resized);
+			final PreparedCover fresult = result;
+			SwingUtils.invokeLater(() ->
+			{
+				if (gen != loadGeneration) return;
+
+				setLoading(false);
+				if (fresult != null) applyCover(fresult);
+			});
+		}, "THREAD_LOAD_COVER"); //$NON-NLS-1$
+		t.setDaemon(true);
+		t.start();
+	}
+
+	private record PreparedCover(BufferedImage full, BufferedImage display, BufferedImage storage) {}
+
+	private PreparedCover prepareCover(BufferedImage nci, BufferedImage warnIcon, boolean withStorage) {
+		BufferedImage resized = ImageUtilities.resizeCoverImageForFullSizeUI(nci, scale(ImageUtilities.BASE_COVER_WIDTH), scale(ImageUtilities.BASE_COVER_HEIGHT));
+
+		if (!ImageUtilities.isImageRatioAcceptable(nci.getWidth(), nci.getHeight())) {
+			Point tr = ImageUtilities.getTopRightNonTransparentPixel(resized);
+
+			resized.getGraphics().drawImage(warnIcon, tr.x - 32 - 2, tr.y + 2, null);
+		}
+
+		BufferedImage storage = withStorage ? ImageUtilities.resizeCoverImageForStorage(nci, ownerWindow.ccprops()) : null;
+
+		return new PreparedCover(nci, resized, storage);
+	}
+
+	private void applyCover(PreparedCover pc) {
+		if (pc != null) {
+			this.fullImage = pc.full;
+			this.storageImage = pc.storage;
+
+			lblCover.setCoverDirect(pc.display, pc.full);
+
+			lblResolution.setText(pc.full.getWidth() + " x " + pc.full.getHeight()); //$NON-NLS-1$
+			Point tl = ImageUtilities.getTopLeftNonTransparentPixel(pc.display);
 			lblResolution.setBounds(lblCover.getBounds().x + tl.x, lblCover.getBounds().y + tl.y, (int)lblResolution.getPreferredSize().getWidth(), (int)lblResolution.getPreferredSize().getHeight());
 		} else {
 			this.fullImage = null;
+			this.storageImage = null;
 
 			lblCover.clearCover();
-			
+
 			lblResolution.setText(""); //$NON-NLS-1$
 		}
 
-		btnCrop.setEnabled(isCoverSet() && isEnabled());
+		updateButtonState();
 
-		for (var a : listenerList.getListeners(TagsChangedListener.class)) a.tagsChanged(new ActionEvent(nci, -1, Str.Empty));
+		for (var a : listenerList.getListeners(CoverChangedListener.class)) a.coverChanged(new ActionEvent(this, -1, Str.Empty));
+	}
+
+	private void setLoading(boolean v) {
+		if (loading == v) return;
+		loading = v;
+
+		if (v) {
+			loadingFrame = 0;
+			lblLoading.setIcon(getLoadingIcons()[0]);
+			lblLoading.setVisible(true);
+			lblResolution.setVisible(false);
+			loadingTimer.start();
+		} else {
+			loadingTimer.stop();
+			lblLoading.setVisible(false);
+			lblLoading.setIcon(null);
+		}
+
+		updateButtonState();
+
+		for (var a : listenerList.getListeners(CoverLoadingListener.class)) a.loadingChanged(v);
+	}
+
+	private void nextLoadingFrame() {
+		var icons = getLoadingIcons();
+		loadingFrame = (loadingFrame + 1) % icons.length;
+		lblLoading.setIcon(icons[loadingFrame]);
+	}
+
+	private Icon[] getLoadingIcons() {
+		if (loadingIcons == null) {
+			var refs = new IconRef[] {
+				Resources.ICN_COVER_LOADING_P0, Resources.ICN_COVER_LOADING_P1, Resources.ICN_COVER_LOADING_P2, Resources.ICN_COVER_LOADING_P3,
+				Resources.ICN_COVER_LOADING_P4, Resources.ICN_COVER_LOADING_P5, Resources.ICN_COVER_LOADING_P6, Resources.ICN_COVER_LOADING_P7,
+			};
+			var icons = new Icon[refs.length];
+			for (int i = 0; i < refs.length; i++) {
+				icons[i] = (uiScale == 1.0)
+					? refs[i].get()
+					: new ImageIcon(ImageUtilities.getScaledInstance(refs[i].getImage(), lblLoading.getWidth(), lblLoading.getHeight()));
+			}
+			loadingIcons = icons;
+		}
+		return loadingIcons;
+	}
+
+	private void updateButtonState() {
+		btnCrop.setEnabled(isEnabled() && isCoverSet() && !loading);
+		btnFind.setEnabled(isEnabled() && !loading);
 	}
 
 	@Override
@@ -322,7 +447,7 @@ public class EditCoverControl extends AbstractEditCoverControl {
 
 	@Override
 	public void setEnabled(boolean e) {
-		btnCrop.setEnabled(e && isCoverSet());
-		btnFind.setEnabled(e);
+		super.setEnabled(e);
+		updateButtonState();
 	}
 }

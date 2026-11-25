@@ -50,6 +50,8 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 	{
 		ccprops().PROP_FSIZE_ADDSEASONFRAME.applyOrSkip(this);
 
+		edCvrControl.addCoverLoadingListener(loading -> btnOK.setEnabled(!loading));
+
 		this.edTitle.setText(this.parent.guessNextSeasonTitle().orElse(Str.Empty));
 	}
 
@@ -63,6 +65,8 @@ public class AddSeasonFrame extends JCCFrame implements UserDataProblemHandler, 
 	}
 
 	private void onBtnOK(boolean check) throws Exception {
+		if (edCvrControl.isLoading()) return;
+
 		SwingUtils.trimText(edTitle);
 
 		List<UserDataProblem> problems = new ArrayList<>();

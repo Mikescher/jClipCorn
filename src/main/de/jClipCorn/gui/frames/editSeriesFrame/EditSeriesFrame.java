@@ -123,6 +123,12 @@ public class EditSeriesFrame extends JCCFrame
 	{
 		ccprops().PROP_FSIZE_EDITSERIESFRAME.applyOrSkip(this);
 
+		edSeriesCvrControl.addCoverLoadingListener(loading -> {
+			btnSeriesOk.setEnabled(!loading);
+			btnOkClose.setEnabled(!loading);
+		});
+		edSeasonCvrControl.addCoverLoadingListener(loading -> button12.setEnabled(!loading));
+
 		setTitle(LocaleBundle.getFormattedString("EditSeriesFrame.this.title", series.getTitle())); //$NON-NLS-1$
 
 		lsSeasons.setCellRenderer(new HFixListCellRenderer());
@@ -507,7 +513,7 @@ public class EditSeriesFrame extends JCCFrame
 		_ignoreSeriesDirty = true;
 		_ignoreUIChangeEvents = true;
 		{
-			edSeriesCvrControl.setCover(series.getCover());
+			edSeriesCvrControl.setCoverImmediate(series.getCover());
 
 			edSeriesTitle.setText(series.getTitle());
 			spnSeriesOnlineScore.setValue(series.getOnlinescore());
@@ -591,7 +597,7 @@ public class EditSeriesFrame extends JCCFrame
 			} else {
 				pnlEditSeason.setVisible(true);
 
-				edSeasonCvrControl.setCover(season.getCover());
+				edSeasonCvrControl.setCoverImmediate(season.getCover());
 				edSeasonTitle.setText(season.getTitle());
 				spnSeasonYear.setValueOpt(season.getYear());
 				cbxSeasonScore.setSelectedEnum(season.getScore());
@@ -711,6 +717,8 @@ public class EditSeriesFrame extends JCCFrame
 	}
 
 	private boolean onOKSeries(boolean check) {
+		if (edSeriesCvrControl.isLoading()) return false;
+
 		SwingUtils.trimText(edSeriesTitle);
 
 		List<UserDataProblem> problems = new ArrayList<>();
@@ -898,6 +906,8 @@ public class EditSeriesFrame extends JCCFrame
 	}
 
 	private void onOKSeason(boolean check) {
+		if (edSeasonCvrControl.isLoading()) return;
+
 		CCSeason season = getSelectedSeason();
 
 		if (season == null) return;

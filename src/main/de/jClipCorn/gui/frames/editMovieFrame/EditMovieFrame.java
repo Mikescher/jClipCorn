@@ -92,6 +92,8 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	{
 		ccprops().PROP_FSIZE_EDITMOVIEFRAME.applyOrSkip(this);
 
+		edCvrControl.addCoverLoadingListener(loading -> btnOK.setEnabled(!loading));
+
 		setDefaultValues();
 		initFileChooser();
 		initFields();
@@ -182,7 +184,7 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 		memoScoreComment.setText(movie.ScoreComment.get());
 		tagPnl.setValue(movie.Tags.get());
 
-		edCvrControl.setCover(movie.getCover());
+		edCvrControl.setCoverImmediate(movie.getCover());
 
 		edViewedHistory.setValue(movie.ViewedHistory.get());
 		edReference.setValue(movie.OnlineReference.get());
@@ -373,6 +375,8 @@ public class EditMovieFrame extends JCCFrame implements ParseResultHandler, User
 	}
 
 	private void onBtnOK(boolean check) {
+		if (edCvrControl.isLoading()) return;
+
 		SwingUtils.trimText(edTitle);
 		SwingUtils.trimText(edZyklus);
 

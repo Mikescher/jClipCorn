@@ -109,6 +109,11 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 	{
 		ccprops().PROP_FSIZE_ADDMOVIEFRAME.applyOrSkip(this);
 
+		edCvrControl.addCoverLoadingListener(loading -> {
+			btnOK.setEnabled(!loading && edCvrControl.isEnabled());
+			btnOKMove.setEnabled(!loading && edCvrControl.isEnabled());
+		});
+
 		initFileChooser();
 		setDefaultValues();
 
@@ -156,6 +161,8 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 	}
 
 	private void onBtnOK(boolean check, boolean move) throws Exception {
+		if (edCvrControl.isLoading()) return;
+
 		_pendingMove = move;
 
 		SwingUtils.trimText(edTitle);
@@ -431,8 +438,8 @@ public class AddMovieFrame extends JCCFrame implements ParseResultHandler, UserD
 		cbxFormat.setEnabled(e);
 		spnYear.setEnabled(e);
 		spnSize.setEnabled(e);
-		btnOK.setEnabled(e);
-		btnOKMove.setEnabled(e);
+		btnOK.setEnabled(e && !edCvrControl.isLoading());
+		btnOKMove.setEnabled(e && !edCvrControl.isLoading());
 		btnCancel.setEnabled(e);
 		edTitle.setEnabled(e);
 		spnZyklus.setEnabled(e);

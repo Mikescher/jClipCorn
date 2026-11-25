@@ -51,6 +51,8 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 	{
 		ccprops().PROP_FSIZE_ADDSERIESFRAME.applyOrSkip(this);
 
+		edCvrControl.addCoverLoadingListener(loading -> button1.setEnabled(!loading));
+
 		cbxFSK.setSelectedEnum(CCOptionalFSK.NULL);
 	}
 
@@ -90,6 +92,8 @@ public class AddSeriesFrame extends JCCFrame implements ParseResultHandler, User
 	}
 
 	private void onBtnOK(boolean check) throws Exception {
+		if (edCvrControl.isLoading()) return;
+
 		SwingUtils.trimText(edTitle);
 
 		java.util.List<UserDataProblem> problems = new ArrayList<>();

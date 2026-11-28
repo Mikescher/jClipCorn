@@ -72,7 +72,14 @@ public class CCDatabaseValidator extends AbstractDatabaseValidator
 
 	private FSDirectorySnapshot getFilesystemSnapshot(DoubleProgressCallbackListener pcl) throws IOException {
 		if (fsSnapshot == null) {
-			fsSnapshot = FSDirectorySnapshot.build(collectFilesystemRoots(), f -> pcl.stepSub(f.getFilenameWithExt()));
+			// The file count is unknown up front, so the sub-progress max grows with the walk.
+			var progress = new int[] { 0, 1024 };
+			pcl.setMaxAndResetValueSub(progress[1]);
+			fsSnapshot = FSDirectorySnapshot.build(collectFilesystemRoots(), f ->
+			{
+				if (++progress[0] > progress[1]) pcl.setSubMax(progress[1] *= 2);
+				pcl.stepSub(f.getFilenameWithExt());
+			});
 		}
 		return fsSnapshot;
 	}

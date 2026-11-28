@@ -14,6 +14,7 @@ public class DoubleProgressCallbackProgressBarHelper implements DoubleProgressCa
 	private final JLabel lblSub;
 
 	private final AtomicBoolean cancelled = new AtomicBoolean(false);
+	private boolean overflowLogged = false;
 
 	private int progressRoot;
 	private int progressSub;
@@ -149,13 +150,15 @@ public class DoubleProgressCallbackProgressBarHelper implements DoubleProgressCa
 			pbRoot.setValue(progressRoot);
 			lblRoot.setText(msgRoot);
 
-			if (progressRoot > maxRoot) CCLog.addWarning("Invalid progress value ("+progressRoot+">"+maxRoot+")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
 			pbSub.setMaximum(maxSub);
 			pbSub.setValue(progressSub);
 			lblSub.setText(msgSub);
 
-			if (progressSub > maxSub) CCLog.addWarning("Invalid progress value ("+progressSub+">"+maxSub+")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			// Once per helper: an overflowing loop calls update() for every step.
+			if (!overflowLogged && (progressRoot > maxRoot || progressSub > maxSub)) {
+				overflowLogged = true;
+				CCLog.addWarning("Invalid progress value (root: "+progressRoot+"/"+maxRoot+", sub: "+progressSub+"/"+maxSub+", '"+msgRoot+"')"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+			}
 		});
 	}
 }

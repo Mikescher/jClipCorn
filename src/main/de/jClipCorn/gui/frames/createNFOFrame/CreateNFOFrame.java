@@ -3,6 +3,7 @@ package de.jClipCorn.gui.frames.createNFOFrame;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import de.jClipCorn.database.CCMovieList;
+import de.jClipCorn.features.log.CCLog;
 import de.jClipCorn.features.nfo.NFOEntry;
 import de.jClipCorn.features.nfo.NFOGenerator;
 import de.jClipCorn.features.nfo.NFOStatus;
@@ -17,6 +18,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("nls")
@@ -131,21 +133,23 @@ public class CreateNFOFrame extends JCCFrame {
                     progressBar.setValue(0);
                 });
 
+                // No full rescan afterwards: it re-reads every NFO file, which takes hours on network shares.
+                List<NFOEntry> result = new ArrayList<>(entries.size());
                 int count = 0;
                 int errors = 0;
                 for (NFOEntry entry : entries) {
-                    if (entry.getStatus() == NFOStatus.UNCHANGED) {
-                        count++;
-                        continue;
-                    }
-                    if (entry.getStatus() == NFOStatus.ERROR) {
+                    if (entry.getStatus() == NFOStatus.UNCHANGED || entry.getStatus() == NFOStatus.ERROR) {
+                        result.add(entry);
                         count++;
                         continue;
                     }
 
                     try {
                         NFOGenerator.applyEntry(entry);
+                        result.add(entry.withStatus(NFOStatus.UNCHANGED));
                     } catch (IOException e) {
+                        CCLog.addWarning("Failed to apply NFO entry " + entry.getFilePath(), e);
+                        result.add(entry);
                         errors++;
                     }
 
@@ -157,8 +161,13 @@ public class CreateNFOFrame extends JCCFrame {
                     count++;
                 }
 
+                _entries = result;
+
                 final int finalErrors = errors;
                 SwingUtils.invokeLater(() -> {
+                    tableMain.setData(result);
+                    tableMain.autoResize();
+
                     if (finalErrors > 0) {
                         DialogHelper.showDispatchInformation(this,
                                 LocaleBundle.getString("CreateNFOFrame.done_with_errors_caption"),
@@ -166,14 +175,6 @@ public class CreateNFOFrame extends JCCFrame {
                     } else {
                         DialogHelper.showDispatchLocalInformation(this, "CreateNFOFrame.done");
                     }
-                });
-
-                // Regenerate to update status
-                _entries = NFOGenerator.generateEntries(movielist);
-
-                SwingUtils.invokeLater(() -> {
-                    tableMain.setData(_entries);
-                    tableMain.autoResize();
                 });
 
             } catch (Exception e) {

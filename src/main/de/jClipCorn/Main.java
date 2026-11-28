@@ -35,7 +35,7 @@ import de.jClipCorn.util.listener.DoubleProgressCallbackListener;
 
 public class Main {
 	public final static String TITLE             = "jClipCorn";                                                             //$NON-NLS-1$
-	public final static String VERSION           = /*<gradle_version_marker>*/"1.11.2.1"/*</gradle_version_marker>*/;     //$NON-NLS-1$
+	public final static String VERSION           = /*<gradle_version_marker>*/"1.11.2.2"/*</gradle_version_marker>*/;     //$NON-NLS-1$
 	public final static String DBVERSION         = "39";                                                                    //$NON-NLS-1$
 	public final static String USERDATA_DBVERSION= "4";                                                                     //$NON-NLS-1$
 	public final static String JXMLVER           = "12";                                                                    //$NON-NLS-1$
